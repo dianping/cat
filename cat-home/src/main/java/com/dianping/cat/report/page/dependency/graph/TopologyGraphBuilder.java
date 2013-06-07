@@ -1,8 +1,11 @@
 package com.dianping.cat.report.page.dependency.graph;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.hsqldb.lib.StringUtil;
 
@@ -28,10 +31,12 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private Date m_date;
 
+	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
+
 	public Node createNode(String domain) {
 		return m_itemBuilder.createNode(domain);
 	}
-	
+
 	public Node cloneNode(Node node) {
 		Node result = new Node();
 
@@ -124,7 +129,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	public void visitDependency(Dependency dependency) {
 		String type = dependency.getType();
 		// pigeonServer is no use
-		if (!"PigeonServer".equals(type)) {
+		if (!m_pigeonServices.contains(type)) {
 			Edge edge = m_itemBuilder.buildEdge(m_domain, dependency);
 			TopologyGraph graph = findOrCreateGraph();
 			Edge old = graph.findEdge(edge.getKey());

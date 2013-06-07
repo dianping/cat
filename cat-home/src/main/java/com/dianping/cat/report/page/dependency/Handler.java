@@ -284,7 +284,7 @@ public class Handler implements PageHandler<Context> {
 		DependencyReport report = queryDependencyReport(payload);
 		switch (action) {
 		case TOPOLOGY:
-			TopologyGraph topologyGraph = m_graphManager.buildGraphByDomainTime(model.getDomain(), reportTime.getTime());
+			TopologyGraph topologyGraph = m_graphManager.buildTopologyGraph(model.getDomain(), reportTime.getTime());
 			Map<String, List<String>> graphDependency = parseDependencies(topologyGraph);
 			Map<String, List<Event>> externalErrors = queryDependencyEvent(graphDependency, model.getDomain(), reportTime);
 

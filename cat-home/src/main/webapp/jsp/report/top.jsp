@@ -19,17 +19,7 @@
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		var refresh = ${payload.refresh};
-		var second = ${payload.second};
-		if(refresh){
-			setInterval(function(){
-				window.location.href="?refresh=true&second="+second;
-			},second*1000);
-		}
-	});
-</script>
+
 <div class="report">
 	<table class="header">
 		<tr>
@@ -48,8 +38,8 @@
 		<a class='btn btn-small btn-primary' href="?refresh=true&second=20">20秒定时刷新</a>
 		<a class='btn btn-small btn-primary' href="?refresh=true&second=30">30秒定时刷新</a>
 	</div>
-<div class="tabbable tabs-left alert-info" id="topMetric"> <!-- Only required for left/right tabs -->
-  <ul class="nav nav-tabs">
+<div class="tabbable  " id="topMetric"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs alert-info">
     <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
     <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
     <li class='text-right'><a href="#tab3" data-toggle="tab">Service最慢Top10</a></li>
@@ -61,11 +51,15 @@
     <div class="tab-pane active" id="tab1">
       <c:forEach var="item" items="${model.metrix.error.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
+				<tr><th colspan="3">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>个</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td><a href="/cat/r/p?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
+						<td>
+						<a href="/cat/r/p?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td>
+						<td><i tips="" data-trigger="hover" class="icon-question-sign"
+		                  data-toggle="popover" data-placement="top" data-original-title="tips"
+		                  data-content=""></i>&nbsp;&nbsp;${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
@@ -145,15 +139,24 @@
 </div>
 </a:body>
 <script type="text/javascript">
-	/* if(${model.refresh}){
-		setTimeout(function refresh(){
-			window.location.href="?count=10";
-		},10000);		
-	} */
 	$(document).ready(function() {
+		$('i[tips]').popover();
 		$('#topMetric .nav-tabs a').mouseenter(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
 		});	
+		
+		var refresh = ${payload.refresh};
+		var second = ${payload.second};
+		if(refresh){
+			setInterval(function(){
+				window.location.href="?refresh=true&second="+second;
+			},second*1000);
+		}
+	});
+</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		
 	});
 </script>

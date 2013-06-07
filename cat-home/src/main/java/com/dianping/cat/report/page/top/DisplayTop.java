@@ -5,25 +5,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.top.model.entity.Domain;
+import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 
-public class Metric extends BaseVisitor {
+public class DisplayTop extends BaseVisitor {
 
 	private String m_currentDomain;
 
 	private Date m_start;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
-
-	private int m_count;
 
 	private MetricItem m_error;
 
@@ -36,23 +37,18 @@ public class Metric extends BaseVisitor {
 	private MetricItem m_sql;
 
 	private MetricItem m_cache;
-	
-	private static final int DEFAULT = 10;
 
 	private long m_currentTime = System.currentTimeMillis();
 
-	public Metric() {
-		this(DEFAULT);
-	}
+	private Integer m_currentMinute;
 
-	public Metric(int count) {
-		m_count = count;
-		m_error = new MetricItem(m_count);
-		m_url = new MetricItem(m_count);
-		m_service = new MetricItem(m_count);
-		m_call = new MetricItem(m_count);
-		m_sql = new MetricItem(m_count);
-		m_cache = new MetricItem(m_count);
+	public DisplayTop(int count,int tops) {
+		m_error = new MetricItem(count,tops);
+		m_url = new MetricItem(count,tops);
+		m_service = new MetricItem(count,tops);
+		m_call = new MetricItem(count,tops);
+		m_sql = new MetricItem(count,tops);
+		m_cache = new MetricItem(count,tops);
 	}
 
 	public MetricItem getCache() {
@@ -90,23 +86,32 @@ public class Metric extends BaseVisitor {
 	}
 
 	@Override
+	public void visitError(Error error) {
+		String exception = error.getId();
+		long count = error.getCount();
+		Date minute = new Date(m_start.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
+		String minuteStr = m_sdf.format(minute);
+
+		m_error.addError(minuteStr, m_currentDomain, exception, count);
+		super.visitError(error);
+	}
+
+	@Override
 	public void visitSegment(Segment segment) {
-		int minute = segment.getId();
-		long time = m_start.getTime() + minute * TimeUtil.ONE_MINUTE;
+		m_currentMinute = segment.getId();
+		long time = m_start.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE;
 		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
-			m_error.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
-			      segment.getError());
-			m_url.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
-			      segment.getUrlDuration());
-			m_service.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
-			      segment.getServiceDuration());
-			m_call.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
-			      segment.getCallDuration());
-			m_sql.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
-			      segment.getSqlDuration());
-			m_cache.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
-			      segment.getCacheDuration());
+			Date minute = new Date(m_start.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
+			String minuteStr = m_sdf.format(minute);
+
+			m_error.add(minuteStr, m_currentDomain, segment.getError());
+			m_url.add(minuteStr, m_currentDomain, segment.getUrlDuration());
+			m_service.add(minuteStr, m_currentDomain, segment.getServiceDuration());
+			m_call.add(minuteStr, m_currentDomain, segment.getCallDuration());
+			m_sql.add(minuteStr, m_currentDomain, segment.getSqlDuration());
+			m_cache.add(minuteStr, m_currentDomain, segment.getCacheDuration());
 		}
+		super.visitSegment(segment);
 	}
 
 	@Override
@@ -121,18 +126,28 @@ public class Metric extends BaseVisitor {
 
 		private double m_value;
 
+		private Map<String, Double> m_exceptions = new HashMap<String, Double>();
+
 		public Item(String domain, double value) {
 			m_domain = domain;
 			m_value = value;
 		}
 
-		@Override
-		public Item clone() {
-			return new Item(m_domain, m_value);
-		}
-
 		public String getDomain() {
 			return m_domain;
+		}
+
+		public String getErrorInfo() {
+			StringBuilder sb = new StringBuilder();
+
+			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
+				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("<br/>");
+			}
+			return sb.toString();
+		}
+
+		public Map<String, Double> getException() {
+			return m_exceptions;
 		}
 
 		public double getValue() {
@@ -141,6 +156,10 @@ public class Metric extends BaseVisitor {
 
 		public void setDomain(String domain) {
 			m_domain = domain;
+		}
+
+		public void setExceptions(Map<String, Double> exceptions) {
+			m_exceptions = exceptions;
 		}
 
 		public void setValue(double value) {
@@ -161,20 +180,41 @@ public class Metric extends BaseVisitor {
 
 		private int m_itemSize = 10;
 
-		private Map<String, ArrayList<Item>> m_result = new LinkedHashMap<String, ArrayList<Item>>();
+		private Map<String, Map<String, Item>> m_result = new LinkedHashMap<String, Map<String, Item>>();
 
-		public MetricItem(int minuteCount) {
+		public MetricItem(int minuteCount,int itemSize) {
 			m_minuteCount = minuteCount;
+			m_itemSize = itemSize;
 		}
 
 		public void add(String minute, String domain, double value) {
-			ArrayList<Item> temp = m_result.get(minute);
+			Map<String, Item> temp = m_result.get(minute);
 
 			if (temp == null) {
-				temp = new ArrayList<Item>();
+				temp = new HashMap<String, Item>();
 				m_result.put(minute, temp);
 			}
-			temp.add(new Item(domain, value));
+			Item item = temp.get(domain);
+
+			if (item == null) {
+				item = new Item(domain, value);
+				temp.put(domain, item);
+			} else {
+				item.setValue(item.getValue() + value);
+			}
+		}
+
+		public void addError(String time, String currentDomain, String exception, long count) {
+			Map<String, Item> items = m_result.get(time);
+			Item item = items.get(currentDomain);
+			Double d = item.getException().get(exception);
+
+			if (d == null) {
+				d = new Double(count);
+			} else {
+				d = d + count;
+			}
+			item.getException().put(exception, d);
 		}
 
 		public Map<String, List<Item>> getResult() {
@@ -186,24 +226,17 @@ public class Metric extends BaseVisitor {
 				keyList = keyList.subList(0, m_minuteCount);
 			}
 
-			synchronized (m_result) {
-				for (String key : keyList) {
-					ArrayList<Item> value = m_result.get(key);
-					List<Item> other = new ArrayList<Item>();
+			for (String key : keyList) {
+				List<Item> valule = new ArrayList<Item>(m_result.get(key).values());
 
-					for (Item item : value) {
-						other.add(item.clone());
-					}
+				Collections.sort(valule, new ItemCompartor());
 
-					Collections.sort(other, new ItemCompartor());
+				if (valule.size() > m_itemSize) {
+					valule = valule.subList(0, m_itemSize);
+				}
 
-					if (other.size() > m_itemSize) {
-						other = other.subList(0, m_itemSize);
-					}
-
-					if (keyList.contains(key)) {
-						temp.put(key, other);
-					}
+				if (keyList.contains(key)) {
+					temp.put(key, valule);
 				}
 			}
 
@@ -221,5 +254,4 @@ public class Metric extends BaseVisitor {
 			return Integer.parseInt(end) - Integer.parseInt(first);
 		}
 	}
-
 }

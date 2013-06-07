@@ -209,7 +209,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			if (m_domainManager.containsDomainInCat(target)) {
 				DependencyReport serverReport = findOrCreateReport(target);
 
-				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonServer");
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
 			}
 		}
 		// else if ("PigeonService".equals(type) || "Service".equals(type)) {

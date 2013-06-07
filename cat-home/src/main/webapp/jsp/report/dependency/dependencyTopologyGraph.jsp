@@ -72,6 +72,7 @@
 			"bPaginate": false,
 		});
 		var data = ${model.topologyGraph};
+		
 		console.log(data);
 		function parse(data){
 			var nodes = data.nodes;

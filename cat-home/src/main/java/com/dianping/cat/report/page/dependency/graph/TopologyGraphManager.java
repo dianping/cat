@@ -107,7 +107,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return dashboardGraph;
 	}
 
-	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
+	public TopologyGraph buildTopologyGraph(String domain, long time) {
 		TopologyGraph all = queryGraph(time);
 		TopologyGraph topylogyGraph = new TopologyGraph();
 

@@ -12,7 +12,7 @@
 	<h4 class="text-center text-error">修改拓扑节点配置信息</h4>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
-			<td width="40%"  style="text-align:right" class="text-success">规则类型</td>
+			<td width="40%"  style="text-align:right" class="text-success">节点规则类型</td>
 			<td><input id="type" name="type" value="${payload.type}" readonly/></td>
 		</tr>
 		<tr>

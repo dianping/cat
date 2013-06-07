@@ -66,26 +66,20 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		
+
 		normalize(model, payload);
 
 		TopReport report = getReport(payload);
-		ModelPeriod period = payload.getPeriod();
-		Metric metrix = new Metric();
+		DisplayTop displayTop = new DisplayTop(60, payload.getTops());
 		int count = payload.getCount();
 
-		if (!period.isCurrent()) {
-			metrix = new Metric(60);
-		} else {
-			model.setRefresh(true);
-		}
 		if (count > 0) {
-			metrix = new Metric(count);
+			displayTop = new DisplayTop(count, payload.getTops());
 		}
 
-		metrix.visitTopReport(report);
+		displayTop.visitTopReport(report);
 		model.setTopReport(report);
-		model.setMetrix(metrix);
+		model.setMetrix(displayTop);
 		m_jspViewer.view(ctx, model);
 	}
 
