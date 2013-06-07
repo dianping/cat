@@ -315,7 +315,7 @@
 			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
 			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
 			<configuration>
-				<refreshTime>6</refreshTime>
+				<refreshTimeInSeconds>60</refreshTimeInSeconds>
 			</configuration>
 			<requirements>
 				<requirement>

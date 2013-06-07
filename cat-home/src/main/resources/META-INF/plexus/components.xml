@@ -1160,9 +1160,9 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
-					<user>binlog</user>
-					<password>binlog</password>
+					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
+					<user>root</user>
+					<password></password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
@@ -3157,28 +3157,19 @@
 			<implementation>com.dianping.cat.system.page.abtest.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.abtest.JspViewer</role>
-			<implementation>com.dianping.cat.system.page.abtest.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3206,6 +3197,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.abtest.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

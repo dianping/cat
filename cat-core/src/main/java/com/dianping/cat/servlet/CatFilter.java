@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -28,6 +29,7 @@ public class CatFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletResponse resp = (HttpServletResponse) response;
 		boolean isRoot = !Cat.getManager().hasContext();
 
 		if (isRoot) {
@@ -41,7 +43,7 @@ public class CatFilter implements Filter {
 		if (isRoot) {
 			t = Cat.newTransaction(getTypeName(), getOriginalUrl(request));
 			logRequestClientInfo(cat, req);
-			ABTestManager.onRequestBegin(req);
+			ABTestManager.onRequestBegin(req,resp);
 		} else {
 			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
 		}	

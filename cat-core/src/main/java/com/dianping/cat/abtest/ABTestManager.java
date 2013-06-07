@@ -1,6 +1,7 @@
 package com.dianping.cat.abtest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.unidal.helper.Threads;
@@ -43,10 +44,10 @@ public final class ABTestManager {
 		}
 	}
 
-	public static void onRequestBegin(HttpServletRequest req) {
+	public static void onRequestBegin(HttpServletRequest request,HttpServletResponse response) {
 		initialize();
 
-		s_contextManager.onRequestBegin(req);
+		s_contextManager.onRequestBegin(request,response);
 	}
 
 	public static void onRequestEnd() {
