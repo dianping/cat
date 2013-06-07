@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.page.top.TopMetric.Item;
 
 public class TopMetric extends BaseVisitor {
 
@@ -44,13 +45,13 @@ public class TopMetric extends BaseVisitor {
 
 	private Integer m_currentMinute;
 
-	public TopMetric(int count,int tops) {
-		m_error = new MetricItem(count,tops);
-		m_url = new MetricItem(count,tops);
-		m_service = new MetricItem(count,tops);
-		m_call = new MetricItem(count,tops);
-		m_sql = new MetricItem(count,tops);
-		m_cache = new MetricItem(count,tops);
+	public TopMetric(int count, int tops) {
+		m_error = new MetricItem(count, tops);
+		m_url = new MetricItem(count, tops);
+		m_service = new MetricItem(count, tops);
+		m_call = new MetricItem(count, tops);
+		m_sql = new MetricItem(count, tops);
+		m_cache = new MetricItem(count, tops);
 	}
 
 	public MetricItem getCache() {
@@ -120,6 +121,13 @@ public class TopMetric extends BaseVisitor {
 	public void visitTopReport(TopReport topReport) {
 		m_start = topReport.getStartTime();
 		super.visitTopReport(topReport);
+
+		m_error.buildDisplayResult();
+		m_url.buildDisplayResult();
+		m_service.buildDisplayResult();
+		m_call.buildDisplayResult();
+		m_sql.buildDisplayResult();
+		m_cache.buildDisplayResult();
 	}
 
 	public static class Item {
@@ -143,7 +151,7 @@ public class TopMetric extends BaseVisitor {
 			StringBuilder sb = new StringBuilder();
 
 			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
-				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("\\n");
+				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("  ");
 			}
 			return sb.toString();
 		}
@@ -182,19 +190,21 @@ public class TopMetric extends BaseVisitor {
 
 		private int m_itemSize = 10;
 
-		private Map<String, Map<String, Item>> m_result = new LinkedHashMap<String, Map<String, Item>>();
+		private Map<String, Map<String, Item>> m_items = new LinkedHashMap<String, Map<String, Item>>();
 
-		public MetricItem(int minuteCount,int itemSize) {
+		private Map<String, List<Item>> m_result;
+
+		public MetricItem(int minuteCount, int itemSize) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
 		}
 
 		public void add(String minute, String domain, double value) {
-			Map<String, Item> temp = m_result.get(minute);
+			Map<String, Item> temp = m_items.get(minute);
 
 			if (temp == null) {
 				temp = new HashMap<String, Item>();
-				m_result.put(minute, temp);
+				m_items.put(minute, temp);
 			}
 			Item item = temp.get(domain);
 
@@ -207,7 +217,7 @@ public class TopMetric extends BaseVisitor {
 		}
 
 		public void addError(String time, String currentDomain, String exception, long count) {
-			Map<String, Item> items = m_result.get(time);
+			Map<String, Item> items = m_items.get(time);
 			Item item = items.get(currentDomain);
 			Double d = item.getException().get(exception);
 
@@ -220,9 +230,13 @@ public class TopMetric extends BaseVisitor {
 		}
 
 		public Map<String, List<Item>> getResult() {
+			return m_result;
+		}
+
+		public void buildDisplayResult() {
 			Transaction t = Cat.newTransaction("Top", "Query");
 			Map<String, List<Item>> temp = new LinkedHashMap<String, List<Item>>();
-			List<String> keyList = new ArrayList<String>(m_result.keySet());
+			List<String> keyList = new ArrayList<String>(m_items.keySet());
 			Collections.sort(keyList, new StringCompartor());
 
 			if (keyList.size() > m_minuteCount) {
@@ -230,7 +244,7 @@ public class TopMetric extends BaseVisitor {
 			}
 
 			for (String key : keyList) {
-				List<Item> valule = new ArrayList<Item>(m_result.get(key).values());
+				List<Item> valule = new ArrayList<Item>(m_items.get(key).values());
 
 				Collections.sort(valule, new ItemCompartor());
 
@@ -244,7 +258,7 @@ public class TopMetric extends BaseVisitor {
 			}
 			t.complete();
 
-			return temp;
+			m_result = temp;
 		}
 	}
 
