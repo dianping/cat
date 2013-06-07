@@ -1,11 +1,11 @@
 package com.dianping.cat.report.page.health;
 
 public enum JspFile {
-	HOURLY("/jsp/report/health.jsp"),
+	HOURLY("/jsp/report/health/health.jsp"),
 
-	HISTORY("/jsp/report/healthHistory.jsp"),
+	HISTORY("/jsp/report/health/healthHistory.jsp"),
 
-	HISTORY_GRAPH("/jsp/report/healthGraphs.jsp");
+	HISTORY_GRAPH("/jsp/report/health/healthGraphs.jsp");
 
 	private String m_path;
 

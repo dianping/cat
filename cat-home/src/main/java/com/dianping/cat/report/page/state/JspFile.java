@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.state;
 
 public enum JspFile {
-	HOURLY("/jsp/report/state.jsp"),
+	HOURLY("/jsp/report/state/state.jsp"),
 
-	HISTORY("/jsp/report/stateHistory.jsp"),
+	HISTORY("/jsp/report/state/stateHistory.jsp"),
 	
-	GRAPH("/jsp/report/stateGraphs.jsp"),
+	GRAPH("/jsp/report/state/stateGraphs.jsp"),
 	
-	HISTORY_GRAPH("/jsp/report/stateGraphs.jsp")
+	HISTORY_GRAPH("/jsp/report/state/stateGraphs.jsp")
 	;
 
 	private String m_path;
