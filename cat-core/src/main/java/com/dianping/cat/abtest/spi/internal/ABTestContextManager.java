@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.dianping.cat.abtest.ABTestId;
+import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 
 public interface ABTestContextManager {
-	public ABTestContext getContext(ABTestId testId);
+	public ABTestContext getContext(ABTestName testName);
 
 	public List<ABTestContext> getContexts();
 

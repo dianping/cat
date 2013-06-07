@@ -14,10 +14,10 @@ import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 public final class ABTestManager {
 	private static ABTestContextManager s_contextManager;
 
-	public static ABTest getTest(ABTestId id) {
+	public static ABTest getTest(ABTestName name) {
 		initialize();
 
-		return new DefaultABTest(id, s_contextManager);
+		return new DefaultABTest(name, s_contextManager);
 	}
 
 	public static void initialize() {

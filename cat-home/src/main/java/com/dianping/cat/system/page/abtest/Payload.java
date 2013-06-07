@@ -49,12 +49,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("strategyConfig")
 	private String m_strategyConfig;
 
-	private String m_startDateStr;
-
-	private String m_endDateStr;
-
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-
 	@FieldMeta("enable")
 	private boolean m_enableAbtest;
 
@@ -67,6 +61,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("id")
 	private int id;
 
+	private String m_startDateStr;
+	
+	private String m_endDateStr;
+	
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+	
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
 			m_action = Action.getByName(action, Action.REPORT);
