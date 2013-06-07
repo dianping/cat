@@ -1,9 +1,9 @@
 package com.dianping.cat.report.page.database;
 
 public enum JspFile {
-	HOURLY("/jsp/report/database.jsp"),
+	HOURLY("/jsp/report/database/database.jsp"),
 
-	HISTORY("/jsp/report/databaseHistory.jsp");
+	HISTORY("/jsp/report/database/databaseHistory.jsp");
 
 	private String m_path;
 

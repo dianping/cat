@@ -35,11 +35,17 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("domain")
 	private String m_domain;
 
+	@FieldMeta("from")
+	private String m_from;
+
 	@FieldMeta("id")
 	private int m_id;
-	
+
 	@FieldMeta("type")
 	private String m_type;
+
+	@FieldMeta("to")
+	private String m_to;
 
 	@Override
 	public Action getAction() {
@@ -84,7 +90,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getType() {
 		return m_type;
-   }
+	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
@@ -120,19 +126,44 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setType(String type) {
-   	m_type = type;
-   }
+		if (type.startsWith("Cache.")) {
+			type = "Cache";
+		}
+		if (type.equals("Call")) {
+			type = "PigeonCall";
+		}
+		if (type.equals("Service")) {
+			type = "PigeonService";
+		}
+		m_type = type;
+	}
 
 	public String getDomain() {
-   	return m_domain;
-   }
+		return m_domain;
+	}
 
 	public void setDomain(String domain) {
-   	m_domain = domain;
-   }
+		m_domain = domain;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 	}
-	
+
+	public String getTo() {
+		return m_to;
+	}
+
+	public void setTo(String to) {
+		m_to = to;
+	}
+
+	public String getFrom() {
+		return m_from;
+	}
+
+	public void setFrom(String from) {
+		m_from = from;
+	}
+
 }

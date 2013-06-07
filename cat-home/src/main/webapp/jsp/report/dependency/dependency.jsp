@@ -16,35 +16,53 @@
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	
 	<div class='report'>
 		<div class="row-fluid">
 			<div class="span12 text-center">
-				<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
+				<%@ include file="dependencyOpNav.jsp" %>
 			</div>
 		</div>
-	<%@ include file="dependencyLineGraph.jsp"%>
-	</br>
-  	<div class="row-fluid">
-	  <div class="span12">
-	  		<%@ include file="dependencyEvent.jsp"%>
-	  </div>
-	</div>
-	  <div class="row-fluid">
-	  	    <div class="span2">
-	  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
-	  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
-	  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
-	  	    </div>
-	  	    <div class="span10">
-	  	    	<%@ include file="dependencyHeader.jsp" %>
-	  	    </div>
-	  </div>
-	  <%@ include file="dependencyDetailData.jsp"%>
+		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
+  			<ul class="nav nav-tabs">
+   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
+   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维Zabbix告警信息</strong></a></li>
+   			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>详细数据以及配置</strong></a></li>
+  			</ul>
+  			<div class="tab-content">
+	    		<div class="tab-pane active" id="tab1">
+	    			<%@ include file="dependencyLineGraph.jsp"%>
+	    		</div>
+	    		<div class="tab-pane" id="tab2">
+	  				<%@ include file="dependencyEvent.jsp"%>
+	    		</div>
+	    		<div class="tab-pane" id="tab3">
+	    			 <div class="row-fluid">
+				  	    <div class="span2">
+				  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
+				  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
+				  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
+				  	    </div>
+				  	    <div class="span10">
+				  	    	<%@ include file="dependencyTimeNav.jsp" %>
+				  	    </div>
+				  </div>
+				  <%@ include file="dependencyDetailData.jsp"%>
+	    		</div>
+	    	</div></div>
+	 
 	  </div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#content .nav-tabs a').mouseenter(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+		});
+
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
@@ -61,7 +79,7 @@
 		  e.preventDefault();
 		  $(this).tab('show');
 		});	
-		$('#tab0').addClass('active');
+		$('#zabbixTab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');
 		$('.dataTables_info').css('display','none');

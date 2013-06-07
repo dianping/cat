@@ -2,7 +2,7 @@
 	
 <div class="row-fluid">
 	<div class='span12'>
-		<h4 class='text-error'>当前小时内项目本身指标趋势图</h4>
+		<h4 class='text-error text-center'>当前小时内项目本身指标趋势图</h4>
 		<table>
 			<tr>
 				<c:forEach var="item" items="${model.indexGraph}" varStatus="status">
@@ -10,7 +10,7 @@
 						<h5 class='text-center text-info'>
 							<c:if test="${status.index == 0 }">访问量</c:if>
 							<c:if test="${status.index == 1 }">错误量</c:if>
-							<c:if test="${status.index == 2 }">相应时间</c:if>
+							<c:if test="${status.index == 2 }">响应时间</c:if>
 						</h5>
 						<div id="item${status.index}" style="width:450px;height:300px;"></div>
 					</td>
@@ -21,10 +21,10 @@
 </div>
 <div class="row-fluid">
 	<div class='span12'>
-		<h4 class='text-error'>当前小时内项目依赖指标趋势图</h4>
+		<h4 class='text-error text-center'>当前小时内项目依赖指标趋势图</h4>
 		<table>
 		<c:forEach var="charts" items="${model.dependencyGraph}" varStatus="type">
-			<th colspan="3"><h4 class='text-center text-warning'>${charts.key}</h4></th>
+			<th colspan="3"><h4 class='text-center text-success'>${charts.key}</h4></th>
 			<c:set var="key" value="${charts.key}"/>
 			<c:set var="value" value="${charts.value}"/>
 			<tr>
