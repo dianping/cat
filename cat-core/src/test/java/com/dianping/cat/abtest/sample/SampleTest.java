@@ -3,7 +3,7 @@ package com.dianping.cat.abtest.sample;
 import org.junit.Test;
 
 import com.dianping.cat.abtest.ABTest;
-import com.dianping.cat.abtest.ABTestId;
+import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.ABTestManager;
 
 public class SampleTest {
@@ -25,7 +25,7 @@ public class SampleTest {
 		// some cleanup for case 1
 	}
 
-	public static enum MyABTestId implements ABTestId {
+	public static enum MyABTestId implements ABTestName {
 		CASE1("1001"),
 		
 		CASE2("1002");

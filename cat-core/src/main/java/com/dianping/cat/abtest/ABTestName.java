@@ -1,6 +1,6 @@
 package com.dianping.cat.abtest;
 
-public interface ABTestId {
+public interface ABTestName {
 	/**
 	 * @return unique abtest name
 	 */

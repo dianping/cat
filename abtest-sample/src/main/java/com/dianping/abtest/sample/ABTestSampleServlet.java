@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.abtest.ABTest;
-import com.dianping.cat.abtest.ABTestId;
+import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.ABTestManager;
 
 public class ABTestSampleServlet extends HttpServlet {
@@ -30,7 +30,7 @@ public class ABTestSampleServlet extends HttpServlet {
 		}
 	}
 
-	public static enum MyABTestId implements ABTestId {
+	public static enum MyABTestId implements ABTestName {
 		CASE1("demo1");
 
 		private String m_id;

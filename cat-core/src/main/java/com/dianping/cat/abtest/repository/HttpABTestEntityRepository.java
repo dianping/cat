@@ -34,7 +34,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	private ClientConfigManager m_configManager;
 	
 	@Inject
-	private int m_refreshTime = 60;  //seconds
+	private int m_refreshTimeInSeconds = 60;  //seconds
 
 	private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
 
@@ -58,8 +58,8 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	}
 	
-	public void setRefreshTime(int refreshTime) {
-   	m_refreshTime = refreshTime;
+	public void setRefreshTimeInSeconds(int refreshTimeInSeconds) {
+   	m_refreshTimeInSeconds = refreshTimeInSeconds;
    }
 
 	private void refresh() {
@@ -110,7 +110,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				Cat.logError(e);
 			}
 
-			LockSupport.parkUntil(start + m_refreshTime * 1000L); // every minute
+			LockSupport.parkUntil(start + m_refreshTimeInSeconds * 1000L); // every minute
 		}
 	}
 

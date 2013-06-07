@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.abtest.ABTestId;
+import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
@@ -28,17 +28,17 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	};
 
 	@Override
-	public ABTestContext getContext(ABTestId testId) {
+	public ABTestContext getContext(ABTestName testName) {
 		Entry entry = m_threadLocal.get();
 		Map<String, DefaultABTestContext> map = entry.getContextMap();
-		String id = testId.getValue();
-		DefaultABTestContext ctx = map.get(id);
+		String name = testName.getValue();
+		DefaultABTestContext ctx = map.get(name);
 
 		if (ctx == null) {
-			ABTestEntity entity = m_entityManager.getEntity(testId);
+			ABTestEntity entity = m_entityManager.getEntity(testName);
 
 			ctx = createContext(entity, entry.getHttpServletRequest());
-			map.put(id, ctx);
+			map.put(name, ctx);
 		}
 
 		return ctx;

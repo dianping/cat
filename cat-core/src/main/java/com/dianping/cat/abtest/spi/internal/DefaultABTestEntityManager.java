@@ -9,7 +9,7 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.abtest.ABTestId;
+import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
@@ -20,7 +20,7 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 	private ABTestEntityRepository m_repository;
 
 	@Override
-	public ABTestEntity getEntity(ABTestId name) {
+	public ABTestEntity getEntity(ABTestName name) {
 		ABTestEntity entity = m_repository.getEntities().get(name.getValue());
 
 		if (entity == null) {
