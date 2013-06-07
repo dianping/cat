@@ -8,15 +8,18 @@ import com.dianping.cat.report.page.AbstractReportPayload;
 
 public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("minute")
-	private String minute;
+	private String m_minute;
 	
 	@FieldMeta("all")
-	private boolean all;
+	private boolean m_all;
 	
 	private ReportPage m_page;
 
 	@FieldMeta("op")
 	private Action m_action;
+	
+	@FieldMeta("productLine")
+	private String productLine;
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -28,7 +31,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getMinute() {
-   	return minute;
+   	return m_minute;
    }
 
 	@Override
@@ -37,11 +40,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, Action.LINE_CHART);
 	}
 
 	public void setMinute(String minute) {
-   	this.minute = minute;
+   	this.m_minute = minute;
    }
 
 	@Override
@@ -52,16 +55,24 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.LINE_CHART;
 		}
 	}
 
 	public boolean isAll() {
-   	return all;
+   	return m_all;
    }
 
 	public void setAll(boolean all) {
-   	this.all = all;
+   	this.m_all = all;
+   }
+
+	public String getProductLine() {
+   	return productLine;
+   }
+
+	public void setProductLine(String productLine) {
+   	this.productLine = productLine;
    }
 	
 }

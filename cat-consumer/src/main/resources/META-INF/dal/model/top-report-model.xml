@@ -34,5 +34,10 @@
 		<attribute name="cache-error" value-type="long" primitive="true" />
 		<attribute name="cache-duration" value-type="double" primitive="true" format="0.00" />
 		<attribute name="cache-sum" value-type="double" primitive="true" format="0.00" />
+	    <entity-ref name="error" type="map" names="errors" method-find-or-create="true"/>
+	</entity>
+	<entity name="error">
+		<attribute name="id" value-type="String"  key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 </model>

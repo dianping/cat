@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model.top;
 
 import com.dianping.cat.consumer.top.model.entity.Domain;
+import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultMerger;
@@ -14,6 +15,12 @@ public class TopReportMerger extends DefaultMerger {
 	@Override
 	protected void mergeDomain(Domain old, Domain domain) {
 		super.mergeDomain(old, domain);
+	}
+
+	@Override
+	protected void mergeError(Error old, Error error) {
+		old.setCount(old.getCount() + error.getCount());
+		super.mergeError(old, error);
 	}
 
 	@Override

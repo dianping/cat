@@ -141,7 +141,7 @@ public class DisplayMatrix {
 		}
 
 		public String getName() {
-			return m_name;
+			return String.valueOf(m_name);
 		}
 
 		public double getSqlAvg() {
@@ -165,7 +165,7 @@ public class DisplayMatrix {
 		}
 
 		public String getType() {
-			return m_type;
+			return String.valueOf(m_type);
 		}
 
 		public String getUrl() {

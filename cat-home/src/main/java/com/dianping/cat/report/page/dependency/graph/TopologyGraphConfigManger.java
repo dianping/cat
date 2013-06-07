@@ -3,6 +3,9 @@ package com.dianping.cat.report.page.dependency.graph;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -41,6 +44,10 @@ public class TopologyGraphConfigManger implements Initializable {
 
 	private String m_fileName = DEFAULT_FILE;
 
+	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "PigeonCall", "PigeonClient"));
+
+	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
+
 	private String buildDes(String... args) {
 		StringBuilder sb = new StringBuilder();
 		int len = args.length;
@@ -52,42 +59,54 @@ public class TopologyGraphConfigManger implements Initializable {
 
 		return sb.toString();
 	}
+	
+	private String buildErrorDes(String... args) {
+		StringBuilder sb = new StringBuilder("<span style='color:red'>");
+		int len = args.length;
+
+		for (int i = 0; i < len - 1; i++) {
+			sb.append(args[i]).append(GraphConstrant.DELIMITER);
+		}
+		sb.append(args[len - 1]).append("</span>").append(GraphConstrant.ENTER);
+		return sb.toString();
+	}
 
 	public Pair<Integer, String> buildEdgeState(String domain, Dependency dependency) {
 		String type = dependency.getType();
 		String from = domain;
 		String to = dependency.getTarget();
 		EdgeConfig config = queryEdgeConfig(type, from, to);
+		long error = dependency.getErrorCount();
+		StringBuilder sb = new StringBuilder();
+		int errorCode = OK;
 
 		if (config != null) {
 			double avg = dependency.getAvg();
-			long error = dependency.getErrorCount();
-			int errorCode = OK;
-			StringBuilder sb = new StringBuilder();
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
-				sb.append(buildDes(AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			} else if (avg >= config.getWarningResponseTime()) {
 				errorCode = WARN;
-				sb.append(buildDes(AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+			} else {
+				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			}
 			if (error >= config.getErrorThreshold()) {
 				errorCode = ERROR;
-				sb.append(buildDes(ERROR_STR, String.valueOf(error)));
+				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
-				sb.append(buildDes(ERROR_STR, String.valueOf(error)));
-			}
-			if (errorCode != OK) {
-				Pair<Integer, String> result = new Pair<Integer, String>();
-
-				result.setKey(errorCode);
-				result.setValue(sb.toString());
-				return result;
+				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
+			} else if (error > 0) {
+				sb.append(buildDes(type, ERROR_STR, String.valueOf(error)));
 			}
 		}
-		return null;
+		Pair<Integer, String> result = new Pair<Integer, String>();
+
+		result.setKey(errorCode);
+		result.setValue(sb.toString());
+		return result;
 
 	}
 
@@ -95,36 +114,39 @@ public class TopologyGraphConfigManger implements Initializable {
 		String type = index.getName();
 		String realType = formatType(type);
 		DomainConfig config = queryNodeConfig(realType, domain);
+		int errorCode = OK;
+		StringBuilder sb = new StringBuilder();
 
 		if (config != null) {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
-			int errorCode = OK;
-			StringBuilder sb = new StringBuilder();
+
+			
 
 			if (avg > config.getErrorResponseTime()) {
 				errorCode = ERROR;
-				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			} else if (avg > config.getWarningResponseTime()) {
 				errorCode = WARN;
+				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+			}else{
 				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			}
 			if (error >= config.getErrorThreshold()) {
 				errorCode = ERROR;
-				sb.append(buildDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
+				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
+			}else if (error > 0) {
 				sb.append(buildDes(type, ERROR_STR, String.valueOf(error)));
 			}
-			if (errorCode != OK) {
-				Pair<Integer, String> result = new Pair<Integer, String>();
-
-				result.setKey(errorCode);
-				result.setValue(sb.toString());
-				return result;
-			}
 		}
-		return null;
+		Pair<Integer, String> result = new Pair<Integer, String>();
+
+		result.setKey(errorCode);
+		result.setValue(sb.toString());
+		return result;
 	}
 
 	private EdgeConfig convertNodeConfig(DomainConfig config) {
@@ -164,9 +186,9 @@ public class TopologyGraphConfigManger implements Initializable {
 		String realType = type;
 		if (type.startsWith("Cache.")) {
 			realType = "Cache";
-		} else if ("PigeonCall".equals(type) || "Call".equals(type)) {
+		} else if (m_pigeonCalls.contains(type)) {
 			realType = "PigeonCall";
-		} else if ("PigeonService".equals(type) || "Service".equals(type)) {
+		} else if (m_pigeonServices.contains(type)) {
 			realType = "PigeonService";
 		}
 		return realType;
@@ -190,15 +212,16 @@ public class TopologyGraphConfigManger implements Initializable {
 			m_config = new TopologyGraphConfig();
 		}
 	}
+
 	public boolean insertDomainDefaultConfig(String type, DomainConfig config) {
 		NodeConfig node = m_config.findOrCreateNodeConfig(type);
-		
+
 		node.setDefaultErrorResponseTime(config.getErrorResponseTime());
 		node.setDefaultErrorThreshold(config.getErrorThreshold());
 		node.setDefaultWarningResponseTime(config.getWarningResponseTime());
 		node.setDefaultWarningThreshold(config.getWarningThreshold());
-	   return flushConfig();
-   }
+		return flushConfig();
+	}
 
 	public boolean insertDomainConfig(String type, DomainConfig config) {
 		m_config.findOrCreateNodeConfig(type).addDomainConfig(config);
@@ -216,7 +239,7 @@ public class TopologyGraphConfigManger implements Initializable {
 
 		if (edgeConfig == null) {
 			DomainConfig domainConfig = null;
-			if ("PigeonCall".equalsIgnoreCase(type)) {
+			if ("PigeonClient".equalsIgnoreCase(type)) {
 				domainConfig = queryNodeConfig("PigeonService", to);
 			} else if ("PigeonServer".equalsIgnoreCase(type)) {
 				domainConfig = queryNodeConfig("PigeonService", from);
@@ -256,6 +279,5 @@ public class TopologyGraphConfigManger implements Initializable {
 	public void setFileName(String file) {
 		m_fileName = file;
 	}
-
 
 }

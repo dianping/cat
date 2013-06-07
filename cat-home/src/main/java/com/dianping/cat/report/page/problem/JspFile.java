@@ -2,21 +2,21 @@ package com.dianping.cat.report.page.problem;
 
 public enum JspFile {
 
-	ALL("/jsp/report/problemStatics.jsp"),
+	ALL("/jsp/report/problem/problemStatics.jsp"),
 
-	DETAIL("/jsp/report/problemDetail.jsp"),
+	DETAIL("/jsp/report/problem/problemDetail.jsp"),
 
-	GROUP("/jsp/report/problemGroup.jsp"),
+	GROUP("/jsp/report/problem/problemGroup.jsp"),
 	
-	HOUR_GRAPH("/jsp/report/problemHourlyGraphs.jsp"),
+	HOUR_GRAPH("/jsp/report/problem/problemHourlyGraphs.jsp"),
 
-	HISTORY("/jsp/report/problemHistoryReport.jsp"),
+	HISTORY("/jsp/report/problem/problemHistoryReport.jsp"),
 
-	HISTORY_GRAPH("/jsp/report/problemHistoryGraphs.jsp"),
+	HISTORY_GRAPH("/jsp/report/problem/problemHistoryGraphs.jsp"),
 
-	MOBILE("/jsp/report/problem_mobile.jsp"),
+	MOBILE("/jsp/report/problem/problem_mobile.jsp"),
 
-	THREAD("/jsp/report/problemThread.jsp");
+	THREAD("/jsp/report/problem/problemThread.jsp");
 
 	private String m_path;
 

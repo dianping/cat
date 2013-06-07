@@ -35,7 +35,10 @@ public class MatrixReportFilter extends DefaultXmlBuilder {
 
 			Matrix value = new Matrix(OTHERS);
 			for (int i = m_maxItems; i < size; i++) {
-				value.setCount(matrixList.get(i).getCount() + value.getCount());
+				Matrix item = matrixList.get(i);
+				
+				value.setType(item.getType());
+				value.setCount(item.getCount() + value.getCount());
 			}
 			matrixs.put(OTHERS, value);
 		}
