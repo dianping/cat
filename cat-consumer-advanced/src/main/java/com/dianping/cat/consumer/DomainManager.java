@@ -21,11 +21,11 @@ import org.unidal.webres.helper.Files;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
-import com.dainping.cat.consumer.core.dal.Hostinfo;
-import com.dainping.cat.consumer.core.dal.HostinfoDao;
-import com.dainping.cat.consumer.core.dal.HostinfoEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.core.dal.Hostinfo;
+import com.dianping.cat.consumer.core.dal.HostinfoDao;
+import com.dianping.cat.consumer.core.dal.HostinfoEntity;
 
 public class DomainManager implements Initializable, LogEnabled {
 
@@ -41,6 +41,8 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private Map<String, String> m_cmdbs = new ConcurrentHashMap<String, String>();
 
+	private Set<String> m_domainsInCat = new HashSet<String>();
+
 	private Logger m_logger;
 
 	private static final String UNKNOWN_IP = "UnknownIp";
@@ -48,6 +50,10 @@ public class DomainManager implements Initializable, LogEnabled {
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
+
+	public boolean containsDomainInCat(String domain) {
+		return m_domainsInCat.contains(domain);
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -62,6 +68,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 			if (project == null) {
 				m_unknownIps.put(ip, ip);
+				m_logger.info("add ip to unknown list,ip:" + ip);
 				return UNKNOWN_PROJECT;
 			}
 		}
@@ -73,10 +80,10 @@ public class DomainManager implements Initializable, LogEnabled {
 		if (!m_manager.isLocalMode()) {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
-
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
+					m_domainsInCat.add(info.getDomain());
 				}
 			} catch (DalException e) {
 				Cat.logError(e);
@@ -103,7 +110,7 @@ public class DomainManager implements Initializable, LogEnabled {
 		}
 
 		private void queryFromCMDB() {
-			Set<String> addIps = new HashSet<String>();
+			Set<String> addedIps = new HashSet<String>();
 			for (String ip : m_unknownIps.keySet()) {
 				try {
 					String cmdb = String.format(CMDB_URL, ip);
@@ -118,7 +125,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 						if (domain != null) {
 							m_cmdbs.put(ip, domain);
-							addIps.add(ip);
+							addedIps.add(ip);
 							m_logger.info(String.format("get domain info from cmdb. ip: %s,domain: %s", ip, domain));
 						} else {
 							m_logger.error(String.format("can't get domain info from cmdb, ip: %s", ip));
@@ -128,7 +135,7 @@ public class DomainManager implements Initializable, LogEnabled {
 					Cat.logError(e);
 				}
 
-				for (String temp : addIps) {
+				for (String temp : addedIps) {
 					m_unknownIps.remove(temp);
 				}
 			}
@@ -142,6 +149,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 					addIps.add(hostinfo.getIp());
 					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+					m_domainsInCat.add(hostinfo.getDomain());
 				} catch (Exception e) {
 					// ignore
 				}

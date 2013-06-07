@@ -9,9 +9,9 @@ import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.webres.helper.Files;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReport;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dianping.cat.consumer.advanced.dal.BusinessReport;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;

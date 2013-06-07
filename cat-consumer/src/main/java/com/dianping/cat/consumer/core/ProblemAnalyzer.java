@@ -13,13 +13,13 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
@@ -49,11 +49,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Inject
 	private List<ProblemHandler> m_handlers;
-	
+
 	@Inject
 	private ProblemReportAggregation m_problemReportAggregation;
-	
-	private static final String FRONT_END="FrontEnd";
+
+	private static final String FRONT_END = "FrontEnd";
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
@@ -180,9 +180,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				for (String domain : m_reports.keySet()) {
-					if(domain.equals(FRONT_END)){
+					if (domain.equals(FRONT_END)) {
 						m_reports.get(domain).accept(m_problemReportAggregation);
-						m_reports.put(domain,m_problemReportAggregation.getReport());
+						m_reports.put(domain, m_problemReportAggregation.getReport());
 					}
 				}
 				ProblemReport all = buildTotalProblemReport();

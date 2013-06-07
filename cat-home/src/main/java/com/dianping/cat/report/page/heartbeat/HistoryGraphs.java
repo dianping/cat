@@ -16,11 +16,12 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.BaseHistoryGraphs;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;
 
-public class HistoryGraphs {
+public class HistoryGraphs extends BaseHistoryGraphs{
 
 	public static final int K = 1024;
 
@@ -71,8 +72,8 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private ArrayList<HistoryGraphItem> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
-		ArrayList<HistoryGraphItem> diskInfo = new ArrayList<HistoryGraphItem>();
+	private ArrayList<LineChart> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
+		ArrayList<LineChart> diskInfo = new ArrayList<LineChart>();
 
 		Iterator<Entry<String, double[]>> iterator = graphData.entrySet().iterator();
 		while (iterator.hasNext()) {
@@ -84,18 +85,20 @@ public class HistoryGraphs {
 					data[i] = data[i] / (K * K * K);
 				}
 				String title = name + "[GB]";
-				HistoryGraphItem disk = getGraphItem(title, name, start, size, graphData);
+				LineChart disk = getGraphItem(title, name, start, size, graphData);
 				diskInfo.add(disk);
 			}
 		}
 		return diskInfo;
 	}
 
-	private HistoryGraphItem getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChart getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
+		LineChart item = new LineChart();
 		item.setStart(start);
 		item.setSize(size);
 		item.setTitles(title);
+		item.addSubTitle(title);
+		item.setStep(TimeUtil.ONE_MINUTE);
 		double[] activeThread = graphData.get(key);
 		item.addValue(activeThread);
 		return item;
@@ -104,7 +107,7 @@ public class HistoryGraphs {
 	public Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
 		Date start = new Date(payload.getDate());
 		Date end = payload.getHistoryEndDate();
-		String ip = model.getIpAddress();
+		String ip = payload.getIpAddress();
 		String domain = payload.getDomain();
 		List<Graph> graphs = new ArrayList<Graph>();
 
@@ -239,7 +242,7 @@ public class HistoryGraphs {
 			model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
 			      .getJsonString());
 		} else if (queryType.equalsIgnoreCase("disk")) {
-			List<HistoryGraphItem> diskInfo = getDiskInfo(graphData, start, size);
+			List<LineChart> diskInfo = getDiskInfo(graphData, start, size);
 		
 			model.setDisks(diskInfo.size());
 			model.setDiskHistoryGraph(new Gson().toJson(diskInfo));

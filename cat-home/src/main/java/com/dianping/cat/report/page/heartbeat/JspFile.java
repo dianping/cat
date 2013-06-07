@@ -5,8 +5,6 @@ public enum JspFile {
 	
 	PART_HISTORY("/jsp/report/heartbeatPartHistoryGraph.jsp"),
 
-	MOBILE("/jsp/report/heartbeat_mobile.jsp"),
-
 	VIEW("/jsp/report/heartbeat.jsp");
 
 	private String m_path;

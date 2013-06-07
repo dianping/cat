@@ -14,10 +14,10 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 
 public class ProblemReportAggregation extends BaseVisitor {
-	
+
 	@Inject
 	private AggregationManager m_aggregationManger;
-	
+
 	private ProblemReport m_report;
 
 	private Machine m_currentMachine;
@@ -56,7 +56,7 @@ public class ProblemReportAggregation extends BaseVisitor {
 	public void visitEntry(Entry entry) {
 		String type = entry.getType();
 		String status = entry.getStatus();
-		status = m_aggregationManger.handle(AggregationManager.PROBLEM_TYPE,m_domain,status);
+		status = m_aggregationManger.handle(AggregationManager.PROBLEM_TYPE, m_domain, status);
 		m_currentEntry = findOrCreatEntry(m_currentMachine, type, status);
 		super.visitEntry(entry);
 	}

@@ -18,6 +18,7 @@ public class AggregationMessageFormat {
 
 	/**
 	 * build message format by user's aggregation rule
+	 * 
 	 * @param pattern
 	 * @return
 	 */
@@ -29,7 +30,7 @@ public class AggregationMessageFormat {
 		while (matcher.find()) {
 			m_formatTokens.add(matcher.group(1).trim());
 			matcher.appendReplacement(output, "{" + index + "}");
-			if(index < 9){
+			if (index < 9) {
 				index++;
 			}
 		}
@@ -43,10 +44,11 @@ public class AggregationMessageFormat {
 
 	/**
 	 * message format is not thread safe, so return a clone
+	 * 
 	 * @return message format clone
 	 */
 	public MessageFormat getMessageFormat() {
-		return (MessageFormat)m_messageFormat.clone();
+		return (MessageFormat) m_messageFormat.clone();
 	}
 
 }

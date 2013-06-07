@@ -8,11 +8,11 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReport;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportEntity;
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.advanced.dal.BusinessReport;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;

@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.BussinessConfigManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.DomainManager</role>
 			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
@@ -8,7 +12,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
+					<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -17,9 +21,13 @@
 			<implementation>com.dianping.cat.consumer.sql.SqlParseManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.advanced.dal.SqltableDao</role>
+					<role>com.dianping.cat.consumer.advanced.dal.SqltableDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.advanced.DatabaseParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
@@ -31,7 +39,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -45,10 +53,13 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -62,10 +73,13 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -79,7 +93,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -93,10 +107,13 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.DomainManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -110,7 +127,10 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</role>
+					<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -178,8 +198,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</role>
-			<implementation>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</implementation>
+			<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
+			<implementation>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -187,8 +207,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.advanced.dal.SqltableDao</role>
-			<implementation>com.dainping.cat.consumer.advanced.dal.SqltableDao</implementation>
+			<role>com.dianping.cat.consumer.advanced.dal.SqltableDao</role>
+			<implementation>com.dianping.cat.consumer.advanced.dal.SqltableDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

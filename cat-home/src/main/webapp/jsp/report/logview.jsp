@@ -10,8 +10,6 @@
 <a:body>
 
 <res:useCss value="${res.css.local.logview_css}" target="head-css"/>
-
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 <res:useJs value="${res.js.local.logview_js}" target="head-js"/>
 
 <c:choose>

@@ -34,7 +34,7 @@ public class DefaultFormat extends Format {
 					return input;
 				}
 			}
-		} else if( item.equals("number")) {
+		} else if (item.equals("number")) {
 			char[] charArray = input.toCharArray();
 			for (Character ch : charArray) {
 				if (!Character.isDigit(ch)) {

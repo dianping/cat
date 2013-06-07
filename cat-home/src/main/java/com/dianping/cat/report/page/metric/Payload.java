@@ -12,7 +12,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("op")
+	@FieldMeta("group")
 	private String m_group;
 
 	@FieldMeta("channel")

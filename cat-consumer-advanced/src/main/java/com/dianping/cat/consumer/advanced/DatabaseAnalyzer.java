@@ -10,11 +10,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.database.model.entity.Domain;
 import com.dianping.cat.consumer.database.model.entity.Method;
@@ -40,6 +40,9 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 	@Inject
 	private SqlParseManager m_sqlParseManeger;
+	
+	@Inject
+	private DatabaseParser m_parser;
 
 	private Map<String, DatabaseReport> m_reports = new HashMap<String, DatabaseReport>();
 
@@ -64,7 +67,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
-			String database = DatabaseParseUtil.parseDatabaseName(connection);
+			String database = m_parser.parseDatabaseName(connection);
 
 			if (database == null) {
 				database = "Unknown";

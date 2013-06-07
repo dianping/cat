@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.advanced;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,12 +10,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReport;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.advanced.BussinessConfigManager.BusinessConfig;
+import com.dianping.cat.consumer.advanced.dal.BusinessReport;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
@@ -38,34 +38,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Inject
 	private BusinessReportDao m_businessReportDao;
 
+	@Inject
+	private BussinessConfigManager m_configManager;
+
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
-
-	private static final String TUANGOU = "TuanGou";
-
-	private static final String CHANNEL = "channel";
-
-	private static Map<String, Set<String>> s_urls = new HashMap<String, Set<String>>();
-
-	private static Map<String, Map<String, String>> s_metric = new HashMap<String, Map<String, String>>();
-
-	static {
-		Set<String> urls = new HashSet<String>();
-
-		urls.add("/index");
-		urls.add("/detail");
-		urls.add("/order/submitOrder");
-		s_urls.put(TUANGOU, urls);
-	}
-
-	static {
-		Map<String, String> tuangou = new HashMap<String, String>();
-
-		tuangou.put("order", "quantity");
-		tuangou.put("payment.pending", "amount");
-		tuangou.put("payment.success", "amount");
-		s_metric.put(TUANGOU, tuangou);
-	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -80,10 +57,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Override
 	public Set<String> getDomains() {
 		return m_reports.keySet();
-	}
-
-	public String getGroup(String domain) {
-		return "TuanGou";
 	}
 
 	public MetricReport getReport(String group) {
@@ -124,8 +97,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		String group = getGroup(domain);
-
+		String group = m_configManager.getGroup(domain);
 		MetricReport report = m_reports.get(group);
 
 		if (report == null) {
@@ -139,7 +111,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			processUrl(group, report, (Transaction) message);
+			processUrl(group, report, (Transaction) message, tree);
 		}
 		if (message instanceof Transaction) {
 			processTransaction(group, report, tree, (Transaction) message);
@@ -148,35 +120,45 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void processUrl(String group, MetricReport report, Transaction transaction) {
-		Set<String> urls = s_urls.get(group);
+	private void processUrl(String group, MetricReport report, Transaction transaction, MessageTree tree) {
 		String type = transaction.getType();
-		String name = transaction.getName();
 
-		if (type.equals(CatConstants.TYPE_URL) && urls.contains(name)) {
-			long current = transaction.getTimestamp() / 1000 / 60;
-			int min = (int) (current % (60));
+		if (CatConstants.TYPE_URL.equals(type)) {
+			String name = transaction.getName();
+			String domain = tree.getDomain();
+			Map<String, BusinessConfig> configs = m_configManager.getUrlConfigs(domain);
+			BusinessConfig config = null;
 
-			com.dianping.cat.consumer.metric.model.entity.Metric metric = report.findOrCreateMetric(name);
-			Point point = metric.findOrCreatePoint(min);
+			config = configs.get(name);
+			if (config != null) {
+				long current = transaction.getTimestamp() / 1000 / 60;
+				int min = (int) (current % (60));
 
-			point.setCount(point.getCount() + 1);
-			point.setSum(point.getSum() + transaction.getDurationInMillis());
-			point.setAvg(point.getSum() / point.getCount());
+				com.dianping.cat.consumer.metric.model.entity.Metric metric = report.findOrCreateMetric(name);
+				Point point = metric.findOrCreatePoint(min);
 
-			Object data = transaction.getData();
-			if (data != null) {
-				String channel = parseValue(CHANNEL, (String) data);
-				if (channel != null) {
-					updateChannel(min, metric, channel, transaction.getDurationInMillis());
+				point.setCount(point.getCount() + 1);
+				point.setSum(point.getSum() + transaction.getDurationInMillis());
+				point.setAvg(point.getSum() / point.getCount());
+
+				String childKey = config.getClassifications();
+				if (childKey != null && childKey.length() > 0) {
+					Object data = transaction.getData();
+					if (data != null) {
+						String channel = parseValue(childKey, (String) data);
+						if (channel != null) {
+							updateMetricChild(min, metric, childKey, channel, transaction.getDurationInMillis());
+						}
+					}
 				}
 			}
 		}
 	}
 
-	private void updateChannel(int min, com.dianping.cat.consumer.metric.model.entity.Metric metric, String channel,
-	      double value) {
-		com.dianping.cat.consumer.metric.model.entity.Metric detail = metric.findOrCreateMetric(CHANNEL + "=" + channel);
+	private void updateMetricChild(int min, com.dianping.cat.consumer.metric.model.entity.Metric metric,
+	      String childKey, String childValue, double value) {
+		com.dianping.cat.consumer.metric.model.entity.Metric detail = metric.findOrCreateMetric(childKey + "="
+		      + childValue);
 
 		Point channelPoint = detail.findOrCreatePoint(min);
 
@@ -187,12 +169,13 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
 		String name = metric.getName();
-		Map<String, String> metrics = s_metric.get(group);
-		String key = metrics.get(name);
+		String domain = tree.getDomain();
+		Map<String, BusinessConfig> configs = m_configManager.getMetricConfigs(domain);
+		BusinessConfig config = configs.get(name);
 
-		if (key != null) {
+		if (config != null) {
 			String data = (String) metric.getData();
-			String valueStr = parseValue(key, data);
+			String valueStr = parseValue(config.getTarget(), data);
 
 			if (valueStr != null) {
 				double value = Double.parseDouble(valueStr);
@@ -206,9 +189,14 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				point.setSum(point.getSum() + value);
 				point.setAvg(point.getSum() / point.getCount());
 
-				String channel = parseValue("channel", data);
-				if (channel != null) {
-					updateChannel(min, temp, channel, value);
+				String childKey = config.getClassifications();
+				if (childKey != null && childKey.length() > 0) {
+					if (data != null) {
+						String childValue = parseValue(childKey, data);
+						if (childValue != null) {
+							updateMetricChild(min, temp, childKey, childValue, value);
+						}
+					}
 				}
 			}
 		}
@@ -315,12 +303,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 						r.setPeriod(period);
 						r.setIp(ip);
 						r.setType(binary);
-						// r.setBinaryContent(DefaultNativeBuilder.build(report));
 						r.setContent(DefaultNativeBuilder.build(report));
 						r.setCreationDate(new Date());
 
 						m_businessReportDao.insert(r);
 					} catch (Throwable e) {
+						m_logger.error(report.toString());
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}

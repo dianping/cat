@@ -83,6 +83,20 @@ public class TypeDetailInfo {
 			m_tps = m_totalCount / (double) m_seconds;
 		}
 	}
+	
+	public void mergeTypeDetailInfo(TypeDetailInfo type){
+		m_totalCount += type.getTotalCount();
+		m_failureCount += type.getFailureCount();
+		m_sum += type.getSum();
+
+		if (m_totalCount > 0) {
+			m_avg = m_sum / (double) m_totalCount;
+			m_failurePercent = (double) m_failureCount / (double) m_totalCount;
+		}
+		if (m_seconds > 0) {
+			m_tps = m_totalCount / (double) m_seconds;
+		}
+	}
 
 	public void setAvg(double avg) {
 		m_avg = avg;

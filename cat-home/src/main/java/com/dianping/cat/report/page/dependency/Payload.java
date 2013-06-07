@@ -10,6 +10,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("minute")
 	private String minute;
 	
+	@FieldMeta("all")
+	private boolean all;
+	
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -52,4 +55,13 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.VIEW;
 		}
 	}
+
+	public boolean isAll() {
+   	return all;
+   }
+
+	public void setAll(boolean all) {
+   	this.all = all;
+   }
+	
 }

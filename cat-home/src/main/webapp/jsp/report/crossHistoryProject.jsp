@@ -9,11 +9,8 @@
 
 <a:historyReport title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
-
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-
-<res:useCss value="${res.css.local.cross_css}" target="head-css" />
 <%@ include file="crossQuery.jsp" %>
 </br>
 <table class="machines">
@@ -43,7 +40,7 @@
 	</tr>
 </table>
 <br>
-<table class='cross'>
+<table class='data'>
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
 		<tr>
 			<th class="left">Type(本项目调用其他Pigeon服务)</th>

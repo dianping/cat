@@ -8,45 +8,37 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
 <a:body>
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useCss value='${res.css.local.report_css}' target="head-css" />
+
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
-<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
-<res:useJs value="${res.js.local['metric.js']}" target="head-js"/>
-<style type="text/css">
-.graph {
-	width: 380px;
-	height: 200px;
-	margin: 4px auto;
-}
-.row-fluid .span2{
-	width:12%;
-}
-</style>
+<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.display.groups}" varStatus="status">
 			var data = ${item.jsonString};
-			graph(document.getElementById('${item.title}'), data);
+			graphLineChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
-		var id = "${model.channel}";
+/* 		var id = "${model.channel}";
 		if (id == '') {
 			$('#allChannel').addClass("active");
 		} else {
 			$('#' + id).addClass("active");
-		}
+		} */
+		var group = '${model.group}';
+		$('#' + group).addClass("active");
+		var childKey = '${model.channel}';
+		$('#' + childKey).addClass("active");
 	});
 </script>
 <div class="report">
 	<table class="header">
 		<tr>
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-		<td class="nav">
+			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&group=${model.group}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
@@ -58,11 +50,16 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li id="allChannel"><a href="?date=${model.date}&group=${model.group}"><strong>团购ALL</strong></a></li>
+	            <c:forEach var="item" items="${model.groups}" varStatus="status">
+	              <li class='nav-header' id="${item}"><a href="?date=${model.date}&group=${item}"><strong>${item}</strong></a></li>
+	              <c:if test="${model.group eq item }">
+		               <c:forEach var="item" items="${model.childKeyValues}" varStatus="status">
+			              <li id="${item}"><a href="?date=${model.date}&group=${model.group}&${model.childKey}=${item}">${item}</a></li>
+		       		  </c:forEach>
+	              </c:if>
+	            </c:forEach>
               <li >&nbsp;</li>
-              <c:forEach var="item" items="${model.channels}" varStatus="status">
-	              <li id="${item}"><a href="?date=${model.date}&group=${model.group}&channel=${item}">${item}</a></li>
-       		  </c:forEach>
+             
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
@@ -78,3 +75,26 @@
 	</table>
 </div>
 </a:body>
+<style type="text/css">
+.graph {
+	width: 380px;
+	height: 250px;
+	margin: 4px auto;
+}
+.row-fluid .span2{
+	width:12%;
+}
+.well {
+padding: 10px 10px 10px 19p;
+}
+.nav-list  li  a{
+	padding:2px 15px;
+}
+
+.nav li  +.nav-header{
+	margin-top:2px;
+}
+.nav-header{
+	padding:5px 3px;
+}
+</style>

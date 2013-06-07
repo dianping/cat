@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dainping.cat.consumer.core.dal.AggregationRule;
+import com.dianping.cat.consumer.core.dal.AggregationRule;
 
 public class DefaultAggregationHandler implements AggregationHandler {
 
@@ -47,6 +47,7 @@ public class DefaultAggregationHandler implements AggregationHandler {
 
 	/**
 	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
+	 * 
 	 * @param tree
 	 * @param prefix
 	 * @param suffix
@@ -82,7 +83,7 @@ public class DefaultAggregationHandler implements AggregationHandler {
 				eCurrent = node;
 			}
 		}
-		//choose prefix or suffix as trieTree index based on size of tree leaf
+		// choose prefix or suffix as trieTree index based on size of tree leaf
 		if (sIndex > eIndex) {
 			isPrefix = true;
 		} else if (sIndex < eIndex) {
@@ -98,6 +99,9 @@ public class DefaultAggregationHandler implements AggregationHandler {
 	}
 
 	private TrieTreeNode getFormatTree(int type, String domain) {
+		if (m_formatMap == null) {
+			return null;
+		}
 		Map<String, TrieTreeNode> domainToFormatMap = m_formatMap.get(type);
 		if (domainToFormatMap == null) {
 			return null;
@@ -107,14 +111,15 @@ public class DefaultAggregationHandler implements AggregationHandler {
 
 	/**
 	 * parse input to output based on format tree
+	 * 
 	 * @param formatTree
 	 * @param input
-	 * @return 
+	 * @return
 	 */
 	private String parse(TrieTreeNode formatTree, String input) {
 		char[] cs = input.toCharArray();
-		List<Map<String,AggregationMessageFormat>> sformatSet = new ArrayList<Map<String,AggregationMessageFormat>>();
-		List<Map<String,AggregationMessageFormat>> eformatSet = new ArrayList<Map<String,AggregationMessageFormat>>();
+		List<Map<String, AggregationMessageFormat>> sformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();
+		List<Map<String, AggregationMessageFormat>> eformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();
 
 		TrieTreeNode current = formatTree;
 		int i = 0;
@@ -140,9 +145,9 @@ public class DefaultAggregationHandler implements AggregationHandler {
 			current = node;
 		}
 
-		for (Map<String,AggregationMessageFormat> amfMap : sformatSet) {
-			for(String key:amfMap.keySet()) {
-				if(!input.endsWith(key)) {
+		for (Map<String, AggregationMessageFormat> amfMap : sformatSet) {
+			for (String key : amfMap.keySet()) {
+				if (!input.endsWith(key)) {
 					continue;
 				}
 				AggregationMessageFormat amf = amfMap.get(key);
@@ -156,9 +161,9 @@ public class DefaultAggregationHandler implements AggregationHandler {
 				return output;
 			}
 		}
-		for (Map<String,AggregationMessageFormat> amfMap : eformatSet) {
-			for(String key:amfMap.keySet()) {
-				if(!input.startsWith(key)) {
+		for (Map<String, AggregationMessageFormat> amfMap : eformatSet) {
+			for (String key : amfMap.keySet()) {
+				if (!input.startsWith(key)) {
 					continue;
 				}
 				AggregationMessageFormat amf = amfMap.get(key);

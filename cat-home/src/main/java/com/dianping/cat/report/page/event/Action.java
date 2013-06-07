@@ -7,11 +7,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HISTORY_REPORT("history"),
 
-	HOURLY_REPORT("view"),
-
-	MOBILE("mobile"),
-
-	MOBILE_GRAPHS("mobile_graphs");
+	HOURLY_REPORT("view");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {

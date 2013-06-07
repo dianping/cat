@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta("dependecy")
 public class Model extends AbstractReportModel<Action, Context> {
-
+	@EntityMeta
 	private DependencyReport m_report;
 
 	private Segment m_segment;
@@ -22,15 +26,39 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<Integer> m_minutes;
 
+	private int m_maxMinute;
+
 	private Map<String, List<Event>> m_events;
+
+	private String m_topologyGraph;
+
+	private List<String> m_indexGraph;
+
+	private Map<String, List<String>> m_dependencyGraph;
+
+	public List<String> getIndexGraph() {
+		return m_indexGraph;
+	}
+
+	public void setIndexGraph(List<String> indexGraph) {
+		m_indexGraph = indexGraph;
+	}
+
+	public Map<String, List<String>> getDependencyGraph() {
+		return m_dependencyGraph;
+	}
+
+	public void setDependencyGraph(Map<String, List<String>> dependencyGraph) {
+		m_dependencyGraph = dependencyGraph;
+	}
 
 	public Map<String, List<Event>> getEvents() {
 		return m_events;
 	}
 
 	public void setEvents(Map<String, List<Event>> events) {
-   	m_events = events;
-   }
+		m_events = events;
+	}
 
 	public List<Integer> getMinutes() {
 		return m_minutes;
@@ -52,6 +80,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
+	}
+
+	public int getMaxMinute() {
+		return m_maxMinute;
+	}
+
+	public void setMaxMinute(int maxMinute) {
+		m_maxMinute = maxMinute;
 	}
 
 	@Override
@@ -91,5 +127,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setMinute(int minute) {
 		m_minute = minute;
 	}
+
+	public String getTopologyGraph() {
+   	return m_topologyGraph;
+   }
+
+	public void setTopologyGraph(String topologyGraph) {
+   	m_topologyGraph = topologyGraph;
+   }
 
 }

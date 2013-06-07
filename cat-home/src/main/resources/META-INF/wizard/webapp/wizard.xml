@@ -47,9 +47,6 @@
          <page name="state" title="State" path="state">
             <description>State</description>
          </page>
-         <page name="query" title="Query" path="query">
-            <description>Query</description>
-         </page>
          <page name="top" title="Top" path="top">
             <description>Top</description>
          </page>
@@ -73,11 +70,8 @@
          <page name="login" title="Login" default="true" path="login" standalone="false">
             <description>Login</description>
          </page>
-         <page name="project" title="Project" path="project">
-            <description>Project</description>
-         </page>
-         <page name="aggregation" title="Aggregation" path="aggregation" template="default">
-            <description>Aggregation</description>
+         <page name="config" title="Config" path="config">
+            <description>Config</description>
          </page>
       </module>
    </webapp>

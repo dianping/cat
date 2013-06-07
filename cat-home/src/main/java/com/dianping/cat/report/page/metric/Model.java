@@ -19,6 +19,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Set<String> m_channels;
 
+	private Set<String> m_groups;
+
+	private Set<String> m_childKeyValues;
+	
+	private String m_childKey;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -77,5 +83,29 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(MetricReport report) {
 		m_report = report;
 	}
+
+	public void setGroups(Set<String> groups) {
+		m_groups =groups;
+   }
+
+	public Set<String> getGroups() {
+   	return m_groups;
+   }
+
+	public void setChildKeyValues(Set<String> childKeys) {
+		m_childKeyValues = childKeys;
+   }
+
+	public Set<String> getChildKeyValues() {
+   	return m_childKeyValues;
+   }
+
+	public String getChildKey() {
+   	return m_childKey;
+   }
+
+	public void setChildKey(String childKey) {
+   	m_childKey = childKey;
+   }
 
 }

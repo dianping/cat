@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.problem;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -57,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-	
+
 	@Inject
 	private ProblemReportAggregation m_problemReportAggregation;
 
@@ -69,19 +68,19 @@ public class Handler implements PageHandler<Context> {
 		cal.setTimeInMillis(date);
 		return cal.get(Calendar.HOUR_OF_DAY);
 	}
-	
+
 	private ProblemReport getHourlyReport(Payload payload, String type) {
-		ProblemReport report =getHourlyReportInternal(payload, type);	
-		if(payload.getDomain().equals("FrontEnd")){
-			if(payload.getPeriod()==ModelPeriod.CURRENT||payload.getPeriod()== ModelPeriod.LAST){
+		ProblemReport report = getHourlyReportInternal(payload, type);
+		if (payload.getDomain().equals("FrontEnd")) {
+			if (payload.getPeriod() == ModelPeriod.CURRENT || payload.getPeriod() == ModelPeriod.LAST) {
 				report = buildFrontEndByRule(report);
 			}
 		}
-		
+
 		return report;
 	}
-	
-	private ProblemReport buildFrontEndByRule(ProblemReport report){	
+
+	private ProblemReport buildFrontEndByRule(ProblemReport report) {
 		report.accept(m_problemReportAggregation);
 		return m_problemReportAggregation.getReport();
 	}
@@ -194,33 +193,12 @@ public class Handler implements PageHandler<Context> {
 		case DETAIL:
 			showDetail(model, payload);
 			break;
-		case MOBILE:
-			if (ip.equals(CatString.ALL)) {
-				report = getHourlyReport(payload, VIEW);
-
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
-				      .setServiceThreshold(serviceThreshold);
-				problemStatistics.visitProblemReport(report);
-				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
-				String response = m_gson.toJson(problemStatistics);
-				model.setMobileResponse(response);
-			} else {
-				report = showHourlyReport(model, payload);
-
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
-				      .setServiceThreshold(serviceThreshold);
-				problemStatistics.visitProblemReport(report);
-				ProblemStatistics statistics = model.getAllStatistics();
-				statistics.setIps(new ArrayList<String>(report.getIps()));
-				model.setMobileResponse(m_gson.toJson(statistics));
-			}
-			break;
 		case HOUR_GRAPH:
 			report = getHourlyReport(payload, DETAIL);
 			String type = payload.getType();
 			String state = payload.getStatus();
 			Date start = report.getStartTime();
-			ProblemReportVisitor vistor = new ProblemReportVisitor(ip, type, state, start);
+			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
 
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));

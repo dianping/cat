@@ -12,12 +12,12 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -27,7 +27,6 @@ import com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -43,6 +42,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject
 	private DomainManager m_domainManager;
+
+	@Inject
+	private DatabaseParser m_parser;
 
 	private Map<String, DependencyReport> m_reports = new HashMap<String, DependencyReport>();
 
@@ -70,6 +72,13 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public DependencyReport getReport(String domain) {
+		DependencyReport report = findOrCreateReport(domain);
+
+		report.getDomainNames().addAll(m_reports.keySet());
+		return report;
+	}
+
+	private DependencyReport findOrCreateReport(String domain) {
 		DependencyReport report = m_reports.get(domain);
 
 		if (report == null) {
@@ -77,25 +86,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-		}
 
-		report.getDomainNames().addAll(m_reports.keySet());
+			m_reports.put(domain, report);
+		}
 		return report;
-	}
-
-	public boolean isIp(String ip) {
-		boolean result = false;
-		try {
-			char first = ip.charAt(0);
-			char next = ip.charAt(1);
-			if (first >= '0' && first <= '9') {
-				if (next >= '0' && next <= '9') {
-					return true;
-				}
-			}
-		} catch (Exception e) {
-		}
-		return result;
 	}
 
 	@Override
@@ -128,7 +122,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				String type = message.getType();
 
 				if (type.equals("SQL.Database")) {
-					return DatabaseParseUtil.parseDatabaseName(message.getName());
+					return m_parser.parseDatabaseName(message.getName());
 				}
 			}
 		}
@@ -141,9 +135,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonCall.server")) {
-					String name =message.getName();
+					String name = message.getName();
 					int index = name.indexOf(":");
-					
+
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
@@ -154,50 +148,31 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return UNKNOWN;
 	}
 
-	private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
-		String clientIp = UNKNOWN;
-		List<Message> messages = t.getChildren();
-
-		for (Message message : messages) {
-			if (message instanceof Event) {
-				if (message.getType().equals("PigeonService.client")) {
-					String name = message.getName();
-					int index = name.indexOf(":");
-
-					if (index > 0) {
-						name = name.substring(0, index);
-					}
-					if (isIp(name)) {
-						clientIp = name;
-					}
-					break;
-				}
-			}
-		}
-
-		if (clientIp.equals(UNKNOWN)) {
-			MessageId id = MessageId.parse(tree.getMessageId());
-			String remoteIp = id.getIpAddress();
-
-			clientIp = remoteIp;
-		}
-
-		return clientIp;
-	}
+	// private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
+	// List<Message> messages = t.getChildren();
+	//
+	// for (Message message : messages) {
+	// if (message instanceof Event) {
+	// if (message.getType().equals("PigeonService.client")) {
+	// String name = message.getName();
+	// int index = name.indexOf(":");
+	//
+	// if (index > 0) {
+	// name = name.substring(0, index);
+	// }
+	// return name;
+	// }
+	// }
+	// }
+	// MessageId id = MessageId.parse(tree.getMessageId());
+	//
+	// return id.getIpAddress();
+	// }
 
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		DependencyReport report = m_reports.get(domain);
-
-		if (report == null) {
-			report = new DependencyReport(domain);
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
-			m_reports.put(domain, report);
-		}
-
+		DependencyReport report = findOrCreateReport(domain);
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -214,8 +189,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			long current = event.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			Segment segment = report.findOrCreateSegment(min);
+			Index index = segment.findOrCreateIndex("Exception");
 
-			segment.incExceptionCount();
+			index.incTotalCount();
+			index.incErrorCount();
 		}
 	}
 
@@ -224,17 +201,24 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String ip = parseIpFromPigeonClientTransaction(t, tree);
-			String domain = m_domainManager.getDomainByIp(ip);
+			String target = m_domainManager.getDomainByIp(ip);
 			String callType = "PigeonClient";
 
-			updateDependencyInfo(report, t, domain, callType);
-		} else if ("PigeonService".equals(type) || "Service".equals(type)) {
-			String ip = parseIpFromPigeonServerTransaction(t, tree);
-			String domain = m_domainManager.getDomainByIp(ip);
+			updateDependencyInfo(report, t, target, callType);
 
-			String callType = "PigeonServer";
-			updateDependencyInfo(report, t, domain, callType);
+			if (m_domainManager.containsDomainInCat(target)) {
+				DependencyReport serverReport = findOrCreateReport(target);
+
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
+			}
 		}
+		// else if ("PigeonService".equals(type) || "Service".equals(type)) {
+		// String ip = parseIpFromPigeonServerTransaction(t, tree);
+		// String domain = m_domainManager.getDomainByIp(ip);
+		//
+		// String callType = "PigeonServer";
+		// updateDependencyInfo(report, t, domain, callType);
+		// }
 	}
 
 	private void processSqlTransaction(DependencyReport report, Transaction t) {
@@ -271,7 +255,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private void processTransactionType(DependencyReport report, Transaction t) {
 		String type = t.getType();
 
-		if (m_types.contains(type) || type.startsWith("Cache.")) {
+		if (m_types.contains(type) || isCache(type)) {
 			long current = t.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			Segment segment = report.findOrCreateSegment(min);
@@ -284,6 +268,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			index.setSum(index.getSum() + t.getDurationInMillis());
 			index.setAvg(index.getSum() / index.getTotalCount());
 		}
+	}
+
+	private boolean isCache(String type) {
+		return (!type.equals("Cache.Web")) && type.startsWith("Cache.");
 	}
 
 	private void storeReports(boolean atEnd) {

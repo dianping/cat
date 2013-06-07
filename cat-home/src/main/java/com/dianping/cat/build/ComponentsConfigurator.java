@@ -10,15 +10,14 @@ import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dainping.cat.consumer.core.dal.ProjectDao;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
-
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -33,8 +32,13 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
@@ -200,8 +204,17 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
+		
+		all.add(C(TopologyGraphConfigManger.class));
+		
+		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManger.class));
+		
+		all.add(C(TopologyGraphBuilder.class).req(TopologyGraphItemBuilder.class));
+		
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
+
+		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class).req(ModelService.class, "dependency"));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //

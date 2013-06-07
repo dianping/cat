@@ -406,7 +406,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void run() {
 			try {
-				while (true) { 
+				while (true) {
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
@@ -441,7 +441,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket.initialize(dataFile);
 					synchronized (m_buckets) {
 						m_buckets.put(dataFile, bucket);
-               }
+					}
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
@@ -579,7 +579,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			while (active) {
 				try {
-					moveOldMessages();
+					long current = System.currentTimeMillis() / 1000 / 60;
+					int min = (int) (current % (60));
+					
+					// make system is 0-10 min is not busy
+					if (min > 10) {
+						moveOldMessages();
+					}
 				} catch (Throwable e) {
 					m_logger.error(e.getMessage(), e);
 				}

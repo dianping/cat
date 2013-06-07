@@ -4,37 +4,36 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.aggregation.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.aggregation.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.aggregation.Model" scope="request"/>
-
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <a:body>
-
-	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
-	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useCss value='${res.css.local.table_css}' target="head-css" />
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		init();
-	});
-</script>
-	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#aggregationList').addClass('active');
+			$(".delete").bind("click", function() {
+				return confirm("确定要删除此项目吗(不可恢复)？");
+			});
+		});
+	</script>
 	<div>
+		<div class="row-fluid">
+        <div class="span2">
+		<%@include file="./configTree.jsp"%>
+		</div>
+		<div class="span10">
+			<div>
 			</br>
-			<table class="project" id="contents" width="100%">
+			<table class="table table-striped table-bordered table-condensed" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
-					<td width="15%">报表类型</td>
-					<td width="10%">域名</td>
-					<td width="10%">规则</td>
-					<td width="15%">显示名称</td>
-					<td width="8%">示例</td>
-					<td width="5%">操作&nbsp;&nbsp;  <a href="?op=update" target="_blank">新增</a></td>
+					<th width="15%">报表类型</th>
+					<th width="10%">域名</th>
+					<th width="10%">规则</th>
+					<th width="15%">显示名称</th>
+					<th width="8%">示例</th>
+					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=aggregationUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.aggregationRules}"
@@ -55,12 +54,12 @@
 						<td>${item.pattern}</td>
 						<td>${item.displayName}</td>
 						<td>${item.sample}</td>
-						<td><a href="?op=update&id=${item.id}">编辑</a>
-						<a href="?op=delete&id=${item.id}">删除</a></td>
+						<td><a class='btn  btn-small btn-primary'href="?op=aggregationUpdate&id=${item.id}">编辑</a>
+						<a class='delete btn  btn-small btn-danger' href="?op=aggregationDelete&id=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>
 			</table>
 		</div>
-		
+		</div></div></div>
 </a:body>

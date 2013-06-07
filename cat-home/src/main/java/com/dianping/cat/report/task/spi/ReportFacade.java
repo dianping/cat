@@ -10,8 +10,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Task;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
@@ -88,19 +88,24 @@ public class ReportFacade implements LogEnabled, Initializable {
 				m_logger.info("no report builder for type:" + " " + reportName);
 				return false;
 			} else {
+				boolean result = false;
+				
 				if (type == TYPE_DAILY) {
-					return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_HOUR) {
-					return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_WEEK) {
-					return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_MONTH) {
-					return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+				}
+				if (result) {
+					return result;
+				} else {
+					m_logger.error(task.toString());
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Flowing is error stack trace:");
-			e.printStackTrace();
 			m_logger.error("Error when building report," + e.getMessage(), e);
 			Cat.logError(e);
 			return false;

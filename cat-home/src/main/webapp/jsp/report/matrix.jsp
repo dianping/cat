@@ -10,9 +10,8 @@
 <a:report title="Matrix Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
-	<res:useCss value="${res.css.local.matrix_css}" target="head-css" />
 <br>
-<table class="matrix">
+<table class='data'>
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entities do-package="com.dainping.cat.consumer.advanced.dal" gen="true">
+<entities do-package="com.dianping.cat.consumer.advanced.dal" gen="true">
 	<entity name="sqltable">
 		<member name="creation-date" insert-expr="NOW()" />
 		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />

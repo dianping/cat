@@ -12,11 +12,11 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.AggregationRule;
-import com.dainping.cat.consumer.core.dal.AggregationRuleDao;
-import com.dainping.cat.consumer.core.dal.AggregationRuleEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.core.dal.AggregationRule;
+import com.dianping.cat.consumer.core.dal.AggregationRuleDao;
+import com.dianping.cat.consumer.core.dal.AggregationRuleEntity;
 
 public class AggregationManager implements Initializable {
 
@@ -25,20 +25,20 @@ public class AggregationManager implements Initializable {
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
-	
+
 	@Inject
 	protected AggregationHandler m_handler;
 
 	private static Map<Integer, Map<String, List<AggregationRule>>> m_ruleMap = new HashMap<Integer, Map<String, List<AggregationRule>>>();
 
-	public static final int ONE_MINUTE = 60 * 1000;
+	public static final int ONE_SECOND = 1000;
 
 	public static final int TRANSACTION_TYPE = 1;
 
 	public static final int EVENT_TYPE = 2;
 
 	public static final int PROBLEM_TYPE = 3;
-	
+
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_serverConfigManager.isLocalMode()) {
@@ -93,8 +93,9 @@ public class AggregationManager implements Initializable {
 
 	/**
 	 * Thread to reload aggregation rule from database
+	 * 
 	 * @author renyuan.sun
-	 *
+	 * 
 	 */
 	public class RuleReload implements Task {
 
@@ -114,7 +115,7 @@ public class AggregationManager implements Initializable {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(3 * ONE_MINUTE);
+					Thread.sleep(30*ONE_SECOND);
 				} catch (InterruptedException e) {
 					active = false;
 				}
@@ -127,8 +128,7 @@ public class AggregationManager implements Initializable {
 	}
 
 	public String handle(int type, String domain, String status) {
-	   return m_handler.handle(type, domain, status);
-   }
+		return m_handler.handle(type, domain, status);
+	}
 
-	
 }

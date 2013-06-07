@@ -8,11 +8,12 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.core.dal.AggregationRuleDao;
-import com.dainping.cat.consumer.core.dal.HostinfoDao;
-import com.dainping.cat.consumer.core.dal.ProjectDao;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dianping.cat.consumer.core.dal.AggregationRuleDao;
+import com.dianping.cat.consumer.core.dal.HostinfoDao;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.TaskDao;
+
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DefaultMessageAnalyzerManager;
