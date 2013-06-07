@@ -250,37 +250,39 @@ CREATE TABLE `abtest` (
   `name` varchar(45) NOT NULL COMMENT '名字',
   `owner` varchar(45) NOT NULL COMMENT 'case的Owner',
   `group_strategy` int(11) DEFAULT NULL COMMENT '分组策略ID',
-  `domains` varchar(200) DEFAULT NULL COMMENT 'Domains，分号分割',
+  `domains` varchar(200) DEFAULT NULL COMMENT 'Domains，逗号分割',
   `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
   `modified_date` datetime DEFAULT NULL COMMENT '上次修改时间',
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `abtest_run` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `creator` varchar(45) DEFAULT NULL,
-  `case_id` int(11) NOT NULL,
+  `creator` varchar(45) DEFAULT NULL COMMENT 'Creator',
+  `case_id` int(11) NOT NULL COMMENT 'Case ID',
   `start_date` datetime DEFAULT NULL COMMENT '开始时间',
   `end_date` datetime DEFAULT NULL COMMENT '结束时间',
   `disabled` tinyint(4) NOT NULL COMMENT '是否有效',
-  `domains` varchar(100) NOT NULL COMMENT '属于的domain，用分号分割',
-  `strategy_configuration` varchar(1024) DEFAULT NULL COMMENT '策略配置',
+  `domains` varchar(100) NOT NULL COMMENT '属于的domain，用逗号分割',
+  `strategy_configuration` text COMMENT '策略配置',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   `modified_date` datetime NOT NULL COMMENT '上次修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `group_strategy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL COMMENT 'GroupStrategy的名字',
-  `alias` varchar(45) NOT NULL COMMENT 'GroupStrategy的英文名',
-  `classname` varchar(45) NOT NULL COMMENT 'GroupStrategy的class名字',
-  `configuration` varchar(512) DEFAULT NULL COMMENT '配置的schema',
-  `status` tinyint(4) NOT NULL COMMENT '是否开/关',
-  `description` varchar(45) DEFAULT NULL COMMENT '描述',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `name` varchar(100) NOT NULL COMMENT 'GroupStrategy的名字',
+  `alias` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
+  `classname` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
+  `configuration` text COMMENT '配置的schema',
+  `status` tinyint(4) NOT NULL COMMENT '是否开/关，1是开，0是关',
+  `description` varchar(512) DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 

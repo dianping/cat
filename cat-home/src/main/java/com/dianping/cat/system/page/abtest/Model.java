@@ -41,7 +41,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private AbtestDaoModel m_abtest;
 
 	private String m_abtestModel;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -156,12 +156,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getAbtestModel() {
-   	return m_abtestModel;
-   }
+		return m_abtestModel;
+	}
 
 	public void setAbtestModel(String abtestModel) {
-   	m_abtestModel = abtestModel;
-   }
+		m_abtestModel = abtestModel;
+	}
 
 	public static class AbtestDaoModel {
 
@@ -192,45 +192,44 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 
 		public String getDescription() {
-	      return m_abtest.getDescription();
-      }
+			return m_abtest.getDescription();
+		}
 
 		public int getGroupStrategy() {
-	      return m_abtest.getGroupStrategy();
-      }
+			return m_abtest.getGroupStrategy();
+		}
 
 		public String getName() {
-	      return m_abtest.getName();
-      }
+			return m_abtest.getName();
+		}
 
 		public String getOwner() {
-	      return m_abtest.getOwner();
-      }
+			return m_abtest.getOwner();
+		}
 
 		public int getCaseId() {
-	      return m_run.getCaseId();
-      }
+			return m_run.getCaseId();
+		}
 
 		public String getDomains() {
-	      return m_run.getDomains();
-      }
+			return m_run.getDomains();
+		}
 
 		public Date getEndDate() {
-	      return m_run.getEndDate();
-      }
+			return m_run.getEndDate();
+		}
 
 		public int getId() {
-	      return m_run.getId();
-      }
+			return m_run.getId();
+		}
 
 		public Date getStartDate() {
-	      return m_run.getStartDate();
-      }
+			return m_run.getStartDate();
+		}
 
 		public String getStrategyConfiguration() {
-	      return m_run.getStrategyConfiguration();
-      }
-		
-		
+			return m_run.getStrategyConfiguration();
+		}
+
 	}
 }

@@ -1,27 +1,27 @@
 package com.dianping.cat.abtest.internal;
 
 import com.dianping.cat.abtest.ABTest;
-import com.dianping.cat.abtest.ABTestId;
+import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 
 public class DefaultABTest implements ABTest {
 	private ABTestContextManager m_contextManager;
 
-	private ABTestId m_id;
+	private ABTestName m_name;
 
-	public DefaultABTest(ABTestId id, ABTestContextManager contextManager) {
+	public DefaultABTest(ABTestName name, ABTestContextManager contextManager) {
 		m_contextManager = contextManager;
-		m_id = id;
+		m_name = name;
 	}
 
 	@Override
-	public ABTestId getTestId() {
-		return m_id;
+	public ABTestName getTestName() {
+		return m_name;
 	}
 
 	private String getGroupName() {
-		ABTestContext ctx = m_contextManager.getContext(m_id);
+		ABTestContext ctx = m_contextManager.getContext(m_name);
 
 		return ctx.getGroupName();
 	}

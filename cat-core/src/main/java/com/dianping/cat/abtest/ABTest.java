@@ -1,7 +1,7 @@
 package com.dianping.cat.abtest;
 
 public interface ABTest {
-	public ABTestId getTestId();
+	public ABTestName getTestName();
 
 	public boolean isDefaultGroup();
 

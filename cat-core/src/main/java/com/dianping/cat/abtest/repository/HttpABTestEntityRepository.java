@@ -32,15 +32,18 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	@Inject
 	private ClientConfigManager m_configManager;
+	
+	@Inject
+	private int m_refreshTimeInSeconds = 60;  //seconds
 
-	private String m_domain;
-
-	private Map<Integer, ABTestEntity> m_entities = new HashMap<Integer, ABTestEntity>();
+	private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
 
 	private Map<String, ABTestGroupStrategy> m_strategies = new HashMap<String, ABTestGroupStrategy>();
 
+	private String m_domain;
+	
 	@Override
-	public Map<Integer, ABTestEntity> getEntities() {
+	public Map<String, ABTestEntity> getEntities() {
 		return m_entities;
 	}
 
@@ -54,6 +57,10 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		m_domain = m_configManager.getFirstDomain().getId();
 
 	}
+	
+	public void setRefreshTimeInSeconds(int refreshTimeInSeconds) {
+   	m_refreshTimeInSeconds = refreshTimeInSeconds;
+   }
 
 	private void refresh() {
 		String clientIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -103,7 +110,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				Cat.logError(e);
 			}
 
-			LockSupport.parkUntil(start + 6 * 1000L); // every minute
+			LockSupport.parkUntil(start + m_refreshTimeInSeconds * 1000L); // every minute
 		}
 	}
 
@@ -114,14 +121,14 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	class ABTestVisitor extends BaseVisitor {
 		private String m_domain;
 
-		private Map<Integer, ABTestEntity> m_entities;
+		private Map<String, ABTestEntity> m_entities;
 
 		public ABTestVisitor(String domain) {
 			m_domain = domain;
-			m_entities = new HashMap<Integer, ABTestEntity>();
+			m_entities = new HashMap<String, ABTestEntity>();
 		}
 
-		public Map<Integer, ABTestEntity> getEntities() {
+		public Map<String, ABTestEntity> getEntities() {
 			return m_entities;
 		}
 
@@ -158,7 +165,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 						}
 					}
 
-					m_entities.put(entity.getId(), entity);
+					m_entities.put(entity.getName(), entity);
 				}
 			}
 		}

@@ -23,7 +23,8 @@ class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ABTestEntityManager.class));
 
 		all.add(C(ABTestEntityRepository.class, HttpABTestEntityRepository.class) //
-				.req(ClientConfigManager.class));
+				.req(ClientConfigManager.class)
+				.config(E("refreshTime").value("6")));
 
 		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class) //
 				.req(ABTestEntityRepository.class));
