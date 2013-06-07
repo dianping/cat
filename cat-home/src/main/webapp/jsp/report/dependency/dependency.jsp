@@ -22,15 +22,14 @@
 	<div class='report'>
 		<div class="row-fluid">
 			<div class="span12 text-center">
-				<a class="btn btn-danger  btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
-				<a class="btn btn-danger  btn-primary" href="?op=dashboard&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到产品线监控大盘</a>
+				<%@ include file="dependencyOpNav.jsp" %>
 			</div>
 		</div>
 		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab">数据趋势(项目以及依赖项目)</a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab">运维告警(Zabbix告警信息)</a></li>
-   			 	<li class="text-right"><a href="#tab3" data-toggle="tab">详细数据(Detail以及配置)</a></li>
+   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
+   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维Zabbix告警信息</strong></a></li>
+   			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>详细数据以及配置</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
@@ -47,7 +46,7 @@
 				  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
 				  	    </div>
 				  	    <div class="span10">
-				  	    	<%@ include file="dependencyHeader.jsp" %>
+				  	    	<%@ include file="dependencyTimeNav.jsp" %>
 				  	    </div>
 				  </div>
 				  <%@ include file="dependencyDetailData.jsp"%>

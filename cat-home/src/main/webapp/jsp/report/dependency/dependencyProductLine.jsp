@@ -8,8 +8,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
 <a:report title="Dependency Report"
-	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
-	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	navUrlPrefix="domain=${model.domain}&op=productLine&productLine=${payload.productLine}">
+	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
@@ -20,14 +20,29 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	
 	<div class="report">
- 		 <%@ include file="dependencyDashboardNav.jsp"%>
-    </div>
+		<div class='text-center'>
+		<%@ include file="dependencyOpNav.jsp" %>
+ 		<%@ include file="dependencyTimeNav.jsp"%>
+ 		</div>
+ 		<div class="row-fluid">
+ 			<div class="span2">
+ 				<div class="well sidebar-nav">
+           			 <ul class="nav nav-list">
+		 				 <c:forEach var="item" items="${model.productLines}" varStatus="status">
+					             <li class="text-left" id="tab${item}"><a href="?op=productLine&productLine=${item}&minute=${model.minute}&domain=${model.domain}&date=${model.date}">${item}</a></li>
+			            </c:forEach></ul></div></div>
+ 			<div class="span10">
+ 				<div class="text-center" id="container" style="width:1000px;height:600px;border:solid 1px #ccc;"></div>
+ 			</div>
+ 			</div>
+ 		</div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
-		var data = ${model.dashboardGraph};
+		$('#tab'+'${payload.productLine}').addClass('active');
+		var data = ${model.productLineGraph};
 		console.log(data);
 		function parse(data){
 			var nodes = data.nodes;
@@ -49,7 +64,7 @@
 			delete data.edges;
 			return data;
 		}
-		new StarTopo('container',parse(data),{
+		new StarTopo('container',data,{
 			typeMap:{
 				database:'rect',
 				project:'circle',

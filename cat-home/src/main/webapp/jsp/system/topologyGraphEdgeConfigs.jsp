@@ -15,6 +15,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#topylogyEdgeConfigList').addClass('active');
+			$('#content .nav-tabs a').mouseenter(function (e) {
+				  e.preventDefault();
+				  $(this).tab('show');
+			});
 			$(".delete").bind("click", function() {
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});
@@ -75,7 +79,7 @@
 				<div class="span2 text-center"><a class="btn btn-primary btn-small  update" href="?op=topologyGraphEdgeConfigAdd">新增</a></div>
 			</div>
 			</c:if>
-			<div class="tabbable tabs-left" id="topMetric"> <!-- Only required for left/right tabs -->
+			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.edgeConfigs}" varStatus="status">
 				    <c:set var="key" value="${item.key}"/>

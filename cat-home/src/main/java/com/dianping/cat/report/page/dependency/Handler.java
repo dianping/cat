@@ -37,7 +37,9 @@ import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.dashboard.DashboardGraph;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
@@ -48,6 +50,7 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 
 public class Handler implements PageHandler<Context> {
+
 	@Inject(type = ModelService.class, value = "dependency")
 	private ModelService<DependencyReport> m_dependencyService;
 
@@ -60,17 +63,20 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
+	private Set<String> m_nodes;
+
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject(type = ModelService.class, value = "problem")
 	private ModelService<ProblemReport> m_problemservice;
-	
-	private Set<String> m_nodes;
 
-	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	@Inject
+	private ProductLineConfig m_productLineConfig;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
+
+	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	private Segment buildAllSegmentInfo(DependencyReport report) {
 		Segment result = new Segment();
@@ -92,39 +98,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return result;
-	}
-
-	private void buildDashboardErrorInfo(DashboardGraph dashboardGraph, Model model, Payload payload) {
-		Map<String, List<Node>> nodes = dashboardGraph.getNodes();
-		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
-
-		for (Entry<String, List<Node>> entry : nodes.entrySet()) {
-			for (Node node : entry.getValue()) {
-				String domain = node.getId();
-				List<Event> events = m_eventManager.queryEvents(domain, reportTime);
-
-				node.setLink(buildLink(payload, model, domain));
-
-				if (events != null && events.size() > 0) {
-					if (node.getStatus() == GraphConstrant.OK) {
-						node.setStatus(GraphConstrant.OP_ERROR);
-					}
-					node.setDes(node.getDes() + buildZabbixHeader(payload, model));
-
-					StringBuilder sb = new StringBuilder();
-					for (Event event : events) {
-						sb.append(m_sdf.format(event.getDate())).append((" "));
-						sb.append(event.getSubject()).append(GraphConstrant.ENTER);
-					}
-					node.setDes(node.getDes() + sb.toString());
-				}
-				if (node.getStatus() != GraphConstrant.OK) {
-					String exceptionInfo = buildProblemInfo(domain, payload);
-
-					node.setDes(node.getDes() + exceptionInfo);
-				}
-			}
-		}
 	}
 
 	private void buildExceptionInfoOnGraph(Payload payload, Model model, TopologyGraph graph) {
@@ -184,24 +157,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private List<String> buildGraphList(List<LineChart> charts) {
-		List<String> result = new ArrayList<String>();
-
-		for (LineChart temp : charts) {
-			result.add(temp.getJsonString());
-		}
-		return result;
-	}
-
-	private Map<String, List<String>> buildGraphMap(Map<String, List<LineChart>> charts) {
-		Map<String, List<String>> result = new HashMap<String, List<String>>();
-
-		for (Entry<String, List<LineChart>> temp : charts.entrySet()) {
-			result.put(temp.getKey(), buildGraphList(temp.getValue()));
-		}
-		return result;
-	}
-
 	private void buildHourlyLineGraph(DependencyReport report, Model model) {
 		LineGraphBuilder builder = new LineGraphBuilder();
 
@@ -210,8 +165,8 @@ public class Handler implements PageHandler<Context> {
 		List<LineChart> index = builder.queryIndex();
 		Map<String, List<LineChart>> dependencys = builder.queryDependencyGraph();
 
-		model.setIndexGraph(buildGraphList(index));
-		model.setDependencyGraph(buildGraphMap(dependencys));
+		model.setIndexGraph(buildLineChartGraphs(index));
+		model.setDependencyGraph(buildLineChartGraphMap(dependencys));
 	}
 
 	private void buildHourlyReport(DependencyReport report, Model model, Payload payload) {
@@ -225,9 +180,54 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private Map<String, List<String>> buildLineChartGraphMap(Map<String, List<LineChart>> charts) {
+		Map<String, List<String>> result = new HashMap<String, List<String>>();
+
+		for (Entry<String, List<LineChart>> temp : charts.entrySet()) {
+			result.put(temp.getKey(), buildLineChartGraphs(temp.getValue()));
+		}
+		return result;
+	}
+
+	private List<String> buildLineChartGraphs(List<LineChart> charts) {
+		List<String> result = new ArrayList<String>();
+
+		for (LineChart temp : charts) {
+			result.add(temp.getJsonString());
+		}
+		return result;
+	}
+
 	private String buildLink(Payload payload, Model model, String domain) {
 		return String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
 		      m_dateFormat.format(new Date(payload.getDate())));
+	}
+
+	private void buildNodeErrorInfo(Node node, Model model, Payload payload) {
+		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
+		String domain = node.getId();
+		List<Event> events = m_eventManager.queryEvents(domain, reportTime);
+
+		node.setLink(buildLink(payload, model, domain));
+
+		if (events != null && events.size() > 0) {
+			if (node.getStatus() == GraphConstrant.OK) {
+				node.setStatus(GraphConstrant.OP_ERROR);
+			}
+			node.setDes(node.getDes() + buildZabbixHeader(payload, model));
+
+			StringBuilder sb = new StringBuilder();
+			for (Event event : events) {
+				sb.append(m_sdf.format(event.getDate())).append((" "));
+				sb.append(event.getSubject()).append(GraphConstrant.ENTER);
+			}
+			node.setDes(node.getDes() + sb.toString());
+		}
+		if (node.getStatus() != GraphConstrant.OK) {
+			String exceptionInfo = buildProblemInfo(domain, payload);
+
+			node.setDes(node.getDes() + exceptionInfo);
+		}
 	}
 
 	private String buildProblemInfo(String domain, Payload payload) {
@@ -283,7 +283,7 @@ public class Handler implements PageHandler<Context> {
 		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
 		DependencyReport report = queryDependencyReport(payload);
 		switch (action) {
-		case GRAPH:
+		case TOPOLOGY:
 			TopologyGraph topologyGraph = m_graphManager.buildGraphByDomainTime(model.getDomain(), reportTime.getTime());
 			Map<String, List<String>> graphDependency = parseDependencies(topologyGraph);
 			Map<String, List<Event>> externalErrors = queryDependencyEvent(graphDependency, model.getDomain(), reportTime);
@@ -293,9 +293,11 @@ public class Handler implements PageHandler<Context> {
 			m_nodes = new HashSet<String>();
 			buildExternalErrorOnGraph(topologyGraph, buildZabbixHeader(payload, model), externalErrors);
 			buildExceptionInfoOnGraph(payload, model, topologyGraph);
+			model.setReportStart(new Date(payload.getDate()));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
 			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(topologyGraph));
 			break;
-		case VIEW:
+		case LINE_CHART:
 			buildHourlyReport(report, model, payload);
 			buildHourlyLineGraph(report, model);
 
@@ -305,10 +307,36 @@ public class Handler implements PageHandler<Context> {
 			model.setEvents(queryDependencyEvent(dependency, model.getDomain(), reportTime));
 			break;
 		case DASHBOARD:
-			DashboardGraph dashboardGraph = m_graphManager.buildDashboardGraph(reportTime.getTime());
+			ProductLinesDashboard dashboardGraph = m_graphManager.buildDashboardGraph(reportTime.getTime());
+			Map<String, List<Node>> dashboardNodes = dashboardGraph.getNodes();
 
-			buildDashboardErrorInfo(dashboardGraph, model, payload);
+			for (Entry<String, List<Node>> entry : dashboardNodes.entrySet()) {
+				for (Node node : entry.getValue()) {
+					buildNodeErrorInfo(node, model, payload);
+				}
+			}
+			model.setReportStart(new Date(payload.getDate()));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
 			model.setDashboardGraph(dashboardGraph.toJson());
+			model.setDashboardGraphData(dashboardGraph);
+			break;
+		case PRODUCT_LINE:
+			String productLine = payload.getProductLine();
+			if(StringUtil.isEmpty(productLine)){
+				payload.setProductLine(CatString.TUAN_TOU);
+				productLine=CatString.TUAN_TOU;
+			}
+			ProductLineDashboard productLineGraph = m_graphManager.buildProductLineGraph(productLine,
+			      reportTime.getTime());
+			List<Node> productLineNodes = productLineGraph.getNodes();
+
+			for (Node node : productLineNodes) {
+				buildNodeErrorInfo(node, model, payload);
+			}
+			model.setReportStart(new Date(payload.getDate()));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
+			model.setProductLineGraph(productLineGraph.toJson());
+			model.setProductLines(new ArrayList<String>(m_productLineConfig.queryProductLines()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -316,7 +344,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.DEPENDENCY);
-		model.setAction(Action.VIEW);
+		model.setAction(Action.LINE_CHART);
 
 		m_normalizePayload.normalize(model, payload);
 
@@ -353,7 +381,6 @@ public class Handler implements PageHandler<Context> {
 				targets.add(target);
 			}
 		}
-
 		return results;
 	}
 

@@ -9,7 +9,7 @@
 
 <a:report title="Dependency Report"
 	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
-	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
@@ -20,12 +20,16 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	
 <div class="report">
-  <%@ include file="dependencyTopologyGraphNav.jsp"%>
+	<div class="row-fluid">
+ 		<div class="span12 text-center">
+		<%@ include file="dependencyOpNav.jsp"%>
+	    <%@ include file="dependencyTimeNav.jsp"%>
+	    </div></div>
   		<div class="tabbable tabs-left " id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs alert-info">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab">依赖拓扑</a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab">运维告警</a></li>
-   			 	<li class="text-right"><a href="#tab3" data-toggle="tab">数据配置</a></li>
+   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>依赖拓扑</strong></a></li>
+   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维告警</strong></a></li>
+   			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>数据配置</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
@@ -53,6 +57,7 @@
 		});
 	
 		$('#minute'+${model.minute}).addClass('disabled');
+		$('#minute'+${model.minute}).addClass('text-error');
 		$('#zabbixTab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.contents').dataTable({

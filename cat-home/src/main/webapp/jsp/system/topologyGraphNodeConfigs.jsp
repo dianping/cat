@@ -15,7 +15,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#topylogyNodeConfigList').addClass('active');
-			
+			$('#content .nav-tabs a').mouseenter(function (e) {
+				  e.preventDefault();
+				  $(this).tab('show');
+			});
 			var type = '${payload.type}';
 			if(type==''){
 				type = 'URL';
@@ -72,7 +75,7 @@
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
-			<div class="tabbable tabs-left" id="topMetric"> <!-- Only required for left/right tabs -->
+			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.config.nodeConfigs}" varStatus="status">
 				    <c:set var="key" value="${item.key}"/>

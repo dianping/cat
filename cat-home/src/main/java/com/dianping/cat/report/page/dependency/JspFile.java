@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.dependency;
 
 public enum JspFile {
-	VIEW("/jsp/report/dependency.jsp"),
+	LINE_CHART("/jsp/report/dependency/dependency.jsp"),
 
-	GRAPH("/jsp/report/dependencyTopologyGraph.jsp"),
+	TOPOLOGY("/jsp/report/dependency/dependencyTopologyGraph.jsp"),
 
-	DASHBOARD("/jsp/report/dependencyDashboard.jsp"),
+	DASHBOARD("/jsp/report/dependency/dependencyDashboard.jsp"),
+	
+	PRODUCT_LINE("/jsp/report/dependency/dependencyProductLine.jsp"),
 
 	;
 

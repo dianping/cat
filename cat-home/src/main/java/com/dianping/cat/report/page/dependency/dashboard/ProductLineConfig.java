@@ -2,26 +2,31 @@ package com.dianping.cat.report.page.dependency.dashboard;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-public class DashboardConfig implements Initializable {
+public class ProductLineConfig implements Initializable {
 
-	private Map<String, Group> m_groups = new LinkedHashMap<String, Group>();
+	private Map<String, Group> m_groups = new TreeMap<String, Group>();
 
 	private Set<String> m_allDomains = new HashSet<String>();
-	
-	public boolean contains(String domain){
+
+	public Set<String> queryProductLines() {
+		return m_groups.keySet();
+	}
+
+	public boolean contains(String domain) {
 		return m_allDomains.contains(domain);
 	}
+
 	public Map<String, Group> getGroups() {
-   	return m_groups;
-   }
+		return m_groups;
+	}
 
 	@Override
 	public void initialize() throws InitializationException {

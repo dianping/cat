@@ -9,7 +9,7 @@ import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.google.gson.Gson;
 
-public class DashboardGraph {
+public class ProductLinesDashboard {
 
 	private Map<String, List<Node>> productLines = new LinkedHashMap<String, List<Node>>();
 
@@ -18,14 +18,16 @@ public class DashboardGraph {
 	private transient Map<String, Node> temp = new LinkedHashMap<String, Node>();
 
 	public String toJson() {
-		return new Gson().toJson(this);
+		String str = new Gson().toJson(this);
+		str = str.replaceAll("\"m_", "\"");
+		return str;
 	}
 
 	public boolean exsit(Node node) {
 		return temp.containsKey(node.getId());
 	}
 
-	public DashboardGraph addNode(String productLine, Node node) {
+	public ProductLinesDashboard addNode(String productLine, Node node) {
 		List<Node> nodeList = productLines.get(productLine);
 
 		if (nodeList == null) {
@@ -37,7 +39,7 @@ public class DashboardGraph {
 		return this;
 	}
 
-	public DashboardGraph addEdge(Edge edge) {
+	public ProductLinesDashboard addEdge(Edge edge) {
 		edges.add(edge);
 		return this;
 	}

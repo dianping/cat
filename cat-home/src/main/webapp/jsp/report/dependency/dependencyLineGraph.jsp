@@ -24,7 +24,7 @@
 		<h4 class='text-error text-center'>当前小时内项目依赖指标趋势图</h4>
 		<table>
 		<c:forEach var="charts" items="${model.dependencyGraph}" varStatus="type">
-			<th colspan="3"><h4 class='text-center text-warning'>${charts.key}</h4></th>
+			<th colspan="3"><h4 class='text-center text-success'>${charts.key}</h4></th>
 			<c:set var="key" value="${charts.key}"/>
 			<c:set var="value" value="${charts.value}"/>
 			<tr>

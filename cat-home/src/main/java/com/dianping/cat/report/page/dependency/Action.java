@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.dependency;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view"),
-	
-	GRAPH("dependencyGraph"),
-	
-	DASHBOARD("dashboard"),;
+	LINE_CHART("view"),
+
+	TOPOLOGY("dependencyGraph"),
+
+	DASHBOARD("dashboard"),
+
+	PRODUCT_LINE("productLine");
 
 	private String m_name;
 

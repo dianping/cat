@@ -18,16 +18,16 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
-import com.dianping.cat.home.dependency.graph.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.dependency.dashboard.DashboardConfig;
-import com.dianping.cat.report.page.dependency.dashboard.DashboardConfig.Group;
-import com.dianping.cat.report.page.dependency.dashboard.DashboardGraph;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig.Group;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -46,7 +46,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private ServerConfigManager m_manager;
 
 	@Inject
-	private DashboardConfig m_dashboardConfig;
+	private ProductLineConfig m_productLineConfig;
 
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
@@ -54,12 +54,32 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	private static final String DEPENDENCY = "Dependency";
 
-	public DashboardGraph buildDashboardGraph(long time) {
+	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
 		TopologyGraph topologyGraph = queryGraph(time);
-		DashboardGraph dashboardGraph = new DashboardGraph();
+		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
+		Group group = m_productLineConfig.getGroups().get(productLine);
+		if (group != null) {
+			List<String> domains = group.getDomains();
+
+			if (topologyGraph != null) {
+				for (String domain : domains) {
+					Node node = topologyGraph.findNode(domain);
+
+					if (node != null) {
+						dashboard.addNode(m_graphBuilder.cloneNode(node));
+					}
+				}
+			}
+		}
+		return dashboard;
+	}
+
+	public ProductLinesDashboard buildDashboardGraph(long time) {
+		TopologyGraph topologyGraph = queryGraph(time);
+		ProductLinesDashboard dashboardGraph = new ProductLinesDashboard();
 
 		if (topologyGraph != null) {
-			Map<String, Group> groups = m_dashboardConfig.getGroups();
+			Map<String, Group> groups = m_productLineConfig.getGroups();
 
 			for (Entry<String, Group> entry : groups.entrySet()) {
 				String groupName = entry.getKey();
@@ -79,7 +99,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				String self = edge.getSelf();
 				String to = edge.getTarget();
 
-				if (m_dashboardConfig.contains(self) && m_dashboardConfig.contains(to)) {
+				if (m_productLineConfig.contains(self) && m_productLineConfig.contains(to)) {
 					dashboardGraph.addEdge(m_graphBuilder.cloneEdge(edge));
 				}
 			}
