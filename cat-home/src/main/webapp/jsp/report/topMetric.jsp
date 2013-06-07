@@ -16,12 +16,10 @@
 				<tr><th colspan="3">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>个</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr title="${detail.errorInfo}" class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td >
-						<a href="/cat/r/p?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td>
-						<td><i tips="" data-trigger="hover" class=" icon-plus-sign"
-		                  data-toggle="popover" data-placement="top" data-original-title="tips"
-		                  data-content="${detail.errorInfo}"></i>&nbsp;&nbsp;${w:format(detail.value,'0.0')}</td>
+					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+						<td>
+						<a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a>
+						<td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>

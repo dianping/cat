@@ -15,7 +15,7 @@
 }
 </style>
 <a:report title="Dependency Report"
-	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
+	navUrlPrefix="domain=${model.domain}&op=dashboard">
 	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
@@ -41,6 +41,7 @@
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('i[tips]').popover();
+		$('.hrefTip').tooltip();
 		$('#topMetric .nav-tabs a').mouseenter(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
