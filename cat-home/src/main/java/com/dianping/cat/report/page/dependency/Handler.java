@@ -208,7 +208,7 @@ public class Handler implements PageHandler<Context> {
 		      m_dateFormat.format(new Date(payload.getDate())));
 	}
 
-	private void buildNodeErrorInfo(Node node, Model model, Payload payload) {
+	private void buildNodeZabbixInfo(Node node, Model model, Payload payload) {
 		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
 		String domain = node.getId();
 		List<Event> events = m_eventManager.queryEvents(domain, reportTime);
@@ -228,6 +228,10 @@ public class Handler implements PageHandler<Context> {
 			}
 			node.setDes(node.getDes() + sb.toString());
 		}
+	}
+
+	private void buildNodeExceptionInfo(Node node, Model model, Payload payload) {
+		String domain = node.getId();
 		if (node.getStatus() != GraphConstrant.OK) {
 			String exceptionInfo = buildProblemInfo(domain, payload);
 
@@ -271,15 +275,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildTopErrorInfo(Payload payload, Model model) {
-		int count = payload.getCount();
+		int count = payload.getTopCounts();
 
 		if (!payload.getPeriod().isCurrent()) {
 			count = 60;
 		}
-		TopMetric topMetric = new TopMetric(count, payload.getTops());
+		TopMetric topMetric = new TopMetric(count, payload.getTopCounts());
 
 		if (count > 0) {
-			topMetric = new TopMetric(count, payload.getTops());
+			topMetric = new TopMetric(count, payload.getTopCounts());
 		}
 		TopReport report = queryTopReport(payload);
 		topMetric.visitTopReport(report);
@@ -348,7 +352,7 @@ public class Handler implements PageHandler<Context> {
 
 			for (Entry<String, List<Node>> entry : dashboardNodes.entrySet()) {
 				for (Node node : entry.getValue()) {
-					buildNodeErrorInfo(node, model, payload);
+					buildNodeZabbixInfo(node, model, payload);
 				}
 			}
 			buildTopErrorInfo(payload, model);
@@ -368,7 +372,8 @@ public class Handler implements PageHandler<Context> {
 			List<Node> productLineNodes = productLineGraph.getNodes();
 
 			for (Node node : productLineNodes) {
-				buildNodeErrorInfo(node, model, payload);
+				buildNodeZabbixInfo(node, model, payload);
+				buildNodeExceptionInfo(node, model, payload);
 			}
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));

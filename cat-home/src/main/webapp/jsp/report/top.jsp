@@ -33,9 +33,9 @@
 	</table>
 	
 	<div class='text-center' style="margin:3px;">
-		<a class='btn btn-small btn-primary' href="?refresh=true&second=10">10秒定时刷新</a>
-		<a class='btn btn-small btn-primary' href="?refresh=true&second=20">20秒定时刷新</a>
-		<a class='btn btn-small btn-primary' href="?refresh=true&second=30">30秒定时刷新</a>
+		<a class='btn btn-small btn-primary' href="?refresh=true&frequency=10">10秒定时刷新</a>
+		<a class='btn btn-small btn-primary' href="?refresh=true&frequency=20">20秒定时刷新</a>
+		<a class='btn btn-small btn-primary' href="?refresh=true&frequency=30">30秒定时刷新</a>
 	</div>
     <%@ include file="topMetric.jsp"%>
 	<table  class="footer">
@@ -53,12 +53,12 @@
 		  $(this).tab('show');
 		});	
 		
-		var refresh = ${payload.refresh};
-		var second = ${payload.second};
+		var refresh = '${payload.refresh}';
+		var frequency = ${payload.frequency};
 		if(refresh){
 			setInterval(function(){
-				window.location.href="?refresh=true&second="+second;
-			},second*1000);
+				location.reload();				
+			},frequency*1000);
 		}
 	});
 </script>

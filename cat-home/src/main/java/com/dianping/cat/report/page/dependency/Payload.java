@@ -21,40 +21,40 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("productLine")
 	private String productLine;
 	
-   @FieldMeta("count")
-   private int m_count = 10;
+	@FieldMeta("count")
+	private int m_minuteCounts = 10;
 
-   @FieldMeta("second")
-   private int m_second;
+	@FieldMeta("frequency")
+	private int m_frequency = 10;
 
-   @FieldMeta("tops")
-   private int m_tops = 10;
+	@FieldMeta("tops")
+	private int m_topCounts = 10;
 
    @FieldMeta("refresh")
    private boolean m_refresh;
 
-	public int getCount() {
-   	return m_count;
+	public int getMinuteCounts() {
+   	return m_minuteCounts;
    }
 
-	public void setCount(int count) {
-   	m_count = count;
+	public void setMinuteCounts(int minuteCounts) {
+   	m_minuteCounts = minuteCounts;
    }
 
-	public int getSecond() {
-   	return m_second;
+	public int getTopCounts() {
+   	return m_topCounts;
    }
 
-	public void setSecond(int second) {
-   	m_second = second;
+	public void setTopCounts(int topCounts) {
+   	m_topCounts = topCounts;
    }
 
-	public int getTops() {
-   	return m_tops;
+	public int getFrequency() {
+   	return m_frequency;
    }
 
-	public void setTops(int tops) {
-   	m_tops = tops;
+	public void setFrequency(int frequency) {
+   	m_frequency = frequency;
    }
 
 	public boolean isRefresh() {

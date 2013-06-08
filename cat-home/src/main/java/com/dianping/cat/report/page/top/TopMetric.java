@@ -11,15 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.top.TopMetric.Item;
 
 public class TopMetric extends BaseVisitor {
 
@@ -188,7 +185,7 @@ public class TopMetric extends BaseVisitor {
 	public static class MetricItem {
 		private int m_minuteCount;
 
-		private int m_itemSize = 10;
+		private int m_itemSize;
 
 		private Map<String, Map<String, Item>> m_items = new LinkedHashMap<String, Map<String, Item>>();
 
@@ -234,7 +231,6 @@ public class TopMetric extends BaseVisitor {
 		}
 
 		public void buildDisplayResult() {
-			Transaction t = Cat.newTransaction("Top", "Query");
 			Map<String, List<Item>> temp = new LinkedHashMap<String, List<Item>>();
 			List<String> keyList = new ArrayList<String>(m_items.keySet());
 			Collections.sort(keyList, new StringCompartor());
@@ -256,8 +252,6 @@ public class TopMetric extends BaseVisitor {
 					temp.put(key, valule);
 				}
 			}
-			t.complete();
-
 			m_result = temp;
 		}
 	}

@@ -71,16 +71,15 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 
 		TopReport report = getReport(payload);
-		int count = payload.getCount();
-		
-		if (!payload.getPeriod().isCurrent()) {
-			count = 60;
-		}
-		TopMetric displayTop = new TopMetric(count, payload.getTops());
+		int minuteCount = payload.getMinuteCounts();
 
-		if (count > 0) {
-			displayTop = new TopMetric(count, payload.getTops());
+		if (!payload.getPeriod().isCurrent()) {
+			minuteCount = 60;
+		}else{
+			minuteCount = payload.getMinuteCounts();
 		}
+		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts());
+
 		Transaction t = Cat.newTransaction("Top", "Parser");
 		displayTop.visitTopReport(report);
 		model.setTopReport(report);

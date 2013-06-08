@@ -13,24 +13,24 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("count")
-	private int m_count = 10;
+	private int m_minuteCounts = 10;
 
-	@FieldMeta("second")
-	private int m_second;
+	@FieldMeta("frequency")
+	private int m_frequency = 10;
 
 	@FieldMeta("tops")
-	private int m_tops = 10;
+	private int m_topCounts = 10;
 
 	@FieldMeta("refresh")
 	private boolean m_refresh;
 
-	public int getSecond() {
-		return m_second;
-	}
+	public int getFrequency() {
+   	return m_frequency;
+   }
 
-	public void setSecond(int second) {
-		m_second = second;
-	}
+	public void setFrequency(int frequency) {
+   	m_frequency = frequency;
+   }
 
 	public Payload() {
 		super(ReportPage.TOP);
@@ -49,10 +49,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public int getCount() {
-		return m_count;
-	}
-
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -62,21 +58,25 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setCount(int count) {
-		m_count = count;
-	}
+	public int getMinuteCounts() {
+   	return m_minuteCounts;
+   }
+
+	public void setMinuteCounts(int minuteCount) {
+   	m_minuteCounts = minuteCount;
+   }
 
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.TOP);
 	}
 
-	public int getTops() {
-		return m_tops;
+	public int getTopCounts() {
+		return m_topCounts;
 	}
 
-	public void setTops(int tops) {
-		m_tops = tops;
+	public void setTopCounts(int tops) {
+		m_topCounts = tops;
 	}
 
 	@Override
