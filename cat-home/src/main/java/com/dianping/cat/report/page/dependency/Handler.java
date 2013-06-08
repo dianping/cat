@@ -275,17 +275,20 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildTopErrorInfo(Payload payload, Model model) {
-		int count = payload.getTopCounts();
-
+		int minuteCount = payload.getMinuteCounts();
 		if (!payload.getPeriod().isCurrent()) {
-			count = 60;
+			minuteCount = 60;
 		}
-		TopMetric topMetric = new TopMetric(count, payload.getTopCounts());
 
-		if (count > 0) {
-			topMetric = new TopMetric(count, payload.getTopCounts());
-		}
 		TopReport report = queryTopReport(payload);
+		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts());
+		int minute = model.getMinute();
+		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
+		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
+
+		System.out.println(start);
+		System.out.println(end);
+		topMetric.setStart(start).setEnd(end);
 		topMetric.visitTopReport(report);
 		model.setTopReport(report);
 		model.setTopMetric(topMetric);

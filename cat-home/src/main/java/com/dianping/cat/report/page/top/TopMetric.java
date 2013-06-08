@@ -22,7 +22,7 @@ public class TopMetric extends BaseVisitor {
 
 	private String m_currentDomain;
 
-	private Date m_start;
+	private Date m_currentStart;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
@@ -41,6 +41,20 @@ public class TopMetric extends BaseVisitor {
 	private long m_currentTime = System.currentTimeMillis();
 
 	private Integer m_currentMinute;
+
+	private Date m_end;
+
+	private Date m_start;
+
+	public TopMetric setStart(Date start) {
+		m_start = start;
+		return this;
+	}
+
+	public TopMetric setEnd(Date end) {
+		m_end = end;
+		return this;
+	}
 
 	public TopMetric(int count, int tops) {
 		m_error = new MetricItem(count, tops);
@@ -89,7 +103,7 @@ public class TopMetric extends BaseVisitor {
 	public void visitError(Error error) {
 		String exception = error.getId();
 		long count = error.getCount();
-		Date minute = new Date(m_start.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
+		Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
 		String minuteStr = m_sdf.format(minute);
 
 		m_error.addError(minuteStr, m_currentDomain, exception, count);
@@ -99,9 +113,16 @@ public class TopMetric extends BaseVisitor {
 	@Override
 	public void visitSegment(Segment segment) {
 		m_currentMinute = segment.getId();
-		long time = m_start.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE;
+		long time = m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE;
+
+		if (m_start != null && m_end != null) {
+			if (time > m_end.getTime() || time < m_start.getTime()) {
+				return;
+			}
+		}
+
 		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
-			Date minute = new Date(m_start.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
+			Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
 			String minuteStr = m_sdf.format(minute);
 
 			m_error.add(minuteStr, m_currentDomain, segment.getError());
@@ -116,7 +137,7 @@ public class TopMetric extends BaseVisitor {
 
 	@Override
 	public void visitTopReport(TopReport topReport) {
-		m_start = topReport.getStartTime();
+		m_currentStart = topReport.getStartTime();
 		super.visitTopReport(topReport);
 
 		m_error.buildDisplayResult();
