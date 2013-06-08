@@ -20,11 +20,7 @@
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	
 	<div class='report'>
-		<div class="row-fluid">
-			<div class="span12 text-center">
-				<%@ include file="dependencyOpNav.jsp" %>
-			</div>
-		</div>
+		<%@ include file="dependencyOpNav.jsp" %>
 		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs">
    			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
