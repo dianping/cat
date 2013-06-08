@@ -286,8 +286,6 @@ public class Handler implements PageHandler<Context> {
 		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
 		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
 
-		System.out.println(start);
-		System.out.println(end);
 		topMetric.setStart(start).setEnd(end);
 		topMetric.visitTopReport(report);
 		model.setTopReport(report);

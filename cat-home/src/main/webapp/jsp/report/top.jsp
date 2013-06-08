@@ -53,7 +53,7 @@
 		  $(this).tab('show');
 		});	
 		
-		var refresh = '${payload.refresh}';
+		var refresh = ${payload.refresh};
 		var frequency = ${payload.frequency};
 		if(refresh){
 			setInterval(function(){

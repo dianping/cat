@@ -31,7 +31,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private int m_topCounts = 10;
 
    @FieldMeta("refresh")
-   private boolean m_refresh;
+   private boolean m_refresh = false;
 
 	public int getMinuteCounts() {
    	return m_minuteCounts;
