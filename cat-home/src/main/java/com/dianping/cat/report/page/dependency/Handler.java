@@ -50,6 +50,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
+import com.dianping.cat.report.service.ReportService;
 
 public class Handler implements PageHandler<Context> {
 
@@ -61,6 +62,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphManager m_graphManager;
+
+	@Inject
+	private ReportService m_reportService;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -268,7 +272,12 @@ public class Handler implements PageHandler<Context> {
 
 		if (m_topService.isEligable(request)) {
 			ModelResponse<TopReport> response = m_topService.invoke(request);
-			return response.getModel();
+			TopReport report = response.getModel();
+			if (report == null || report.getDomains().size() == 0) {
+				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
+				      + TimeUtil.ONE_HOUR));
+			}
+			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
 		}
@@ -276,17 +285,20 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildTopErrorInfo(Payload payload, Model model) {
 		int minuteCount = payload.getMinuteCounts();
-		if (!payload.getPeriod().isCurrent()) {
-			minuteCount = 60;
-		}
-
+		int minute = model.getMinute();
 		TopReport report = queryTopReport(payload);
 		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts());
-		int minute = model.getMinute();
 		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
 		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
 
 		topMetric.setStart(start).setEnd(end);
+		if (minuteCount > minute) {
+			Payload lastPayload = new Payload();
+			Date lastHour = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
+			lastPayload.setDate(new SimpleDateFormat("yyyyMMddHH").format(lastHour));
+
+			topMetric.visitTopReport(queryTopReport(lastPayload));
+		}
 		topMetric.visitTopReport(report);
 		model.setTopReport(report);
 		model.setTopMetric(topMetric);
@@ -322,13 +334,15 @@ public class Handler implements PageHandler<Context> {
 
 		Action action = payload.getAction();
 		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
-		DependencyReport report = queryDependencyReport(payload);
+		DependencyReport report = null;
+
 		switch (action) {
 		case TOPOLOGY:
 			TopologyGraph topologyGraph = m_graphManager.buildTopologyGraph(model.getDomain(), reportTime.getTime());
 			Map<String, List<String>> graphDependency = parseDependencies(topologyGraph);
 			Map<String, List<Event>> externalErrors = queryDependencyEvent(graphDependency, model.getDomain(), reportTime);
 
+			report = queryDependencyReport(payload);
 			buildHourlyReport(report, model, payload);
 			model.setEvents(externalErrors);
 			m_nodes = new HashSet<String>();
@@ -339,6 +353,7 @@ public class Handler implements PageHandler<Context> {
 			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(topologyGraph));
 			break;
 		case LINE_CHART:
+			report = queryDependencyReport(payload);
 			buildHourlyReport(report, model, payload);
 			buildHourlyLineGraph(report, model);
 

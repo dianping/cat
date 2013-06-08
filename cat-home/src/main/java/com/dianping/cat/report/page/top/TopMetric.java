@@ -281,10 +281,17 @@ public class TopMetric extends BaseVisitor {
 
 		@Override
 		public int compare(String o1, String o2) {
-			String first = o1.substring(3, 5);
-			String end = o2.substring(3, 5);
+			String hour1 = o1.substring(0, 2);
+			String hour2 = o2.substring(0, 2);
 
-			return Integer.parseInt(end) - Integer.parseInt(first);
+			if (!hour1.equals(hour2)) {
+				return Integer.parseInt(hour2) - Integer.parseInt(hour1);
+			} else {
+				String first = o1.substring(3, 5);
+				String end = o2.substring(3, 5);
+
+				return Integer.parseInt(end) - Integer.parseInt(first);
+			}
 		}
 	}
 }

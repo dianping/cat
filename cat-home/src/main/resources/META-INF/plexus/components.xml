@@ -2540,6 +2540,9 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
 				</requirement>
 				<requirement>

@@ -67,7 +67,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 
 		for (String temp : domains) {
-			if (!temp.equals("FrontEnd")) {
+			if (validate(temp)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(temp);
 
 				new TransactionReportVisitor(topReport).visitTransactionReport(report);
@@ -81,6 +81,10 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		}
 		return topReport;
 	}
+
+	private boolean validate(String domain) {
+	   return !domain.equals("FrontEnd");
+   }
 
 	@Override
 	protected void process(MessageTree tree) {
