@@ -35,7 +35,7 @@
 				<%@ include file="dependencyOpNav.jsp"%>
 		 		<%@ include file="dependencyTimeNav.jsp"%>
 		</div></div>
-			<h1>监控大盘信息</h1>
+			<h1>监控仪表盘信息</h1>
 			<%@ include file="../topMetric.jsp"%>
     </div>
 </jsp:body>
@@ -48,10 +48,10 @@
 		
 		$('.position').hide();
 		$('.switch').hide();
-		$('#topMetric .nav-tabs a').mouseenter(function (e) {
+		/* $('#topMetric .nav-tabs a').mouseenter(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
-		});	
+		}); */	
 		var data = ${model.dashboardGraph};
 		console.log(data);
 		function parse(data){

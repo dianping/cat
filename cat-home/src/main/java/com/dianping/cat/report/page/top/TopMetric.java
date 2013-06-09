@@ -165,11 +165,26 @@ public class TopMetric extends BaseVisitor {
 			return m_domain;
 		}
 
+		private String buildErrorText(String str) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<span style='color:red'>").append("<strong>");
+			sb.append(str).append("</strong>").append("</span>");
+
+			return sb.toString();
+		}
+
 		public String getErrorInfo() {
 			StringBuilder sb = new StringBuilder();
 
 			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
-				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("<br/>");
+
+				double value = entry.getValue().doubleValue();
+				if (value > 200) {
+					sb.append(buildErrorText(entry.getKey()+" "+value)).append("<br/>");
+				} else {
+					sb.append(entry.getKey()).append(" ");
+					sb.append(value).append("<br/>");
+				}
 			}
 			return sb.toString();
 		}

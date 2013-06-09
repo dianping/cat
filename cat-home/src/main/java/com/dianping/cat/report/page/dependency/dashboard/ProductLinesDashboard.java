@@ -21,7 +21,6 @@ public class ProductLinesDashboard {
 		String str = new Gson().toJson(this);
 		str = str.replaceAll("\"m_", "\"");
 		
-		System.out.println(str);
 		return str;
 	}
 
