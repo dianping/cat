@@ -43,9 +43,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
-		
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
-		
 		$('.position').hide();
 		$('.switch').hide();
 		/* $('#topMetric .nav-tabs a').mouseenter(function (e) {
