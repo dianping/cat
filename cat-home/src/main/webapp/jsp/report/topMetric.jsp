@@ -20,7 +20,7 @@
                <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
                   <td>
                   <a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a>
-                  <td>${w:format(detail.value,'0.0')}</td>
+                  <td style="text-align:right">${w:format(detail.value,'0')}</td>
                </tr>
             </c:forEach>
       </table>

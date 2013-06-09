@@ -42,6 +42,8 @@
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('#tab'+'${payload.productLine}').addClass('active');
+		$('.position').hide();
+		$('.switch').hide();
 		var data = ${model.productLineGraph};
 		console.log(data);
 		function parse(data){

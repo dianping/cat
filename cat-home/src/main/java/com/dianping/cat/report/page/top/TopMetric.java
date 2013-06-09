@@ -169,7 +169,7 @@ public class TopMetric extends BaseVisitor {
 			StringBuilder sb = new StringBuilder();
 
 			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
-				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("  ");
+				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("<br/>");
 			}
 			return sb.toString();
 		}

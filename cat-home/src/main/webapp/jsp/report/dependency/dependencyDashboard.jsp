@@ -6,14 +6,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.dependency.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
-<style>
-.tab-content	table {
-  max-width: 100%;
-  background-color: transparent;
-  border-collapse: collapse;
-  border-spacing: 0; 
-}
-</style>
+
 <a:report title="Dependency Report"
 	navUrlPrefix="domain=${model.domain}&op=dashboard">
 	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -25,7 +18,17 @@
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	
+	<style>
+	.tooltip-inner {
+		max-width:36555px;
+	 }
+	.tab-content	table {
+	  max-width: 100%;
+	  background-color: transparent;
+	  border-collapse: collapse;
+	  border-spacing: 0; 
+	}
+	</style>
 	<div class="report">
 		<div class="row-fluid">
 			<div class="span12 text-center">
@@ -40,7 +43,11 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
-		$('.hreftip').tooltip();
+		
+		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+		
+		$('.position').hide();
+		$('.switch').hide();
 		$('#topMetric .nav-tabs a').mouseenter(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
