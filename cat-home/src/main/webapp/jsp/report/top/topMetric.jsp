@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 
-<div class="tabbable  " id="topMetric"> <!-- Only required for left/right tabs -->
+<div class="tabbable tabs-left " id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs alert-info">
     <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
     <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
@@ -11,7 +11,7 @@
   </ul>
   <c:set var="date" value="${w:format(model.topReport.startTime,'yyyyMMddHH')}"/>
   <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
+    <div class="tab-pane  active" id="tab1">
       <c:forEach var="item" items="${model.topMetric.error.result}" varStatus="status">
       <table width="20%" style="float:left" border=1>  
             <tr><th colspan="3">${item.key}</th></tr>

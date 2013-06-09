@@ -162,8 +162,13 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		TopologyGraph graph = m_topologyGraphs.get(time);
 		long current = System.currentTimeMillis();
 		long minute = current - current % TimeUtil.ONE_MINUTE;
+		
 		if (minute == time && graph == null) {
 			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
+
+			if (graph == null) {
+				graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE * 2);
+			}
 		}
 		return graph;
 	}

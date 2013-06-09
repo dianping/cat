@@ -35,8 +35,8 @@
 				<%@ include file="dependencyOpNav.jsp"%>
 		 		<%@ include file="dependencyTimeNav.jsp"%>
 		</div></div>
-			<h1>监控仪表盘信息</h1>
-			<%@ include file="../topMetric.jsp"%>
+		<h1>监控仪表盘信息</h1>
+		<%@ include file="topMetric.jsp"%>
     </div>
 </jsp:body>
 </a:report>
