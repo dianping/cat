@@ -29,6 +29,8 @@ public class Cat {
 
 	private static Cat s_instance = new Cat();
 
+	private static final String MetricType = "metricType";
+
 	private static void checkAndInitialize() {
 		synchronized (s_instance) {
 			if (s_instance.m_container == null) {
@@ -116,6 +118,25 @@ public class Cat {
 
 	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
 		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
+	}
+
+	public static void recordMetric(String name, double value) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append("=").append(value).append("&").append(MetricType).append("=sum");
+		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
+	}
+
+	public static void recordResponseTimeMetric(String name, double millis) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append("=").append(millis).append("&").append(MetricType).append("=avg");
+		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
+	}
+
+	public static void incrementCounter(String name) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(name).append("=").append(1).append("&").append(MetricType).append("=count");
+		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
 	}
 
 	public static void logMetric(String name, Object... keyValues) {

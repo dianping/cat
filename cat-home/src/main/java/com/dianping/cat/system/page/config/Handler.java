@@ -125,7 +125,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case TOPOLOGY_GRAPH_PRODUCT_LINE:
-			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			model.setProductLines(m_topologyConfigManager.queryProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
@@ -134,11 +133,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
 			model.setOpState(m_topologyConfigManager.deleteProductLine(payload.getProductLineName()));
-			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			model.setProductLines(m_topologyConfigManager.queryProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
-			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			model.setProductLines(m_topologyConfigManager.queryProductLines());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
