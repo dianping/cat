@@ -59,7 +59,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
 		TopologyGraph topologyGraph = queryGraph(time);
 		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		List<String> domains = m_configManger.queryDomains(productLine);
+		List<String> domains = m_configManger.queryProductLineDomains(productLine);
 
 		if (topologyGraph != null) {
 			for (String domain : domains) {

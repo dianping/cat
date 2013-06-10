@@ -294,7 +294,7 @@ public class TopologyGraphConfigManager implements Initializable {
 		return null;
 	}
 
-	public List<String> queryDomains(String productLine) {
+	public List<String> queryProductLineDomains(String productLine) {
 		List<String> domains = new ArrayList<String>();
 		ProductLine line = m_config.findProductLine(productLine);
 
@@ -309,7 +309,7 @@ public class TopologyGraphConfigManager implements Initializable {
 	public Map<String, ProductLine> queryProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
-		for (ProductLine line : m_config.getProductLines()) {
+		for (ProductLine line : m_config.getProductLines().values()) {
 			productLines.put(line.getId(), line);
 		}
 		return MapUtils.sortMap(productLines,new Comparator<Map.Entry<String,ProductLine>>() {

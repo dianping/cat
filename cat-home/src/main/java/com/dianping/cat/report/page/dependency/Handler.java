@@ -31,6 +31,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
+import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
@@ -394,7 +395,7 @@ public class Handler implements PageHandler<Context> {
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
 			model.setProductLineGraph(productLineGraph.toJson());
-			model.setProductLines(m_graphConfigManager.getConfig().getProductLines());
+			model.setProductLines(new ArrayList<ProductLine>(m_graphConfigManager.queryProductLines().values()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);

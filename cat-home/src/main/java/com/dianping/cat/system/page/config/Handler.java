@@ -126,6 +126,7 @@ public class Handler implements PageHandler<Context> {
 
 		case TOPOLOGY_GRAPH_PRODUCT_LINE:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			model.setProductLines(m_topologyConfigManager.queryProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
 			graphPruductLineAddOrUpdate(payload, model);

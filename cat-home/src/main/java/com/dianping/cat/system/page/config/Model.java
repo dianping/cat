@@ -40,6 +40,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	
 	private ProductLine m_productLine;
 
+	private Map<String, ProductLine> m_productLines;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -182,6 +184,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setProductLine(ProductLine productLine) {
    	m_productLine = productLine;
+   }
+
+	public void setProductLines(Map<String, ProductLine> productLines) {
+		m_productLines = productLines;
+   }
+
+	public Map<String, ProductLine> getProductLines() {
+   	return m_productLines;
    }
 	
 }
