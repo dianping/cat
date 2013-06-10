@@ -1,21 +1,21 @@
 package com.dianping.cat.system.page.config;
 
 public enum JspFile {
-	PROJECT_ALL("/jsp/system/project.jsp"),
+	PROJECT_ALL("/jsp/system/project/project.jsp"),
 
-	PROJECT_UPATE("/jsp/system/projectUpdate.jsp"),
+	PROJECT_UPATE("/jsp/system/project/projectUpdate.jsp"),
 
-	AGGREGATION_ALL("/jsp/system/aggregation.jsp"),
+	AGGREGATION_ALL("/jsp/system/aggregation/aggregation.jsp"),
 
-	AGGREGATION_UPATE("/jsp/system/aggregationUpdate.jsp"),
+	AGGREGATION_UPATE("/jsp/system/aggregation/aggregationUpdate.jsp"),
 
-	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("/jsp/system/topologyGraphNodeConfigAdd.jsp"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("/jsp/system/topology/topologyGraphNodeConfigAdd.jsp"),
 
-	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("/jsp/system/topologyGraphNodeConfigs.jsp"), 
+	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("/jsp/system/topology/topologyGraphNodeConfigs.jsp"), 
 
-	TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE("/jsp/system/topologyGraphEdgeConfigAdd.jsp"),
+	TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE("/jsp/system/topology/topologyGraphEdgeConfigAdd.jsp"),
 
-	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("/jsp/system/topologyGraphEdgeConfigs.jsp"), 
+	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("/jsp/system/topology/topologyGraphEdgeConfigs.jsp"), 
 	
 
 	;

@@ -8,5 +8,10 @@
 	<edge-config key="PigeonCall:UserWeb:UserService" type="PigeonCall" from="UserWeb" to="UserService" warning-threshold='1' error-threshold='2' warning-response-time='50.0' error-response-time='50.0'></edge-config>
 	<edge-config key="PigeonCall:UserWeb:UserService" type="PigeonCall" from="UserWeb" to="UserService" warning-threshold='1' error-threshold='2' warning-response-time='50.0' error-response-time='50.0'></edge-config>
 	<edge-config key="sql:UserWeb:Dianping" type="sql" from="UserWeb" to="Dianping" warning-threshold='1' error-threshold='2' warning-response-time='50.0' error-response-time='50.0'></edge-config>
+	<product-line id="TuanGou" title="TuanGou" order="1" important="true">
+		<domain id="MobileApi"></domain>
+		<domain id="MobileApi"></domain>
+	</product-line>
+	<product-line></product-line>
 </topology-graph-config>
 

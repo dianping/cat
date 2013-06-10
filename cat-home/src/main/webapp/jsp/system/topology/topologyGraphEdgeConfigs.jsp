@@ -66,13 +66,13 @@
 	</script>
 	<div class="row-fluid">
         <div class="span2">
-			<%@include file="./configTree.jsp"%>
+			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
-			<h5 id="state" class="text-center text-error">&nbsp;</h5>
+			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<c:if test="${w:size(model.edgeConfigs) ==0 }">
 				<div class="row-fluid">
 				<div class="span10"><h5 class="text-center text-error">拓扑图依赖关系配置信息 </h5></div>

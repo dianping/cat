@@ -7,6 +7,8 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+
+
 <form name="topologyGraphNodeConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=topologyGraphNodeConfigAddSumbit">
 	<h4 class="text-center text-error" id="state">&nbsp;</h4>
 	<h4 class="text-center text-error">修改拓扑节点配置信息</h4>
@@ -22,7 +24,11 @@
 					<input id="id" name="domainConfig.id" value="${payload.domain}" readonly required/>
 				</c:if>
 				<c:if test="${empty payload.domain}">
-					<input id="id" name="domainConfig.id" value="${model.domainConfig.id}" required/>
+					<select style="width:200px;" name="domainConfig.id" id="id">
+	                     <c:forEach var="item" items="${model.projects}">
+	                           <option value="${item.domain}">${item.domain}</option>
+	                     </c:forEach>
+                 	 </select>
 				</c:if>
 			</td>
 		</tr>

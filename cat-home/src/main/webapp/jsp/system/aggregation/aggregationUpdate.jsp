@@ -12,7 +12,7 @@
 	<div>
 		<div class="row-fluid">
         <div class="span2">
-		<%@include file="./configTree.jsp"%>
+		<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
 		</br>
