@@ -3,9 +3,15 @@ package com.dianping.cat.report.page.dependency.graph;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -16,13 +22,16 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.MapUtils;
+import com.dianping.cat.home.dependency.config.entity.Domain;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
+import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 
-public class TopologyGraphConfigManger implements Initializable {
+public class TopologyGraphConfigManager implements Initializable {
 
 	private TopologyGraphConfig m_config;
 
@@ -59,7 +68,7 @@ public class TopologyGraphConfigManger implements Initializable {
 
 		return sb.toString();
 	}
-	
+
 	private String buildErrorDes(String... args) {
 		StringBuilder sb = new StringBuilder("<span style='color:red'>");
 		int len = args.length;
@@ -121,15 +130,13 @@ public class TopologyGraphConfigManger implements Initializable {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
 
-			
-
 			if (avg > config.getErrorResponseTime()) {
 				errorCode = ERROR;
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			} else if (avg > config.getWarningResponseTime()) {
 				errorCode = WARN;
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
-			}else{
+			} else {
 				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			}
 			if (error >= config.getErrorThreshold()) {
@@ -138,7 +145,7 @@ public class TopologyGraphConfigManger implements Initializable {
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
 				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
-			}else if (error > 0) {
+			} else if (error > 0) {
 				sb.append(buildDes(type, ERROR_STR, String.valueOf(error)));
 			}
 		}
@@ -228,6 +235,21 @@ public class TopologyGraphConfigManger implements Initializable {
 		return flushConfig();
 	}
 
+	public boolean insertProductLine(ProductLine line, String[] domains) {
+		m_config.removeProductLine(line.getId());
+		m_config.addProductLine(line);
+
+		for (String domain : domains) {
+			line.addDomain(new Domain(domain));
+		}
+		return flushConfig();
+	}
+
+	public boolean deleteProductLine(String line) {
+		m_config.removeProductLine(line);
+		return flushConfig();
+	}
+
 	public boolean insertEdgeConfig(EdgeConfig config) {
 		config.setKey(config.getType() + ":" + config.getFrom() + ":" + config.getTo());
 		m_config.addEdgeConfig(config);
@@ -270,6 +292,34 @@ public class TopologyGraphConfigManger implements Initializable {
 			return config;
 		}
 		return null;
+	}
+
+	public List<String> queryDomains(String productLine) {
+		List<String> domains = new ArrayList<String>();
+		ProductLine line = m_config.findProductLine(productLine);
+
+		if (line != null) {
+			for (Domain domain : line.getDomains().values()) {
+				domains.add(domain.getId());
+			}
+		}
+		return domains;
+	}
+
+	public Map<String, ProductLine> queryProductLines() {
+		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
+
+		for (ProductLine line : m_config.getProductLines()) {
+			productLines.put(line.getId(), line);
+		}
+		return MapUtils.sortMap(productLines,new Comparator<Map.Entry<String,ProductLine>>() {
+
+			@Override
+         public int compare(Entry<String, ProductLine> o1, Entry<String, ProductLine> o2) {
+				return (int)(o2.getValue().getOrder()*100-o1.getValue().getOrder()*100);
+         }
+		});
+		
 	}
 
 	private String readConfig() throws IOException {

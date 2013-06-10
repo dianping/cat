@@ -29,7 +29,7 @@
  				<div class="well sidebar-nav">
            			 <ul class="nav nav-list">
 		 				 <c:forEach var="item" items="${model.productLines}" varStatus="status">
-					             <li class="text-left" id="tab${item}"><a href="?op=productLine&productLine=${item}&minute=${model.minute}&domain=${model.domain}&date=${model.date}">${item}</a></li>
+					             <li class="text-left" id="tab${item.id}"><a href="?op=productLine&productLine=${item.id}&minute=${model.minute}&domain=${model.domain}&date=${model.date}">${item.title}</a></li>
 			            </c:forEach></ul></div></div>
  			<div class="span10">
  				<div class="text-center" id="container" style="width:1000px;height:600px;border:solid 1px #ccc;"></div>

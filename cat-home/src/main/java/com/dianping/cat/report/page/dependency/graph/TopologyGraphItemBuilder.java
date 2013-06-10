@@ -11,7 +11,7 @@ import com.dianping.cat.home.dependency.graph.entity.Node;
 public class TopologyGraphItemBuilder {
 
 	@Inject
-	private TopologyGraphConfigManger m_graphConfigManager;
+	private TopologyGraphConfigManager m_graphConfigManager;
 
 	private static final int OK = GraphConstrant.OK;
 

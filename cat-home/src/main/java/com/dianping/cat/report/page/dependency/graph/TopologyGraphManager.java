@@ -2,9 +2,11 @@ package com.dianping.cat.report.page.dependency.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -19,13 +21,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dependency.config.entity.Domain;
+import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig.Group;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
@@ -43,10 +45,10 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private TopologyGraphBuilder m_graphBuilder;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private TopologyGraphConfigManager m_configManger;
 
 	@Inject
-	private ProductLineConfig m_productLineConfig;
+	private ServerConfigManager m_manager;
 
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
@@ -57,17 +59,14 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
 		TopologyGraph topologyGraph = queryGraph(time);
 		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		Group group = m_productLineConfig.getGroups().get(productLine);
-		if (group != null) {
-			List<String> domains = group.getDomains();
+		List<String> domains = m_configManger.queryDomains(productLine);
 
-			if (topologyGraph != null) {
-				for (String domain : domains) {
-					Node node = topologyGraph.findNode(domain);
+		if (topologyGraph != null) {
+			for (String domain : domains) {
+				Node node = topologyGraph.findNode(domain);
 
-					if (node != null) {
-						dashboard.addNode(m_graphBuilder.cloneNode(node));
-					}
+				if (node != null) {
+					dashboard.addNode(m_graphBuilder.cloneNode(node));
 				}
 			}
 		}
@@ -77,17 +76,19 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public ProductLinesDashboard buildDashboardGraph(long time) {
 		TopologyGraph topologyGraph = queryGraph(time);
 		ProductLinesDashboard dashboardGraph = new ProductLinesDashboard();
+		Set<String> m_allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, Group> groups = m_productLineConfig.getGroups();
+			Map<String, ProductLine> groups = m_configManger.queryProductLines();
 
-			for (Entry<String, Group> entry : groups.entrySet()) {
+			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String groupName = entry.getKey();
-				Group groupDetail = entry.getValue();
-
-				for (String nodeName : groupDetail.getDomains()) {
+				Map<String, Domain> domains = entry.getValue().getDomains();
+				for (Domain domain : domains.values()) {
+					String nodeName = domain.getId();
 					Node node = topologyGraph.findNode(nodeName);
 
+					m_allDomains.add(nodeName);
 					if (node != null) {
 						dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
 					}
@@ -99,7 +100,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				String self = edge.getSelf();
 				String to = edge.getTarget();
 
-				if (m_productLineConfig.contains(self) && m_productLineConfig.contains(to)) {
+				if (m_allDomains.contains(self) && m_allDomains.contains(to)) {
 					dashboardGraph.addEdge(m_graphBuilder.cloneEdge(edge));
 				}
 			}
@@ -162,7 +163,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		TopologyGraph graph = m_topologyGraphs.get(time);
 		long current = System.currentTimeMillis();
 		long minute = current - current % TimeUtil.ONE_MINUTE;
-		
+
 		if (minute == time && graph == null) {
 			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
 

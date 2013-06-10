@@ -27,7 +27,8 @@ import com.dianping.cat.home.dal.report.AggregationRuleDao;
 import com.dianping.cat.home.dal.report.AggregationRuleEntity;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger;
+import com.dianping.cat.home.dependency.config.entity.ProductLine;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 
@@ -42,7 +43,7 @@ public class Handler implements PageHandler<Context> {
 	private AggregationRuleDao m_aggregationRuleDao;
 
 	@Inject
-	private TopologyGraphConfigManger m_topologyConfigManager;
+	private TopologyGraphConfigManager m_topologyConfigManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -122,8 +123,39 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(graphEdgeConfigDelete(payload));
 			model.buildEdgeInfo();
 			break;
+
+		case TOPOLOGY_GRAPH_PRODUCT_LINE:
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			break;
+		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
+			graphPruductLineAddOrUpdate(payload, model);
+			model.setProjects(queryAllProjects());
+			break;
+		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
+			model.setOpState(m_topologyConfigManager.deleteProductLine(payload.getProductLineName()));
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			break;
+		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
+		ProductLine line = payload.getProductLine();
+	 String[] domains = payload.getDomains();
+
+		return m_topologyConfigManager.insertProductLine(line, domains);
+	}
+
+	private void graphPruductLineAddOrUpdate(Payload payload, Model model) {
+		String name = payload.getProductLineName();
+
+		if (!StringUtil.isEmpty(name)) {
+			model.setProductLine(m_topologyConfigManager.getConfig().findProductLine(name));
+		}
 	}
 
 	private boolean graphEdgeConfigAddOrUpdateSubmit(Payload payload, Model model) {

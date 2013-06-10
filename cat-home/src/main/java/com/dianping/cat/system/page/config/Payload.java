@@ -9,6 +9,7 @@ import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
+import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -19,6 +20,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("project")
 	private Project m_project = new Project();
+
+	@ObjectMeta("productLine")
+	private ProductLine m_productLine = new ProductLine();
 
 	@ObjectMeta("aggregation")
 	private AggregationRule m_rule = new AggregationRule();
@@ -32,8 +36,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("projectId")
 	private int m_projectId;
 
+	@FieldMeta("productLineName")
+	private String m_productLineName;
+
 	@FieldMeta("domain")
 	private String m_domain;
+
+	@FieldMeta("domains")
+	private String[] m_domains = new String[100];
 
 	@FieldMeta("from")
 	private String m_from;
@@ -164,6 +174,30 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setFrom(String from) {
 		m_from = from;
+	}
+
+	public ProductLine getProductLine() {
+		return m_productLine;
+	}
+
+	public void setProductLine(ProductLine productLine) {
+		m_productLine = productLine;
+	}
+
+	public String getProductLineName() {
+		return m_productLineName;
+	}
+
+	public void setProductLineName(String productLineName) {
+		m_productLineName = productLineName;
+	}
+
+	public String[] getDomains() {
+		return m_domains;
+	}
+
+	public void setDomains(String[] domains) {
+		m_domains = domains;
 	}
 
 }

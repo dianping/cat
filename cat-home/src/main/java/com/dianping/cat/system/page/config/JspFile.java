@@ -17,7 +17,10 @@ public enum JspFile {
 
 	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("/jsp/system/topology/topologyGraphEdgeConfigs.jsp"), 
 	
-
+	TOPOLOGY_GRAPH_PRODUCT_LINE("/jsp/system/topology/topologyProductLines.jsp"), 
+	
+	TOPOLOGY_GRAPH_PRODUCT_ADD_OR_UPDATE("/jsp/system/topology/topologyProductLineAdd.jsp"),
+	
 	;
 
 	private String m_path;

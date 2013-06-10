@@ -8,6 +8,7 @@
            <li class='nav-header'><h4>拓扑图配置</h4></li>
 	       <li id="topylogyNodeConfigList"><a href="?op=topologyGraphNodeConfigList"><strong>拓扑节点阀值</strong></a></li>
 	       <li id="topylogyEdgeConfigList"><a href="?op=topologyGraphEdgeConfigList"><strong>拓扑依赖阀值</strong></a></li>
+	       <li id="topologyProductLines"><a href="?op=topologyProductLines"><strong>产品线配置</strong></a></li>
            <li class='nav-header'><h4>业务监控配置</h4></li>
 	       <li id="bussinessConfigList"><a href="?"><strong>业务监控规则</strong></a></li>
          </ul>

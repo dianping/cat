@@ -18,7 +18,7 @@ import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 
 public class GraphConfigManagerTest {
-	private TopologyGraphConfigManger m_manager;
+	private TopologyGraphConfigManager m_manager;
 
 	private File m_file;
 
@@ -31,7 +31,7 @@ public class GraphConfigManagerTest {
 
 	@Before
 	public void setUp() throws InitializationException, IOException {
-		m_manager = new TopologyGraphConfigManger();
+		m_manager = new TopologyGraphConfigManager();
 		m_file = new File("src/test/resources/com/dianping/cat/report/page/dependency/graph/ConfigForTest.xml");
 		m_orginalContent = Files.forIO().readFrom(m_file, "utf-8");
 		m_manager.setFileName(m_file.getAbsolutePath());

@@ -29,7 +29,16 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	TOPOLOGY_GRAPH_EDGE_CONFIG_DELETE("topologyGraphEdgeConfigDelete"), 
 	
-	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("topologyGraphEdgeConfigList");
+	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("topologyGraphEdgeConfigList"),
+	
+	TOPOLOGY_GRAPH_PRODUCT_LINE("topologyProductLines"),
+	
+	TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE("topologyProductLineAdd"),
+	
+	TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT("topologyProductLineAddSubmit"),
+	
+	TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE("topologyProductLineDelete")
+	;
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {

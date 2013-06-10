@@ -38,11 +38,11 @@ import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
@@ -64,6 +64,9 @@ public class Handler implements PageHandler<Context> {
 	private TopologyGraphManager m_graphManager;
 
 	@Inject
+	private TopologyGraphConfigManager m_graphConfigManager;
+
+	@Inject
 	private ReportService m_reportService;
 
 	@Inject
@@ -79,9 +82,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "top")
 	private ModelService<TopReport> m_topService;
-
-	@Inject
-	private ProductLineConfig m_productLineConfig;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
@@ -394,7 +394,7 @@ public class Handler implements PageHandler<Context> {
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
 			model.setProductLineGraph(productLineGraph.toJson());
-			model.setProductLines(new ArrayList<String>(m_productLineConfig.queryProductLines()));
+			model.setProductLines(m_graphConfigManager.getConfig().getProductLines());
 			break;
 		}
 		m_jspViewer.view(ctx, model);

@@ -73,7 +73,7 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td><input class='btn btn-primary' id="addOrUpdateEdgeSubmit" type="submit"
-				name="submit" value="submit"/></td>
+				name="submit" value="提交"/></td>
 		</tr>
 	</table>
 </form>

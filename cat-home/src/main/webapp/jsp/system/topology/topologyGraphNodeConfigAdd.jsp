@@ -52,7 +52,7 @@
 		</c:if>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input class='btn btn-primary' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="submit" /></td>
+			<td><input class='btn btn-primary' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 		</tr>
 	</table>
 </form>

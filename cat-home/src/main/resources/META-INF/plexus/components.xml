@@ -586,15 +586,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</implementation>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1194,10 +1194,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
-			<implementation>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</implementation>
 			<requirements>
@@ -1208,7 +1204,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2540,6 +2536,9 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
@@ -2557,9 +2556,6 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 					<field-name>m_topService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2597,10 +2593,10 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2609,8 +2605,8 @@
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
-			<implementation>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</implementation>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.JspViewer</role>
@@ -2875,7 +2871,7 @@
 					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2905,10 +2901,6 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>

@@ -14,6 +14,7 @@ import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
+import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.system.SystemPage;
 
@@ -36,6 +37,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private DomainConfig m_domainConfig;
 
 	private EdgeConfig m_edgeConfig;
+	
+	private ProductLine m_productLine;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -173,4 +176,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
+	public ProductLine getProductLine() {
+   	return m_productLine;
+   }
+
+	public void setProductLine(ProductLine productLine) {
+   	m_productLine = productLine;
+   }
+	
 }
