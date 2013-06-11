@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.home.dependency.graph"  enable-merger="true"  enable-sax-parser="true"
-	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true">
+	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true"  
+	enable-native-parser="true"  enable-native-builder="true">
   <entity name="topology-graph"  root="true">
     <attribute name="id" value-type="String" />
     <attribute name="type" value-type="String" />

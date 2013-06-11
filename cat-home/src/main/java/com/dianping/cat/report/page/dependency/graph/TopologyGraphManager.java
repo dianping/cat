@@ -34,6 +34,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {

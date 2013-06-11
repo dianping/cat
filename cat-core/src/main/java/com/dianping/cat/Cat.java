@@ -29,7 +29,9 @@ public class Cat {
 
 	private static Cat s_instance = new Cat();
 
-	private static final String MetricType = "metricType";
+	public static final String MetricType = "_MetricType";
+
+	public static final String MetricGroup = "_MetricGroup";
 
 	private static void checkAndInitialize() {
 		synchronized (s_instance) {
@@ -120,23 +122,25 @@ public class Cat {
 		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
-	public static void recordMetric(String name, double value) {
+	private static void recordMetric(String group, String name, double value, String metricType) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(name).append("=").append(value).append("&").append(MetricType).append("=sum");
+
+		sb.append(name).append("=").append(value);
+		sb.append("&").append(MetricGroup).append("=").append(group);
+		sb.append("&").append(MetricType).append("=").append(metricType);
 		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
 	}
 
-	public static void recordResponseTimeMetric(String name, double millis) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(name).append("=").append(millis).append("&").append(MetricType).append("=avg");
-		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
+	public static void recordMetric(String group, String name, double value) {
+		recordMetric(group, name, value, "SUM");
 	}
 
-	public static void incrementCounter(String name) {
-		StringBuilder sb = new StringBuilder();
+	public static void recordResponseTimeMetric(String group, String name, double millis) {
+		recordMetric(group, name, millis, "AVG");
+	}
 
-		sb.append(name).append("=").append(1).append("&").append(MetricType).append("=count");
-		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
+	public static void recordCountMetric(String group, String name) {
+		recordMetric(group, name, 1, "SUM");
 	}
 
 	public static void logMetric(String name, Object... keyValues) {

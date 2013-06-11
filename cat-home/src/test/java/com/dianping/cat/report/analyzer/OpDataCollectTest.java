@@ -20,6 +20,7 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
+import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 
 public class OpDataCollectTest extends ComponentTestCase {
 
@@ -27,6 +28,14 @@ public class OpDataCollectTest extends ComponentTestCase {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+	@Test
+	public void test1()throws Exception{
+		DependencyReportBuilder builder =(DependencyReportBuilder)lookup(DependencyReportBuilder.class);
+		System.out.println(builder.toString());
+		
+		System.out.println(builder.buildHourReport("Cat", "Domain", new Date()));
+	}
+	
 	@Test
 	public void test() throws Exception {
 		m_hourlyReportService = (HourlyReportService) lookup(HourlyReportService.class);

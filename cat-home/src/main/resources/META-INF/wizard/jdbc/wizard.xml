@@ -17,6 +17,7 @@
          <table name="location"/>
          <table name="aggregationRule"/>
          <table name="event"/>
+         <table name="topologyGraph"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="alarmTemplate"/>

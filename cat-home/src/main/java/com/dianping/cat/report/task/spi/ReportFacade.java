@@ -14,6 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
+import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.health.HealthReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
@@ -64,6 +65,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
+	
+	@Inject
+	private DependencyReportBuilder m_dependendcyReportBuilder;
 
 	private Logger m_logger;
 
@@ -89,11 +93,11 @@ public class ReportFacade implements LogEnabled, Initializable {
 				return false;
 			} else {
 				boolean result = false;
-				
-				if (type == TYPE_DAILY) {
-					result = reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
-				} else if (type == TYPE_HOUR) {
+
+				if (type == TYPE_HOUR) {
 					result = reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+				} else if (type == TYPE_DAILY) {
+					result = reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_WEEK) {
 					result = reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_MONTH) {
@@ -134,6 +138,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
 		m_reportBuilders.put("health", m_healthReportBuilder);
 		m_reportBuilders.put("state", m_stateReportBuilder);
+		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
 	}
 
 }

@@ -18,6 +18,8 @@ import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -39,6 +41,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private TaskDao m_taskDao;
 
 	@Inject
 	private DomainManager m_domainManager;
@@ -317,6 +322,18 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
+						
+						m_reportDao.insert(r);
+
+						Task task = m_taskDao.createLocal();
+						task.setCreationDate(new Date());
+						task.setProducer("");
+						task.setReportDomain(domain);
+						task.setReportName("dependency");
+						task.setReportPeriod(period);
+						task.setStatus(1); // status todo
+						task.setTaskType(0);
+						m_taskDao.insert(task);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);

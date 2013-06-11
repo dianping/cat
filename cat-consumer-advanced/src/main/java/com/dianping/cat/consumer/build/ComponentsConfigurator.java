@@ -24,6 +24,7 @@ import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.SqltableDao;
 import com.dianping.cat.consumer.core.dal.HostinfoDao;
 import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.storage.BucketManager;
 
@@ -53,7 +54,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(MessageAnalyzer.class, DependencyAnalyzer.ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, DomainManager.class, DatabaseParser.class));
+		      .req(BucketManager.class, ReportDao.class, TaskDao.class, DomainManager.class, DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, BussinessConfigManager.class));
