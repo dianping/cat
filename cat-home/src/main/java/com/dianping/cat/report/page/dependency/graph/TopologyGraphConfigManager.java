@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 public class TopologyGraphConfigManager implements Initializable {
 
 	private TopologyGraphConfig m_config;
+
+	private Map<String, String> m_domainToProductLine = new HashMap<String, String>();
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 
@@ -66,17 +69,6 @@ public class TopologyGraphConfigManager implements Initializable {
 		}
 		sb.append(args[len - 1]).append(GraphConstrant.ENTER);
 
-		return sb.toString();
-	}
-
-	private String buildErrorDes(String... args) {
-		StringBuilder sb = new StringBuilder("<span style='color:red'>");
-		int len = args.length;
-
-		for (int i = 0; i < len - 1; i++) {
-			sb.append(args[i]).append(GraphConstrant.DELIMITER);
-		}
-		sb.append(args[len - 1]).append("</span>").append(GraphConstrant.ENTER);
 		return sb.toString();
 	}
 
@@ -117,6 +109,17 @@ public class TopologyGraphConfigManager implements Initializable {
 		result.setValue(sb.toString());
 		return result;
 
+	}
+
+	private String buildErrorDes(String... args) {
+		StringBuilder sb = new StringBuilder("<span style='color:red'>");
+		int len = args.length;
+
+		for (int i = 0; i < len - 1; i++) {
+			sb.append(args[i]).append(GraphConstrant.DELIMITER);
+		}
+		sb.append(args[len - 1]).append("</span>").append(GraphConstrant.ENTER);
+		return sb.toString();
 	}
 
 	public Pair<Integer, String> buildNodeState(String domain, Index index) {
@@ -169,16 +172,21 @@ public class TopologyGraphConfigManager implements Initializable {
 	public boolean deleteDomainConfig(String type, String domain) {
 		NodeConfig types = m_config.getNodeConfigs().get(type);
 		types.removeDomainConfig(domain);
-		return flushConfig();
+		return storeConfig();
 	}
 
 	public boolean deleteEdgeConfig(String type, String from, String to) {
 		String key = type + ':' + from + ':' + to;
 		m_config.removeEdgeConfig(key);
-		return flushConfig();
+		return storeConfig();
 	}
 
-	private boolean flushConfig() {
+	public boolean deleteProductLine(String line) {
+		m_config.removeProductLine(line);
+		return storeConfig();
+	}
+
+	private boolean storeConfig() {
 		String data = m_config.toString();
 		try {
 			Files.forIO().writeTo(new File(m_fileName), data);
@@ -186,6 +194,16 @@ public class TopologyGraphConfigManager implements Initializable {
 			Cat.logError(e);
 			return false;
 		}
+
+		Map<String, ProductLine> productLines = m_config.getProductLines();
+		Map<String, String> domainToProductLine = new HashMap<String, String>();
+
+		for (ProductLine product : productLines.values()) {
+			for (Domain domain : product.getDomains().values()) {
+				domainToProductLine.put(domain.getId(), product.getId());
+			}
+		}
+		m_domainToProductLine = domainToProductLine;
 		return true;
 	}
 
@@ -220,6 +238,11 @@ public class TopologyGraphConfigManager implements Initializable {
 		}
 	}
 
+	public boolean insertDomainConfig(String type, DomainConfig config) {
+		m_config.findOrCreateNodeConfig(type).addDomainConfig(config);
+		return storeConfig();
+	}
+
 	public boolean insertDomainDefaultConfig(String type, DomainConfig config) {
 		NodeConfig node = m_config.findOrCreateNodeConfig(type);
 
@@ -227,12 +250,13 @@ public class TopologyGraphConfigManager implements Initializable {
 		node.setDefaultErrorThreshold(config.getErrorThreshold());
 		node.setDefaultWarningResponseTime(config.getWarningResponseTime());
 		node.setDefaultWarningThreshold(config.getWarningThreshold());
-		return flushConfig();
+		return storeConfig();
 	}
 
-	public boolean insertDomainConfig(String type, DomainConfig config) {
-		m_config.findOrCreateNodeConfig(type).addDomainConfig(config);
-		return flushConfig();
+	public boolean insertEdgeConfig(EdgeConfig config) {
+		config.setKey(config.getType() + ":" + config.getFrom() + ":" + config.getTo());
+		m_config.addEdgeConfig(config);
+		return storeConfig();
 	}
 
 	public boolean insertProductLine(ProductLine line, String[] domains) {
@@ -242,18 +266,7 @@ public class TopologyGraphConfigManager implements Initializable {
 		for (String domain : domains) {
 			line.addDomain(new Domain(domain));
 		}
-		return flushConfig();
-	}
-
-	public boolean deleteProductLine(String line) {
-		m_config.removeProductLine(line);
-		return flushConfig();
-	}
-
-	public boolean insertEdgeConfig(EdgeConfig config) {
-		config.setKey(config.getType() + ":" + config.getFrom() + ":" + config.getTo());
-		m_config.addEdgeConfig(config);
-		return flushConfig();
+		return storeConfig();
 	}
 
 	public EdgeConfig queryEdgeConfig(String type, String from, String to) {
@@ -312,14 +325,18 @@ public class TopologyGraphConfigManager implements Initializable {
 		for (ProductLine line : m_config.getProductLines().values()) {
 			productLines.put(line.getId(), line);
 		}
-		return MapUtils.sortMap(productLines,new Comparator<Map.Entry<String,ProductLine>>() {
+		return MapUtils.sortMap(productLines, new Comparator<Map.Entry<String, ProductLine>>() {
 
 			@Override
-         public int compare(Entry<String, ProductLine> o1, Entry<String, ProductLine> o2) {
-				return (int)(o2.getValue().getOrder()*100-o1.getValue().getOrder()*100);
-         }
+			public int compare(Entry<String, ProductLine> o1, Entry<String, ProductLine> o2) {
+				return (int) (o2.getValue().getOrder() * 100 - o1.getValue().getOrder() * 100);
+			}
 		});
-		
+
+	}
+
+	public String queryProductLineByDomain(String domain) {
+		return m_domainToProductLine.get(domain);
 	}
 
 	private String readConfig() throws IOException {

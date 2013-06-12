@@ -350,7 +350,7 @@ public class Handler implements PageHandler<Context> {
 			buildExternalErrorOnGraph(topologyGraph, buildZabbixHeader(payload, model), externalErrors);
 			buildExceptionInfoOnGraph(payload, model, topologyGraph);
 			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate()  - 1));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(topologyGraph));
 			break;
 		case LINE_CHART:
@@ -374,7 +374,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			buildTopErrorInfo(payload, model);
 			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate()  - 1));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setDashboardGraph(dashboardGraph.toJson());
 			model.setDashboardGraphData(dashboardGraph);
 			break;
@@ -393,7 +393,7 @@ public class Handler implements PageHandler<Context> {
 				buildNodeExceptionInfo(node, model, payload);
 			}
 			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setProductLineGraph(productLineGraph.toJson());
 			model.setProductLines(new ArrayList<ProductLine>(m_graphConfigManager.queryProductLines().values()));
 			break;
