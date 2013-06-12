@@ -122,25 +122,24 @@ public class Cat {
 		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
-	private static void recordMetric(String group, String name, double value, String metricType) {
+	private static void recordMetric( String name, double value, String metricType) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(name).append("=").append(value);
-		sb.append("&").append(MetricGroup).append("=").append(group);
 		sb.append("&").append(MetricType).append("=").append(metricType);
 		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
 	}
 
-	public static void recordMetric(String group, String name, double value) {
-		recordMetric(group, name, value, "SUM");
+	public static void recordMetric( String name, double value) {
+		recordMetric( name, value, "SUM");
 	}
 
-	public static void recordResponseTimeMetric(String group, String name, double millis) {
-		recordMetric(group, name, millis, "AVG");
+	public static void recordResponseTimeMetric( String name, double millis) {
+		recordMetric( name, millis, "AVG");
 	}
 
-	public static void recordCountMetric(String group, String name) {
-		recordMetric(group, name, 1, "SUM");
+	public static void recordCountMetric( String name) {
+		recordMetric( name, 1, "SUM");
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
