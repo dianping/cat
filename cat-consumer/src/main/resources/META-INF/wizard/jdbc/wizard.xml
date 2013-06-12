@@ -14,5 +14,8 @@
          <table name="task"/>
          <table name="project"/>
       </group>
+      <group name="config" package="com.dainping.cat.consumer.dal.config">
+         <table name="config"/>
+      </group>
    </jdbc>
 </wizard>

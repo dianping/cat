@@ -16,10 +16,16 @@ import java.util.TreeMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.config.Config;
+import com.dianping.cat.consumer.core.config.ConfigDao;
+import com.dianping.cat.consumer.core.config.ConfigEntity;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.helper.CatString;
@@ -33,6 +39,8 @@ import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 
 public class TopologyGraphConfigManager implements Initializable {
+	@Inject
+	private ConfigDao m_configDao;
 
 	private TopologyGraphConfig m_config;
 
@@ -46,15 +54,17 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private static final String MILLISECOND = "(ms)";
 
-	private static final String DEFAULT_FILE = "/data/appdatas/cat/topology-config.xml";
-
 	private static final int OK = GraphConstrant.OK;
 
 	private static final int WARN = GraphConstrant.WARN;
 
 	private static final int ERROR = GraphConstrant.ERROR;
 
-	private String m_fileName = DEFAULT_FILE;
+	private static final String CONFIG_NAME = "topologyConfig";
+
+	private int m_configId;
+
+	private String m_fileName;
 
 	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "PigeonCall", "PigeonClient"));
 
@@ -108,7 +118,6 @@ public class TopologyGraphConfigManager implements Initializable {
 		result.setKey(errorCode);
 		result.setValue(sb.toString());
 		return result;
-
 	}
 
 	private String buildErrorDes(String... args) {
@@ -133,10 +142,10 @@ public class TopologyGraphConfigManager implements Initializable {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
 
-			if (avg > config.getErrorResponseTime()) {
+			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
-			} else if (avg > config.getWarningResponseTime()) {
+			} else if (avg >= config.getWarningResponseTime()) {
 				errorCode = WARN;
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			} else {
@@ -187,12 +196,25 @@ public class TopologyGraphConfigManager implements Initializable {
 	}
 
 	private boolean storeConfig() {
-		String data = m_config.toString();
-		try {
-			Files.forIO().writeTo(new File(m_fileName), data);
-		} catch (IOException e) {
-			Cat.logError(e);
-			return false;
+		if (m_fileName != null) {
+			try {
+				Files.forIO().writeTo(new File(m_fileName), m_config.toString());
+			} catch (IOException e) {
+				Cat.logError(e);
+				return false;
+			}
+		} else {
+			try {
+				Config config = m_configDao.createLocal();
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_config.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
 		}
 
 		Map<String, ProductLine> productLines = m_config.getProductLines();
@@ -225,16 +247,40 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		try {
-			String content = readConfig();
+		if (m_fileName != null) {
+			try {
+				String content = Files.forIO().readFrom(new File(m_fileName), "utf-8");
+				m_config = DefaultSaxParser.parse(content);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		} else {
+			try {
+				Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+				String content = config.getContent();
+				// String content = readConfig();
+				m_config = DefaultSaxParser.parse(content);
+				m_configId = config.getId();
+			} catch (DalNotFoundException e) {
+				try {
+					String content = Files.forIO().readFrom(
+					      this.getClass().getResourceAsStream("/config/default-topology-config.xml"), "utf-8");
+					Config config = m_configDao.createLocal();
 
-			m_config = DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			System.err.println(e);
-			Cat.logError(e);
-		}
-		if (m_config == null) {
-			m_config = new TopologyGraphConfig();
+					config.setName(CONFIG_NAME);
+					config.setContent(content);
+					m_configDao.insert(config);
+					m_config = DefaultSaxParser.parse(content);
+					m_configId = config.getId();
+				} catch (Exception ex) {
+					Cat.logError(ex);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			if (m_config == null) {
+				m_config = new TopologyGraphConfig();
+			}
 		}
 	}
 
@@ -274,7 +320,7 @@ public class TopologyGraphConfigManager implements Initializable {
 
 		if (edgeConfig == null) {
 			DomainConfig domainConfig = null;
-			if ("PigeonClient".equalsIgnoreCase(type)) {
+			if ("PigeonCall".equalsIgnoreCase(type)) {
 				domainConfig = queryNodeConfig("PigeonService", to);
 			} else if ("PigeonServer".equalsIgnoreCase(type)) {
 				domainConfig = queryNodeConfig("PigeonService", from);
@@ -339,12 +385,25 @@ public class TopologyGraphConfigManager implements Initializable {
 		return m_domainToProductLine.get(domain);
 	}
 
-	private String readConfig() throws IOException {
-		return Files.forIO().readFrom(new File(m_fileName), "utf-8");
-	}
-
 	public void setFileName(String file) {
 		m_fileName = file;
+	}
+
+	public class Reload implements Task {
+
+		@Override
+		public void run() {
+
+		}
+
+		@Override
+		public String getName() {
+			return null;
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 
 }

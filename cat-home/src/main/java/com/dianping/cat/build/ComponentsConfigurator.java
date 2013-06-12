@@ -15,6 +15,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.core.config.ConfigDao;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.TaskDao;
@@ -218,7 +219,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
-		all.add(C(TopologyGraphConfigManager.class));
+		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 

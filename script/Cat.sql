@@ -273,6 +273,16 @@ CREATE TABLE `topologyGraph` (
   KEY `period` (`period`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
 
+CREATE TABLE `config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NULL COMMENT '配置名称',
+  `content` longtext COMMENT '配置的具体内容',
+  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
+  `modify_date` datetime NOT NULL COMMENT '配置修改时间',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储系统的全局配置信息';
+
 
 
 
