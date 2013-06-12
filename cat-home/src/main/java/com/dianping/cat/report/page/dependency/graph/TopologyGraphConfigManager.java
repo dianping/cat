@@ -14,9 +14,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -30,6 +33,7 @@ import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.MapUtils;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.config.entity.Domain;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
@@ -38,7 +42,7 @@ import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 
-public class TopologyGraphConfigManager implements Initializable {
+public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -66,9 +70,13 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private String m_fileName;
 
+	private long m_modifyTime;
+
 	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "PigeonCall", "PigeonClient"));
 
 	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
+
+	private Logger m_logger;
 
 	private String buildDes(String... args) {
 		StringBuilder sb = new StringBuilder();
@@ -195,38 +203,9 @@ public class TopologyGraphConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	private boolean storeConfig() {
-		if (m_fileName != null) {
-			try {
-				Files.forIO().writeTo(new File(m_fileName), m_config.toString());
-			} catch (IOException e) {
-				Cat.logError(e);
-				return false;
-			}
-		} else {
-			try {
-				Config config = m_configDao.createLocal();
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(m_config.toString());
-				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-
-		Map<String, ProductLine> productLines = m_config.getProductLines();
-		Map<String, String> domainToProductLine = new HashMap<String, String>();
-
-		for (ProductLine product : productLines.values()) {
-			for (Domain domain : product.getDomains().values()) {
-				domainToProductLine.put(domain.getId(), product.getId());
-			}
-		}
-		m_domainToProductLine = domainToProductLine;
-		return true;
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	private String formatType(String type) {
@@ -241,7 +220,7 @@ public class TopologyGraphConfigManager implements Initializable {
 		return realType;
 	}
 
-	public TopologyGraphConfig getConfig() {
+	public synchronized TopologyGraphConfig getConfig() {
 		return m_config;
 	}
 
@@ -258,9 +237,10 @@ public class TopologyGraphConfigManager implements Initializable {
 			try {
 				Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 				String content = config.getContent();
-				// String content = readConfig();
+
 				m_config = DefaultSaxParser.parse(content);
 				m_configId = config.getId();
+				m_modifyTime = config.getModifyDate().getTime();
 			} catch (DalNotFoundException e) {
 				try {
 					String content = Files.forIO().readFrom(
@@ -270,8 +250,10 @@ public class TopologyGraphConfigManager implements Initializable {
 					config.setName(CONFIG_NAME);
 					config.setContent(content);
 					m_configDao.insert(config);
+
 					m_config = DefaultSaxParser.parse(content);
 					m_configId = config.getId();
+					m_modifyTime = config.getModifyDate().getTime();
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
@@ -282,6 +264,8 @@ public class TopologyGraphConfigManager implements Initializable {
 				m_config = new TopologyGraphConfig();
 			}
 		}
+
+		Threads.forGroup("Cat").start(new Reload());
 	}
 
 	public boolean insertDomainConfig(String type, DomainConfig config) {
@@ -353,6 +337,10 @@ public class TopologyGraphConfigManager implements Initializable {
 		return null;
 	}
 
+	public String queryProductLineByDomain(String domain) {
+		return m_domainToProductLine.get(domain);
+	}
+
 	public List<String> queryProductLineDomains(String productLine) {
 		List<String> domains = new ArrayList<String>();
 		ProductLine line = m_config.findProductLine(productLine);
@@ -381,24 +369,79 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	}
 
-	public String queryProductLineByDomain(String domain) {
-		return m_domainToProductLine.get(domain);
-	}
-
 	public void setFileName(String file) {
 		m_fileName = file;
+	}
+
+	private boolean storeConfig() {
+		if (m_fileName != null) {
+			try {
+				Files.forIO().writeTo(new File(m_fileName), m_config.toString());
+			} catch (IOException e) {
+				Cat.logError(e);
+				return false;
+			}
+		} else {
+			try {
+				Config config = m_configDao.createLocal();
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_config.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+
+		Map<String, ProductLine> productLines = m_config.getProductLines();
+		Map<String, String> domainToProductLine = new HashMap<String, String>();
+
+		for (ProductLine product : productLines.values()) {
+			for (Domain domain : product.getDomains().values()) {
+				domainToProductLine.put(domain.getId(), product.getId());
+			}
+		}
+		m_domainToProductLine = domainToProductLine;
+		return true;
 	}
 
 	public class Reload implements Task {
 
 		@Override
-		public void run() {
-
+		public String getName() {
+			return null;
 		}
 
 		@Override
-		public String getName() {
-			return null;
+		public void run() {
+			boolean active = true;
+			while (active) {
+				try {
+					Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+					long modifyTime = config.getModifyDate().getTime();
+
+					if (modifyTime > m_modifyTime) {
+						String content = config.getContent();
+
+						synchronized (m_config) {
+							m_config = DefaultSaxParser.parse(content);
+						}
+
+						m_modifyTime = modifyTime;
+						m_logger.info("Topology config refresh done!");
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+
+				try {
+					Thread.sleep(TimeUtil.ONE_MINUTE);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
 		}
 
 		@Override
