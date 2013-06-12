@@ -32,8 +32,8 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.config.entity.ProductLine;
-import com.dianping.cat.home.dependency.graph.entity.Edge;
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
@@ -116,7 +116,7 @@ public class Handler implements PageHandler<Context> {
 
 			graph.setDes(graph.getDes() + problemInfo);
 		}
-		for (Node node : graph.getNodes().values()) {
+		for (TopologyNode node : graph.getNodes().values()) {
 			if (node.getType().equals(GraphConstrant.PROJECT)) {
 				node.setLink(buildLink(payload, model, node.getId()));
 
@@ -134,7 +134,7 @@ public class Handler implements PageHandler<Context> {
 			List<Event> eventList = entry.getValue();
 
 			for (Event event : eventList) {
-				Node node = graph.findNode(event.getDomain());
+				TopologyNode node = graph.findTopologyNode(event.getDomain());
 
 				if (node != null) {
 					if (!m_nodes.contains(node.getId())) {
@@ -213,7 +213,7 @@ public class Handler implements PageHandler<Context> {
 		      m_dateFormat.format(new Date(payload.getDate())));
 	}
 
-	private void buildNodeZabbixInfo(Node node, Model model, Payload payload) {
+	private void buildNodeZabbixInfo(TopologyNode node, Model model, Payload payload) {
 		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
 		String domain = node.getId();
 		List<Event> events = m_eventManager.queryEvents(domain, reportTime);
@@ -235,7 +235,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildNodeExceptionInfo(Node node, Model model, Payload payload) {
+	private void buildNodeExceptionInfo(TopologyNode node, Model model, Payload payload) {
 		String domain = node.getId();
 		if (node.getStatus() != GraphConstrant.OK) {
 			String exceptionInfo = buildProblemInfo(domain, payload);
@@ -365,10 +365,10 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DASHBOARD:
 			ProductLinesDashboard dashboardGraph = m_graphManager.buildDashboardGraph(reportTime.getTime());
-			Map<String, List<Node>> dashboardNodes = dashboardGraph.getNodes();
+			Map<String, List<TopologyNode>> dashboardNodes = dashboardGraph.getNodes();
 
-			for (Entry<String, List<Node>> entry : dashboardNodes.entrySet()) {
-				for (Node node : entry.getValue()) {
+			for (Entry<String, List<TopologyNode>> entry : dashboardNodes.entrySet()) {
+				for (TopologyNode node : entry.getValue()) {
 					buildNodeZabbixInfo(node, model, payload);
 				}
 			}
@@ -386,9 +386,9 @@ public class Handler implements PageHandler<Context> {
 			}
 			ProductLineDashboard productLineGraph = m_graphManager
 			      .buildProductLineGraph(productLine, reportTime.getTime());
-			List<Node> productLineNodes = productLineGraph.getNodes();
+			List<TopologyNode> productLineNodes = productLineGraph.getNodes();
 
-			for (Node node : productLineNodes) {
+			for (TopologyNode node : productLineNodes) {
 				buildNodeZabbixInfo(node, model, payload);
 				buildNodeExceptionInfo(node, model, payload);
 			}
@@ -445,9 +445,9 @@ public class Handler implements PageHandler<Context> {
 
 	private Map<String, List<String>> parseDependencies(TopologyGraph graph) {
 		Map<String, List<String>> dependencies = new HashMap<String, List<String>>();
-		Map<String, Edge> edges = graph.getEdges();
+		Map<String, TopologyEdge> edges = graph.getEdges();
 
-		for (Edge temp : edges.values()) {
+		for (TopologyEdge temp : edges.values()) {
 			String type = temp.getType();
 			String target = temp.getTarget();
 

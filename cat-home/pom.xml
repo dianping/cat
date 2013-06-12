@@ -151,7 +151,7 @@
                </webResources>
             </configuration>
          </plugin>
-        <!--  <plugin>
+         <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
             <version>2.0.5</version>
@@ -193,7 +193,7 @@
                   </configuration>
                </execution>
             </executions>
-         </plugin> -->
+         </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>

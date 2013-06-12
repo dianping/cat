@@ -15,8 +15,8 @@ import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dependency.graph.entity.Edge;
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 
 public class TopologyGraphBuilder extends BaseVisitor {
@@ -33,12 +33,12 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
 
-	public Node createNode(String domain) {
+	public TopologyNode createNode(String domain) {
 		return m_itemBuilder.createNode(domain);
 	}
 
-	public Node cloneNode(Node node) {
-		Node result = new Node();
+	public TopologyNode cloneNode(TopologyNode node) {
+		TopologyNode result = new TopologyNode();
 
 		result.setDes(node.getDes());
 		result.setId(node.getId());
@@ -49,8 +49,8 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		return result;
 	}
 
-	public Edge cloneEdge(Edge edge) {
-		Edge result = new Edge();
+	public TopologyEdge cloneEdge(TopologyEdge edge) {
+		TopologyEdge result = new TopologyEdge();
 
 		result.setDes(edge.getDes());
 		result.setKey(edge.getKey());
@@ -90,7 +90,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		}
 	}
 
-	private Edge mergeEdge(Edge old, Edge edge) {
+	private TopologyEdge mergeEdge(TopologyEdge old, TopologyEdge edge) {
 		if (old == null) {
 			return edge;
 		} else {
@@ -105,7 +105,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		}
 	}
 
-	private Node mergeNode(Node old, Node node) {
+	private TopologyNode mergeNode(TopologyNode old, TopologyNode node) {
 		if (old == null) {
 			return node;
 		} else {
@@ -130,9 +130,9 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		String type = dependency.getType();
 		// pigeonServer is no use
 		if (!m_pigeonServices.contains(type)) {
-			Edge edge = m_itemBuilder.buildEdge(m_domain, dependency);
+			TopologyEdge edge = m_itemBuilder.buildEdge(m_domain, dependency);
 			TopologyGraph graph = findOrCreateGraph();
-			Edge old = graph.findEdge(edge.getKey());
+			TopologyEdge old = graph.findTopologyEdge(edge.getKey());
 
 			if (old != null) {
 				System.out.println(old);
@@ -140,7 +140,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 			graph.getEdges().put(edge.getKey(), mergeEdge(old, edge));
 			if ("Database".equals(type)) {
 				String target = dependency.getTarget();
-				Node nodeOld = graph.findNode(target);
+				TopologyNode nodeOld = graph.findTopologyNode(target);
 
 				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.createDatabaseNode(target)));
 			}
@@ -157,8 +157,8 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	@Override
 	public void visitIndex(Index index) {
 		TopologyGraph graph = findOrCreateGraph();
-		Node node = m_itemBuilder.buildNode(m_domain, index);
-		Node old = graph.findNode(node.getId());
+		TopologyNode node = m_itemBuilder.buildNode(m_domain, index);
+		TopologyNode old = graph.findTopologyNode(node.getId());
 
 		graph.getNodes().put(node.getId(), mergeNode(old, node));
 	}

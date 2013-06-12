@@ -72,10 +72,10 @@
 			"bPaginate": false,
 		});
 		var data = ${model.topologyGraph};
-		
 		console.log(data);
 		function parse(data){
 			var nodes = data.nodes;
+			var edges = data.edges;
 			var points = [];
 			var sides = [];
 
@@ -84,7 +84,7 @@
 					points.push(nodes[o]);
 				}
 			}
-			for(var o in data.edges){
+			for(var o in edges){
 				if(data.edges.hasOwnProperty(o)){
 					sides.push(data.edges[o]);
 				}

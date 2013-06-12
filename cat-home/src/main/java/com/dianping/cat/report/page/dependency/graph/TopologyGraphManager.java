@@ -27,8 +27,8 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.TopologyGraphEntity;
 import com.dianping.cat.home.dependency.config.entity.Domain;
 import com.dianping.cat.home.dependency.config.entity.ProductLine;
-import com.dianping.cat.home.dependency.graph.entity.Edge;
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
@@ -77,7 +77,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				Map<String, Domain> domains = entry.getValue().getDomains();
 				for (Domain domain : domains.values()) {
 					String nodeName = domain.getId();
-					Node node = topologyGraph.findNode(nodeName);
+					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
 
 					m_allDomains.add(nodeName);
 					if (node != null) {
@@ -85,9 +85,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					}
 				}
 			}
-			Map<String, Edge> edges = topologyGraph.getEdges();
+			Map<String, TopologyEdge> edges = topologyGraph.getEdges();
 
-			for (Edge edge : edges.values()) {
+			for (TopologyEdge edge : edges.values()) {
 				String self = edge.getSelf();
 				String to = edge.getTarget();
 
@@ -106,7 +106,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 		if (topologyGraph != null) {
 			for (String domain : domains) {
-				Node node = topologyGraph.findNode(domain);
+				TopologyNode node = topologyGraph.findTopologyNode(domain);
 
 				if (node != null) {
 					dashboard.addNode(m_graphBuilder.cloneNode(node));
@@ -125,42 +125,42 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		topylogyGraph.setStatus(GraphConstrant.OK);
 
 		if (all != null) {
-			Node node = all.findNode(domain);
+			TopologyNode node = all.findTopologyNode(domain);
 
 			if (node != null) {
 				topylogyGraph.setDes(node.getDes());
 				topylogyGraph.setStatus(node.getStatus());
 				topylogyGraph.setType(node.getType());
 			}
-			Collection<Edge> edges = all.getEdges().values();
+			Collection<TopologyEdge> edges = all.getEdges().values();
 
-			for (Edge edge : edges) {
+			for (TopologyEdge edge : edges) {
 				String self = edge.getSelf();
 				String target = edge.getTarget();
-				Edge cloneEdge = m_graphBuilder.cloneEdge(edge);
+				TopologyEdge cloneEdge = m_graphBuilder.cloneEdge(edge);
 
 				if (self.equals(domain)) {
-					Node other = all.findNode(target);
+					TopologyNode other = all.findTopologyNode(target);
 
 					if (other != null) {
-						topylogyGraph.addNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addTopologyNode(m_graphBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addTopologyNode(m_graphBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
-					topylogyGraph.addEdge(cloneEdge);
+					topylogyGraph.addTopologyEdge(cloneEdge);
 				} else if (target.equals(domain)) {
-					Node other = all.findNode(self);
+					TopologyNode other = all.findTopologyNode(self);
 
 					if (other != null) {
-						topylogyGraph.addNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addTopologyNode(m_graphBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addTopologyNode(m_graphBuilder.createNode(target));
 					}
 					cloneEdge.setTarget(edge.getSelf());
 					cloneEdge.setSelf(edge.getTarget());
 					cloneEdge.setOpposite(true);
-					topylogyGraph.addEdge(cloneEdge);
+					topylogyGraph.addTopologyEdge(cloneEdge);
 				}
 			}
 		}

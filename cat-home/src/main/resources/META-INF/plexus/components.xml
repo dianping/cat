@@ -1630,8 +1630,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
-			<implementation>com.dainping.cat.home.dal.user.DpAdminLoginDao</implementation>
+			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2829,7 +2829,7 @@
 					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2852,8 +2852,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
-			<implementation>com.dainping.cat.home.dal.user.DpAdminLoginDao</implementation>
+			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2865,7 +2865,7 @@
 			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
@@ -2951,7 +2951,7 @@
 			<implementation>com.dianping.cat.system.page.login.service.SessionManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -2,11 +2,11 @@ package com.dianping.cat.consumer.advanced;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -51,7 +51,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Inject
 	private DatabaseParser m_parser;
 
-	private Map<String, DependencyReport> m_reports = new HashMap<String, DependencyReport>();
+	private Map<String, DependencyReport> m_reports = new ConcurrentHashMap<String, DependencyReport>();
 
 	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
 	      "PigeonService"));
@@ -308,6 +308,23 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
+				try {
+					Task task = m_taskDao.createLocal();
+
+					task.setCreationDate(new Date());
+					task.setProducer("");
+					task.setReportDomain("Cat");
+					task.setReportName(ID);
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					task.setTaskType(0);
+					m_taskDao.insert(task);
+
+					System.out.println(task);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+
 				for (DependencyReport report : m_reports.values()) {
 					try {
 						Report r = m_reportDao.createLocal();
@@ -320,20 +337,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						r.setIp(ip);
 						r.setType(1);
 						r.setContent(xml);
-
 						m_reportDao.insert(r);
-						
-						m_reportDao.insert(r);
-
-						Task task = m_taskDao.createLocal();
-						task.setCreationDate(new Date());
-						task.setProducer("");
-						task.setReportDomain(domain);
-						task.setReportName(ID);
-						task.setReportPeriod(period);
-						task.setStatus(1); // status todo
-						task.setTaskType(0);
-						m_taskDao.insert(task);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
