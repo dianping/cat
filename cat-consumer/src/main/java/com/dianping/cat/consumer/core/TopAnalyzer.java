@@ -109,7 +109,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
 
-					r.setName("top");
+					r.setName(ID);
 					r.setDomain(domain);
 					r.setPeriod(period);
 					r.setIp(ip);

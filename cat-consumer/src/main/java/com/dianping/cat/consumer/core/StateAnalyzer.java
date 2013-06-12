@@ -158,7 +158,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			String xml = builder.buildXml(report);
 			String domain = report.getDomain();
 
-			r.setName("state");
+			r.setName(ID);
 			r.setDomain(domain);
 			r.setPeriod(period);
 			r.setIp(ip);

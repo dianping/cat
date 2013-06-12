@@ -314,7 +314,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("dependency");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -329,7 +329,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						task.setCreationDate(new Date());
 						task.setProducer("");
 						task.setReportDomain(domain);
-						task.setReportName("dependency");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						task.setTaskType(0);
