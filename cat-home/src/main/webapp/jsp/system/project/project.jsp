@@ -33,7 +33,7 @@
 				<tr class="odd">
 					<th width="15%">项目名称</th>
 					<th width="10%">所属部门</th>
-					<th width="10%">产品线</th>
+					<th width="10%">二级分类（可按照产品线）</th>
 					<th width="15%">组邮件</th>
 					<th width="8%">负责人</th>
 					<th width="5%">操作</th>
