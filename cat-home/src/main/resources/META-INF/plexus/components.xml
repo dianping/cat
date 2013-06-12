@@ -1271,6 +1271,9 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>dependency</role-hint>
 				</requirement>
@@ -2681,6 +2684,9 @@
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2690,6 +2696,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.JspViewer</role>

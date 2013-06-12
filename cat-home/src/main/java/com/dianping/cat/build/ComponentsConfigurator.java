@@ -228,7 +228,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class)//
-		      .req(TopologyGraphConfigManager.class).req(ModelService.class, "dependency"));
+		      .req(TopologyGraphConfigManager.class,TopologyGraphDao.class).req(ModelService.class, "dependency"));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //

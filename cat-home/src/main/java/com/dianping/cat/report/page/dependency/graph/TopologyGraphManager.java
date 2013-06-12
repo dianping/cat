@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.dependency.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -21,11 +23,14 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.home.dal.report.TopologyGraphEntity;
 import com.dianping.cat.home.dependency.config.entity.Domain;
 import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
@@ -34,7 +39,6 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
@@ -51,28 +55,14 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	@Inject
 	private ServerConfigManager m_manager;
 
+	@Inject
+	private TopologyGraphDao m_topologyGraphDao;
+
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
 	private Logger m_logger;
 
 	private static final String DEPENDENCY = "Dependency";
-
-	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
-		TopologyGraph topologyGraph = queryGraph(time);
-		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		List<String> domains = m_configManger.queryProductLineDomains(productLine);
-
-		if (topologyGraph != null) {
-			for (String domain : domains) {
-				Node node = topologyGraph.findNode(domain);
-
-				if (node != null) {
-					dashboard.addNode(m_graphBuilder.cloneNode(node));
-				}
-			}
-		}
-		return dashboard;
-	}
 
 	public ProductLinesDashboard buildDashboardGraph(long time) {
 		TopologyGraph topologyGraph = queryGraph(time);
@@ -107,6 +97,23 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			}
 		}
 		return dashboardGraph;
+	}
+
+	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
+		TopologyGraph topologyGraph = queryGraph(time);
+		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
+		List<String> domains = m_configManger.queryProductLineDomains(productLine);
+
+		if (topologyGraph != null) {
+			for (String domain : domains) {
+				Node node = topologyGraph.findNode(domain);
+
+				if (node != null) {
+					dashboard.addNode(m_graphBuilder.cloneNode(node));
+				}
+			}
+		}
+		return dashboard;
 	}
 
 	public TopologyGraph buildTopologyGraph(String domain, long time) {
@@ -160,7 +167,44 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return topylogyGraph;
 	}
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		// if(!m_manager.isLocalMode()&&m_manager.isJobMachine()){
+		Threads.forGroup("Cat").start(new Reload());
+		// }
+	}
+
 	private TopologyGraph queryGraph(long time) {
+		ModelPeriod period = ModelPeriod.getByTime(time);
+
+		if (period.isHistorical()) {
+			return queryGraphFromDB(time);
+		} else {
+			return queryGraphFromMemory(time);
+		}
+	}
+
+	private TopologyGraph queryGraphFromDB(long time) {
+		try {
+			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao.findByPeriod(new Date(time),
+			      TopologyGraphEntity.READSET_FULL);
+			if (topologyGraph != null) {
+				byte[] content = topologyGraph.getContent();
+
+				return DefaultNativeParser.parse(content);
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	private TopologyGraph queryGraphFromMemory(long time) {
 		TopologyGraph graph = m_topologyGraphs.get(time);
 		long current = System.currentTimeMillis();
 		long minute = current - current % TimeUtil.ONE_MINUTE;
@@ -173,18 +217,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			}
 		}
 		return graph;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		// if(!m_manager.isLocalMode()&&m_manager.isJobMachine()){
-		Threads.forGroup("Cat").start(new Reload());
-		// }
 	}
 
 	private class Reload implements Task {
