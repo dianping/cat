@@ -30,9 +30,6 @@
     <attribute name="warning-response-time" value-type="double" primitive="true" />
     <attribute name="error-response-time" value-type="double" primitive="true" />
   </entity>
-  <entity name="domain">
-    <attribute name="id" value-type="String" key="true"/>
-  </entity>
 </model>
 
 

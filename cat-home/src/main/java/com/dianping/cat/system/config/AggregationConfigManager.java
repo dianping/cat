@@ -32,7 +32,6 @@ public class AggregationConfigManager implements Initializable {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
 
-			System.out.println(content);
 			m_aggregation = DefaultSaxParser.parse(content);
 			m_configId = config.getId();
 		} catch (DalNotFoundException e) {

@@ -66,7 +66,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private static final String DEPENDENCY = "Dependency";
 
 	public ProductLinesDashboard buildDashboardGraph(long time) {
-		TopologyGraph topologyGraph = queryGraph(time);
+		TopologyGraph topologyGraph = queryTopologyGraph(time);
 		ProductLinesDashboard dashboardGraph = new ProductLinesDashboard();
 		Set<String> m_allDomains = new HashSet<String>();
 
@@ -101,7 +101,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	}
 
 	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
-		TopologyGraph topologyGraph = queryGraph(time);
+		TopologyGraph topologyGraph = queryTopologyGraph(time);
 		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
 		List<String> domains = m_productLineConfigManger.queryProductLineDomains(productLine);
 
@@ -118,7 +118,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	}
 
 	public TopologyGraph buildTopologyGraph(String domain, long time) {
-		TopologyGraph all = queryGraph(time);
+		TopologyGraph all = queryTopologyGraph(time);
 		TopologyGraph topylogyGraph = new TopologyGraph();
 
 		topylogyGraph.setId(domain);
@@ -175,12 +175,12 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-	//	if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
-			Threads.forGroup("Cat").start(new Reload());
-	//	}
+		// if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
+		Threads.forGroup("Cat").start(new Reload());
+		// }
 	}
 
-	private TopologyGraph queryGraph(long time) {
+	private TopologyGraph queryTopologyGraph(long time) {
 		ModelPeriod period = ModelPeriod.getByTime(time);
 
 		if (period.isHistorical()) {
@@ -210,7 +210,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		long current = System.currentTimeMillis();
 		long minute = current - current % TimeUtil.ONE_MINUTE;
 
-		if (minute == time && graph == null) {
+		if ((minute - time) <= 3 * TimeUtil.ONE_MINUTE && graph == null) {
 			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
 
 			if (graph == null) {
