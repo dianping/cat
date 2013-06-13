@@ -74,7 +74,7 @@
 			"bPaginate": false,
 		});
 		var data = ${model.topologyGraph};
-		console.log(data);
+		var nodeSize = 0;
 		function parse(data){
 			var nodes = data.nodes;
 			var edges = data.edges;
@@ -84,6 +84,7 @@
 			for(var o in nodes){
 				if(nodes.hasOwnProperty(o)){
 					points.push(nodes[o]);
+					nodeSize++;
 				}
 			}
 			for(var o in edges){
@@ -97,7 +98,19 @@
 			delete data.edges;
 			return data;
 		}
-		new  StarTopo('container',parse(data),{
+		var convertData = parse(data);
+		var defaultWeight=0.8;
+		if(nodeSize>30){
+			defaultWeight = 0.5;
+		}else if(nodeSize>20){
+			defaultWeight = 0.6;
+		}else if(nodeSize>10){
+			defaultWeight = 0.8;
+		}else if(nodeSize>0){
+			defaultWeight = 1.0;
+		}
+		console.log(nodeSize+" "+defaultWeight);
+		new  StarTopo('container',convertData,{
 				typeMap:{
 					database:'rect',
 					project:'circle',
@@ -114,7 +127,7 @@
 				return weight+1
 			},
 			nodeWeight:function(weight){
-				return weight/5+0.8;
+				return weight/5+defaultWeight;
 			}});
 	});
 </script>
