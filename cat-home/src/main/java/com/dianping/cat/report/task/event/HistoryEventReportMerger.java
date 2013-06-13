@@ -11,7 +11,7 @@ public class HistoryEventReportMerger extends EventReportMerger {
 	}
 
 	@Override
-	protected void mergeName(EventName old, EventName other) {
+	public void mergeName(EventName old, EventName other) {
 		old.getRanges().clear();
 		other.getRanges().clear();
 		super.mergeName(old, other);

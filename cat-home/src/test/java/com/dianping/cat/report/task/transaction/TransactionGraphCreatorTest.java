@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
@@ -22,7 +22,7 @@ public class TransactionGraphCreatorTest {
 	public void testSplitReportToGraphs() throws Exception {
 		TransactionGraphCreator creator = new TransactionGraphCreator();
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseTransactionReportForGraph.xml"), "utf-8");
-		TransactionReport report = new DefaultDomParser().parse(xml);
+		TransactionReport report = DefaultSaxParser.parse(xml);
 		Date date = new Date();
 		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", "transaction", report);
 		Map<String, Range> realResult = new HashMap<String, Range>();

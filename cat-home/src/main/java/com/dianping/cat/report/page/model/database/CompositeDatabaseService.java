@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
 
@@ -27,7 +27,7 @@ public class CompositeDatabaseService extends BaseCompositeModelService<Database
 		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(request.getProperty("database")));
 		String domain = request.getDomain();
 
-		if (domain.equals(CatString.ALL_Domain)) {
+		if (domain.equals(CatString.ALL)) {
 			merger.setAllDomain(true);
 		}
 

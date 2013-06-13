@@ -17,34 +17,11 @@ public class DatabaseReportMerger extends DefaultMerger {
 		super(databaseReport);
 	}
 
-	public Domain mergesForAllMachine(DatabaseReport report) {
-		Domain machine = new Domain(CatString.ALL_IP);
-
-		for (Domain m : report.getDomains().values()) {
-			if (!m.getId().equals(CatString.ALL_IP)) {
-				visitDomainChildren(machine, m);
-			}
-		}
-
-		return machine;
-	}
-
 	@Override
-	public void visitDomain(Domain domain) {
-		if (m_allDomain) {
-			visitDomainChildren(m_all, domain);
-		} else {
-			super.visitDomain(domain);
-		}
-	}
-
-	@Override
-	protected void mergeTable(Table old, Table table) {
-		old.setTotalCount(old.getTotalCount() + table.getTotalCount());
-		old.setFailCount(old.getFailCount() + table.getFailCount());
-		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
-		old.setSum(old.getSum() + table.getSum());
-		old.setAvg(old.getSum() / (double) old.getTotalCount());
+	protected void mergeDatabaseReport(DatabaseReport old, DatabaseReport databaseReport) {
+		old.getDomainNames().addAll(databaseReport.getDomainNames());
+		old.getDatabaseNames().addAll(databaseReport.getDatabaseNames());
+		super.mergeDatabaseReport(old, databaseReport);
 	}
 
 	@Override
@@ -58,11 +35,29 @@ public class DatabaseReportMerger extends DefaultMerger {
 		old.getSqlNames().addAll(method.getSqlNames());
 	}
 
+	public Domain mergesForAllMachine(DatabaseReport report) {
+		Domain machine = new Domain(CatString.ALL);
+
+		for (Domain m : report.getDomains().values()) {
+			if (!m.getId().equals(CatString.ALL)) {
+				visitDomainChildren(machine, m);
+			}
+		}
+
+		return machine;
+	}
+
 	@Override
-	protected void mergeDatabaseReport(DatabaseReport old, DatabaseReport databaseReport) {
-		old.getDomainNames().addAll(databaseReport.getDomainNames());
-		old.getDatabaseNames().addAll(databaseReport.getDatabaseNames());
-		super.mergeDatabaseReport(old, databaseReport);
+	protected void mergeTable(Table old, Table table) {
+		old.setTotalCount(old.getTotalCount() + table.getTotalCount());
+		old.setFailCount(old.getFailCount() + table.getFailCount());
+		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
+		old.setSum(old.getSum() + table.getSum());
+		old.setAvg(old.getSum() / (double) old.getTotalCount());
+	}
+
+	public void setAllDomain(boolean allDomain) {
+		m_allDomain = true;
 	}
 
 	@Override
@@ -70,7 +65,7 @@ public class DatabaseReportMerger extends DefaultMerger {
 		DatabaseReport old = getDatabaseReport();
 
 		if (m_allDomain) {
-			m_all = old.findOrCreateDomain(CatString.ALL_Domain);
+			m_all = old.findOrCreateDomain(CatString.ALL);
 		}
 		super.visitDatabaseReport(databaseReport);
 		old.setConnectUrl(databaseReport.getConnectUrl());
@@ -80,12 +75,17 @@ public class DatabaseReportMerger extends DefaultMerger {
 		old.getDatabaseNames().addAll(databaseReport.getDatabaseNames());
 
 		if (m_allDomain) {
-			old.getDomainNames().remove(CatString.ALL_Domain);
+			old.getDomainNames().remove(CatString.ALL);
 		}
 
 	}
 
-	public void setAllDomain(boolean allDomain) {
-		m_allDomain = true;
+	@Override
+	public void visitDomain(Domain domain) {
+		if (m_allDomain) {
+			visitDomainChildren(m_all, domain);
+		} else {
+			super.visitDomain(domain);
+		}
 	}
 }

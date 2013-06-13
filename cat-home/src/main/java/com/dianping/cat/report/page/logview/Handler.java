@@ -16,9 +16,9 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.model.ModelPeriod;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 
 public class Handler implements PageHandler<Context> {
@@ -38,7 +38,8 @@ public class Handler implements PageHandler<Context> {
 				ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
 				ModelRequest request = new ModelRequest(id.getDomain(), period) //
 				      .setProperty("messageId", messageId) //
-				      .setProperty("waterfall", String.valueOf(waterfall));
+				      .setProperty("waterfall", String.valueOf(waterfall))
+				      .setProperty("timestamp", String.valueOf(id.getTimestamp()));
 
 				if (m_service.isEligable(request)) {
 					ModelResponse<String> response = m_service.invoke(request);
@@ -65,6 +66,16 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			return null;
 		}
+	}
+
+	private String getPath(String messageId) {
+		MessageId id = MessageId.parse(messageId);
+		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
+		final StringBuilder sb = new StringBuilder();
+		sb.append('/').append(path);
+
+		final String key = id.getDomain() + '-' + id.getIpAddress();
+		return path + key;
 	}
 
 	@Override
@@ -108,16 +119,6 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		m_jspViewer.view(ctx, model);
-	}
-
-	private String getPath(String messageId) {
-		MessageId id = MessageId.parse(messageId);
-		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
-		final StringBuilder sb = new StringBuilder();
-		sb.append('/').append(path);
-
-		final String key = id.getDomain() + '-' + id.getIpAddress();
-		return path + key;
 	}
 
 }

@@ -46,6 +46,7 @@ public class ShopWebMonthAnalyzer extends ComponentTestCase {
 	}
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -126,6 +127,7 @@ public class ShopWebMonthAnalyzer extends ComponentTestCase {
 			m_urls = urls;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 			sb.append(sdf.format(m_date)).append("\t");

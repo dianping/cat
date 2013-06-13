@@ -37,6 +37,7 @@ public class MachineMonthAnalyzer extends ComponentTestCase {
 	private DailyreportDao m_dailyreportDao;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -122,6 +123,7 @@ public class MachineMonthAnalyzer extends ComponentTestCase {
 			return info;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
@@ -204,6 +206,7 @@ public class MachineMonthAnalyzer extends ComponentTestCase {
 			m_loadAvg = loadAvg;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 

@@ -1,14 +1,13 @@
 package com.dianping.cat.consumer;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
-import com.dianping.cat.message.spi.MessageAnalyzer;
-import com.dianping.cat.message.spi.MessageConsumer;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
+
+import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
+import com.dianping.cat.message.spi.MessageConsumer;
 
 public class OneAnalyzerTwoDurationTestConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -20,20 +19,18 @@ public class OneAnalyzerTwoDurationTestConfigurator extends AbstractResourceConf
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(MessageConsumer.class, "mock", RealtimeConsumer.class) //
-		      .config(E("analyzers").value("mock") //
-		      ).req(AnalyzerFactory.class)//
-		);
+		      .req(MessageAnalyzerManager.class));
 
 		all.add(C(MessageAnalyzer.class, "mock", MockAnalyzer.class) //
 		      .is(PER_LOOKUP));
 
-		all.add(C(AnalyzerFactory.class, OneAnalyzerMockFactory.class));
+		all.add(C(MessageAnalyzerManager.class, OneAnalyzerMockManager.class));
 
 		return all;
 	}
 
 	@Override
-	protected File getConfigurationFile() {
-		return new File("src/test/resources/" + OneAnalyzerTwoDurationTest.class.getName().replace('.', '/') + ".xml");
+	protected Class<?> getTestClass() {
+		return OneAnalyzerTwoDurationTest.class;
 	}
 }

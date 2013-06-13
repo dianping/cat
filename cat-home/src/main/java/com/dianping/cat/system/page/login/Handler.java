@@ -91,18 +91,6 @@ public class Handler implements PageHandler<Context> {
 		ctx.skipAction();
 	}
 
-	private void redirect(Context ctx, Payload payload) {
-		String url = payload.getRtnUrl();
-		String loginUrl = ctx.getRequestContext().getActionUri(SystemPage.LOGIN.getName());
-
-		if (url == null || url.length() == 0 || url.equals(loginUrl)) {
-			url = ctx.getRequestContext().getActionUri("");
-		}
-
-		ctx.redirect(url);
-		ctx.stopProcess();
-	}
-
 	@Override
 	@OutboundActionMeta(name = "login")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
@@ -164,5 +152,17 @@ public class Handler implements PageHandler<Context> {
 			sb.append(actionUri);
 		}
 		// m_logger.info(sb.toString());
+	}
+
+	private void redirect(Context ctx, Payload payload) {
+		String url = payload.getRtnUrl();
+		String loginUrl = ctx.getRequestContext().getActionUri(SystemPage.LOGIN.getName());
+
+		if (url == null || url.length() == 0 || url.equals(loginUrl)) {
+			url = ctx.getRequestContext().getActionUri("");
+		}
+
+		ctx.redirect(url);
+		ctx.stopProcess();
 	}
 }

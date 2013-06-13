@@ -48,7 +48,6 @@ public class CatFilter implements Filter {
 			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
 		}	
 
-
 		logRequestPayload(cat, req);
 
 		try {

@@ -35,50 +35,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.DASHBOARD);
-	}
-
-	public String getReport() {
-		return m_report;
-	}
-
-	public void setReport(String report) {
-		m_report = report;
-	}
-
 	public String getDomain() {
 		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setType(String type) {
-		m_type = type;
-	}
-
-	public String getName() {
-		return m_name;
-	}
-
-	public void setName(String name) {
-		m_name = name;
 	}
 
 	public String getIp() {
@@ -88,8 +46,50 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_ip;
 	}
 
+	public String getName() {
+		return m_name;
+	}
+
+	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	public String getReport() {
+		return m_report;
+	}
+
+	public String getType() {
+		return m_type;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	public void setIp(String ip) {
 		m_ip = ip;
+	}
+
+	public void setName(String name) {
+		m_name = name;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.DASHBOARD);
+	}
+
+	public void setReport(String report) {
+		m_report = report;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override

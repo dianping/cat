@@ -10,6 +10,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.hadoop.hdfs.DumpUploader</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.DumpUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.storage.dump.MessageBucket</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucket</implementation>

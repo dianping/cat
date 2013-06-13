@@ -19,15 +19,11 @@ com.dianping.cat.report.page.heartbeat.Handler.class,
 
 com.dianping.cat.report.page.logview.Handler.class,
 
-com.dianping.cat.report.page.ip.Handler.class,
-
 com.dianping.cat.report.page.model.Handler.class,
 
 com.dianping.cat.report.page.sql.Handler.class,
 
 com.dianping.cat.report.page.dashboard.Handler.class,
-
-com.dianping.cat.report.page.task.Handler.class,
 
 com.dianping.cat.report.page.matrix.Handler.class,
 
@@ -43,7 +39,11 @@ com.dianping.cat.report.page.state.Handler.class,
 
 com.dianping.cat.report.page.query.Handler.class,
 
-com.dianping.cat.report.page.top.Handler.class
+com.dianping.cat.report.page.top.Handler.class,
+
+com.dianping.cat.report.page.metric.Handler.class,
+
+com.dianping.cat.report.page.jsError.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

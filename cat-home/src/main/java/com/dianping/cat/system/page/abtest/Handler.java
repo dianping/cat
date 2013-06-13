@@ -89,6 +89,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					}
 				}
 			}
+			System.out.println(abtestModel);
 			return abtestModel;
 		} catch (DalException e) {
 			m_logger.error("Error when find all AbtestRun", e);

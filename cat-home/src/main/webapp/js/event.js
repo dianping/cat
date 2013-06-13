@@ -112,5 +112,5 @@ function graphPieChart(container,data){
 	  });
 }
 
-graphPieChart(document.getElementById('eventGraph'), data );
+
 

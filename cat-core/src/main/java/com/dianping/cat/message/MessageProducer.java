@@ -178,6 +178,20 @@ public interface MessageProducer {
 	public void logHeartbeat(String type, String name, String status, String nameValuePairs);
 
 	/**
+	 * Log a metric in one shot.
+	 * 
+	 * @param type
+	 *           metric type
+	 * @param name
+	 *           metric name
+	 * @param status
+	 *           "0" means success, otherwise means error code
+	 * @param nameValuePairs
+	 *           name value pairs in the format of "a=1&b=2&..."
+	 */
+	public void logMetric(String type, String name, String status, String nameValuePairs);
+
+	/**
 	 * Create a new event with given type and name.
 	 * 
 	 * @param type
@@ -186,7 +200,7 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public Event newEvent(String type, String name);
-
+	
 	/**
 	 * Create a new heartbeat with given type and name.
 	 * 
@@ -196,6 +210,16 @@ public interface MessageProducer {
 	 *           heartbeat name
 	 */
 	public Heartbeat newHeartbeat(String type, String name);
+
+	/**
+	 * Create a new metric with given type and name.
+	 * 
+	 * @param type
+	 *           metric type
+	 * @param name
+	 *           metric name
+	 */
+	public Metric newMetric(String type, String name);
 
 	/**
 	 * Create a new transaction with given type and name.

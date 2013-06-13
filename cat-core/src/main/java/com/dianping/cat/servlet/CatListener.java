@@ -20,7 +20,7 @@ public class CatListener implements ServletContextListener {
 		String catClientXml = ctx.getInitParameter("cat-client-xml");
 
 		if (catClientXml == null) {
-			catClientXml = "/data/appdatas/cat/client.xml";
+			catClientXml = new File(Cat.getCatHome(), "client.xml").getPath();
 		}
 
 		Cat.initialize(new File(catClientXml));

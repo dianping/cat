@@ -40,6 +40,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	private DailyreportDao m_dailyreportDao;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -91,7 +92,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				      DailyreportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
-				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL_IP);
+				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL);
 
 				Indicator indicator = indicators.get(date.getTime());
 				if (indicator == null) {
@@ -229,6 +230,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			m_webCache = webCache;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
@@ -294,6 +296,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			m_sum = sum;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 

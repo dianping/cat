@@ -48,6 +48,20 @@ public class ProblemRender {
 		}
 	}
 
+	private String buildGraphUrl(String type) {
+		return String.format(m_typeGraphLink, m_host, m_domain, m_dateStr, type);
+	}
+
+	private String buildProblemUrl(Date date) {
+		String dateStr = m_sdf.format(m_date);
+
+		return String.format(m_problemLink, m_host, m_domain, dateStr);
+	}
+
+	public Map<Object, Object> getRenderResult() {
+		return m_result;
+	}
+
 	public void visitProblemReport(ProblemReport report) {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		problemStatistics.setAllIp(true);
@@ -76,20 +90,6 @@ public class ProblemRender {
 		m_result.put("types", m_types);
 	}
 
-	private String buildProblemUrl(Date date) {
-		String dateStr = m_sdf.format(m_date);
-
-		return String.format(m_problemLink, m_host, m_domain, dateStr);
-	}
-
-	private String buildGraphUrl(String type) {
-		return String.format(m_typeGraphLink, m_host, m_domain, m_dateStr, type);
-	}
-
-	public Map<Object, Object> getRenderResult() {
-		return m_result;
-	}
-
 	public static class Type {
 		private String m_type;
 
@@ -97,17 +97,16 @@ public class ProblemRender {
 
 		private String m_url;
 
+		public int getCount() {
+			return m_count;
+		}
+
 		public String getType() {
 			return m_type;
 		}
 
-		public Type setType(String type) {
-			m_type = type;
-			return this;
-		}
-
-		public int getCount() {
-			return m_count;
+		public String getUrl() {
+			return m_url;
 		}
 
 		public Type setCount(int count) {
@@ -115,14 +114,15 @@ public class ProblemRender {
 			return this;
 		}
 
-		public String getUrl() {
-			return m_url;
+		public Type setType(String type) {
+			m_type = type;
+			return this;
 		}
 
 		public Type setUrl(String url) {
 			m_url = url;
 			return this;
 		}
-
 	}
+
 }

@@ -1,8 +1,8 @@
 package com.dianping.cat.report.task.transaction;
 
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class HistoryTransactionReportMerger extends TransactionReportMerger {
 
@@ -11,7 +11,7 @@ public class HistoryTransactionReportMerger extends TransactionReportMerger {
 	}
 
 	@Override
-	protected void mergeName(TransactionName old, TransactionName other) {
+	public void mergeName(TransactionName old, TransactionName other) {
 		old.getDurations().clear();
 		old.getRanges().clear();
 

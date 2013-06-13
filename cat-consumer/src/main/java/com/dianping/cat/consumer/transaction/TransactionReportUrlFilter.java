@@ -9,13 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
 public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
-
 	private int m_maxItems = 200;
-	
+
 	private void mergeName(TransactionName old, TransactionName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -43,11 +41,6 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 		if (old.getFailMessageUrl() == null) {
 			old.setFailMessageUrl(other.getFailMessageUrl());
 		}
-	}
-
-	@Override
-	public void visitTransactionReport(TransactionReport transactionReport) {
-		super.visitTransactionReport(transactionReport);
 	}
 
 	@Override
@@ -87,6 +80,7 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 				}
 
 				TransactionName other = type.findOrCreateName("OTHERS");
+
 				for (int i = m_maxItems; i < size; i++) {
 					mergeName(other, all.get(i));
 				}
@@ -97,6 +91,7 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 
 			transactionNames = type.getNames();
 			names = transactionNames.keySet();
+
 			for (String temp : names) {
 				TransactionName tansactionName = transactionNames.get(temp);
 
@@ -110,15 +105,14 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 				transactionNames.remove(temp);
 			}
 		}
+
 		super.visitType(type);
 	}
 
-	public static class TransactionNameCompator implements Comparator<TransactionName> {
-
+	static class TransactionNameCompator implements Comparator<TransactionName> {
 		@Override
 		public int compare(TransactionName o1, TransactionName o2) {
 			return (int) (o2.getTotalCount() - o1.getTotalCount());
 		}
 	}
-
 }

@@ -25,12 +25,6 @@ function graph(container, data) {
 
 		// Clone the options, so the 'options' variable always keeps intact.
 		o = Flotr._.extend(Flotr._.clone(options), opts || {});
-
-		if (opts != null && opts.xaxis != null) {
-			o.title = " From " + formatDate(new Date(opts.xaxis.min)) + " To "
-					+ formatDate(new Date(opts.xaxis.max));
-		} else {
-		}
 		// Return a new graph.
 		return Flotr.draw(container, [ d1 ], o);
 	}
@@ -46,6 +40,9 @@ function graph(container, data) {
 				mode : 'time',
 				timeMode : 'local',
 				labelsAngle : 15
+			},
+			selection : {
+				mode : 'x'
 			},
 			yaxis : {
 				min : area.y1,

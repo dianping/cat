@@ -11,16 +11,16 @@ public class ProblemQueryItem {
 
 	private long m_totalCount;
 
+	public void addCount(long count) {
+		m_totalCount += count;
+	}
+
 	public Date getDate() {
 		return m_date;
 	}
 
 	public String getName() {
 		return m_name;
-	}
-
-	public void addCount(long count) {
-		m_totalCount += count;
 	}
 
 	public long getTotalCount() {

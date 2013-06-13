@@ -12,6 +12,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -23,10 +27,6 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 	public static final String ID = "hdfs";
@@ -62,13 +62,17 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (!m_serverConfigManager.isLocalMode()) {
+		if (m_serverConfigManager.isHdfsOn() && !m_serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(new IdleChecker());
 		}
 	}
 
 	@Override
 	public MessageTree loadMessage(String messageId) throws IOException {
+		if (!m_serverConfigManager.isHdfsOn()) {
+			return null;
+		}
+
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 

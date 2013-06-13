@@ -5,17 +5,17 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
 public class TransactionReportFilterTest {
 	@Test
 	public void test() throws Exception {
-		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
-		TransactionReport report = parser.parse(source);
+		TransactionReport report = DefaultSaxParser.parse(source);
 
 		TransactionType type = report.findMachine("10.1.77.193").findType("URL");
 
@@ -30,7 +30,7 @@ public class TransactionReportFilterTest {
 
 		TransactionReportUrlFilter f1 = new TransactionReportUrlFilter();
 		String filterReport = f1.buildXml(report);
-		TransactionReport newReport = parser.parse(filterReport);
+		TransactionReport newReport = DefaultSaxParser.parse(filterReport);
 
 		System.out.println(newReport.toString().length());
 
