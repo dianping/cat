@@ -276,7 +276,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private boolean isCache(String type) {
-		return (!type.equals("Cache.Web")) && type.startsWith("Cache.");
+		return type.startsWith("Cache.");
 	}
 
 	private void storeReports(boolean atEnd) {
