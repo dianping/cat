@@ -37,15 +37,25 @@
 							value="${model.productLine.order}" required /></td>
 					</tr>
 					<tr>
+						<td style="text-align: right" class="text-success">产品线负责人</td>
+						<td><input name="productLine.owner"
+							value="${model.productLine.owner}" required /></td>
+					</tr>
+					<tr>
+						<td style="text-align: right" class="text-success">产品线邮件</td>
+						<td><input name="productLine.email"
+							value="${model.productLine.email}" required /></td>
+					</tr>
+					<tr>
 						<td style="text-align: right" class="text-success">是否显示到监控大盘</td>
 						<td><c:choose>
-								<c:when test="${model.productLine.important}">
-									<input type="radio" name="productLine.important" value="true" checked />是	
-									<input type="radio" name="productLine.important" value="false" />否
+								<c:when test="${model.productLine.dashboard}">
+									<input type="radio" name="productLine.dashboard" value="true" checked />是	
+									<input type="radio" name="productLine.dashboard" value="false" />否
 							</c:when>
 								<c:otherwise>
-									<input type="radio" name="productLine.important" value="true" />是
-									<input type="radio" name="productLine.important" value="false" checked />否
+									<input type="radio" name="productLine.dashboard" value="true" />是
+									<input type="radio" name="productLine.dashboard" value="false" checked />否
 						</c:otherwise>
 							</c:choose></td>
 					</tr>

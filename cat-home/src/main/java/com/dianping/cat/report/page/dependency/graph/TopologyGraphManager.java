@@ -23,13 +23,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.company.entity.Domain;
+import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.TopologyGraphEntity;
-import com.dianping.cat.home.dependency.config.entity.Domain;
-import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
-import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -40,6 +40,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
@@ -50,7 +51,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private TopologyGraphBuilder m_graphBuilder;
 
 	@Inject
-	private TopologyGraphConfigManager m_configManger;
+	private ProductLineConfigManager m_productLineConfigManger;
 
 	@Inject
 	private ServerConfigManager m_manager;
@@ -70,7 +71,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		Set<String> m_allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, ProductLine> groups = m_configManger.queryProductLines();
+			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String groupName = entry.getKey();
@@ -102,7 +103,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
 		TopologyGraph topologyGraph = queryGraph(time);
 		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		List<String> domains = m_configManger.queryProductLineDomains(productLine);
+		List<String> domains = m_productLineConfigManger.queryProductLineDomains(productLine);
 
 		if (topologyGraph != null) {
 			for (String domain : domains) {
@@ -174,9 +175,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		// if(!m_manager.isLocalMode()&&m_manager.isJobMachine()){
-		Threads.forGroup("Cat").start(new Reload());
-		// }
+	//	if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
+			Threads.forGroup("Cat").start(new Reload());
+	//	}
 	}
 
 	private TopologyGraph queryGraph(long time) {

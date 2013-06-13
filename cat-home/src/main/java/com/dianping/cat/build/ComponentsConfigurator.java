@@ -83,6 +83,7 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -163,7 +164,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DependencyReportBuilder.class) //
 		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class)//
-		      .req(ReportService.class,TopologyGraphBuilder.class,TopologyGraphDao.class));
+		      .req(ReportService.class, TopologyGraphBuilder.class, TopologyGraphDao.class));
 
 		all.add(C(TaskProducer.class, TaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class));
@@ -176,7 +177,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
 		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
-		            StateReportBuilder.class,DependencyReportBuilder.class));
+		            StateReportBuilder.class, DependencyReportBuilder.class));
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
@@ -219,6 +220,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
+		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
+
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
@@ -228,8 +231,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class)//
-		      .req(TopologyGraphConfigManager.class,TopologyGraphDao.class).req(ModelService.class, "dependency"));
+		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class) //
+		      .req(ProductLineConfigManager.class, TopologyGraphDao.class)//
+		      .req(ModelService.class, "dependency"));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //

@@ -4,7 +4,6 @@
  <entity name="topology-graph-config" root="true">
     <entity-ref name="node-config" type="map" names="node-configs"  method-find-or-create="true" />
     <entity-ref name="edge-config" type="map" names="edge-configs"  method-find-or-create="true" />
-	<entity-ref name="product-line" type="map" names="product-lines" method-find-or-create="true"/>
   </entity>
   <entity name="node-config">
     <attribute name="type" value-type="String"  key="true"/>
@@ -30,13 +29,6 @@
     <attribute name="error-threshold" value-type="int" primitive="true" />
     <attribute name="warning-response-time" value-type="double" primitive="true" />
     <attribute name="error-response-time" value-type="double" primitive="true" />
-  </entity>
-  <entity name="product-line">
-    <attribute name="id" value-type="String" key="true"/>
-    <attribute name="title" value-type="String" />
-    <attribute name="order" value-type="double" primitive="true" />
-    <attribute name="important" value-type="boolean" primitive="true"/>
-    <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
   </entity>
   <entity name="domain">
     <attribute name="id" value-type="String" key="true"/>

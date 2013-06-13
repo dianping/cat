@@ -193,6 +193,18 @@
 					 ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
+${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
+${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,]]></manifest>
+                  </configuration>
+               </execution>
             </executions>
          </plugin>
          <plugin>

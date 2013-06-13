@@ -27,23 +27,4 @@
    <edge-config key="PigeonCall:ShopSearchWeb:ShopServer" type="PigeonCall" from="ShopSearchWeb" to="ShopServer" warning-threshold="6" error-threshold="11" warning-response-time="50.01" error-response-time="100.01"/>
    <edge-config key="PigeonCall:UserWeb:ShopServer" type="PigeonCall" from="UserWeb" to="ShopServer" warning-threshold="1" error-threshold="11" warning-response-time="10.0" error-response-time="104.0"/>
    <edge-config key="PigeonCall:Cat:MailServer" type="PigeonCall" from="Cat" to="MailServer" warning-threshold="10" error-threshold="50" warning-response-time="50.0" error-response-time="100.0"/>
-   <product-line id="123" title="123" order="123.0" important="true">
-   </product-line>
-   <product-line id="12344" title="5455" order="5555.0" important="false">
-   </product-line>
-   <product-line id="12" title="12" order="12.0" important="true">
-   </product-line>
-   <product-line id="Info" title="主站" order="1.0" important="true">
-      <domain id="TuanGou"/>
-      <domain id="TuanGouRank"/>
-      <domain id="TuanGouWebBA"/>
-      <domain id="MobileApi"/>
-   </product-line>
-   <product-line id="TuanGou" title="团购" order="1.0" important="true">
-      <domain id="Cat0"/>
-      <domain id="Cat1"/>
-      <domain id="AdwordsWeb"/>
-   </product-line>
-   <product-line id="1234" title="1234" order="6666.0" important="false">
-   </product-line>
 </topology-graph-config>

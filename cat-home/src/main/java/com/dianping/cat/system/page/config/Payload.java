@@ -6,10 +6,10 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
-import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {

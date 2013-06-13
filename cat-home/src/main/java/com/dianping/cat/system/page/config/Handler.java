@@ -22,15 +22,16 @@ import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dal.report.AggregationRuleDao;
 import com.dianping.cat.home.dal.report.AggregationRuleEntity;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
-import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -44,6 +45,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphConfigManager m_topologyConfigManager;
+	
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManger;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -125,19 +129,19 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case TOPOLOGY_GRAPH_PRODUCT_LINE:
-			model.setProductLines(m_topologyConfigManager.queryProductLines());
+			model.setProductLines(m_productLineConfigManger.queryProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
 			graphPruductLineAddOrUpdate(payload, model);
 			model.setProjects(queryAllProjects());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
-			model.setOpState(m_topologyConfigManager.deleteProductLine(payload.getProductLineName()));
-			model.setProductLines(m_topologyConfigManager.queryProductLines());
+			model.setOpState(m_productLineConfigManger.deleteProductLine(payload.getProductLineName()));
+			model.setProductLines(m_productLineConfigManger.queryProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
-			model.setProductLines(m_topologyConfigManager.queryProductLines());
+			model.setProductLines(m_productLineConfigManger.queryProductLines());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -145,16 +149,16 @@ public class Handler implements PageHandler<Context> {
 
 	private boolean graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
 		ProductLine line = payload.getProductLine();
-	 String[] domains = payload.getDomains();
+		String[] domains = payload.getDomains();
 
-		return m_topologyConfigManager.insertProductLine(line, domains);
+		return m_productLineConfigManger.insertProductLine(line, domains);
 	}
 
 	private void graphPruductLineAddOrUpdate(Payload payload, Model model) {
 		String name = payload.getProductLineName();
 
 		if (!StringUtil.isEmpty(name)) {
-			model.setProductLine(m_topologyConfigManager.getConfig().findProductLine(name));
+			model.setProductLine(m_productLineConfigManger.getCompany().findProductLine(name));
 		}
 	}
 

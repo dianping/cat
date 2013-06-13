@@ -51,13 +51,13 @@
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<table class="table table-striped table-bordered">
 				<tr class="text-success">
-					<th>产品线</th><th>显示标题</th><th>顺序</th><th>监控大盘显示</th><th>项目列表</th>
+					<th>产品线</th><th>标题</th><th>顺序</th><th>监控大盘显示</th><th>项目列表</th>
 					<th>操作 <a href="?op=topologyProductLineAdd" class='update btn btn-primary btn-small'>新增</a></th>
 				</tr>
 				<c:forEach var="entry" items="${model.productLines}" varStatus="status">
 					<c:set var='item' value='${entry.value}'/>
 					<tr><td>${item.id}</td><td>${item.title}</td>
-					<td>${item.order}</td><td>${item.important }</td>
+					<td>${item.order}</td><td>${item.dashboard }</td>
 					<td>
 						<c:forEach var="domain" items="${item.domains}"> 
 							${domain.key},

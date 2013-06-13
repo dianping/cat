@@ -30,11 +30,11 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dal.report.Event;
-import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
-import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
@@ -43,7 +43,6 @@ import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
@@ -52,6 +51,7 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class Handler implements PageHandler<Context> {
 
@@ -63,9 +63,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphManager m_graphManager;
-
+	
 	@Inject
-	private TopologyGraphConfigManager m_graphConfigManager;
+	private ProductLineConfigManager m_productLineConfigManger;
 
 	@Inject
 	private ReportService m_reportService;
@@ -395,7 +395,7 @@ public class Handler implements PageHandler<Context> {
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setProductLineGraph(productLineGraph.toJson());
-			model.setProductLines(new ArrayList<ProductLine>(m_graphConfigManager.queryProductLines().values()));
+			model.setProductLines(new ArrayList<ProductLine>(m_productLineConfigManger.queryProductLines().values()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);

@@ -33,9 +33,6 @@ public class DomainNavManager implements Initializable {
 	// key is domain
 	private static Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
 
-	// key is product line
-	private static Map<String, Map<String, Project>> m_productLines = new ConcurrentHashMap<String, Map<String, Project>>();
-
 	public static final String DEFAULT = "Default";
 
 	public static Collection<String> getDomains() {

@@ -3,24 +3,13 @@ package com.dianping.cat.report.page.dependency.graph;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.webres.helper.Files;
@@ -32,23 +21,17 @@ import com.dianping.cat.consumer.core.config.ConfigEntity;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.helper.MapUtils;
-import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dependency.config.entity.Domain;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
-import com.dianping.cat.home.dependency.config.entity.ProductLine;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 
-public class TopologyGraphConfigManager implements Initializable, LogEnabled {
+public class TopologyGraphConfigManager implements Initializable {
 	@Inject
 	private ConfigDao m_configDao;
 
 	private TopologyGraphConfig m_config;
-
-	private Map<String, String> m_domainToProductLine = new HashMap<String, String>();
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 
@@ -72,22 +55,17 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 	private String m_fileName;
 
-	private long m_modifyTime;
-
 	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "PigeonCall", "PigeonClient"));
 
 	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
-
-	private Logger m_logger;
 
 	private String buildDes(String... args) {
 		StringBuilder sb = new StringBuilder();
 		int len = args.length;
 
-		for (int i = 0; i < len - 1; i++) {
+		for (int i = 0; i < len; i++) {
 			sb.append(args[i]).append(GraphConstrant.DELIMITER);
 		}
-		sb.append(args[len - 1]).append(GraphConstrant.ENTER);
 
 		return sb.toString();
 	}
@@ -103,25 +81,25 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 		if (config != null) {
 			double avg = dependency.getAvg();
-			sb.append(buildDes(type, TOTAL_STR, String.valueOf(dependency.getTotalCount())));
+			sb.append(buildDes(type, TOTAL_STR, String.valueOf(dependency.getTotalCount()))).append(GraphConstrant.ENTER);
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
-				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			} else if (avg >= config.getWarningResponseTime()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			} else {
-				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			}
 			if (error >= config.getErrorThreshold()) {
 				errorCode = ERROR;
-				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			} else if (error > 0) {
-				sb.append(buildDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			}
 		}
 		Pair<Integer, String> result = new Pair<Integer, String>();
@@ -133,12 +111,9 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 	private String buildErrorDes(String... args) {
 		StringBuilder sb = new StringBuilder("<span style='color:red'>");
-		int len = args.length;
+		String content = buildDes(args);
 
-		for (int i = 0; i < len - 1; i++) {
-			sb.append(args[i]).append(GraphConstrant.DELIMITER);
-		}
-		sb.append(args[len - 1]).append("</span>").append(GraphConstrant.ENTER);
+		sb.append(content).append("</span>");
 		return sb.toString();
 	}
 
@@ -152,28 +127,34 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 		if (config != null) {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
-			sb.append(buildDes(type, TOTAL_STR, String.valueOf(index.getTotalCount())));
+
+			sb.append(type).append(GraphConstrant.DELIMITER);
+
+			if (index.getTotalCount() > 0) {
+				sb.append(buildDes(TOTAL_STR, String.valueOf(index.getTotalCount())));
+			}
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
-				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(AVG_STR, m_df.format(avg), MILLISECOND));
 			} else if (avg >= config.getWarningResponseTime()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildErrorDes(AVG_STR, m_df.format(avg), MILLISECOND));
 			} else {
-				if (!type.equals("Exception")) {
-					sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				if (!type.equalsIgnoreCase("Exception")) {
+					sb.append(buildDes(AVG_STR, m_df.format(avg), MILLISECOND));
 				}
 			}
 			if (error >= config.getErrorThreshold()) {
 				errorCode = ERROR;
-				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildErrorDes(ERROR_STR, String.valueOf(error)));
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildErrorDes(ERROR_STR, String.valueOf(error)));
 			} else if (error > 0) {
-				sb.append(buildDes(type, ERROR_STR, String.valueOf(error)));
+				sb.append(buildDes(ERROR_STR, String.valueOf(error)));
 			}
+			sb.append(GraphConstrant.ENTER);
 		}
 		Pair<Integer, String> result = new Pair<Integer, String>();
 
@@ -202,16 +183,6 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 		String key = type + ':' + from + ':' + to;
 		m_config.removeEdgeConfig(key);
 		return storeConfig();
-	}
-
-	public boolean deleteProductLine(String line) {
-		m_config.removeProductLine(line);
-		return storeConfig();
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	private String formatType(String type) {
@@ -246,7 +217,6 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 				m_config = DefaultSaxParser.parse(content);
 				m_configId = config.getId();
-				m_modifyTime = config.getModifyDate().getTime();
 			} catch (DalNotFoundException e) {
 				try {
 					String content = Files.forIO().readFrom(
@@ -259,7 +229,6 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 					m_config = DefaultSaxParser.parse(content);
 					m_configId = config.getId();
-					m_modifyTime = config.getModifyDate().getTime();
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
@@ -270,8 +239,6 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 				m_config = new TopologyGraphConfig();
 			}
 		}
-
-		Threads.forGroup("Cat").start(new Reload());
 	}
 
 	public boolean insertDomainConfig(String type, DomainConfig config) {
@@ -292,16 +259,6 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 	public boolean insertEdgeConfig(EdgeConfig config) {
 		config.setKey(config.getType() + ":" + config.getFrom() + ":" + config.getTo());
 		m_config.addEdgeConfig(config);
-		return storeConfig();
-	}
-
-	public boolean insertProductLine(ProductLine line, String[] domains) {
-		m_config.removeProductLine(line.getId());
-		m_config.addProductLine(line);
-
-		for (String domain : domains) {
-			line.addDomain(new Domain(domain));
-		}
 		return storeConfig();
 	}
 
@@ -343,38 +300,6 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
-	public String queryProductLineByDomain(String domain) {
-		return m_domainToProductLine.get(domain);
-	}
-
-	public List<String> queryProductLineDomains(String productLine) {
-		List<String> domains = new ArrayList<String>();
-		ProductLine line = m_config.findProductLine(productLine);
-
-		if (line != null) {
-			for (Domain domain : line.getDomains().values()) {
-				domains.add(domain.getId());
-			}
-		}
-		return domains;
-	}
-
-	public Map<String, ProductLine> queryProductLines() {
-		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
-
-		for (ProductLine line : m_config.getProductLines().values()) {
-			productLines.put(line.getId(), line);
-		}
-		return MapUtils.sortMap(productLines, new Comparator<Map.Entry<String, ProductLine>>() {
-
-			@Override
-			public int compare(Entry<String, ProductLine> o1, Entry<String, ProductLine> o2) {
-				return (int) (o2.getValue().getOrder() * 100 - o1.getValue().getOrder() * 100);
-			}
-		});
-
-	}
-
 	public void setFileName(String file) {
 		m_fileName = file;
 	}
@@ -401,58 +326,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 			}
 		}
 
-		Map<String, ProductLine> productLines = m_config.getProductLines();
-		Map<String, String> domainToProductLine = new HashMap<String, String>();
-
-		for (ProductLine product : productLines.values()) {
-			for (Domain domain : product.getDomains().values()) {
-				domainToProductLine.put(domain.getId(), product.getId());
-			}
-		}
-		m_domainToProductLine = domainToProductLine;
 		return true;
-	}
-
-	public class Reload implements Task {
-
-		@Override
-		public String getName() {
-			return null;
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-					long modifyTime = config.getModifyDate().getTime();
-
-					if (modifyTime > m_modifyTime) {
-						String content = config.getContent();
-
-						synchronized (m_config) {
-							m_config = DefaultSaxParser.parse(content);
-						}
-
-						m_modifyTime = modifyTime;
-						m_logger.info("Topology config refresh done!");
-					}
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-
-				try {
-					Thread.sleep(TimeUtil.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
 	}
 
 }
