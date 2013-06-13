@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -64,11 +65,10 @@ public class ReportServiceImpl implements ReportService {
 	public int getQueryType(Date start, Date end) {
 		long endTime = end.getTime();
 		long startTime = start.getTime();
-
 		long currentWeek = TimeUtil.getCurrentWeek().getTime();
 		long currentMonth = TimeUtil.getCurrentMonth().getTime();
-
 		long duration = endTime - startTime;
+
 		if (duration == TimeUtil.ONE_HOUR) {
 			return s_hourly;
 		}
@@ -104,226 +104,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryTransactionReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryTransactionReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryTransactionReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryTransactionReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryTransactionReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryTransactionReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryTransactionReport(domain, start);
-		} else {
-			return m_dailyReportService.queryTransactionReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public EventReport queryEventReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryEventReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryEventReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryEventReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryEventReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryEventReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryEventReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryEventReport(domain, start);
-		} else {
-			return m_dailyReportService.queryEventReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryProblemReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryProblemReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryProblemReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryProblemReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryProblemReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryProblemReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryProblemReport(domain, start);
-		} else {
-			return m_dailyReportService.queryProblemReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryHeartbeatReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryHeartbeatReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryHeartbeatReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryHeartbeatReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryHeartbeatReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryHeartbeatReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryHeartbeatReport(domain, start);
-		} else {
-			return m_dailyReportService.queryHeartbeatReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public MatrixReport queryMatrixReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryMatrixReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryMatrixReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryMatrixReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryMatrixReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryMatrixReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryMatrixReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryMatrixReport(domain, start);
-		} else {
-			return m_dailyReportService.queryMatrixReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public CrossReport queryCrossReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryCrossReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryCrossReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryCrossReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryCrossReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryCrossReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryCrossReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryCrossReport(domain, start);
-		} else {
-			return m_dailyReportService.queryCrossReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public SqlReport querySqlReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.querySqlReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.querySqlReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.querySqlReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.querySqlReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.querySqlReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.querySqlReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.querySqlReport(domain, start);
-		} else {
-			return m_dailyReportService.querySqlReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryDatabaseReport(database, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryDatabaseReport(database, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryDatabaseReport(database, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryDatabaseReport(database, start);
-		} else {
-			return m_dailyReportService.queryDatabaseReport(database, start, end);
-		}
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryHealthReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryHealthReport(domain, start);
-		} else {
-			return m_dailyReportService.queryHealthReport(domain, start, end);
-		}
-	}
-
-	@Override
-	public StateReport queryStateReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		if (type == s_hourly) {
-			return m_hourlyReportService.queryStateReport(domain, start, end);
-		} else if (type == s_daily) {
-			return m_dailyReportService.queryStateReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			return m_dailyReportService.queryStateReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			return m_weeklyReportService.queryStateReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			return m_weeklyReportCache.queryStateReport(domain, start);
-		} else if (type == s_historyMonth) {
-			return m_monthReportService.queryStateReport(domain, start);
-		} else if (type == s_currentMonth) {
-			return m_monthReportCache.queryStateReport(domain, start);
-		} else {
-			return m_dailyReportService.queryStateReport(domain, start, end);
-		}
-	}
-
-	@Override
 	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
 		return m_hourlyReportService.queryAllDatabaseNames(start, end, reportName);
 	}
@@ -334,12 +114,314 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-   public TopReport queryTopReport(String domain, Date start, Date end) {
+	public CrossReport queryCrossReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
+		CrossReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryCrossReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryCrossReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryCrossReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryCrossReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryCrossReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryCrossReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryCrossReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryCrossReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new CrossReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
+		int type = getQueryType(start, end);
+		DatabaseReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryDatabaseReport(database, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryDatabaseReport(database, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryDatabaseReport(database, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryDatabaseReport(database, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryDatabaseReport(database, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryDatabaseReport(database, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryDatabaseReport(database, start);
+		} else {
+			report = m_dailyReportService.queryDatabaseReport(database, start, end);
+		}
+		if (report == null) {
+			report = new DatabaseReport(database);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public EventReport queryEventReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		EventReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryEventReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryEventReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryEventReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryEventReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryEventReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryEventReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryEventReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryEventReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new EventReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public HealthReport queryHealthReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		HealthReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryHealthReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryHealthReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryHealthReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryHealthReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryHealthReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryHealthReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryHealthReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryHealthReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new HealthReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		HeartbeatReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryHeartbeatReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryHeartbeatReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryHeartbeatReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryHeartbeatReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryHeartbeatReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryHeartbeatReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryHeartbeatReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryHeartbeatReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new HeartbeatReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public MatrixReport queryMatrixReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		MatrixReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryMatrixReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryMatrixReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryMatrixReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryMatrixReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryMatrixReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryMatrixReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryMatrixReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryMatrixReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new MatrixReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public MetricReport queryMetricReport(String group, Date start, Date end) {
+		int type = getQueryType(start, end);
+		
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryMetricReport(group, start, end);
+		} else {
+			throw new RuntimeException("unexcepted query type in metric report!");
+		}
+	}
+
+	@Override
+	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		ProblemReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryProblemReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryProblemReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryProblemReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryProblemReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryProblemReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryProblemReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryProblemReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryProblemReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new ProblemReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public SqlReport querySqlReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		SqlReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.querySqlReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.querySqlReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.querySqlReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.querySqlReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.querySqlReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.querySqlReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.querySqlReport(domain, start);
+		} else {
+			report = m_dailyReportService.querySqlReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new SqlReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public StateReport queryStateReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		StateReport report = null;
+		
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryStateReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryStateReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryStateReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryStateReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryStateReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryStateReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryStateReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryStateReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new StateReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public TopReport queryTopReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		
 		if (type == s_hourly) {
 			return m_hourlyReportService.queryTopReport(domain, start, end);
 		} else {
 			throw new RuntimeException("Top report don't have other report type but houly!");
 		}
+	}
+
+	@Override
+	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		TransactionReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryTransactionReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryTransactionReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryTransactionReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryTransactionReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryTransactionReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new TransactionReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
 	}
 }

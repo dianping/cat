@@ -1,13 +1,13 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.abtest.spi.ABTestEntityManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.ABTestGroupStrategy</role>
-			<role-hint>roundrobin</role-hint>
-			<implementation>com.dianping.cat.abtest.demo.roundrobin.RoundRobinGroupStrategy</implementation>
+			<role>com.dianping.cat.abtest.spi.internal.ABTestContextManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

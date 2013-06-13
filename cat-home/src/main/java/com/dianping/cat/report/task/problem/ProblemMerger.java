@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
@@ -41,6 +41,7 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 		return problemReport;
 	}
 
+	@Override
 	public ProblemReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
 		ProblemReport report = merge(reportDomain, reports, true);
 		Date date = report.getStartTime();

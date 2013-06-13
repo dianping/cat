@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 
 public class CrossReportMergerTest {
@@ -13,8 +13,8 @@ public class CrossReportMergerTest {
 	public void testCrossReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("CrossReportOld.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("CrossReportNew.xml"), "utf-8");
-		CrossReport reportOld = new DefaultDomParser().parse(oldXml);
-		CrossReport reportNew = new DefaultDomParser().parse(newXml);
+		CrossReport reportOld = DefaultSaxParser.parse(oldXml);
+		CrossReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("CrossReportMergeResult.xml"), "utf-8");
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(reportOld.getDomain()));
 

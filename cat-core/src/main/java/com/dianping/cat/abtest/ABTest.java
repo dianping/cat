@@ -16,5 +16,5 @@ public interface ABTest {
 	public boolean isGroupE();
 
 	public boolean isGroup(String name);
-
+	
 }

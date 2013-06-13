@@ -23,6 +23,14 @@ public  class TransactionReportVisitor extends BaseVisitor {
 		m_item.setName(name);
 	}
 
+	public TransactionQueryItem getItem() {
+		return m_item;
+	}
+
+	public void setItem(TransactionQueryItem item) {
+		m_item = item;
+	}
+
 	@Override
 	public void visitName(TransactionName name) {
 		m_currentName = name.getId();
@@ -35,6 +43,12 @@ public  class TransactionReportVisitor extends BaseVisitor {
 			m_item.setAvg(name.getAvg());
 			m_item.setLine95Value(name.getLine95Value());
 		}
+	}
+
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		super.visitTransactionReport(transactionReport);
+		m_item.setDate(transactionReport.getStartTime());
 	}
 
 	@Override
@@ -53,20 +67,6 @@ public  class TransactionReportVisitor extends BaseVisitor {
 		} else {
 			super.visitType(type);
 		}
-	}
-
-	@Override
-	public void visitTransactionReport(TransactionReport transactionReport) {
-		super.visitTransactionReport(transactionReport);
-		m_item.setDate(transactionReport.getStartTime());
-	}
-
-	public TransactionQueryItem getItem() {
-		return m_item;
-	}
-
-	public void setItem(TransactionQueryItem item) {
-		m_item = item;
 	}
 
 }

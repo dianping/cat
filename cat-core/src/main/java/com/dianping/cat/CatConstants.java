@@ -11,8 +11,6 @@ public class CatConstants {
 	/**
 	 * Config File
 	 */
-	public static final String CONFIG_FILE = "/data/appdatas/cat/client.xml";
-
 	public static final String CAT_STATE = "cat-state";
 
 	/**
@@ -78,7 +76,6 @@ public class CatConstants {
 	public static final String NAME_CLIENT_INFO = "ClientInfo";
 
 	public static final String TYPE_ACTION = "Action";
-	
 
 	public static final int ERROR_COUNT = 100;
 

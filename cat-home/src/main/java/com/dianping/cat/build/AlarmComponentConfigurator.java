@@ -34,8 +34,7 @@ import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
 import com.dianping.cat.system.tool.MailSMSImpl;
 
-public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
-
+class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();

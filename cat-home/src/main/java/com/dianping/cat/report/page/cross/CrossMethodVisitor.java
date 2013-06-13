@@ -20,13 +20,13 @@ public class CrossMethodVisitor extends BaseVisitor {
 
 	private DomainManager m_manager;
 
-	public MethodQueryInfo getInfo() {
-		return m_info;
-	}
-
 	public CrossMethodVisitor(String method, DomainManager manager) {
 		m_method = method;
 		m_manager = manager;
+	}
+
+	public MethodQueryInfo getInfo() {
+		return m_info;
 	}
 
 	@Override

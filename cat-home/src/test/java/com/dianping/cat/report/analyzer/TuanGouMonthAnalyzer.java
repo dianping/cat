@@ -17,6 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.health.model.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -30,7 +31,6 @@ import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.health.HealthReportMerger;
 
 @RunWith(JUnit4.class)
@@ -43,6 +43,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 	private DomainManager m_domainManager;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -331,7 +332,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 		TransactionReport transactionReport = meger.getTransactionReport();
 		System.out.println(transactionReport);
 		
-		Machine machine = transactionReport.findMachine(CatString.ALL_IP);
+		Machine machine = transactionReport.findMachine(CatString.ALL);
 		TransactionType type = machine.getTypes().get("URL");
 		
 		for(TransactionName name :type.getNames().values()){
@@ -421,6 +422,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 			m_totalCount = totalCount;
 		}
 
+		@Override
 		public String toString() {
 			return new StringBuilder().append(m_totalCount).append('\t').append(m_failureCount).append('\t').append(m_avg)
 			      .append('\t').append(m_95Line).append('\t').toString();

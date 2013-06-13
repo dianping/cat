@@ -1,6 +1,6 @@
 package com.dianping.cat.report.task.thread;
 
-import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.core.dal.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 
@@ -40,6 +40,7 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	protected abstract boolean processTask(Task doing);
 
+	@Override
 	public void run() {
 		String localIp = getLoaclIp();
 		while (running) {
@@ -56,7 +57,6 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 						if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) {
 							int retryTimes = 0;
 							while (!processTask(task)) {
-								// TODO add failure count
 								retryTimes++;
 								if (retryTimes < MAX_TODO_RETRY_TIMES) {
 									taskRetryDuration();
@@ -71,7 +71,7 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 							}
 						}
 					} catch (Throwable e) {
-						Cat.logError(e);
+						Cat.logError(task.toString(),e);
 					} 
 				} else {
 					taskNotFoundDuration();

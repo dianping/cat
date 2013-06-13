@@ -12,8 +12,6 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
 public class Payload extends AbstractReportPayload<Action> {
-	private ReportPage m_page;
-
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -53,25 +51,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public String getReportLevel() {
-		return m_reportLevel;
-	}
-
-	public void setReportLevel(String reportLevel) {
-		m_reportLevel = reportLevel;
-	}
-
 	public Date getEnd() {
 		return m_end;
 	}
 
-	public String getName() {
-		return m_name;
+	public String getEndStr() {
+		return m_endStr;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
+	public String getName() {
+		return m_name;
 	}
 
 	public String getQueryDomain() {
@@ -82,8 +71,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_queryType;
 	}
 
+	public String getReportLevel() {
+		return m_reportLevel;
+	}
+
 	public Date getStart() {
 		return m_start;
+	}
+
+	public String getStartStr() {
+		return m_startStr;
 	}
 
 	public String getType() {
@@ -107,21 +104,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_name = name;
 	}
 
-	public void setPage(ReportPage page) {
-		m_page = page;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.QUERY);
-	}
-
 	public void setQueryDomain(String queryDomain) {
 		m_queryDomain = queryDomain;
 	}
 
 	public void setQueryType(String queryType) {
 		m_queryType = queryType;
+	}
+
+	public void setReportLevel(String reportLevel) {
+		m_reportLevel = reportLevel;
 	}
 
 	public void setStart(String start) {
@@ -135,14 +127,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public String getStartStr() {
-		return m_startStr;
-	}
-
-	public String getEndStr() {
-		return m_endStr;
 	}
 
 	@Override

@@ -1,12 +1,14 @@
 package com.dianping.cat.system.alarm.threshold;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.unidal.lookup.logger.LoggerFactory;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.template.entity.Duration;
@@ -45,7 +47,7 @@ public class ThresholdRule {
 			int length = durations.size();
 			Date date = entity.getDate();
 
-			for (int i = length - 1; i > 0; i--) {
+			for (int i = length - 1; i >= 0; i--) {
 				Duration duration = durations.get(i);
 				String strategy = duration.getAlarm();
 
@@ -75,8 +77,8 @@ public class ThresholdRule {
 
 	public void cleanData(int maxInterval, long time) {
 		long start = time - (maxInterval + 1) * TimeUtil.ONE_MINUTE;
-
 		List<ThresholdDataEntity> removes = new ArrayList<ThresholdDataEntity>();
+
 		for (ThresholdDataEntity entity : m_datas) {
 			if (entity.getDate().getTime() < start) {
 				removes.add(entity);
@@ -95,7 +97,6 @@ public class ThresholdRule {
 	public long getCount(int interval, Date date) {
 		long start = date.getTime() - interval * 60 * 1000;
 		long totalCount = 0;
-
 		ThresholdDataEntity last = null;
 		ThresholdDataEntity first = null;
 
@@ -193,8 +194,23 @@ public class ThresholdRule {
 		m_template = template;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(500);
+
+		sb.append("[Domain:").append(m_domain).append(";");
+		sb.append("[Template:").append(m_template.toString()).append(";").append("]");
+
+		return sb.toString();
+	}
+
 	private boolean validateData(ThresholdDataEntity entity) {
-		if (entity.getDate().getTime() > System.currentTimeMillis()) {
+		Date entityDate = entity.getDate();
+		long now = System.currentTimeMillis() + TimeUtil.ONE_MINUTE;
+		if (entityDate.getTime() > now) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			LoggerFactory.getLogger(ThresholdRule.class).error(
+			      "date is invalidate!" + sdf.format(entity.getDate()) + " Now:" + sdf.format(new Date()));
 			return false;
 		}
 		if (m_lastData == null) {
@@ -206,25 +222,15 @@ public class ThresholdRule {
 			if (newCount > lastCount) {
 				return true;
 			} else {
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(entity.getDate());
+				long current = entityDate.getTime() / 1000 / 60;
+				int minute = (int) (current % (60));
 
-				int minute = cal.get(Calendar.MINUTE);
 				if (minute == 0) {
 					return true;
 				}
 			}
 		}
 		return false;
-	}
-
-	public String toString() {
-		StringBuilder sb = new StringBuilder(500);
-
-		sb.append("[Domain:").append(m_domain).append(";");
-		sb.append("[Template:").append(m_template.toString()).append(";").append("]");
-
-		return sb.toString();
 	}
 
 }

@@ -10,18 +10,23 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
-import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class TransactionMerger implements ReportMerger<TransactionReport>, LogEnabled {
 
 	private Logger m_logger;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
 	private TransactionReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
 		TransactionReportMerger merger = null;
@@ -46,6 +51,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 		return transactionReport;
 	}
 
+	@Override
 	public TransactionReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domainSet) {
 		TransactionReport transactionReport = merge(reportDomain, reports, true);
 		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
@@ -65,6 +71,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 		return transactionReport;
 	}
 
+	@Override
 	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
 		TransactionReport transactionReport = merge(reportDomain, reports, false);
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
@@ -76,10 +83,5 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 
 		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

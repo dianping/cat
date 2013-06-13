@@ -24,6 +24,14 @@ public class ProblemReportVisitor extends BaseVisitor {
 		m_item.setName(name);
 	}
 
+	public ProblemQueryItem getItem() {
+		return m_item;
+	}
+
+	public void setItem(ProblemQueryItem item) {
+		m_item = item;
+	}
+
 	@Override
 	public void visitDuration(Duration duration) {
 		long count = duration.getCount();
@@ -57,14 +65,6 @@ public class ProblemReportVisitor extends BaseVisitor {
 	public void visitProblemReport(ProblemReport problemReport) {
 		super.visitProblemReport(problemReport);
 		m_item.setDate(problemReport.getStartTime());
-	}
-
-	public ProblemQueryItem getItem() {
-		return m_item;
-	}
-
-	public void setItem(ProblemQueryItem item) {
-		m_item = item;
 	}
 
 }

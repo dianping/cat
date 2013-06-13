@@ -6,6 +6,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.dianping.cat.system.alarm.threshold.ThresholdRule;
@@ -37,7 +38,6 @@ public class ExceptionDataListener implements EventListener {
 	@Override
 	public void onEvent(Event event) {
 		ExceptionDataEvent dataEvent = (ExceptionDataEvent) event;
-
 		ThresholdDataEntity data = dataEvent.getData();
 		List<ThresholdRule> rules = m_manager.getExceptionRuleByDomain(data.getDomain());
 
@@ -45,13 +45,21 @@ public class ExceptionDataListener implements EventListener {
 			ThresholdAlarmMeta alarmMeta = rule.addData(data, AlertInfo.EXCEPTION);
 
 			if (alarmMeta != null) {
+				Transaction t = Cat.newTransaction("SendAlarm", "Exception");
+
+				t.addData(alarmMeta.toString());
 				try {
 					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
-					
-					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS, alarmMeta.getRuleId() + "");
+					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS,
+					      String.valueOf(alarmMeta.getRuleId()));
+
 					m_dispatcher.dispatch(alertEvent);
+					t.setStatus("Alarm");
 				} catch (Exception e) {
+					t.setStatus(e);
 					Cat.logError(e);
+				} finally {
+					t.complete();
 				}
 			}
 		}

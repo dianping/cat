@@ -26,17 +26,31 @@ public class MonthReportServiceImpl implements MonthReportService {
 	private MonthreportDao m_monthreportDao;
 
 	@Override
-	public TransactionReport queryTransactionReport(String domain, Date start) {
+	public CrossReport queryCrossReport(String domain, Date start) {
 		try {
-			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "cross",
 			      MonthreportEntity.READSET_FULL);
 			String content = entity.getContent();
 
-			return com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
+			return com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(content);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new TransactionReport(domain);
+		return new CrossReport(domain);
+	}
+
+	@Override
+	public DatabaseReport queryDatabaseReport(String database, Date start) {
+		try {
+			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, database, "database",
+			      MonthreportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.consumer.database.model.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new DatabaseReport(database);
 	}
 
 	@Override
@@ -54,17 +68,17 @@ public class MonthReportServiceImpl implements MonthReportService {
 	}
 
 	@Override
-	public ProblemReport queryProblemReport(String domain, Date start) {
+	public HealthReport queryHealthReport(String domain, Date start) {
 		try {
-			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "problem",
+			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "health",
 			      MonthreportEntity.READSET_FULL);
 			String content = entity.getContent();
 
-			return com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
+			return com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(content);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new ProblemReport(domain);
+		return new HealthReport(domain);
 	}
 
 	@Override
@@ -96,17 +110,17 @@ public class MonthReportServiceImpl implements MonthReportService {
 	}
 
 	@Override
-	public CrossReport queryCrossReport(String domain, Date start) {
+	public ProblemReport queryProblemReport(String domain, Date start) {
 		try {
-			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "cross",
+			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "problem",
 			      MonthreportEntity.READSET_FULL);
 			String content = entity.getContent();
 
-			return com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(content);
+			return com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new CrossReport(domain);
+		return new ProblemReport(domain);
 	}
 
 	@Override
@@ -124,34 +138,6 @@ public class MonthReportServiceImpl implements MonthReportService {
 	}
 
 	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start) {
-		try {
-			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, database, "database",
-			      MonthreportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.consumer.database.model.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new DatabaseReport(database);
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start) {
-		try {
-			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "health",
-			      MonthreportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new HealthReport(domain);
-	}
-
-	@Override
    public StateReport queryStateReport(String domain, Date start) {
 		try {
 			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "state",
@@ -164,5 +150,19 @@ public class MonthReportServiceImpl implements MonthReportService {
 		}
 		return new StateReport(domain);
    }
+
+	@Override
+	public TransactionReport queryTransactionReport(String domain, Date start) {
+		try {
+			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			      MonthreportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new TransactionReport(domain);
+	}
 
 }

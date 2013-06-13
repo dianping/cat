@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.advanced.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
@@ -28,11 +29,14 @@ public class MatrixMerger implements ReportMerger<MatrixReport> {
 			}
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
-		matrixReport.getDomainNames().addAll(domains);
 		Date date = matrixReport.getStartTime();
-		matrixReport.setStartTime(TaskHelper.todayZero(date));
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+
+		matrixReport.getDomainNames().addAll(domains);
+		matrixReport.setStartTime(TaskHelper.todayZero(date));
 		matrixReport.setEndTime(end);
+
+		new MatrixReportFilter().visitMatrixReport(matrixReport);
 		return matrixReport;
 	}
 

@@ -6,17 +6,17 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 import com.dianping.cat.abtest.spi.internal.ABTestEntityManager;
-import com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager;
+import com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager;
 
 public class ABTestServerConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class));
-		all.add(C(ABTestGroupStrategy.class, "roundrobin", RoundRobinGroupStrategy.class));
+		all.add(C(ABTestContextManager.class, DefaultABTestContextManager.class) //
+		      .req(ABTestEntityManager.class));
 
 		return all;
 	}

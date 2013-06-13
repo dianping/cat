@@ -11,14 +11,15 @@ import java.util.concurrent.BlockingQueue;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.lookup.annotation.Inject;
 
 /**
  * Local use only, do not use it over network since it only supports one-way encoding
@@ -26,7 +27,7 @@ import org.unidal.lookup.annotation.Inject;
 public class HtmlMessageCodec implements MessageCodec, Initializable {
 	public static final String ID = "html";
 
-	private static final String VERSION = "HT1"; // HTML version 1
+	private static final String VERSION = "HT2"; // HTML version 2 since Mar 20, 2013
 
 	@Inject
 	private BufferWriter m_writer;
@@ -203,15 +204,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	protected int encodeMessage(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
-		if (message instanceof Event) {
-			String type = message.getType();
-
-			if ("RemoteCall".equals(type)) {
-				return encodeLogViewLink(tree, message, buf, level, counter);
-			} else {
-				return encodeLine(tree, message, buf, 'E', Policy.DEFAULT, level, counter);
-			}
-		} else if (message instanceof Transaction) {
+		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 			List<Message> children = transaction.getChildren();
 
@@ -234,6 +227,16 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 				return count;
 			}
+		} else if (message instanceof Event) {
+			String type = message.getType();
+
+			if ("RemoteCall".equals(type)) {
+				return encodeLogViewLink(tree, message, buf, level, counter);
+			} else {
+				return encodeLine(tree, message, buf, 'E', Policy.DEFAULT, level, counter);
+			}
+		} else if (message instanceof Metric) {
+			return encodeLine(tree, message, buf, 'M', Policy.DEFAULT, level, counter);
 		} else if (message instanceof Heartbeat) {
 			return encodeLine(tree, message, buf, 'H', Policy.DEFAULT, level, counter);
 		} else {

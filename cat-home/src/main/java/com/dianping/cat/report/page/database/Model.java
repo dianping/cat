@@ -55,6 +55,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_domain;
 	}
 
+	@Override
 	public List<String> getDomains() {
 		if (m_report == null) {
 			ArrayList<String> arrayList = new ArrayList<String>();
@@ -68,6 +69,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	@Override
 	public String getIpAddress() {
 		return m_ipAddress;
 	}
@@ -102,6 +104,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_domain = domain;
 	}
 
+	@Override
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
