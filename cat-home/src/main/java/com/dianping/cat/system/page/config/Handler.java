@@ -48,6 +48,76 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AggregationConfigManager m_aggreationConfigManager;
 
+	private void deleteAggregationRule(Payload payload) {
+		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
+	}
+
+	private void graphEdgeConfigAdd(Payload payload, Model model) {
+		String type = payload.getType();
+		String from = payload.getFrom();
+		String to = payload.getTo();
+		EdgeConfig config = m_topologyConfigManager.queryEdgeConfig(type, from, to);
+
+		model.setEdgeConfig(config);
+	}
+
+	private boolean graphEdgeConfigAddOrUpdateSubmit(Payload payload, Model model) {
+		EdgeConfig config = payload.getEdgeConfig();
+
+		if (!StringUtil.isEmpty(config.getType())) {
+			model.setEdgeConfig(config);
+			payload.setType(config.getType());
+			return m_topologyConfigManager.insertEdgeConfig(config);
+		} else {
+			return false;
+		}
+	}
+
+	private boolean graphEdgeConfigDelete(Payload payload) {
+		return m_topologyConfigManager.deleteEdgeConfig(payload.getType(), payload.getFrom(), payload.getTo());
+	}
+
+	private void graphNodeConfigAddOrUpdate(Payload payload, Model model) {
+		String domain = payload.getDomain();
+		String type = payload.getType();
+
+		if (!StringUtils.isEmpty(domain)) {
+			model.setDomainConfig(m_topologyConfigManager.queryNodeConfig(type, domain));
+		}
+	}
+
+	private boolean graphNodeConfigAddOrUpdateSubmit(Payload payload, Model model) {
+		String type = payload.getType();
+		DomainConfig config = payload.getDomainConfig();
+		String domain = config.getId();
+		model.setDomainConfig(config);
+
+		if (domain.equalsIgnoreCase(CatString.ALL)) {
+			return m_topologyConfigManager.insertDomainDefaultConfig(type, config);
+		} else {
+			return m_topologyConfigManager.insertDomainConfig(type, config);
+		}
+	}
+
+	private boolean graphNodeConfigDelete(Payload payload) {
+		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
+	}
+
+	private boolean graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
+		ProductLine line = payload.getProductLine();
+		String[] domains = payload.getDomains();
+
+		return m_productLineConfigManger.insertProductLine(line, domains);
+	}
+
+	private void graphPruductLineAddOrUpdate(Payload payload, Model model) {
+		String name = payload.getProductLineName();
+
+		if (!StringUtil.isEmpty(name)) {
+			model.setProductLine(m_productLineConfigManger.getCompany().findProductLine(name));
+		}
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "config")
@@ -147,72 +217,6 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private boolean graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
-		ProductLine line = payload.getProductLine();
-		String[] domains = payload.getDomains();
-
-		return m_productLineConfigManger.insertProductLine(line, domains);
-	}
-
-	private void graphPruductLineAddOrUpdate(Payload payload, Model model) {
-		String name = payload.getProductLineName();
-
-		if (!StringUtil.isEmpty(name)) {
-			model.setProductLine(m_productLineConfigManger.getCompany().findProductLine(name));
-		}
-	}
-
-	private boolean graphEdgeConfigAddOrUpdateSubmit(Payload payload, Model model) {
-		EdgeConfig config = payload.getEdgeConfig();
-
-		if (!StringUtil.isEmpty(config.getType())) {
-			model.setEdgeConfig(config);
-			payload.setType(config.getType());
-			return m_topologyConfigManager.insertEdgeConfig(config);
-		} else {
-			return false;
-		}
-	}
-
-	private void graphNodeConfigAddOrUpdate(Payload payload, Model model) {
-		String domain = payload.getDomain();
-		String type = payload.getType();
-
-		if (!StringUtils.isEmpty(domain)) {
-			model.setDomainConfig(m_topologyConfigManager.queryNodeConfig(type, domain));
-		}
-	}
-
-	private boolean graphNodeConfigAddOrUpdateSubmit(Payload payload, Model model) {
-		String type = payload.getType();
-		DomainConfig config = payload.getDomainConfig();
-		String domain = config.getId();
-		model.setDomainConfig(config);
-
-		if (domain.equalsIgnoreCase(CatString.ALL)) {
-			return m_topologyConfigManager.insertDomainDefaultConfig(type, config);
-		} else {
-			return m_topologyConfigManager.insertDomainConfig(type, config);
-		}
-	}
-
-	private boolean graphNodeConfigDelete(Payload payload) {
-		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
-	}
-
-	private void graphEdgeConfigAdd(Payload payload, Model model) {
-		String type = payload.getType();
-		String from = payload.getFrom();
-		String to = payload.getTo();
-		EdgeConfig config = m_topologyConfigManager.queryEdgeConfig(type, from, to);
-
-		model.setEdgeConfig(config);
-	}
-
-	private boolean graphEdgeConfigDelete(Payload payload) {
-		return m_topologyConfigManager.deleteEdgeConfig(payload.getType(), payload.getFrom(), payload.getTo());
-	}
-
 	private List<Project> queryAllProjects() {
 		List<Project> projects = new ArrayList<Project>();
 
@@ -235,6 +239,11 @@ public class Handler implements PageHandler<Context> {
 		return project;
 	}
 
+	private void updateAggregationRule(Payload payload) {
+		AggregationRule proto = payload.getRule();
+		m_aggreationConfigManager.insertAggregationRule(proto);
+	}
+
 	private void updateProject(Payload payload) {
 		Project project = payload.getProject();
 		project.setKeyId(project.getId());
@@ -245,15 +254,6 @@ public class Handler implements PageHandler<Context> {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-	}
-
-	private void updateAggregationRule(Payload payload) {
-		AggregationRule proto = payload.getRule();
-		m_aggreationConfigManager.insertAggregationRule(proto);
-	}
-
-	private void deleteAggregationRule(Payload payload) {
-		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
 	}
 
 	class ProjectCompartor implements Comparator<Project> {

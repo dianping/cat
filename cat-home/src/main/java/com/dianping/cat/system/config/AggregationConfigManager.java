@@ -26,6 +26,11 @@ public class AggregationConfigManager implements Initializable {
 
 	private Aggregation m_aggregation;
 
+	public boolean deleteAggregationRule(String rule) {
+		m_aggregation.removeAggregationRule(rule);
+		return storeConfig();
+	}
+
 	@Override
 	public void initialize() {
 		try {
@@ -56,36 +61,13 @@ public class AggregationConfigManager implements Initializable {
 		}
 	}
 
-	private boolean storeConfig() {
-		try {
-			Config config = m_configDao.createLocal();
-
-			config.setId(m_configId);
-			config.setKeyId(m_configId);
-			config.setName(CONFIG_NAME);
-			config.setContent(m_aggregation.toString());
-			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
+	public boolean insertAggregationRule(AggregationRule rule) {
+		m_aggregation.addAggregationRule(rule);
+		return storeConfig();
 	}
 
 	public List<AggregationRule> queryAggrarationRules() {
 		return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
-	}
-
-	private Aggregation queryAggreation() {
-		try {
-			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-			String content = config.getContent();
-
-			return DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new Aggregation();
 	}
 
 	public List<AggregationRule> queryAggrarationRulesFromDB() {
@@ -103,13 +85,31 @@ public class AggregationConfigManager implements Initializable {
 		return m_aggregation.findAggregationRule(key);
 	}
 
-	public boolean insertAggregationRule(AggregationRule rule) {
-		m_aggregation.addAggregationRule(rule);
-		return storeConfig();
+	private Aggregation queryAggreation() {
+		try {
+			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			String content = config.getContent();
+
+			return DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new Aggregation();
 	}
 
-	public boolean deleteAggregationRule(String rule) {
-		m_aggregation.removeAggregationRule(rule);
-		return storeConfig();
+	private boolean storeConfig() {
+		try {
+			Config config = m_configDao.createLocal();
+
+			config.setId(m_configId);
+			config.setKeyId(m_configId);
+			config.setName(CONFIG_NAME);
+			config.setContent(m_aggregation.toString());
+			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
 	}
 }

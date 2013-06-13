@@ -111,6 +111,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_opState;
 	}
 
+	public ProductLine getProductLine() {
+   	return m_productLine;
+   }
+
+	public Map<String, ProductLine> getProductLines() {
+   	return m_productLines;
+   }
+
 	public Project getProject() {
 		return m_project;
 	}
@@ -151,6 +159,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
+	public void setProductLine(ProductLine productLine) {
+   	m_productLine = productLine;
+   }
+
+	public void setProductLines(Map<String, ProductLine> productLines) {
+		m_productLines = productLines;
+   }
+
 	public void setProject(Project project) {
 		m_project = project;
 	}
@@ -177,21 +193,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			return m_nodeConfig;
 		}
 	}
-
-	public ProductLine getProductLine() {
-   	return m_productLine;
-   }
-
-	public void setProductLine(ProductLine productLine) {
-   	m_productLine = productLine;
-   }
-
-	public void setProductLines(Map<String, ProductLine> productLines) {
-		m_productLines = productLines;
-   }
-
-	public Map<String, ProductLine> getProductLines() {
-   	return m_productLines;
-   }
 	
 }
