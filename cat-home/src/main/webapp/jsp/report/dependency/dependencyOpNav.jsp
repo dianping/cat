@@ -21,11 +21,6 @@ function fullScreen(e){
 	 e.preventDefault();
 	}
 	 var container = $('#fullScreenData')[0];
-	    //W3C suggest to use requestFullScreen
-	    //but webkit use webkitRequestFullScreen ,FireFox use mozRequestFullScreen
-	    //Opera and IE don't support the fullScreen API
-	    //careful fullScreen is called on the element but exitFullScreen is called on the document!!
-	    //WHAT THE FUCK!!
 	 container.requestFullScreen ? container.requestFullScreen() : (container.webkitRequestFullScreen ? container.webkitRequestFullScreen() : (container.mozRequestFullScreen && container.mozRequestFullScreen()));
 }
 
@@ -41,6 +36,7 @@ $(document).ready(function() {
 			location.reload();				
 		},frequency*1000);
 	};
+	
 	$('#fullScreen').click(function (e) {
 		fullScreen(e);
 	});
