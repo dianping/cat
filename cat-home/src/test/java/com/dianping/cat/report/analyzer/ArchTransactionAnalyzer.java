@@ -40,6 +40,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 	private Map<String, DomainInfo> m_infos = new LinkedHashMap<String, DomainInfo>();
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -97,7 +98,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 				      DailyreportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 
-				info.reset(report.findMachine(CatString.ALL_IP));
+				info.reset(report.findMachine(CatString.ALL));
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -144,6 +145,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 			m_service = service;
 		}
 
+		@Override
 		public String toString() {
 			return m_url.toString() + m_service.toString();
 		}
@@ -189,6 +191,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 			m_avg = avg;
 		}
 
+		@Override
 		public String toString() {
 			if (m_days == 0) {
 				m_days = 1;

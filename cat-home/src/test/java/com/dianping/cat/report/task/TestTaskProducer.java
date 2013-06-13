@@ -19,6 +19,7 @@ public class TestTaskProducer extends ComponentTestCase {
    private TaskProducer m_taskProducer;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_taskProducer = lookup(TaskProducer.class);

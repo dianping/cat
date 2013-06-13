@@ -40,5 +40,4 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 			}
 		}
 	}
-
 }

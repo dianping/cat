@@ -13,7 +13,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
 import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -37,6 +36,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 			final int num = p;
 
 			pool.submit(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						for (int i = 0; i < 100; i++) {
@@ -64,6 +64,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 			final int num = p;
 
 			pool.submit(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						for (int i = 0; i < 100; i++) {

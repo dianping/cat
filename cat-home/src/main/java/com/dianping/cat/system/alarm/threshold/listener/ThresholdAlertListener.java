@@ -50,7 +50,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 	}
 
 	private AlertInfo buildAlertInfo(ThresholdAlarmMeta meta, String title, String content, String ruleType,
-	      List<String> address) {
+	      int alertType) {
 		AlertInfo info = new AlertInfo();
 
 		info.setContent(content);
@@ -58,7 +58,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		info.setRuleId(meta.getRuleId());
 		info.setDate(meta.getDate());
 		info.setRuleType(ruleType);
-		info.setMails(address);
+		info.setAlertType(alertType);
 		return info;
 	}
 
@@ -135,35 +135,35 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 	@Override
 	public void onEvent(Event event) {
 		ThresholdAlertEvent alertEvent = (ThresholdAlertEvent) event;
-		ThresholdAlarmMeta meta = alertEvent.getAlarmMeta();
-		String title = buildAlarmTitle(meta);
-		String content = buildEmailAlarmContent(meta);
-		String alertType = meta.getDuration().getAlarm().toLowerCase();
-		String ruleType = meta.getType();
+		ThresholdAlarmMeta metaInfo = alertEvent.getAlarmMeta();
+		String title = buildAlarmTitle(metaInfo);
+		String content = buildEmailAlarmContent(metaInfo);
+		String alertType = metaInfo.getDuration().getAlarm().toLowerCase();
+		String ruleType = metaInfo.getType();
 
 		if (alertType != null && alertType.length() > 0) {
 			String[] types = alertType.split(",");
 
 			for (String type : types) {
 				if (type.equalsIgnoreCase(AlertInfo.EMAIL)) {
-					List<String> address = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
-					AlertInfo info = buildAlertInfo(meta, title, content, ruleType, address);
+					List<String> emailAddress = m_ruleManager.queryUserMailsByRuleId(metaInfo.getRuleId());
+					AlertInfo info = buildAlertInfo(metaInfo, title, content, ruleType, AlertInfo.EMAIL_TYPE);
 
-					info.setAlertType(AlertInfo.EMAIL_TYPE);
+					info.setMails(emailAddress);
 					m_alertManager.addAlarmInfo(info);
 				}
 				if (type.equalsIgnoreCase(AlertInfo.SMS)) {
-					List<String> emails = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
-					AlertInfo emailsInfo = buildAlertInfo(meta, title + "[SMS]", content, ruleType, emails);
+					List<String> emailAddress = m_ruleManager.queryUserMailsByRuleId(metaInfo.getRuleId());
+					AlertInfo info = buildAlertInfo(metaInfo, title + "[SMS]", content, ruleType, AlertInfo.EMAIL_TYPE);
 
-					emailsInfo.setAlertType(AlertInfo.EMAIL_TYPE);
-					m_alertManager.addAlarmInfo(emailsInfo);
-
-					List<String> address = m_ruleManager.queryUserPhonesByRuleId(meta.getRuleId());
-					AlertInfo info = buildAlertInfo(meta, title, content, ruleType, address);
-
-					info.setAlertType(AlertInfo.SMS_TYPE);
+					info.setMails(emailAddress);
 					m_alertManager.addAlarmInfo(info);
+
+					List<String> phoneAddress = m_ruleManager.queryUserPhonesByRuleId(metaInfo.getRuleId());
+					AlertInfo smsInfo = buildAlertInfo(metaInfo, title, content, ruleType, AlertInfo.SMS_TYPE);
+
+					smsInfo.setPhones(phoneAddress);
+					m_alertManager.addAlarmInfo(smsInfo);
 				}
 			}
 		}

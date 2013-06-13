@@ -10,8 +10,8 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.StringBucketTestCase;
 
 public class LocalReportBucketTest extends StringBucketTestCase {
-
 	@SuppressWarnings("unchecked")
+	@Override
 	protected Bucket<String> createBucket() throws Exception, IOException {
 		Bucket<String> bucket = lookup(Bucket.class, String.class.getName() + "-report");
 		bucket.initialize(null, "cat", new Date());
@@ -19,6 +19,7 @@ public class LocalReportBucketTest extends StringBucketTestCase {
 	}
 
 	@After
+	@Override
 	public void tearDown() throws Exception {
 		super.tearDown();
 		String m_baseDir = ((LocalReportBucket) this.bucket).getBaseDir();

@@ -19,6 +19,7 @@ public class TransactionReportBuilderTest extends ComponentTestCase {
 	private TransactionReportBuilder m_builder;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_builder = lookup(TransactionReportBuilder.class);

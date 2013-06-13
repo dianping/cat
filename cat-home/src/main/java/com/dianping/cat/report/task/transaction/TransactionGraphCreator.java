@@ -126,7 +126,7 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 				Map<String, TransactionName> names = transactionType.getNames();
 				for (Entry<String, TransactionName> nameEntry : names.entrySet()) {
 					TransactionName transactionName = nameEntry.getValue();
-					List<Range> ranges = transactionName.getRanges();
+					List<Range> ranges = new ArrayList<Range>(transactionName.getRanges().values());
 
 					detailBuilder.append(transactionType.getId());
 					detailBuilder.append('\t');

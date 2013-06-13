@@ -43,44 +43,18 @@ public class HistoryGraphs {
 		}
 	}
 
-	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name, List<Graph> graphs) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
-		double[] total_count = new double[size];
-		double[] failure_count = new double[size];
+	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
+		HistoryGraphItem item = new HistoryGraphItem();
 
-		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
-				String summaryContent = graph.getSummaryContent();
-				String[] allLines = summaryContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
-					}
-				}
-			}
-		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
-				String detailContent = graph.getDetailContent();
-				String[] allLines = detailContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
+		item.setStart(start);
+		item.setSize(size);
+		item.setStep(step);
+		item.setTitles(name + " Error (count)");
 
-						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
-					}
-				}
-			}
+		for (Map<String, double[]> data : datas) {
+			item.addValue(data.get("failure_count"));
 		}
-
-		result.put("total_count", total_count);
-		result.put("failure_count", failure_count);
-		return result;
+		return item;
 	}
 	
 	public Map<String, double[]> buildGraphDatasForDaily(Date start, Date end, String type, String name,
@@ -123,6 +97,46 @@ public class HistoryGraphs {
 		return result;
 	}
 
+	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name, List<Graph> graphs) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+		double[] total_count = new double[size];
+		double[] failure_count = new double[size];
+
+		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+				String summaryContent = graph.getSummaryContent();
+				String[] allLines = summaryContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
+						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
+					}
+				}
+			}
+		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+				String detailContent = graph.getDetailContent();
+				String[] allLines = detailContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
+
+						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
+					}
+				}
+			}
+		}
+
+		result.put("total_count", total_count);
+		result.put("failure_count", failure_count);
+		return result;
+	}
+
 	private HistoryGraphItem buildTotal(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
 		HistoryGraphItem item = new HistoryGraphItem();
 
@@ -134,20 +148,6 @@ public class HistoryGraphs {
 		for (Map<String, double[]> data : datas) {
 			double[] totalCount = data.get("total_count");
 			item.addValue(totalCount);
-		}
-		return item;
-	}
-
-	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
-
-		item.setStart(start);
-		item.setSize(size);
-		item.setStep(step);
-		item.setTitles(name + " Error (count)");
-
-		for (Map<String, double[]> data : datas) {
-			item.addValue(data.get("failure_count"));
 		}
 		return item;
 	}
@@ -197,6 +197,28 @@ public class HistoryGraphs {
 		model.setFailureTrend(item.getJsonString());
 	}
 	
+	public Map<String, double[]> getGraphDatasForHour(Date start,Date end,Model model, Payload payload) {
+		String domain = model.getDomain();
+		String type = payload.getType();
+		String name = payload.getName();
+		String ip = model.getIpAddress();
+		String queryIP = "All".equals(ip) == true ? "all" : ip;
+		List<Graph> events = new ArrayList<Graph>();
+		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
+			try {
+				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, "event",
+				      GraphEntity.READSET_FULL);
+				events.add(graph);
+			} catch (DalNotFoundException e) {
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, events);
+		return result;
+	}
+	
+	
 	private Map<String, double[]> getGraphDatasFromDaily(Date start, Date end, Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();
@@ -216,28 +238,6 @@ public class HistoryGraphs {
 			}
 		}
 		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);
-		return result;
-	}
-	
-	
-	public Map<String, double[]> getGraphDatasForHour(Date start,Date end,Model model, Payload payload) {
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = model.getIpAddress();
-		String queryIP = "All".equals(ip) == true ? "all" : ip;
-		List<Graph> events = new ArrayList<Graph>();
-		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
-			try {
-				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, "event",
-				      GraphEntity.READSET_FULL);
-				events.add(graph);
-			} catch (DalNotFoundException e) {
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, events);
 		return result;
 	}
 }

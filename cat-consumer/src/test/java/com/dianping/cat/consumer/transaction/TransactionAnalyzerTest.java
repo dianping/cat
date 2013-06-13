@@ -5,15 +5,17 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.helper.Files;
-import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class TransactionAnalyzerTest extends ComponentTestCase {
@@ -22,7 +24,8 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testProcessTransaction() throws Exception {
 		timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
-		TransactionAnalyzer analyzer = lookup(TransactionAnalyzer.class);
+
+		TransactionAnalyzer analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
 		TransactionReport report = new TransactionReport("Test");
 
 		for (int i = 1; i <= 1000; i++) {
@@ -56,12 +59,10 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			analyzer.processTransaction(report, tree, t);
 		}
 
-		report.accept(new StatisticsComputer());
+		report.accept(new TransactionStatisticsComputer());
 
-		String json = new DefaultJsonBuilder().buildJson(report);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionAnalyzerTest.json"), "utf-8");
-
-		Assert.assertEquals(expected.replace("\r", ""), json.replace("\r", ""));
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionAnalyzerTest.xml"), "utf-8");
+		Assert.assertEquals(expected.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
 
 	protected MessageTree newMessageTree(int i) {

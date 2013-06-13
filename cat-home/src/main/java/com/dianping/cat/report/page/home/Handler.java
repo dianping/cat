@@ -22,7 +22,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = MessageConsumer.class, value = "realtime")
+	@Inject(type = MessageConsumer.class, value = RealtimeConsumer.ID)
 	private RealtimeConsumer m_realtimeConsumer;
 
 	@Override

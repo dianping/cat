@@ -3,6 +3,7 @@ package com.dianping.cat.abtest.spi.internal;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.spi.ABTestContext;
@@ -16,7 +17,9 @@ public class DefaultABTestContext implements ABTestContext {
 
 	private ABTestEntity m_entity;
 
-	private HttpServletRequest m_req;
+	private HttpServletRequest m_request;
+	
+	private HttpServletResponse m_response;
 
 	private ABTestGroupStrategy m_groupStrategy;
 
@@ -61,14 +64,20 @@ public class DefaultABTestContext implements ABTestContext {
 		m_groupName = groupName;
 	}
 
-	public void setup(HttpServletRequest req) {
-		m_req = req;
+	public void setup(HttpServletRequest request,HttpServletResponse response) {
+		m_request = request;
+		m_response = response;
 	}
 
 	@Override
 	public HttpServletRequest getHttpServletRequest() {
-		return m_req;
+		return m_request;
 	}
+
+	@Override
+   public HttpServletResponse getHttpServletResponse() {
+	   return m_response;
+   }
 
 	@Override
 	public ABTestEntity getEntity() {
@@ -78,4 +87,6 @@ public class DefaultABTestContext implements ABTestContext {
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
 		m_groupStrategy = groupStrategy;
 	}
+
+	
 }
