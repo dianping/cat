@@ -12,6 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.helper.Files;
+import org.unidal.helper.Reflects;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -22,8 +24,6 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.helper.Files;
-import org.unidal.helper.Reflects;
 
 @RunWith(JUnit4.class)
 public class CatClientTest extends CatTestCase {

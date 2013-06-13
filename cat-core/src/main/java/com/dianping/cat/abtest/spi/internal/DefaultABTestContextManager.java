@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
@@ -37,20 +38,20 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		if (ctx == null) {
 			ABTestEntity entity = m_entityManager.getEntity(testName);
 
-			ctx = createContext(entity, entry.getHttpServletRequest());
+			ctx = createContext(entity, entry.getHttpServletRequest(),entry.getHttpServletResponse());
 			map.put(name, ctx);
 		}
 
 		return ctx;
 	}
 
-	private DefaultABTestContext createContext(ABTestEntity entity, HttpServletRequest req) {
+	private DefaultABTestContext createContext(ABTestEntity entity, HttpServletRequest request,HttpServletResponse response) {
 		DefaultABTestContext ctx = new DefaultABTestContext(entity);
 
 		if (!entity.isDisabled()) {
 			ABTestGroupStrategy groupStrategy = entity.getGroupStrategy();
 
-			ctx.setup(req);
+			ctx.setup(request,response);
 			ctx.setGroupStrategy(groupStrategy);
 		}
 
@@ -73,7 +74,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 				DefaultABTestContext ctx = ctxMap.get(name);
 
 				if (ctx == null) {
-					ctx = createContext(entity, entry.getHttpServletRequest());
+					ctx = createContext(entity, entry.getHttpServletRequest(),entry.getHttpServletResponse());
 
 					ctxMap.put(name, ctx);
 				}
@@ -95,14 +96,14 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	}
 
 	@Override
-	public void onRequestBegin(HttpServletRequest req) {
+	public void onRequestBegin(HttpServletRequest request,HttpServletResponse response) {
 		Entry entry = m_threadLocal.get();
 
-		entry.setHttpServletRequest(req);
+		entry.setup(request,response);
 
 		Map<String, DefaultABTestContext> map = entry.getContextMap();
 		for (DefaultABTestContext ctx : map.values()) {
-			ctx.setup(req);
+			ctx.setup(request,response);
 		}
 	}
 
@@ -111,11 +112,22 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 		private List<ABTestContext> m_list;
 
-		private HttpServletRequest m_req;
+		private HttpServletRequest m_request;
+		
+		private HttpServletResponse m_response;
 
 		public Map<String, DefaultABTestContext> getContextMap() {
 			return m_map;
 		}
+
+		public void setup(HttpServletRequest request, HttpServletResponse response) {
+			m_request = request;
+			m_response = response;
+      }
+
+		public HttpServletResponse getHttpServletResponse() {
+	      return m_response;
+      }
 
 		public void setContextList(List<ABTestContext> ctxList) {
 			m_list = ctxList;
@@ -126,11 +138,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		}
 
 		public HttpServletRequest getHttpServletRequest() {
-			return m_req;
-		}
-
-		public void setHttpServletRequest(HttpServletRequest req) {
-			m_req = req;
+			return m_request;
 		}
 	}
 }

@@ -6,7 +6,10 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.abtest.repository.ABTestEntityRepository;
+import com.dianping.cat.abtest.repository.HttpABTestEntityRepository;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.configuration.ClientConfigManager;
 
 public class ABTestServerConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -15,6 +18,10 @@ public class ABTestServerConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ABTestGroupStrategy.class, IPDistributionStrategy.ID, IPDistributionStrategy.class)
 				.is(PER_LOOKUP));
+		
+		all.add(C(ABTestEntityRepository.class, HttpABTestEntityRepository.class) //
+				.req(ClientConfigManager.class)
+				.config(E("refreshTimeInSeconds").value("6")));
 
 		return all;
 	}

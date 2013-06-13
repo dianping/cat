@@ -39,7 +39,7 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 			graph.setName(reportName);
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
-			com.dianping.cat.consumer.problem.model.entity.Machine machine = report.getMachines().get(ip);
+			com.dianping.cat.consumer.problem.model.entity.Machine machine = report.findOrCreateMachine(ip);
 
 			for (com.dianping.cat.consumer.problem.model.entity.Entry entry : machine.getEntries()) {
 				Map<String, JavaThread> threads = entry.getThreads();

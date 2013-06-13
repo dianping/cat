@@ -45,15 +45,6 @@ public class StateGraphs {
 		return item;
 	}
 
-	private HistoryGraphItem getHourlyGraph(StateReport report, String domain, Date start, Date end, String key,
-	      String ip) {
-		HistoryGraphItem item = new HistoryGraphItem();
-		
-		item.setStart(start).setSize(60).setTitles(key).setStep(TimeUtil.ONE_MINUTE);
-		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
-		return item;
-	}
-
 	private double[] getDataFromHourlyDetail(StateReport report, long start, int size, String key, String ip) {
 		double[] result = new double[size];
 		StateShow show = new StateShow(ip);
@@ -139,6 +130,15 @@ public class StateGraphs {
 			}
 		}
 		return result;
+	}
+
+	private HistoryGraphItem getHourlyGraph(StateReport report, String domain, Date start, Date end, String key,
+	      String ip) {
+		HistoryGraphItem item = new HistoryGraphItem();
+		
+		item.setStart(start).setSize(60).setTitles(key).setStep(TimeUtil.ONE_MINUTE);
+		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
+		return item;
 	}
 
 	private StateReport getHourlyReport(long date, String domain, String ip) {

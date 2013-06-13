@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
-import com.dianping.cat.consumer.database.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
 
@@ -14,8 +14,8 @@ public class DatabaseReportMergerTest {
 	public void testDatabaseReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportOld.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportNew.xml"), "utf-8");
-		DatabaseReport reportOld = new DefaultDomParser().parse(oldXml);
-		DatabaseReport reportNew = new DefaultDomParser().parse(newXml);
+		DatabaseReport reportOld = DefaultSaxParser.parse(oldXml);
+		DatabaseReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO()
 		      .readFrom(getClass().getResourceAsStream("DatabaseReportMergeResult.xml"), "utf-8");
 		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(reportOld.getDatabase()));
@@ -38,8 +38,8 @@ public class DatabaseReportMergerTest {
 	public void testMergeAllDomain() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportOld.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportNew.xml"), "utf-8");
-		DatabaseReport reportOld = new DefaultDomParser().parse(oldXml);
-		DatabaseReport reportNew = new DefaultDomParser().parse(newXml);
+		DatabaseReport reportOld = DefaultSaxParser.parse(oldXml);
+		DatabaseReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportMergeAllResult.xml"),
 		      "utf-8");
 

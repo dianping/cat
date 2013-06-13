@@ -16,8 +16,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.transaction.StatisticsComputer;
+import com.dianping.cat.consumer.transaction.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -26,10 +25,11 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
@@ -57,12 +57,15 @@ public class Handler implements PageHandler<Context> {
 	private ReportService m_reportService;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private TransactionMergeManager m_mergeManager;
+
+	@Inject
+	private NormalizePayload m_normalizePayload;
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	private Gson m_gson = new Gson();
 
@@ -135,13 +138,12 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
-			calculateTps(payload, report);
 
 			if (payload.getPeriod().isLast()) {
 				Date start = new Date(payload.getDate());
 				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
 
-				if (CatString.ALL_Domain.equals(domain)) {
+				if (CatString.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
 				Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
@@ -149,7 +151,8 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
@@ -171,12 +174,13 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = "ALL";
+			name = CatString.ALL;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		TransactionType t = report.getMachines().get(ip).findType(type);
 
+		report = m_mergeManager.mergerAll(report, ipAddress, name);
+		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
 			TransactionName n = t.findName(name);
 			if (n != null) {
@@ -253,13 +257,9 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		Action action = payload.getAction();
-		model.setAction(action);
 		model.setPage(ReportPage.TRANSACTION);
+		m_normalizePayload.normalize(model, payload);
 
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
 		if (StringUtils.isEmpty(payload.getQueryName())) {
 			payload.setQueryName(null);
 		}
@@ -267,41 +267,9 @@ public class Handler implements PageHandler<Context> {
 			payload.setType(null);
 		}
 
-		String ip = payload.getIpAddress();
 		String queryName = payload.getQueryName();
-
-		if (ip == null || ip.length() == 0) {
-			payload.setIpAddress(CatString.ALL_IP);
-		}
 		if (queryName != null) {
 			model.setQueryName(queryName);
-		}
-		model.setIpAddress(payload.getIpAddress());
-		model.setDisplayDomain(payload.getDomain());
-
-		if (payload.getPeriod().isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
-		} else {
-			model.setLongDate(payload.getDate());
-		}
-
-		if (payload.getPeriod().isCurrent()) {
-			model.setCreatTime(new Date());
-		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
-		}
-		if (action == Action.HISTORY_REPORT || action == Action.HISTORY_GRAPH) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
 	}
 

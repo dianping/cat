@@ -2,7 +2,8 @@ package com.dianping.cat.message;
 
 /**
  * <p>
- * <code>Metic</code> is used to log anything about bussniess log.
+ * <code>Metric</code> is used to log business data point happens at a specific time. Such as an exception thrown, a
+ * review added by user, a new user registered, an user logged into the system etc.
  * </p>
  * 
  * <p>

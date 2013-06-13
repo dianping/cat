@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -22,24 +23,26 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-
-import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessageQueue;
-import com.dianping.cat.message.spi.MessageStatistics;
-import com.dianping.cat.message.spi.MessageTree;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageStatistics;
+import com.dianping.cat.message.spi.MessageTree;
+
 public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled {
+	public static final String ID = "tcp-socket-hierarchy";
+
 	@Inject
 	private MessageCodec m_codec;
 
 	@Inject
-	private MessageQueue m_queue;
-
-	@Inject
 	private MessageStatistics m_statistics;
+
+	private MessageQueue m_queue = new DefaultMessageQueue(10000);
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -198,6 +201,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+				@Override
 				public ChannelPipeline getPipeline() {
 					return Channels.pipeline(new MyHandler(m_logger));
 				}
@@ -223,10 +227,10 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			InetSocketAddress address = m_serverAddresses.get(index);
 			ChannelFuture future = m_bootstrap.connect(address);
 
-			future.awaitUninterruptibly();
+			future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 			if (!future.isSuccess()) {
-				future.getChannel().getCloseFuture().awaitUninterruptibly();
+				future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 				int count = m_reconnects.incrementAndGet();
 
 				if (count % 1000 == 0) {
@@ -256,7 +260,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 		public void releaseAll() {
 			for (ChannelFuture future : m_futures) {
 				if (future != null) {
-					future.getChannel().getCloseFuture().awaitUninterruptibly();
+					future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 				}
 			}
 
@@ -268,20 +272,24 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 		public void run() {
 			try {
 				while (m_active) {
-					if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
-						m_activeIndex = m_serverAddresses.size();
-					}
+					try {
+	               if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
+	               	m_activeIndex = m_serverAddresses.size();
+	               }
 
-					for (int i = 0; i < m_activeIndex; i++) {
-						ChannelFuture future = createChannel(i);
+	               for (int i = 0; i < m_activeIndex; i++) {
+	               	ChannelFuture future = createChannel(i);
 
-						if (future != null) {
-							m_lastFuture = m_activeFuture;
-							m_activeFuture = future;
-							m_activeIndex = i;
-							break;
-						}
-					}
+	               	if (future != null) {
+	               		m_lastFuture = m_activeFuture;
+	               		m_activeFuture = future;
+	               		m_activeIndex = i;
+	               		break;
+	               	}
+	               }
+               } catch (Throwable e) {
+               	Cat.logError(e);
+               }
 
 					Thread.sleep(2 * 1000L); // check every 2 seconds
 				}

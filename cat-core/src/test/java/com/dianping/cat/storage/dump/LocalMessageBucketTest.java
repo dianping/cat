@@ -5,20 +5,23 @@ import java.io.IOException;
 import java.util.Random;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.lookup.ComponentTestCase;
-
+      
 @RunWith(JUnit4.class)
 @Ignore
 public class LocalMessageBucketTest extends ComponentTestCase {
@@ -38,13 +41,20 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		LocalMessageBucket bucket = createBucket(factory, "");
 
 		DefaultMessageTree tree = new DefaultMessageTree();
+
+		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+
+		codec.setBufferWriter(new EscapingBufferWriter());
 		int count = 2000;
 
 		for (int i = 0; i < count; i++) {
 			MessageId id = MessageId.parse(tree.getMessageId());
 	
 			tree.setMessageId(factory.getNextId());
-			bucket.store(tree,id);
+
+			codec.encode(tree, buf);
+			bucket.storeMessage(buf,id);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -62,6 +72,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 	public void testManyReadWrite() throws Exception {
 		MessageIdFactory factory = new MockMessageIdFactory();
 		LocalMessageBucket[] buckets = new LocalMessageBucket[3];
+		PlainTextMessageCodec codec = new PlainTextMessageCodec();
 
 		for (int i = 0; i < buckets.length; i++) {
 			LocalMessageBucket bucket = createBucket(factory, "-" + i);
@@ -76,7 +87,9 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 			MessageId id = MessageId.parse(tree.getMessageId());
 			
 			tree.setMessageId(factory.getNextId());
-			buckets[i % buckets.length].store(tree,id);
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+			codec.encode(tree,buf);
+			buckets[i % buckets.length].storeMessage(buf,id);
 		}
 
 		for (int i = 0; i < count; i++) {

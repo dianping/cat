@@ -8,9 +8,12 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import com.dainping.cat.consumer.advanced.dal.BusinessReport;
+import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dainping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -18,10 +21,13 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
@@ -30,11 +36,11 @@ import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
+import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.top.TopReportMerger;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
 
@@ -43,9 +49,13 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	@Inject
 	private ReportDao m_reportDao;
 	
+	@Inject
+	private BusinessReportDao m_businessReportDao;
+
+	@Override
 	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
-			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
 		}
 		Set<String> domains = new HashSet<String>();
 
@@ -62,9 +72,10 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		return domains;
 	}
 
+	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
-			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
 		}
 		Set<String> domains = new HashSet<String>();
 
@@ -82,36 +93,68 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
-	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+	public CrossReport queryCrossReport(String domain, Date start, Date end) {
+		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "cross",
 			      ReportEntity.READSET_FULL);
-
 			for (Report report : reports) {
 				String xml = report.getContent();
 
 				try {
-					TransactionReport reportModel = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
-					      .parse(xml);
+					CrossReport reportModel = com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "transaction", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "cross", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		TransactionReport transactionReport = merger.getTransactionReport();
+		CrossReport crossReport = merger.getCrossReport();
 
-		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
+		crossReport.setStartTime(start);
+		crossReport.setEndTime(end);
 
-		Set<String> domains = queryAllDomainNames(start, end, "transaction");
-		transactionReport.getDomainNames().addAll(domains);
-		return transactionReport;
+		Set<String> domains = queryAllDomainNames(start, end, "cross");
+		crossReport.getDomainNames().addAll(domains);
+		return crossReport;
+	}
+
+	@Override
+	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
+		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
+
+		try {
+			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
+			      ReportEntity.READSET_FULL);
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					DatabaseReport reportModel = com.dianping.cat.consumer.database.model.transform.DefaultSaxParser
+					      .parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		DatabaseReport databaseReport = merger.getDatabaseReport();
+
+		databaseReport.setStartTime(start);
+		databaseReport.setEndTime(end);
+
+		Set<String> domains = queryAllDomainNames(start, end, "database");
+		databaseReport.getDomainNames().addAll(domains);
+		return databaseReport;
 	}
 
 	@Override
@@ -130,7 +173,8 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "event", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "event", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -147,35 +191,35 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
-	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
+	public HealthReport queryHealthReport(String domain, Date start, Date end) {
+		HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "health",
 			      ReportEntity.READSET_FULL);
 			for (Report report : reports) {
 				String xml = report.getContent();
 
 				try {
-					ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser
-					      .parse(xml);
+					HealthReport reportModel = com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "problem", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "health", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		ProblemReport problemReport = merger.getProblemReport();
+		HealthReport healthReport = merger.getHealthReport();
 
-		problemReport.setStartTime(start);
-		problemReport.setEndTime(end);
+		healthReport.setStartTime(start);
+		healthReport.setEndTime(end);
 
-		Set<String> domains = queryAllDomainNames(start, end, "problem");
-		problemReport.getDomainNames().addAll(domains);
-		return problemReport;
+		Set<String> domains = queryAllDomainNames(start, end, "health");
+		healthReport.getDomainNames().addAll(domains);
+		return healthReport;
 	}
 
 	@Override
@@ -194,7 +238,8 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "heartbeat", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "heartbeat", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -225,7 +270,8 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "matrix", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "matrix", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -242,34 +288,66 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
-	public CrossReport queryCrossReport(String domain, Date start, Date end) {
-		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
+	public MetricReport queryMetricReport(String group, Date start, Date end) {
+		MetricReportMerger merger = new MetricReportMerger(new MetricReport(group));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "cross",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
+			List<BusinessReport> reports = m_businessReportDao.findAllByProductLineNameDuration(start, end, group, "metric",
+			      BusinessReportEntity.READSET_FULL);
+
+			for (BusinessReport report : reports) {
+				byte[] content = report.getContent();
 
 				try {
-					CrossReport reportModel = com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(xml);
+					MetricReport reportModel = DefaultNativeParser.parse(content);
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "cross", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "metric", Event.SUCCESS,
+					      report.getProductLine() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		CrossReport crossReport = merger.getCrossReport();
+		MetricReport metricReport = merger.getMetricReport();
 
-		crossReport.setStartTime(start);
-		crossReport.setEndTime(end);
+		metricReport.setStartTime(start);
+		metricReport.setEndTime(end);
+		return metricReport;
+	}
 
-		Set<String> domains = queryAllDomainNames(start, end, "cross");
-		crossReport.getDomainNames().addAll(domains);
-		return crossReport;
+	@Override
+	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
+
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+			      ReportEntity.READSET_FULL);
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser
+					      .parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "problem", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		ProblemReport problemReport = merger.getProblemReport();
+
+		problemReport.setStartTime(start);
+		problemReport.setEndTime(end);
+
+		Set<String> domains = queryAllDomainNames(start, end, "problem");
+		problemReport.getDomainNames().addAll(domains);
+		return problemReport;
 	}
 
 	@Override
@@ -287,7 +365,8 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "sql", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "sql", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -304,70 +383,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
-
-				try {
-					DatabaseReport reportModel = com.dianping.cat.consumer.database.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		DatabaseReport databaseReport = merger.getDatabaseReport();
-
-		databaseReport.setStartTime(start);
-		databaseReport.setEndTime(end);
-
-		Set<String> domains = queryAllDomainNames(start, end, "database");
-		databaseReport.getDomainNames().addAll(domains);
-		return databaseReport;
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-
-		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "health",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
-
-				try {
-					HealthReport reportModel = com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "health", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		HealthReport healthReport = merger.getHealthReport();
-
-		healthReport.setStartTime(start);
-		healthReport.setEndTime(end);
-
-		Set<String> domains = queryAllDomainNames(start, end, "health");
-		healthReport.getDomainNames().addAll(domains);
-		return healthReport;
-	}
-
-	@Override
-   public StateReport queryStateReport(String domain, Date start, Date end) {
+	public StateReport queryStateReport(String domain, Date start, Date end) {
 		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
 
 		try {
@@ -378,26 +394,26 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 				String xml = report.getContent();
 
 				try {
-					StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser
-					      .parse(xml);
+					StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "state", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "state", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		StateReport stateReport = merger.getStateReport();
-		
+
 		stateReport.setStartTime(start);
 		stateReport.setEndTime(end);
 		return stateReport;
-   }
+	}
 
 	@Override
-   public TopReport queryTopReport(String domain, Date start, Date end) {
+	public TopReport queryTopReport(String domain, Date start, Date end) {
 		TopReportMerger merger = new TopReportMerger(new TopReport(domain));
 
 		try {
@@ -408,22 +424,56 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 				String xml = report.getContent();
 
 				try {
-					TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser
-					      .parse(xml);
+					TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "top", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "top", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		TopReport topReport = merger.getTopReport();
-		
+
 		topReport.setStartTime(start);
 		topReport.setEndTime(end);
 		return topReport;
-   }
+	}
+
+	@Override
+	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					TransactionReport reportModel = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
+					      .parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "transaction", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		TransactionReport transactionReport = merger.getTransactionReport();
+
+		transactionReport.setStartTime(start);
+		transactionReport.setEndTime(end);
+
+		Set<String> domains = queryAllDomainNames(start, end, "transaction");
+		transactionReport.getDomainNames().addAll(domains);
+		return transactionReport;
+	}
 
 }

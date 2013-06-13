@@ -57,8 +57,7 @@ public class ConversionJoblet extends ContainerHolder implements Joblet<IntWrita
 
 		try {
 			tree.setMessageId(m_factory.getNextId());
-			MessageId id = MessageId.parse(tree.getMessageId());
-			m_bucket.store(tree, id);
+			MessageId.parse(tree.getMessageId());
 		} catch (Exception e) {
 			System.out.println(e);
 		}

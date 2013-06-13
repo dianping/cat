@@ -7,19 +7,15 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
+import com.dianping.cat.report.model.ModelPeriod;
+import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
-import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class LocalTopService extends BaseLocalModelService<TopReport> {
 	@Inject
 	private BucketManager m_bucketManager;
-
-	@Inject
-	private ReportService m_reportSerivce;
 
 	public LocalTopService() {
 		super("top");

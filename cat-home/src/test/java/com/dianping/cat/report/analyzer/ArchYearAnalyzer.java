@@ -40,6 +40,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 	private DailyreportDao m_dailyreportDao;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_reportService = lookup(ReportService.class);
@@ -107,7 +108,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 		}
 
 		public void accept(TransactionReport report) {
-			Machine machine = report.findOrCreateMachine(CatString.ALL_IP);
+			Machine machine = report.findOrCreateMachine(CatString.ALL);
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
 				String name = type.getId();
@@ -133,6 +134,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 			m_call = call;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
@@ -192,6 +194,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 			m_sum = sum;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 

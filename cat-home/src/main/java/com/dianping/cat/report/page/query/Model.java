@@ -17,22 +17,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private List<ProblemQueryItem> m_problemItems;
 	
-	public List<TransactionQueryItem> getTransactionItems() {
-		return m_transactionItems;
-	}
-
-	public void setTransactionItems(List<TransactionQueryItem> transactionItems) {
-		m_transactionItems = transactionItems;
-	}
-	
-	public List<EventQueryItem> getEventItems() {
-		return m_eventItems;
-	}
-
-	public void setEventItems(List<EventQueryItem> eventItems) {
-		m_eventItems = eventItems;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -41,7 +25,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
-
+	
 	@Override
    public String getDomain() {
 	   return "Cat";
@@ -52,12 +36,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 	   return Collections.emptyList();
    }
 
+	public List<EventQueryItem> getEventItems() {
+		return m_eventItems;
+	}
+
 	public List<ProblemQueryItem> getProblemItems() {
 		return m_problemItems;
 	}
 
+	public List<TransactionQueryItem> getTransactionItems() {
+		return m_transactionItems;
+	}
+
+	public void setEventItems(List<EventQueryItem> eventItems) {
+		m_eventItems = eventItems;
+	}
+
 	public void setProblemItems(List<ProblemQueryItem> problemItems) {
 		m_problemItems = problemItems;
+	}
+
+	public void setTransactionItems(List<TransactionQueryItem> transactionItems) {
+		m_transactionItems = transactionItems;
 	}
 	
 }

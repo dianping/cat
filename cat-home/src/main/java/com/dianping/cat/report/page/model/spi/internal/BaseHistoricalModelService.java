@@ -6,8 +6,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 
 public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
@@ -22,6 +22,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 
 	protected abstract T buildModel(ModelRequest request) throws Exception;
 
+	@Override
 	public String getName() {
 		return m_name;
 	}

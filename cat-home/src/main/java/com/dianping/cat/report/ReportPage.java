@@ -17,15 +17,11 @@ public enum ReportPage implements Page {
 
    LOGVIEW("logview", "m", "Logview", "Log View Details", false),
 
-   IP("ip", "ip", "Top IP", "Top Visited IP", false),
-
    MODEL("model", "model", "Model", "Service Model", false),
 
    SQL("sql", "sql", "SQL", "SQL Report", true),
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
-
-   TASK("task", "task", "Task", "Task", false),
 
    MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
 
@@ -41,7 +37,11 @@ public enum ReportPage implements Page {
 
    QUERY("query", "query", "Query", "Query", true),
 
-   TOP("top", "top", "Top", "Top", true);
+   TOP("top", "top", "Top", "Top", true),
+
+   METRIC("metric", "metric", "Metric", "Metric", true),
+
+   JSERROR("jsError", "jsError", "JsError", "jsError", true);
 
    private String m_name;
 

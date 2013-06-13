@@ -70,6 +70,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_hostInfo;
 	}
 
+	public MethodQueryInfo getInfo() {
+		return m_info;
+	}
+
 	public Collection<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
@@ -106,6 +110,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_hostInfo = hostInfo;
 	}
 
+	public void setInfo(MethodQueryInfo info) {
+		m_info = info;
+	}
+
 	public void setMethodInfo(MethodInfo methodInfo) {
 		m_methodInfo = methodInfo;
 	}
@@ -124,14 +132,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
-	}
-
-	public MethodQueryInfo getInfo() {
-		return m_info;
-	}
-
-	public void setInfo(MethodQueryInfo info) {
-		m_info = info;
 	}
 	
 

@@ -16,8 +16,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
@@ -41,6 +41,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	protected abstract BaseRemoteModelService<T> createRemoteService();
 
+	@Override
 	public String getName() {
 		return m_name;
 	}

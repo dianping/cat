@@ -14,30 +14,14 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Project;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ProjectEntity;
+import com.dainping.cat.consumer.core.dal.Project;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 
 public class DomainNavManager implements Initializable {
-
-	@Inject
-	private ProjectDao m_projectDao;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
-	private static Map<String, Project> m_projects = new HashMap<String, Project>();
-
-	public static Project getProjectByName(String domain) {
-		return m_projects.get(domain);
-	}
-
-	public static Map<String, Project> getProjects() {
-		return m_projects;
-	}
 
 	public static Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
@@ -62,6 +46,22 @@ public class DomainNavManager implements Initializable {
 		}
 
 		return result;
+	}
+
+	@Inject
+	private ProjectDao m_projectDao;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
+
+	private static Map<String, Project> m_projects = new HashMap<String, Project>();
+
+	public static Project getProjectByName(String domain) {
+		return m_projects.get(domain);
+	}
+
+	public static Map<String, Project> getProjects() {
+		return m_projects;
 	}
 
 	@Override

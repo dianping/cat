@@ -13,12 +13,12 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dainping.cat.consumer.dal.report.Task;
-import com.dainping.cat.consumer.dal.report.TaskDao;
-import com.dainping.cat.consumer.dal.report.TaskEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
+import com.dainping.cat.consumer.core.dal.Task;
+import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dainping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.helper.CatString;
@@ -43,6 +43,43 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	private long m_currentDay;
 
+	private void creatReportTask(Date yesterday) {
+		generateDailyReportTasks(yesterday);
+		generateDailyDatabaseTasks(yesterday);
+
+		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
+		Date lastWeekEnd = TimeUtil.getCurrentWeek();
+		Date lastWeekStart = TimeUtil.getLastWeek();
+
+		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
+		generateWeeklyDatabaseReportTasks(lastWeekStart, lastWeekEnd);
+
+		Date currentMonth = TimeUtil.getCurrentMonth();
+		Date lastMonth = TimeUtil.getLastMonth();
+
+		generateMonthReportTasks(lastMonth, currentMonth);
+		generateMonthDatabaseReportTasks(lastMonth, currentMonth);
+	}
+
+	public void firstInit() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -3);
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		Date currentMonth = TimeUtil.getCurrentMonth();
+		Date lastWeekEnd = TimeUtil.getCurrentWeek();
+
+		generateWeeklyReportTasks(cal.getTime(), lastWeekEnd);
+		generateWeeklyDatabaseReportTasks(cal.getTime(), lastWeekEnd);
+
+		generateMonthReportTasks(cal.getTime(), currentMonth);
+		generateMonthDatabaseReportTasks(cal.getTime(), currentMonth);
+
+		Date yesterday = TimeUtil.getYesterday();
+		generateDailyGraphTask(cal.getTime(), yesterday);
+	}
+
 	private void generateDailyDatabaseTasks(Date date) {
 		try {
 			Set<String> databaseSet = queryDatabaseSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
@@ -57,6 +94,31 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
+		}
+	}
+
+	private void generateDailyGraphTask(Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			Date date = new Date(startTime);
+			Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
+
+			for (String domain : domainSet) {
+				for (String name : m_graphReportNameSet) {
+					try {
+						try {
+							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY_GRAPH, date,
+							      TaskEntity.READSET_FULL);
+						} catch (DalNotFoundException e) {
+							// insertTask(domain, name, date, ReportFacade.TYPE_DAILY_GRAPH);
+						}
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+			}
 		}
 	}
 
@@ -259,50 +321,6 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		m_graphReportNameSet.add("heartbeat");
 	}
 
-	public void firstInit() {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -3);
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		Date currentMonth = TimeUtil.getCurrentMonth();
-		Date lastWeekEnd = TimeUtil.getCurrentWeek();
-
-		generateWeeklyReportTasks(cal.getTime(), lastWeekEnd);
-		generateWeeklyDatabaseReportTasks(cal.getTime(), lastWeekEnd);
-
-		generateMonthReportTasks(cal.getTime(), currentMonth);
-		generateMonthDatabaseReportTasks(cal.getTime(), currentMonth);
-
-		Date yesterday = TimeUtil.getYesterday();
-		generateDailyGraphTask(cal.getTime(), yesterday);
-	}
-
-	private void generateDailyGraphTask(Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			Date date = new Date(startTime);
-			Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
-
-			for (String domain : domainSet) {
-				for (String name : m_graphReportNameSet) {
-					try {
-						try {
-							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY_GRAPH, date,
-							      TaskEntity.READSET_FULL);
-						} catch (DalNotFoundException e) {
-							// insertTask(domain, name, date, ReportFacade.TYPE_DAILY_GRAPH);
-						}
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-			}
-		}
-	}
-
 	private void insertTask(String domain, String name, Date date, int type) {
 		Task task = m_taskDao.createLocal();
 
@@ -403,24 +421,6 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 				active = false;
 			}
 		}
-	}
-
-	private void creatReportTask(Date yesterday) {
-		generateDailyReportTasks(yesterday);
-		generateDailyDatabaseTasks(yesterday);
-
-		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
-		Date lastWeekEnd = TimeUtil.getCurrentWeek();
-		Date lastWeekStart = TimeUtil.getLastWeek();
-
-		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
-		generateWeeklyDatabaseReportTasks(lastWeekStart, lastWeekEnd);
-
-		Date currentMonth = TimeUtil.getCurrentMonth();
-		Date lastMonth = TimeUtil.getLastMonth();
-
-		generateMonthReportTasks(lastMonth, currentMonth);
-		generateMonthDatabaseReportTasks(lastMonth, currentMonth);
 	}
 
 	@Override

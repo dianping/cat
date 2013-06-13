@@ -7,45 +7,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.lookup.util.StringUtils;
-
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
 
 public class DisplayNames {
 
 	private List<EventNameModel> m_results = new ArrayList<EventNameModel>();
 
 	public DisplayNames display(String sorted, String type, String ip, EventReport report) {
-		try {
-			Machine machine = report.getMachines().get(ip);
-			if (machine == null) {
-				return this;
-			}
-			Map<String, EventType> types = machine.getTypes();
-			if (types != null) {
-				EventType names = types.get(type);
-				if (names == null) {
-					return this;
-				}
+		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
+		EventName all = new EventName("TOTAL");
+		all.setTotalPercent(1);
+		if (types != null) {
+			EventType names = types.get(type);
+
+			if (names != null) {
 				for (Entry<String, EventName> entry : names.getNames().entrySet()) {
 					m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
+					mergeName(all, entry.getValue());
 				}
 			}
-			if (!StringUtils.isEmpty(sorted)) {
-				Collections.sort(m_results, new EventComparator(sorted));
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
 		}
+		if (sorted == null) {
+			sorted = "avg";
+		}
+		Collections.sort(m_results, new EventComparator(sorted));
+
+		long total = all.getTotalCount();
+		for (EventNameModel nameModel : m_results) {
+			EventName eventName = nameModel.getDetail();
+			eventName.setTotalPercent(eventName.getTotalCount() / (double) total);
+		}
+		m_results.add(0, new EventNameModel("TOTAL", all));
 		return this;
 	}
 
 	public List<EventNameModel> getResults() {
 		return m_results;
+	}
+
+	public void mergeName(EventName old, EventName other) {
+		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
+		old.setFailCount(old.getFailCount() + other.getFailCount());
+
+		if (old.getTotalCount() > 0) {
+			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
+		}
+
+		if (old.getSuccessMessageUrl() == null) {
+			old.setSuccessMessageUrl(other.getSuccessMessageUrl());
+		}
+
+		if (old.getFailMessageUrl() == null) {
+			old.setFailMessageUrl(other.getFailMessageUrl());
+		}
 	}
 
 	public static class EventComparator implements Comparator<EventNameModel> {

@@ -52,9 +52,11 @@ public class ServiceDataListener implements EventListener {
 				try {
 					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
 
-					Cat.getProducer().logEvent("ServiceAlarm", "Domain", Message.SUCCESS, alarmMeta.getRuleId() + "");
+					Cat.getProducer().logEvent("ServiceAlarm", "Domain", Message.SUCCESS,
+					      String.valueOf(alarmMeta.getRuleId()));
 					m_dispatcher.dispatch(alertEvent);
 					t.setStatus(Transaction.SUCCESS);
+					t.setStatus("Alarm");
 				} catch (Exception e) {
 					t.setStatus(e);
 				} finally {

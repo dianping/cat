@@ -24,18 +24,6 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 
-	public static Date getYesterday() {
-		Calendar cal = Calendar.getInstance();
-
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		cal.add(Calendar.DAY_OF_MONTH, -1);
-
-		return cal.getTime();
-	}
-
 	public static Date getCurrentMonth() {
 		Calendar cal = Calendar.getInstance();
 
@@ -45,18 +33,6 @@ public class TimeUtil {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
-		return cal.getTime();
-	}
-
-	public static Date getLastMonth() {
-		Calendar cal = Calendar.getInstance();
-
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		cal.add(Calendar.MONTH, -1);
 		return cal.getTime();
 	}
 
@@ -79,10 +55,34 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 
+	public static Date getLastMonth() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.MONTH, -1);
+		return cal.getTime();
+	}
+
 	// last week sarterday
 	public static Date getLastWeek() {
 		Date date = getCurrentWeek();
 		return new Date(date.getTime() - 7 * ONE_DAY);
+	}
+
+	public static Date getYesterday() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+
+		return cal.getTime();
 	}
 
 }

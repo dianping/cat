@@ -54,9 +54,9 @@ public class AlertManager implements Initializable {
 		if (sendResult) {
 			record.setStatus(1);
 		} else {
-			record.setStatus(0);
+			record.setStatus(2);
 		}
-		record.setType(type);// for alarm type
+		record.setType(type);
 
 		try {
 			m_mailRecordDao.insert(record);
@@ -79,28 +79,32 @@ public class AlertManager implements Initializable {
 			while (active) {
 				try {
 					AlertInfo entity = m_alarmInfos.poll(5, TimeUnit.MILLISECONDS);
-
 					if (entity != null) {
-						String alarmType = entity.getRuleType();
-
 						int alertType = entity.getAlertType();
 						String title = entity.getTitle();
 						String content = entity.getContent();
 						boolean sendResult = false;
 
-						if (alertType == AlertInfo.EMAIL_TYPE) {
-							List<String> mails = entity.getMails();
+						try {
+							if (alertType == AlertInfo.EMAIL_TYPE) {
+								List<String> mails = entity.getMails();
 
-							sendResult = m_mailSms.sendEmail(title, content, mails);
-						} else if (alertType == AlertInfo.SMS_TYPE) {
-							List<String> phones = entity.getPhones();
+								sendResult = m_mailSms.sendEmail(title, content, mails);
+							} else if (alertType == AlertInfo.SMS_TYPE) {
+								List<String> phones = entity.getPhones();
 
-							sendResult = m_mailSms.sendSMS(title + " " + content, phones);
+								sendResult = m_mailSms.sendSMS(title, phones);
+							} else {
+								Cat.logError(new RuntimeException("unexcepted alert type! type : " + alertType));
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
+						String ruleType = entity.getRuleType();
 
-						if (alarmType.equals(AlertInfo.EXCEPTION)) {
+						if (ruleType.equals(AlertInfo.EXCEPTION)) {
 							insert(entity, 2, sendResult);
-						} else if (alarmType.equals(AlertInfo.SERVICE)) {
+						} else if (ruleType.equals(AlertInfo.SERVICE)) {
 							insert(entity, 3, sendResult);
 						}
 					} else {
@@ -110,7 +114,7 @@ public class AlertManager implements Initializable {
 							active = false;
 						}
 					}
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					Cat.logError(e);
 				}
 			}

@@ -106,6 +106,7 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 		return m_title;
 	}
 
+	@Override
 	public final double[] getValues() {
 		if (m_values == null) {
 			m_values = loadValues();
