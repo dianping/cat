@@ -251,6 +251,55 @@ CREATE TABLE `project` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
 
+CREATE TABLE `abtest` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `name` varchar(45) NOT NULL COMMENT '名字',
+  `owner` varchar(45) NOT NULL COMMENT 'case的Owner',
+  `group_strategy` int(11) DEFAULT NULL COMMENT '分组策略ID',
+  `domains` varchar(200) DEFAULT NULL COMMENT 'Domains，逗号分割',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modified_date` datetime DEFAULT NULL COMMENT '上次修改时间',
+  `description` varchar(512) DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `abtest_run` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `creator` varchar(45) DEFAULT NULL COMMENT 'Creator',
+  `case_id` int(11) NOT NULL COMMENT 'Case ID',
+  `start_date` datetime DEFAULT NULL COMMENT '开始时间',
+  `end_date` datetime DEFAULT NULL COMMENT '结束时间',
+  `disabled` tinyint(4) NOT NULL COMMENT '是否有效',
+  `domains` varchar(100) NOT NULL COMMENT '属于的domain，用逗号分割',
+  `strategy_configuration` text COMMENT '策略配置',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  `modified_date` datetime NOT NULL COMMENT '上次修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `group_strategy` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL COMMENT 'GroupStrategy的名字',
+  `alias` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
+  `classname` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
+  `configuration` text COMMENT '配置的schema',
+  `status` tinyint(4) NOT NULL COMMENT '是否开/关，1是开，0是关',
+  `description` varchar(512) DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
