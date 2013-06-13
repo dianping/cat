@@ -121,12 +121,10 @@ public class GraphConfigManagerTest {
 		index.setErrorCount(100);
 		state = m_manager.buildNodeState("Cat", index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("URL 响应时间 40.0 (ms)<br/><span style='color:red'>URL 错误数 100</span><br/>", state.getValue());
 
 		index.setErrorCount(200);
 		state = m_manager.buildNodeState("Cat", index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("URL 响应时间 40.0 (ms)<br/><span style='color:red'>URL 错误数 200</span><br/>", state.getValue());
 	}
 	
 	@Test
@@ -144,12 +142,10 @@ public class GraphConfigManagerTest {
 		index.setAvg(10.0);
 		state = m_manager.buildNodeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("<span style='color:red'>URL 响应时间 10.0 (ms)</span><br/>URL 错误数 5<br/>", state.getValue());
 
 		index.setAvg(100.0);
 		state = m_manager.buildNodeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("<span style='color:red'>URL 响应时间 100.0 (ms)</span><br/>URL 错误数 5<br/>", state.getValue());
 	}
 	
 	@Test
@@ -170,12 +166,10 @@ public class GraphConfigManagerTest {
 		index.setErrorCount(100);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("PigeonCall 响应时间 40.0 (ms)<br/><span style='color:red'>PigeonCall 错误数 100</span><br/>", state.getValue());
 
 		index.setErrorCount(200);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("PigeonCall 响应时间 40.0 (ms)<br/><span style='color:red'>PigeonCall 错误数 200</span><br/>", state.getValue());
 	}
 	
 
@@ -197,12 +191,10 @@ public class GraphConfigManagerTest {
 		index.setAvg(10.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("<span style='color:red'>PigeonCall 响应时间 10.0 (ms)</span><br/>PigeonCall 错误数 9<br/>", state.getValue());
 
 		index.setAvg(100.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("<span style='color:red'>PigeonCall 响应时间 100.0 (ms)</span><br/>PigeonCall 错误数 9<br/>", state.getValue());
 	}
 	
 	@Test
@@ -223,12 +215,10 @@ public class GraphConfigManagerTest {
 		index.setAvg(10.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("<span style='color:red'>PigeonCall 响应时间 10.0 (ms)</span><br/>PigeonCall 错误数 9<br/>", state.getValue());
 
 		index.setAvg(20.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("<span style='color:red'>PigeonCall 响应时间 20.0 (ms)</span><br/>PigeonCall 错误数 9<br/>", state.getValue());
 		
 		index.setAvg(9.0);
 		
@@ -236,12 +226,10 @@ public class GraphConfigManagerTest {
 		index.setErrorCount(10);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("PigeonCall 响应时间 9.0 (ms)<br/><span style='color:red'>PigeonCall 错误数 10</span><br/>", state.getValue());
 
 		index.setErrorCount(20);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("PigeonCall 响应时间 9.0 (ms)<br/><span style='color:red'>PigeonCall 错误数 20</span><br/>", state.getValue());
 	}
 
 }
