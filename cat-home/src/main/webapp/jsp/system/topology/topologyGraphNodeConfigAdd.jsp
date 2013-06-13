@@ -41,14 +41,24 @@
 			<td><input id="errorThreshold" name="domainConfig.errorThreshold" value="${model.domainConfig.errorThreshold}" required/></td>
 		</tr>
 		<c:if test="${payload.type ne 'Exception' }">
-		<tr>
-			<td style="text-align:right" class="text-success">响应时间warning阈值</td>
-			<td><input id="warningResponseTime"  name="domainConfig.warningResponseTime" value="${model.domainConfig.warningResponseTime}" required/></td>
-		</tr>
-		<tr>
-			<td style="text-align:right" class="text-success">响应时间error阈值</td>
-			<td><input id="errorResponseTime"  name="domainConfig.errorResponseTime" value="${model.domainConfig.errorResponseTime}" required/></td>
-		</tr>
+			<tr>
+				<td style="text-align:right" class="text-success">响应时间warning阈值</td>
+				<td><input id="warningResponseTime"  name="domainConfig.warningResponseTime" value="${model.domainConfig.warningResponseTime}" required/></td>
+			</tr>
+			<tr>
+				<td style="text-align:right" class="text-success">响应时间error阈值</td>
+				<td><input id="errorResponseTime"  name="domainConfig.errorResponseTime" value="${model.domainConfig.errorResponseTime}" required/></td>
+			</tr>
+		</c:if>
+		<c:if test="${payload.type eq 'Exception' }">
+			<tr style="display:none">
+				<td style="text-align:right" class="text-success">响应时间warning阈值</td>
+				<td><input id="warningResponseTime"  name="domainConfig.warningResponseTime" value="100" required/></td>
+			</tr>
+			<tr style="display:none">
+				<td style="text-align:right" class="text-success">响应时间error阈值</td>
+				<td><input id="errorResponseTime"  name="domainConfig.errorResponseTime" value="100" required/></td>
+			</tr>
 		</c:if>
 		<tr>
 			<td>&nbsp;</td>
