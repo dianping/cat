@@ -57,7 +57,9 @@
 				<c:forEach var="entry" items="${model.productLines}" varStatus="status">
 					<c:set var='item' value='${entry.value}'/>
 					<tr><td>${item.id}</td><td>${item.title}</td>
-					<td>${item.order}</td><td>${item.dashboard }</td>
+					<td>${item.order}</td>
+					<td><c:if test="${item.dashboard }"><span class="text-error"><strong>是</strong></span></c:if>
+						<c:if test="${!item.dashboard }"><span><strong>否</strong></span></c:if>  </td>
 					<td>
 						<c:forEach var="domain" items="${item.domains}"> 
 							${domain.key},
