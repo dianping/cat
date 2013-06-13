@@ -13,6 +13,7 @@ import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
+import com.dianping.cat.abtest.ABTestManager;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ClientConfigReloader;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -59,6 +60,8 @@ public class CatCoreModule extends AbstractModule {
 				Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
 			}
 		}
+		
+		ABTestManager.initialize();
 	}
 
 	@Override

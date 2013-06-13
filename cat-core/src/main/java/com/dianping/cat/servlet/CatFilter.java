@@ -10,9 +10,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.abtest.ABTestManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -27,6 +29,7 @@ public class CatFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletResponse resp = (HttpServletResponse) response;
 		boolean isRoot = !Cat.getManager().hasContext();
 
 		if (isRoot) {
@@ -40,9 +43,10 @@ public class CatFilter implements Filter {
 		if (isRoot) {
 			t = Cat.newTransaction(getTypeName(), getOriginalUrl(request));
 			logRequestClientInfo(cat, req);
+			ABTestManager.onRequestBegin(req,resp);
 		} else {
 			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
-		}
+		}	
 
 		logRequestPayload(cat, req);
 
@@ -75,6 +79,7 @@ public class CatFilter implements Filter {
 			t.complete();
 			if (isRoot) {
 				Cat.reset();
+				ABTestManager.onRequestEnd();
 			}
 		}
 	}
@@ -147,3 +152,4 @@ public class CatFilter implements Filter {
 		cat.logEvent(getTypeName(), CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
 	}
 }
+

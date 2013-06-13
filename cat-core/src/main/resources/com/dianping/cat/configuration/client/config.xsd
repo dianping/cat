@@ -30,7 +30,8 @@
       <xs:simpleContent>
          <xs:extension base="xs:string">
             <xs:attribute name="ip" type="xs:string" use="required"/>
-            <xs:attribute name="port" type="xs:int"/>
+            <xs:attribute name="port" type="xs:int" default="2280"/>
+            <xs:attribute name="http-port" type="xs:int" default="2281"/>
             <xs:attribute name="enabled" type="xs:boolean" default="true"/>
          </xs:extension>
       </xs:simpleContent>

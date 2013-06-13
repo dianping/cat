@@ -8,6 +8,7 @@ import com.dianping.cat.system.SystemPage;
 public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
+		SystemPage.ABTEST,
 
 		SystemPage.ALARM,
 
@@ -51,7 +52,7 @@ public class NavigationBar {
 		
 		ReportPage.STATE,
 
-		ReportPage.LOGVIEW
+		ReportPage.LOGVIEW,
 
 		};
 	}

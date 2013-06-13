@@ -218,6 +218,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
+		
 		return all;
 	}
 }
