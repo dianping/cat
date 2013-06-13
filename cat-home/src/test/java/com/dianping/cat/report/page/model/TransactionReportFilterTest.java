@@ -23,6 +23,6 @@ public class TransactionReportFilterTest {
 		TransactionReportFilter f2 = new TransactionReportFilter("URL", null, null);
 		String expected2 = Files.forIO().readFrom(getClass().getResourceAsStream("transaction-name.xml"), "utf-8");
 
-		Assert.assertEquals(expected2.replaceAll("\\s*", ""), f2.buildXml(report).replaceAll("\\s*", ""));
+		Assert.assertEquals(expected2.replaceAll("\r", ""), f2.buildXml(report).replaceAll("\r", ""));
 	}
 }
