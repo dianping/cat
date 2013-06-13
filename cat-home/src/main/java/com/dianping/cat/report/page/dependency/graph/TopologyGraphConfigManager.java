@@ -55,7 +55,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 	private static final String AVG_STR = CatString.RESPONSE_TIME;
 
 	private static final String ERROR_STR = CatString.EXCEPTION_COUNT;
-	
+
 	private static final String TOTAL_STR = CatString.TOTAL_COUNT;
 
 	private static final String MILLISECOND = "(ms)";
@@ -103,7 +103,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 		if (config != null) {
 			double avg = dependency.getAvg();
-			sb.append(buildDes(type,TOTAL_STR,String.valueOf(dependency.getTotalCount())));
+			sb.append(buildDes(type, TOTAL_STR, String.valueOf(dependency.getTotalCount())));
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
@@ -152,7 +152,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 		if (config != null) {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
-			sb.append(buildDes(type,TOTAL_STR,String.valueOf(index.getTotalCount())));
+			sb.append(buildDes(type, TOTAL_STR, String.valueOf(index.getTotalCount())));
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
@@ -161,7 +161,9 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 				errorCode = WARN;
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			} else {
-				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				if (!type.equals("Exception")) {
+					sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
+				}
 			}
 			if (error >= config.getErrorThreshold()) {
 				errorCode = ERROR;

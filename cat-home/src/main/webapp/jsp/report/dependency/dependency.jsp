@@ -54,11 +54,11 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#content .nav-tabs a').mouseenter(function (e) {
+/* 		$('#content .nav-tabs a').mouseenter(function (e) {
 			  e.preventDefault();
 			  $(this).tab('show');
 		});
-
+ */
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",

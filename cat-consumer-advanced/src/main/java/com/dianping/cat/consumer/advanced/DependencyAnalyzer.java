@@ -308,23 +308,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-				try {
-					Task task = m_taskDao.createLocal();
-
-					task.setCreationDate(new Date());
-					task.setProducer("");
-					task.setReportDomain("Cat");
-					task.setReportName(ID);
-					task.setReportPeriod(period);
-					task.setStatus(1); // status todo
-					task.setTaskType(0);
-					m_taskDao.insert(task);
-
-					System.out.println(task);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-
 				for (DependencyReport report : m_reports.values()) {
 					try {
 						Report r = m_reportDao.createLocal();
@@ -342,6 +325,20 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}
+				}
+				try {
+					Task task = m_taskDao.createLocal();
+
+					task.setCreationDate(new Date());
+					task.setProducer("");
+					task.setReportDomain("Cat");
+					task.setReportName(ID);
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					task.setTaskType(0);
+					m_taskDao.insert(task);
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		} catch (Exception e) {

@@ -120,11 +120,6 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		}
 	}
 
-	public TopologyGraphBuilder setMinute(int minute) {
-		m_minute = minute;
-		return this;
-	}
-
 	@Override
 	public void visitDependency(Dependency dependency) {
 		String type = dependency.getType();
