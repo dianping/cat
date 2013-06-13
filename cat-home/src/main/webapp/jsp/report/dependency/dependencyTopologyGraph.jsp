@@ -25,7 +25,7 @@
 		<%@ include file="dependencyOpNav.jsp"%>
 	    <%@ include file="dependencyTimeNav.jsp"%>
 	    </div></div>
-  		<div class="tabbable tabs-left " id="content"> <!-- Only required for left/right tabs -->
+  		<div class="tabbable tabs-left "  id="fullScreenData" > <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs alert-info">
    			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>依赖拓扑</strong></a></li>
    			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维告警</strong></a></li>
@@ -38,7 +38,9 @@
 					  </div>
 	    		</div>
 	    		<div class="tab-pane" id="tab2">
-	  				<%@ include file="dependencyEvent.jsp"%>
+	    			<div>
+		  				<%@ include file="dependencyEvent.jsp"%>
+	    			</div>
 	    		</div>
 	    		<div class="tab-pane" id="tab3">
 	  				<%@ include file="dependencyDetailData.jsp"%>

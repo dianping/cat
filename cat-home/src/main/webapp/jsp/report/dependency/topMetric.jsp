@@ -13,7 +13,7 @@
   <c:set var="date" value="${w:format(model.topReport.startTime,'yyyyMMddHH')}"/>
   <div class="tab-content">
     <div class="tab-pane  active" id="tab1">
-      <c:forEach var="item" items="${model.topMetric.error.result}"  varStatus="status">
+      <c:forEach var="item" items="${model.topMetric.error.result}"  varStatus="itemStatus">
 	      <table width="20%" style="float:left" border=1>  
 	           <tr><th colspan="2" class="text-error" class="text-error">${item.key}</th></tr>
 	           <tr><th width="80%">系统</th>      <th>个</th></tr>
@@ -25,6 +25,7 @@
 	              </tr>
 	           </c:forEach>
 	      </table>
+	      <c:if test="${itemStatus.index mod 5 == 4 }"><br/></c:if>
       </c:forEach>
     </div>
     <div class="tab-pane" id="tab2">

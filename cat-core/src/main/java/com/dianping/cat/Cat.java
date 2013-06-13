@@ -31,8 +31,6 @@ public class Cat {
 
 	public static final String MetricType = "_MetricType";
 
-	public static final String MetricGroup = "_MetricGroup";
-
 	private static void checkAndInitialize() {
 		synchronized (s_instance) {
 			if (s_instance.m_container == null) {
@@ -122,7 +120,7 @@ public class Cat {
 		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
-	private static void recordMetric( String name, double value, String metricType) {
+	private static void recordMetric(String name, double value, String metricType) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(name).append("=").append(value);
@@ -134,11 +132,11 @@ public class Cat {
 		recordMetric( name, value, "SUM");
 	}
 
-	public static void recordResponseTimeMetric( String name, double millis) {
+	public static void recordResponseTimeMetric(String name, double millis) {
 		recordMetric( name, millis, "AVG");
 	}
 
-	public static void recordCountMetric( String name) {
+	public static void recordCountMetric(String name) {
 		recordMetric( name, 1, "SUM");
 	}
 

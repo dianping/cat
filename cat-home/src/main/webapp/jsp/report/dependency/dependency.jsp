@@ -79,6 +79,20 @@
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');
 		$('.dataTables_info').css('display','none');
+		/* 
+		var full = ${payload.fullScreen};
+		
+		if(full){
+			console.log(full);
+			 var container = $('#fullScreenData')[0];
+			console.log(container);
+			    //W3C suggest to use requestFullScreen
+			    //but webkit use webkitRequestFullScreen ,FireFox use mozRequestFullScreen
+			    //Opera and IE don't support the fullScreen API
+			    //careful fullScreen is called on the element but exitFullScreen is called on the document!!
+			    //WHAT THE FUCK!!
+			 container.requestFullScreen ? container.requestFullScreen() : (container.webkitRequestFullScreen ? container.webkitRequestFullScreen() : (container.mozRequestFullScreen && container.mozRequestFullScreen()));
+		} */
 	});
 </script>
 <style>

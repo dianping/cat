@@ -32,6 +32,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
    @FieldMeta("refresh")
    private boolean m_refresh = false;
+   
+   @FieldMeta("fullScreen")
+   private boolean m_fullScreen = false;
 
 	public int getMinuteCounts() {
    	return m_minuteCounts;
@@ -117,6 +120,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setProductLine(String productLine) {
    	this.productLine = productLine;
+   }
+
+	public boolean isFullScreen() {
+   	return m_fullScreen;
+   }
+
+	public void setFullScreen(boolean fullScreen) {
+   	m_fullScreen = fullScreen;
    }
 	
 }
