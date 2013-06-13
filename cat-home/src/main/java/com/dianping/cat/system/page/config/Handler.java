@@ -22,15 +22,14 @@ import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.home.aggreation.entity.AggregationRule;
 import com.dianping.cat.home.company.entity.ProductLine;
-import com.dianping.cat.home.dal.report.AggregationRule;
-import com.dianping.cat.home.dal.report.AggregationRuleDao;
-import com.dianping.cat.home.dal.report.AggregationRuleEntity;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.config.AggregationConfigManager;
 import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -41,13 +40,13 @@ public class Handler implements PageHandler<Context> {
 	private ProjectDao m_projectDao;
 
 	@Inject
-	private AggregationRuleDao m_aggregationRuleDao;
-
-	@Inject
 	private TopologyGraphConfigManager m_topologyConfigManager;
 	
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManger;
+	
+	@Inject
+	private AggregationConfigManager m_aggreationConfigManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -79,18 +78,19 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case AGGREGATION_ALL:
-			model.setAggregationRules(queryAllAggregationRules());
+			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
 			break;
 		case AGGREGATION_UPDATE:
-			model.setAggregationRule(queryAggregationRuleById(payload.getId()));
+			model.setAggregationRule(
+					m_aggreationConfigManager.queryAggration(payload.getPattern()));
 			break;
 		case AGGREGATION_UPDATE_SUBMIT:
 			updateAggregationRule(payload);
-			model.setAggregationRules(queryAllAggregationRules());
+			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
 			break;
 		case AGGREGATION_DELETE:
 			deleteAggregationRule(payload);
-			model.setAggregationRules(queryAllAggregationRules());
+			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
 			break;
 
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
@@ -249,45 +249,11 @@ public class Handler implements PageHandler<Context> {
 
 	private void updateAggregationRule(Payload payload) {
 		AggregationRule proto = payload.getRule();
-		proto.setKeyId(payload.getId());
-		try {
-			if (proto.getKeyId() == 0) {
-				m_aggregationRuleDao.insert(proto);
-			} else {
-				m_aggregationRuleDao.updateByPK(proto, AggregationRuleEntity.UPDATESET_FULL);
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-	}
-
-	private List<AggregationRule> queryAllAggregationRules() {
-		List<AggregationRule> aggregationRules = new ArrayList<AggregationRule>();
-		try {
-			aggregationRules = m_aggregationRuleDao.findAll(AggregationRuleEntity.READSET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return aggregationRules;
-	}
-
-	private AggregationRule queryAggregationRuleById(int id) {
-		try {
-			return m_aggregationRuleDao.findByPK(id, AggregationRuleEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return null;
-		}
+		m_aggreationConfigManager.insertAggregationRule(proto);
 	}
 
 	private void deleteAggregationRule(Payload payload) {
-		AggregationRule proto = new AggregationRule();
-		proto.setKeyId(payload.getId());
-		try {
-			m_aggregationRuleDao.deleteByPK(proto);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
+		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
 	}
 
 	class ProjectCompartor implements Comparator<Project> {

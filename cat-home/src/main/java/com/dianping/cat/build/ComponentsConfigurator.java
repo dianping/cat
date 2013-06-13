@@ -83,6 +83,7 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.AggregationConfigManager;
 import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -221,6 +222,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
+
+		all.add(C(AggregationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 

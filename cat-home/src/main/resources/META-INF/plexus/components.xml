@@ -658,6 +658,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.system.config.AggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
 			<requirements>
@@ -1326,16 +1335,6 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>aggregation-rule</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>aggregation-rule</logical-table-name>
-				<physical-table-name>aggregationRule</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>dailygraph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1413,15 +1412,6 @@
 				<physical-table-name>weeklyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AggregationRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
@@ -2994,13 +2984,13 @@
 					<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3023,17 +3013,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AggregationRuleDao</implementation>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<role>com.dianping.cat.system.config.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.system.config.AggregationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>

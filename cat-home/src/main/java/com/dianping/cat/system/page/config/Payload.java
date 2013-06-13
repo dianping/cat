@@ -6,8 +6,8 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.home.aggreation.entity.AggregationRule;
 import com.dianping.cat.home.company.entity.ProductLine;
-import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.system.SystemPage;
@@ -56,6 +56,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("to")
 	private String m_to;
+	
+	@FieldMeta("pattern")
+	private String m_pattern;
 
 	@Override
 	public Action getAction() {
@@ -65,12 +68,24 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
+	public String getDomain() {
+		return m_domain;
+	}
+
 	public DomainConfig getDomainConfig() {
 		return m_domainConfig;
 	}
 
+	public String[] getDomains() {
+		return m_domains;
+	}
+
 	public EdgeConfig getEdgeConfig() {
 		return m_edgeConfig;
+	}
+
+	public String getFrom() {
+		return m_from;
 	}
 
 	public int getId() {
@@ -80,6 +95,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public SystemPage getPage() {
 		return m_page;
+	}
+
+	public String getPattern() {
+   	return m_pattern;
+   }
+
+	public ProductLine getProductLine() {
+		return m_productLine;
+	}
+
+	public String getProductLineName() {
+		return m_productLineName;
 	}
 
 	public Project getProject() {
@@ -98,6 +125,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_rule;
 	}
 
+	public String getTo() {
+		return m_to;
+	}
+
 	public String getType() {
 		return m_type;
 	}
@@ -106,12 +137,24 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
 	}
 
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	public void setDomainConfig(DomainConfig domainConfig) {
 		m_domainConfig = domainConfig;
 	}
 
+	public void setDomains(String[] domains) {
+		m_domains = domains;
+	}
+
 	public void setEdgeConfig(EdgeConfig edgeConfig) {
 		m_edgeConfig = edgeConfig;
+	}
+
+	public void setFrom(String from) {
+		m_from = from;
 	}
 
 	public void setId(int id) {
@@ -121,6 +164,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
+	}
+
+	public void setPattern(String pattern) {
+   	m_pattern = pattern;
+   }
+
+	public void setProductLine(ProductLine productLine) {
+		m_productLine = productLine;
+	}
+
+	public void setProductLineName(String productLineName) {
+		m_productLineName = productLineName;
 	}
 
 	public void setProject(Project project) {
@@ -133,6 +188,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setRule(AggregationRule rule) {
 		m_rule = rule;
+	}
+
+	public void setTo(String to) {
+		m_to = to;
 	}
 
 	public void setType(String type) {
@@ -148,56 +207,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_type = type;
 	}
 
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
 	@Override
 	public void validate(ActionContext<?> ctx) {
-	}
-
-	public String getTo() {
-		return m_to;
-	}
-
-	public void setTo(String to) {
-		m_to = to;
-	}
-
-	public String getFrom() {
-		return m_from;
-	}
-
-	public void setFrom(String from) {
-		m_from = from;
-	}
-
-	public ProductLine getProductLine() {
-		return m_productLine;
-	}
-
-	public void setProductLine(ProductLine productLine) {
-		m_productLine = productLine;
-	}
-
-	public String getProductLineName() {
-		return m_productLineName;
-	}
-
-	public void setProductLineName(String productLineName) {
-		m_productLineName = productLineName;
-	}
-
-	public String[] getDomains() {
-		return m_domains;
-	}
-
-	public void setDomains(String[] domains) {
-		m_domains = domains;
 	}
 
 }

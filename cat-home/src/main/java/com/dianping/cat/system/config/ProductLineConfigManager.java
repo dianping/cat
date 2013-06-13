@@ -139,6 +139,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	private boolean storeConfig() {
 		try {
 			Config config = m_configDao.createLocal();
+			
 			config.setId(m_configId);
 			config.setKeyId(m_configId);
 			config.setName(CONFIG_NAME);
