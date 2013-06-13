@@ -12,6 +12,7 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultMessageProducer implements MessageProducer {
 	@Inject
@@ -72,7 +73,9 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
-   public void logMetric(String type, String name, String status, String nameValuePairs) {
+	public void logMetric(String name, String status, String nameValuePairs) {
+		MessageTree tree = m_manager.getThreadLocalMessageTree();
+		String type = tree == null ? null : tree.getMetricType();
 		Metric event = newMetric(type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
@@ -81,7 +84,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 		event.setStatus(status);
 		event.complete();
-   }
+	}
 
 	@Override
 	public Event newEvent(String type, String name) {
@@ -98,7 +101,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			return NullMessage.EVENT;
 		}
 	}
-	
+
 	public Event newEvent(Transaction parent, String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -150,10 +153,10 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled()) {
-			DefaultMetric metric = new DefaultMetric(type, name);
-			
+			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name);
+
 			m_manager.add(metric);
 			return metric;
 		} else {
