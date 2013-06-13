@@ -20,9 +20,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dainping.cat.consumer.dal.report.Project;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ProjectEntity;
+import com.dainping.cat.consumer.core.dal.Project;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.model.entity.Case;
@@ -54,10 +54,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private ProjectDao m_projectDao;
-	
+
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	private Logger m_logger;
 
 	private final int m_pageSize = 10;
@@ -89,7 +89,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					}
 				}
 			}
-			System.out.println(abtestModel);
+
 			return abtestModel;
 		} catch (DalException e) {
 			m_logger.error("Error when find all AbtestRun", e);
@@ -176,7 +176,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			handleStatusChangeAction(ctx);
 		}
 	}
-	
+
 	@Override
 	@OutboundActionMeta(name = "abtest")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
@@ -226,7 +226,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						} else {
 							error.addArgument(id, String.format("Abtest %d has been already suspended!", id));
 						}
-					} else if (payload.getDisableAbtest() == 1) { 
+					} else if (payload.getDisableAbtest() == 1) {
 						// resume abtest
 						if (run.isDisabled()) {
 							run.setDisabled(false);
@@ -240,7 +240,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					Cat.logError(e);
 				}
 			}
-			
+
 			if (error.getArguments().isEmpty()) {
 				ErrorObject success = new ErrorObject("success");
 				ctx.addError(success);
@@ -296,7 +296,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
 
 		List<AbtestRun> runs = new ArrayList<AbtestRun>();
-		
+
 		try {
 			runs = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
 
@@ -368,7 +368,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private void renderModel(Model model) {
 		model.setAbtestModel(fetchAbtestModel().toString());
-   }
+	}
 
 	private void renderReportModel(Context ctx, Model model, Payload payload) {
 		try {
