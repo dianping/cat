@@ -15,6 +15,7 @@
   border-spacing: 0; 
 }
 </style>
+</style>
 <a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
@@ -47,12 +48,6 @@
 </a:body>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('i[tips]').popover();
-		$('#topMetric .nav-tabs a').mouseenter(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-		});	
-		
 		var refresh = ${payload.refresh};
 		var frequency = ${payload.frequency};
 		if(refresh){

@@ -55,6 +55,8 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 	private static final String AVG_STR = CatString.RESPONSE_TIME;
 
 	private static final String ERROR_STR = CatString.EXCEPTION_COUNT;
+	
+	private static final String TOTAL_STR = CatString.TOTAL_COUNT;
 
 	private static final String MILLISECOND = "(ms)";
 
@@ -91,7 +93,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Pair<Integer, String> buildEdgeState(String domain, Dependency dependency) {
-		String type = dependency.getType();
+		String type = formatType(dependency.getType());
 		String from = domain;
 		String to = dependency.getTarget();
 		EdgeConfig config = queryEdgeConfig(type, from, to);
@@ -101,6 +103,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 
 		if (config != null) {
 			double avg = dependency.getAvg();
+			sb.append(buildDes(type,TOTAL_STR,String.valueOf(dependency.getTotalCount())));
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;
@@ -149,6 +152,7 @@ public class TopologyGraphConfigManager implements Initializable, LogEnabled {
 		if (config != null) {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
+			sb.append(buildDes(type,TOTAL_STR,String.valueOf(index.getTotalCount())));
 
 			if (avg >= config.getErrorResponseTime()) {
 				errorCode = ERROR;

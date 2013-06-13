@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" %>
-	
+	<div id="fullScreenData">
 <div class="row-fluid">
 	<div class='span12'>
 		<h4 class='text-error text-center'>当前小时内项目本身指标趋势图</h4>
@@ -39,7 +39,7 @@
 		</c:forEach></table>
 	</div>
 </div>
-
+</div>
 <script type="text/javascript">
 	<c:forEach  var="item" items="${model.indexGraph}" varStatus="status">
 		_data = lineChartParse(${item});

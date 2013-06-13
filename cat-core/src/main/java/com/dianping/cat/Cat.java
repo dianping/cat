@@ -130,7 +130,7 @@ public class Cat {
 		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
 	}
 
-	public static void recordMetric( String name, double value) {
+	public static void recordMetric(String name, double value) {
 		recordMetric( name, value, "SUM");
 	}
 

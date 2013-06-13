@@ -15,10 +15,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#topylogyEdgeConfigList').addClass('active');
-			$('#content .nav-tabs a').mouseenter(function (e) {
+			/* $('#content .nav-tabs a').mouseenter(function (e) {
 				  e.preventDefault();
 				  $(this).tab('show');
-			});
+			}); */
 			$(".delete").bind("click", function() {
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});

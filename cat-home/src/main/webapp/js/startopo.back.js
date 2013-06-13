@@ -115,7 +115,7 @@
 			this.centerNode.node.click(function(){
 				data.link && (location.href = data.link);
 			}).mouseover(function(e){
-					self._showTip(data.des,e.pageX+15,e.pageY+15);
+					self._showTip(data.des,e.pageX,e.pageY);
 				}).mouseout(function(){
 					self._hideTip();
 				});;
@@ -127,28 +127,18 @@
 			if(!points){
 				return ;
 			}
-			var averageDegree = 2 * PI/(points.length+(self.twoSides?2:0));
+			var averageDegree = 2 * PI/points.length;
 			var centerNode = this.centerNode;
 
 			points.forEach(function(p,i){
 				var type = self._getNodeType(p.type);
 			   	var node = self._createNode(type,p.id);	
 				var angle;
-				//if(self.twoSides){
-				//	if(i<self.posLength){
-				//		angle = (i+1) * (PI / (self.posLength +1)) - PI/2;
-				//	}else{
-				//		angle = (i + 1  - self.posLength) * (PI / (self.navLength+1)) + PI/2
-				//	}
-				//}else{
-				//	angle = averageDegree * i;
-				//}
-
 				if(self.twoSides){
 					if(i<self.posLength){
-						angle = averageDegree * i;
+						angle = (i+1) * (PI / (self.posLength +1)) - PI/2;
 					}else{
-						angle = averageDegree * (i+ 1);
+						angle = (i + 1  - self.posLength) * (PI / (self.navLength+1)) + PI/2
 					}
 				}else{
 					angle = averageDegree * i;
@@ -168,7 +158,7 @@
 					p.link && (location.href = p.link);
 				}).mouseover(function(e){
 					console.log(e);
-					self._showTip(p.des,e.pageX+15,e.pageY+15);
+					self._showTip(p.des,e.pageX,e.pageY);
 				}).mouseout(function(){
 					self._hideTip();
 				});
@@ -209,34 +199,16 @@
 					alpha = ( Math.acos((endPoint.x - startPoint.x) / length ) * ( startPoint.y > endPoint.y ? 1 : -1));
 				}
 				alpha = 360 - alpha * 180 / Math.PI;
-				if(s.dashed){
-					var dashSpan = 3,lineSpan = 5,currentLength=0;
-					while(currentLength<length){
-						pathStr.push('h',lineSpan,'m',dashSpan,0);
-						currentLength+=(dashSpan+lineSpan);
-					}
-					pathStr.push('h',length - currentLength);
-					pathStr.push();
-				}else {
-					pathStr.push('h',length);
-				}
-				//箭头
-				pathStr.push('l',-10,-5,'l',5,5,'l',-5,5,'l',10,-5);
+				pathStr.push('h',length,'l',-10,-10,'m',10,10,'l',-10,10)
 				self.stage.path().attr({
 					'path':pathStr
 				}).rotate(alpha,startPoint.x,startPoint.y).attr({
 					'stroke':self.options.colorMap[s.status],
-					'stroke-width': self.options.sideWeight(s.weight || 0),
-					'fill':self.options.colorMap[s.status]
-				}).mouseover(function(e){
-					self._showTip(s.des,e.pageX+15,e.pageY+15);
-				}).mouseout(function(){
-					self._hideTip();
+					'stroke-width': self.options.sideWeight(s.weight || 0)
 				});
-
-				//self.stage.text(startPoint.x+length/2,startPoint.y,s.des).rotate(alpha,startPoint.x,startPoint.y).click(function(){
-				//	s.link && (location.href = s.link);
-				//});
+				self.stage.text(startPoint.x+length/2,startPoint.y,s.des).rotate(alpha,startPoint.x,startPoint.y).click(function(){
+					s.link && (location.href = s.link);
+				});
 			});
 		},
 		_getNodeType:function(type){
@@ -273,7 +245,7 @@
 				node.node.click(function(){
 					p.link && (location.href = p.link);
 				}).mouseover(function(e){
-					self._showTip(p.des,e.pageX+15,e.pageY+15);
+					self._showTip(p.des,e.pageX,e.pageY);
 				}).mouseout(function(){
 					self._hideTip();
 				});
@@ -289,7 +261,7 @@
 			}
 			if(!this._tip){
 				this._tip = document.createElement('div');
-				this._tip.style.cssText= 'position:absolute;display:none;z-index:100000;padding:10px;border:solid 1px #ccc;box-shadow:#ccc 0 0 10px 2px;background-color:#fff;';
+				this._tip.style.cssText= 'position:absolute;display:none;z-index:100000;padding:10px;border:solid 1px #ccc;box-shadow:#ccc 0 0 4px 2px;background-color:#fff;';
 				document.body.appendChild(this._tip);
 			}
 			this._tip.innerHTML = content;
@@ -300,6 +272,7 @@
 		_hideTip:function(){
 			this._tip && (this._tip.style.display = 'none');
 		}
+		
 	}
 
 

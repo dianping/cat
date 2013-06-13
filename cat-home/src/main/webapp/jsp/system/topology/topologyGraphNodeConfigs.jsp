@@ -17,11 +17,11 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#topylogyNodeConfigList').addClass('active');
-			$('#content .nav-tabs a').mouseenter(function (e) {
+/* 			$('#content .nav-tabs a').mouseenter(function (e) {
 				  e.preventDefault();
 				  $(this).tab('show');
 			});
-			var type = '${payload.type}';
+ */			var type = '${payload.type}';
 			if(type==''){
 				type = 'URL';
 			}

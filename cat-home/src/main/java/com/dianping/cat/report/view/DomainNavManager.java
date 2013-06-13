@@ -30,7 +30,13 @@ public class DomainNavManager implements Initializable {
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
+	// key is domain
 	private static Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
+
+	// key is product line
+	private static Map<String, Map<String, Project>> m_productLines = new ConcurrentHashMap<String, Map<String, Project>>();
+
+	public static final String DEFAULT = "Default";
 
 	public static Collection<String> getDomains() {
 		return m_projects.keySet();
@@ -42,8 +48,8 @@ public class DomainNavManager implements Initializable {
 		synchronized (m_projects) {
 			for (String domain : domains) {
 				Project project = m_projects.get(domain);
-				String department = "Default";
-				String projectLine = "Default";
+				String department = DEFAULT;
+				String projectLine = DEFAULT;
 
 				if (project != null) {
 					department = project.getDepartment();
@@ -73,13 +79,7 @@ public class DomainNavManager implements Initializable {
 	public void initialize() throws InitializationException {
 		reloadDomainInfo();
 		if (!m_serverConfigManager.isLocalMode()) {
-			try {
-				DomainReload reload = new DomainReload();
-
-				Threads.forGroup("Cat").start(reload);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			Threads.forGroup("Cat").start(new DomainReload());
 		}
 	}
 

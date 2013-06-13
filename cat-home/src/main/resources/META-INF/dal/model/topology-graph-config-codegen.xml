@@ -3,7 +3,6 @@
   <entity name="topology-graph-config" root="true">
     <entity-ref name="node-config" type="list" names="node-configs" />
     <entity-ref name="edge-config" type="list" names="edge-configs" />
-    <entity-ref name="product-line" type="list" names="product-lines" />
   </entity>
   <entity name="node-config">
     <attribute name="type" value-type="String" />
@@ -29,16 +28,6 @@
     <attribute name="error-threshold" value-type="int" />
     <attribute name="warning-response-time" value-type="double" />
     <attribute name="error-response-time" value-type="double" />
-  </entity>
-  <entity name="product-line">
-    <attribute name="id" value-type="String" />
-    <attribute name="title" value-type="String" />
-    <attribute name="order" value-type="int" />
-    <attribute name="important" value-type="boolean" />
-    <entity-ref name="domain" type="list" names="domains" />
-  </entity>
-  <entity name="domain">
-    <attribute name="id" value-type="String" />
   </entity>
 </model>
 

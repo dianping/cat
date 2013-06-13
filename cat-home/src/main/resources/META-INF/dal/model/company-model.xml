@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.company" enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true" >
+  <entity name="product-line">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="title" value-type="String" />
+    <attribute name="order" value-type="double" primitive="true" />
+    <attribute name="important" value-type="boolean" primitive="true"/>
+    <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true"/>
+  </entity>
+</model>
+
