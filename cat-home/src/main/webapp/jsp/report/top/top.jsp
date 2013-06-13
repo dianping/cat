@@ -48,6 +48,7 @@
 </a:body>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		var refresh = ${payload.refresh};
 		var frequency = ${payload.frequency};
 		if(refresh){

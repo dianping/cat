@@ -37,7 +37,7 @@
 		</div></div>
 		<div id="fullScreenData">
 			<h1>监控仪表盘信息</h1>
-			<%@ include file="topMetric.jsp"%>
+			<%@ include file="../top/topMetric.jsp"%>
 		</div>
     </div>
 </jsp:body>

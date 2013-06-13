@@ -4,6 +4,8 @@
   <entity name="product-line">
     <attribute name="id" value-type="String" key="true"/>
     <attribute name="title" value-type="String" />
+    <attribute name="owner" value-type="String" />
+    <attribute name="email" value-type="String" />
     <attribute name="order" value-type="double" primitive="true" />
     <attribute name="important" value-type="boolean" primitive="true"/>
     <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
