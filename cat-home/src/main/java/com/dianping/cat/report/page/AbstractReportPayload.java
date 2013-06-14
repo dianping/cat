@@ -46,6 +46,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
 	private ReportPage m_defaultPage;
+	
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;

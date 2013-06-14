@@ -158,7 +158,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			String xml = builder.buildXml(report);
 			String domain = report.getDomain();
 
-			r.setName("state");
+			r.setName(ID);
 			r.setDomain(domain);
 			r.setPeriod(period);
 			r.setIp(ip);
@@ -243,11 +243,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		ProcessDomain processDomains = machine.findOrCreateProcessDomain(domain);
 
-		if (!m_domains.contains(domain)) {
+		if (validate(domain) && !m_domains.contains(domain)) {
 			insertDomainInfo(domain);
 			m_domains.add(domain);
 		}
 		processDomains.addIp(ip);
+	}
+
+	private boolean validate(String domain) {
+		return !domain.equals("PhoenixAgent") && !domain.equals("FrondEnd");
 	}
 
 	private void storeReport(boolean atEnd) {
@@ -273,6 +277,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 						long minute = 1000 * 60;
 						long start = m_startTime - minute * 60 * 2;
 						long end = m_startTime - minute * 60;
+
 						for (; start < end; start += minute) {
 							m_serverStateManager.RemoveState(start);
 						}
@@ -305,7 +310,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			for (String ip : ips) {
 				try {
 					// Hack For PhoenixAgent
-					if (!domain.equals("PhoenixAgent")) {
+					if (validate(domain)) {
 						Hostinfo info = m_hostInfoDao.createLocal();
 
 						info.setDomain(domain);
@@ -315,12 +320,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				} catch (DalException e) {
 					Cat.logError(e);
 				}
-			}
-
-			try {
-				insertDomainInfo(domain);
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
 		}
 	}

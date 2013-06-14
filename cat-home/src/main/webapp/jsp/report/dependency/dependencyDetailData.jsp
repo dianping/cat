@@ -52,12 +52,14 @@
 					<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 					<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
 					<td>
-					 <c:if test="${itemValue.type eq 'PigeonServer'}">
-						<a class="btn btn-primary edgeConfigUpdate btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=PigeonCall&to=${model.domain}&from=${itemValue.target}">配置阀值</a>
-					 </c:if>
-					 <c:if test="${itemValue.type ne 'PigeonServer'}">
-						<a class="btn btn-primary edgeConfigUpdate btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=${itemValue.type}&from=${model.domain}&to=${itemValue.target}">配置阀值</a>
-					 </c:if>
+					<c:choose>
+						<c:when test="${itemValue.type eq 'PigeonServer' || itemValue.type eq 'PigeonService'}">
+							<a class="btn btn-primary edgeConfigUpdate btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=PigeonCall&to=${model.domain}&from=${itemValue.target}">配置阀值</a>
+						</c:when>
+						<c:otherwise>
+							<a class="btn btn-primary edgeConfigUpdate btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=${itemValue.type}&from=${model.domain}&to=${itemValue.target}">配置阀值</a>
+						</c:otherwise>
+					</c:choose>
 					</td>
 				</tr>		
 			</c:forEach></tbody>

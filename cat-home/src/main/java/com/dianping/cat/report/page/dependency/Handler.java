@@ -27,17 +27,18 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dal.report.Event;
-import com.dianping.cat.home.dependency.graph.entity.Edge;
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
@@ -48,6 +49,9 @@ import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.top.TopMetric;
+import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class Handler implements PageHandler<Context> {
 
@@ -59,6 +63,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphManager m_graphManager;
+	
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManger;
+
+	@Inject
+	private ReportService m_reportService;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -71,8 +81,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "problem")
 	private ModelService<ProblemReport> m_problemservice;
 
-	@Inject
-	private ProductLineConfig m_productLineConfig;
+	@Inject(type = ModelService.class, value = "top")
+	private ModelService<TopReport> m_topService;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
@@ -106,7 +116,7 @@ public class Handler implements PageHandler<Context> {
 
 			graph.setDes(graph.getDes() + problemInfo);
 		}
-		for (Node node : graph.getNodes().values()) {
+		for (TopologyNode node : graph.getNodes().values()) {
 			if (node.getType().equals(GraphConstrant.PROJECT)) {
 				node.setLink(buildLink(payload, model, node.getId()));
 
@@ -124,7 +134,7 @@ public class Handler implements PageHandler<Context> {
 			List<Event> eventList = entry.getValue();
 
 			for (Event event : eventList) {
-				Node node = graph.findNode(event.getDomain());
+				TopologyNode node = graph.findTopologyNode(event.getDomain());
 
 				if (node != null) {
 					if (!m_nodes.contains(node.getId())) {
@@ -203,7 +213,7 @@ public class Handler implements PageHandler<Context> {
 		      m_dateFormat.format(new Date(payload.getDate())));
 	}
 
-	private void buildNodeErrorInfo(Node node, Model model, Payload payload) {
+	private void buildNodeZabbixInfo(TopologyNode node, Model model, Payload payload) {
 		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
 		String domain = node.getId();
 		List<Event> events = m_eventManager.queryEvents(domain, reportTime);
@@ -223,6 +233,10 @@ public class Handler implements PageHandler<Context> {
 			}
 			node.setDes(node.getDes() + sb.toString());
 		}
+	}
+
+	private void buildNodeExceptionInfo(TopologyNode node, Model model, Payload payload) {
+		String domain = node.getId();
 		if (node.getStatus() != GraphConstrant.OK) {
 			String exceptionInfo = buildProblemInfo(domain, payload);
 
@@ -249,6 +263,46 @@ public class Handler implements PageHandler<Context> {
 		      .append(")").append("</span>").append(GraphConstrant.ENTER);
 
 		return sb.toString();
+	}
+
+	private TopReport queryTopReport(Payload payload) {
+		String domain = CatString.CAT;
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date);
+
+		if (m_topService.isEligable(request)) {
+			ModelResponse<TopReport> response = m_topService.invoke(request);
+			TopReport report = response.getModel();
+			if (report == null || report.getDomains().size() == 0) {
+				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
+				      + TimeUtil.ONE_HOUR));
+			}
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
+		}
+	}
+
+	private void buildTopErrorInfo(Payload payload, Model model) {
+		int minuteCount = payload.getMinuteCounts();
+		int minute = model.getMinute();
+		TopReport report = queryTopReport(payload);
+		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts());
+		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
+		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
+
+		topMetric.setStart(start).setEnd(end);
+		if (minuteCount > minute) {
+			Payload lastPayload = new Payload();
+			Date lastHour = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
+			lastPayload.setDate(new SimpleDateFormat("yyyyMMddHH").format(lastHour));
+
+			topMetric.visitTopReport(queryTopReport(lastPayload));
+		}
+		topMetric.visitTopReport(report);
+		model.setTopReport(report);
+		model.setTopMetric(topMetric);
 	}
 
 	private int computeMinute(Payload payload) {
@@ -281,23 +335,26 @@ public class Handler implements PageHandler<Context> {
 
 		Action action = payload.getAction();
 		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
-		DependencyReport report = queryDependencyReport(payload);
+		DependencyReport report = null;
+
 		switch (action) {
 		case TOPOLOGY:
-			TopologyGraph topologyGraph = m_graphManager.buildGraphByDomainTime(model.getDomain(), reportTime.getTime());
+			TopologyGraph topologyGraph = m_graphManager.buildTopologyGraph(model.getDomain(), reportTime.getTime());
 			Map<String, List<String>> graphDependency = parseDependencies(topologyGraph);
 			Map<String, List<Event>> externalErrors = queryDependencyEvent(graphDependency, model.getDomain(), reportTime);
 
+			report = queryDependencyReport(payload);
 			buildHourlyReport(report, model, payload);
 			model.setEvents(externalErrors);
 			m_nodes = new HashSet<String>();
 			buildExternalErrorOnGraph(topologyGraph, buildZabbixHeader(payload, model), externalErrors);
 			buildExceptionInfoOnGraph(payload, model, topologyGraph);
 			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(topologyGraph));
 			break;
 		case LINE_CHART:
+			report = queryDependencyReport(payload);
 			buildHourlyReport(report, model, payload);
 			buildHourlyLineGraph(report, model);
 
@@ -308,35 +365,37 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DASHBOARD:
 			ProductLinesDashboard dashboardGraph = m_graphManager.buildDashboardGraph(reportTime.getTime());
-			Map<String, List<Node>> dashboardNodes = dashboardGraph.getNodes();
+			Map<String, List<TopologyNode>> dashboardNodes = dashboardGraph.getNodes();
 
-			for (Entry<String, List<Node>> entry : dashboardNodes.entrySet()) {
-				for (Node node : entry.getValue()) {
-					buildNodeErrorInfo(node, model, payload);
+			for (Entry<String, List<TopologyNode>> entry : dashboardNodes.entrySet()) {
+				for (TopologyNode node : entry.getValue()) {
+					buildNodeZabbixInfo(node, model, payload);
 				}
 			}
+			buildTopErrorInfo(payload, model);
 			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setDashboardGraph(dashboardGraph.toJson());
 			model.setDashboardGraphData(dashboardGraph);
 			break;
 		case PRODUCT_LINE:
 			String productLine = payload.getProductLine();
-			if(StringUtil.isEmpty(productLine)){
+			if (StringUtil.isEmpty(productLine)) {
 				payload.setProductLine(CatString.TUAN_TOU);
-				productLine=CatString.TUAN_TOU;
+				productLine = CatString.TUAN_TOU;
 			}
-			ProductLineDashboard productLineGraph = m_graphManager.buildProductLineGraph(productLine,
-			      reportTime.getTime());
-			List<Node> productLineNodes = productLineGraph.getNodes();
+			ProductLineDashboard productLineGraph = m_graphManager
+			      .buildProductLineGraph(productLine, reportTime.getTime());
+			List<TopologyNode> productLineNodes = productLineGraph.getNodes();
 
-			for (Node node : productLineNodes) {
-				buildNodeErrorInfo(node, model, payload);
+			for (TopologyNode node : productLineNodes) {
+				buildNodeZabbixInfo(node, model, payload);
+				buildNodeExceptionInfo(node, model, payload);
 			}
 			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
+			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 			model.setProductLineGraph(productLineGraph.toJson());
-			model.setProductLines(new ArrayList<String>(m_productLineConfig.queryProductLines()));
+			model.setProductLines(new ArrayList<ProductLine>(m_productLineConfigManger.queryProductLines().values()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -386,9 +445,9 @@ public class Handler implements PageHandler<Context> {
 
 	private Map<String, List<String>> parseDependencies(TopologyGraph graph) {
 		Map<String, List<String>> dependencies = new HashMap<String, List<String>>();
-		Map<String, Edge> edges = graph.getEdges();
+		Map<String, TopologyEdge> edges = graph.getEdges();
 
-		for (Edge temp : edges.values()) {
+		for (TopologyEdge temp : edges.values()) {
 			String type = temp.getType();
 			String target = temp.getTarget();
 

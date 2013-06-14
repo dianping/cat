@@ -462,6 +462,17 @@
 			</query>
 		</query-defs>
 	</entity>	
+	<entity name="topology-graph" table="topologyGraph" alias="t">
+    <member name="creation-date" insert-expr="NOW()" />
+    <query-defs>
+      <query name="find-by-period" type="SELECT">
+        <param name="period" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
 </entities>
 
 

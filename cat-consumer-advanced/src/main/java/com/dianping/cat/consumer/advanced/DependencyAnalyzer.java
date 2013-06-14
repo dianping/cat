@@ -2,11 +2,11 @@ package com.dianping.cat.consumer.advanced;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -18,6 +18,8 @@ import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -41,12 +43,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private ReportDao m_reportDao;
 
 	@Inject
+	private TaskDao m_taskDao;
+
+	@Inject
 	private DomainManager m_domainManager;
 
 	@Inject
 	private DatabaseParser m_parser;
 
-	private Map<String, DependencyReport> m_reports = new HashMap<String, DependencyReport>();
+	private Map<String, DependencyReport> m_reports = new ConcurrentHashMap<String, DependencyReport>();
 
 	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
 	      "PigeonService"));
@@ -209,7 +214,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			if (m_domainManager.containsDomainInCat(target)) {
 				DependencyReport serverReport = findOrCreateReport(target);
 
-				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonServer");
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
 			}
 		}
 		// else if ("PigeonService".equals(type) || "Service".equals(type)) {
@@ -271,7 +276,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private boolean isCache(String type) {
-		return (!type.equals("Cache.Web")) && type.startsWith("Cache.");
+		return type.startsWith("Cache.");
 	}
 
 	private void storeReports(boolean atEnd) {
@@ -309,18 +314,31 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("dependency");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
 						r.setType(1);
 						r.setContent(xml);
-
 						m_reportDao.insert(r);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}
+				}
+				try {
+					Task task = m_taskDao.createLocal();
+
+					task.setCreationDate(new Date());
+					task.setProducer("");
+					task.setReportDomain("Cat");
+					task.setReportName(ID);
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					task.setTaskType(0);
+					m_taskDao.insert(task);
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		} catch (Exception e) {

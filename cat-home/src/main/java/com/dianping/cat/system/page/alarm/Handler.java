@@ -11,7 +11,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
-import com.dainping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemPage;
 
 public class Handler implements PageHandler<Context> {

@@ -3,4 +3,7 @@
    <model package="com.dianping.cat.consumer.metric-report" name="metric-report">
       <sample-model>src/test/resources/com/dianping/cat/consumer/metric/model/metric-report.xml</sample-model>
    </model>
+    <model package="com.dianping.cat.home.aggreation" name="aggreation">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/problem/aggreation/aggreation.xml</sample-model>
+   </model>
 </wizard>

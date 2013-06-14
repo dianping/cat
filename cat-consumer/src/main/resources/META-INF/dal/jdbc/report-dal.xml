@@ -318,17 +318,4 @@
 			</query>
 		</query-defs>
 	</entity>
-	<entity name="aggregation-rule" table="aggregationRule" alias="a">
-		<member name="create-date" insert-expr="NOW()" />
-		<member name="update-date" insert-expr="NOW()" update-expr="NOW()"  />
-		<query-defs>
-			<query name="find-all" type="SELECT" multiple="true">
-				<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/> 
-				]]>
-				</statement>
-			</query>
-		</query-defs>
-	</entity>
 </entities>

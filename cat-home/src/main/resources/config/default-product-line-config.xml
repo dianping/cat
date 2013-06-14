@@ -1,0 +1,19 @@
+<company>
+   <product-line id="TuanGou" title="团购" order="1.0" dashbord="true">
+      <domain id="TuanGou"/>
+      <domain id="TuanGouEvent"/>
+      <domain id="TuanGouOperation"/>
+      <domain id="TuanGouRank"/>
+      <domain id="TuanGouWebBA"/>
+      <domain id="tuangou-paygate"/>
+      <domain id="BCTuangouServer"/>
+      <domain id="BCTuangouWeb"/>
+      <domain id="TuanGouWeb"/>
+      <domain id="TuanGouApiMobile"/>
+      <domain id="TuanGouMT"/>
+      <domain id="TuanGouWap"/>
+      <domain id="TuanGouRemote"/>
+      <domain id="TuanGouApi"/>
+      <domain id="TuanGouTracking"/>
+   </product-line>
+</company>

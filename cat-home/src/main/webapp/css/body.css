@@ -16,6 +16,7 @@ html {
 	font-weight: bold;
 	border-bottom: solid black 1px;
 	width: 100%;
+	margin-top: -11px;
 }
 
 .report .header .title {

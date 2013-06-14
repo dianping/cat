@@ -8,12 +8,6 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.consumer.core.dal.AggregationRuleDao;
-import com.dianping.cat.consumer.core.dal.HostinfoDao;
-import com.dianping.cat.consumer.core.dal.ProjectDao;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.TaskDao;
-
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DefaultMessageAnalyzerManager;
@@ -27,9 +21,14 @@ import com.dianping.cat.consumer.core.ProblemAnalyzer;
 import com.dianping.cat.consumer.core.StateAnalyzer;
 import com.dianping.cat.consumer.core.TopAnalyzer;
 import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
 import com.dianping.cat.consumer.core.aggregation.AggregationHandler;
-import com.dianping.cat.consumer.core.aggregation.AggregationManager;
 import com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler;
+import com.dianping.cat.consumer.core.config.ConfigDao;
+import com.dianping.cat.consumer.core.dal.HostinfoDao;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.DefaultProblemHandler;
 import com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
@@ -44,13 +43,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
 		
 		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
 
-		all.add(C(AggregationManager.class).req(AggregationRuleDao.class, ServerConfigManager.class, AggregationHandler.class));
+		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
 		
-		all.add(C(ProblemReportAggregation.class).req(AggregationManager.class));
+		all.add(C(ProblemReportAggregation.class).req(AggregationConfigManager.class));
 		
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 

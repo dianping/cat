@@ -29,6 +29,8 @@ public class Handler implements PageHandler<Context> {
 
 	private String m_data;
 
+	private String m_referer;
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "jsError")
@@ -47,20 +49,17 @@ public class Handler implements PageHandler<Context> {
 		String host = parseHost();
 
 		if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
-			String url = parseValue("Referer", m_data);
-			if (url != null) {
-				file = url;
+			if (m_referer != null) {
+				file = m_referer;
 			} else {
 				file = "unknown";
 			}
-		} else {
-			int index = file.indexOf('?');
-
-			if (index > -1) {
-				file = file.substring(0, index);
-			}
+		} 
+		
+		int index = file.indexOf('?');
+		if (index > -1) {
+			file = file.substring(0, index);
 		}
-		// file = formateFile(file);
 		Cat.logEvent("Error", file, "Error", error);
 		Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 		      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
@@ -88,11 +87,11 @@ public class Handler implements PageHandler<Context> {
 				String type = temp.getType();
 				if (type.equals("URL.Server") || type.equals("ClientInfo")) {
 					m_data = temp.getData().toString();
-					String url = parseValue("Referer", m_data);
+					m_referer = parseValue("Referer", m_data);
 
-					if (url != null) {
+					if (m_referer != null) {
 						try {
-							URL u = new URL(url);
+							URL u = new URL(m_referer);
 							return u.getHost().toLowerCase();
 						} catch (MalformedURLException e) {
 							break;

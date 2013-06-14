@@ -12,13 +12,12 @@
 	<div>
 		<div class="row-fluid">
         <div class="span2">
-		<%@include file="./configTree.jsp"%>
+		<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
 		</br>
 			<form name="aggregationUpdate" id="form" method="post" action="${model.pageUri}?op=aggregationUpdateSubmit">
 				<table style='width:60%' class='table table-striped table-bordered'>
-					<input type="hidden" name="id" value="${model.aggregationRule.id}" />
 					<tr>
 						<td>报表类型</td>
 						<td><select id="reportType" name = "aggregation.type">	

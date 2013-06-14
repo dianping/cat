@@ -8,9 +8,10 @@ import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.consumer.core.dal.AggregationRule;
+import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
@@ -36,6 +37,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private DomainConfig m_domainConfig;
 
 	private EdgeConfig m_edgeConfig;
+	
+	private ProductLine m_productLine;
+
+	private Map<String, ProductLine> m_productLines;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -106,6 +111,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_opState;
 	}
 
+	public ProductLine getProductLine() {
+   	return m_productLine;
+   }
+
+	public Map<String, ProductLine> getProductLines() {
+   	return m_productLines;
+   }
+
 	public Project getProject() {
 		return m_project;
 	}
@@ -146,6 +159,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
+	public void setProductLine(ProductLine productLine) {
+   	m_productLine = productLine;
+   }
+
+	public void setProductLines(Map<String, ProductLine> productLines) {
+		m_productLines = productLines;
+   }
+
 	public void setProject(Project project) {
 		m_project = project;
 	}
@@ -172,5 +193,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			return m_nodeConfig;
 		}
 	}
-
+	
 }

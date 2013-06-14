@@ -44,7 +44,7 @@ var lineChartOptions = {
     axis:{
         x:{
             type:"datetime",
-            	percent:0.8
+            percent:0.8
         },
         y:{
         }
@@ -60,7 +60,11 @@ var lineChartOptions = {
         enableColumn:true
     },
     legend:{
+    },
+    tooltip:function(obj){
+    	return obj.label+" "+obj.y;
     }
+    
  }
 function graphLineChart(container, data) {
 	var _data = lineChartParse(data);

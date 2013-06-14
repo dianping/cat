@@ -226,7 +226,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("sql");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);

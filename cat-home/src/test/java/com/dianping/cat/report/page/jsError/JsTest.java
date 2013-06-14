@@ -40,5 +40,24 @@ public class JsTest {
 
 		return sb.toString();
 	}
+	
+	@Test
+	public void test2() throws Exception{
+		for (int i = 0; i < 1000; i++) {
+			URL url = new URL("http://localhost:2281/cat/r/jsError?error=Script%20error.&file=&line=0&timestamp=1371196520045");
+			URLConnection URLconnection = url.openConnection();
+			URLconnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon;)");
+			URLconnection.setRequestProperty("referer", "http://www.dianping.com/shop/1");
+
+			HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
+			int responseCode = httpConnection.getResponseCode();
+
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+			} else {
+			}
+			Thread.sleep(100);
+		}
+		
+	}
 
 }

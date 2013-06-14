@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<topology-graph-config>
+   <node-config type="URL" default-warning-threshold="10" default-error-threshold="20" default-warning-response-time="100.0" default-error-response-time="300.0">
+      <domain-config id="Cat" warning-threshold="111" error-threshold="222" warning-response-time="33.03" error-response-time="44.04"/>
+      <domain-config id="UserWeb" warning-threshold="100011" error-threshold="200022" warning-response-time="3000.033" error-response-time="4000.044"/>
+      <domain-config id="MobileWapMWeb" warning-threshold="10" error-threshold="20" warning-response-time="100.0" error-response-time="300.0"/>
+   </node-config>
+   <node-config type="Exception" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="20.0" default-error-response-time="100.0">
+      <domain-config id="Cat" warning-threshold="5" error-threshold="20" warning-response-time="0.0" error-response-time="0.0"/>
+   </node-config>
+   <node-config type="Database" default-warning-threshold="5" default-error-threshold="20" default-warning-response-time="50.0" default-error-response-time="100.0">
+   </node-config>
+   <node-config type="PigeonCall" default-warning-threshold="5" default-error-threshold="10" default-warning-response-time="50.0" default-error-response-time="100.0">
+      <domain-config id="1" warning-threshold="1" error-threshold="1" warning-response-time="1.0" error-response-time="1.0"/>
+      <domain-config id="Cat" warning-threshold="5" error-threshold="10" warning-response-time="50.0" error-response-time="100.0"/>
+   </node-config>
+   <node-config type="SQL" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="50.0" default-error-response-time="100.0">
+      <domain-config id="ShopServer" warning-threshold="1" error-threshold="20" warning-response-time="10.0" error-response-time="50.0"/>
+      <domain-config id="Cat" warning-threshold="10" error-threshold="50" warning-response-time="50.0" error-response-time="100.0"/>
+   </node-config>
+   <node-config type="Cache" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="10.0" default-error-response-time="30.0">
+      <domain-config id="ShopServer" warning-threshold="100" error-threshold="500" warning-response-time="10.01" error-response-time="30.01"/>
+   </node-config>
+   <node-config type="PigeonService" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="50.0" default-error-response-time="100.0">
+   </node-config>
+   <edge-config key="Database:Cat:cat" type="Database" from="Cat" to="cat" warning-threshold="2" error-threshold="20" warning-response-time="50.02" error-response-time="100.02"/>
+   <edge-config key="PigeonCall:ShopSearchWeb:ShopServer" type="PigeonCall" from="ShopSearchWeb" to="ShopServer" warning-threshold="6" error-threshold="11" warning-response-time="50.01" error-response-time="100.01"/>
+   <edge-config key="PigeonCall:UserWeb:ShopServer" type="PigeonCall" from="UserWeb" to="ShopServer" warning-threshold="1" error-threshold="11" warning-response-time="10.0" error-response-time="104.0"/>
+   <edge-config key="PigeonCall:Cat:MailServer" type="PigeonCall" from="Cat" to="MailServer" warning-threshold="10" error-threshold="50" warning-response-time="50.0" error-response-time="100.0"/>
+</topology-graph-config>

@@ -5,13 +5,13 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
-import com.dianping.cat.home.dependency.graph.entity.Edge;
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 
 public class TopologyGraphItemBuilder {
 
 	@Inject
-	private TopologyGraphConfigManger m_graphConfigManager;
+	private TopologyGraphConfigManager m_graphConfigManager;
 
 	private static final int OK = GraphConstrant.OK;
 
@@ -19,8 +19,8 @@ public class TopologyGraphItemBuilder {
 
 	private static final String PROJECT = GraphConstrant.PROJECT;
 
-	public Node createDatabaseNode(String database) {
-		Node node = new Node(database);
+	public TopologyNode createDatabaseNode(String database) {
+		TopologyNode node = new TopologyNode(database);
 
 		node.setStatus(OK);
 		node.setType(DATABASE);
@@ -28,8 +28,8 @@ public class TopologyGraphItemBuilder {
 		return node;
 	}
 
-	public Edge buildEdge(String domain, Dependency dependency) {
-		Edge edge = new Edge();
+	public TopologyEdge buildEdge(String domain, Dependency dependency) {
+		TopologyEdge edge = new TopologyEdge();
 
 		edge.setType(dependency.getType());
 		edge.setKey(dependency.getType() + ':' + domain + ':' + dependency.getTarget());
@@ -48,8 +48,8 @@ public class TopologyGraphItemBuilder {
 		return edge;
 	}
 
-	public Node createNode(String domain) {
-		Node node = new Node(domain);
+	public TopologyNode createNode(String domain) {
+		TopologyNode node = new TopologyNode(domain);
 
 		node.setStatus(OK);
 		node.setType(PROJECT);
@@ -57,8 +57,8 @@ public class TopologyGraphItemBuilder {
 		return node;
 	}
 
-	public Node buildNode(String domain, Index index) {
-		Node node = new Node(domain);
+	public TopologyNode buildNode(String domain, Index index) {
+		TopologyNode node = new TopologyNode(domain);
 
 		node.setType(PROJECT);
 		node.setWeight(1);

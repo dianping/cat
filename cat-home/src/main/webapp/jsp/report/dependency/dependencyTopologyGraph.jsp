@@ -25,7 +25,7 @@
 		<%@ include file="dependencyOpNav.jsp"%>
 	    <%@ include file="dependencyTimeNav.jsp"%>
 	    </div></div>
-  		<div class="tabbable tabs-left " id="content"> <!-- Only required for left/right tabs -->
+  		<div class="tabbable tabs-left "  > <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs alert-info">
    			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>依赖拓扑</strong></a></li>
    			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维告警</strong></a></li>
@@ -33,12 +33,14 @@
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
-	    			<div class="text-center">
+	    			<div class="text-center" id="fullScreenData">
 						<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
 					  </div>
 	    		</div>
 	    		<div class="tab-pane" id="tab2">
-	  				<%@ include file="dependencyEvent.jsp"%>
+	    			<div>
+		  				<%@ include file="dependencyEvent.jsp"%>
+	    			</div>
 	    		</div>
 	    		<div class="tab-pane" id="tab3">
 	  				<%@ include file="dependencyDetailData.jsp"%>
@@ -51,10 +53,10 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#content .nav-tabs a').mouseenter(function (e) {
+		/* $('#content .nav-tabs a').mouseenter(function (e) {
 			  e.preventDefault();
 			  $(this).tab('show');
-		});
+		}); */
 	
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('#minute'+${model.minute}).addClass('text-error');
@@ -72,18 +74,20 @@
 			"bPaginate": false,
 		});
 		var data = ${model.topologyGraph};
-		console.log(data);
+		var nodeSize = 0;
 		function parse(data){
 			var nodes = data.nodes;
+			var edges = data.edges;
 			var points = [];
 			var sides = [];
 
 			for(var o in nodes){
 				if(nodes.hasOwnProperty(o)){
 					points.push(nodes[o]);
+					nodeSize++;
 				}
 			}
-			for(var o in data.edges){
+			for(var o in edges){
 				if(data.edges.hasOwnProperty(o)){
 					sides.push(data.edges[o]);
 				}
@@ -94,7 +98,19 @@
 			delete data.edges;
 			return data;
 		}
-		new  StarTopo('container',parse(data),{
+		var convertData = parse(data);
+		var defaultWeight=0.8;
+		if(nodeSize>30){
+			defaultWeight = 0.5;
+		}else if(nodeSize>20){
+			defaultWeight = 0.6;
+		}else if(nodeSize>10){
+			defaultWeight = 0.8;
+		}else if(nodeSize>0){
+			defaultWeight = 1.0;
+		}
+		console.log(nodeSize+" "+defaultWeight);
+		new  StarTopo('container',convertData,{
 				typeMap:{
 					database:'rect',
 					project:'circle',
@@ -111,7 +127,7 @@
 				return weight+1
 			},
 			nodeWeight:function(weight){
-				return weight/5+0.8;
+				return weight/5+defaultWeight;
 			}});
 	});
 </script>

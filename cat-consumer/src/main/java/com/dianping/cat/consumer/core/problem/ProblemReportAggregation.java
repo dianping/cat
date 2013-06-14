@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.core.aggregation.AggregationManager;
+import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 public class ProblemReportAggregation extends BaseVisitor {
 
 	@Inject
-	private AggregationManager m_aggregationManger;
+	private AggregationConfigManager m_aggregationManger;
 
 	private ProblemReport m_report;
 
@@ -29,8 +29,12 @@ public class ProblemReportAggregation extends BaseVisitor {
 	private String m_domain;
 
 	private static final int SIZE = 60;
+	
+	public void refreshRule(){
+		m_aggregationManger.refreshRule();
+	}
 
-	public void setRuleManger(AggregationManager ruleManger) {
+	public void setRuleManger(AggregationConfigManager ruleManger) {
 		m_aggregationManger = ruleManger;
 	}
 
@@ -56,7 +60,7 @@ public class ProblemReportAggregation extends BaseVisitor {
 	public void visitEntry(Entry entry) {
 		String type = entry.getType();
 		String status = entry.getStatus();
-		status = m_aggregationManger.handle(AggregationManager.PROBLEM_TYPE, m_domain, status);
+		status = m_aggregationManger.handle(AggregationConfigManager.PROBLEM_TYPE, m_domain, status);
 		m_currentEntry = findOrCreatEntry(m_currentMachine, type, status);
 		super.visitEntry(entry);
 	}

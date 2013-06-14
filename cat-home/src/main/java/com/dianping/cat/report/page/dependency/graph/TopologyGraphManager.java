@@ -2,15 +2,19 @@ package com.dianping.cat.report.page.dependency.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -19,13 +23,16 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dependency.graph.entity.Edge;
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.company.entity.Domain;
+import com.dianping.cat.home.company.entity.ProductLine;
+import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.home.dal.report.TopologyGraphEntity;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
+import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig.Group;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
@@ -33,6 +40,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
@@ -43,10 +51,16 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private TopologyGraphBuilder m_graphBuilder;
 
 	@Inject
+	private ProductLineConfigManager m_productLineConfigManger;
+
+	@Inject
 	private ServerConfigManager m_manager;
 
 	@Inject
-	private ProductLineConfig m_productLineConfig;
+	private TopologyGraphDao m_topologyGraphDao;
+	
+	@Inject
+	private DomainNavManager m_domainNavManager;
 
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
@@ -54,52 +68,34 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	private static final String DEPENDENCY = "Dependency";
 
-	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
-		TopologyGraph topologyGraph = queryGraph(time);
-		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		Group group = m_productLineConfig.getGroups().get(productLine);
-		if (group != null) {
-			List<String> domains = group.getDomains();
-
-			if (topologyGraph != null) {
-				for (String domain : domains) {
-					Node node = topologyGraph.findNode(domain);
-
-					if (node != null) {
-						dashboard.addNode(m_graphBuilder.cloneNode(node));
-					}
-				}
-			}
-		}
-		return dashboard;
-	}
-
 	public ProductLinesDashboard buildDashboardGraph(long time) {
-		TopologyGraph topologyGraph = queryGraph(time);
+		TopologyGraph topologyGraph = queryTopologyGraph(time);
 		ProductLinesDashboard dashboardGraph = new ProductLinesDashboard();
+		Set<String> m_allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, Group> groups = m_productLineConfig.getGroups();
+			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
 
-			for (Entry<String, Group> entry : groups.entrySet()) {
+			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String groupName = entry.getKey();
-				Group groupDetail = entry.getValue();
+				Map<String, Domain> domains = entry.getValue().getDomains();
+				for (Domain domain : domains.values()) {
+					String nodeName = domain.getId();
+					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
 
-				for (String nodeName : groupDetail.getDomains()) {
-					Node node = topologyGraph.findNode(nodeName);
-
+					m_allDomains.add(nodeName);
 					if (node != null) {
 						dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
 					}
 				}
 			}
-			Map<String, Edge> edges = topologyGraph.getEdges();
+			Map<String, TopologyEdge> edges = topologyGraph.getEdges();
 
-			for (Edge edge : edges.values()) {
+			for (TopologyEdge edge : edges.values()) {
 				String self = edge.getSelf();
 				String to = edge.getTarget();
 
-				if (m_productLineConfig.contains(self) && m_productLineConfig.contains(to)) {
+				if (m_allDomains.contains(self) && m_allDomains.contains(to)) {
 					dashboardGraph.addEdge(m_graphBuilder.cloneEdge(edge));
 				}
 			}
@@ -107,8 +103,25 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return dashboardGraph;
 	}
 
-	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
-		TopologyGraph all = queryGraph(time);
+	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
+		TopologyGraph topologyGraph = queryTopologyGraph(time);
+		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
+		List<String> domains = m_productLineConfigManger.queryProductLineDomains(productLine);
+
+		if (topologyGraph != null) {
+			for (String domain : domains) {
+				TopologyNode node = topologyGraph.findTopologyNode(domain);
+
+				if (node != null) {
+					dashboard.addNode(m_graphBuilder.cloneNode(node));
+				}
+			}
+		}
+		return dashboard;
+	}
+
+	public TopologyGraph buildTopologyGraph(String domain, long time) {
+		TopologyGraph all = queryTopologyGraph(time);
 		TopologyGraph topylogyGraph = new TopologyGraph();
 
 		topylogyGraph.setId(domain);
@@ -116,56 +129,46 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		topylogyGraph.setStatus(GraphConstrant.OK);
 
 		if (all != null) {
-			Node node = all.findNode(domain);
+			TopologyNode node = all.findTopologyNode(domain);
 
 			if (node != null) {
 				topylogyGraph.setDes(node.getDes());
 				topylogyGraph.setStatus(node.getStatus());
 				topylogyGraph.setType(node.getType());
 			}
-			Collection<Edge> edges = all.getEdges().values();
+			Collection<TopologyEdge> edges = all.getEdges().values();
 
-			for (Edge edge : edges) {
+			for (TopologyEdge edge : edges) {
 				String self = edge.getSelf();
 				String target = edge.getTarget();
-				Edge cloneEdge = m_graphBuilder.cloneEdge(edge);
+				TopologyEdge cloneEdge = m_graphBuilder.cloneEdge(edge);
 
 				if (self.equals(domain)) {
-					Node other = all.findNode(target);
+					TopologyNode other = all.findTopologyNode(target);
 
 					if (other != null) {
-						topylogyGraph.addNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addTopologyNode(m_graphBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addTopologyNode(m_graphBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
-					topylogyGraph.addEdge(cloneEdge);
+					topylogyGraph.addTopologyEdge(cloneEdge);
 				} else if (target.equals(domain)) {
-					Node other = all.findNode(self);
+					TopologyNode other = all.findTopologyNode(self);
 
 					if (other != null) {
-						topylogyGraph.addNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addTopologyNode(m_graphBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addTopologyNode(m_graphBuilder.createNode(target));
 					}
 					cloneEdge.setTarget(edge.getSelf());
 					cloneEdge.setSelf(edge.getTarget());
 					cloneEdge.setOpposite(true);
-					topylogyGraph.addEdge(cloneEdge);
+					topylogyGraph.addTopologyEdge(cloneEdge);
 				}
 			}
 		}
 		return topylogyGraph;
-	}
-
-	private TopologyGraph queryGraph(long time) {
-		TopologyGraph graph = m_topologyGraphs.get(time);
-		long current = System.currentTimeMillis();
-		long minute = current - current % TimeUtil.ONE_MINUTE;
-		if (minute == time && graph == null) {
-			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
-		}
-		return graph;
 	}
 
 	@Override
@@ -175,9 +178,49 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		// if(!m_manager.isLocalMode()&&m_manager.isJobMachine()){
-		Threads.forGroup("Cat").start(new Reload());
-		// }
+		if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
+			Threads.forGroup("Cat").start(new Reload());
+		}
+	}
+
+	private TopologyGraph queryTopologyGraph(long time) {
+		ModelPeriod period = ModelPeriod.getByTime(time);
+
+		if (period.isHistorical()) {
+			return queryGraphFromDB(time);
+		} else {
+			return queryGraphFromMemory(time);
+		}
+	}
+
+	private TopologyGraph queryGraphFromDB(long time) {
+		try {
+			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao.findByPeriod(new Date(time),
+			      TopologyGraphEntity.READSET_FULL);
+			if (topologyGraph != null) {
+				byte[] content = topologyGraph.getContent();
+
+				return DefaultNativeParser.parse(content);
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	private TopologyGraph queryGraphFromMemory(long time) {
+		TopologyGraph graph = m_topologyGraphs.get(time);
+		long current = System.currentTimeMillis();
+		long minute = current - current % TimeUtil.ONE_MINUTE;
+
+		if ((minute - time) <= 3 * TimeUtil.ONE_MINUTE && graph == null) {
+			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
+
+			if (graph == null) {
+				graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE * 2);
+			}
+		}
+		return graph;
 	}
 
 	private class Reload implements Task {
@@ -242,7 +285,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 
 		private Collection<String> queryAllDomains() {
-			return DomainNavManager.getDomains();
+			return m_domainNavManager.getDomains();
 		}
 
 		@Override

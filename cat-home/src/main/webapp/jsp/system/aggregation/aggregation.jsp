@@ -20,7 +20,7 @@
 	<div>
 		<div class="row-fluid">
         <div class="span2">
-		<%@include file="./configTree.jsp"%>
+		<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
 			<div>
@@ -54,8 +54,8 @@
 						<td>${item.pattern}</td>
 						<td>${item.displayName}</td>
 						<td>${item.sample}</td>
-						<td><a class='btn  btn-small btn-primary'href="?op=aggregationUpdate&id=${item.id}">编辑</a>
-						<a class='delete btn  btn-small btn-danger' href="?op=aggregationDelete&id=${item.id}">删除</a></td>
+						<td><a class='btn  btn-small btn-primary'href="?op=aggregationUpdate&pattern=${item.pattern}">编辑</a>
+						<a class='delete btn  btn-small btn-danger' href="?op=aggregationDelete&pattern=${item.pattern}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

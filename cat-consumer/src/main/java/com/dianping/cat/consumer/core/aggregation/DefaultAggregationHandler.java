@@ -5,44 +5,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.consumer.core.dal.AggregationRule;
+import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 
 public class DefaultAggregationHandler implements AggregationHandler {
 
-	Map<Integer, Map<String, TrieTreeNode>> m_formatMap;
+	Map<Integer, Map<String, TrieTreeNode>> m_formats = new HashMap<Integer, Map<String, TrieTreeNode>>();
 
-	@Override
-	public void register(Map<Integer, Map<String, List<AggregationRule>>> ruleMap) {
-		Map<Integer, Map<String, TrieTreeNode>> tmpFormatMap = new HashMap<Integer, Map<String, TrieTreeNode>>();
-		for (int type : ruleMap.keySet()) {
-			Map<String, TrieTreeNode> tmpDomainToFormatMap = new HashMap<String, TrieTreeNode>();
-			tmpFormatMap.put(type, tmpDomainToFormatMap);
-			Map<String, List<AggregationRule>> domainToRuleMap = ruleMap.get(type);
-			for (String domain : domainToRuleMap.keySet()) {
-				TrieTreeNode formatTree = new TrieTreeNode();
-				tmpDomainToFormatMap.put(domain, formatTree);
-				List<AggregationRule> ruleList = domainToRuleMap.get(domain);
-				for (AggregationRule rule : ruleList) {
-					String format = rule.getPattern();
-					if (format == null || format.isEmpty()) {
-						continue;
-					}
-					int index1 = format.indexOf('{');
-					if (index1 == -1 || index1 == format.length() - 1) {
-						continue;
-					}
-					int index2 = format.lastIndexOf('}');
-					if (index2 == -1 || index2 < index1) {
-						continue;
-					}
-					String key1 = format.substring(0, index1);
-					String key2 = format.substring(index2 + 1);
-					AggregationMessageFormat value = new AggregationMessageFormat(format);
-					buildFormatTree(formatTree, key1.toCharArray(), key2.toCharArray(), value);
-				}
-			}
+	private Map<String, TrieTreeNode> findOrCreateTrieTreeNodes(int type) {
+		Map<String, TrieTreeNode> nodes = m_formats.get(type);
+
+		if (nodes == null) {
+			nodes = new HashMap<String, TrieTreeNode>();
+			m_formats.put(type, nodes);
 		}
-		m_formatMap = tmpFormatMap;
+
+		return nodes;
+	}
+
+	private TrieTreeNode findOrCreateTrieTreeNode(int type, String domain) {
+		Map<String, TrieTreeNode> nodes = findOrCreateTrieTreeNodes(type);
+		TrieTreeNode node = nodes.get(domain);
+
+		if (node == null) {
+			node = new TrieTreeNode();
+			nodes.put(domain, node);
+		}
+		return node;
 	}
 
 	/**
@@ -99,10 +87,10 @@ public class DefaultAggregationHandler implements AggregationHandler {
 	}
 
 	private TrieTreeNode getFormatTree(int type, String domain) {
-		if (m_formatMap == null) {
+		if (m_formats == null) {
 			return null;
 		}
-		Map<String, TrieTreeNode> domainToFormatMap = m_formatMap.get(type);
+		Map<String, TrieTreeNode> domainToFormatMap = m_formats.get(type);
 		if (domainToFormatMap == null) {
 			return null;
 		}
@@ -120,9 +108,9 @@ public class DefaultAggregationHandler implements AggregationHandler {
 		char[] cs = input.toCharArray();
 		List<Map<String, AggregationMessageFormat>> sformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();
 		List<Map<String, AggregationMessageFormat>> eformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();
-
 		TrieTreeNode current = formatTree;
 		int i = 0;
+		
 		for (; i < cs.length; i++) {
 			sformatSet.add(current.getFormatMap());
 			TrieTreeNode node = current.getChildNode(cs[i], true);
@@ -187,5 +175,38 @@ public class DefaultAggregationHandler implements AggregationHandler {
 			return input;
 		}
 		return parse(formatTree, input);
+	}
+
+	@Override
+	public void register(List<AggregationRule> rules) {
+		m_formats.clear();
+
+		for (AggregationRule rule : rules) {
+			String format = rule.getPattern();
+
+			if (format == null || format.isEmpty()) {
+				continue;
+			}
+			int index1 = format.indexOf('{');
+			
+			if (index1 == -1 || index1 == format.length() - 1) {
+				continue;
+			}
+			int index2 = format.lastIndexOf('}');
+			
+			if (index2 == -1 || index2 < index1) {
+				continue;
+			}
+			
+			String key1 = format.substring(0, index1);
+			String key2 = format.substring(index2 + 1);
+			AggregationMessageFormat value = new AggregationMessageFormat(format);
+
+			if (rule.getDomain() != null) {
+				TrieTreeNode node = findOrCreateTrieTreeNode(rule.getType(), rule.getDomain());
+				
+				buildFormatTree(node, key1.toCharArray(), key2.toCharArray(), value);
+			}
+		}
 	}
 }
