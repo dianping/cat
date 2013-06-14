@@ -70,7 +70,7 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8 * 1024); // 8K
 			codec.encode(tree, buf);
 			
-			tree.setBuf(buf);
+			tree.setBuffer(buf);
 			manager.storeMessage(tree, id);
 		}
 

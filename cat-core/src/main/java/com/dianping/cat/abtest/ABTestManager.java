@@ -44,13 +44,15 @@ public final class ABTestManager {
 		}
 	}
 
-	public static void onRequestBegin(HttpServletRequest request,HttpServletResponse response) {
+	public static void onRequestBegin(HttpServletRequest request, HttpServletResponse response) {
 		initialize();
 
-		s_contextManager.onRequestBegin(request,response);
+		s_contextManager.onRequestBegin(request, response);
 	}
 
 	public static void onRequestEnd() {
+		initialize();
+
 		s_contextManager.onRequestEnd();
 	}
 }

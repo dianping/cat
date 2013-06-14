@@ -18,28 +18,41 @@ public class DefaultABTestContext implements ABTestContext {
 	private ABTestEntity m_entity;
 
 	private HttpServletRequest m_request;
-	
+
 	private HttpServletResponse m_response;
 
 	private ABTestGroupStrategy m_groupStrategy;
 
-	private boolean m_initialized;
+	private boolean m_applied;
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
 	}
 
 	@Override
+	public ABTestEntity getEntity() {
+		return m_entity;
+	}
+
+	@Override
 	public String getGroupName() {
-		if (!m_initialized) {
-			initialize(new Date());
-		}
+		initialize(new Date());
 
 		return m_groupName;
 	}
 
+	@Override
+	public HttpServletRequest getHttpServletRequest() {
+		return m_request;
+	}
+
+	@Override
+	public HttpServletResponse getHttpServletResponse() {
+		return m_response;
+	}
+
 	public void initialize(Date timestamp) {
-		if (!m_initialized) {
+		if (!m_applied) {
 			if (m_entity.isEligible(timestamp)) {
 				Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
 
@@ -53,9 +66,9 @@ public class DefaultABTestContext implements ABTestContext {
 				} finally {
 					t.complete();
 				}
-			}
 
-			m_initialized = true;
+				m_applied = true;
+			}
 		}
 	}
 
@@ -64,29 +77,12 @@ public class DefaultABTestContext implements ABTestContext {
 		m_groupName = groupName;
 	}
 
-	public void setup(HttpServletRequest request,HttpServletResponse response) {
-		m_request = request;
-		m_response = response;
-	}
-
-	@Override
-	public HttpServletRequest getHttpServletRequest() {
-		return m_request;
-	}
-
-	@Override
-   public HttpServletResponse getHttpServletResponse() {
-	   return m_response;
-   }
-
-	@Override
-	public ABTestEntity getEntity() {
-		return m_entity;
-	}
-
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
 		m_groupStrategy = groupStrategy;
 	}
 
-	
+	public void setup(HttpServletRequest request, HttpServletResponse response) {
+		m_request = request;
+		m_response = response;
+	}
 }
