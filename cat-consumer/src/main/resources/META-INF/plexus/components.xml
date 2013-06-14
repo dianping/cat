@@ -208,37 +208,13 @@
 			</configuration>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
-			<role-hint>CatCore</role-hint>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
-			<configuration>
-				<id>CatCore</id>
-				<maximum-pool-size>3</maximum-pool-size>
-				<connection-timeout>1s</connection-timeout>
-				<idle-timeout>10m</idle-timeout>
-				<statement-cache-size>1000</statement-cache-size>
-				<properties>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
-					<user>dpcom_cat</user>
-					<password>password</password>
-					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-				</properties>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>config</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>config</logical-table-name>
 				<physical-table-name>config</physical-table-name>
-				<data-source-name>CatCore</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -257,7 +233,7 @@
 			<configuration>
 				<logical-table-name>hostinfo</logical-table-name>
 				<physical-table-name>hostinfo</physical-table-name>
-				<data-source-name>CatCore</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -267,7 +243,7 @@
 			<configuration>
 				<logical-table-name>project</logical-table-name>
 				<physical-table-name>project</physical-table-name>
-				<data-source-name>CatCore</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -277,7 +253,7 @@
 			<configuration>
 				<logical-table-name>report</logical-table-name>
 				<physical-table-name>report</physical-table-name>
-				<data-source-name>CatCore</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -287,7 +263,7 @@
 			<configuration>
 				<logical-table-name>task</logical-table-name>
 				<physical-table-name>task</physical-table-name>
-				<data-source-name>CatCore</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>

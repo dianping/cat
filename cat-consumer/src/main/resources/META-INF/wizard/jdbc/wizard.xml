@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat.consumer">
-   <jdbc package="com.dainping.cat.consumer.dal" name="CatCore">
+   <jdbc package="com.dainping.cat.consumer.dal" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://192.168.7.43:3306/cat</url>
