@@ -21,6 +21,7 @@ import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
+import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -50,6 +51,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Inject
 	private List<ProblemHandler> m_handlers;
+
+	@Inject
+	private ProblemReportAggregation m_problemReportAggregation;
+
+	private static final String FRONT_END = "FrontEnd";
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
@@ -178,6 +184,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			if (atEnd && !isLocalMode()) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				for (String domain : m_reports.keySet()) {
+					if (domain.equals(FRONT_END)) {
+						m_reports.get(domain).accept(m_problemReportAggregation);
+						m_reports.put(domain, m_problemReportAggregation.getReport());
+					}
+				}
 				ProblemReport all = buildTotalProblemReport();
 
 				m_reports.put(ALL, all);

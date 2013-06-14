@@ -13,6 +13,7 @@
          <table name="hostinfo"/>
          <table name="task"/>
          <table name="project"/>
+         <table name="aggregationRule"/>
       </group>
    </jdbc>
 </wizard>

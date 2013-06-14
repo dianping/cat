@@ -18,13 +18,13 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.AggregationRule;
+import com.dianping.cat.consumer.core.dal.AggregationRuleDao;
+import com.dianping.cat.consumer.core.dal.AggregationRuleEntity;
 import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.dal.report.AggregationRule;
-import com.dianping.cat.home.dal.report.AggregationRuleDao;
-import com.dianping.cat.home.dal.report.AggregationRuleEntity;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger;
