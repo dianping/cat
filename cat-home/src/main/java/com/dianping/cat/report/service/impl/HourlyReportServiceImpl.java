@@ -119,7 +119,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		CrossReport crossReport = merger.getCrossReport();
 
 		crossReport.setStartTime(start);
-		crossReport.setEndTime(end);
+		crossReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "cross");
 		crossReport.getDomainNames().addAll(domains);
@@ -152,7 +152,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		DatabaseReport databaseReport = merger.getDatabaseReport();
 
 		databaseReport.setStartTime(start);
-		databaseReport.setEndTime(end);
+		databaseReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDatabaseNames(start, end, "database");
 		
@@ -187,7 +187,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		EventReport eventReport = merger.getEventReport();
 
 		eventReport.setStartTime(start);
-		eventReport.setEndTime(end);
+		eventReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "event");
 		eventReport.getDomainNames().addAll(domains);
@@ -219,7 +219,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		HealthReport healthReport = merger.getHealthReport();
 
 		healthReport.setStartTime(start);
-		healthReport.setEndTime(end);
+		healthReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "health");
 		healthReport.getDomainNames().addAll(domains);
@@ -252,7 +252,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 
 		heartbeatReport.setStartTime(start);
-		heartbeatReport.setEndTime(end);
+		heartbeatReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "heartbeat");
 		heartbeatReport.getDomainNames().addAll(domains);
@@ -284,7 +284,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		MatrixReport matrixReport = merger.getMatrixReport();
 
 		matrixReport.setStartTime(start);
-		matrixReport.setEndTime(end);
+		matrixReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "matrix");
 		matrixReport.getDomainNames().addAll(domains);
@@ -317,7 +317,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		MetricReport metricReport = merger.getMetricReport();
 
 		metricReport.setStartTime(start);
-		metricReport.setEndTime(end);
+		metricReport.setEndTime(new Date(end.getTime()-1));
 		return metricReport;
 	}
 
@@ -347,7 +347,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		ProblemReport problemReport = merger.getProblemReport();
 
 		problemReport.setStartTime(start);
-		problemReport.setEndTime(end);
+		problemReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "problem");
 		problemReport.getDomainNames().addAll(domains);
@@ -379,7 +379,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		SqlReport sqlReport = merger.getSqlReport();
 
 		sqlReport.setStartTime(start);
-		sqlReport.setEndTime(end);
+		sqlReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "sql");
 		sqlReport.getDomainNames().addAll(domains);
@@ -412,7 +412,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		StateReport stateReport = merger.getStateReport();
 
 		stateReport.setStartTime(start);
-		stateReport.setEndTime(end);
+		stateReport.setEndTime(new Date(end.getTime()-1));
 		return stateReport;
 	}
 
@@ -442,7 +442,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		TopReport topReport = merger.getTopReport();
 
 		topReport.setStartTime(start);
-		topReport.setEndTime(end);
+		topReport.setEndTime(new Date(end.getTime()-1));
 		return topReport;
 	}
 
@@ -472,7 +472,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		DependencyReport dependencyReport = merger.getDependencyReport();
 
 		dependencyReport.setStartTime(start);
-		dependencyReport.setEndTime(end);
+		dependencyReport.setEndTime(new Date(end.getTime()-1));
 		return dependencyReport;
 	}
 	@Override
@@ -502,7 +502,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		TransactionReport transactionReport = merger.getTransactionReport();
 
 		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
+		transactionReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "transaction");
 		transactionReport.getDomainNames().addAll(domains);

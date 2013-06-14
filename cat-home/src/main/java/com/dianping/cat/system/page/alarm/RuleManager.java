@@ -8,9 +8,6 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.home.dal.user.DpAdminLogin;
-import com.dainping.cat.home.dal.user.DpAdminLoginDao;
-import com.dainping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.AlarmRule;
 import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
@@ -21,6 +18,9 @@ import com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionEntity;
 import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateEntity;
+import com.dianping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.home.dal.user.DpAdminLoginDao;
+import com.dianping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.system.page.alarm.UserAlarmSubState.UserAlarmSubStateCompartor;
 
 public class RuleManager {

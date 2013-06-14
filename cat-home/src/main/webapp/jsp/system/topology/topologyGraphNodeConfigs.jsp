@@ -12,14 +12,16 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#topylogyNodeConfigList').addClass('active');
-			$('#content .nav-tabs a').mouseenter(function (e) {
+/* 			$('#content .nav-tabs a').mouseenter(function (e) {
 				  e.preventDefault();
 				  $(this).tab('show');
 			});
-			var type = '${payload.type}';
+ */			var type = '${payload.type}';
 			if(type==''){
 				type = 'URL';
 			}
@@ -48,6 +50,7 @@
 						$('#myModal').html(response);
 						$('#myModal').modal();
 						nodeValidate();
+						$("#id").select2();
 					}
 				});
 			});
@@ -68,7 +71,7 @@
 	</script>
 	<div class="row-fluid">
         <div class="span2">
-			<%@include file="./configTree.jsp"%>
+			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
 			<!-- Modal -->
@@ -107,7 +110,7 @@
 						     	</c:if>
 						     	<td style="text-align:center;vertical-align:middle;"><a href="?op=topologyGraphNodeConfigAdd&type=${item.key}&domain=ALL" class="btn update btn-primary btn-small">修改</a></td>
 					     		</tr>
-					     	<c:forEach var="domainConfig" items="${value.domains}">
+					     	<c:forEach var="domainConfig" items="${value.domainConfigs}">
 					     		<c:set var="temp" value="${domainConfig.value}"/>
 				     			<tr><td>${temp.id}</td>
 				     			<td style="text-align:right">${temp.warningThreshold}</td>

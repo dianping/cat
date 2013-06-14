@@ -221,7 +221,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("matrix");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);

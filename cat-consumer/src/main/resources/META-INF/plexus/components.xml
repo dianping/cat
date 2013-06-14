@@ -5,17 +5,14 @@
 			<implementation>com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.core.aggregation.AggregationManager</role>
-			<implementation>com.dianping.cat.consumer.core.aggregation.AggregationManager</implementation>
+			<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.AggregationRuleDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -24,7 +21,7 @@
 			<implementation>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.aggregation.AggregationManager</role>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -211,38 +208,23 @@
 			</configuration>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
-			<role-hint>cat</role-hint>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
-			<configuration>
-				<id>cat</id>
-				<maximum-pool-size>3</maximum-pool-size>
-				<connection-timeout>1s</connection-timeout>
-				<idle-timeout>10m</idle-timeout>
-				<statement-cache-size>1000</statement-cache-size>
-				<properties>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
-					<user>root</user>
-					<password>password</password>
-					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-				</properties>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>aggregation-rule</role-hint>
+			<role-hint>config</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>aggregation-rule</logical-table-name>
-				<physical-table-name>aggregationRule</physical-table-name>
+				<logical-table-name>config</logical-table-name>
+				<physical-table-name>config</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+			<implementation>com.dianping.cat.consumer.core.config.ConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
@@ -283,15 +265,6 @@
 				<physical-table-name>task</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.core.dal.AggregationRuleDao</role>
-			<implementation>com.dianping.cat.consumer.core.dal.AggregationRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>

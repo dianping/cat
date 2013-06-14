@@ -267,7 +267,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("heartbeat");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -280,7 +280,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 						task.setCreationDate(new Date());
 						task.setProducer(ip);
 						task.setReportDomain(domain);
-						task.setReportName("heartbeat");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);

@@ -103,7 +103,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
-
 			if (period.isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(dateLong), new Date(dateLong
 				      + TimeUtil.ONE_HOUR), "heartbeat");

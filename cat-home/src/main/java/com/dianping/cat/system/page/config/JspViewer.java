@@ -42,6 +42,15 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TOPOLOGY_GRAPH_EDGE_CONFIG_LIST.getPath();
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.TOPOLOGY_GRAPH_EDGE_CONFIG_LIST.getPath();
+		//Product Line
+		case TOPOLOGY_GRAPH_PRODUCT_LINE:
+			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
+		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
+			return JspFile.TOPOLOGY_GRAPH_PRODUCT_ADD_OR_UPDATE.getPath();
+		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
+			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
+		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
+			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

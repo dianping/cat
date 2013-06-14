@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.dependency;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	LINE_CHART("view"),
+	LINE_CHART("lineChart"),
 
 	TOPOLOGY("dependencyGraph"),
 

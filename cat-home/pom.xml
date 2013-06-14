@@ -154,7 +154,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.0.5</version>
+            <version>2.0.6</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>
@@ -174,9 +174,10 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml,
-                     	${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
-						${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,</manifest>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml, 
+                     	${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml, 
+						${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
+						${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -199,9 +200,9 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[
-						${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
-						${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,]]></manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
+${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
+${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

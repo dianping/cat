@@ -1,9 +1,8 @@
 package com.dianping.cat.consumer.core.aggregation;
 
 import java.util.List;
-import java.util.Map;
 
-import com.dianping.cat.consumer.core.dal.AggregationRule;
+import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 
 public interface AggregationHandler {
 
@@ -13,8 +12,8 @@ public interface AggregationHandler {
 	 * @param formats
 	 *           page type and domain to rule List Map
 	 */
-	public void register(Map<Integer, Map<String, List<AggregationRule>>> formats);
-
+	public void register(List<AggregationRule> rules);
+	
 	/**
 	 * parse input to output use aggregation rule
 	 * 

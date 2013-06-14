@@ -224,7 +224,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("event");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -237,7 +237,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 						task.setCreationDate(new Date());
 						task.setProducer(ip);
 						task.setReportDomain(domain);
-						task.setReportName("event");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);

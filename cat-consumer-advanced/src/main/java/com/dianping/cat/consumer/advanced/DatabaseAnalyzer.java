@@ -214,7 +214,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 						String xml = builder.buildXml(report);
 						String domain = report.getDatabase();
 
-						r.setName("database");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);

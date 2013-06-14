@@ -17,7 +17,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dainping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemContext;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.login.service.Credential;

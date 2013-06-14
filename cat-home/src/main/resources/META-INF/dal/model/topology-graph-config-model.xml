@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.home.dependency.config"  enable-merger="true"  enable-sax-parser="true"
-	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true">
+	enable-base-visitor="true" >
  <entity name="topology-graph-config" root="true">
     <entity-ref name="node-config" type="map" names="node-configs"  method-find-or-create="true" />
     <entity-ref name="edge-config" type="map" names="edge-configs"  method-find-or-create="true" />
@@ -11,7 +11,7 @@
     <attribute name="default-error-threshold" value-type="int" />
     <attribute name="default-warning-response-time" value-type="double" />
     <attribute name="default-error-response-time" value-type="double" />
-    <entity-ref name="domain-config" type="map" names="domains"  method-find-or-create="true" />
+    <entity-ref name="domain-config" type="map" names="domainConfigs"  method-find-or-create="true" />
   </entity>
   <entity name="domain-config">
     <attribute name="id" value-type="String"  key="true"/>

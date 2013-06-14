@@ -20,6 +20,53 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("productLine")
 	private String productLine;
+	
+	@FieldMeta("count")
+	private int m_minuteCounts = 10;
+
+	@FieldMeta("frequency")
+	private int m_frequency = 10;
+
+	@FieldMeta("tops")
+	private int m_topCounts = 10;
+
+   @FieldMeta("refresh")
+   private boolean m_refresh = false;
+   
+   @FieldMeta("fullScreen")
+   private boolean m_fullScreen = false;
+
+	public int getMinuteCounts() {
+   	return m_minuteCounts;
+   }
+
+	public void setMinuteCounts(int minuteCounts) {
+   	m_minuteCounts = minuteCounts;
+   }
+
+	public int getTopCounts() {
+   	return m_topCounts;
+   }
+
+	public void setTopCounts(int topCounts) {
+   	m_topCounts = topCounts;
+   }
+
+	public int getFrequency() {
+   	return m_frequency;
+   }
+
+	public void setFrequency(int frequency) {
+   	m_frequency = frequency;
+   }
+
+	public boolean isRefresh() {
+   	return m_refresh;
+   }
+
+	public void setRefresh(boolean refresh) {
+   	m_refresh = refresh;
+   }
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -73,6 +120,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setProductLine(String productLine) {
    	this.productLine = productLine;
+   }
+
+	public boolean isFullScreen() {
+   	return m_fullScreen;
+   }
+
+	public void setFullScreen(boolean fullScreen) {
+   	m_fullScreen = fullScreen;
    }
 	
 }

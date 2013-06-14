@@ -56,7 +56,8 @@ public class ThresholdRuleTest {
 
 		Pair<Boolean, ThresholdAlarmMeta> temp = m_rule.addData(entity, AlertInfo.EXCEPTION);
 		
-		Assert.assertNotNull(temp);
+		System.out.println(temp);
+		Assert.assertNull(temp);
 	}
 
 	@Test

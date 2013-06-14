@@ -30,7 +30,7 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implements LogEnabled {
-	public static final Object ID = "metric";
+	public static final String ID = "metric";
 
 	@Inject
 	private BucketManager m_bucketManager;
@@ -298,7 +298,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 						BusinessReport r = m_businessReportDao.createLocal();
 						String group = report.getGroup();
 
-						r.setName("metric");
+						r.setName(ID);
 						r.setProductLine(group);
 						r.setPeriod(period);
 						r.setIp(ip);

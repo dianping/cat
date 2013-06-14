@@ -30,26 +30,30 @@ public class DomainNavManager implements Initializable {
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
-	private static Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
+	// key is domain
+	private Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
 
-	public static Collection<String> getDomains() {
+	public static final String DEFAULT = "Default";
+
+	public Collection<String> getDomains() {
 		return m_projects.keySet();
 	}
 
-	public static Map<String, Department> getDepartment(Collection<String> domains) {
+	public Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
 
 		synchronized (m_projects) {
 			for (String domain : domains) {
 				Project project = m_projects.get(domain);
-				String department = "Default";
-				String projectLine = "Default";
+				String department = DEFAULT;
+				String projectLine = DEFAULT;
 
 				if (project != null) {
 					department = project.getDepartment();
 					projectLine = project.getProjectLine();
 				}
 				Department temp = result.get(department);
+				
 				if (temp == null) {
 					temp = new Department();
 					result.put(department, temp);
@@ -61,41 +65,39 @@ public class DomainNavManager implements Initializable {
 		return result;
 	}
 
-	public static Project getProjectByName(String domain) {
-		return m_projects.get(domain);
+	public Project getProjectByName(String domain) {
+		synchronized (m_projects) {
+			return m_projects.get(domain);
+		}
 	}
 
-	public static Map<String, Project> getProjects() {
-		return m_projects;
+	public Map<String, Project> getProjects() {
+		synchronized (m_projects) {
+			return m_projects;
+		}
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
 		reloadDomainInfo();
 		if (!m_serverConfigManager.isLocalMode()) {
-			try {
-				DomainReload reload = new DomainReload();
-
-				Threads.forGroup("Cat").start(reload);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			Threads.forGroup("Cat").start(new DomainReload());
 		}
 	}
 
 	public void reloadDomainInfo() {
-		synchronized (m_projects) {
-			try {
-				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+		try {
+			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
 
+			synchronized (m_projects) {
 				if (projects.size() > 0) {
 					for (Project project : projects) {
 						m_projects.put(project.getDomain(), project);
 					}
 				}
-			} catch (DalException e) {
-				Cat.logError(e);
 			}
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
 	}
 

@@ -56,6 +56,7 @@
 							${basedir}/src/main/resources/META-INF/dal/model/heartbeat-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
 					 </manifest>
                   </configuration>
                </execution>
@@ -79,6 +80,7 @@
                   <configuration>
                      <manifest><![CDATA[
                      	${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
                      ]]></manifest>
                   </configuration>
                </execution>

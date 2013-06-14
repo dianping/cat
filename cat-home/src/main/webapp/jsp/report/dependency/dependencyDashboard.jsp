@@ -8,7 +8,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
 <a:report title="Dependency Report"
-	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
+	navUrlPrefix="domain=${model.domain}&op=dashboard">
 	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
@@ -18,30 +18,40 @@
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	
+	<style>
+	.tooltip-inner {
+		max-width:36555px;
+	 }
+	.tab-content	table {
+	  max-width: 100%;
+	  background-color: transparent;
+	  border-collapse: collapse;
+	  border-spacing: 0; 
+	}
+	</style>
 	<div class="report">
 		<div class="row-fluid">
 			<div class="span12 text-center">
 				<%@ include file="dependencyOpNav.jsp"%>
 		 		<%@ include file="dependencyTimeNav.jsp"%>
 		</div></div>
- 		<div class="tabbable tabs-left " id="content">
-  			<ul class="nav nav-tabs alert-info">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>产品线监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>TOP异常</strong></a></li>
-  			</ul>
-  			<div class="tab-content">
-	    		<div class="tab-pane active" id="tab1">
-	    		</div>
-	    		<div class="tab-pane" id="tab2">
-	    		</div>
-			</div>	    			
+		<div id="fullScreenData">
+			<h1>监控仪表盘信息</h1>
+			<%@ include file="../top/topMetric.jsp"%>
+		</div>
     </div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
+		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+		$('.position').hide();
+		$('.switch').hide();
+		/* $('#topMetric .nav-tabs a').mouseenter(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+		}); */	
 		var data = ${model.dashboardGraph};
 		console.log(data);
 		function parse(data){

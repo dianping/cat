@@ -18,7 +18,7 @@ import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 
 public class GraphConfigManagerTest {
-	private TopologyGraphConfigManger m_manager;
+	private TopologyGraphConfigManager m_manager;
 
 	private File m_file;
 
@@ -31,7 +31,7 @@ public class GraphConfigManagerTest {
 
 	@Before
 	public void setUp() throws InitializationException, IOException {
-		m_manager = new TopologyGraphConfigManger();
+		m_manager = new TopologyGraphConfigManager();
 		m_file = new File("src/test/resources/com/dianping/cat/report/page/dependency/graph/ConfigForTest.xml");
 		m_orginalContent = Files.forIO().readFrom(m_file, "utf-8");
 		m_manager.setFileName(m_file.getAbsolutePath());
@@ -116,18 +116,17 @@ public class GraphConfigManagerTest {
 		index.setTotalCount(100);
 		
 		Pair<Integer, String> state = m_manager.buildNodeState("Cat", index);
-		Assert.assertEquals(state, null);
+		Assert.assertEquals(GraphConstrant.OK, (int)state.getKey());
 		
 		index.setErrorCount(100);
 		state = m_manager.buildNodeState("Cat", index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("ERROR:100\n", state.getValue());
 
 		index.setErrorCount(200);
 		state = m_manager.buildNodeState("Cat", index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("ERROR:200\n", state.getValue());
 	}
+	
 	@Test
 	public void testBuildNodeStateByResponse(){
 		Index index = new Index("URL");
@@ -138,17 +137,15 @@ public class GraphConfigManagerTest {
 		index.setTotalCount(100);
 		
 		Pair<Integer, String> state = m_manager.buildNodeState(domain, index);
-		Assert.assertEquals(state, null);
+		Assert.assertEquals(GraphConstrant.OK, (int)state.getKey());
 		
 		index.setAvg(10.0);
 		state = m_manager.buildNodeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("AVG:10.0\n", state.getValue());
 
 		index.setAvg(100.0);
 		state = m_manager.buildNodeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("AVG:100.0\n", state.getValue());
 	}
 	
 	@Test
@@ -164,17 +161,15 @@ public class GraphConfigManagerTest {
 		index.setTotalCount(100);
 		
 		Pair<Integer, String> state = m_manager.buildEdgeState(domain, index);
-		Assert.assertNull(state);
+		Assert.assertEquals(GraphConstrant.OK, (int)state.getKey());
 		
 		index.setErrorCount(100);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("ERROR:100\n", state.getValue());
 
 		index.setErrorCount(200);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("ERROR:200\n", state.getValue());
 	}
 	
 
@@ -191,17 +186,15 @@ public class GraphConfigManagerTest {
 		index.setTotalCount(100);
 		
 		Pair<Integer, String> state = m_manager.buildEdgeState(domain, index);
-		Assert.assertNull(state);
+		Assert.assertEquals(GraphConstrant.OK, (int)state.getKey());
 		
 		index.setAvg(10.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("AVG:10.0\n", state.getValue());
 
 		index.setAvg(100.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("AVG:100.0\n", state.getValue());
 	}
 	
 	@Test
@@ -217,17 +210,15 @@ public class GraphConfigManagerTest {
 		index.setTotalCount(100);
 		
 		Pair<Integer, String> state = m_manager.buildEdgeState(domain, index);
-		Assert.assertNull(state);
+		Assert.assertEquals(GraphConstrant.OK, (int)state.getKey());
 		
 		index.setAvg(10.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("AVG:10.0\n", state.getValue());
 
 		index.setAvg(20.0);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("AVG:20.0\n", state.getValue());
 		
 		index.setAvg(9.0);
 		
@@ -235,12 +226,10 @@ public class GraphConfigManagerTest {
 		index.setErrorCount(10);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
-		Assert.assertEquals("ERROR:10\n", state.getValue());
 
 		index.setErrorCount(20);
 		state = m_manager.buildEdgeState(domain, index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
-		Assert.assertEquals("ERROR:20\n", state.getValue());
 	}
 
 }

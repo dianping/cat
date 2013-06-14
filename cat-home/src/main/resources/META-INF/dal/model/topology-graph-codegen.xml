@@ -5,10 +5,10 @@
     <attribute name="type" value-type="String" />
     <attribute name="status" value-type="int" />
     <attribute name="des" value-type="int" />
-    <entity-ref name="node" type="list" names="nodes" />
-    <entity-ref name="edge" type="list" names="edges" />
+    <entity-ref name="topology-node" type="list" names="topology-nodes" />
+    <entity-ref name="topology-edge" type="list" names="topology-edges" />
   </entity>
-  <entity name="node">
+  <entity name="topology-node">
     <attribute name="id" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="status" value-type="int" />
@@ -16,7 +16,7 @@
     <attribute name="link" value-type="String" />
     <attribute name="weight" value-type="int" />
   </entity>
-  <entity name="edge">
+  <entity name="topology-edge">
     <attribute name="key" value-type="int" />
     <attribute name="type" value-type="String" />
     <attribute name="target" value-type="String" />

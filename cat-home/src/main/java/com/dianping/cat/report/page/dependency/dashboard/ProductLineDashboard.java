@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.dependency.dashboard;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.google.gson.Gson;
 
@@ -17,19 +17,19 @@ public class ProductLineDashboard {
 	
 	private String des;
 
-	private List<Node> nodes = new ArrayList<Node>();
+	private List<TopologyNode> nodes = new ArrayList<TopologyNode>();
 
 	public ProductLineDashboard(String productLine) {
 		id = productLine;
 	}
 
-	public ProductLineDashboard addNode(Node node) {
+	public ProductLineDashboard addNode(TopologyNode node) {
 		nodes.add(node);
 
 		return this;
 	}
 	
-	public List<Node> getNodes() {
+	public List<TopologyNode> getNodes() {
    	return nodes;
    }
 
@@ -65,11 +65,11 @@ public class ProductLineDashboard {
    	this.des = des;
    }
 
-	public List<Node> getPoints() {
+	public List<TopologyNode> getPoints() {
    	return nodes;
    }
 
-	public void setPoints(List<Node> points) {
+	public void setPoints(List<TopologyNode> points) {
    	this.nodes = points;
    }
 

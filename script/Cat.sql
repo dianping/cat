@@ -262,6 +262,27 @@ CREATE TABLE `event` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件记录表';
 
+CREATE TABLE `topologyGraph` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-client机器ip',
+  `period` datetime NOT NULL  COMMENT '报表时间段,精确到分钟',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/binary',
+  `content` longblob COMMENT '用于存放报表的具体内容',
+  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`),
+  KEY `period` (`period`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
+
+CREATE TABLE `config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '配置名称',
+  `content` longtext COMMENT '配置的具体内容',
+  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
+  `modify_date` datetime NOT NULL COMMENT '配置修改时间',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储系统的全局配置信息';
+
 
 
 

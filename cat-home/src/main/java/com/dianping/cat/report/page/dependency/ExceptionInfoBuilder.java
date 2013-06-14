@@ -24,9 +24,10 @@ public class ExceptionInfoBuilder extends BaseVisitor {
 
 	@Override
 	public void visitEntry(Entry entry) {
+		int count = 0;
 		String type = entry.getType();
 		String state = entry.getStatus();
-		int count = 0;
+		
 		for (Duration duration : entry.getDurations().values()) {
 			count += duration.getCount();
 		}

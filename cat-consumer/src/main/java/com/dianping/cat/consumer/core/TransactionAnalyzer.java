@@ -342,7 +342,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 						String xml = new TransactionReportUrlFilter().buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("transaction");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -355,7 +355,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 						task.setCreationDate(new Date());
 						task.setProducer(ip);
 						task.setReportDomain(domain);
-						task.setReportName("transaction");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);

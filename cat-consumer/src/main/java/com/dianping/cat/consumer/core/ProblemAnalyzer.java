@@ -22,13 +22,8 @@ import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
-import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
-import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
@@ -59,9 +54,16 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
+	private ProblemReport buildFrontEndReport(ProblemReport report) {
+		m_problemReportAggregation.refreshRule();
+		report.accept(m_problemReportAggregation);
+
+		return m_problemReportAggregation.getReport();
+	}
+
 	private ProblemReport buildTotalProblemReport() {
 		ProblemReport report = new ProblemReport(ALL);
-		ProblemReportVisitor visitor = new ProblemReportVisitor(report);
+		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
 
 		try {
 			for (ProblemReport temp : m_reports.values()) {
@@ -102,6 +104,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 			}
 			report.getDomainNames().addAll(m_reports.keySet());
+
+			if (FRONT_END.equals(domain)) {
+				report.accept(m_problemReportAggregation);
+
+				report = m_problemReportAggregation.getReport();
+			}
 			return report;
 		} else {
 			return buildTotalProblemReport();
@@ -184,12 +192,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			if (atEnd && !isLocalMode()) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				for (String domain : m_reports.keySet()) {
-					if (domain.equals(FRONT_END)) {
-						m_reports.get(domain).accept(m_problemReportAggregation);
-						m_reports.put(domain, m_problemReportAggregation.getReport());
-					}
+				ProblemReport frontEnd = m_reports.get(FRONT_END);
+
+				if (frontEnd != null) {
+					m_reports.put(FRONT_END, buildFrontEndReport(frontEnd));
 				}
+
 				ProblemReport all = buildTotalProblemReport();
 
 				m_reports.put(ALL, all);
@@ -200,7 +208,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("problem");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -213,7 +221,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 						task.setCreationDate(new Date());
 						task.setProducer(ip);
 						task.setReportDomain(domain);
-						task.setReportName("problem");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1);
 						m_taskDao.insert(task);
@@ -236,83 +244,4 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 	}
 
-	static class ProblemReportVisitor extends BaseVisitor {
-
-		private ProblemReport m_report;
-
-		private String m_currentDomain;
-
-		private String m_currentType;
-
-		private String m_currentState;
-
-		private String m_currentThread;
-
-		public ProblemReportVisitor(ProblemReport report) {
-			m_report = report;
-		}
-
-		protected Entry findOrCreatEntry(Machine machine, String type, String status) {
-			List<Entry> entries = machine.getEntries();
-
-			for (Entry entry : entries) {
-				if (entry.getType().equals(type) && entry.getStatus().equals(status)) {
-					return entry;
-				}
-			}
-			Entry entry = new Entry();
-
-			entry.setStatus(status);
-			entry.setType(type);
-			entries.add(entry);
-			return entry;
-		}
-
-		@Override
-		public void visitDuration(Duration duration) {
-			int value = duration.getValue();
-			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
-			Entry entry = findOrCreatEntry(machine, m_currentType, m_currentState);
-			Duration temp = entry.findOrCreateDuration(value);
-
-			temp.setCount(temp.getCount() + duration.getCount());
-		}
-
-		@Override
-		public void visitEntry(Entry entry) {
-			m_currentType = entry.getType();
-			m_currentState = entry.getStatus();
-			super.visitEntry(entry);
-		}
-
-		@Override
-		public void visitProblemReport(ProblemReport problemReport) {
-			m_currentDomain = problemReport.getDomain();
-			super.visitProblemReport(problemReport);
-		}
-
-		@Override
-		public void visitMachine(Machine machine) {
-			super.visitMachine(machine);
-		}
-
-		@Override
-		public void visitSegment(Segment segment) {
-			int minute = segment.getId();
-			int count = segment.getCount();
-			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
-			Entry entry = findOrCreatEntry(machine, m_currentType, m_currentState);
-			JavaThread thread = entry.findOrCreateThread(m_currentThread);
-			Segment temp = thread.findOrCreateSegment(minute);
-			
-			temp.setCount(temp.getCount() + count);
-		}
-
-		@Override
-		public void visitThread(JavaThread thread) {
-			m_currentThread = thread.getId();
-			super.visitThread(thread);
-		}
-	}
-	
 }

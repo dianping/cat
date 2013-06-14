@@ -21,6 +21,8 @@ public class CatString {
 	public static final String RESPONSE_TIME = "响应时间";
 
 	public static final String EXCEPTION_COUNT = "错误数";
+	
+	public static final String TOTAL_COUNT = "访问量";
 
 	public static final String EXCEPTION_INFO = "异常信息";
 	

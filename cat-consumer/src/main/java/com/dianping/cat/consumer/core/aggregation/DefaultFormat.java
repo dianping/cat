@@ -10,6 +10,7 @@ public class DefaultFormat extends Format {
 		String item = "";
 		String describe = "";
 		int index = pattern.indexOf(":");
+		
 		if (index != -1 && pattern.length() > index + 1) {
 			item = pattern.substring(0, index).trim();
 			describe = pattern.substring(index + 1).trim();
