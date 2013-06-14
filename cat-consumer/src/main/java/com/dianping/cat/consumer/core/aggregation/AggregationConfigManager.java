@@ -69,7 +69,6 @@ public class AggregationConfigManager implements Initializable {
 		if (m_aggregation == null) {
 			m_aggregation = new Aggregation();
 		}
-		
 		m_handler.register(queryAggrarationRules());
 	}
 
