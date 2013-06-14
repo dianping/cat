@@ -12,7 +12,6 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultMessageProducer implements MessageProducer {
 	@Inject
@@ -74,8 +73,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logMetric(String name, String status, String nameValuePairs) {
-		MessageTree tree = m_manager.getThreadLocalMessageTree();
-		String type = tree == null ? null : tree.getMetricType();
+		String type = ((DefaultMessageManager) m_manager).getMetricType();
 		Metric event = newMetric(type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {

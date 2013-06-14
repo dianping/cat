@@ -15,8 +15,6 @@ public interface MessageTree extends Cloneable {
 
 	public String getMessageId();
 
-	public String getMetricType();
-
 	public String getParentMessageId();
 
 	public String getRootMessageId();
@@ -38,8 +36,6 @@ public interface MessageTree extends Cloneable {
 	public void setMessage(Message message);
 
 	public void setMessageId(String messageId);
-
-	public void setMetricType(String metricType);
 
 	public void setParentMessageId(String parentMessageId);
 

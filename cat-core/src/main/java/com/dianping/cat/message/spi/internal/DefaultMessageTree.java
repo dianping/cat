@@ -34,8 +34,6 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
-	private String m_metricType;
-	
 	@Override
 	public DefaultMessageTree copy() {
 		DefaultMessageTree tree = new DefaultMessageTree();
@@ -83,11 +81,6 @@ public class DefaultMessageTree implements MessageTree {
 	public String getMessageId() {
 		return m_messageId;
 	}
-
-	@Override
-   public String getMetricType() {
-	   return m_metricType;
-   }
 
 	@Override
 	public String getParentMessageId() {
@@ -149,11 +142,6 @@ public class DefaultMessageTree implements MessageTree {
 			m_messageId = messageId;
 		}
 	}
-
-	@Override
-   public void setMetricType(String metricType) {
-		m_metricType = metricType;
-   }
 
 	@Override
 	public void setParentMessageId(String parentMessageId) {
