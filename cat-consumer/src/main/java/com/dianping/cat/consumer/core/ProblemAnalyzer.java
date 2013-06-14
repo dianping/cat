@@ -104,8 +104,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 			}
 			report.getDomainNames().addAll(m_reports.keySet());
-			
-			
+
+			if (FRONT_END.equals(domain)) {
+				report.accept(m_problemReportAggregation);
+
+				report = m_problemReportAggregation.getReport();
+			}
 			return report;
 		} else {
 			return buildTotalProblemReport();
