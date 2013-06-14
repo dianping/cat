@@ -83,7 +83,6 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
-import com.dianping.cat.system.config.AggregationConfigManager;
 import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -193,9 +192,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
-
 		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class) //
 		      .req(ReportDao.class, BusinessReportDao.class));
 
@@ -222,8 +219,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
-
-		all.add(C(AggregationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 

@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.aggreation.entity.AggregationRule;
 import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;

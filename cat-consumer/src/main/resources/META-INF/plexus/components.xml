@@ -1,6 +1,31 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+			<implementation>com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
+			<implementation>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
 			<implementation>com.dianping.cat.consumer.DefaultMessageAnalyzerManager</implementation>
 		</component>
@@ -50,6 +75,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.dal.TaskDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>

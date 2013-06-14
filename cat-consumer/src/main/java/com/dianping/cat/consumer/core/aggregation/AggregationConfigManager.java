@@ -1,36 +1,45 @@
-package com.dianping.cat.system.config;
+package com.dianping.cat.consumer.core.aggregation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.aggreation.model.entity.Aggregation;
+import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.consumer.aggreation.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.core.config.Config;
 import com.dianping.cat.consumer.core.config.ConfigDao;
 import com.dianping.cat.consumer.core.config.ConfigEntity;
-import com.dianping.cat.home.aggreation.entity.Aggregation;
-import com.dianping.cat.home.aggreation.entity.AggregationRule;
-import com.dianping.cat.home.aggreation.transform.DefaultSaxParser;
 
 public class AggregationConfigManager implements Initializable {
 	@Inject
 	private ConfigDao m_configDao;
+	
+	@Inject
+	protected AggregationHandler m_handler;
 
 	private int m_configId;
 
 	private static final String CONFIG_NAME = "aggreationConfig";
 
 	private Aggregation m_aggregation;
+	
+	public static final int PROBLEM_TYPE = 3;
 
 	public boolean deleteAggregationRule(String rule) {
 		m_aggregation.removeAggregationRule(rule);
 		return storeConfig();
 	}
-
+	
+	public String handle(int type, String domain, String status) {
+		return m_handler.handle(type, domain, status);
+	}
+	
 	@Override
 	public void initialize() {
 		try {
@@ -112,4 +121,10 @@ public class AggregationConfigManager implements Initializable {
 		}
 		return true;
 	}
+
+	public void refreshRule() {
+	   List<AggregationRule> rules = queryAggrarationRulesFromDB();
+	  
+	   m_handler.register(rules);
+   }
 }

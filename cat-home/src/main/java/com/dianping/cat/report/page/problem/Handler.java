@@ -19,6 +19,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.CatString;
@@ -56,6 +57,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
+	@Inject
+	private ProblemReportAggregation m_problemReportAggregation;
+
 	private Gson m_gson = new Gson();
 
 	private int getHour(long date) {
@@ -66,6 +70,23 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
+		ProblemReport report = getHourlyReportInternal(payload, type);
+		if ("FrontEnd".equals(payload.getDomain())) {
+			ModelPeriod period = payload.getPeriod();
+
+			if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
+				report = buildFrontEndByRule(report);
+			}
+		}
+		return report;
+	}
+
+	private ProblemReport buildFrontEndByRule(ProblemReport report) {
+		report.accept(m_problemReportAggregation);
+		return m_problemReportAggregation.getReport();
+	}
+
+	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
@@ -79,7 +100,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);
 			ProblemReport report = response.getModel();
-
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
 				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "problem");
