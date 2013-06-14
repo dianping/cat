@@ -18,30 +18,31 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
-<table class='table table-striped table-bordered table-condensed'>
-	<tr><td>CAT系统文档</td><td>CAT系统链接</td></tr>
-	<tr><td><a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C" target="_blank">CAT用户手册</a></td>
-		<td><a href="http://cat.qa.dianpingoa.com/cat/r">CAT线下环境链接</a></td>	</tr>
-	<tr><td><a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E5%BC%80%E5%8F%91%E8%80%85%E6%96%87%E6%A1%A3" target="_blank">CAT开发者文档</a></td>
-	<td><a href="http://10.1.8.64:8080/cat/r">CAT预发环境链接</a></td>	</tr>
-	<tr><td><a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E9%9B%86%E6%88%90%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" target="_blank">CAT集成帮助文档</a></td>	
-		<td><a href="http://cat.dianpingoa.com/cat/r">CAT线上环境链接</a></td></tr>
+<table style="width:60%" class='table table-striped table-bordered table-condensed'>
+	<tr><td><a class="btn btn-primary btn-small btn-danger" href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C" target="_blank">CAT用户手册</a></td>
+	<td><a class="btn btn-primary btn-small" href="http://cat.qa.dianpingoa.com/cat/r">CAT线下环境链接</a></td>	</tr>
+	<tr><td><a class="btn btn-primary btn-small btn-danger" href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E5%BC%80%E5%8F%91%E8%80%85%E6%96%87%E6%A1%A3" target="_blank">CAT开发者文档</a></td>
+	<td><a class="btn btn-primary btn-small" href="http://10.1.8.64:8080/cat/r">CAT预发环境链接</a></td>	</tr>
+	<tr><td><a class="btn btn-primary btn-small btn-danger" href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E9%9B%86%E6%88%90%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" target="_blank">CAT集成帮助文档</a></td>	
+	<td><a class="btn btn-primary btn-small" href="http://cat.dianpingoa.com/cat/r">CAT线上环境链接</a></td></tr>
 </table>
 <br>
 <table class='table table-striped table-bordered table-condensed'>
-	<tr><td width="3%">序号</td><td width="87%">最新发布功能描述</td><td width="10%">发布时间</td></tr>	
-	<tr><td>8</td><td style="color:red">Problem小时报表支持一个小时内的错误趋势图</td><td>2013-03-13</td></tr>
-	<tr><td>7</td><td style="color:red">Query报表支持按照天或者小时查询Transaction,Event,Problem数据</td><td>2013-03-11</td></tr>
-	<tr><td>6</td><td style="color:red">Cross报表支持根据方法名称查询是哪些客户端调用此方法</td><td>2013-03-11</td></tr>
-	<tr><td>5</td><td style="color:red">Top报表,根据分钟级别实时展现线上异常最多、访问最慢(URL\Service\SQL\Call\Cache)的应用</td><td>2013-03-11</td></tr>
-	<tr><td>4</td><td style="color:red">项目信息修改，请项目负责人到Project标签下，修改项目所在分组的基本信息（仅修改线上环境）</<td><td>2013-01-21</td></tr>
+	<tr class="text-success"><th width="3%">序号</th><th width="87%">最新发布功能描述</th><th width="10%">发布时间</th></tr>	
+	<tr><td>10</td><td style="color:red">Dependency报表，包含依赖拓扑、产品线监控、监控仪表盘</td><td>2013-06-14</td></tr>
+	<tr><td>9</td><td style="color:red">支付FrontEnd的错误js的合并</td><td>2013-06-14</td></tr>
+	<tr><td>8</td><td>Problem小时报表支持一个小时内的错误趋势图</td><td>2013-03-13</td></tr>
+	<tr><td>7</td><td>Query报表支持按照天或者小时查询Transaction,Event,Problem数据</td><td>2013-03-11</td></tr>
+	<tr><td>6</td><td>Cross报表支持根据方法名称查询是哪些客户端调用此方法</td><td>2013-03-11</td></tr>
+	<tr><td>5</td><td>Top报表,根据分钟级别实时展现线上异常最多、访问最慢(URL\Service\SQL\Call\Cache)的应用</td><td>2013-03-11</td></tr>
+	<tr><td>4</td><td>项目信息修改，请项目负责人到Project标签下，修改项目所在分组的基本信息（仅修改线上环境）</<td><td>2013-01-21</td></tr>
 	<tr><td>3</td><td>Transaction\Event月报表支持每天的趋势图，以天为单位</td><td>2013-01-21</td></tr>
 	<tr><td>2</td><td>Transaction\Event报表日报表、周报表支持趋势图对比,时间精度为5分钟</td><td>2013-01-01</td></tr>
 	<tr><td>1</td><td>默认告警，邮件订阅（修改线上环境即可)，请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td><td>2012-09-01</td></tr>
 </table>
 <br>
 <table class='table table-striped table-bordered table-condensed'>
-	<tr><td width="3%">序号</td><td>常见问题</td><td>问题解答</td></tr>
+	<tr class="text-success"><th width="3%">序号</th><th>常见问题</th><th>问题解答</th></tr>
 	<tr  style="color:red"><td>7</td><td>Job打包出错</<td><td style="white-space:normal;">升级maven-assembly-plugin至2.2-beta-5版本</td></tr>
 	<tr><td>6</td><td>95Line</<td><td style="white-space:normal;">由于计算95line需要数据较多，为了减少内存开销，系统做了一些优化，在单个小时内某一台机器，95Line误差是1ms，但是合并成1一天，1周，1个月误差较大（数据仅供参考）</td></tr>
 	<tr><td>5</td><td>默认告警，邮件订阅（仅修改线上环境）</<td><td>请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td></tr>
@@ -52,7 +53,8 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 </table>
 <br>
 <table class='table table-striped table-bordered table-condensed'>
-	<tr><td width="3%">版本</td><td width="87%">说明</td><td width="10%">发布时间</td></tr>
+	<tr class="text-success"><th width="3%">版本</th><th width="87%">说明</th><th width="10%">发布时间</th></tr>
+	<tr><td>0.6.1</td><td>1、cat客户端的消息长度设置了子消息的最大长度（500），多的消息直接丢弃</td><td>2013-06-06</td></tr>
 	<tr><td>0.6.0</td><td>1、增加业务监控埋点API。2、修复时间戳调整bug。3、修复classpath获取bug。4、修复CatFilter支持Forward请求</td><td>2013-03-26</td></tr>
 	<tr><td>0.4.1</td><td>1、默认禁止心跳线程获取线程锁信息，以降低对业务线程的影响。</td><td>2012-09-06</td></tr>
 	<tr><td>0.4.0</td><td>1、支持开关动态关闭。2、后端存储重构，支持分布式Logview的查看(关联pigeon的call)。</td><td>2012-08-20</td></tr>
