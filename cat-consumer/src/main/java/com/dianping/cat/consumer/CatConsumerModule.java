@@ -6,6 +6,7 @@ import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.core.aggregation.AggregationManager;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 
 public class CatConsumerModule extends AbstractModule {
@@ -15,6 +16,7 @@ public class CatConsumerModule extends AbstractModule {
 	protected void execute(ModuleContext ctx) {
 		TcpSocketReceiver receiver = ctx.lookup(TcpSocketReceiver.class);
 		ServerConfigManager manager = ctx.lookup(ServerConfigManager.class);
+		ctx.lookup(AggregationManager.class);
 		int encodeThreadNumber = 10;
 
 		if (manager.isLocalMode()) {

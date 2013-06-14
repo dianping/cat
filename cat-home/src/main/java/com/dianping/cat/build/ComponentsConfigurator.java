@@ -180,9 +180,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
-
 		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class) //
 		      .req(ReportDao.class, BusinessReportDao.class));
 

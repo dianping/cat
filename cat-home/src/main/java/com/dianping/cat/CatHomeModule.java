@@ -11,6 +11,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.consumer.core.aggregation.AggregationManager;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
@@ -35,6 +36,7 @@ public class CatHomeModule extends AbstractModule {
 
 		ctx.lookup(MessageConsumer.class, RealtimeConsumer.ID);
 		ctx.lookup(DomainNavManager.class);
+		ctx.lookup(AggregationManager.class);
 
 		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 		TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
