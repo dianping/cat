@@ -264,7 +264,7 @@ CREATE TABLE `event` (
 
 CREATE TABLE `topologyGraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip',
+  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-client机器ip',
   `period` datetime NOT NULL  COMMENT '报表时间段,精确到分钟',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/binary',
   `content` longblob COMMENT '用于存放报表的具体内容',
@@ -275,7 +275,7 @@ CREATE TABLE `topologyGraph` (
 
 CREATE TABLE `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NULL COMMENT '配置名称',
+  `name` varchar(50) NOT NULL COMMENT '配置名称',
   `content` longtext COMMENT '配置的具体内容',
   `creation_date` datetime NOT NULL COMMENT '配置创建时间',
   `modify_date` datetime NOT NULL COMMENT '配置修改时间',
