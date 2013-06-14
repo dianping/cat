@@ -6,61 +6,130 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
-import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.page.model.cross.CompositeCrossService;
-import com.dianping.cat.report.page.model.cross.HistoricalCrossService;
-import com.dianping.cat.report.page.model.cross.LocalCrossService;
-import com.dianping.cat.report.page.model.database.CompositeDatabaseService;
-import com.dianping.cat.report.page.model.database.HistoricalDatabaseService;
-import com.dianping.cat.report.page.model.database.LocalDatabaseService;
-import com.dianping.cat.report.page.model.dependency.CompositeDependencyService;
-import com.dianping.cat.report.page.model.dependency.HistoricalDependencyService;
-import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
-import com.dianping.cat.report.page.model.event.CompositeEventService;
-import com.dianping.cat.report.page.model.event.HistoricalEventService;
-import com.dianping.cat.report.page.model.event.LocalEventService;
-import com.dianping.cat.report.page.model.heartbeat.CompositeHeartbeatService;
-import com.dianping.cat.report.page.model.heartbeat.HistoricalHeartbeatService;
-import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
-import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
-import com.dianping.cat.report.page.model.logview.HistoricalMessageService;
-import com.dianping.cat.report.page.model.logview.LocalMessageService;
-import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
-import com.dianping.cat.report.page.model.matrix.HistoricalMatrixService;
-import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
-import com.dianping.cat.report.page.model.metric.CompositeMetricService;
-import com.dianping.cat.report.page.model.metric.HistoricalMetricService;
-import com.dianping.cat.report.page.model.metric.LocalMetricService;
-import com.dianping.cat.report.page.model.problem.CompositeProblemService;
-import com.dianping.cat.report.page.model.problem.HistoricalProblemService;
-import com.dianping.cat.report.page.model.problem.LocalProblemService;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.model.sql.CompositeSqlService;
-import com.dianping.cat.report.page.model.sql.HistoricalSqlService;
-import com.dianping.cat.report.page.model.sql.LocalSqlService;
-import com.dianping.cat.report.page.model.state.CompositeStateService;
-import com.dianping.cat.report.page.model.state.HistoricalStateService;
-import com.dianping.cat.report.page.model.state.LocalStateService;
-import com.dianping.cat.report.page.model.top.CompositeTopService;
-import com.dianping.cat.report.page.model.top.HistoricalTopService;
-import com.dianping.cat.report.page.model.top.LocalTopService;
-import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
-import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
-import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
+import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.TaskDao;
+import com.dianping.cat.home.dal.report.DailygraphDao;
+import com.dianping.cat.home.dal.report.DailyreportDao;
+import com.dianping.cat.home.dal.report.GraphDao;
+import com.dianping.cat.home.dal.report.MonthreportDao;
+import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.home.dal.report.WeeklyreportDao;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.dump.LocalMessageBucketManager;
-import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.report.task.cross.CrossMerger;
+import com.dianping.cat.report.task.cross.CrossReportBuilder;
+import com.dianping.cat.report.task.database.DatabaseMerger;
+import com.dianping.cat.report.task.database.DatabaseReportBuilder;
+import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
+import com.dianping.cat.report.task.event.EventGraphCreator;
+import com.dianping.cat.report.task.event.EventMerger;
+import com.dianping.cat.report.task.event.EventReportBuilder;
+import com.dianping.cat.report.task.health.HealthReportBuilder;
+import com.dianping.cat.report.task.health.HealthServiceCollector;
+import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
+import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
+import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.matrix.MatrixMerger;
+import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.problem.ProblemGraphCreator;
+import com.dianping.cat.report.task.problem.ProblemMerger;
+import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.spi.ReportFacade;
+import com.dianping.cat.report.task.sql.SqlMerger;
+import com.dianping.cat.report.task.sql.SqlReportBuilder;
+import com.dianping.cat.report.task.state.StateMerger;
+import com.dianping.cat.report.task.state.StateReportBuilder;
+import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
+import com.dianping.cat.report.task.thread.TaskProducer;
+import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
+import com.dianping.cat.report.task.transaction.TransactionMerger;
+import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 
-class TaskComponentConfigurator extends AbstractResourceConfigurator {
+public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
+
+		all.add(C(DefaultTaskConsumer.class) //
+		      .req(TaskDao.class, ReportFacade.class));
+
+		all.add(C(TransactionGraphCreator.class));
+		all.add(C(EventGraphCreator.class));
+		all.add(C(ProblemGraphCreator.class));
+		all.add(C(HeartbeatGraphCreator.class));
+
+		all.add(C(TransactionMerger.class));
+		all.add(C(EventMerger.class));
+		all.add(C(ProblemMerger.class));
+		all.add(C(HeartbeatMerger.class));
+		all.add(C(CrossMerger.class));
+		all.add(C(DatabaseMerger.class));
+		all.add(C(MatrixMerger.class));
+		all.add(C(SqlMerger.class));
+		all.add(C(StateMerger.class));
+
+		all.add(C(TransactionReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class,
+		            TransactionGraphCreator.class)//
+		      .req(TransactionMerger.class, WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(EventReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class,
+		            EventMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(ProblemReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class) //
+		      .req(WeeklyreportDao.class, MonthreportDao.class, ProblemMerger.class));
+
+		all.add(C(HeartbeatReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class) //
+		      .req(HeartbeatGraphCreator.class, HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(DatabaseReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(MatrixReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(SqlReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, SqlMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(CrossReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(CrossReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(StateReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, StateMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
+
+		all.add(C(DependencyReportBuilder.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class)//
+		      .req(ReportService.class, TopologyGraphBuilder.class, TopologyGraphDao.class));
+
+		all.add(C(TaskProducer.class, TaskProducer.class) //
+		      .req(TaskDao.class, ReportDao.class));
+
+		all.add(C(HealthReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class, HealthServiceCollector.class));
+
+		all.add(C(ReportFacade.class)//
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
+		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
+		            StateReportBuilder.class, DependencyReportBuilder.class));
 
 		return all;
 	}
