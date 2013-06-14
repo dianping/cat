@@ -47,6 +47,9 @@ public class Handler implements PageHandler<Context> {
 	
 	@Inject
 	private AggregationConfigManager m_aggreationConfigManager;
+	
+	@Inject
+	private DomainNavManager m_manager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -250,7 +253,7 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			m_projectDao.updateByPK(project, ProjectEntity.UPDATESET_FULL);
-			DomainNavManager.getProjects().put(project.getDomain(), project);
+			m_manager.getProjects().put(project.getDomain(), project);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}

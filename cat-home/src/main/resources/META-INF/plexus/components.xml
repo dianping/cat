@@ -143,6 +143,9 @@
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.view.DomainNavManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>dependency</role-hint>
 				</requirement>
@@ -2715,6 +2718,9 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.view.DomainNavManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2733,6 +2739,27 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.view.DomainNavManager</role>
+			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
+			<implementation>com.dianping.cat.consumer.core.dal.ProjectDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -3007,6 +3034,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.view.DomainNavManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3015,15 +3045,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
-			<implementation>com.dianping.cat.consumer.core.dal.ProjectDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

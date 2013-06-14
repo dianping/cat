@@ -13,7 +13,7 @@ public interface AggregationHandler {
 	 *           page type and domain to rule List Map
 	 */
 	public void register(List<AggregationRule> rules);
-
+	
 	/**
 	 * parse input to output use aggregation rule
 	 * 

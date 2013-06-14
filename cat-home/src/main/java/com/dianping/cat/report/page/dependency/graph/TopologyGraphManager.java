@@ -58,6 +58,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private TopologyGraphDao m_topologyGraphDao;
+	
+	@Inject
+	private DomainNavManager m_domainNavManager;
 
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
@@ -282,7 +285,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 
 		private Collection<String> queryAllDomains() {
-			return DomainNavManager.getDomains();
+			return m_domainNavManager.getDomains();
 		}
 
 		@Override

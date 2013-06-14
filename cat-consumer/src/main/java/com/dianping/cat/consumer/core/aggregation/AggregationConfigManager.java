@@ -33,6 +33,7 @@ public class AggregationConfigManager implements Initializable {
 
 	public boolean deleteAggregationRule(String rule) {
 		m_aggregation.removeAggregationRule(rule);
+		m_handler.register(queryAggrarationRules());
 		return storeConfig();
 	}
 	
@@ -68,10 +69,13 @@ public class AggregationConfigManager implements Initializable {
 		if (m_aggregation == null) {
 			m_aggregation = new Aggregation();
 		}
+		
+		m_handler.register(queryAggrarationRules());
 	}
 
 	public boolean insertAggregationRule(AggregationRule rule) {
 		m_aggregation.addAggregationRule(rule);
+		m_handler.register(queryAggrarationRules());
 		return storeConfig();
 	}
 

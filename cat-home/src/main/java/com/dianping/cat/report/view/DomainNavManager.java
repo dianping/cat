@@ -31,15 +31,15 @@ public class DomainNavManager implements Initializable {
 	private ServerConfigManager m_serverConfigManager;
 
 	// key is domain
-	private static Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
+	private Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
 
 	public static final String DEFAULT = "Default";
 
-	public static Collection<String> getDomains() {
+	public Collection<String> getDomains() {
 		return m_projects.keySet();
 	}
 
-	public static Map<String, Department> getDepartment(Collection<String> domains) {
+	public Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
 
 		synchronized (m_projects) {
@@ -53,6 +53,7 @@ public class DomainNavManager implements Initializable {
 					projectLine = project.getProjectLine();
 				}
 				Department temp = result.get(department);
+				
 				if (temp == null) {
 					temp = new Department();
 					result.put(department, temp);
@@ -64,12 +65,16 @@ public class DomainNavManager implements Initializable {
 		return result;
 	}
 
-	public static Project getProjectByName(String domain) {
-		return m_projects.get(domain);
+	public Project getProjectByName(String domain) {
+		synchronized (m_projects) {
+			return m_projects.get(domain);
+		}
 	}
 
-	public static Map<String, Project> getProjects() {
-		return m_projects;
+	public Map<String, Project> getProjects() {
+		synchronized (m_projects) {
+			return m_projects;
+		}
 	}
 
 	@Override
@@ -81,18 +86,18 @@ public class DomainNavManager implements Initializable {
 	}
 
 	public void reloadDomainInfo() {
-		synchronized (m_projects) {
-			try {
-				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+		try {
+			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
 
+			synchronized (m_projects) {
 				if (projects.size() > 0) {
 					for (Project project : projects) {
 						m_projects.put(project.getDomain(), project);
 					}
 				}
-			} catch (DalException e) {
-				Cat.logError(e);
 			}
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
 	}
 
