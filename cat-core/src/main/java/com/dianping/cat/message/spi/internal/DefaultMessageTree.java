@@ -53,7 +53,7 @@ public class DefaultMessageTree implements MessageTree {
 		return tree;
 	}
 
-	public ChannelBuffer getBuf() {
+	public ChannelBuffer getBuffer() {
 		return m_buf;
 	}
 
@@ -112,7 +112,7 @@ public class DefaultMessageTree implements MessageTree {
 		return m_threadName;
 	}
 
-	public void setBuf(ChannelBuffer buf) {
+	public void setBuffer(ChannelBuffer buf) {
 		m_buf = buf;
 	}
 

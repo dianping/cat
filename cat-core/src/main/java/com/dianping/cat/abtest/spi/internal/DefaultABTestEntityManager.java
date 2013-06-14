@@ -13,26 +13,25 @@ import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.message.Message;
 
 public class DefaultABTestEntityManager extends ContainerHolder implements ABTestEntityManager, Initializable {
-
 	@Inject
 	private ABTestEntityRepository m_repository;
 
 	@Override
 	public ABTestEntity getEntity(ABTestName name) {
-		ABTestEntity entity = m_repository.getEntities().get(name.getValue());
+		String id = name.getValue();
+		ABTestEntity entity = m_repository.getEntities().get(id);
 
 		if (entity == null) {
 			entity = new ABTestEntity();
-			entity.setName(name.getValue());
+			entity.setName(id);
 			entity.setDisabled(true);
 
-			m_repository.getEntities().put(name.getValue(), entity);
+			m_repository.getEntities().put(id, entity);
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("name ").append(name.getValue()).append(" doesn't exsit");
-			Cat.getProducer().logEvent("ABTest", "abtest-miss", sb.toString(), "");
+			Cat.getProducer().logEvent("ABTestDisabled", id, Message.SUCCESS, null);
 		}
 
 		return entity;
@@ -40,9 +39,11 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 
 	public List<ABTestEntity> getEntityList() {
 		List<ABTestEntity> entitiesList = new ArrayList<ABTestEntity>();
+
 		for (ABTestEntity entity : m_repository.getEntities().values()) {
 			entitiesList.add(entity);
 		}
+
 		return entitiesList;
 	}
 

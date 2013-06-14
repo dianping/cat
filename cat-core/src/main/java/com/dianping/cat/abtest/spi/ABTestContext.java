@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface ABTestContext {
-	public final String DEFAULT_GROUP = "default";
+	public final String DEFAULT_GROUP = "";
 
 	public ABTestEntity getEntity();
 

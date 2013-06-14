@@ -13,6 +13,7 @@ import com.dianping.cat.abtest.spi.internal.ABTestEntityManager;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager;
 import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.message.spi.MessageManager;
 
 class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -20,15 +21,14 @@ class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(ABTestContextManager.class, DefaultABTestContextManager.class) //
-		      .req(ABTestEntityManager.class));
+		      .req(ABTestEntityManager.class, MessageManager.class));
 
 		all.add(C(ABTestEntityRepository.class, HttpABTestEntityRepository.class) //
-				.req(ClientConfigManager.class)
-				.config(E("refreshTimeInSeconds").value("60")));
+		      .req(ClientConfigManager.class).config(E("refreshTimeInSeconds").value("60")));
 
 		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class) //
-				.req(ABTestEntityRepository.class));
-		
+		      .req(ABTestEntityRepository.class));
+
 		return all;
 	}
 }
