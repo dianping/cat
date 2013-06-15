@@ -38,10 +38,10 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(DomainNavManager.class);
 		ctx.lookup(AggregationConfigManager.class);
 
-		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-		TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
-
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
+			TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
+
 			Threads.forGroup("Cat").start(taskConsumer);
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
@@ -65,7 +65,7 @@ public class CatHomeModule extends AbstractModule {
 		AlarmRuleCreator alarmCreatorTask = ctx.lookup(AlarmRuleCreator.class);
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
-		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+		if (serverConfigManager.isAlarmMachine() && !serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(exceptionAlarmTask);
 			Threads.forGroup("Cat").start(alarmCreatorTask);
 			Threads.forGroup("Cat").start(scheduledTask);

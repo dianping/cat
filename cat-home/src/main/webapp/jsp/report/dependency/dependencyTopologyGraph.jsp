@@ -124,7 +124,7 @@
 				},
 			radius:300,
 			sideWeight:function(weight){
-				return weight+1
+				return weight+3
 			},
 			nodeWeight:function(weight){
 				return weight/5+defaultWeight;
