@@ -38,10 +38,10 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(DomainNavManager.class);
 		ctx.lookup(AggregationConfigManager.class);
 
-		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-		TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
-
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
+			TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
+
 			Threads.forGroup("Cat").start(taskConsumer);
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}

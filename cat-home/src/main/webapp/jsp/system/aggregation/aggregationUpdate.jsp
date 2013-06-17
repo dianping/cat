@@ -54,14 +54,14 @@
 						<td>模板</td>
 						<td><input type="text" class="input-xlarge"  placeholder="选择被聚合对象的模板" name="aggregation.pattern" required value="${model.aggregationRule.pattern}"/></td>
 					</tr>
-					<tr>
+					<%-- <tr>
 						<td>显示名称</td>
 						<td><input type="text" class="input-xlarge" placeholder="聚合显示的名称" name="aggregation.displayName" required value="${model.aggregationRule.displayName}"/></td>
 					</tr>
 					<tr>
 						<td>示例</td>
 						<td><input type="text" class="input-xlarge" placeholder="被聚合对象的示例" name="aggregation.sample" required value="${model.aggregationRule.sample}"/></td>
-					</tr>
+					</tr> --%>
 					<tr>
 						<td style='text-align:center' colspan='2'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
 					</tr>

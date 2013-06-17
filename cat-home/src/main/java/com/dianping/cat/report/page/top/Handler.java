@@ -11,11 +11,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -80,14 +78,10 @@ public class Handler implements PageHandler<Context> {
 		}
 		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts());
 
-		Transaction t = Cat.newTransaction("Top", "Parser");
 		displayTop.visitTopReport(report);
 		model.setTopReport(report);
 		model.setTopMetric(displayTop);
-		t.complete();
-		Transaction t1 = Cat.newTransaction("Top", "BuildJsp");
 		m_jspViewer.view(ctx, model);
-		t1.complete();
 	}
 
 	private void normalize(Model model, Payload payload) {

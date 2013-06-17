@@ -23,9 +23,9 @@
 		<%@ include file="dependencyOpNav.jsp" %>
 		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维Zabbix告警信息</strong></a></li>
-   			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>详细数据以及配置</strong></a></li>
+   			 	<li style="margin-left:20px;" class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
+   			 	<li class="text-right"><a href="#tab2" id="tab2Href" data-toggle="tab"><strong>运维Zabbix告警信息</strong></a></li>
+   			 	<li class="text-right"><a href="#tab3" id="tab3Href" data-toggle="tab"><strong>详细数据以及配置</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
@@ -54,11 +54,10 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
-/* 		$('#content .nav-tabs a').mouseenter(function (e) {
-			  e.preventDefault();
-			  $(this).tab('show');
-		});
- */
+		var data = ${payload.data};
+		if(data){
+			$('#tab3Href').trigger('click');
+		}
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",

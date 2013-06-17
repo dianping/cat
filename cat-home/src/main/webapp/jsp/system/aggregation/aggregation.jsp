@@ -30,9 +30,9 @@
 				<tr class="odd">
 					<th width="15%">报表类型</th>
 					<th width="10%">域名</th>
-					<th width="10%">规则</th>
-					<th width="15%">显示名称</th>
-					<th width="8%">示例</th>
+					<th width="70%">规则</th>
+					<!-- <th width="15%">显示名称</th>
+					<th width="8%">示例</th> -->
 					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=aggregationUpdate">新增</a></th>
 				</tr></thead><tbody>
 
@@ -51,9 +51,9 @@
 							</c:when>
 						</c:choose>
 						<td>${item.domain}</td>
-						<td>${item.pattern}</td>
+						<td>${item.pattern}</td><%-- 
 						<td>${item.displayName}</td>
-						<td>${item.sample}</td>
+						<td>${item.sample}</td> --%>
 						<td><a class='btn  btn-small btn-primary'href="?op=aggregationUpdate&pattern=${item.pattern}">编辑</a>
 						<a class='delete btn  btn-small btn-danger' href="?op=aggregationDelete&pattern=${item.pattern}">删除</a></td>
 					</tr>

@@ -98,7 +98,7 @@ public class DomainManager implements Initializable, LogEnabled {
 	public class ReloadDomainTask implements Task {
 		@Override
 		public String getName() {
-			return "Reload-Ip-DomainInfo";
+			return "Reload-CMDB-Ip-Domain-Info";
 		}
 
 		public String parseIp(String content) throws Exception {

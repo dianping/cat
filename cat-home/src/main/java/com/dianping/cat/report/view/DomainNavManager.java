@@ -80,7 +80,7 @@ public class DomainNavManager implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		reloadDomainInfo();
-		if (!m_serverConfigManager.isLocalMode()) {
+		if (!m_serverConfigManager.isLocalMode()&&m_serverConfigManager.isJobMachine()) {
 			Threads.forGroup("Cat").start(new DomainReload());
 		}
 	}

@@ -72,11 +72,11 @@ public class Handler implements PageHandler<Context> {
 	private ProblemReport getHourlyReport(Payload payload, String type) {
 		ProblemReport report = getHourlyReportInternal(payload, type);
 		if ("FrontEnd".equals(payload.getDomain())) {
-			ModelPeriod period = payload.getPeriod();
+			//ModelPeriod period = payload.getPeriod();
 
-			if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
+			//if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
 				report = buildFrontEndByRule(report);
-			}
+			//}
 		}
 		return report;
 	}

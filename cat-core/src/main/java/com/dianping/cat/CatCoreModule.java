@@ -31,7 +31,7 @@ public class CatCoreModule extends AbstractModule {
 		// disable thread renaming of Netty
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 		// tracking thread start/stop
-		//Threads.addListener(new CatThreadListener(ctx));
+		Threads.addListener(new CatThreadListener(ctx));
 		File clientConfigFile = ctx.getAttribute("cat-client-config-file");
 		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
 
