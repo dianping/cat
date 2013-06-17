@@ -18,7 +18,7 @@
 <h3 class="text-error">服务端功能说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="90%">最新发布功能描述</th><th width="10%">发布时间</th></tr>	
-	<tr><th style="color:red">Dependency报表，包含实时依赖曲线图、依赖拓扑、产品线监控、监控仪表盘</th><td>2013-06-14</td></tr>
+	<tr><td style="color:red"><strong>Dependency报表，包含实时依赖曲线图、依赖拓扑、产品线监控、监控仪表盘</strong></td><td>2013-06-14</td></tr>
 	<tr><td style="color:red">支持FrontEnd的错误js的合并</td><td>2013-06-14</td></tr>
 	<tr><td>Problem小时报表支持一个小时内的错误趋势图</td><td>2013-03-13</td></tr>
 	<tr><td>Query报表支持按照天或者小时查询Transaction,Event,Problem数据</td><td>2013-03-11</td></tr>
