@@ -225,7 +225,8 @@ public class Handler implements PageHandler<Context> {
 		Domain d = domains.get(payload.getDomain());
 
 		if (d != null) {
-			int longUrlTime = d.getUrlThreshold();
+			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
+			      .intValue();
 
 			if (payload.getRealLongTime() == 0) {
 				payload.setLongTime(longUrlTime);

@@ -12,7 +12,6 @@ import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class IPDistributionStrategy implements ABTestGroupStrategy {
-	
 	public static final String ID = "ip-distribution";
 
 	public IPDistributionStrategy(){
@@ -23,7 +22,7 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 	public void apply(ABTestContext ctx) {
 		ABTestEntity entity = ctx.getEntity();
 		String config = entity.getGroupStrategyConfiguration();
-		List<String> ips = Splitters.by(',').trim().split(config);
+		List<String> ips = Splitters.by(',').trim().noEmptyItem().split(config);
 		HttpServletRequest req = ctx.getHttpServletRequest();
 		String address = getRemoteAddr(req);
 
@@ -59,4 +58,8 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 
 		return ip;
 	}
+
+	@Override
+   public void init(ABTestEntity entity) {
+   }
 }
