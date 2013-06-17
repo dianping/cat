@@ -1,6 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h4 class="text-success">实时导航介绍</h4>
-<img src="${model.webapp}/images/overall01.jpg" style="width:520px;height:200px;"/>
+<img src="${model.webapp}/images/overall01.jpg" style="width:520px;"/>
 <p>  CAT监控数据实时数据是以小时为单位，如果当前报表是表示5月7号10点- 11点的数据报表，导航链接表示为：</p>
 <p>1. -1d就是表示5月6号10点-11点的数据（上一天这个小时数据）</p>
 <p>2. -2h就是表示5月7号9点-10点的数据 （上两个小时数据）</p>
