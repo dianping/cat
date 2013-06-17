@@ -10,9 +10,9 @@ public interface ABTestContext {
 
 	public String getGroupName();
 
-	public void setGroupName(String groupName);
-
 	public HttpServletRequest getHttpServletRequest();
-	
+
 	public HttpServletResponse getHttpServletResponse();
+
+	public void setGroupName(String groupName);
 }
