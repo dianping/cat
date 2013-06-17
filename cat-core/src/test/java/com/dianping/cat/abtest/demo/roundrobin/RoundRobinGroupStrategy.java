@@ -3,6 +3,7 @@ package com.dianping.cat.abtest.demo.roundrobin;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.abtest.spi.ABTestContext;
+import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class RoundRobinGroupStrategy implements ABTestGroupStrategy {
@@ -20,4 +21,8 @@ public class RoundRobinGroupStrategy implements ABTestGroupStrategy {
 			// do nothing
 		}
 	}
+
+	@Override
+   public void init(ABTestEntity entity) {
+   }
 }

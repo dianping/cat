@@ -151,15 +151,15 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 				String value = map.get(key);
 
 				if (value == null) {
-					ctx.setup(request, response);
-					ctx.initialize(new Date());
+					ctx.setup(request, response, new Date());
 
 					String groupName = ctx.getGroupName();
 
-					if (groupName != null && groupName.length() > 0) {
+					if (groupName != null) {
 						result.put(key, groupName);
 					}
 				} else {
+					ctx.setGroupName(value);
 					result.put(key, value);
 				}
 			}

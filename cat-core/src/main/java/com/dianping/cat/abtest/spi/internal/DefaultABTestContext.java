@@ -23,8 +23,6 @@ public class DefaultABTestContext implements ABTestContext {
 
 	private ABTestGroupStrategy m_groupStrategy;
 
-	private boolean m_applied;
-
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
 	}
@@ -36,8 +34,6 @@ public class DefaultABTestContext implements ABTestContext {
 
 	@Override
 	public String getGroupName() {
-		initialize(new Date());
-
 		return m_groupName;
 	}
 
@@ -51,27 +47,6 @@ public class DefaultABTestContext implements ABTestContext {
 		return m_response;
 	}
 
-	public void initialize(Date timestamp) {
-		if (!m_applied) {
-			if (m_entity.isEligible(timestamp)) {
-				Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
-
-				try {
-					m_groupStrategy.apply(this);
-
-					t.setStatus(Message.SUCCESS);
-				} catch (Throwable e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				} finally {
-					t.complete();
-				}
-
-				m_applied = true;
-			}
-		}
-	}
-
 	@Override
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
@@ -81,8 +56,23 @@ public class DefaultABTestContext implements ABTestContext {
 		m_groupStrategy = groupStrategy;
 	}
 
-	public void setup(HttpServletRequest request, HttpServletResponse response) {
+	public void setup(HttpServletRequest request, HttpServletResponse response, Date timestamp) {
 		m_request = request;
 		m_response = response;
+
+		if (m_entity.isEligible(timestamp)) {
+			Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
+
+			try {
+				m_groupStrategy.apply(this);
+
+				t.setStatus(Message.SUCCESS);
+			} catch (Throwable e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
+			}
+		}
 	}
 }
