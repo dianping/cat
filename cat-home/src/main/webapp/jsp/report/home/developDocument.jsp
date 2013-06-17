@@ -1,9 +1,8 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-
-<h3 class="text-error text-center">开发文档</h3>
+<h3 class="text-error">开发者文档</h3>
 <dl>
   <dt><h5 class="text-success">1.CAT实施部署结构</h5></dt>
-  <dd><img src="img/cat-overall.jpg" style="width:600px;height:400px;"/></dd>
+  <dd><img src="${model.webapp}/images/cat-overall.jpg"/></dd>
   
   <dt><h5 class="text-success">2.CAT消息协议</h5></dt>
   <dd>CAT客户端可以向服务端发送Transaction, Event, Heartbeat三种消息. 消息的传输格式如下:
@@ -29,7 +28,7 @@
       <p>d).大部分的Transaction可能会失败, 因此需要一个结果状态码. </p>
       <p>e).如果Transaction开始和结束之间没有其他消息产生, 那它就是Atomic Transaction(合并了起始标记).</p>
 
-	  <img src="img/transaction01.jpg"/>
+	  <imgages src="../imgages/transactionGuide.jpg"/>
 	  <br/>
 	  <p><strong class="text-info">Transaction API</strong></p>
 	  <code>
@@ -57,7 +56,6 @@
      } finally {
            t.complete();
      }
-	  	
 	  </xmp>
   </dd>
   <dt><h5 class="text-success">3.Event</h5></dt>

@@ -1,6 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 
-<h3 class="text-center text-error">集成帮助文档</h3>
+<h3 class="text-error">集成帮助文档</h3>
 
 <dl>
   <dt><h5 class="text-success">1.Web.xml中新增filter</h5></dt>

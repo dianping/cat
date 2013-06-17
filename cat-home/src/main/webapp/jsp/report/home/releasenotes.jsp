@@ -1,8 +1,8 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 
-<h3 class="text-center text-error">客户端版本说明</h3>
+<h3 class="text-error">客户端版本说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
-	<tr class="text-success"><th width="3%">版本</th><th width="90%">说明</th><th width="10%">发布时间</th></tr>
+	<tr class="text-success"><th width="3%">版本</th><th width="87%">说明</th><th width="10%">发布时间</th></tr>
 	<tr><td>0.6.1</td><td>1、cat客户端的消息长度设置了子消息的最大长度（500），多的消息直接丢弃，以防止内存过大的CAT消息内存泄露</td><td>2013-06-06</td></tr>
 	<tr><td>0.6.0</td><td>1、增加业务监控埋点API。2、修复时间戳调整bug。3、修复classpath获取bug。4、修复CatFilter支持Forward请求</td><td>2013-03-26</td></tr>
 	<tr><td>0.4.1</td><td>1、默认禁止心跳线程获取线程锁信息，以降低对业务线程的影响。</td><td>2012-09-06</td></tr>
@@ -15,7 +15,7 @@
 	<tr><td>0.2.5</td><td>1、心跳消息监控新增oldgc和newgc  2、更新了ThreadLocal的线程模型（修复了一些无头消息和部分错乱消息）</td><td>2012-05-01</td></tr>
 </table>
 
-<br>
+<h3 class="text-error">服务度功能说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="90%">最新发布功能描述</th><th width="10%">发布时间</th></tr>	
 	<tr><th style="color:red">Dependency报表，包含实时依赖曲线图、依赖拓扑、产品线监控、监控仪表盘</th><td>2013-06-14</td></tr>
