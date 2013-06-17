@@ -5,7 +5,6 @@
 		<attribute name="job-machine" value-type="boolean"  primitive="true" default-value="false"/>
 		<attribute name="alarm-machine" value-type="boolean"  primitive="true" default-value="false"/>
 		<attribute name="console-machine" value-type="boolean"  primitive="true" default-value="false"/>
-		<attribute name="consumer-machine" value-type="boolean"  primitive="true" default-value="true"/>
 	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />

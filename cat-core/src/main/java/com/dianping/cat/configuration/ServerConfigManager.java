@@ -230,10 +230,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public boolean isConsumerMachine(){
-		return m_config.isConsumerMachine();
-	}
-	
 	public boolean isConsoleMachine(){
 		return m_config.isConsoleMachine();
 	}
