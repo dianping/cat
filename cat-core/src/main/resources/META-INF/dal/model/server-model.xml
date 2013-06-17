@@ -3,8 +3,6 @@
 	<entity name="config" class-name="ServerConfig">
 		<attribute name="local-mode" value-type="boolean"  primitive="true" default-value="true"/>
 		<attribute name="job-machine" value-type="boolean"  primitive="true" default-value="false"/>
-		<attribute name="alarm-machine" value-type="boolean"  primitive="true" default-value="false"/>
-		<attribute name="console-machine" value-type="boolean"  primitive="true" default-value="false"/>
 	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />

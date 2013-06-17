@@ -43,7 +43,7 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 
 	@Override
 	public void initialize() {
-		if (m_serverConfig.isAlarmMachine() && !m_serverConfig.isLocalMode()) {
+		if (m_serverConfig.isJobMachine() && !m_serverConfig.isLocalMode()) {
 			try {
 				ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/remoteService.xml");
 
@@ -63,7 +63,7 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 		}
 		boolean sendResult = false;
 
-		if (m_serverConfig.isAlarmMachine()) {
+		if (m_serverConfig.isJobMachine()) {
 			if (emails.size() > 0) {
 				for (String mail : emails) {
 					try {
@@ -90,7 +90,7 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 		}
 		boolean sendResult = false;
 
-		if (m_serverConfig.isAlarmMachine()) {
+		if (m_serverConfig.isJobMachine()) {
 			if (phones != null && phones.size() > 0) {
 				for (String phone : phones) {
 					m_logger.info("CAT sms send to ! " + phone + " " + content);

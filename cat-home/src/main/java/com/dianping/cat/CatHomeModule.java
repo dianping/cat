@@ -65,7 +65,7 @@ public class CatHomeModule extends AbstractModule {
 		AlarmRuleCreator alarmCreatorTask = ctx.lookup(AlarmRuleCreator.class);
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
-		if (serverConfigManager.isAlarmMachine() && !serverConfigManager.isLocalMode()) {
+		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(exceptionAlarmTask);
 			Threads.forGroup("Cat").start(alarmCreatorTask);
 			Threads.forGroup("Cat").start(scheduledTask);

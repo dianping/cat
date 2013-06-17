@@ -61,7 +61,7 @@ public class MonthReportCache implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (m_serverConfigManager.isConsoleMachine()) {
+		if (m_serverConfigManager.isJobMachine()) {
 			Threads.forGroup("Cat").start(new Reload());
 		}
 	}

@@ -230,14 +230,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public boolean isConsoleMachine(){
-		return m_config.isConsoleMachine();
-	}
-	
-	public boolean isAlarmMachine(){
-		return m_config.isAlarmMachine();
-	}
-	
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
 		int len = str == null ? 0 : str.length();
