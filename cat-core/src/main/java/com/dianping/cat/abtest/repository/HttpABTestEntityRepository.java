@@ -2,7 +2,9 @@ package com.dianping.cat.abtest.repository;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -36,6 +38,8 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	private String m_domain;
 
 	private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
+	
+	private Set<String> m_activeRuns = new HashSet<String>();
 
 	@Inject
 	private int m_refreshTimeInSeconds = 60; // seconds
@@ -43,7 +47,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	private Map<String, ABTestGroupStrategy> m_strategies = new HashMap<String, ABTestGroupStrategy>();
 
 	@Override
-	public Map<String, ABTestEntity> getEntities() {
+	public Map<String, ABTestEntity> getCurrentEntities() {
 		return m_entities;
 	}
 
@@ -77,6 +81,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 				// switch the entities
 				m_entities = visitor.getEntities();
+				m_activeRuns = visitor.getActiveRuns();
 
 				Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", clientIp);
 
@@ -122,16 +127,23 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		private String m_domain;
 
 		private Map<String, ABTestEntity> m_entities;
+		
+		private Set<String> m_activeRuns;
 
 		public ABTestVisitor(String domain) {
 			m_domain = domain;
 			m_entities = new HashMap<String, ABTestEntity>();
+			m_activeRuns = new HashSet<String>();
 		}
 
 		public Map<String, ABTestEntity> getEntities() {
 			return m_entities;
 		}
 
+		public Set<String> getActiveRuns(){
+			return m_activeRuns;
+		}
+		
 		private void prepareEntity(Case _case, Run run) {
 			ABTestEntity entity = new ABTestEntity(_case, run);
 			String strategyKey = String.format("%s:%s:%s", _case.getId(), entity.getGroupStrategyName(),
@@ -166,10 +178,17 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		@Override
 		public void visitCase(Case _case) {
 			for (Run run : _case.getRuns()) {
+				m_activeRuns.add(String.valueOf(run.getId()));
+				
 				if (run.getDomains() != null && run.getDomains().contains(m_domain)) {
 					prepareEntity(_case, run);
 				}
 			}
 		}
 	}
+
+	@Override
+   public Set<String> getActiveRuns() {
+		return m_activeRuns;
+   }
 }
