@@ -15,7 +15,7 @@
 	<tr><td>0.2.5</td><td>1、心跳消息监控新增oldgc和newgc  2、更新了ThreadLocal的线程模型（修复了一些无头消息和部分错乱消息）</td><td>2012-05-01</td></tr>
 </table>
 
-<h3 class="text-error">服务度功能说明</h3>
+<h3 class="text-error">服务端功能说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="90%">最新发布功能描述</th><th width="10%">发布时间</th></tr>	
 	<tr><th style="color:red">Dependency报表，包含实时依赖曲线图、依赖拓扑、产品线监控、监控仪表盘</th><td>2013-06-14</td></tr>
