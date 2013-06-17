@@ -18,11 +18,11 @@
 <table>
 	<tr>
 		<td>
-			<h5 style="text-align:center" class='text-center text-info'>访问量</h5>
+			<h5 style="text-align:center" class='text-center text-info'>响应时间</h5>
 			<div id="responseTrend" class="graph"></div></td>
-		<td><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
+		<td><h5 style="text-align:center"  class='text-center text-info'>访问量</h5>
 			<div id="hitTrend" class="graph"></div></td>
-		<td><h5 style="text-align:center"  class='text-center text-info'>响应时间</h5>
+		<td><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
 			<div id="errorTrend" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">

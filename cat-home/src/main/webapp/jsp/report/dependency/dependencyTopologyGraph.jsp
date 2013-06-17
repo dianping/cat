@@ -27,9 +27,9 @@
 	    </div></div>
   		<div class="tabbable tabs-left "  > <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs alert-info">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>依赖拓扑</strong></a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>运维告警</strong></a></li>
-   			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>数据配置</strong></a></li>
+   			 	<li style="margin-left:20px;" class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>依赖拓扑</strong></a></li>
+   			 	<li class="text-right"><a id="tab2Href" href="#tab2" data-toggle="tab"><strong>运维告警</strong></a></li>
+   			 	<li class="text-right"><a id="tab3Href" href="#tab3" data-toggle="tab"><strong>数据配置</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
@@ -73,6 +73,10 @@
 			'iDisplayLength': 50,
 			"bPaginate": false,
 		});
+		var tab3 = ${payload.data};
+		if(tab3){
+			$('#tab3Href').trigger('click');
+		}
 		var data = ${model.topologyGraph};
 		var nodeSize = 0;
 		function parse(data){
