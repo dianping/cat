@@ -147,7 +147,7 @@ tr.centerth>th {
                <tr class="centerth">
                   <th width="1%"></th>
                   <th style="display: none;" width="8%">ID</th>
-                  <th width="8%">Case ID</th>
+                  <th width="8%">ID</th>
                   <th>Name</th>
                   <th>Domain</th>
                   <th>Start Time</th>
@@ -162,7 +162,7 @@ tr.centerth>th {
                   <tr class="middle center rowlink">
                      <td class="nolink" style="padding-bottom: 8px"><input type="checkbox" /></td>
                      <td style="display: none;">${item.run.id}</td>
-                     <td style="font-size: 15px; font-weight: bold;">${item.run.caseId}</td>
+                     <td style="font-size: 15px; font-weight: bold;">${item.run.id}</td>
                      <td><a href="abtest?op=detail&id=${item.run.id}">${item.entity.name}</a></td>
                      <c:choose>
                         <c:when test="${fn:length(item.run.domains) > 20}">
