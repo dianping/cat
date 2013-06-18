@@ -1,14 +1,16 @@
 package com.dianping.cat.abtest.spi.internal;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
@@ -16,10 +18,17 @@ import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.message.internal.DefaultMessageManager;
+import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestContextManager extends ContainerHolder implements ABTestContextManager {
+	private static final String ABTEST_COOKIE_NAME = "ab";
+
 	@Inject
 	private ABTestEntityManager m_entityManager;
+
+	@Inject
+	private MessageManager m_messageManager;
 
 	private InheritableThreadLocal<Entry> m_threadLocal = new InheritableThreadLocal<Entry>() {
 		@Override
@@ -31,63 +40,16 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	@Override
 	public ABTestContext getContext(ABTestName testName) {
 		Entry entry = m_threadLocal.get();
-		Map<String, DefaultABTestContext> map = entry.getContextMap();
-		String name = testName.getValue();
-		DefaultABTestContext ctx = map.get(name);
+		ABTestEntity entity = m_entityManager.getEntity(testName);
 
-		if (ctx == null) {
-			ABTestEntity entity = m_entityManager.getEntity(testName);
-
-			ctx = createContext(entity, entry.getHttpServletRequest(),entry.getHttpServletResponse());
-			map.put(name, ctx);
-		}
-
-		return ctx;
+		return entry.getContext(entity);
 	}
 
-	private DefaultABTestContext createContext(ABTestEntity entity, HttpServletRequest request,HttpServletResponse response) {
-		DefaultABTestContext ctx = new DefaultABTestContext(entity);
+	@Override
+	public void onRequestBegin(HttpServletRequest request, HttpServletResponse response) {
+		Entry entry = m_threadLocal.get();
 
-		if (!entity.isDisabled()) {
-			ABTestGroupStrategy groupStrategy = entity.getGroupStrategy();
-
-			ctx.setup(request,response);
-			ctx.setGroupStrategy(groupStrategy);
-		}
-
-		return ctx;
-	}
-
-	public List<ABTestContext> getContexts() {
-		List<ABTestContext> ctxList = m_threadLocal.get().getContextList();
-
-		if (ctxList == null) {
-			ctxList = new ArrayList<ABTestContext>(4);
-
-			List<ABTestEntity> entities = m_entityManager.getEntityList();
-			Map<String, DefaultABTestContext> ctxMap = m_threadLocal.get().getContextMap();
-			Date now = new Date();
-
-			for (ABTestEntity entity : entities) {
-				Entry entry = m_threadLocal.get();
-				String name = entity.getName();
-				DefaultABTestContext ctx = ctxMap.get(name);
-
-				if (ctx == null) {
-					ctx = createContext(entity, entry.getHttpServletRequest(),entry.getHttpServletResponse());
-
-					ctxMap.put(name, ctx);
-				}
-
-				ctx.initialize(now);
-				ctxList.add(ctx);
-			}
-
-			m_threadLocal.get().setContextList(ctxList);
-
-		}
-
-		return ctxList;
+		entry.setup(request, response);
 	}
 
 	@Override
@@ -95,50 +57,124 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		m_threadLocal.remove();
 	}
 
-	@Override
-	public void onRequestBegin(HttpServletRequest request,HttpServletResponse response) {
-		Entry entry = m_threadLocal.get();
+	class Entry {
+		private Map<String, ABTestContext> m_map = new HashMap<String, ABTestContext>(4);
 
-		entry.setup(request,response);
+		private ABTestContext createContext(ABTestEntity entity) {
+			DefaultABTestContext ctx = new DefaultABTestContext(entity);
 
-		Map<String, DefaultABTestContext> map = entry.getContextMap();
-		for (DefaultABTestContext ctx : map.values()) {
-			ctx.setup(request,response);
+			if (!entity.isDisabled()) {
+				ABTestGroupStrategy groupStrategy = entity.getGroupStrategy();
+
+				ctx.setGroupStrategy(groupStrategy);
+			}
+
+			return ctx;
 		}
-	}
 
-	static class Entry {
-		private Map<String, DefaultABTestContext> m_map = new HashMap<String, DefaultABTestContext>(4);
+		public ABTestContext getContext(ABTestEntity entity) {
+			String name = entity.getName();
+			ABTestContext ctx = m_map.get(name);
 
-		private List<ABTestContext> m_list;
+			if (ctx == null) {
+				ctx = createContext(entity);
+				m_map.put(name, ctx);
+			}
 
-		private HttpServletRequest m_request;
-		
-		private HttpServletResponse m_response;
+			return ctx;
+		}
 
-		public Map<String, DefaultABTestContext> getContextMap() {
-			return m_map;
+		private Map<String, String> getGroupsFromCookie(HttpServletRequest request) {
+			Map<String, String> map = new HashMap<String, String>();
+			Cookie[] cookies = request.getCookies();
+
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (ABTEST_COOKIE_NAME.equals(cookie.getName())) {
+						String value = cookie.getValue();
+						List<String> parts = Splitters.by('|').noEmptyItem().trim().split(value);
+
+						for (String part : parts) {
+							int pos = part.indexOf(':');
+
+							if (pos > 0) {
+								map.put(part.substring(0, pos), part.substring(pos + 1));
+							}
+						}
+					}
+				}
+			}
+
+			return map;
+		}
+
+		private String setGroupsToCookie(HttpServletRequest request, HttpServletResponse response,
+		      Map<String, String> result) {
+			StringBuilder sb = new StringBuilder(64);
+			boolean first = true;
+
+			for (Map.Entry<String, String> e : result.entrySet()) {
+				if (first) {
+					first = false;
+				} else {
+					sb.append('|');
+				}
+
+				sb.append(e.getKey()).append(':').append(e.getValue());
+			}
+
+			String value = sb.toString();
+			Cookie cookie = new Cookie(ABTEST_COOKIE_NAME, value);
+			String server = request.getServerName();
+
+			if (server.endsWith(".dianping.com")) {
+				cookie.setDomain(".dianping.com");
+			} else if (server.endsWith(".51ping.com")) {
+				cookie.setDomain(".51ping.com");
+			} else {
+				cookie.setDomain(server);
+			}
+
+			cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days expiration
+			cookie.setPath("/");
+
+			response.addCookie(cookie);
+			return value;
 		}
 
 		public void setup(HttpServletRequest request, HttpServletResponse response) {
-			m_request = request;
-			m_response = response;
-      }
+			List<ABTestEntity> activeEntities = m_entityManager.getEntityList();
+			Set<String> activeRuns = m_entityManager.getActiveRun();
+			Map<String, String> map = getGroupsFromCookie(request);
+			Map<String, String> result = new HashMap<String, String>();
 
-		public HttpServletResponse getHttpServletResponse() {
-	      return m_response;
-      }
+			for (String id : activeRuns) {
+				if (map.containsKey(id)) {
+					result.put(id, map.get(id));
+				}
+			}
 
-		public void setContextList(List<ABTestContext> ctxList) {
-			m_list = ctxList;
+			for (ABTestEntity entity : activeEntities) {
+				DefaultABTestContext ctx = (DefaultABTestContext) getContext(entity);
+				String key = String.valueOf(ctx.getEntity().getRun().getId());
+				String value = result.get(key);
+
+				if (value == null) {
+					ctx.setup(request, response, new Date());
+
+					String groupName = ctx.getGroupName();
+
+					if (groupName != null) {
+						result.put(key, groupName);
+					}
+				} else {
+					ctx.setGroupName(value);
+				}
+			}
+
+			String value = setGroupsToCookie(request, response, result);
+			((DefaultMessageManager) m_messageManager).setMetricType(value);
 		}
 
-		public List<ABTestContext> getContextList() {
-			return m_list;
-		}
-
-		public HttpServletRequest getHttpServletRequest() {
-			return m_request;
-		}
 	}
 }

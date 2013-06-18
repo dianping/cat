@@ -102,7 +102,7 @@ public class ABTestEntity {
 	}
 	
 	public boolean isEligible(Date date) {
-		if (m_run.getDisabled() != null && m_run.getDisabled()) {
+		if (m_run.isDisabled()) {
 			return false;
 		}
 
