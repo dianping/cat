@@ -72,16 +72,17 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
-   public void logMetric(String type, String name, String status, String nameValuePairs) {
-		Metric event = newMetric(type, name);
+	public void logMetric(String name, String status, String nameValuePairs) {
+		String type = ((DefaultMessageManager) m_manager).getMetricType();
+		Metric metric = newMetric(type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
-			event.addData(nameValuePairs);
+			metric.addData(nameValuePairs);
 		}
 
-		event.setStatus(status);
-		event.complete();
-   }
+		metric.setStatus(status);
+		metric.complete();
+	}
 
 	@Override
 	public Event newEvent(String type, String name) {
@@ -98,7 +99,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			return NullMessage.EVENT;
 		}
 	}
-	
+
 	public Event newEvent(Transaction parent, String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -150,10 +151,10 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled()) {
-			DefaultMetric metric = new DefaultMetric(type, name);
-			
+			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name);
+
 			m_manager.add(metric);
 			return metric;
 		} else {
