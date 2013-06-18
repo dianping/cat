@@ -89,11 +89,6 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public DatabaseReport getReport(String domain) {
 		DatabaseReport report = m_reports.get(domain);
 
@@ -192,7 +187,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 				try {
 					Set<String> domainNames = report.getDatabaseNames();
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDatabase();

@@ -1,13 +1,17 @@
 package com.dianping.cat.configuration;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
+import org.unidal.helper.Splitters;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -38,6 +42,10 @@ public class ServerConfigManager implements LogEnabled {
 		return 2280;
 	}
 
+	public boolean isHdfsOn() {
+		return !m_config.getStorage().isHdfsDisabled();
+	}
+
 	public boolean isSerialWrite() {
 		return false;
 	}
@@ -61,6 +69,27 @@ public class ServerConfigManager implements LogEnabled {
 		}
 
 		return "";
+	}
+
+	public List<Pair<String, Integer>> getConsoleEndpoints() {
+		if (m_config != null) {
+			ConsoleConfig console = m_config.getConsole();
+			String remoteServers = console.getRemoteServers();
+			List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
+			List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(endpoints.size());
+
+			for (String endpoint : endpoints) {
+				int pos = endpoint.indexOf(':');
+				String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+				int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
+
+				pairs.add(new Pair<String, Integer>(host, port));
+			}
+
+			return pairs;
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	public String getHdfsBaseDir(String id) {

@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer;
 
-import java.util.Set;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -75,11 +73,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 
 		@Override
 		public Void getReport(String domain) {
-			return null;
-		}
-
-		@Override
-		public Set<String> getDomains() {
 			return null;
 		}
 	}

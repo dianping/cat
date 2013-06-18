@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -8,7 +9,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class MergeAllMachine extends BaseVisitor {
 

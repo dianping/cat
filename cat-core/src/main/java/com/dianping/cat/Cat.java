@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.unidal.helper.Properties;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
@@ -21,20 +22,25 @@ import com.dianping.cat.message.spi.MessageManager;
 
 /**
  * This is the main entry point to the system.
- * 
- * @author Frankie Wu
  */
 public class Cat {
-	public static final String CAT_GLOBAL_XML = "/data/appdatas/cat/client.xml";
-
 	private static Cat s_instance = new Cat();
 
 	public static final String MetricType = "_MetricType";
 
+	private MessageProducer m_producer;
+
+	private MessageManager m_manager;
+
+	private PlexusContainer m_container;
+
+	private Cat() {
+	}
+
 	private static void checkAndInitialize() {
 		synchronized (s_instance) {
 			if (s_instance.m_container == null) {
-				initialize(new File(CAT_GLOBAL_XML));
+				initialize(new File(getCatHome(), "client.xml"));
 				log("WARN", "Cat is lazy initialized!");
 			}
 		}
@@ -47,6 +53,12 @@ public class Cat {
 	public static void destroy() {
 		s_instance.m_container.dispose();
 		s_instance = new Cat();
+	}
+
+	public static String getCatHome() {
+		String catHome = Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat");
+
+		return catHome;
 	}
 
 	public static Cat getInstance() {
@@ -120,26 +132,6 @@ public class Cat {
 		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
-	private static void recordMetric(String name, double value, String metricType) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(name).append("=").append(value);
-		sb.append("&").append(MetricType).append("=").append(metricType);
-		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
-	}
-
-	public static void recordMetric(String name, double value) {
-		recordMetric( name, value, "SUM");
-	}
-
-	public static void recordResponseTimeMetric(String name, double millis) {
-		recordMetric( name, millis, "AVG");
-	}
-
-	public static void recordCountMetric(String name) {
-		recordMetric( name, 1, "SUM");
-	}
-
 	public static void logMetric(String name, Object... keyValues) {
 		StringBuilder sb = new StringBuilder(1024);
 		int len = keyValues.length;
@@ -166,7 +158,59 @@ public class Cat {
 			}
 		}
 
-		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
+		logMetricInternal(name, Message.SUCCESS, sb.toString());
+	}
+
+	/**
+	 * Increase the counter specified by <code>name</code> by one.
+	 * 
+	 * @param name
+	 *           the name of the metric
+	 */
+	public static void logMetricForCount(String name) {
+		logMetricInternal(name, "C", null);
+	}
+
+	/**
+	 * Increase the metric specified by <code>name</code> by <code>durationInMillis</code>.
+	 * 
+	 * @param name
+	 *           the name of the metric
+	 * @param durationInMillis
+	 *           duration in milli-second added to the metric
+	 */
+	public static void logMetricForDuration(String name, long durationInMillis) {
+		logMetricInternal(name, "T", String.valueOf(durationInMillis));
+	}
+
+	/**
+	 * Increase the sum specified by <code>name</code> by <code>value</code> only for one item.
+	 * 
+	 * @param name
+	 *           the name of the metric
+	 * @param value
+	 *           the value added to the metric
+	 */
+	public static void logMetricForSum(String name, double value) {
+		logMetricInternal(name, "S", String.format("%.2f", value));
+	}
+
+	/**
+	 * Increase the metric specified by <code>name</code> by <code>sum</code> for multiple items.
+	 * 
+	 * @param name
+	 *           the name of the metric
+	 * @param sum
+	 *           the sum value added to the metric
+	 * @param quantity
+	 *           the quantity to be accumulated
+	 */
+	public static void logMetricForSum(String name, double sum, int quantity) {
+		logMetricInternal(name, "S", String.format("%.2f,%s", sum, quantity));
+	}
+
+	static void logMetricInternal(String name, String type, String keyValuePairs) {
+		Cat.getProducer().logMetric(name, type, keyValuePairs);
 	}
 
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
@@ -204,15 +248,6 @@ public class Cat {
 		}
 		manager.setup();
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
-	}
-
-	private MessageProducer m_producer;
-
-	private MessageManager m_manager;
-
-	private PlexusContainer m_container;
-
-	private Cat() {
 	}
 
 	void setContainer(PlexusContainer container) {

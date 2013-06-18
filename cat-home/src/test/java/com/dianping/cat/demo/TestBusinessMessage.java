@@ -8,7 +8,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestBusinessMessage {
-
 	private static final String TuanGou = "TuanGouWeb";
 
 	private static final String PayOrder = "PayOrder";
@@ -26,6 +25,7 @@ public class TestBusinessMessage {
 				tree.setDomain(TuanGou);
 				t.complete();
 			}
+
 			for (int i = 0; i < 900; i++) {
 				Transaction t = Cat.newTransaction("URL", "/detail");
 				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
@@ -34,6 +34,7 @@ public class TestBusinessMessage {
 				t.addData("channel=channel" + i % 5);
 				t.complete();
 			}
+
 			for (int i = 0; i < 500; i++) {
 				Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
 				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();

@@ -73,6 +73,9 @@
          <page name="config" title="Config" path="config">
             <description>Config</description>
          </page>
+         <page name="abtest" title="Abtest" path="abtest">
+            <description>Abtest</description>
+         </page>
       </module>
    </webapp>
 </wizard>

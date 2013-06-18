@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -19,7 +20,6 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.dal.report.Monthreport;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.MonthreportEntity;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class DBAAnalyzer extends ComponentTestCase {
 
@@ -61,14 +61,14 @@ public class DBAAnalyzer extends ComponentTestCase {
 		for (TransactionType type : info.getTypes().values()) {
 			if (type.getId().equals("SQL") || type.getId().startsWith("Cache.")) {
 				System.out.println(type.getId() + '\t' + type.getTotalCount() + '\t' + type.getFailCount() + '\t'
-				      + type.getAvg() + '\t' + type.getLine95Count());
+				      + type.getAvg() + '\t' + type.getLine95Value());
 			}
 		}
 		System.out.println("商务线");
 		for (TransactionType type : biz.getTypes().values()) {
 			if (type.getId().equals("SQL") || type.getId().startsWith("Cache.")) {
 				System.out.println(type.getId() + '\t' + type.getTotalCount() + '\t' + type.getFailCount() + '\t'
-				      + type.getAvg() + '\t' + type.getLine95Count());
+				      + type.getAvg() + '\t' + type.getLine95Value());
 			}
 		}
 	}

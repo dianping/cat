@@ -1,0 +1,13 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.ABTestDaoTest</role>
+			<implementation>com.dianping.cat.system.page.abtest.ABTestDaoTest</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+				</requirement>
+			</requirements>
+		</component>
+	</components>
+</plexus>

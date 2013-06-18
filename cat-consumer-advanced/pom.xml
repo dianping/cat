@@ -35,7 +35,7 @@
       </dependency>
       <dependency>
          <groupId>org.unidal.webres</groupId>
-         <artifactId>WebResServer</artifactId>
+         <artifactId>WebResBase</artifactId>
          <version>1.2.0</version>
       </dependency>
       <dependency>
@@ -63,13 +63,15 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
+                     <manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
                      		${basedir}/src/main/resources/META-INF/dal/model/database-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/health-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,</manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
+					 </manifest>
                   </configuration>
                </execution>
                <execution>

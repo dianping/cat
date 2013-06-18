@@ -112,7 +112,7 @@ public class FileSystemManager implements Initializable {
 	public void initialize() throws InitializationException {
 		m_defaultBaseDir = m_configManager.getHdfsLocalBaseDir("hdfs");
 
-		if (!m_configManager.isLocalMode()) {
+		if (m_configManager.isHdfsOn() && !m_configManager.isLocalMode()) {
 			try {
 				m_config = getHdfsConfiguration();
 				SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");

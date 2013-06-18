@@ -183,11 +183,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public StateReport getReport(String domain) {
 		StateReport report = new StateReport(domain);
 		report = new StateReport("Cat");

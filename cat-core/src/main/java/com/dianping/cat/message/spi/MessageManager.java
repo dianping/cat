@@ -13,8 +13,8 @@ public interface MessageManager {
 	public void add(Message message);
 
 	/**
-	 * Be triggered when a transaction ends, whatever it's the root transaction or nested transaction. However, if it's
-	 * the root transaction then it will be flushed to back-end CAT server asynchronously.
+	 * Be triggered when a transaction ends, whatever it's the root transaction or nested transaction. However, if it's the root
+	 * transaction then it will be flushed to back-end CAT server asynchronously.
 	 * <p>
 	 * 
 	 * @param transaction

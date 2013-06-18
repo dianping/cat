@@ -62,13 +62,17 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (!m_serverConfigManager.isLocalMode()) {
+		if (m_serverConfigManager.isHdfsOn() && !m_serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(new IdleChecker());
 		}
 	}
 
 	@Override
 	public MessageTree loadMessage(String messageId) throws IOException {
+		if (!m_serverConfigManager.isHdfsOn()) {
+			return null;
+		}
+
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 
