@@ -54,13 +54,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		
+
 		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
 
 		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
-		
+
 		all.add(C(ProblemReportAggregation.class).req(AggregationConfigManager.class));
-		
+
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.ID, RealtimeConsumer.class) //

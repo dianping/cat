@@ -31,13 +31,6 @@
 	padding-left: 5px;
 }
 
-.selected {
-	background-color: #D8DFEA;
-	border-radius: 5px;
-	font-weight: bold;
-	padding-left: 4px;
-}
-
 .liHover>li {
 	line-height: 1.3em;
 }

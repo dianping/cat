@@ -13,8 +13,6 @@ public class NavigationBar {
 
 		SystemPage.ALARM,
 
-		ReportPage.QUERY,
-
 		SystemPage.CONFIG,
 
 		SystemPage.LOGIN

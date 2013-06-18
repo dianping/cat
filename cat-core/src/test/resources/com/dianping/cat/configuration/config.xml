@@ -2,9 +2,9 @@
 <config mode="client" enabled="true" dev-mode="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
    <base-log-dir>target/catlog</base-log-dir>
    <servers>
-      <server ip="192.168.8.21" port="2280" http-port="2281" enabled="true"/>
-      <server ip="192.168.8.22" port="2281" http-port="2281" enabled="false"/>
-      <server ip="192.168.8.23" port="2280" http-port="2281" enabled="true"/>
+      <server ip="192.168.8.21" port="2280" http-port="8080" enabled="true"/>
+      <server ip="192.168.8.22" port="2281" http-port="8080" enabled="false"/>
+      <server ip="192.168.8.23" port="2280" http-port="8080" enabled="true"/>
    </servers>
    <domain id="Group" max-threads="500" enabled="true"/>
    <domain id="Review" ip="192.168.8.1" max-threads="500" enabled="false"/>
