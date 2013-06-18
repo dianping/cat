@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="abtest-model" root="true">
+    <entity-ref name="case" type="list" names="cases" />
+  </entity>
+  <entity name="case">
+    <attribute name="id" value-type="int" />
+    <attribute name="name" value-type="String" />
+    <attribute name="created-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="description" value-type="String" />
+    <element name="owner" value-type="String" />
+    <element name="group-strategy" value-type="String" />
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="run" type="list" names="runs" xml-indent="true" />
+  </entity>
+  <entity name="run">
+    <attribute name="id" value-type="int" />
+    <attribute name="start-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="disabled" value-type="boolean" />
+    <element name="creator" value-type="String" />
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <element name="group-strategy-configuration" value-type="String" />
+  </entity>
+</model>
+

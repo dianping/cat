@@ -10,9 +10,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.abtest.ABTestManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -24,30 +26,33 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	      ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		boolean isRoot = !Cat.getManager().hasContext();
+		HttpServletResponse res = (HttpServletResponse) response;
+		boolean top = !Cat.getManager().hasContext();
 
-		if (isRoot) {
+		if (top) {
 			String sessionToken = getSessionIdFromCookie(req);
+
 			Cat.setup(sessionToken);
 		}
 
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = null;
 
-		if (isRoot) {
-			t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
+		if (top) {
+			t = Cat.newTransaction(getTypeName(), getOriginalUrl(request));
+			ABTestManager.onRequestBegin(req, res);
+
+			logRequestClientInfo(cat, req);
 		} else {
-			t = cat.newTransaction(CatConstants.TYPE_URL + ".Forward", getOriginalUrl(request));
+			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
 		}
 
-		logRequestClientInfo(cat, req);
 		logRequestPayload(cat, req);
 
 		try {
-			chain.doFilter(request, response);
+			doNextFilter(request, response, chain);
 
 			Object catStatus = request.getAttribute("cat-state");
 			if (catStatus != null) {
@@ -73,10 +78,16 @@ public class CatFilter implements Filter {
 			throw e;
 		} finally {
 			t.complete();
-			if (isRoot) {
+			if (top) {
 				Cat.reset();
+				ABTestManager.onRequestEnd();
 			}
 		}
+	}
+
+	protected void doNextFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+	      ServletException {
+		chain.doFilter(request, response);
 	}
 
 	protected String getOriginalUrl(ServletRequest request) {
@@ -95,6 +106,10 @@ public class CatFilter implements Filter {
 		}
 
 		return null;
+	}
+
+	protected String getTypeName() {
+		return CatConstants.TYPE_URL;
 	}
 
 	@Override
@@ -120,7 +135,7 @@ public class CatFilter implements Filter {
 		sb.append("&Referer=").append(req.getHeader("referer"));
 		sb.append("&Agent=").append(req.getHeader("user-agent"));
 
-		cat.logEvent("URL", "ClientInfo", Message.SUCCESS, sb.toString());
+		cat.logEvent(getTypeName(), "ClientInfo", Message.SUCCESS, sb.toString());
 	}
 
 	protected void logRequestPayload(MessageProducer cat, HttpServletRequest req) {
@@ -135,6 +150,6 @@ public class CatFilter implements Filter {
 			sb.append('?').append(qs);
 		}
 
-		cat.logEvent(CatConstants.TYPE_URL, CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
+		cat.logEvent(getTypeName(), CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
 	}
 }

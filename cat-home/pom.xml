@@ -154,7 +154,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.0.6</version>
+            <version>2.0.5</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>
@@ -190,8 +190,10 @@
                   <configuration>
                      <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]>  <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-					 ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,]]></manifest>
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]>  
+                     <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+					 ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
+					 ${basedir}/src/main/resources/META-INF/dal/jdbc/abtest-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>
