@@ -2,6 +2,7 @@ package com.dianping.cat.abtest.spi.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -22,14 +23,14 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 	@Override
 	public ABTestEntity getEntity(ABTestName name) {
 		String id = name.getValue();
-		ABTestEntity entity = m_repository.getEntities().get(id);
+		ABTestEntity entity = m_repository.getCurrentEntities().get(id);
 
 		if (entity == null) {
 			entity = new ABTestEntity();
 			entity.setName(id);
 			entity.setDisabled(true);
 
-			m_repository.getEntities().put(id, entity);
+			m_repository.getCurrentEntities().put(id, entity);
 
 			Cat.getProducer().logEvent("ABTestDisabled", id, Message.SUCCESS, null);
 		}
@@ -40,16 +41,20 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 	public List<ABTestEntity> getEntityList() {
 		List<ABTestEntity> entitiesList = new ArrayList<ABTestEntity>();
 
-		for (ABTestEntity entity : m_repository.getEntities().values()) {
+		for (ABTestEntity entity : m_repository.getCurrentEntities().values()) {
 			entitiesList.add(entity);
 		}
 
 		return entitiesList;
 	}
+	
+	public Set<String> getActiveRun(){
+		return m_repository.getActiveRuns();
+	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		for (ABTestEntity entity : m_repository.getEntities().values()) {
+		for (ABTestEntity entity : m_repository.getCurrentEntities().values()) {
 			try {
 				ABTestGroupStrategy groupStrategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategyName());
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -91,7 +92,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 				for (Cookie cookie : cookies) {
 					if (ABTEST_COOKIE_NAME.equals(cookie.getName())) {
 						String value = cookie.getValue();
-						List<String> parts = Splitters.by(',').noEmptyItem().trim().split(value);
+						List<String> parts = Splitters.by('|').noEmptyItem().trim().split(value);
 
 						for (String part : parts) {
 							int pos = part.indexOf(':');
@@ -107,7 +108,8 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			return map;
 		}
 
-		private String setGroupsToCookie(HttpServletRequest request, HttpServletResponse response, Map<String, String> result) {
+		private String setGroupsToCookie(HttpServletRequest request, HttpServletResponse response,
+		      Map<String, String> result) {
 			StringBuilder sb = new StringBuilder(64);
 			boolean first = true;
 
@@ -115,7 +117,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 				if (first) {
 					first = false;
 				} else {
-					sb.append(',');
+					sb.append('|');
 				}
 
 				sb.append(e.getKey()).append(':').append(e.getValue());
@@ -142,13 +144,20 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 		public void setup(HttpServletRequest request, HttpServletResponse response) {
 			List<ABTestEntity> activeEntities = m_entityManager.getEntityList();
+			Set<String> activeRuns = m_entityManager.getActiveRun();
 			Map<String, String> map = getGroupsFromCookie(request);
 			Map<String, String> result = new HashMap<String, String>();
+
+			for (String id : activeRuns) {
+				if (map.containsKey(id)) {
+					result.put(id, map.get(id));
+				}
+			}
 
 			for (ABTestEntity entity : activeEntities) {
 				DefaultABTestContext ctx = (DefaultABTestContext) getContext(entity);
 				String key = String.valueOf(ctx.getEntity().getRun().getId());
-				String value = map.get(key);
+				String value = result.get(key);
 
 				if (value == null) {
 					ctx.setup(request, response, new Date());
@@ -160,12 +169,12 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 					}
 				} else {
 					ctx.setGroupName(value);
-					result.put(key, value);
 				}
 			}
 
 			String value = setGroupsToCookie(request, response, result);
 			((DefaultMessageManager) m_messageManager).setMetricType(value);
 		}
+
 	}
 }
