@@ -9,7 +9,9 @@ public enum SystemPage implements Page {
 
    LOGIN("login", "login", "Login", "Login", false),
 
-   CONFIG("config", "config", "Config", "Config", true);
+   CONFIG("config", "config", "Config", "Config", true),
+
+   ABTEST("abtest", "abtest", "Abtest", "Abtest", true);
 
    private String m_name;
 

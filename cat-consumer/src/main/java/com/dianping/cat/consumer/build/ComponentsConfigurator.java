@@ -87,8 +87,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
-
-
 		
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //
