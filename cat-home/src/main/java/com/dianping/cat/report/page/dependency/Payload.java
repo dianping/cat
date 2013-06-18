@@ -33,8 +33,8 @@ public class Payload extends AbstractReportPayload<Action> {
    @FieldMeta("refresh")
    private boolean m_refresh = false;
    
-   @FieldMeta("data")
-   private boolean m_data = false;
+   @FieldMeta("tab")
+   private String m_tab ="tab1";
    
    @FieldMeta("fullScreen")
    private boolean m_fullScreen = false;
@@ -133,12 +133,12 @@ public class Payload extends AbstractReportPayload<Action> {
    	m_fullScreen = fullScreen;
    }
 
-	public boolean isData() {
-   	return m_data;
+	public String getTab() {
+   	return m_tab;
    }
 
-	public void setData(boolean data) {
-   	m_data = data;
+	public void setTab(String tab) {
+   	m_tab = tab;
    }
-	
+
 }
