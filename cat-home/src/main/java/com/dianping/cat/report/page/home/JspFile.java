@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.home;
 
 public enum JspFile {
-	VIEW("/jsp/report/home.jsp"),
+	VIEW("/jsp/report/home/home.jsp"),
 
 	;
 

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -54,9 +52,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
-	private TransactionReport buildTotalTransactionReport() {
+	private TransactionReport buildAllTransactionReport() {
 		TransactionReport all = new TransactionReport(ALL);
-		TransactionReportVisitor visitor = new TransactionReportVisitor(all);
+		TransactionReportAllBuilder visitor = new TransactionReportAllBuilder(all);
 
 		all.setStartTime(new Date(m_startTime));
 		all.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
@@ -70,24 +68,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			Cat.logError(e);
 		}
 		return all;
-	}
-
-	private double compute95LineDetail(Map<Integer, AllDuration> durations) {
-		int totalCount = 0;
-
-		for (AllDuration duration : durations.values()) {
-			totalCount += duration.getCount();
-		}
-		int index = totalCount * 5 / 100;
-		Map<Integer, AllDuration> result = getSortDuration(durations);
-
-		for (Entry<Integer, AllDuration> entry : result.entrySet()) {
-			index = index - entry.getValue().getCount();
-			if (index <= 0) {
-				return entry.getKey();
-			}
-		}
-		return 0;
 	}
 
 	private void compute95Line(TransactionReport report) {
@@ -108,6 +88,24 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				}
 			}
 		}
+	}
+
+	private double compute95LineDetail(Map<Integer, AllDuration> durations) {
+		int totalCount = 0;
+
+		for (AllDuration duration : durations.values()) {
+			totalCount += duration.getCount();
+		}
+		int index = totalCount * 5 / 100;
+		Map<Integer, AllDuration> result = getSortDuration(durations);
+
+		for (Entry<Integer, AllDuration> entry : result.entrySet()) {
+			index = index - entry.getValue().getCount();
+			if (index <= 0) {
+				return entry.getKey();
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -201,6 +199,26 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
+	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
+		int dk = 1;
+		int tk = min - min % 5;
+
+		while (dk < d) {
+			dk <<= 1;
+		}
+
+		Duration duration = name.findOrCreateDuration(dk);
+		Range range = name.findOrCreateRange(tk);
+
+		duration.incCount();
+		range.incCount();
+
+		if (!t.isSuccess()) {
+			range.incFails();
+		}
+		range.setSum(range.getSum() + d);
+	}
+
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		if (shouldDiscard(t)) {
 			return 0;
@@ -274,26 +292,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return count;
 	}
 
-	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
-		int dk = 1;
-		int tk = min - min % 5;
-
-		while (dk < d) {
-			dk <<= 1;
-		}
-
-		Duration duration = name.findOrCreateDuration(dk);
-		Range range = name.findOrCreateRange(tk);
-
-		duration.incCount();
-		range.incCount();
-
-		if (!t.isSuccess()) {
-			range.incFails();
-		}
-		range.setSum(range.getSum() + d);
-	}
-
 	private void processTypeRange(Transaction t, TransactionType type, int min, double d) {
 		Range2 range = type.findOrCreateRange2(min);
 
@@ -332,7 +330,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			if (atEnd && !isLocalMode()) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				TransactionReport all = buildTotalTransactionReport();
+				TransactionReport all = buildAllTransactionReport();
 
 				m_reports.put(ALL, all);
 
@@ -374,81 +372,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
-			}
-		}
-	}
-
-	public static class TransactionReportVisitor extends BaseVisitor {
-
-		private TransactionReport m_report;
-
-		public String m_currentDomain;
-
-		public static Set<String> ALL_TYPES = new HashSet<String>();
-
-		static {
-			ALL_TYPES.add("URL");
-			ALL_TYPES.add("Call");
-			ALL_TYPES.add("PigeonCall");
-			ALL_TYPES.add("Service");
-			ALL_TYPES.add("PigeonService");
-			ALL_TYPES.add("SQL");
-			ALL_TYPES.add("MsgProduceTried");
-			ALL_TYPES.add("MsgProduced");
-		}
-
-		public TransactionReportVisitor(TransactionReport report) {
-			m_report = report;
-		}
-
-		private void mergeType(TransactionType old, TransactionType other) {
-			old.setTotalCount(old.getTotalCount() + other.getTotalCount());
-			old.setFailCount(old.getFailCount() + other.getFailCount());
-
-			if (other.getMin() < old.getMin()) {
-				old.setMin(other.getMin());
-			}
-
-			if (other.getMax() > old.getMax()) {
-				old.setMax(other.getMax());
-			}
-			old.setSum(old.getSum() + other.getSum());
-			old.setSum2(old.getSum2() + other.getSum2());
-
-			old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
-			old.setLine95Count(old.getLine95Count() + other.getLine95Count());
-			if (old.getLine95Count() > 0) {
-				old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
-			}
-			if (old.getTotalCount() > 0) {
-				old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
-				old.setAvg(old.getSum() / old.getTotalCount());
-			}
-
-			if (old.getSuccessMessageUrl() == null) {
-				old.setSuccessMessageUrl(other.getSuccessMessageUrl());
-			}
-
-			if (old.getFailMessageUrl() == null) {
-				old.setFailMessageUrl(other.getFailMessageUrl());
-			}
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			m_currentDomain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
-			String typeName = type.getId();
-
-			if (typeName.startsWith("Cache.") || ALL_TYPES.contains(typeName)) {
-				TransactionType result = machine.findOrCreateType(typeName);
-
-				mergeType(result, type);
 			}
 		}
 	}

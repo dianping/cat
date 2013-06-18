@@ -2647,53 +2647,19 @@
 					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
+					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_problemservice</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>top</role-hint>
-					<field-name>m_topService</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-			<implementation>com.dianping.cat.report.page.externalError.EventCollectManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.EventDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.EventDao</role>
-			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2760,6 +2726,49 @@
 		<component>
 			<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
 			<implementation>com.dianping.cat.consumer.core.dal.ProjectDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemservice</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>top</role-hint>
+					<field-name>m_topService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+			<implementation>com.dianping.cat.report.page.externalError.EventCollectManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.EventDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.EventDao</role>
+			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

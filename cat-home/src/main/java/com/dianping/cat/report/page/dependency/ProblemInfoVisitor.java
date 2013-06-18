@@ -16,7 +16,7 @@ import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 
-public class ExceptionInfoBuilder extends BaseVisitor {
+public class ProblemInfoVisitor extends BaseVisitor {
 
 	private Map<String, Integer> m_errors = new LinkedHashMap<String, Integer>();
 
@@ -54,7 +54,7 @@ public class ExceptionInfoBuilder extends BaseVisitor {
 		super.visitSegment(segment);
 	}
 
-	public String buildResult() {
+	public String buildExceptionInfo() {
 		StringBuilder sb = new StringBuilder();
 		Comparator<java.util.Map.Entry<String, Integer>> compator = new Comparator<Map.Entry<String, Integer>>() {
 			@Override
@@ -63,6 +63,7 @@ public class ExceptionInfoBuilder extends BaseVisitor {
 			}
 		};
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
 		if (m_errors.size() > 0) {
 			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
 			sb.append("<span style='color:red'>").append(CatString.EXCEPTION_INFO).append("（");

@@ -65,26 +65,26 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
-
-		for (String temp : domains) {
-			if (validate(temp)) {
-				TransactionReport report = m_transactionAnalyzer.getReport(temp);
+		for (String domainName : domains) {
+			if (validateDomain(domainName)) {
+				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
 				new TransactionReportVisitor(topReport).visitTransactionReport(report);
 			}
 		}
+		for (String domainName : domains) {
+			if (validateDomain(domainName)) {
+				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
-		for (String temp : domains) {
-			ProblemReport report = m_problemAnalyzer.getReport(temp);
-
-			new ProblemReportVisitor(topReport).visitProblemReport(report);
+				new ProblemReportVisitor(topReport).visitProblemReport(report);
+			}
 		}
 		return topReport;
 	}
 
-	private boolean validate(String domain) {
-	   return !domain.equals("FrontEnd");
-   }
+	private boolean validateDomain(String domain) {
+		return !domain.equals("FrontEnd");
+	}
 
 	@Override
 	protected void process(MessageTree tree) {
@@ -323,10 +323,10 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
 				      .findOrCreateSegment(id);
 				temp.setError(temp.getError() + count);
-				
+
 				Error error = temp.findOrCreateError(m_state);
 				error.setCount(error.getCount() + count);
-			} 
+			}
 		}
 	}
 

@@ -33,6 +33,9 @@ public class Payload extends AbstractReportPayload<Action> {
    @FieldMeta("refresh")
    private boolean m_refresh = false;
    
+   @FieldMeta("data")
+   private boolean m_data = false;
+   
    @FieldMeta("fullScreen")
    private boolean m_fullScreen = false;
 
@@ -128,6 +131,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setFullScreen(boolean fullScreen) {
    	m_fullScreen = fullScreen;
+   }
+
+	public boolean isData() {
+   	return m_data;
+   }
+
+	public void setData(boolean data) {
+   	m_data = data;
    }
 	
 }

@@ -54,22 +54,17 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
-	private ProblemReport buildFrontEndReport(ProblemReport report) {
-		m_problemReportAggregation.refreshRule();
-		report.accept(m_problemReportAggregation);
-
-		return m_problemReportAggregation.getReport();
-	}
-
-	private ProblemReport buildTotalProblemReport() {
+	private ProblemReport buildAllProblemReport() {
 		ProblemReport report = new ProblemReport(ALL);
 		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
 
 		try {
 			for (ProblemReport temp : m_reports.values()) {
-				report.getIps().add(temp.getDomain());
-				report.getDomainNames().add(temp.getDomain());
-				visitor.visitProblemReport(temp);
+				if (validateDomain(temp.getDomain())) {
+					report.getIps().add(temp.getDomain());
+					report.getDomainNames().add(temp.getDomain());
+					visitor.visitProblemReport(temp);
+				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -112,7 +107,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			}
 			return report;
 		} else {
-			return buildTotalProblemReport();
+			return buildAllProblemReport();
 		}
 	}
 
@@ -164,6 +159,13 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 	}
 
+	private ProblemReport rebuildFrontEndReport(ProblemReport report) {
+		m_problemReportAggregation.refreshRule();
+		report.accept(m_problemReportAggregation);
+
+		return m_problemReportAggregation.getReport();
+	}
+
 	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
@@ -195,10 +197,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				ProblemReport frontEnd = m_reports.get(FRONT_END);
 
 				if (frontEnd != null) {
-					m_reports.put(FRONT_END, buildFrontEndReport(frontEnd));
+					m_reports.put(FRONT_END, rebuildFrontEndReport(frontEnd));
 				}
 
-				ProblemReport all = buildTotalProblemReport();
+				ProblemReport all = buildAllProblemReport();
 
 				m_reports.put(ALL, all);
 
@@ -242,6 +244,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
+	}
+
+	private boolean validateDomain(String domain) {
+		return !domain.equals("FrontEnd");
 	}
 
 }

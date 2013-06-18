@@ -88,7 +88,7 @@ public class TopologyGraphConfigManager implements Initializable {
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			} else if (avg >= config.getWarningResponseTime()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
+				sb.append(buildWarningDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			} else {
 				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			}
@@ -97,7 +97,7 @@ public class TopologyGraphConfigManager implements Initializable {
 				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
+				sb.append(buildWarningDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			} else if (error > 0) {
 				sb.append(buildDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			}
@@ -111,6 +111,14 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private String buildErrorDes(String... args) {
 		StringBuilder sb = new StringBuilder("<span style='color:red'>");
+		String content = buildDes(args);
+
+		sb.append(content).append("</span>");
+		return sb.toString();
+	}
+	
+	private String buildWarningDes(String... args){
+		StringBuilder sb = new StringBuilder("<span style='color:#bfa22f'>");
 		String content = buildDes(args);
 
 		sb.append(content).append("</span>");
@@ -139,7 +147,7 @@ public class TopologyGraphConfigManager implements Initializable {
 				sb.append(buildErrorDes(AVG_STR, m_df.format(avg), MILLISECOND));
 			} else if (avg >= config.getWarningResponseTime()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(AVG_STR, m_df.format(avg), MILLISECOND));
+				sb.append(buildWarningDes(AVG_STR, m_df.format(avg), MILLISECOND));
 			} else {
 				if (!type.equalsIgnoreCase("Exception")) {
 					sb.append(buildDes(AVG_STR, m_df.format(avg), MILLISECOND));
@@ -150,7 +158,7 @@ public class TopologyGraphConfigManager implements Initializable {
 				sb.append(buildErrorDes(ERROR_STR, String.valueOf(error)));
 			} else if (error >= config.getWarningThreshold()) {
 				errorCode = WARN;
-				sb.append(buildErrorDes(ERROR_STR, String.valueOf(error)));
+				sb.append(buildWarningDes(ERROR_STR, String.valueOf(error)));
 			} else if (error > 0) {
 				sb.append(buildDes(ERROR_STR, String.valueOf(error)));
 			}
