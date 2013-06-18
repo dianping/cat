@@ -26,27 +26,28 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	      ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse resp = (HttpServletResponse) response;
-		boolean isRoot = !Cat.getManager().hasContext();
+		HttpServletResponse res = (HttpServletResponse) response;
+		boolean top = !Cat.getManager().hasContext();
 
-		if (isRoot) {
+		if (top) {
 			String sessionToken = getSessionIdFromCookie(req);
+
 			Cat.setup(sessionToken);
 		}
 
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = null;
 
-		if (isRoot) {
+		if (top) {
 			t = Cat.newTransaction(getTypeName(), getOriginalUrl(request));
+			ABTestManager.onRequestBegin(req, res);
+
 			logRequestClientInfo(cat, req);
-			ABTestManager.onRequestBegin(req,resp);
 		} else {
 			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
-		}	
+		}
 
 		logRequestPayload(cat, req);
 
@@ -77,7 +78,7 @@ public class CatFilter implements Filter {
 			throw e;
 		} finally {
 			t.complete();
-			if (isRoot) {
+			if (top) {
 				Cat.reset();
 				ABTestManager.onRequestEnd();
 			}
@@ -152,4 +153,3 @@ public class CatFilter implements Filter {
 		cat.logEvent(getTypeName(), CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
 	}
 }
-
