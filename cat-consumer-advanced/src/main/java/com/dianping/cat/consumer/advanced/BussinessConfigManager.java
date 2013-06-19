@@ -6,8 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -18,18 +17,6 @@ public class BussinessConfigManager implements Initializable {
 	// key is domain
 	private Map<String, Map<Integer, Map<String, BusinessConfig>>> m_configs = new ConcurrentHashMap<String, Map<Integer, Map<String, BusinessConfig>>>();
 
-	// key is group
-	private Map<String, List<BusinessConfig>> m_groupConfigs = new ConcurrentHashMap<String, List<BusinessConfig>>();
-
-	// key is domain,value is group
-	private Map<String, String> m_domainGroup = new ConcurrentHashMap<String, String>();
-
-	private Set<String> m_groups = new TreeSet<String>();
-
-	public Set<String> getGroups() {
-		return m_groups;
-	}
-
 	public Map<String, BusinessConfig> getUrlConfigs(String domain) {
 		return getMetricConfigsByType(domain, BusinessConfig.URL);
 	}
@@ -38,15 +25,19 @@ public class BussinessConfigManager implements Initializable {
 		return getMetricConfigsByType(domain, BusinessConfig.METRIC);
 	}
 
-	public List<BusinessConfig> getConfigs(String group) {
-		List<BusinessConfig> list = m_groupConfigs.get(group);
+	public List<BusinessConfig> getConfigs(List<String> domains) {
+		List<BusinessConfig> configs = new ArrayList<BusinessConfig>();
 
-		if (list != null) {
-			Collections.sort(list, new BusinessConfigCompator());
-			return list;
-		} else {
-			return new ArrayList<BusinessConfig>();
+		for (String domain : domains) {
+			Map<Integer, Map<String, BusinessConfig>> value = m_configs.get(domain);
+
+			for (Entry<Integer, Map<String, BusinessConfig>> internalEntry : value.entrySet()) {
+				configs.addAll(internalEntry.getValue().values());
+			}
 		}
+
+		Collections.sort(configs, new BusinessConfigCompator());
+		return configs;
 	}
 
 	private Map<String, BusinessConfig> getMetricConfigsByType(String domain, int type) {
@@ -79,92 +70,74 @@ public class BussinessConfigManager implements Initializable {
 			configsMap.put(config.getType(), configs);
 		}
 		configs.put(config.getMainKey(), config);
-
-		String group = config.getGroup();
-		List<BusinessConfig> groupConfigs = m_groupConfigs.get(group);
-
-		if (groupConfigs == null) {
-			groupConfigs = new ArrayList<BusinessConfig>();
-			m_groupConfigs.put(group, groupConfigs);
-		}
-		groupConfigs.add(config);
-		m_domainGroup.put(domain, group);
 		return this;
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		String TuanGou = "TuanGou";
 		String TuanGouWeb = "TuanGouWeb";
 		String PayOrder = "PayOrder";
 		String Cat = "Cat";
 
-		// tuangou.put("order", "quantity");
-		// tuangou.put("payment.pending", "amount");
-		// tuangou.put("payment.success", "amount");
-
-		m_groups.add(Cat);
-		m_groups.add(TuanGou);
-
 		BusinessConfig config = new BusinessConfig();
 
-		config.setGroup(Cat).setDomain(Cat).setType(BusinessConfig.URL);
+		config.setDomain(Cat).setType(BusinessConfig.URL);
 		config.setViewOrder(1).setMainKey("t").setClassifications(null);
 		config.setTitle("Transaction").setShowCount(true).setShowAvg(true).setShowSum(true);
 		addConfig(config);
 
 		config = new BusinessConfig();
 
-		config.setGroup(Cat).setDomain(Cat).setType(BusinessConfig.URL);
+		config.setDomain(Cat).setType(BusinessConfig.URL);
 		config.setViewOrder(2).setMainKey("e").setClassifications(null);
 		config.setTitle("Event").setShowCount(true).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(Cat).setDomain(Cat).setType(BusinessConfig.URL);
+		config.setDomain(Cat).setType(BusinessConfig.URL);
 		config.setViewOrder(3).setMainKey("home").setClassifications(null);
 		config.setTitle("Home").setShowCount(true).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(TuanGou).setDomain(TuanGouWeb).setType(BusinessConfig.URL);
+		config.setDomain(TuanGouWeb).setType(BusinessConfig.URL);
 		config.setViewOrder(1).setMainKey("/index").setClassifications("channel");
 		config.setTitle(MetricTitle.INDEX).setShowCount(true).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(TuanGou).setDomain(TuanGouWeb).setType(BusinessConfig.URL);
+		config.setDomain(TuanGouWeb).setType(BusinessConfig.URL);
 		config.setViewOrder(2).setMainKey("/detail").setClassifications("channel");
 		config.setTitle(MetricTitle.DETAIL).setShowCount(true).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(TuanGou).setDomain(PayOrder).setType(BusinessConfig.URL);
+		config.setDomain(PayOrder).setType(BusinessConfig.URL);
 		config.setViewOrder(3).setMainKey("/order/submitOrder").setClassifications("channel");
 		config.setTitle(MetricTitle.PAY).setShowCount(true).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(TuanGou).setDomain(PayOrder).setType(BusinessConfig.METRIC);
+		config.setDomain(PayOrder).setType(BusinessConfig.METRIC);
 		config.setViewOrder(4).setMainKey("order").setClassifications("channel").setTarget("quantity");
 		config.setTitle(MetricTitle.ORDER).setShowCount(true).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(TuanGou).setDomain(PayOrder).setType(BusinessConfig.METRIC);
+		config.setDomain(PayOrder).setType(BusinessConfig.METRIC);
 		config.setViewOrder(5).setMainKey("payment.pending").setClassifications("channel").setTarget("amount");
 		config.setTitle(MetricTitle.SUCCESS).setShowCount(false).setShowAvg(false).setShowSum(false);
 
 		addConfig(config);
 
 		config = new BusinessConfig();
-		config.setGroup(TuanGou).setDomain(PayOrder).setType(BusinessConfig.METRIC);
+		config.setDomain(PayOrder).setType(BusinessConfig.METRIC);
 		config.setViewOrder(6).setMainKey("payment.success").setClassifications("channel").setTarget("amount");
 		config.setTitle(MetricTitle.SUCCESS).setShowCount(false).setShowAvg(false).setShowSum(true);
 
@@ -190,8 +163,6 @@ public class BussinessConfigManager implements Initializable {
 		public static final String Suffix_COUNT = "(次数)";
 
 		public static final String Suffix_AVG = "(平均)";
-
-		private String m_group;
 
 		private String m_domain;
 
@@ -230,10 +201,6 @@ public class BussinessConfigManager implements Initializable {
 			return m_domain;
 		}
 
-		public String getGroup() {
-			return m_group;
-		}
-
 		public String getMainKey() {
 			return m_mainKey;
 		}
@@ -269,11 +236,6 @@ public class BussinessConfigManager implements Initializable {
 
 		public BusinessConfig setDomain(String domain) {
 			m_domain = domain;
-			return this;
-		}
-
-		public BusinessConfig setGroup(String group) {
-			m_group = group;
 			return this;
 		}
 
@@ -324,14 +286,5 @@ public class BussinessConfigManager implements Initializable {
 		public static final String ORDER = "订单创建";
 
 		public static final String SUCCESS = "支付金额(单位:元)";
-	}
-
-	public String getGroup(String domain) {
-		String group = m_domainGroup.get(domain);
-
-		if (group == null) {
-			group = "default";
-		}
-		return group;
 	}
 }

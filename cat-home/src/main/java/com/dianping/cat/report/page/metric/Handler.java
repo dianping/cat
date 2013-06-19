@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -32,7 +33,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private BussinessConfigManager m_configManager;
-	
+
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
 
@@ -64,7 +65,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		
+
 		normalize(model, payload);
 
 		MetricReport report = getReport(payload);
@@ -75,7 +76,9 @@ public class Handler implements PageHandler<Context> {
 			if (startTime == null) {
 				startTime = payload.getHistoryStartDate();
 			}
-			MetricDisplay display = new MetricDisplay(m_configManager.getConfigs(payload.getProduct()), test, startTime);
+			String product = payload.getProduct();
+			List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
+			MetricDisplay display = new MetricDisplay(m_configManager.getConfigs(domains), test, startTime);
 
 			display.visitMetricReport(report);
 			model.setDisplay(display);
