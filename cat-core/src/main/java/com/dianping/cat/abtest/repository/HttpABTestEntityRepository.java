@@ -26,7 +26,7 @@ import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -83,11 +83,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				m_entities = visitor.getEntities();
 				m_activeRuns = visitor.getActiveRuns();
 
-				Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", clientIp);
-
-				h.addData(abtest.toString());
-				h.setStatus(Message.SUCCESS);
-				h.complete();
+				Cat.logEvent("abtest-heartbeat", clientIp, Event.SUCCESS, abtest.toString());
 
 				t.setStatus(Message.SUCCESS);
 				break;

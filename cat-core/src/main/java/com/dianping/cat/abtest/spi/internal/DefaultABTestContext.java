@@ -1,6 +1,8 @@
 package com.dianping.cat.abtest.spi.internal;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +24,8 @@ public class DefaultABTestContext implements ABTestContext {
 	private HttpServletResponse m_response;
 
 	private ABTestGroupStrategy m_groupStrategy;
+	
+	private Map<String, String> m_cookielets = new ConcurrentHashMap<String, String>();
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
@@ -75,4 +79,26 @@ public class DefaultABTestContext implements ABTestContext {
 			}
 		}
 	}
+
+	@Override
+   public void setCookielet(String name, String value) {
+		if(value == null){
+			m_cookielets.remove(name);
+		}else{
+			m_cookielets.put(name, value);
+		}
+   }
+
+	@Override
+   public String getCookielet(String name) {
+	   return m_cookielets.get(name);
+   }
+
+	public Map<String, String> getCookielets() {
+   	return m_cookielets;
+   }
+
+	public void setCookielets(Map<String, String> cookielets) {
+   	m_cookielets = cookielets;
+   }
 }

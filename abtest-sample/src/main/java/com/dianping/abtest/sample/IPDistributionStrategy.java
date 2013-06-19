@@ -25,11 +25,18 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 		List<String> ips = Splitters.by(',').trim().noEmptyItem().split(config);
 		HttpServletRequest req = ctx.getHttpServletRequest();
 		String address = getRemoteAddr(req);
-
-		for (String ip : ips) {
-			if (ip.equals(address)) {
-				ctx.setGroupName("A");
-				return;
+		String group = ctx.getCookielet("ab");
+		
+		if(group != null && group.equals("A")){
+			ctx.setGroupName("A");
+		}else{
+			for (String ip : ips) {
+				if (ip.equals(address)) {
+					ctx.setGroupName("A");
+					ctx.setCookielet("ab", "A");
+					ctx.setCookielet("hit", "1");
+					return;
+				}
 			}
 		}
 	}
