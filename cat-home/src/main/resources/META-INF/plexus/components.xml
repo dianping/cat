@@ -90,15 +90,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ProductLineConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
 			<requirements>
@@ -137,7 +128,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -2661,6 +2652,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2675,6 +2669,15 @@
 		<component>
 			<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
 			<implementation>com.dianping.cat.consumer.advanced.BussinessConfigManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.core.ProductLineConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.jsError.Handler</role>
@@ -2707,7 +2710,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
@@ -2733,7 +2736,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -2749,15 +2752,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ProductLineConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -3095,7 +3089,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>

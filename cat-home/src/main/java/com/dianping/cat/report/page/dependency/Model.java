@@ -10,10 +10,10 @@ import java.util.Set;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.home.company.entity.ProductLine;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
