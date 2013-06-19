@@ -23,7 +23,6 @@
 	<div class="row-fluid">
  		<div class="span12 text-center">
 		<%@ include file="dependencyOpNav.jsp"%>
-	    <%@ include file="dependencyTimeNav.jsp"%>
 	    </div></div>
   		<div class="tabbable tabs-left "  > <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs alert-info">
@@ -33,16 +32,19 @@
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
+	   				<%@ include file="dependencyTimeNavTab1.jsp"%>
 	    			<div class="text-center" id="fullScreenData">
 						<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
 					  </div>
 	    		</div>
 	    		<div class="tab-pane" id="tab2">
+	   				<%@ include file="dependencyTimeNavTab2.jsp"%>
 	    			<div>
 		  				<%@ include file="dependencyEvent.jsp"%>
 	    			</div>
 	    		</div>
 	    		<div class="tab-pane" id="tab3">
+	   				<%@ include file="dependencyTimeNavTab3.jsp"%>
 	  				<%@ include file="dependencyDetailData.jsp"%>
 	    		</div>
   			</div>
@@ -53,15 +55,6 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
-		/* $('#content .nav-tabs a').mouseenter(function (e) {
-			  e.preventDefault();
-			  $(this).tab('show');
-		}); */
-	
-		$('#minute'+${model.minute}).addClass('disabled');
-		$('#minute'+${model.minute}).addClass('text-error');
-		$('#zabbixTab0').addClass('active');
-		$('#leftTab0').addClass('active');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 50,
@@ -73,10 +66,6 @@
 			'iDisplayLength': 50,
 			"bPaginate": false,
 		});
-		var tab3 = ${payload.data};
-		if(tab3){
-			$('#tab3Href').trigger('click');
-		}
 		var data = ${model.topologyGraph};
 		var nodeSize = 0;
 		function parse(data){
@@ -133,6 +122,15 @@
 			nodeWeight:function(weight){
 				return weight/5+defaultWeight;
 			}});
+		
+		var tab = '${payload.tab}';
+		if(tab=='tab3'){
+			$('#tab3Href').trigger('click');
+		}else if(tab=='tab2'){
+			$('#tab2Href').trigger('click');
+		}else if(tab=='tab1'){
+			$('#tab1Href').trigger('click');
+		}
 	});
 </script>
 <style>
