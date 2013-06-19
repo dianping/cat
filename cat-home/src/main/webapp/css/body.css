@@ -284,6 +284,10 @@ a.cache{
 a.heartbeat{
 	background-color: #009933;
 }
+
+a.abtest-heartbeat{
+	background-color: #009933;
+}
 .detail {
 	font-size: small;
 	border-spacing: 1px;

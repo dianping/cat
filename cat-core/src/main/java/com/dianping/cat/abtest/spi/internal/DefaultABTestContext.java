@@ -25,10 +25,11 @@ public class DefaultABTestContext implements ABTestContext {
 
 	private ABTestGroupStrategy m_groupStrategy;
 	
-	private Map<String, String> m_cookielets = new ConcurrentHashMap<String, String>();
+	private Map<String, String> m_cookielets;
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
+		m_cookielets = new ConcurrentHashMap<String, String>();
 	}
 
 	@Override
