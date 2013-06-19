@@ -22,7 +22,7 @@
 	<div class="report">
 		<div class='text-center'>
 		<%@ include file="dependencyOpNav.jsp" %>
- 		<%@ include file="dependencyTimeNav.jsp"%>
+ 		<%@ include file="dependencyTimeNavTab1.jsp"%>
  		</div>
  		<div class="row-fluid">
  			<div class="span2">
@@ -46,7 +46,7 @@
 		$('.position').hide();
 		$('.switch').hide();
 		var data = ${model.productLineGraph};
-		console.log(data);
+		
 		var title = data.id;
 		$('#title').html(title);
 		function parse(data){

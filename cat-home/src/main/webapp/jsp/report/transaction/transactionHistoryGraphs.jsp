@@ -8,6 +8,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
+<script type="text/javascript" src="/cat/js/transaction.js"></script>
 <style type="text/css">
 .graph {
 	width: 450px;

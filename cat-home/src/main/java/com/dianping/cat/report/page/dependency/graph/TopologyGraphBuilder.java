@@ -129,9 +129,6 @@ public class TopologyGraphBuilder extends BaseVisitor {
 			TopologyGraph graph = findOrCreateGraph();
 			TopologyEdge old = graph.findTopologyEdge(edge.getKey());
 
-			if (old != null) {
-				System.out.println(old);
-			}
 			graph.getEdges().put(edge.getKey(), mergeEdge(old, edge));
 			if ("Database".equals(type)) {
 				String target = dependency.getTarget();

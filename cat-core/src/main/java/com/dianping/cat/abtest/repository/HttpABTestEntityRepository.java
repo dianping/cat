@@ -88,7 +88,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				h.addData(abtest.toString());
 				h.setStatus(Message.SUCCESS);
 				h.complete();
-
+				
 				t.setStatus(Message.SUCCESS);
 				break;
 			} catch (Throwable e) {

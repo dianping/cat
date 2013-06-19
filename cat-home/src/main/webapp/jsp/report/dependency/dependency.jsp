@@ -32,6 +32,9 @@
 	    			<%@ include file="dependencyLineGraph.jsp"%>
 	    		</div>
 	    		<div class="tab-pane" id="tab2">
+	    			<div class="text-center">
+		    			<%@ include file="dependencyTimeNavTab2.jsp" %>
+	    			</div>
 	  				<%@ include file="dependencyEvent.jsp"%>
 	    		</div>
 	    		<div class="tab-pane" id="tab3">
@@ -42,7 +45,7 @@
 				  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
 				  	    </div>
 				  	    <div class="span10">
-				  	    	<%@ include file="dependencyTimeNav.jsp" %>
+				  	    	<%@ include file="dependencyTimeNavTab3.jsp" %>
 				  	    </div>
 				  </div>
 				  <%@ include file="dependencyDetailData.jsp"%>
@@ -54,11 +57,14 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
-		var data = ${payload.data};
-		if(data){
+		var tab = '${payload.tab}';
+		if(tab=='tab3'){
 			$('#tab3Href').trigger('click');
+		}else if(tab=='tab2'){
+			$('#tab2Href').trigger('click');
+		}else if(tab=='tab1'){
+			$('#tab1Href').trigger('click');
 		}
-		$('#minute'+${model.minute}).addClass('disabled');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 50,

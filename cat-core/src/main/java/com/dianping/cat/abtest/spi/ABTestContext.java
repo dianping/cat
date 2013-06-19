@@ -15,4 +15,12 @@ public interface ABTestContext {
 	public HttpServletResponse getHttpServletResponse();
 
 	public void setGroupName(String groupName);
+	
+	/**
+	 * @param name
+	 * @param value if value is null, then remove it.
+	 */
+	public void setCookielet(String name, String value);
+	
+	public String getCookielet(String name);
 }
