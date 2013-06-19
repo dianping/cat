@@ -16,7 +16,7 @@ public class MetricReportMergerTest {
 		MetricReport reportOld = DefaultSaxParser.parse(oldXml);
 		MetricReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("MetricReportMergeResult.xml"), "utf-8");
-		MetricReportMerger merger = new MetricReportMerger(new MetricReport(reportOld.getGroup()));
+		MetricReportMerger merger = new MetricReportMerger(new MetricReport(reportOld.getProduct()));
 
 		reportOld.accept(merger);
 		reportNew.accept(merger);

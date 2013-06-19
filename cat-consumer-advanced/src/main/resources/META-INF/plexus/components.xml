@@ -135,6 +135,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

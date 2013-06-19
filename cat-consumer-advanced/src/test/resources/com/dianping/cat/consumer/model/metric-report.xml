@@ -1,0 +1,24 @@
+<metric-report product="TuanGou" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
+	<metric-item id="addCount">
+		<domain>TuanGouWeb</domain>
+		<domain>TuanGouAPI</domain>
+		<abtest run-id="0" name="ALL">
+			<group name="">
+				<point id="1" count="1" sum="1.0" avg="123.0"/>
+				<point id="2" count="1" sum="1.0" avg="123.0"/>
+			</group>	
+		</abtest>
+		
+		<abtest run-id="1" name="test1">
+			<group name="A">
+				<point id="1" count="1" sum="1.0" avg="123.0"/>
+				<point id="2" count="1" sum="1.0" avg="123.0"/>
+			</group>
+			<group name="B">
+			</group>	
+			<group name="">
+			</group>
+		</abtest>
+	</metric-item>
+	<metric-item></metric-item>
+</metric-report>
