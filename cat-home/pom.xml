@@ -177,7 +177,6 @@
                      <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml, 
                      	${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml, 
 						${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
-						${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,
 						${basedir}/src/main/resources/META-INF/dal/model/info-manifest.xml,</manifest>
                   </configuration>
                </execution>

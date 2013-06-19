@@ -83,13 +83,13 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				m_entities = visitor.getEntities();
 				m_activeRuns = visitor.getActiveRuns();
 
-				Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", clientIp);
-
-				h.addData(abtest.toString());
-				h.setStatus(Message.SUCCESS);
-				h.complete();
-
-				t.setStatus(Message.SUCCESS);
+//				Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", clientIp);
+//
+//				h.addData(abtest.toString());
+//				h.setStatus(Message.SUCCESS);
+//				h.complete();
+//
+//				t.setStatus(Message.SUCCESS);
 				break;
 			} catch (Throwable e) {
 				t.setStatus(e);

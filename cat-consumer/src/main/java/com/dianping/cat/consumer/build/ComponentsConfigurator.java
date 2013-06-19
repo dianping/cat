@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.core.DumpAnalyzer;
 import com.dianping.cat.consumer.core.EventAnalyzer;
 import com.dianping.cat.consumer.core.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.core.ProblemAnalyzer;
+import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.core.StateAnalyzer;
 import com.dianping.cat.consumer.core.TopAnalyzer;
 import com.dianping.cat.consumer.core.TransactionAnalyzer;
@@ -85,6 +86,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageAnalyzer.class, TopAnalyzer.ID, TopAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
+		
+		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 		
