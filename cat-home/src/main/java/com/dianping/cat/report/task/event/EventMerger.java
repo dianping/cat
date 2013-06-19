@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -16,7 +19,9 @@ import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
-public class EventMerger implements ReportMerger<EventReport> {
+public class EventMerger implements ReportMerger<EventReport>,LogEnabled {
+
+	private Logger m_logger;
 
 	private EventReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
 		EventReportMerger merger = null;
@@ -33,6 +38,7 @@ public class EventMerger implements ReportMerger<EventReport> {
 				model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
 			} catch (Exception e) {
+				m_logger.error(xml);
 				Cat.logError(e);
 			}
 		}
@@ -69,4 +75,9 @@ public class EventMerger implements ReportMerger<EventReport> {
 		eventReport.getIps().add("All");
 		return eventReport;
 	}
+
+	@Override
+   public void enableLogging(Logger logger) {
+		m_logger = logger;
+   }
 }

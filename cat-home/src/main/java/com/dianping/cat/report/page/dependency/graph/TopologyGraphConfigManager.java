@@ -116,8 +116,8 @@ public class TopologyGraphConfigManager implements Initializable {
 		sb.append(content).append("</span>");
 		return sb.toString();
 	}
-	
-	private String buildWarningDes(String... args){
+
+	private String buildWarningDes(String... args) {
 		StringBuilder sb = new StringBuilder("<span style='color:#bfa22f'>");
 		String content = buildDes(args);
 
@@ -138,7 +138,7 @@ public class TopologyGraphConfigManager implements Initializable {
 
 			sb.append(type).append(GraphConstrant.DELIMITER);
 
-			if (index.getTotalCount() > 0) {
+			if (index.getTotalCount() > 0 && !type.equalsIgnoreCase("Exception")) {
 				sb.append(buildDes(TOTAL_STR, String.valueOf(index.getTotalCount())));
 			}
 
