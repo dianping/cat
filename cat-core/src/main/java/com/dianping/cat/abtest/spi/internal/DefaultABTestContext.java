@@ -1,8 +1,8 @@
 package com.dianping.cat.abtest.spi.internal;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,12 +24,24 @@ public class DefaultABTestContext implements ABTestContext {
 	private HttpServletResponse m_response;
 
 	private ABTestGroupStrategy m_groupStrategy;
-	
+
 	private Map<String, String> m_cookielets;
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
-		m_cookielets = new ConcurrentHashMap<String, String>();
+	}
+
+	@Override
+	public String getCookielet(String name) {
+		if (m_cookielets != null) {
+			return m_cookielets.get(name);
+		} else {
+			return null;
+		}
+	}
+
+	public Map<String, String> getCookielets() {
+		return m_cookielets;
 	}
 
 	@Override
@@ -53,6 +65,19 @@ public class DefaultABTestContext implements ABTestContext {
 	}
 
 	@Override
+	public void setCookielet(String name, String value) {
+		if (m_cookielets == null) {
+			m_cookielets = new LinkedHashMap<String, String>();
+		}
+
+		if (value == null) {
+			m_cookielets.remove(name);
+		} else {
+			m_cookielets.put(name, value);
+		}
+	}
+
+	@Override
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
 	}
@@ -61,11 +86,12 @@ public class DefaultABTestContext implements ABTestContext {
 		m_groupStrategy = groupStrategy;
 	}
 
-	public void setup(HttpServletRequest request, HttpServletResponse response, Date timestamp) {
+	public void setup(HttpServletRequest request, HttpServletResponse response, Map<String, String> cookielets) {
 		m_request = request;
 		m_response = response;
+		m_cookielets = cookielets;
 
-		if (m_entity.isEligible(timestamp)) {
+		if (m_entity.isEligible(new Date())) {
 			Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
 
 			try {
@@ -80,26 +106,4 @@ public class DefaultABTestContext implements ABTestContext {
 			}
 		}
 	}
-
-	@Override
-   public void setCookielet(String name, String value) {
-		if(value == null){
-			m_cookielets.remove(name);
-		}else{
-			m_cookielets.put(name, value);
-		}
-   }
-
-	@Override
-   public String getCookielet(String name) {
-	   return m_cookielets.get(name);
-   }
-
-	public Map<String, String> getCookielets() {
-   	return m_cookielets;
-   }
-
-	public void setCookielets(Map<String, String> cookielets) {
-   	m_cookielets = cookielets;
-   }
 }

@@ -1,46 +1,31 @@
 package com.dianping.cat.abtest.spi.internal;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
-public class ABTestContextManagerTest {
-	
+public class ABTestContextManagerTest extends ComponentTestCase {
 	@Test
-	public void testDecoding(){
-		DefaultABTestContextManager manager = new DefaultABTestContextManager();
-		DefaultABTestContextManager.Entry entry = manager.new Entry();
-		
-		Map<String, Map<String, String>> map = entry.decode("1=ab:A|cd:B&2=ab:A|cd:B");
-		Assert.assertEquals(map.toString(),"{2={ab=A, cd=B}, 1={ab=A, cd=B}}");
-		
-		Map<String, Map<String, String>> map2 = entry.decode("1=ab:|cd:B&2=ab:A|cd:B");
-		Assert.assertEquals(map2.toString(),"{2={ab=A, cd=B}, 1={ab=, cd=B}}");
-		
-		Map<String, Map<String, String>> map3 = entry.decode("1=ab:A|cd:B&2=ab:A|cd:");
-		Assert.assertEquals(map3.toString(),"{2={ab=A, cd=}, 1={ab=A, cd=B}}");
-		
-		Map<String, Map<String, String>> map4 = entry.decode("");
-		Assert.assertEquals(map4.toString(),"{}");
+	public void testCodec() throws Exception {
+		check("1=ab:A|cd:B&2=ab:A|cd:B", "1=ab:A|cd:B&2=ab:A|cd:B");
+		check("1=ab:|cd:B&2=ab:A|cd:B", "1=ab:|cd:B&2=ab:A|cd:B");
+		check("1=ab:A|cd:B&2=ab:A|cd:", "1=ab:A|cd:B&2=ab:A|cd:");
+		check("", "");
+
+		check("1=ab:A|cd:B&2=ab:A|cd:B", "1=ab:A|cd:B&2=ab:A|cd:B", "1", "2");
+		check("1=ab:A|cd:B&2=ab:A|cd:B", "1=ab:A|cd:B", "1");
 	}
-	
-	@Test
-	public void testEncoding(){
-		DefaultABTestContextManager manager = new DefaultABTestContextManager();
-		DefaultABTestContextManager.Entry entry = manager.new Entry();
-		
-		Map<String, Map<String, String>> map = entry.decode("1=ab:A|cd:B&2=ab:A|cd:B");
-		Assert.assertEquals(entry.encode(map),"2=ab:A|cd:B&1=ab:A|cd:B");
-		
-		Map<String, Map<String, String>> map2 = entry.decode("1=ab:|cd:B&2=ab:A|cd:B");
-		Assert.assertEquals(entry.encode(map2),"2=ab:A|cd:B&1=ab:|cd:B");
-		
-		Map<String, Map<String, String>> map3 = entry.decode("1=ab:A|cd:B&2=ab:A|cd:");
-		Assert.assertEquals(entry.encode(map3),"2=ab:A|cd:&1=ab:A|cd:B");
-		
-		Map<String, Map<String, String>> map4 = entry.decode("");
-		Assert.assertEquals(entry.encode(map4),"");
+
+	private void check(String source, String expected, String... keys) throws Exception {
+		ABTestCodec codec = lookup(ABTestCodec.class);
+		Map<String, Map<String, String>> map = codec.decode(source,
+		      keys.length == 0 ? null : new HashSet<String>(Arrays.asList(keys)));
+
+		Assert.assertEquals(expected, codec.encode(map));
 	}
 }
