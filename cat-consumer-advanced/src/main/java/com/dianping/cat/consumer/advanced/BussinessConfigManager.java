@@ -31,8 +31,10 @@ public class BussinessConfigManager implements Initializable {
 		for (String domain : domains) {
 			Map<Integer, Map<String, BusinessConfig>> value = m_configs.get(domain);
 
-			for (Entry<Integer, Map<String, BusinessConfig>> internalEntry : value.entrySet()) {
-				configs.addAll(internalEntry.getValue().values());
+			if(value!=null){
+				for (Entry<Integer, Map<String, BusinessConfig>> internalEntry : value.entrySet()) {
+					configs.addAll(internalEntry.getValue().values());
+				}
 			}
 		}
 
