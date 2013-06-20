@@ -35,12 +35,12 @@ public class MetricDisplay extends BaseVisitor {
 	private static final String COUNT = ":count";
 
 	private static final String AVG = "avg";
-	
-	public List<LineChart> getLineCharts(){
+
+	public List<LineChart> getLineCharts() {
 		return new ArrayList<LineChart>(m_lineCharts.values());
 	}
-	
-	public Set<String> getAbtests(){
+
+	public Set<String> getAbtests() {
 		return m_abtests;
 	}
 
@@ -51,32 +51,32 @@ public class MetricDisplay extends BaseVisitor {
 		for (BusinessConfig flag : configs) {
 			if (flag.isShowSum()) {
 				String key = flag.getMainKey() + SUM;
-				
+
 				m_lineCharts.put(key, creatLineChart(key));
 			}
 			if (flag.isShowCount()) {
 				String key = flag.getMainKey() + COUNT;
-				
+
 				m_lineCharts.put(key, creatLineChart(key));
 
 			}
 			if (flag.isShowAvg()) {
 				String key = flag.getMainKey() + AVG;
-				
+
 				m_lineCharts.put(key, creatLineChart(key));
 			}
 		}
 	}
 
 	private LineChart creatLineChart(String key) {
-	   LineChart lineChart = new LineChart();
-	   
-	   lineChart.setTitles(key);
-	   lineChart.setStart(m_start);
-	   lineChart.setSize(60);
-	   lineChart.setStep(TimeUtil.ONE_MINUTE);
-	   return lineChart;
-   }
+		LineChart lineChart = new LineChart();
+
+		lineChart.setTitles(key);
+		lineChart.setStart(m_start);
+		lineChart.setSize(60);
+		lineChart.setStep(TimeUtil.ONE_MINUTE);
+		return lineChart;
+	}
 
 	@Override
 	public void visitAbtest(Abtest abtest) {
@@ -91,6 +91,10 @@ public class MetricDisplay extends BaseVisitor {
 	@Override
 	public void visitGroup(Group group) {
 		String id = group.getName();
+
+		if ("".equals(id)) {
+			id = "Default";
+		}
 		double[] sum = new double[60];
 		double[] avg = new double[60];
 		double[] count = new double[60];

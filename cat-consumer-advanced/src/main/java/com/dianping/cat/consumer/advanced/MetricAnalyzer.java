@@ -29,6 +29,7 @@ import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -107,12 +108,26 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	private Map<String, String> parseABtests(Transaction transaction) {
 		String abtest = queryAbTest(transaction);
+
 		return parseABTests(abtest);
 	}
 
 	private String queryAbTest(Transaction transaction) {
-	   return "";
-   }
+		List<Message> messages = transaction.getChildren();
+
+		for (Message message : messages) {
+			if (message instanceof Event) {
+				if ("URL".equals(message.getType()) && "ABTest".equals(message.getName())) {
+					String data = (String) message.getData();
+					
+					System.out.println(data);
+					return data;
+				}
+			}
+		}
+
+		return "";
+	}
 
 	public Map<String, String> parseABTests(String str) {
 		Map<String, String> abtests = new HashMap<String, String>();
