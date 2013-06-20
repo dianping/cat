@@ -1,15 +1,15 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.report.page.jsError;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 
-public class MetricAnalyzerTest {
+public class ParseTest {
 
 	@Test
 	public void test() {
-		MetricAnalyzer analyzer = new MetricAnalyzer();
+		Handler analyzer = new Handler();
 		String data = "aaa=1.1&a=1.1&abc=2.2&c=1.2&aaaa=11.1&abbbb=1.1&ssabc=2.2&sc=1.2";
 
 		long t = System.currentTimeMillis();

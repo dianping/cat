@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -131,50 +132,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return abtests;
 	}
 
-	public String parseValue(final String key, final String data) {
-		int len = data == null ? 0 : data.length();
-		int keyLen = key.length();
-		StringBuilder name = new StringBuilder();
-		StringBuilder value = new StringBuilder();
-		boolean inName = true;
-
-		for (int i = 0; i < len; i++) {
-			char ch = data.charAt(i);
-
-			switch (ch) {
-			case '&':
-				if (name.length() == keyLen && name.toString().equals(key)) {
-					return value.toString();
-				}
-
-				inName = true;
-				name.setLength(0);
-				value.setLength(0);
-				break;
-			case '=':
-				if (inName) {
-					inName = false;
-				} else {
-					value.append(ch);
-				}
-				break;
-			default:
-				if (inName) {
-					name.append(ch);
-				} else {
-					value.append(ch);
-				}
-				break;
-			}
-		}
-
-		if (name.length() == keyLen && name.toString().equals(key)) {
-			return value.toString();
-		}
-
-		return null;
-	}
-
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -205,23 +162,44 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		String type = metric.getType();
 		String name = metric.getName();
 		String domain = tree.getDomain();
-		Map<String, BusinessConfig> configs = m_configManager.getMetricConfigs(domain);
-		BusinessConfig config = configs.get(name);
+		String data = (String) metric.getData();
+		Pair<Integer, Double> value = parseValue(metric.getStatus(), data);
 
-		if (config != null) {
-			String data = (String) metric.getData();
-			String valueStr = parseValue(config.getTarget(), data);
-
-			if (valueStr != null) {
-				double value = Double.parseDouble(valueStr);
-				long current = metric.getTimestamp() / 1000 / 60;
-				int min = (int) (current % (60));
-				MetricItem metricItem = report.findOrCreateMetricItem(name);
-				Map<Integer, String> abtests = parseABTests(type);
-				updateMetric(metricItem, domain, abtests, min, value);
-			}
+		if (value != null) {
+			long current = metric.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+			MetricItem metricItem = report.findOrCreateMetricItem(name);
+			Map<Integer, String> abtests = parseABTests(type);
+		
+			updateMetric(metricItem, abtests, min, value.getKey(), value.getValue());
 		}
 		return 0;
+	}
+
+	private Pair<Integer, Double> parseValue(String status, String data) {
+		Pair<Integer, Double> value = new Pair<Integer, Double>();
+		
+		if ("C".equals(status)) {
+			int count = Integer.parseInt(data);
+			value.setKey(count);
+			value.setValue((double)count);
+		} else if ("T".equals(status)) {
+			double duration = Double.parseDouble(data);
+			value.setKey(1);
+			value.setValue(duration);
+		} else if ("S".equals(status)) {
+			double sum = Double.parseDouble(data);
+			value.setKey(1);
+			value.setValue(sum);
+		} else if ("S,C".equals(status)) {
+			String[] datas = data.split(",");
+			value.setKey(Integer.parseInt(datas[0]));
+			value.setValue(Double.parseDouble(datas[1]));
+		} else {
+			return null;
+		}
+
+		return value;
 	}
 
 	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
@@ -252,11 +230,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			if (config != null) {
 				long current = transaction.getTimestamp() / 1000 / 60;
 				int min = (int) (current % (60));
-				double value = transaction.getDurationInMicros();
+				double sum = transaction.getDurationInMicros();
 				MetricItem metricItem = report.findOrCreateMetricItem(name);
-
+				
 				Map<Integer, String> abtests = parseABtests(transaction);
-				updateMetric(metricItem, tree.getDomain(), abtests, min, value);
+				updateMetric(metricItem, abtests, min, 1, sum);
 			}
 		}
 	}
@@ -321,14 +299,15 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void updateMetric(MetricItem metricItem, String domain, Map<Integer, String> abtests, int min, double value) {
+	private void updateMetric(MetricItem metricItem, Map<Integer, String> abtests, int minute, int count,
+	      double sum) {
 		for (Entry<Integer, String> entry : abtests.entrySet()) {
 			Abtest abtest = metricItem.findOrCreateAbtest(entry.getKey());
 			Group group = abtest.findOrCreateGroup(entry.getValue());
-			Point point = group.findOrCreatePoint(min);
+			Point point = group.findOrCreatePoint(minute);
 
-			point.setCount(point.getCount() + 1);
-			point.setSum(point.getSum() + value);
+			point.setCount(point.getCount() + count);
+			point.setSum(point.getSum() + sum);
 			point.setAvg(point.getSum() / point.getCount());
 		}
 	}

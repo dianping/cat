@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.abtest.ABTestManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultMessageManager;
 
 public class CatFilter implements Filter {
 	@Override
@@ -26,7 +26,8 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+	      ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		boolean top = !Cat.getManager().hasContext();
@@ -38,18 +39,18 @@ public class CatFilter implements Filter {
 		}
 
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = null;
+		Transaction t;
 
 		if (top) {
-			t = Cat.newTransaction(getTypeName(), getOriginalUrl(request));
-			ABTestManager.onRequestBegin(req, res);
+			t = cat.newTransaction(getTypeName(), getOriginalUrl(request));
 
 			logRequestClientInfo(cat, req);
+			logRequestPayload(cat, req);
+			prepareABTest(req, res);
 		} else {
-			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
+			t = cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
+			logRequestPayload(cat, req);
 		}
-
-		logRequestPayload(cat, req);
 
 		try {
 			doNextFilter(request, response, chain);
@@ -58,7 +59,7 @@ public class CatFilter implements Filter {
 			if (catStatus != null) {
 				t.setStatus(catStatus.toString());
 			} else {
-				t.setStatus(Transaction.SUCCESS);
+				t.setStatus(Message.SUCCESS);
 			}
 		} catch (ServletException e) {
 			cat.logError(e);
@@ -150,6 +151,16 @@ public class CatFilter implements Filter {
 			sb.append('?').append(qs);
 		}
 
-		cat.logEvent(getTypeName(), CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
+		cat.logEvent(getTypeName(), CatConstants.NAME_PAYLOAD, Message.SUCCESS, sb.toString());
+	}
+
+	protected void prepareABTest(HttpServletRequest req, HttpServletResponse res) {
+		ABTestManager.onRequestBegin(req, res);
+		DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
+		String metricType = manager.getMetricType();
+
+		if (metricType != null && metricType.length() > 0) {
+			Cat.logEvent(getTypeName(), "ABTest", Message.SUCCESS, metricType);
+		}
 	}
 }
