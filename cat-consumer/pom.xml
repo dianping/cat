@@ -57,6 +57,7 @@
 							${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,
 					 </manifest>
                   </configuration>
                </execution>

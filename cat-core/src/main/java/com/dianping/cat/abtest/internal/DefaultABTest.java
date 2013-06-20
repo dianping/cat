@@ -1,8 +1,11 @@
 package com.dianping.cat.abtest.internal;
 
+import java.util.Date;
+
 import com.dianping.cat.abtest.ABTest;
 import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
+import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 
 public class DefaultABTest implements ABTest {
@@ -15,11 +18,6 @@ public class DefaultABTest implements ABTest {
 		m_name = name;
 	}
 
-	@Override
-	public ABTestName getTestName() {
-		return m_name;
-	}
-
 	private String getGroupName() {
 		ABTestContext ctx = m_contextManager.getContext(m_name);
 
@@ -27,8 +25,30 @@ public class DefaultABTest implements ABTest {
 	}
 
 	@Override
+	public ABTestName getTestName() {
+		return m_name;
+	}
+
+	@Override
+	public boolean isActive() {
+		ABTestContext ctx = m_contextManager.getContext(m_name);
+		ABTestEntity entity = ctx.getEntity();
+
+		if (entity.isDisabled()) {
+			return false;
+		} else {
+			return entity.isEligible(new Date());
+		}
+	}
+
+	@Override
 	public boolean isDefaultGroup() {
 		return ABTestContext.DEFAULT_GROUP.equals(getGroupName());
+	}
+
+	@Override
+	public boolean isGroup(String name) {
+		return name.equals(getGroupName());
 	}
 
 	@Override
@@ -54,10 +74,5 @@ public class DefaultABTest implements ABTest {
 	@Override
 	public boolean isGroupE() {
 		return "E".equals(getGroupName());
-	}
-
-	@Override
-	public boolean isGroup(String name) {
-		return name.equals(getGroupName());
 	}
 }

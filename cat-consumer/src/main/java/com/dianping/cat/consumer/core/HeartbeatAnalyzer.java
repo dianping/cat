@@ -87,7 +87,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		try {
 			info = com.dianping.cat.status.model.transform.DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
+			System.out.println(xml);
 			m_logger.error("Error when parse status info in heartbeat analyzer." + xml, e);
+			
 			Cat.getProducer().logEvent("HearbeatAnalyzer", "ErrorXml", "Error", xml);
 			return null;
 		}
@@ -220,7 +222,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 				count += processTransaction(report, tree, temp);
 			} else if (message instanceof Heartbeat) {
+<<<<<<< HEAD
 				if (message.getType().equals("heartbeat")) {
+=======
+				if (message.getType().equalsIgnoreCase("heartbeat")) {
+>>>>>>> 5cb523d91ce1562906a1c8cc4db3331d5fd254bf
 					count += processHeartbeat(report, (Heartbeat) message, tree);
 				}
 			}

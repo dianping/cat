@@ -33,7 +33,7 @@
 		<div class="row-fluid">
 			<div class="span12 text-center">
 				<%@ include file="dependencyOpNav.jsp"%>
-		 		<%@ include file="dependencyTimeNav.jsp"%>
+		 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 		</div></div>
 		<div id="fullScreenData">
 			<h1>监控仪表盘信息</h1>

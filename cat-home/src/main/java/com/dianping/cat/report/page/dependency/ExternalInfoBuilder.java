@@ -52,9 +52,9 @@ public class ExternalInfoBuilder {
    		graph.setDes(graph.getDes() + problemInfo);
    	}
    	for (TopologyNode node : graph.getNodes().values()) {
+   		node.setLink(buildTopologyNodeLink(payload, model, node.getId()));
+
    		if (node.getType().equals(GraphConstrant.PROJECT)) {
-   			node.setLink(buildTopologyNodeLink(payload, model, node.getId()));
-   
    			if (node.getStatus() != GraphConstrant.OK) {
    				String problemInfo = buildProblemInfo(node.getId(), payload);
    
