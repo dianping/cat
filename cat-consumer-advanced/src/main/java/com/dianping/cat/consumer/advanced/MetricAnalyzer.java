@@ -14,6 +14,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.advanced.BussinessConfigManager.BusinessConfig;
@@ -49,6 +50,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
+
+	@Inject
+	private ABTestCodec m_codec;
 
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
@@ -101,39 +105,20 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private Map<Integer, String> parseABtests(Transaction transaction) {
-		Map<Integer, String> abtests = new HashMap<Integer, String>();
-		abtests.put(-1, "");
-		double d = Math.random();
-		String group = "";
-		if (d > 0.9) {
-			group = "C";
-		} else if (d > 0.6) {
-			group = "B";
-		} else {
-			group = "A";
-		}
-		abtests.put(1, group);
-		abtests.put(2, group);
-		abtests.put(3, group);
-		return abtests;
+	private Map<String, String> parseABtests(Transaction transaction) {
+		String abtest = queryAbTest(transaction);
+		return parseABTests(abtest);
 	}
 
-	public Map<Integer, String> parseABTests(String str) {
-		Map<Integer, String> abtests = new HashMap<Integer, String>();
-		abtests.put(-1, "");
-		double d = Math.random();
-		String group = "";
-		if (d > 0.9) {
-			group = "C";
-		} else if (d > 0.6) {
-			group = "B";
-		} else {
-			group = "A";
-		}
-		abtests.put(1, group);
-		abtests.put(2, group);
-		abtests.put(3, group);
+	private String queryAbTest(Transaction transaction) {
+	   return "";
+   }
+
+	public Map<String, String> parseABTests(String str) {
+		Map<String, String> abtests = new HashMap<String, String>();
+		abtests.put("-1", "");
+
+		abtests.putAll(m_codec.decode(str));
 		return abtests;
 	}
 
@@ -174,8 +159,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			MetricItem metricItem = report.findOrCreateMetricItem(name);
-			Map<Integer, String> abtests = parseABTests(type);
-		
+			Map<String, String> abtests = parseABTests(type);
+
+			metricItem.addDomain(domain);
 			updateMetric(metricItem, abtests, min, value.getKey(), value.getValue());
 		}
 		return 0;
@@ -183,11 +169,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	private Pair<Integer, Double> parseValue(String status, String data) {
 		Pair<Integer, Double> value = new Pair<Integer, Double>();
-		
+
 		if ("C".equals(status)) {
 			int count = Integer.parseInt(data);
 			value.setKey(count);
-			value.setValue((double)count);
+			value.setValue((double) count);
 		} else if ("T".equals(status)) {
 			double duration = Double.parseDouble(data);
 			value.setKey(1);
@@ -237,8 +223,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				int min = (int) (current % (60));
 				double sum = transaction.getDurationInMicros();
 				MetricItem metricItem = report.findOrCreateMetricItem(name);
-				
-				Map<Integer, String> abtests = parseABtests(transaction);
+				Map<String, String> abtests = parseABtests(transaction);
+
+				metricItem.addDomain(domain);
 				updateMetric(metricItem, abtests, min, 1, sum);
 			}
 		}
@@ -304,9 +291,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void updateMetric(MetricItem metricItem, Map<Integer, String> abtests, int minute, int count,
-	      double sum) {
-		for (Entry<Integer, String> entry : abtests.entrySet()) {
+	private void updateMetric(MetricItem metricItem, Map<String, String> abtests, int minute, int count, double sum) {
+		for (Entry<String, String> entry : abtests.entrySet()) {
 			Abtest abtest = metricItem.findOrCreateAbtest(entry.getKey());
 			Group group = abtest.findOrCreateGroup(entry.getValue());
 			Point point = group.findOrCreatePoint(minute);
