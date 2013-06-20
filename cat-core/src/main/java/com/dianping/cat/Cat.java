@@ -166,6 +166,7 @@ public class Cat {
 	 * 
 	 * @param name
 	 *           the name of the metric
+	 *           default count value is 1
 	 */
 	public static void logMetricForCount(String name) {
 		logMetricInternal(name, "C", "1");
@@ -177,8 +178,8 @@ public class Cat {
 	 * @param name
 	 *           the name of the metric
 	 */
-	public static void logMetricForCount(String name,int count) {
-		logMetricInternal(name, "C", String.valueOf(count));
+	public static void logMetricForCount(String name,int quantity) {
+		logMetricInternal(name, "C", String.valueOf(quantity));
 	}
 
 	/**
