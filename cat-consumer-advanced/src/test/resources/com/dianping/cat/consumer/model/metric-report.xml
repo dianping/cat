@@ -1,5 +1,5 @@
 <metric-report product="TuanGou" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
-	<metric-item id="addCount">
+	<metric-item id="addCount" type="S">
 		<domain>TuanGouWeb</domain>
 		<domain>TuanGouAPI</domain>
 		<abtest run-id="0" name="ALL">

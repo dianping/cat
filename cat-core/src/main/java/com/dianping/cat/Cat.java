@@ -166,9 +166,20 @@ public class Cat {
 	 * 
 	 * @param name
 	 *           the name of the metric
+	 *           default count value is 1
 	 */
 	public static void logMetricForCount(String name) {
-		logMetricInternal(name, "C", null);
+		logMetricInternal(name, "C", "1");
+	}
+	
+	/**
+	 * Increase the counter specified by <code>name</code> by one.
+	 * 
+	 * @param name
+	 *           the name of the metric
+	 */
+	public static void logMetricForCount(String name,int quantity) {
+		logMetricInternal(name, "C", String.valueOf(quantity));
 	}
 
 	/**
@@ -206,11 +217,11 @@ public class Cat {
 	 *           the quantity to be accumulated
 	 */
 	public static void logMetricForSum(String name, double sum, int quantity) {
-		logMetricInternal(name, "S", String.format("%.2f,%s", sum, quantity));
+		logMetricInternal(name, "S,C", String.format("%.2f,%s", sum, quantity));
 	}
 
-	static void logMetricInternal(String name, String type, String keyValuePairs) {
-		Cat.getProducer().logMetric(name, type, keyValuePairs);
+	static void logMetricInternal(String name, String status, String keyValuePairs) {
+		Cat.getProducer().logMetric(name, status, keyValuePairs);
 	}
 
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {

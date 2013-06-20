@@ -71,9 +71,9 @@ public class Handler implements PageHandler<Context> {
 			event.setDate(new Date());
 			try {
 				event.setDate(new Date(Integer.parseInt(time)));
-			} catch (Exception e1) {
+			} catch (Exception ex) {
 				event.setDate(new Date());
-				Cat.logError(e1);
+				Cat.logError(ex);
 			}
 		}
 		m_errorCollectManager.addEvent(event);
