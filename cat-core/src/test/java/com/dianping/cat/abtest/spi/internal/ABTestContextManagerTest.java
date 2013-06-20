@@ -28,4 +28,20 @@ public class ABTestContextManagerTest extends ComponentTestCase {
 
 		Assert.assertEquals(expected, codec.encode(map));
 	}
+	
+	@Test
+	public void testCodec2() throws Exception{
+		check2("1=ab:A|cd:B&2=ab:A|cd:B", "{1=A, 2=A}");
+		check2("1=ab:A&2=ab:A|cd:B", "{1=A, 2=A}");
+		check2("1=ab:A|cd:B&2=ab:|cd:B", "{1=A, 2=}");
+		check2("1=cd:B&2=ab:A|cd:B", "{2=A}");
+		check2("", "{}");
+	}
+	
+	private void check2(String source, String expected) throws Exception {
+		ABTestCodec codec = lookup(ABTestCodec.class);
+		Map<String, String> map = codec.decode(source);
+
+		Assert.assertEquals(expected, map.toString());
+	}
 }
