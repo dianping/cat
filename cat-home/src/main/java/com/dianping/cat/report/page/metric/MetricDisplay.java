@@ -22,9 +22,9 @@ public class MetricDisplay extends BaseVisitor {
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
-	private Set<Integer> m_abtests = new TreeSet<Integer>();
+	private Set<String> m_abtests = new TreeSet<String>();
 
-	private int m_abtest;
+	private String m_abtest;
 
 	private Date m_start;
 
@@ -40,11 +40,11 @@ public class MetricDisplay extends BaseVisitor {
 		return new ArrayList<LineChart>(m_lineCharts.values());
 	}
 	
-	public Set<Integer> getAbtests(){
+	public Set<String> getAbtests(){
 		return m_abtests;
 	}
 
-	public MetricDisplay(List<BusinessConfig> configs, int abtest, Date start) {
+	public MetricDisplay(List<BusinessConfig> configs, String abtest, Date start) {
 		m_start = start;
 		m_abtest = abtest;
 
@@ -80,10 +80,10 @@ public class MetricDisplay extends BaseVisitor {
 
 	@Override
 	public void visitAbtest(Abtest abtest) {
-		Integer abtestId = abtest.getRunId();
+		String abtestId = abtest.getRunId();
 
 		m_abtests.add(abtestId);
-		if (m_abtest == abtestId) {
+		if (m_abtest.equals(abtestId)) {
 			super.visitAbtest(abtest);
 		}
 	}

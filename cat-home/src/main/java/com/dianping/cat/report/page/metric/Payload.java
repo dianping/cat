@@ -16,7 +16,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_product;
 
 	@FieldMeta("test")
-	private int m_test = -1;
+	private String m_test = "-1";
 
 	public Payload() {
 		super(ReportPage.METRIC);
@@ -42,20 +42,20 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getProduct() {
-   	return m_product;
-   }
+		return m_product;
+	}
 
 	public void setProduct(String product) {
-   	m_product = product;
-   }
+		m_product = product;
+	}
 
-	public int getTest() {
-   	return m_test;
-   }
+	public String getTest() {
+		return m_test;
+	}
 
-	public void setTest(int test) {
-   	m_test = test;
-   }
+	public void setTest(String test) {
+		m_test = test;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

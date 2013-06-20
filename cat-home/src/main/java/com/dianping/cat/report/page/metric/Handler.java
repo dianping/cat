@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 
 		MetricReport report = getReport(payload);
-		int test = payload.getTest();
+		String test = payload.getTest();
 
 		if (report != null) {
 			Date startTime = report.getStartTime();

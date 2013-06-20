@@ -138,6 +138,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
