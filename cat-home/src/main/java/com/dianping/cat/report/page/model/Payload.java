@@ -41,16 +41,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("database")
 	private String m_database;
 
-	@FieldMeta("channel")
-	private String m_channel;
-
 	@Override
 	public Action getAction() {
 		return m_action;
-	}
-
-	public String getChannel() {
-		return m_channel;
 	}
 
 	public String getDatabase() {
@@ -112,10 +105,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.XML);
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
 	}
 
 	public void setDatabase(String database) {

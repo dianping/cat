@@ -13,28 +13,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private MetricDisplay m_display;
 
-	private String m_group;
-
-	private String m_channel;
-
-	private Set<String> m_channels;
-
-	private Set<String> m_groups;
-
-	private Set<String> m_childKeyValues;
-	
-	private String m_childKey;
+	private Set<String> m_products;
 
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public Set<String> getChannels() {
-		return m_channels;
 	}
 
 	@Override
@@ -56,56 +38,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new HashSet<String>();
 	}
 
-	public String getGroup() {
-		return m_group;
-	}
-
 	public MetricReport getReport() {
 		return m_report;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public void setChannels(Set<String> channels) {
-		m_channels = channels;
 	}
 
 	public void setDisplay(MetricDisplay display) {
 		m_display = display;
 	}
 
-	public void setGroup(String group) {
-		m_group = group;
-	}
+	public Set<String> getProducts() {
+   	return m_products;
+   }
+
+	public void setProducts(Set<String> products) {
+   	m_products = products;
+   }
 
 	public void setReport(MetricReport report) {
-		m_report = report;
-	}
-
-	public void setGroups(Set<String> groups) {
-		m_groups =groups;
-   }
-
-	public Set<String> getGroups() {
-   	return m_groups;
-   }
-
-	public void setChildKeyValues(Set<String> childKeys) {
-		m_childKeyValues = childKeys;
-   }
-
-	public Set<String> getChildKeyValues() {
-   	return m_childKeyValues;
-   }
-
-	public String getChildKey() {
-   	return m_childKey;
-   }
-
-	public void setChildKey(String childKey) {
-   	m_childKey = childKey;
+   	m_report = report;
    }
 
 }

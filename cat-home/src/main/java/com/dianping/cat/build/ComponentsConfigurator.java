@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.core.config.ConfigDao;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -35,7 +36,6 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
-import com.dianping.cat.system.config.ProductLineConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -67,8 +67,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
-
-		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 

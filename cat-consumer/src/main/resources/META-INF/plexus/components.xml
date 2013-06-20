@@ -196,6 +196,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.core.ProductLineConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>

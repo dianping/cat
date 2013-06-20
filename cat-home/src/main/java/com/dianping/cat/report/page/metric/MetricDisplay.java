@@ -1,8 +1,6 @@
 package com.dianping.cat.report.page.metric;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,208 +8,130 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.dianping.cat.consumer.advanced.BussinessConfigManager.BusinessConfig;
-import com.dianping.cat.consumer.metric.model.entity.Metric;
+import com.dianping.cat.consumer.metric.model.entity.Abtest;
+import com.dianping.cat.consumer.metric.model.entity.Group;
+import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
-import com.google.gson.Gson;
+import com.dianping.cat.report.page.LineChart;
 
 public class MetricDisplay extends BaseVisitor {
 
-	private Map<String, GraphItem> m_metrics = new LinkedHashMap<String, GraphItem>();
+	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
-	private String m_key;
+	private Set<Integer> m_abtests = new TreeSet<Integer>();
 
-	private String m_classificationValue;
+	private int m_abtest;
 
 	private Date m_start;
 
-	private String m_classificationKey;
+	private String m_metricKey;
 
-	private Set<String> m_allChildKeyValues = new TreeSet<String>();
+	private static final String SUM = ":sum";
 
-	public MetricDisplay(List<BusinessConfig> configs, String classificationValue, Date start) {
+	private static final String COUNT = ":count";
+
+	private static final String AVG = "avg";
+	
+	public List<LineChart> getLineCharts(){
+		return new ArrayList<LineChart>(m_lineCharts.values());
+	}
+	
+	public Set<Integer> getAbtests(){
+		return m_abtests;
+	}
+
+	public MetricDisplay(List<BusinessConfig> configs, int abtest, Date start) {
 		m_start = start;
-		m_classificationValue = classificationValue;
+		m_abtest = abtest;
 
 		for (BusinessConfig flag : configs) {
-			String title = flag.getTitle();
-			String classifications = flag.getClassifications();
-
-			if (classifications != null && classifications.length() > 0) {
-				m_classificationKey = classifications;
-			}
 			if (flag.isShowSum()) {
-				String key = flag.getMainKey() + ":sum";
-				m_metrics.put(key, new GraphItem(m_start, title + BusinessConfig.Suffix_SUM, flag.getMainKey()));
+				String key = flag.getMainKey() + SUM;
+				
+				m_lineCharts.put(key, creatLineChart(key));
 			}
 			if (flag.isShowCount()) {
-				String key = flag.getMainKey() + ":count";
-				m_metrics.put(key, new GraphItem(m_start, title + BusinessConfig.Suffix_COUNT, flag.getMainKey()));
+				String key = flag.getMainKey() + COUNT;
+				
+				m_lineCharts.put(key, creatLineChart(key));
+
 			}
 			if (flag.isShowAvg()) {
-				String key = flag.getMainKey() + ":avg";
-				m_metrics.put(key, new GraphItem(m_start, title + BusinessConfig.Suffix_AVG, flag.getMainKey()));
+				String key = flag.getMainKey() + AVG;
+				
+				m_lineCharts.put(key, creatLineChart(key));
 			}
 		}
 	}
 
-	private void buildGraphItem(Collection<Point> points) {
-		for (Point point : points) {
+	private LineChart creatLineChart(String key) {
+	   LineChart lineChart = new LineChart();
+	   
+	   lineChart.setTitles(key);
+	   lineChart.setStart(m_start);
+	   lineChart.setSize(60);
+	   lineChart.setStep(TimeUtil.ONE_MINUTE);
+	   return lineChart;
+   }
 
-			int min = point.getId();
-			long count = point.getCount();
-			double sum = point.getSum();
-			double avg = point.getAvg();
+	@Override
+	public void visitAbtest(Abtest abtest) {
+		Integer abtestId = abtest.getRunId();
 
-			GraphItem graphItem = m_metrics.get(m_key + ":sum");
-			if (graphItem != null) {
-				graphItem.setValue(min, sum);
-			}
-			graphItem = m_metrics.get(m_key + ":count");
-			if (graphItem != null) {
-				graphItem.setValue(min, count);
-			}
-			graphItem = m_metrics.get(m_key + ":avg");
-			if (graphItem != null) {
-				graphItem.setValue(min, avg);
-			}
+		m_abtests.add(abtestId);
+		if (m_abtest == abtestId) {
+			super.visitAbtest(abtest);
 		}
-	}
-
-	public Set<String> getAllChildKeyValues() {
-		return m_allChildKeyValues;
-	}
-
-	public String getChildKey() {
-		return m_classificationKey;
-	}
-
-	public List<GraphItem> getGroups() {
-		return new ArrayList<GraphItem>(m_metrics.values());
 	}
 
 	@Override
-	public void visitMetric(Metric metric) {
-		m_key = metric.getId();
+	public void visitGroup(Group group) {
+		String id = group.getName();
+		double[] sum = new double[60];
+		double[] avg = new double[60];
+		double[] count = new double[60];
 
-		Map<String, Metric> metrics = metric.getMetrics();
-		if (metrics != null) {
-			Set<String> keySet = metrics.keySet();
-			for (String temp : keySet) {
-				m_allChildKeyValues.add(temp.substring(temp.indexOf('=') + 1));
-			}
-		}
-		if (StringUtils.isEmpty(m_classificationValue)) {
-			buildGraphItem(metric.getPoints().values());
-		} else {
-			Metric m = metrics.get(m_classificationKey + '=' + m_classificationValue);
+		for (Point point : group.getPoints().values()) {
+			int index = point.getId();
 
-			if (m != null) {
-				buildGraphItem(m.getPoints().values());
-			}
+			sum[index] = point.getSum();
+			avg[index] = point.getAvg();
+			count[index] = point.getCount();
 		}
+
+		LineChart sumLine = m_lineCharts.get(m_metricKey + SUM);
+
+		if (sumLine != null) {
+			sumLine.addSubTitle(id);
+			sumLine.addValue(sum);
+		}
+		LineChart countLine = m_lineCharts.get(m_metricKey + COUNT);
+
+		if (countLine != null) {
+			countLine.addSubTitle(id);
+			countLine.addValue(count);
+		}
+		LineChart avgLine = m_lineCharts.get(m_metricKey + AVG);
+
+		if (avgLine != null) {
+			avgLine.addSubTitle(id);
+			avgLine.addValue(avg);
+		}
+	}
+
+	@Override
+	public void visitMetricItem(MetricItem metricItem) {
+		m_metricKey = metricItem.getId();
+		super.visitMetricItem(metricItem);
 	}
 
 	@Override
 	public void visitMetricReport(MetricReport metricReport) {
 		super.visitMetricReport(metricReport);
-	}
-
-	public static class GraphItem {
-		private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-
-		private int size = 60;
-
-		private long step = TimeUtil.ONE_MINUTE;
-
-		private String start;
-
-		private transient String title;
-		
-		private List<String> subTitles = new ArrayList<String>();
-
-		private String key;
-
-		private static final int SIZE = 60;
-
-		private transient double[] value = new double[SIZE];
-		
-		private List<double[]> values = new ArrayList<double[]>();
-
-		public GraphItem(Date start, String title, String key) {
-			this.start = sdf.format(start);
-			this.title = title;
-			this.key = key;
-
-			values.add(value);
-			subTitles.add(title);
-		}
-
-		public GraphItem addSubTitle(String title) {
-			return this;
-		}
-
-		public String getJsonString() {
-			Gson gson = new Gson();
-			return gson.toJson(this);
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public int getSize() {
-			return this.size;
-		}
-
-		public String getStart() {
-			return this.start;
-		}
-
-		public long getStep() {
-			return step;
-		}
-
-		public String getTitle() {
-			return this.title;
-		}
-
-		public double[] getValues() {
-			return value;
-		}
-
-		public GraphItem setSize(int size) {
-			this.size = size;
-			return this;
-		}
-
-		public GraphItem setStart(Date start) {
-			this.start = sdf.format(start);
-			return this;
-		}
-
-		public void setStep(long step) {
-			this.step = step;
-		}
-
-		public GraphItem setTitle(String titles) {
-			this.title = titles;
-			return this;
-		}
-
-		public GraphItem setValue(int minute, double temp) {
-			value[minute] = temp;
-			return this;
-		}
-
-		public void setValues(double[] values) {
-			this.value = values;
-		}
 	}
 
 }

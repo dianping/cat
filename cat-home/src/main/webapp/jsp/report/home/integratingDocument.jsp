@@ -4,7 +4,7 @@
 
 <dl>
   <dt><h5 class="text-success">1.Web.xml中新增filter</h5></dt>
-  <dd><p class="detailContent">注：如果项目是对外有没有URL访问，比如GroupService，仅仅提供Pigeon服务，则不需要。</p>
+  <dd><p class="detailContent">注：如果项目是对外不提供URL访问，比如GroupService，仅仅提供Pigeon服务，则不需要。</p>
 	<p class="text-error detailContent"><strong>Filter放在url-rewrite-filter 之后的第一个。</strong></p>
 	<xmp class="well">
     <filter>
