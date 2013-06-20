@@ -2,6 +2,7 @@ package com.dianping.cat.abtest.spi.internal;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class DefaultABTestCodec implements ABTestCodec {
@@ -126,5 +127,23 @@ public class DefaultABTestCodec implements ABTestCodec {
 		}
 
 		return sb.toString();
+	}
+
+	public Map<String,String> decode(String value){
+		Map<String, Map<String, String>> maps = decode(value, null) ;
+		Map<String,String> map = new LinkedHashMap<String, String>();
+		
+		for( Entry<String, Map<String, String>> entry : maps.entrySet()){
+			String key = entry.getKey();
+			if(entry.getValue() != null){
+				String val = entry.getValue().get("ab");
+				
+				if(val != null){
+					map.put(key, val);
+				}
+			}
+		}
+		
+		return map;
 	}
 }
