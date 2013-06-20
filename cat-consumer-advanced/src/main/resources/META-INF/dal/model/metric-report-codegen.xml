@@ -8,6 +8,7 @@
   </entity>
   <entity name="metric-item">
     <attribute name="id" value-type="String" />
+    <attribute name="type" value-type="String" />
     <element name="domain" value-type="String" type="list" names="domains" />
     <entity-ref name="abtest" type="list" names="abtests" />
   </entity>
