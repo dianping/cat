@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -62,18 +61,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		m_logger = logger;
 	}
 
-<<<<<<< HEAD
-	public MetricReport getReport(String group) {
-		MetricReport report = m_reports.get(group);
-=======
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
 
 	public MetricReport getReport(String product) {
 		MetricReport report = m_reports.get(product);
->>>>>>> 5cb523d91ce1562906a1c8cc4db3331d5fd254bf
 
 		if (report == null) {
 			report = new MetricReport(product);
@@ -282,14 +272,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			for (MetricReport report : m_reports.values()) {
 				try {
-<<<<<<< HEAD
-					Set<String> groups = report.getGroupNames();
-
-					groups.clear();
-					groups.addAll(m_reports.keySet());
-
-=======
->>>>>>> 5cb523d91ce1562906a1c8cc4db3331d5fd254bf
 					String xml = builder.buildXml(report);
 					String product = report.getProduct();
 
