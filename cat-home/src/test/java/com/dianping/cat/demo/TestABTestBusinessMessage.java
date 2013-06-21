@@ -17,44 +17,45 @@ public class TestABTestBusinessMessage {
 	@Test
 	public void test() throws Exception {
 
-			for (int i = 0; i < 1000; i++) {
-				Transaction t = Cat.newTransaction("URL", "/index");
-				String abtest = buildAbStr(i);
+			while (true) {
+	         for (int i = 0; i < 1000; i++) {
+		         Transaction t = Cat.newTransaction("URL", "/index");
+		         String abtest = buildAbStr(i);
 
-				Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
-				((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
+		         Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
+		         ((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
 
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-				tree.setDomain(TuanGou);
-				t.complete();
-			}
-			for (int i = 0; i < 800; i++) {
-				Transaction t = Cat.newTransaction("URL", "/detail");
-				String abtest = buildAbStr(i);
+		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		         tree.setDomain(TuanGou);
+		         t.complete();
+	         }
+	         for (int i = 0; i < 800; i++) {
+		         Transaction t = Cat.newTransaction("URL", "/detail");
+		         String abtest = buildAbStr(i);
 
-				Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
-				((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
+		         Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
+		         ((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
 
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-				tree.setDomain(TuanGou);
-				t.complete();
-			}
+		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		         tree.setDomain(TuanGou);
+		         t.complete();
+	         }
+	         for (int i = 0; i < 500; i++) {
+		         Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
+		         String abtest = buildAbStr(i);
 
-			for (int i = 0; i < 500; i++) {
-				Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
-				String abtest = buildAbStr(i);
+		         Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
+		         ((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
+		         Cat.logMetricForCount("order");
+		         Cat.logMetricForDuration("time", 500);
+		         Cat.logMetricForSum("payment.success", i);
 
-				Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
-				((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
-				Cat.logMetricForCount("order");
-				Cat.logMetricForSum("payment.success", i);
-
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-				tree.setDomain(PayOrder);
-				t.complete();
-			}
-			
-			Thread.sleep(1000);
+		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		         tree.setDomain(PayOrder);
+		         t.complete();
+	         }
+	         Thread.sleep(1000);
+         }
 
 	}
 

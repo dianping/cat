@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,10 +15,12 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.Company;
@@ -177,11 +180,28 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		return result;
 	}
+	
+	private void refreshProductLineConfig() throws DalException, SAXException, IOException {
+      Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+      long modifyTime = config.getModifyDate().getTime();
+
+      if (modifyTime > m_modifyTime) {
+      	String content = config.getContent();
+
+      	synchronized (getCompany()) {
+      		m_company = DefaultSaxParser.parse(content);
+      	}
+
+      	m_modifyTime = modifyTime;
+      	m_logger.info("product line config refresh done!");
+      }
+   }
+
 	public class Reload implements Task {
 
 		@Override
 		public String getName() {
-			return null;
+			return "Product-Config-Reload";
 		}
 
 		@Override
@@ -189,19 +209,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			boolean active = true;
 			while (active) {
 				try {
-					Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-					long modifyTime = config.getModifyDate().getTime();
-
-					if (modifyTime > m_modifyTime) {
-						String content = config.getContent();
-
-						synchronized (getCompany()) {
-							m_company = DefaultSaxParser.parse(content);
-						}
-
-						m_modifyTime = modifyTime;
-						m_logger.info("product line config refresh done!");
-					}
+					refreshProductLineConfig();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -213,7 +221,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				}
 			}
 		}
-
+		
 		@Override
 		public void shutdown() {
 		}

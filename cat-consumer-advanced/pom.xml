@@ -69,7 +69,8 @@
 							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/health-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,</manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>

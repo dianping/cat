@@ -33,5 +33,11 @@ public class CatString {
 	public static final String FAIL = "Fail";
 
 	public static final String TUAN_TOU = "TuanGou";
+
+	public static final String SUM = ":和";
+
+	public static final String COUNT = ":次数";
+
+	public static final String AVG = ":平均";
 	
 }

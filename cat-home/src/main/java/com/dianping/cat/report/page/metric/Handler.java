@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,7 +13,8 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.advanced.BussinessConfigManager;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
@@ -32,7 +34,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private BussinessConfigManager m_configManager;
+	private MetricConfigManager m_configManager;
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
@@ -78,7 +80,9 @@ public class Handler implements PageHandler<Context> {
 			}
 			String product = payload.getProduct();
 			List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
-			MetricDisplay display = new MetricDisplay(m_configManager.getConfigs(domains), test, startTime);
+			List<MetricItemConfig> domainSet=m_configManager.queryMetricItemConfig(new HashSet<String>(domains));
+			MetricDisplay display = new MetricDisplay(domainSet,
+			      test, startTime);
 
 			display.visitMetricReport(report);
 			model.setDisplay(display);

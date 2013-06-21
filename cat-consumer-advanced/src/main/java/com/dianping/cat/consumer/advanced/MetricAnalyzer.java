@@ -15,9 +15,9 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.advanced.BussinessConfigManager.BusinessConfig;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
@@ -47,7 +47,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	private BusinessReportDao m_businessReportDao;
 
 	@Inject
-	private BussinessConfigManager m_configManager;
+	private MetricConfigManager m_configManager;
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
@@ -119,8 +119,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			if (message instanceof Event) {
 				if ("URL".equals(message.getType()) && "ABTest".equals(message.getName())) {
 					String data = (String) message.getData();
-					
-					System.out.println(data);
+
 					return data;
 				}
 			}
@@ -168,7 +167,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		String name = metric.getName();
 		String domain = tree.getDomain();
 		String data = (String) metric.getData();
-		Pair<Integer, Double> value = parseValue(metric.getStatus(), data);
+		String status = metric.getStatus();
+		Pair<Integer, Double> value = parseValue(status, data);
 
 		if (value != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
@@ -176,7 +176,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			MetricItem metricItem = report.findOrCreateMetricItem(name);
 			Map<String, String> abtests = parseABTests(type);
 
-			metricItem.addDomain(domain);
+			metricItem.addDomain(domain).setType(status);
 			updateMetric(metricItem, abtests, min, value.getKey(), value.getValue());
 		}
 		return 0;
@@ -229,10 +229,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (CatConstants.TYPE_URL.equals(type)) {
 			String name = transaction.getName();
 			String domain = tree.getDomain();
-			Map<String, BusinessConfig> configs = m_configManager.getUrlConfigs(domain);
-			BusinessConfig config = null;
+			MetricItemConfig config = m_configManager.queryMetricItemConfig(domain + ":" + name);
 
-			config = configs.get(name);
 			if (config != null) {
 				long current = transaction.getTimestamp() / 1000 / 60;
 				int min = (int) (current % (60));
@@ -240,7 +238,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				MetricItem metricItem = report.findOrCreateMetricItem(name);
 				Map<String, String> abtests = parseABtests(transaction);
 
-				metricItem.addDomain(domain);
+				metricItem.addDomain(domain).setType("C");
 				updateMetric(metricItem, abtests, min, 1, sum);
 			}
 		}

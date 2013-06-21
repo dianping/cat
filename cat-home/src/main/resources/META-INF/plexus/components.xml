@@ -2650,7 +2650,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
@@ -2667,8 +2667,13 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
-			<implementation>com.dianping.cat.consumer.advanced.BussinessConfigManager</implementation>
+			<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>

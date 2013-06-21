@@ -32,7 +32,7 @@ public class HistoryGraphs {
 		}
 		int day = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 		LineChart item = new LineChart();
-		item.setStart(start).setSize(day).setTitles(key).addSubTitle(key).setStep(TimeUtil.ONE_DAY);
+		item.setStart(start).setSize(day).setTitle(key).addSubTitle(key).setStep(TimeUtil.ONE_DAY);
 		item.addValue(getDateFromReports(reports, day, key));
 		return item;
 	}
@@ -44,7 +44,7 @@ public class HistoryGraphs {
 			reports.add(report);
 		}
 		LineChart item = new LineChart();
-		item.setStart(start).setSize(24).setTitles(key).addSubTitle(key).setStep(TimeUtil.ONE_HOUR);
+		item.setStart(start).setSize(24).setTitle(key).addSubTitle(key).setStep(TimeUtil.ONE_HOUR);
 		item.addValue(getDateFromReports(reports, 24, key));
 		return item;
 	}

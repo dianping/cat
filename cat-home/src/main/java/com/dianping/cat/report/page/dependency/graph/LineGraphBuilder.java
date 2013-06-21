@@ -49,7 +49,7 @@ public class LineGraphBuilder extends BaseVisitor {
 
 		result.setSize(60);
 		result.setStep(TimeUtil.ONE_MINUTE);
-		result.setTitles(title);
+		result.setTitle(title);
 		result.setStart(m_start);
 		if (items != null) {
 			for (Entry<String, Item> entry : items.entrySet()) {

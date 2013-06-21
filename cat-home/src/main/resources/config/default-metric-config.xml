@@ -1,0 +1,7 @@
+<metric-config>
+	<metric-item-config id="TuanGouWeb:/index" domain="TuanGouWeb" type="URL" view-order="1" metric-key="/index" title="团购首页"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
+	<metric-item-config id="TuanGouWeb:/detail" domain="TuanGouWeb" type="URL" view-order="1" metric-key="/detail" title="团购详情"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
+	<metric-item-config id="TuanGouWeb:/order/submitOrder" domain="PayOrder" type="URL" view-order="1" metric-key="/index" title="团购支付"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
+	<metric-item-config id="Cat:t" domain="Cat" type="URL" view-order="1" metric-key="t" title="transaction"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
+	<metric-item-config id="Cat:home" domain="Cat" type="URL" view-order="1" metric-key="home" title="home"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
+</metric-config>
