@@ -7,11 +7,11 @@
     <attribute name="id" value-type="String" key="true"/>
     <attribute name="domain" value-type="String" />
     <attribute name="type" value-type="String" />
-    <attribute name="view-order" value-type="int" primative="true"/>
+    <attribute name="view-order" value-type="double" primitive="true"/>
     <attribute name="metric-key" value-type="String" />
     <attribute name="title" value-type="String" />
-    <attribute name="show-count" value-type="boolean" primative="true"/>
-    <attribute name="show-avg" value-type="boolean" primative="true"/>
-    <attribute name="show-sum" value-type="boolean" primative="true"/>
+    <attribute name="show-count" value-type="boolean" primitive="true"/>
+    <attribute name="show-avg" value-type="boolean" primitive="true"/>
+    <attribute name="show-sum" value-type="boolean" primitive="true"/>
   </entity>
 </model>

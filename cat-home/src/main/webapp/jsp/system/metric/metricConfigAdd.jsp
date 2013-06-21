@@ -35,7 +35,10 @@
 					<input name="metricItemConfig.type" value="${model.metricItemConfig.type}" readonly required/>
 				</c:if>
 				<c:if test="${empty  model.metricItemConfig.type}">
-					<input name="metricItemConfig.type" value="${model.metricItemConfig.type}" required/>
+					<select name="metricItemConfig.type">
+						<option value="URL">URL</option>
+						<option value="PigeonService">PigeonService</option>
+					</select>
 				</c:if>
 		</tr>
 		<tr>

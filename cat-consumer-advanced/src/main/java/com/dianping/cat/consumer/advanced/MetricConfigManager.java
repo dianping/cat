@@ -2,6 +2,8 @@ package com.dianping.cat.consumer.advanced;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -137,6 +139,13 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				configs.add(item);
 			}
 		}
+		Collections.sort(configs, new Comparator<MetricItemConfig>() {
+
+			@Override
+			public int compare(MetricItemConfig m1, MetricItemConfig m2) {
+				return (int) ((m1.getViewOrder() - m2.getViewOrder()) * 100);
+			}
+		});
 		return configs;
 	}
 

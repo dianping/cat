@@ -12,7 +12,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -152,7 +151,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			processUrl(product, report, (Transaction) message, tree);
+			processMetricOnTransaction(product, report, (Transaction) message, tree);
 		}
 		if (message instanceof Transaction) {
 			processTransaction(product, report, tree, (Transaction) message);
@@ -234,13 +233,17 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return count;
 	}
 
-	private void processUrl(String product, MetricReport report, Transaction transaction, MessageTree tree) {
+	private void processMetricOnTransaction(String product, MetricReport report, Transaction transaction,
+	      MessageTree tree) {
 		String type = transaction.getType();
 
-		if (CatConstants.TYPE_URL.equals(type)) {
+		if (type.equals("Service")) {
+			type = "PigeonService";
+		}
+		if ("URL".equals(type) || "PigeonService".equals(type)) {
 			String name = transaction.getName();
 			String domain = tree.getDomain();
-			String key = m_configManager.buildMetricKey(domain, "URL", name);
+			String key = m_configManager.buildMetricKey(domain, type, name);
 			MetricItemConfig config = m_configManager.queryMetricItemConfig(key);
 
 			if (config != null) {

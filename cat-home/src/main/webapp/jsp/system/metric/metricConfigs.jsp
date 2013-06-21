@@ -11,6 +11,7 @@
 <a:body>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
@@ -46,6 +47,7 @@
 						$('#myModal').html(response);
 						$('#myModal').modal();
 						$("#id").select2();
+						metricValidate();
 					}
 				});
 			});
