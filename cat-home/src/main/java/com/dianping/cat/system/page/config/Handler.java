@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -18,6 +22,8 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
@@ -41,13 +47,16 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphConfigManager m_topologyConfigManager;
-	
+
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManger;
-	
+
 	@Inject
 	private AggregationConfigManager m_aggreationConfigManager;
-	
+
+	@Inject
+	private MetricConfigManager m_metricConfigManager;
+
 	@Inject
 	private DomainNavManager m_manager;
 
@@ -154,8 +163,7 @@ public class Handler implements PageHandler<Context> {
 			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
 			break;
 		case AGGREGATION_UPDATE:
-			model.setAggregationRule(
-					m_aggreationConfigManager.queryAggration(payload.getPattern()));
+			model.setAggregationRule(m_aggreationConfigManager.queryAggration(payload.getPattern()));
 			break;
 		case AGGREGATION_UPDATE_SUBMIT:
 			updateAggregationRule(payload);
@@ -216,8 +224,58 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
 			model.setProductLines(m_productLineConfigManger.queryProductLines());
 			break;
+
+		case METRIC_CONFIG_ADD_OR_UPDATE:
+			metricConfigAdd(payload, model);
+			model.setProjects(queryAllProjects());
+			break;
+		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(metricConfigAddSubmit(payload, model));
+			metricConfigList(payload, model);
+			break;
+		case METRIC_CONFIG_LIST:
+			metricConfigList(payload, model);
+			break;
+		case METRIC_CONFIG_DELETE:
+			model.setOpState(m_metricConfigManager.deleteDomainConfig(m_metricConfigManager.buildMetricKey(payload.getDomain(),
+			      payload.getType(), payload.getMetricKey())));
+			metricConfigList(payload, model);
+			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void metricConfigAdd(Payload payload, Model model) {
+		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
+
+		model.setMetricItemConfig(m_metricConfigManager.queryMetricItemConfig(key));
+	}
+
+	private boolean metricConfigAddSubmit(Payload payload, Model model) {
+		MetricItemConfig config = payload.getMetricItemConfig();
+		String domain = config.getDomain();
+		String type = config.getType();
+		String metricKey = config.getMetricKey();
+
+		if (!StringUtil.isEmpty(domain)&&!StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
+			config.setId(m_metricConfigManager.buildMetricKey(domain, type, metricKey));
+			return m_metricConfigManager.insertMetricItemConfig(config);
+		} else {
+			return false;
+		}
+	}
+
+	private void metricConfigList(Payload payload, Model model) {
+		Map<String, ProductLine> productLins = m_productLineConfigManger.queryProductLines();
+		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
+
+		for (Entry<String, ProductLine> entry : productLins.entrySet()) {
+			Set<String> domains = entry.getValue().getDomains().keySet();
+			List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
+
+			metricConfigs.put(entry.getValue(), configs);
+		}
+		model.setProductMetricConfigs(metricConfigs);
 	}
 
 	private List<Project> queryAllProjects() {
@@ -259,7 +317,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	class ProjectCompartor implements Comparator<Project> {
+	public static class ProjectCompartor implements Comparator<Project> {
 
 		@Override
 		public int compare(Project o1, Project o2) {

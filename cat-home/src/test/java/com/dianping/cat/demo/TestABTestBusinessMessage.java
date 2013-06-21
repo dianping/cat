@@ -49,6 +49,9 @@ public class TestABTestBusinessMessage {
 		         Cat.logMetricForCount("order");
 		         Cat.logMetricForDuration("time", 500);
 		         Cat.logMetricForSum("payment.success", i);
+		         Cat.logMetricForSum("Order1", i);
+		         Cat.logMetricForSum("Order2", i);
+		         Cat.logMetricForSum("Order1-10", i);
 
 		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
 		         tree.setDomain(PayOrder);

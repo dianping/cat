@@ -3100,6 +3100,9 @@
 					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 			</requirements>

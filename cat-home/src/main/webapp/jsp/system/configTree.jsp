@@ -10,7 +10,7 @@
 	       <li class="text-right" id="topylogyNodeConfigList"><a href="?op=topologyGraphNodeConfigList"><strong>拓扑节点阀值</strong></a></li>
 	       <li class="text-right" id="topylogyEdgeConfigList"><a href="?op=topologyGraphEdgeConfigList"><strong>拓扑依赖阀值</strong></a></li>
            <li class='nav-header'><h4>业务监控配置</h4></li>
-	       <li class="text-right" id="bussinessConfigList"><a href="?"><strong>业务监控规则</strong></a></li>
+	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
          </ul>
 </div>
 <style>

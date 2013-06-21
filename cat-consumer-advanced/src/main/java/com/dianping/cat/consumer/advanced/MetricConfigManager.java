@@ -22,6 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.advanced.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.core.config.Config;
 import com.dianping.cat.consumer.core.config.ConfigDao;
 import com.dianping.cat.consumer.core.config.ConfigEntity;
@@ -41,44 +42,24 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "metricConfig";
 
-	public MetricConfig getMetricConfig() {
-		synchronized (m_metricConfig) {
-			return m_metricConfig;
-		}
-	}
-	
-	public boolean insertMetricItemConfig(MetricItemConfig config){
-		getMetricConfig().addMetricItemConfig(config);
-		
-		return storeConfig();
-	}
-	
-	public MetricItemConfig queryMetricItemConfig(String id) {
-		return getMetricConfig().findMetricItemConfig(id);
+	public String buildMetricKey(String domain, String type, String metricKey) {
+		return domain + ":" + type + ":" + metricKey;
 	}
 
-	public List<MetricItemConfig> queryMetricItemConfig(Set<String> domains) {
-		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>();
-		Map<String, MetricItemConfig> metricConfig = getMetricConfig().getMetricItemConfigs();
-
-		for (Entry<String, MetricItemConfig> entry : metricConfig.entrySet()) {
-			MetricItemConfig item = entry.getValue();
-
-			if (domains.contains(item.getDomain())) {
-				configs.add(item);
-			}
-		}
-		return configs;
-	}
-
-	public boolean deleteDomainConfig(String domain) {
-		getMetricConfig().removeMetricItemConfig(domain);
+	public boolean deleteDomainConfig(String key) {
+		getMetricConfig().removeMetricItemConfig(key);
 		return storeConfig();
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public MetricConfig getMetricConfig() {
+		synchronized (m_metricConfig) {
+			return m_metricConfig;
+		}
 	}
 
 	@Override
@@ -109,9 +90,54 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (getMetricConfig() == null) {
+		if (m_metricConfig == null) {
 			m_metricConfig = new MetricConfig();
 		}
+	}
+
+	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
+		String key = buildMetricKey(domain, type, metricKey);
+		MetricItemConfig config = m_metricConfig.findMetricItemConfig(key);
+
+		if (config != null) {
+			return true;
+		} else {
+			config = new MetricItemConfig();
+			config.setDomain(domain);
+			config.setType(type);
+			config.setMetricKey(metricKey);
+			config.setId(key);
+			config.setTitle(item.getTitle());
+			config.setShowAvg(item.isShowAvg());
+			config.setShowCount(item.isShowCount());
+			config.setShowSum(item.isShowSum());
+
+			return insertMetricItemConfig(config);
+		}
+	}
+
+	public boolean insertMetricItemConfig(MetricItemConfig config) {
+		getMetricConfig().addMetricItemConfig(config);
+
+		return storeConfig();
+	}
+
+	public MetricItemConfig queryMetricItemConfig(String id) {
+		return getMetricConfig().findMetricItemConfig(id);
+	}
+
+	public List<MetricItemConfig> queryMetricItemConfigs(Set<String> domains) {
+		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>();
+		Map<String, MetricItemConfig> metricConfig = getMetricConfig().getMetricItemConfigs();
+
+		for (Entry<String, MetricItemConfig> entry : metricConfig.entrySet()) {
+			MetricItemConfig item = entry.getValue();
+
+			if (domains.contains(item.getDomain())) {
+				configs.add(item);
+			}
+		}
+		return configs;
 	}
 
 	private void refreshMetricConfig() throws DalException, SAXException, IOException {

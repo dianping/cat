@@ -10,7 +10,6 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -124,11 +123,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				}
 			}
 		}
-
 		return "";
 	}
 
 	public Map<String, String> parseABTests(String str) {
+		// -1 is the all metric,design for default
 		Map<String, String> abtests = new HashMap<String, String>();
 		abtests.put("-1", "");
 
@@ -168,44 +167,56 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		String domain = tree.getDomain();
 		String data = (String) metric.getData();
 		String status = metric.getStatus();
-		Pair<Integer, Double> value = parseValue(status, data);
+		ConfigItem config = parseValue(status, data);
 
-		if (value != null) {
+		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			MetricItem metricItem = report.findOrCreateMetricItem(name);
 			Map<String, String> abtests = parseABTests(type);
 
 			metricItem.addDomain(domain).setType(status);
-			updateMetric(metricItem, abtests, min, value.getKey(), value.getValue());
+			updateMetric(metricItem, abtests, min, config.getCount(), config.getValue());
+
+			config.setTitle(name);
+			m_configManager.insertIfNotExist(domain, "Metric", name, config);
 		}
 		return 0;
 	}
 
-	private Pair<Integer, Double> parseValue(String status, String data) {
-		Pair<Integer, Double> value = new Pair<Integer, Double>();
+	private ConfigItem parseValue(String status, String data) {
+		ConfigItem config = new ConfigItem();
 
 		if ("C".equals(status)) {
 			int count = Integer.parseInt(data);
-			value.setKey(count);
-			value.setValue((double) count);
+
+			config.setCount(count);
+			config.setValue((double) count);
+			config.setShowCount(true);
 		} else if ("T".equals(status)) {
 			double duration = Double.parseDouble(data);
-			value.setKey(1);
-			value.setValue(duration);
+
+			config.setCount(1);
+			config.setValue(duration);
+			config.setShowAvg(true);
 		} else if ("S".equals(status)) {
 			double sum = Double.parseDouble(data);
-			value.setKey(1);
-			value.setValue(sum);
+
+			config.setCount(1);
+			config.setValue(sum);
+			config.setShowSum(true);
 		} else if ("S,C".equals(status)) {
 			String[] datas = data.split(",");
-			value.setKey(Integer.parseInt(datas[0]));
-			value.setValue(Double.parseDouble(datas[1]));
+
+			config.setCount(Integer.parseInt(datas[0]));
+			config.setValue(Double.parseDouble(datas[1]));
+			config.setShowCount(true);
+			config.setShowSum(true);
 		} else {
 			return null;
 		}
 
-		return value;
+		return config;
 	}
 
 	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
@@ -229,7 +240,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (CatConstants.TYPE_URL.equals(type)) {
 			String name = transaction.getName();
 			String domain = tree.getDomain();
-			MetricItemConfig config = m_configManager.queryMetricItemConfig(domain + ":" + name);
+			String key = m_configManager.buildMetricKey(domain, "URL", name);
+			MetricItemConfig config = m_configManager.queryMetricItemConfig(key);
 
 			if (config != null) {
 				long current = transaction.getTimestamp() / 1000 / 60;
@@ -313,6 +325,73 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			point.setCount(point.getCount() + count);
 			point.setSum(point.getSum() + sum);
 			point.setAvg(point.getSum() / point.getCount());
+		}
+	}
+
+	public static class ConfigItem {
+		private int m_count;
+
+		private double m_value;
+
+		private boolean m_showCount = false;
+
+		private boolean m_showAvg = false;
+
+		private boolean m_showSum = false;
+
+		private String m_title;
+
+		public String getTitle() {
+			return m_title;
+		}
+
+		public void setTitle(String title) {
+			m_title = title;
+		}
+
+		public int getCount() {
+			return m_count;
+		}
+
+		public ConfigItem setCount(int count) {
+			m_count = count;
+			return this;
+		}
+
+		public double getValue() {
+			return m_value;
+		}
+
+		public ConfigItem setValue(double value) {
+			m_value = value;
+			return this;
+		}
+
+		public boolean isShowCount() {
+			return m_showCount;
+		}
+
+		public ConfigItem setShowCount(boolean showCount) {
+			m_showCount = showCount;
+			return this;
+		}
+
+		public boolean isShowAvg() {
+			return m_showAvg;
+		}
+
+		public ConfigItem setShowAvg(boolean showAvg) {
+			m_showAvg = showAvg;
+			return this;
+		}
+
+		public boolean isShowSum() {
+			return m_showSum;
+		}
+
+		public ConfigItem setShowSum(boolean showSum) {
+			m_showSum = showSum;
+			return this;
 		}
 	}
 }

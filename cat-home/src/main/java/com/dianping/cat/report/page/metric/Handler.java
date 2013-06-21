@@ -80,7 +80,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			String product = payload.getProduct();
 			List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
-			List<MetricItemConfig> domainSet=m_configManager.queryMetricItemConfig(new HashSet<String>(domains));
+			List<MetricItemConfig> domainSet=m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
 			MetricDisplay display = new MetricDisplay(domainSet,
 			      test, startTime);
 

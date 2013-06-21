@@ -126,7 +126,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return domains;
 	}
-
+	
 	public Map<String, ProductLine> queryProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
@@ -137,7 +137,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 			@Override
 			public int compare(Entry<String, ProductLine> o1, Entry<String, ProductLine> o2) {
-				return (int) (o2.getValue().getOrder() * 100 - o1.getValue().getOrder() * 100);
+				return (int) (o1.getValue().getOrder() * 100 - o2.getValue().getOrder() * 100);
 			}
 		});
 	}
