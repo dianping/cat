@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.metric;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
@@ -14,14 +13,13 @@ import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 public class MetricReportParseTest {
 
 	@Test
-	@Ignore
-	public void test() throws Exception{
+	public void test() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("metric-report.xml"), "utf-8");
 		MetricReport report = DefaultSaxParser.parse(oldXml);
 		byte[] bytes = DefaultNativeBuilder.build(report);
 
 		MetricReport report2 = DefaultNativeParser.parse(bytes);
-		
+
 		Assert.assertEquals(report.toString(), report2.toString());
 	}
 }

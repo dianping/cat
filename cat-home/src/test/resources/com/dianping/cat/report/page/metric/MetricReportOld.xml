@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metric-report group="TuanGou" startTime="2013-04-03 16:00:00"
-	endTime="2013-04-03 16:59:59">
-	<group>TuanGou</group>
-	<metric id="/index">
-		<point id="0" count="4" sum="4.00" avg="1.00" />
-		<point id="1" count="4" sum="4.00" avg="1.00" />
-	</metric>
-	<metric id="/index1">
-		<point id="0" count="4" sum="4.00" avg="1.00" />
-		<point id="1" count="4" sum="4.00" avg="1.00" />
-	</metric>
+<metric-report product="arch" startTime="2013-06-24 10:00:00" endTime="2013-06-24 10:59:59">
+   <metric-item id="home" type="C">
+      <abtest run-id="-1">
+         <group name="">
+            <point id="40" count="1" sum="100" avg="100.0"/>
+         </group>
+      </abtest>
+   </metric-item>
+   <metric-item id="t" type="C">
+      <abtest run-id="-1">
+         <group name="">
+            <point id="40" count="1" sum="100" avg="100.0"/>
+         </group>
+      </abtest>
+   </metric-item>
+   <metric-item id="state" type="C">
+      <abtest run-id="-1">
+         <group name="">
+            <point id="40" count="1" sum="100" avg="100.0"/>
+         </group>
+      </abtest>
+   </metric-item>
 </metric-report>
