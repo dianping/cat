@@ -23,7 +23,7 @@ public class DependencyReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", merger.getDependencyReport().toString(), result.toString());
+		Assert.assertEquals("Check the merge result!", result.toString(), merger.getDependencyReport().toString());
 	}
 
 }

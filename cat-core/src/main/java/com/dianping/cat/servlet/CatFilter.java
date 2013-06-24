@@ -19,6 +19,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class CatFilter implements Filter {
 	@Override
@@ -26,8 +27,7 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	      ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		boolean top = !Cat.getManager().hasContext();
@@ -36,6 +36,8 @@ public class CatFilter implements Filter {
 			String sessionToken = getSessionIdFromCookie(req);
 
 			Cat.setup(sessionToken);
+
+			initCat(req);
 		}
 
 		MessageProducer cat = Cat.getProducer();
@@ -83,6 +85,21 @@ public class CatFilter implements Filter {
 				Cat.reset();
 				ABTestManager.onRequestEnd();
 			}
+		}
+	}
+
+	protected void initCat(HttpServletRequest req) {
+		String id = req.getHeader("X-Cat-Id");
+
+		if (id != null) {
+			String parentId = req.getHeader("X-Cat-Parent-Id");
+			String rootId = req.getHeader("X-Cat-Root-Id");
+
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+
+			tree.setMessageId(id);
+			tree.setParentMessageId(parentId);
+			tree.setRootMessageId(rootId);
 		}
 	}
 
