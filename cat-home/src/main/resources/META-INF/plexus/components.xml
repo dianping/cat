@@ -143,6 +143,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.ConfigReloadTask</role>
+			<implementation>com.dianping.cat.system.config.ConfigReloadTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.HourlyReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.HourlyReportServiceImpl</implementation>
 			<requirements>

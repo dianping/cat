@@ -18,7 +18,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
@@ -181,7 +180,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return result;
 	}
 	
-	private void refreshProductLineConfig() throws DalException, SAXException, IOException {
+	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
       Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
       long modifyTime = config.getModifyDate().getTime();
 
@@ -196,35 +195,5 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
       	m_logger.info("product line config refresh done!");
       }
    }
-
-	public class Reload implements Task {
-
-		@Override
-		public String getName() {
-			return "Product-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshProductLineConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-
-				try {
-					Thread.sleep(60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-		
-		@Override
-		public void shutdown() {
-		}
-	}
 
 }
