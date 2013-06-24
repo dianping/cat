@@ -17,6 +17,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -38,7 +39,10 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
-
+	
+	@Inject
+	private AbtestDao m_abtestDao;
+	
 	private static final String TUAN = "TuanGou";
 
 	private MetricReport getReport(Payload payload) {
@@ -50,7 +54,6 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();
 
-			System.out.println(report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
@@ -84,11 +87,13 @@ public class Handler implements PageHandler<Context> {
 			List<MetricItemConfig> domainSet=m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
 			MetricDisplay display = new MetricDisplay(domainSet,
 			      test, startTime);
-
+			
+			display.setAbtest(m_abtestDao);
+			
 			display.visitMetricReport(report);
 			model.setDisplay(display);
 			model.setReport(report);
-			model.setProducts(m_productLineConfigManager.queryProductLines().keySet());
+			model.setProductLines(m_productLineConfigManager.queryProductLines().values());
 		}
 		m_jspViewer.view(ctx, model);
 	}

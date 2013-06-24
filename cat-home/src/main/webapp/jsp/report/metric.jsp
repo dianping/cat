@@ -45,12 +45,12 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-	            <c:forEach var="item" items="${model.products}" varStatus="status">
-	              <li class='nav-header' id="${item}"><a href="?date=${model.date}&domain=${model.domain}&product=${item}"><strong>${item}</strong></a></li>
-	              <c:if test="${payload.product eq item }">
-		               <c:forEach var="item" items="${model.display.abtests}" varStatus="status">
-		               	   <c:if test="${item ne -1}">
-				              <li id="${item}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${item}">AB测试${item}</a></li>
+	            <c:forEach var="item" items="${model.productLines}" varStatus="status">
+	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}"><strong>${item.title}</strong></a></li>
+	              <c:if test="${payload.product eq item.id }">
+		               <c:forEach var="test" items="${model.display.abtests}" varStatus="status">
+		               	   <c:if test="${test.id ne -1}">
+				              <li id="${test.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.id}">AB-${test.name}</a></li>
 		               	   </c:if>
 		       		  </c:forEach>
 	              </c:if>
@@ -80,9 +80,6 @@
 	width: 380px;
 	height: 250px;
 	margin: 4px auto;
-}
-.row-fluid .span2{
-	width:12%;
 }
 .well {
 padding: 10px 10px 10px 19p;

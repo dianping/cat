@@ -21,6 +21,7 @@ public class MetricReportMerger extends DefaultMerger {
 
 	@Override
    protected void mergeMetricItem(MetricItem old, MetricItem metricItem) {
+		old.setType(metricItem.getType());
 	   super.mergeMetricItem(old, metricItem);
    }
 
@@ -37,6 +38,5 @@ public class MetricReportMerger extends DefaultMerger {
 			old.setAvg(old.getSum() / old.getCount());
 		}
 	}
-	
 	
 }
