@@ -138,16 +138,23 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		int height = 18;
 		int x = 0;
 		int y = locator.getLine() * height + ruler.getOffsetY();
+		String rid = "r" + locator.getLine();
+		String tid = "t" + locator.getLine();
 
 		b.branch(locator, x, y, width, height);
 
 		x += locator.getLevel() * width;
 
 		if (t.getStatus().equals("0")) {
-			b.tagWithText("text", t.getType(), "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0");
+			b.tag1("text", "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0");
 		} else {
-			b.tagWithText("text", t.getType(), "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0", "fill", "red");
+			b.tag1("text", "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0", "fill", "red");
 		}
+
+		b.add(t.getType()).newLine();
+		b.tag("set", "attributeName", "fill", "to", "red", "begin", rid + ".mouseover", "end", rid + ".mouseout");
+		b.tag("set", "attributeName", "fill", "to", "red", "begin", tid + ".mouseover", "end", tid + ".mouseout");
+		b.tag2("text");
 
 		long t0 = tree.getMessage().getTimestamp();
 		long t1 = t.getTimestamp();
@@ -156,9 +163,9 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		int rx = ruler.calcX((t1 - t0) * 1000);
 		int rw = ruler.calcX(d) - ruler.getOffsetX();
 
-		b.tag("rect", "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
-		b.tagWithText("text", String.format("%.2f %s", t.getDurationInMicros() / 1000.0, t.getName()), "x", rx + 5, "y", y - 3,
-		      "font-size", "11", "stroke-width", "0");
+		b.tag("rect", "id", rid, "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
+		b.tagWithText("text", String.format("%.2f %s", t.getDurationInMicros() / 1000.0, t.getName()), "id", tid, "x", rx + 5, "y",
+		      y - 3, "font-size", "11", "stroke-width", "0");
 
 		int count = helper.write(buf, sb.toString());
 		return count;
