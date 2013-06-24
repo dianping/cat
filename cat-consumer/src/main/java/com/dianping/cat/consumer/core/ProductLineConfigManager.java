@@ -187,7 +187,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
       if (modifyTime > m_modifyTime) {
       	String content = config.getContent();
 
-      	synchronized (getCompany()) {
+      	synchronized (m_company) {
       		m_company = DefaultSaxParser.parse(content);
       	}
 
