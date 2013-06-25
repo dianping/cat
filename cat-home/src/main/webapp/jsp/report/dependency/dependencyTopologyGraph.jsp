@@ -104,7 +104,7 @@
 		}else if(nodeSize>0){
 			defaultWeight = 1.0;
 		}
-		console.log(nodeSize+" "+defaultWeight);
+		try{
 		new  StarTopo('container',convertData,{
 				typeMap:{
 					database:'rect',
@@ -124,7 +124,9 @@
 			nodeWeight:function(weight){
 				return weight/5+defaultWeight;
 			}});
-		
+		}catch(e){
+			console.log(e);
+		}
 		var tab = '${payload.tab}';
 		if(tab=='tab3'){
 			$('#tab3Href').trigger('click');
