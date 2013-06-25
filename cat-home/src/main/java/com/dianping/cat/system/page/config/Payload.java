@@ -5,6 +5,7 @@ import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.core.dal.Project;
@@ -33,6 +34,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@ObjectMeta("edgeConfig")
 	private EdgeConfig m_edgeConfig = new EdgeConfig();
 
+	@ObjectMeta("metricItemConfig")
+	private MetricItemConfig m_metricItemConfig = new MetricItemConfig();
+
 	@FieldMeta("projectId")
 	private int m_projectId;
 
@@ -51,12 +55,15 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("id")
 	private int m_id;
 
+	@FieldMeta("metricKey")
+	private String m_metricKey;
+
 	@FieldMeta("type")
 	private String m_type;
 
 	@FieldMeta("to")
 	private String m_to;
-	
+
 	@FieldMeta("pattern")
 	private String m_pattern;
 
@@ -98,8 +105,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public String getPattern() {
-   	return m_pattern;
-   }
+		return m_pattern;
+	}
 
 	public ProductLine getProductLine() {
 		return m_productLine;
@@ -167,8 +174,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setPattern(String pattern) {
-   	m_pattern = pattern;
-   }
+		m_pattern = pattern;
+	}
 
 	public void setProductLine(ProductLine productLine) {
 		m_productLine = productLine;
@@ -211,4 +218,20 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void validate(ActionContext<?> ctx) {
 	}
 
+	public MetricItemConfig getMetricItemConfig() {
+		return m_metricItemConfig;
+	}
+
+	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
+		m_metricItemConfig = metricItemConfig;
+	}
+
+	public String getMetricKey() {
+   	return m_metricKey;
+   }
+
+	public void setMetricKey(String metricKey) {
+   	m_metricKey = metricKey;
+   }
+	
 }

@@ -20,7 +20,7 @@ public class LineChart {
 
 	private List<String> subTitles = new ArrayList<String>();
 
-	private String titles;
+	private String title;
 
 	private List<double[]> values = new ArrayList<double[]>();
 
@@ -56,8 +56,8 @@ public class LineChart {
 		return this.subTitles;
 	}
 
-	public String getTitles() {
-		return this.titles;
+	public String getTitle() {
+		return this.title;
 	}
 
 	public List<double[]> getValues() {
@@ -83,8 +83,8 @@ public class LineChart {
 		return this;
 	}
 
-	public LineChart setTitles(String titles) {
-		this.titles = titles;
+	public LineChart setTitle(String title) {
+		this.title = title;
 		return this;
 	}
 

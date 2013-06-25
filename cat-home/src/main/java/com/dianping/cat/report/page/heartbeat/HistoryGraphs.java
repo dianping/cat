@@ -96,7 +96,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		LineChart item = new LineChart();
 		item.setStart(start);
 		item.setSize(size);
-		item.setTitles(title);
+		item.setTitle(title);
 		item.addSubTitle(title);
 		item.setStep(TimeUtil.ONE_MINUTE);
 		double[] activeThread = graphData.get(key);

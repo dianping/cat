@@ -74,7 +74,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(MessageAnalyzer.class, StateAnalyzer.ID, StateAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class, TaskDao.class, ReportDao.class, ProjectDao.class)//
+		      .req(HostinfoDao.class, ReportDao.class, ProjectDao.class)//
 		      .req(BucketManager.class, ServerStateManager.class));
 
 		all.add(C(MessageAnalyzer.class, HeartbeatAnalyzer.ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //

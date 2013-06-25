@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependency-report domain="Cat" startTime="2013-05-08 11:00:00" endTime="2013-05-08 11:59:59">
    <domainName>Cat</domainName>
-   <segment id="16" exception-count="0">
+   <segment id="16">
       <index name="URL" total-count="1" error-count="1" sum="1.00" avg="1.00"/>
    </segment>
-   <segment id="18" exception-count="1">
+   <segment id="18">
       <index name="PigeonCall" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
       <index name="PigeonService" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
       <index name="URL" total-count="2" error-count="0" sum="2.00" avg="1.00"/>

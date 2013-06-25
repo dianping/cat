@@ -7,6 +7,15 @@ import java.util.Set;
 
 public class DefaultABTestCodec implements ABTestCodec {
 
+	private Map<String, Map<String, String>> m_codes = new LinkedHashMap<String, Map<String, String>>(1000, 0.75f, true) {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<String, Map<String, String>> arg0) {
+			return true;
+		}
+	};
+
 	public Map<String, Map<String, String>> decode(String value, Set<String> keys) {
 		int len = value.length();
 		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>();
@@ -129,21 +138,26 @@ public class DefaultABTestCodec implements ABTestCodec {
 		return sb.toString();
 	}
 
-	public Map<String,String> decode(String value){
-		Map<String, Map<String, String>> maps = decode(value, null) ;
-		Map<String,String> map = new LinkedHashMap<String, String>();
-		
-		for( Entry<String, Map<String, String>> entry : maps.entrySet()){
-			String key = entry.getKey();
-			if(entry.getValue() != null){
-				String val = entry.getValue().get("ab");
-				
-				if(val != null){
-					map.put(key, val);
+	public Map<String, String> decode(String value) {
+		Map<String, String> code = m_codes.get(value);
+
+		if (code == null) {
+			Map<String, Map<String, String>> maps = decode(value, null);
+
+			code = new LinkedHashMap<String, String>();
+
+			for (Entry<String, Map<String, String>> entry : maps.entrySet()) {
+				String key = entry.getKey();
+				if (entry.getValue() != null) {
+					String val = entry.getValue().get("ab");
+
+					if (val != null) {
+						code.put(key, val);
+					}
 				}
 			}
+			m_codes.put(value, code);
 		}
-		
-		return map;
+		return code;
 	}
 }

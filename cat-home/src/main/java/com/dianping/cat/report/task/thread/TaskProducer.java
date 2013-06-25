@@ -307,13 +307,12 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_dailyReportNameSet.add("event");
 		m_dailyReportNameSet.add("transaction");
+		m_dailyReportNameSet.add("event");
 		m_dailyReportNameSet.add("problem");
 		m_dailyReportNameSet.add("matrix");
 		m_dailyReportNameSet.add("cross");
 		m_dailyReportNameSet.add("sql");
-		m_dailyReportNameSet.add("health");
 
 		m_graphReportNameSet.add("transaction");
 		m_graphReportNameSet.add("event");

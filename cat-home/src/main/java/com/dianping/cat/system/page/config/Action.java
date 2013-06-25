@@ -37,7 +37,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT("topologyProductLineAddSubmit"),
 	
-	TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE("topologyProductLineDelete")
+	TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE("topologyProductLineDelete"),
+	
+	METRIC_CONFIG_LIST("metricConfigList"),
+	
+	METRIC_CONFIG_ADD_OR_UPDATE("metricConfigAdd"),
+	
+	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("metricConfigAddSumbit"),
+
+	METRIC_CONFIG_DELETE("metricConfigDelete")
 	;
 
 	private String m_name;

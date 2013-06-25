@@ -32,7 +32,6 @@ import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
-import com.dianping.cat.report.task.health.HealthReportBuilderTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
@@ -83,9 +82,6 @@ SqlReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class,
-
-/* .health report */
-HealthReportBuilderTest.class,
 
 HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 

@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,10 +15,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.Company;
@@ -123,7 +125,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return domains;
 	}
-
+	
 	public Map<String, ProductLine> queryProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
@@ -134,7 +136,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 			@Override
 			public int compare(Entry<String, ProductLine> o1, Entry<String, ProductLine> o2) {
-				return (int) (o2.getValue().getOrder() * 100 - o1.getValue().getOrder() * 100);
+				return (int) (o1.getValue().getOrder() * 100 - o2.getValue().getOrder() * 100);
 			}
 		});
 	}
@@ -177,46 +179,21 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		return result;
 	}
-	public class Reload implements Task {
+	
+	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
+      Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+      long modifyTime = config.getModifyDate().getTime();
 
-		@Override
-		public String getName() {
-			return null;
-		}
+      if (modifyTime > m_modifyTime) {
+      	String content = config.getContent();
 
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-					long modifyTime = config.getModifyDate().getTime();
+      	synchronized (m_company) {
+      		m_company = DefaultSaxParser.parse(content);
+      	}
 
-					if (modifyTime > m_modifyTime) {
-						String content = config.getContent();
-
-						synchronized (getCompany()) {
-							m_company = DefaultSaxParser.parse(content);
-						}
-
-						m_modifyTime = modifyTime;
-						m_logger.info("product line config refresh done!");
-					}
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-
-				try {
-					Thread.sleep(60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
+      	m_modifyTime = modifyTime;
+      	m_logger.info("product line config refresh done!");
+      }
+   }
 
 }

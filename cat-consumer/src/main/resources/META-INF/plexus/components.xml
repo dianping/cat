@@ -133,9 +133,6 @@
 					<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.TaskDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>

@@ -8,7 +8,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -65,20 +64,6 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 			Cat.logError(e);
 		}
 		return new EventReport(domain);
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start) {
-		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "health",
-			      WeeklyreportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new HealthReport(domain);
 	}
 
 	@Override
