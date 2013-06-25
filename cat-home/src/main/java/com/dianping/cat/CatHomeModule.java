@@ -42,8 +42,8 @@ public class CatHomeModule extends AbstractModule {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 			TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
 
-			Threads.forGroup("Cat").start(taskConsumer);
-			Threads.forGroup("Cat").start(dailyTaskProducer);
+		//	Threads.forGroup("Cat").start(taskConsumer);
+		//	Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
 
 		executeAlarmModule(ctx);
@@ -66,9 +66,9 @@ public class CatHomeModule extends AbstractModule {
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
-			Threads.forGroup("Cat").start(exceptionAlarmTask);
-			Threads.forGroup("Cat").start(alarmCreatorTask);
-			Threads.forGroup("Cat").start(scheduledTask);
+		//	Threads.forGroup("Cat").start(exceptionAlarmTask);
+		//	Threads.forGroup("Cat").start(alarmCreatorTask);
+		//	Threads.forGroup("Cat").start(scheduledTask);
 		}
 	}
 

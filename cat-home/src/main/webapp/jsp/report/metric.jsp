@@ -50,7 +50,7 @@
 	              <c:if test="${payload.product eq item.id }">
 		               <c:forEach var="test" items="${model.display.abtests}" varStatus="status">
 		               	   <c:if test="${test.id ne -1}">
-				              <li id="${test.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.id}">AB-${test.name}</a></li>
+				              <li id="${test.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.id}">${test.name}-[${test.id}]</a></li>
 		               	   </c:if>
 		       		  </c:forEach>
 	              </c:if>

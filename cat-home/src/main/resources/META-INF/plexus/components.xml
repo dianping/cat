@@ -1649,42 +1649,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestContextManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
+			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+			<implementation>com.dianping.cat.system.page.abtest.service.ABTestServiceImpl</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestCodec</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
-			<configuration>
-				<refreshTimeInSeconds>60</refreshTimeInSeconds>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
+					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
 				</requirement>
 			</requirements>
 		</component>
