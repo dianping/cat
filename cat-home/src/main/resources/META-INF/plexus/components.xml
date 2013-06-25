@@ -1649,14 +1649,42 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
-			<implementation>com.dianping.cat.system.page.abtest.service.ABTestServiceImpl</implementation>
+			<role>com.dianping.cat.abtest.spi.internal.ABTestContextManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestCodec</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
+			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
+			<configuration>
+				<refreshTimeInSeconds>60</refreshTimeInSeconds>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ClientConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2596,7 +2624,7 @@
 					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2624,15 +2652,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
-			<implementation>com.dianping.cat.home.dal.abtest.AbtestDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3095,6 +3114,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+			<implementation>com.dianping.cat.home.dal.abtest.AbtestDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

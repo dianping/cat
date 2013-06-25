@@ -33,7 +33,7 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	private long m_interval = 60 * 1000; // 60 seconds
 
-	private String m_jar;
+	private String m_jars;
 
 	@Override
 	public String getName() {
@@ -45,34 +45,36 @@ public class StatusUpdateTask implements Task, Initializable {
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
-	private void buildClasspath() {
-		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
-		StringBuilder sb = new StringBuilder();
-
+	private void buildClasspath(ClassLoader loader, StringBuilder sb) {
 		if (loader instanceof URLClassLoader) {
 			URL[] urLs = ((URLClassLoader) loader).getURLs();
-			boolean first = true;
-
 			for (URL url : urLs) {
 				String jar = parseJar(url.toExternalForm());
 
 				if (jar != null) {
-					if (first) {
-						sb.append(jar);
-						first = false;
-					} else {
-						sb.append(',').append(jar);
-					}
+					sb.append(jar).append(',');
 				}
 			}
+			ClassLoader parent = loader.getParent();
+
+			buildClasspath(parent, sb);
 		}
-		m_jar = sb.toString();
+	}
+
+	private void buildClasspath() {
+		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
+		StringBuilder sb = new StringBuilder();
+
+		buildClasspath(loader, sb);
+		if (sb.length() > 0) {
+			m_jars = sb.substring(0, sb.length() - 1);
+		}
 	}
 
 	private String parseJar(String path) {
 		if (path.endsWith(".jar")) {
 			int index = path.lastIndexOf('/');
-			
+
 			if (index > -1) {
 				return path.substring(index + 1);
 			}
@@ -108,7 +110,7 @@ public class StatusUpdateTask implements Task, Initializable {
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
-			
+
 			if (m_manager.isCatEnabled()) {
 				Transaction t = cat.newTransaction("System", "Status");
 				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
@@ -116,7 +118,7 @@ public class StatusUpdateTask implements Task, Initializable {
 
 				t.addData("dumpLocked", m_manager.isDumpLocked());
 				try {
-					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jar);
+					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jars);
 
 					status.accept(statusInfoCollector.setDumpLocked(m_manager.isDumpLocked()));
 					h.addData(status.toString());

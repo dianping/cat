@@ -22,11 +22,11 @@ public class ABTestServiceImpl implements ABTestService {
 	@Inject
 	private AbtestRunDao m_abtestRunDao;
 
-	private Map<Integer, String> m_abtestMap = new ConcurrentHashMap<Integer, String>();
+	private Map<Integer, Abtest> m_abtestMap = new ConcurrentHashMap<Integer, Abtest>();
 
 	@Override
-	public String getABTestNameByRunId(int id) {
-		String name = m_abtestMap.get(id);
+	public Abtest getABTestNameByRunId(int id) {
+		Abtest name = m_abtestMap.get(id);
 
 		if (name != null) {
 			return name;
@@ -35,13 +35,12 @@ public class ABTestServiceImpl implements ABTestService {
 				AbtestRun run = m_abtestRunDao.findByPK(id, AbtestRunEntity.READSET_FULL);
 				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
 
-				name = abtest.getName();
-				m_abtestMap.put(id, name);
+				m_abtestMap.put(id, abtest);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
 		}
 
-		return name;
+		return null;
 	}
 }
