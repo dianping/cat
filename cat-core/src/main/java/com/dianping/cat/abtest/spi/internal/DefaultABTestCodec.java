@@ -131,7 +131,11 @@ public class DefaultABTestCodec implements ABTestCodec {
 					sb.append('|');
 				}
 
-				sb.append(e.getKey()).append(':').append(e.getValue());
+				if(e.getValue() == null){
+					sb.append(e.getKey()).append(':');
+				}else{
+					sb.append(e.getKey()).append(':').append(e.getValue());
+				}
 			}
 		}
 
