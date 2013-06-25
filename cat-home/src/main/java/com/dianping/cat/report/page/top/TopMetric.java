@@ -120,7 +120,6 @@ public class TopMetric extends BaseVisitor {
 				return;
 			}
 		}
-
 		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
 			Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
 			String minuteStr = m_sdf.format(minute);
@@ -248,7 +247,7 @@ public class TopMetric extends BaseVisitor {
 				item.setValue(item.getValue() + value);
 			}
 		}
-
+		
 		public void addError(String time, String currentDomain, String exception, long count) {
 			Map<String, Item> items = m_items.get(time);
 			Item item = items.get(currentDomain);

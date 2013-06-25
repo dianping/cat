@@ -6,7 +6,6 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.home.dal.report.DailygraphDao;
@@ -25,8 +24,6 @@ import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
-import com.dianping.cat.report.task.health.HealthReportBuilder;
-import com.dianping.cat.report.task.health.HealthServiceCollector;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
@@ -50,8 +47,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
 
 		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
@@ -121,15 +116,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskProducer.class, TaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class));
 
-		all.add(C(HealthReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class)//
-		      .req(WeeklyreportDao.class, MonthreportDao.class, HealthServiceCollector.class));
-
 		all.add(C(ReportFacade.class)//
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
-		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
-		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
-		            StateReportBuilder.class, DependencyReportBuilder.class));
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
+		            ,HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
+		            ,DatabaseReportBuilder.class, SqlReportBuilder.class,StateReportBuilder.class, DependencyReportBuilder.class));
 
 		return all;
 	}

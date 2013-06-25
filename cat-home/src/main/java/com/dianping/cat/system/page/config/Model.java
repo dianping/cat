@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.core.dal.Project;
@@ -41,6 +42,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private ProductLine m_productLine;
 
 	private Map<String, ProductLine> m_productLines;
+	
+	private MetricItemConfig m_metricItemConfig;
+	
+	private Map<ProductLine,List<MetricItemConfig>> m_productMetricConfigs;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -174,6 +179,22 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
 	}
+	
+	public MetricItemConfig getMetricItemConfig() {
+   	return m_metricItemConfig;
+   }
+
+	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
+   	m_metricItemConfig = metricItemConfig;
+   }
+
+	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {
+   	return m_productMetricConfigs;
+   }
+
+	public void setProductMetricConfigs(Map<ProductLine, List<MetricItemConfig>> productMetricConfigs) {
+   	m_productMetricConfigs = productMetricConfigs;
+   }
 
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;

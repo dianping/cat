@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.core.config.ConfigDao;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
@@ -31,11 +32,11 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
-import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.ConfigReloadTask;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -54,9 +55,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
-
-		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
-		      req(ReportService.class));
 
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportService.class));
@@ -78,6 +76,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
 		      .req(ModelService.class, "dependency"));
 
+		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
+		
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task

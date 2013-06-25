@@ -16,7 +16,6 @@ import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
-import com.dianping.cat.report.task.health.HealthReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -59,9 +58,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private SqlReportBuilder m_sqlReportBuilder;
-
-	@Inject
-	private HealthReportBuilder m_healthReportBuilder;
 
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
@@ -136,7 +132,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("cross", m_crossReportBuilder);
 		m_reportBuilders.put("database", m_databaseReportBuilder);
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
-		m_reportBuilders.put("health", m_healthReportBuilder);
 		m_reportBuilders.put("state", m_stateReportBuilder);
 		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
 	}

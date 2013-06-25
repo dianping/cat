@@ -51,6 +51,47 @@ function edgeValidate(){
 	});
 }
 
+function metricValidate(){
+	$("#form").validate({
+		rules : {
+			"metricItemConfig.domain" : {
+				required : true
+			},
+			"metricItemConfig.type" : {
+				required : true
+			},
+			"metricItemConfig.metricKey" : {
+				required : true
+			},
+			"metricItemConfig.title" : {
+				required : true
+			},
+			"metricItemConfig.viewOrder" : {
+				required : true,
+				number :true
+			}
+		},
+		messages : {
+			"metricItemConfig.domain" : {
+				required : "请选择项目"
+			},
+			"metricItemConfig.type" : {
+				required :  "请选择类型"
+			},
+			"metricItemConfig.metricKey" : {
+				required : "请输入MetricKey，URL或者Service的二级分类，比如/index等"
+			},
+			"metricItemConfig.title" : {
+				required : "请输入显示标题"
+			},
+			"metricItemConfig.viewOrder" : {
+				required : "请输入显示顺序",
+				number :"请输入double数字"
+			}
+		}
+	});
+}
+
 
 function nodeValidate(){
 	$("#form").validate({

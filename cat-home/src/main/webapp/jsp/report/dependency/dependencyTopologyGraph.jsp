@@ -55,6 +55,8 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#zabbixTab0').addClass('active');
+		$('#leftTab0').addClass('active');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 50,
@@ -102,7 +104,7 @@
 		}else if(nodeSize>0){
 			defaultWeight = 1.0;
 		}
-		console.log(nodeSize+" "+defaultWeight);
+		try{
 		new  StarTopo('container',convertData,{
 				typeMap:{
 					database:'rect',
@@ -122,7 +124,9 @@
 			nodeWeight:function(weight){
 				return weight/5+defaultWeight;
 			}});
-		
+		}catch(e){
+			console.log(e);
+		}
 		var tab = '${payload.tab}';
 		if(tab=='tab3'){
 			$('#tab3Href').trigger('click');

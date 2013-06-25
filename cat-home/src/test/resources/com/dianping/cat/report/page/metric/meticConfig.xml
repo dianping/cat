@@ -1,8 +1,0 @@
-<metric-config>
-	<domain id="TuanGou">
-		<config type="url" name="/detail"  showSum="true" showAvg="true" showCount="true" title="团购详情页"></config>
-		<config type="service" name="/detail"  showSum="true" showAvg="true" showCount="true" title="团购详情页"></config>
-		<config type="metric" name="/detail"  showSum="true" showAvg="true" showCount="true" title="团购详情页"></config>
-	</domain>
-	<domain></domain>
-</metric-config>

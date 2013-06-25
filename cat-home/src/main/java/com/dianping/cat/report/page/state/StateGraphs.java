@@ -40,7 +40,7 @@ public class StateGraphs {
 		int day = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
 		LineChart item = new LineChart();
 
-		item.setStart(start).setSize(day).setTitles(key).setStep(TimeUtil.ONE_HOUR);
+		item.setStart(start).setSize(day).setTitle(key).setStep(TimeUtil.ONE_HOUR);
 		item.addSubTitle(key);
 		item.addValue(getDataFromHourlySummary(reports, start.getTime(), day, key, ip));
 		return item;
@@ -137,7 +137,7 @@ public class StateGraphs {
 	      String ip) {
 		LineChart item = new LineChart();
 		
-		item.setStart(start).setSize(60).setTitles(key).setStep(TimeUtil.ONE_MINUTE);
+		item.setStart(start).setSize(60).setTitle(key).setStep(TimeUtil.ONE_MINUTE);
 		item.addSubTitle(key);
 		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
 		return item;
