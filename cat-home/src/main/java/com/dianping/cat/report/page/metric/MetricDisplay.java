@@ -33,8 +33,6 @@ public class MetricDisplay extends BaseVisitor {
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
-	// private Set<String> m_abtests = new TreeSet<String>();
-
 	private Map<Integer, com.dianping.cat.home.dal.abtest.Abtest> m_abtests = new HashMap<Integer, com.dianping.cat.home.dal.abtest.Abtest>();
 
 	private String m_abtest;

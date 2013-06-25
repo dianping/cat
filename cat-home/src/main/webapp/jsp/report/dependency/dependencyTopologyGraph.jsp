@@ -55,6 +55,8 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#zabbixTab0').addClass('active');
+		$('#leftTab0').addClass('active');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 50,
