@@ -91,12 +91,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
+		
+		// for abtest module
+		all.addAll(new ABTestComponentConfigurator().defineComponents());
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
 
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
+		
 		return all;
 	}
 }
