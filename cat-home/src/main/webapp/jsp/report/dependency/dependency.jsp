@@ -76,10 +76,6 @@
 			'iDisplayLength': 50,
 			"bPaginate": false,
 		});
-		$('#otherDependency .nav-tabs a').mouseenter(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-		});	
 		$('#zabbixTab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');

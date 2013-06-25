@@ -16,7 +16,6 @@ public class TestBusinessMessage {
 	@Test
 	public void test() throws Exception {
 		while (true) {
-
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "/index");
 				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
