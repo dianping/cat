@@ -58,6 +58,14 @@
                     WHERE <FIELD name='status'/> = ${status}
                 ]]></statement>
 			</query>
+			<query name="find-by-name" type="SELECT" multiple="true">
+				<param name="name" />
+				<statement><![CDATA[
+                    SELECT <FIELDS/> 
+                    FROM <TABLE/>
+                    WHERE <FIELD name='name'/> = ${name}
+                ]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 </entities>

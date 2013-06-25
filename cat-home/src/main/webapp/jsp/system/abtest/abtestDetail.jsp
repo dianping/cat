@@ -54,16 +54,16 @@ div.controls input {
    <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
       <c:choose>
          <c:when test="${ctx.exception != null}">
-            <div id="errorMsg" style="margin: 0 auto; padding: 0; width: 300px;">
-               <div style="position: absolute; width: 300px;" class="alert alert-error">
+            <div id="errorMsg" style="margin-left: 170px; margin-top:5px; padding: 0; width: 300px;">
+               <div style="position: absolute; width: 400px;" class="alert alert-error">
                   <button type="button" class="close" data-dismiss="alert">×</button>
                   <span style="text-align: center;">${ctx.exception.message}</span>
                </div>
             </div>
          </c:when>
          <c:when test="${ctx.httpServletRequest.method == 'POST'}">
-            <div id="successMsg" style="margin: 0 auto; padding: 0; width: 330px;">
-               <div style="position: absolute; width: 330px;" class="alert alert-success">
+            <div id="successMsg" style="margin-left: 170px; margin-top:5px; padding: 0; width: 300px;">
+               <div style="position: absolute; width: 400px;" class="alert alert-success">
                   <button type="button" class="close" data-dismiss="alert">×</button>
                   <span style="text-align: center;">Modify successful! </span>
                </div>
@@ -155,7 +155,7 @@ div.controls input {
                <div class="controls">
                   <select name="strategyId" check-type="required" required-message="Strategy is required!" disabled="disabled">
                      <c:forEach var="item" items="${model.groupStrategyList}">
-                        <option value="${item.id }" <c:if test="${item.id == model.abtest.groupStrategy}">selected="selected"</c:if>>${item.name
+                        <option value="${item.id }" <c:if test="${item.id == model.abtest.groupStrategy}">selected="selected"</c:if>>${item.alias
                            }</option>
                      </c:forEach>
                   </select>

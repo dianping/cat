@@ -2,7 +2,9 @@ package com.dianping.cat.system.page.abtest;
 
 public enum JspFile {
 	
-	CREATE("/jsp/system/abtest/abtestCreate.jsp"),
+	ADDABTEST("/jsp/system/abtest/abtestCreate.jsp"),
+	
+	ADDGROUPSTRATEGY("/jsp/system/abtest/abtestCreate.jsp"),
 	
 	DETAIL("/jsp/system/abtest/abtestDetail.jsp"),
 	

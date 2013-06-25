@@ -127,7 +127,7 @@ tr.centerth>th {
             </c:forEach>
          </c:if>
          <div style="margin-bottom: 10px;">
-            <a class="btn btn-info" style="float: right;" href="?op=create">Create</a> <a class="btn btn-info"
+            <a class="btn btn-info" style="float: right;" href="?op=addABTest">Create</a> <a class="btn btn-info"
                style="margin-bottom: 0px; padding-right: 6px"> <label class="checkbox" style="margin: 0px;"> <input
                   id="ckall" type="checkbox"></input></label>
             </a>

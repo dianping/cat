@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -60,18 +60,32 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("id")
 	private int id;
+	
+	@FieldMeta("groupStrategyName")
+	private String m_groupStrategyName;
+	
+	@FieldMeta("groupStrategyAlias")
+	private String m_groupStrategyAlias;
+	
+	@FieldMeta("groupStrategyConf")
+	private String m_groupStrategyConf;
+	
+	@FieldMeta("groupStrategyDescription")
+	private String m_groupStrategyDescription;
+	
+	private boolean m_addGs;
 
 	private String m_startDateStr;
 	
 	private String m_endDateStr;
 	
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+	private SimpleDateFormat m_dataFormater = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 	
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
 			m_action = Action.getByName(action, Action.REPORT);
-		} else if (action.equalsIgnoreCase(Action.CREATE.getName())) {
-			m_action = Action.getByName(action, Action.CREATE);
+		} else if (action.equalsIgnoreCase(Action.ADDABTEST.getName())) {
+			m_action = Action.getByName(action, Action.ADDABTEST);
 		} else {
 			m_action = Action.getByName(action, Action.VIEW);
 		}
@@ -153,7 +167,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setStartDate(String startDate) {
 		try {
 			m_startDateStr = startDate;
-			m_startDate = m_sdf.parse(startDate);
+			m_startDate = m_dataFormater.parse(startDate);
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
@@ -162,7 +176,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setEndDate(String endDate) {
 		try {
 			m_endDateStr = endDate;
-			m_endDate = m_sdf.parse(endDate);
+			m_endDate = m_dataFormater.parse(endDate);
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
@@ -232,33 +246,84 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public String getGroupStrategyName() {
+   	return m_groupStrategyName;
+   }
+
+	public void setGroupStrategyName(String groupStrategyName) {
+   	m_groupStrategyName = groupStrategyName;
+   }
+
+	public String getGroupStrategyAlias() {
+   	return m_groupStrategyAlias;
+   }
+
+	public void setGroupStrategyAlias(String groupStrategyAlias) {
+   	m_groupStrategyAlias = groupStrategyAlias;
+   }
+
+	public String getGroupStrategyConf() {
+   	return m_groupStrategyConf;
+   }
+
+	public void setGroupStrategyConf(String groupStrategyConf) {
+   	m_groupStrategyConf = groupStrategyConf;
+   }
+
+	public String getGroupStrategyDescription() {
+   	return m_groupStrategyDescription;
+   }
+
+	public void setGroupStrategyDescription(String groupStrategyDescription) {
+   	m_groupStrategyDescription = groupStrategyDescription;
+   }
+	
+
+	public boolean getAddGs() {
+   	return m_addGs;
+   }
+
+	public void setAddGs(boolean addGs) {
+   	m_addGs = addGs;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
 			m_action = Action.VIEW;
 		}
-		// 验证doCreate的参数
-		if (m_action == Action.CREATE && ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			try {
-				Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
-//				Validate.isTrue(m_startDate != null, "'Start Time' is required, and formated 'yyyy-MM-dd hh:mm'");
-//				Validate.isTrue(m_endDate != null, "'End Time' is required, and formated 'yyyy-MM-dd hh:mm'");
-				Validate.isTrue(m_domains != null && m_domains.length > 0, "'Domains' is required, choose one at least");
-				for (String domain : m_domains) {
-					Validate.isTrue(StringUtils.isNotBlank(domain), "'Domains' should not be blank");
-				}
-				Validate.isTrue(m_strategyId > 0, "'Strategy' is required, choose one at least");
-			} catch (IllegalArgumentException e) {
-				ctx.setException(e);
-			}
-		}
+		
 		if (m_status == null) {
 			m_status = "all";
 		}
+		
 		if (m_disableAbtest != -1 && m_disableAbtest != 1) {
 			m_disableAbtest = 0;
 		}
-
+		
+		if(ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")){
+			if (m_action == Action.ADDABTEST) {
+				try {
+					Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
+//				Validate.isTrue(m_startDate != null, "'Start Time' is required, and formated 'yyyy-MM-dd hh:mm'");
+//				Validate.isTrue(m_endDate != null, "'End Time' is required, and formated 'yyyy-MM-dd hh:mm'");
+					Validate.isTrue(m_domains != null && m_domains.length > 0, "'Domains' is required, choose one at least");
+					for (String domain : m_domains) {
+						Validate.isTrue(StringUtils.isNotBlank(domain), "'Domains' should not be blank");
+					}
+					Validate.isTrue(m_strategyId > 0, "'Strategy' is required, choose one at least");
+				} catch (IllegalArgumentException e) {
+					ctx.setException(e);
+				}
+			}else if(m_action == Action.ADDGROUPSTRATEGY){
+				try {
+					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyName), "'GroupStrategy Name' is required");
+					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyAlias), "'GroupStrategy Alias' is required");
+				} catch (IllegalArgumentException e) {
+					ctx.setException(e);
+				}
+			}
+		}
 	}
 }

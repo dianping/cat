@@ -164,17 +164,49 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
-		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			if (action == Action.CREATE) {
-				handleCreateAction(ctx, payload);
-			} else if (action == Action.DETAIL) {
-				handleUpdateAction(ctx, payload);
-			}
-		}
-
 		if (action == Action.VIEW) {
 			handleStatusChangeAction(ctx);
 		}
+		
+		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
+			if (action == Action.ADDABTEST) {
+				handleCreateAction(ctx, payload);
+			} else if (action == Action.DETAIL) {
+				handleUpdateAction(ctx, payload);
+			} else if (action == Action.ADDGROUPSTRATEGY) {
+				handleCreateGroupStrategyAction(ctx, payload);
+			}
+		}
+
+	}
+
+	private void handleCreateGroupStrategyAction(Context ctx, Payload payload) {
+		GroupStrategy gs = new GroupStrategy();
+
+		String name = payload.getGroupStrategyName();
+		gs.setName(name);
+		gs.setAlias(payload.getGroupStrategyAlias());
+		gs.setConfiguration(payload.getGroupStrategyConf());
+		gs.setDescription(payload.getGroupStrategyDescription());
+		gs.setStatus(1);
+		gs.setClassname("");
+
+		try {
+			List<GroupStrategy> groupStrategies = m_groupStrategyDao.findByName(name, GroupStrategyEntity.READSET_FULL);
+
+			if (groupStrategies == null || groupStrategies.size() == 0) {
+				m_groupStrategyDao.insert(gs);
+			} else {
+				throw new DalException("Aready to has a groupstrategy which has the same name...");
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+			ctx.setException(e);
+		}finally{
+			payload.setAction(Action.ADDABTEST.getName());
+			payload.setAddGs(true);
+		}
+
 	}
 
 	@Override
@@ -188,7 +220,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		case VIEW:
 			renderListModel(model, payload);
 			break;
-		case CREATE:
+		case ADDABTEST:
 			renderCreateModel(model);
 			break;
 		case DETAIL:
