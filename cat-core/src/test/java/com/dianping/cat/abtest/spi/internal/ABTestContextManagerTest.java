@@ -15,6 +15,9 @@ public class ABTestContextManagerTest extends ComponentTestCase {
 		check("1=ab:A|cd:B&2=ab:A|cd:B", "1=ab:A|cd:B&2=ab:A|cd:B");
 		check("1=ab:|cd:B&2=ab:A|cd:B", "1=ab:|cd:B&2=ab:A|cd:B");
 		check("1=ab:A|cd:B&2=ab:A|cd:", "1=ab:A|cd:B&2=ab:A|cd:");
+		check("1=ab:|cd:B&2=ab:A|cd:", "1=ab:|cd:B&2=ab:A|cd:");
+		check("1=ab:|cd:", "1=ab:|cd:");
+		check("1=ab:|cd:A", "1=ab:|cd:A");
 		check("", "");
 
 		check("1=ab:A|cd:B&2=ab:A|cd:B", "1=ab:A|cd:B&2=ab:A|cd:B", "1", "2");
@@ -35,6 +38,9 @@ public class ABTestContextManagerTest extends ComponentTestCase {
 		check2("1=ab:A&2=ab:A|cd:B", "{1=A, 2=A}");
 		check2("1=ab:A|cd:B&2=ab:|cd:B", "{1=A, 2=}");
 		check2("1=cd:B&2=ab:A|cd:B", "{2=A}");
+		check2("30=l:A|ab:A", "{30=A}");
+		check2("1=ab:|cd:", "{1=}");
+		check2("1=ab:|cd:A", "{1=}");
 		check2("", "{}");
 	}
 	
