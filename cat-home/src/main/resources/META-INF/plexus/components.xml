@@ -1649,6 +1649,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+			<implementation>com.dianping.cat.system.page.abtest.service.ABTestServiceImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
