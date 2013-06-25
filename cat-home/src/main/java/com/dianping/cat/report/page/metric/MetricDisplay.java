@@ -25,11 +25,6 @@ import com.dianping.cat.home.dal.abtest.AbtestEntity;
 import com.dianping.cat.report.page.LineChart;
 
 public class MetricDisplay extends BaseVisitor {
-	public static final String Suffix_SUM = "(总和)";
-
-	public static final String Suffix_COUNT = "(次数)";
-
-	public static final String Suffix_AVG = "(平均)";
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
@@ -67,17 +62,17 @@ public class MetricDisplay extends BaseVisitor {
 			if (config.isShowSum()) {
 				String key = config.getMetricKey() + SUM;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + Suffix_SUM));
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_SUM));
 			}
 			if (config.isShowCount()) {
 				String key = config.getMetricKey() + COUNT;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + Suffix_COUNT));
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_COUNT));
 			}
 			if (config.isShowAvg()) {
 				String key = config.getMetricKey() + AVG;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + Suffix_AVG));
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_AVG));
 			}
 		}
 	}

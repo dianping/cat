@@ -1,5 +1,7 @@
 package com.dianping.cat.status;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Calendar;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -31,6 +33,8 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	private long m_interval = 60 * 1000; // 60 seconds
 
+	private String m_jar;
+
 	@Override
 	public String getName() {
 		return "StatusUpdateTask";
@@ -41,8 +45,44 @@ public class StatusUpdateTask implements Task, Initializable {
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
+	private void buildClasspath() {
+		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
+		StringBuilder sb = new StringBuilder();
+
+		if (loader instanceof URLClassLoader) {
+			URL[] urLs = ((URLClassLoader) loader).getURLs();
+			boolean first = true;
+
+			for (URL url : urLs) {
+				String jar = parseJar(url.toExternalForm());
+
+				if (jar != null) {
+					if (first) {
+						sb.append(jar);
+						first = false;
+					} else {
+						sb.append(',').append(jar);
+					}
+				}
+			}
+		}
+		m_jar = sb.toString();
+	}
+
+	private String parseJar(String path) {
+		if (path.endsWith(".jar")) {
+			int index = path.lastIndexOf('/');
+			
+			if (index > -1) {
+				return path.substring(index + 1);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void run() {
+		buildClasspath();
 		MessageProducer cat = Cat.getProducer();
 		Transaction reboot = cat.newTransaction("System", "Reboot");
 
@@ -68,16 +108,17 @@ public class StatusUpdateTask implements Task, Initializable {
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
+			
 			if (m_manager.isCatEnabled()) {
 				Transaction t = cat.newTransaction("System", "Status");
 				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
 				StatusInfo status = new StatusInfo();
 
 				t.addData("dumpLocked", m_manager.isDumpLocked());
-
 				try {
-					status.accept(new StatusInfoCollector(m_statistics).setDumpLocked(m_manager.isDumpLocked()));
+					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jar);
 
+					status.accept(statusInfoCollector.setDumpLocked(m_manager.isDumpLocked()));
 					h.addData(status.toString());
 					h.setStatus(Message.SUCCESS);
 				} catch (Throwable e) {

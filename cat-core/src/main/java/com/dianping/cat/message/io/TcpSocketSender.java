@@ -81,7 +81,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 			@Override
 			public ChannelPipeline getPipeline() {
-				return Channels.pipeline(new MyHandler());
+				return Channels.pipeline(new ExceptionHandler());
 			}
 		});
 
@@ -240,7 +240,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_active = false;
 	}
 
-	class MyHandler extends SimpleChannelHandler {
+	class ExceptionHandler extends SimpleChannelHandler {
 		@Override
 		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 			m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
