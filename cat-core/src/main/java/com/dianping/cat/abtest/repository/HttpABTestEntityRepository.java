@@ -38,7 +38,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	private String m_domain;
 
 	private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
-	
+
 	private Set<String> m_activeRuns = new HashSet<String>();
 
 	@Inject
@@ -72,7 +72,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 			Transaction t = Cat.newTransaction("ABTest", url);
 
 			try {
-				InputStream inputStream = Urls.forIO().connectTimeout(100).readTimeout(100).openStream(url);
+				InputStream inputStream = Urls.forIO().connectTimeout(300).readTimeout(100).openStream(url);
 				String content = Files.forIO().readFrom(inputStream, "utf-8");
 				AbtestModel abtest = DefaultSaxParser.parse(content);
 				ABTestVisitor visitor = new ABTestVisitor(m_domain);
@@ -88,7 +88,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				h.addData(abtest.toString());
 				h.setStatus(Message.SUCCESS);
 				h.complete();
-				
+
 				t.setStatus(Message.SUCCESS);
 				break;
 			} catch (Throwable e) {
@@ -127,7 +127,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		private String m_domain;
 
 		private Map<String, ABTestEntity> m_entities;
-		
+
 		private Set<String> m_activeRuns;
 
 		public ABTestVisitor(String domain) {
@@ -140,10 +140,10 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 			return m_entities;
 		}
 
-		public Set<String> getActiveRuns(){
+		public Set<String> getActiveRuns() {
 			return m_activeRuns;
 		}
-		
+
 		private void prepareEntity(Case _case, Run run) {
 			ABTestEntity entity = new ABTestEntity(_case, run);
 			String strategyKey = String.format("%s:%s:%s", _case.getId(), entity.getGroupStrategyName(),
@@ -179,7 +179,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		public void visitCase(Case _case) {
 			for (Run run : _case.getRuns()) {
 				m_activeRuns.add(String.valueOf(run.getId()));
-				
+
 				if (run.getDomains() != null && run.getDomains().contains(m_domain)) {
 					prepareEntity(_case, run);
 				}
@@ -188,7 +188,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	}
 
 	@Override
-   public Set<String> getActiveRuns() {
+	public Set<String> getActiveRuns() {
 		return m_activeRuns;
-   }
+	}
 }
