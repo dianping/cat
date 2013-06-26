@@ -17,6 +17,9 @@
 			colorMap:{
 				
 			},
+            col:3,
+            colInside:4,
+            paddingInside:10,
 			size:{
 				circle:{
 					width:100,
@@ -47,8 +50,8 @@
 		this.container = (typeof container ==="string")? document.getElementById(container): container;
 
 		this._initStage();
-		this._sort();
 		if(data.sides && data.sides.length){
+            this._sort();
 			this._initCenter();
 			this._initPoints();
 			this._initSides();
@@ -97,7 +100,11 @@
 					}
 				});
 				data.points = newPoints;
-				this.twoSides = data.sides[0].opposite !== data.sides[data.sides.length-1].opposite;
+                if(data.sides && data.sides.length){
+                    this.twoSides = data.sides[0].opposite !== data.sides[data.sides.length-1].opposite;
+                }else {
+                    this.twoSides = false;
+                }
 			}
 		},
 		_initCenter:function(){
@@ -251,22 +258,22 @@
 			if(!this.data.points){
 				return ;
 			}
-			//4格
-			var col = 4;
-			var width = this.stageWidth/col;
-			var height = 150;
 			var self = this;
-			var options = this.options;
+            var options = this.options;
+			//4格
+			var col = options.colInside;
+			var width = (this.stageWidth-(options.paddingInside * (col+1)))/col;
+            var titleHeight = 30;
 			//title
-			self.stage.text(this.stageWidth/2,50,this.data.id).attr({
+			self.stage.text(this.stageWidth/2,titleHeight/2,this.data.id).attr({
                 'font-size':15
             });
 			this.data.points.forEach(function(p,i){
-				var x =( i % 4) * width + width/2;
-				var y = parseInt(i/4)* height + height/2;
+				var x =( i % col) * (width+options.paddingInside)+options.paddingInside + width/2;
+				var y = parseInt(i/4)* (width+options.paddingInside) + options.paddingInside+width/2+titleHeight;
 				var type = self._getNodeType(p.type);
 			   	var node = self._createNode(type,p.id);	
-				node.size(options.size[type].width,options.size[type].height);
+				node.size(width,width);
 				node.position(x,y);
 				node.text(p.id);
 				node.color(options.colorMap[p.status]);
@@ -659,6 +666,9 @@
                     gridIndex++;
                 }
             }
+            //设置container高度
+            this.container.style.height = maxY +"px" 
+            this.stage.setSize(this.container.clientWidth,maxY);  
 
         },
         _initSides:function(){
@@ -747,17 +757,17 @@
             var startX = 0 ,startY = 10;
 
             //all
-            var rect = stage.rect(startX,startY,rectWidth,rectWidth).attr({
+            var hideRect = stage.rect(startX,startY,rectWidth,rectWidth).attr({
                 "fill" : 'green',
                 "stroke-width":0,
                 "cursor":"pointer"
-            }).data('fill','green').data('all',true);
-            rectSet.push(rect);
-            var text = stage.text(startX,startY,'all');
+            }).data('fill','green').data('hide',true).data('active',true);
+            rectSet.push(hideRect);
+            var text = stage.text(startX,startY,'依赖关系');
             var bbox = text.getBBox();
             text.attr('x',startX+rectWidth+padding+bbox.width/2);
             text.attr('y',startY+rectWidth/2);
-            set.push(rect);
+            set.push(hideRect);
             set.push(text);
             startX = startX+rectWidth+padding*2+bbox.width;
 
@@ -767,7 +777,7 @@
                         "fill" : options.colorMap[state],
                         "stroke-width":0,
                         "cursor":"pointer"
-                    }).data("fill",options.colorMap[state]).data('status',state);
+                    }).data("fill",options.colorMap[state]).data('status',state).data('active',true);
                     rectSet.push(rect);
                     var text = stage.text(startX,startY,legendMap[state]);
                     var bbox = text.getBBox();
@@ -780,41 +790,81 @@
             }
             set.translate((this.container.clientWidth-startX)/2,0);
 
+            self.edgeSet.data("active",true);
+            self.nodeSet.data("active",true);
 
-            rectSet.click(function(){
+
+            rectSet.dblclick(function(){
                 rectSet.attr({
                     fill:'gray'
-                });
-                this.attr('fill',this.data('fill'));
-                if(this.data('all')===true){
+                }).data('active',false);
+                this.attr('fill',this.data('fill')).data("active",true);
+                if(this.data('hide')===true){
                     self.edgeSet.show();
-                    self.nodeSet.show();
-                    self.nodeSet.forEach(function(node){
-                        node.data('textNode').show();
-
-                    });
                 }else{
                     var state = this.data('status');
                     self.nodeSet.forEach(function(node){
                         var data = node.data('nodeData');
                         if(data.status.toString()===state){
-                            node.show();
+                            node.show().data('active',true);
                             node.data('textNode').show();
                         }else {
-                            node.hide();
+                            node.hide().data("active",false);
                             node.data('textNode').hide();
                         }
                     });
                     self.edgeSet.forEach(function(edge){
                         var data =edge.data('edgeData');
                         if(self.points[data.self].node.data('nodeData').status.toString()===state && self.points[data.target].node.data('nodeData').status.toString()===state){
+                            edge.show().data("active",true);
+                        }else {
+                            edge.hide().data("active",false);
+                        }
+                    });
+                }
+            });
+           
+            rectSet.click(function(){
+                if(this.data('active')){
+                    this.attr('fill','gray');
+                    this.data('active',false);
+                }else {
+                    this.attr('fill',this.data('fill'));
+                    this.data('active',true);
+                }
+                var isActive = this.data('active');
+                var state = this.data('status');
+                if(this.data('hide')){
+                    //依赖关系
+                    self.edgeSet.forEach(function(edge){
+                        if(isActive && edge.data("active")){
                             edge.show();
                         }else {
                             edge.hide();
                         }
-
                     });
+                }else {
+                    self.nodeSet.forEach(function(node){
+                        var data = node.data('nodeData');
+                        if(data.status.toString()===state){
+                            isActive?node.show().data('active',true):node.hide().data('active',false);
+                            isActive?node.data('textNode').show():node.data('textNode').hide();
+                        }                    
+                    });
+                    self.edgeSet.forEach(function(edge){
+                        var data = edge.data('edgeData');
+                        if(self.points[data.self].node.data('active') && self.points[data.target].node.data('active')){
+                            edge.data("active",true);
+                            hideRect.data('active') && edge.show();
+                        }else {
+                            edge.data("active",false).hide();
+                        }
+                    });
+                    
+
                 }
+
+
             });
 
 

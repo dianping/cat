@@ -37,7 +37,7 @@
 		</div></div>
 		<div id="fullScreenData">
 			<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
-			<h1>监控仪表盘信息</h1>
+			<br/>
 			<%@ include file="../top/topMetric.jsp"%>
 		</div>
     </div>
