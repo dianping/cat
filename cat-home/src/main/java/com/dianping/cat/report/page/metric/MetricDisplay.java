@@ -46,8 +46,8 @@ public class MetricDisplay extends BaseVisitor {
 		return new ArrayList<LineChart>(m_lineCharts.values());
 	}
 
-	public Collection<com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
-		return m_abtests.values();
+	public Map<Integer,com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
+		return m_abtests;
 	}
 
 	public MetricDisplay(List<MetricItemConfig> configs, String abtest, Date start) {
