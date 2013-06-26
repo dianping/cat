@@ -594,7 +594,7 @@
 					<role>com.dianping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -157,7 +157,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
 
-		
 		all.add(C(ModelService.class, "metric-local", LocalMetricService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));
