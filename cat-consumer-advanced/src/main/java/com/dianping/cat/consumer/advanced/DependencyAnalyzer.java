@@ -77,8 +77,14 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public DependencyReport getReport(String domain) {
-		DependencyReport report = findOrCreateReport(domain);
+		DependencyReport report = m_reports.get(domain);
 
+		if (report == null) {
+			report = new DependencyReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+		}
 		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}

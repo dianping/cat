@@ -18,8 +18,6 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
-import com.dianping.cat.report.task.database.DatabaseMerger;
-import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
@@ -61,7 +59,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProblemMerger.class));
 		all.add(C(HeartbeatMerger.class));
 		all.add(C(CrossMerger.class));
-		all.add(C(DatabaseMerger.class));
 		all.add(C(MatrixMerger.class));
 		all.add(C(SqlMerger.class));
 		all.add(C(StateMerger.class));
@@ -83,10 +80,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HeartbeatReportBuilder.class) //
 		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class) //
 		      .req(HeartbeatGraphCreator.class, HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
-
-		all.add(C(DatabaseReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class)//
-		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(MatrixReportBuilder.class) //
 		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class)//
@@ -119,7 +112,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
 		            ,HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
-		            ,DatabaseReportBuilder.class, SqlReportBuilder.class,StateReportBuilder.class, DependencyReportBuilder.class));
+		            ,SqlReportBuilder.class,StateReportBuilder.class, DependencyReportBuilder.class));
 
 		return all;
 	}

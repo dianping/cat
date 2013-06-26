@@ -38,9 +38,6 @@
          <page name="cache" title="Cache" path="cache" view="/jsp/report/cache/cache.jsp">
             <description>Cache</description>
          </page>
-         <page name="database" title="Database" path="database" view="/jsp/report/database/database.jsp">
-            <description>Database</description>
-         </page>
          <page name="state" title="State" path="state" view="/jsp/report/database/database.jsp">
             <description>State</description>
          </page>

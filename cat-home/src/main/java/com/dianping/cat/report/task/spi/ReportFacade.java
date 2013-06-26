@@ -13,7 +13,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
-import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
@@ -52,9 +51,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private CrossReportBuilder m_crossReportBuilder;
-
-	@Inject
-	private DatabaseReportBuilder m_databaseReportBuilder;
 
 	@Inject
 	private SqlReportBuilder m_sqlReportBuilder;
@@ -130,7 +126,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("transaction", m_tansactionBuilder);
 		m_reportBuilders.put("matrix", m_matrixReportBuilder);
 		m_reportBuilders.put("cross", m_crossReportBuilder);
-		m_reportBuilders.put("database", m_databaseReportBuilder);
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
 		m_reportBuilders.put("state", m_stateReportBuilder);
 		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);

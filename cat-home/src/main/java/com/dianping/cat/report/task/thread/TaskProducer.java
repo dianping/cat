@@ -45,20 +45,17 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	private void creatReportTask(Date yesterday) {
 		generateDailyReportTasks(yesterday);
-		generateDailyDatabaseTasks(yesterday);
 
 		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
 		Date lastWeekEnd = TimeUtil.getCurrentWeek();
 		Date lastWeekStart = TimeUtil.getLastWeek();
 
 		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
-		generateWeeklyDatabaseReportTasks(lastWeekStart, lastWeekEnd);
 
 		Date currentMonth = TimeUtil.getCurrentMonth();
 		Date lastMonth = TimeUtil.getLastMonth();
 
 		generateMonthReportTasks(lastMonth, currentMonth);
-		generateMonthDatabaseReportTasks(lastMonth, currentMonth);
 	}
 
 	public void firstInit() {
@@ -71,30 +68,11 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		Date lastWeekEnd = TimeUtil.getCurrentWeek();
 
 		generateWeeklyReportTasks(cal.getTime(), lastWeekEnd);
-		generateWeeklyDatabaseReportTasks(cal.getTime(), lastWeekEnd);
 
 		generateMonthReportTasks(cal.getTime(), currentMonth);
-		generateMonthDatabaseReportTasks(cal.getTime(), currentMonth);
 
 		Date yesterday = TimeUtil.getYesterday();
 		generateDailyGraphTask(cal.getTime(), yesterday);
-	}
-
-	private void generateDailyDatabaseTasks(Date date) {
-		try {
-			Set<String> databaseSet = queryDatabaseSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
-
-			for (String domain : databaseSet) {
-				try {
-					m_taskDao.findByDomainNameTypePeriod("database", domain, ReportFacade.TYPE_DAILY, date,
-					      TaskEntity.READSET_FULL);
-				} catch (DalNotFoundException e) {
-					insertTask(domain, "database", date, ReportFacade.TYPE_DAILY);
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 
 	private void generateDailyGraphTask(Date start, Date end) {
@@ -108,12 +86,10 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 			for (String domain : domainSet) {
 				for (String name : m_graphReportNameSet) {
 					try {
-						try {
-							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY_GRAPH, date,
-							      TaskEntity.READSET_FULL);
-						} catch (DalNotFoundException e) {
-							// insertTask(domain, name, date, ReportFacade.TYPE_DAILY_GRAPH);
-						}
+						m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY_GRAPH, date,
+						      TaskEntity.READSET_FULL);
+					} catch (DalNotFoundException e) {
+						// insertTask(domain, name, date, ReportFacade.TYPE_DAILY_GRAPH);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -137,51 +113,15 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 				}
 			}
 			try {
-				try {
-					m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_DAILY, date,
-					      TaskEntity.READSET_FULL);
-				} catch (DalNotFoundException e) {
-					insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_DAILY);
-				}
+				m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_DAILY, date,
+				      TaskEntity.READSET_FULL);
+			} catch (DalNotFoundException e) {
+				insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_DAILY);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
-		}
-	}
-
-	private void generateMonthDatabaseReportTasks(Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			Date date = new Date(startTime);
-			Calendar cal = Calendar.getInstance();
-
-			cal.setTime(date);
-
-			int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-			if (dayOfMonth == 1) {
-				Calendar monthEnd = Calendar.getInstance();
-
-				monthEnd.setTime(date);
-				monthEnd.add(Calendar.MONTH, 1);
-
-				Set<String> databases = queryDatabaseSet(date, monthEnd.getTime());
-				for (String database : databases) {
-					try {
-						try {
-							m_taskDao.findByDomainNameTypePeriod("database", database, ReportFacade.TYPE_WEEK, date,
-							      TaskEntity.READSET_FULL);
-						} catch (DalNotFoundException e) {
-							insertTask(database, "database", date, ReportFacade.TYPE_MONTH);
-						}
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-			}
 		}
 	}
 
@@ -206,12 +146,10 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 					Set<String> domainSet = queryDomainSet(date, monthEnd.getTime());
 					for (String domain : domainSet) {
 						try {
-							try {
-								m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_MONTH, date,
-								      TaskEntity.READSET_FULL);
-							} catch (DalNotFoundException e) {
-								insertTask(domain, name, date, ReportFacade.TYPE_MONTH);
-							}
+							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_MONTH, date,
+							      TaskEntity.READSET_FULL);
+						} catch (DalNotFoundException e) {
+							insertTask(domain, name, date, ReportFacade.TYPE_MONTH);
 						} catch (Exception e) {
 							Cat.logError(e);
 						}
@@ -232,34 +170,6 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		}
 	}
 
-	private void generateWeeklyDatabaseReportTasks(Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			Date date = new Date(startTime);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-
-			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-			if (dayOfWeek == 7) {
-				Set<String> databaseSet = queryDatabaseSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY * 7));
-				for (String database : databaseSet) {
-					try {
-						try {
-							m_taskDao.findByDomainNameTypePeriod("database", database, ReportFacade.TYPE_WEEK, date,
-							      TaskEntity.READSET_FULL);
-						} catch (DalNotFoundException e) {
-							insertTask(database, "database", date, ReportFacade.TYPE_WEEK);
-						}
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-			}
-		}
-	}
-
 	private void generateWeeklyReportTasks(Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -275,12 +185,10 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 					Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY * 7));
 					for (String domain : domainSet) {
 						try {
-							try {
-								m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_WEEK, date,
-								      TaskEntity.READSET_FULL);
-							} catch (DalNotFoundException e) {
-								insertTask(domain, name, date, ReportFacade.TYPE_WEEK);
-							}
+							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_WEEK, date,
+							      TaskEntity.READSET_FULL);
+						} catch (DalNotFoundException e) {
+							insertTask(domain, name, date, ReportFacade.TYPE_WEEK);
 						} catch (Exception e) {
 							Cat.logError(e);
 						}
@@ -336,27 +244,6 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-	}
-
-	private Set<String> queryDatabaseSet(Date start, Date end) {
-		List<Report> databaseNames = new ArrayList<Report>();
-		Set<String> databaseSet = new HashSet<String>();
-
-		try {
-			databaseNames = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
-			      ReportEntity.READSET_DOMAIN_NAME);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-
-		if (databaseNames == null || databaseNames.size() == 0) {
-			return databaseSet;
-		}
-
-		for (Report domainName : databaseNames) {
-			databaseSet.add(domainName.getDomain());
-		}
-		return databaseSet;
 	}
 
 	private Set<String> queryDomainSet(Date start, Date end) {
