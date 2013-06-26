@@ -107,7 +107,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportService.class, TopologyGraphBuilder.class, TopologyGraphDao.class));
 
 		all.add(C(TaskProducer.class, TaskProducer.class) //
-		      .req(TaskDao.class, ReportDao.class));
+		      .req(TaskDao.class, ReportService.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //

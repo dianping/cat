@@ -1,10 +1,8 @@
 package com.dianping.cat.report.task.thread;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -15,22 +13,20 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportFacade;
 
 public class TaskProducer implements org.unidal.helper.Threads.Task, Initializable {
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportService;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -44,58 +40,14 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 	private long m_currentDay;
 
 	private void creatReportTask(Date yesterday) {
-		generateDailyReportTasks(yesterday);
-
-		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
 		Date lastWeekEnd = TimeUtil.getCurrentWeek();
 		Date lastWeekStart = TimeUtil.getLastWeek();
-
-		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
-
 		Date currentMonth = TimeUtil.getCurrentMonth();
 		Date lastMonth = TimeUtil.getLastMonth();
 
+		generateDailyReportTasks(yesterday);
+		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
 		generateMonthReportTasks(lastMonth, currentMonth);
-	}
-
-	public void firstInit() {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -3);
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		Date currentMonth = TimeUtil.getCurrentMonth();
-		Date lastWeekEnd = TimeUtil.getCurrentWeek();
-
-		generateWeeklyReportTasks(cal.getTime(), lastWeekEnd);
-
-		generateMonthReportTasks(cal.getTime(), currentMonth);
-
-		Date yesterday = TimeUtil.getYesterday();
-		generateDailyGraphTask(cal.getTime(), yesterday);
-	}
-
-	private void generateDailyGraphTask(Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			Date date = new Date(startTime);
-			Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
-
-			for (String domain : domainSet) {
-				for (String name : m_graphReportNameSet) {
-					try {
-						m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY_GRAPH, date,
-						      TaskEntity.READSET_FULL);
-					} catch (DalNotFoundException e) {
-						// insertTask(domain, name, date, ReportFacade.TYPE_DAILY_GRAPH);
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-			}
-		}
 	}
 
 	private void generateDailyReportTasks(Date date) {
@@ -247,24 +199,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 	}
 
 	private Set<String> queryDomainSet(Date start, Date end) {
-		List<Report> domainNames = new ArrayList<Report>();
-		Set<String> domainSet = new HashSet<String>();
-
-		try {
-			domainNames = m_reportDao
-			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-
-		if (domainNames == null || domainNames.size() == 0) {
-			return domainSet;
-		}
-
-		for (Report domainName : domainNames) {
-			domainSet.add(domainName.getDomain());
-		}
-		return domainSet;
+		return m_reportService.queryAllDomainNames(start, end, "transaction");
 	}
 
 	@Override

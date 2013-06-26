@@ -38,7 +38,7 @@ public abstract class AbstractReportBuilder {
 
 	@Inject
 	protected DailygraphDao m_dailygraphDao;
-	
+
 	protected Set<String> getDomainsFromHourlyReport(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
 		Set<String> result = new HashSet<String>();

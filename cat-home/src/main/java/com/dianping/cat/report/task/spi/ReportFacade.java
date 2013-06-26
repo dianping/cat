@@ -32,8 +32,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	public static final int TYPE_MONTH = 3;
 
-	public static final int TYPE_DAILY_GRAPH = 4;
-
 	@Inject
 	private EventReportBuilder m_eventBuilder;
 
