@@ -1,7 +1,6 @@
 package com.dianping.cat.system.page.abtest;
 
 import java.util.Date;
-import java.util.Map;
 
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestRun;
@@ -14,8 +13,6 @@ public class ABTestReport {
 
 	private AbtestStatus m_status;
 
-	private Map<String, String> m_items;
-
 	public ABTestReport(Abtest entity, AbtestRun run) {
 		m_entity = entity;
 		m_run = run;
@@ -25,7 +22,6 @@ public class ABTestReport {
 		m_entity = entity;
 		m_run = run;
 		setStatus(now);
-		// TODO m_items setting
 	}
 
 	private void setStatus(Date now) {
@@ -47,9 +43,4 @@ public class ABTestReport {
 	public AbtestStatus getStatus() {
 		return m_status;	
 	}
-
-	public Map<String, String> getItems() {
-		return m_items;
-	}
-
 }

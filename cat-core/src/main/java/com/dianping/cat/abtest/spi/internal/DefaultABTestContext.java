@@ -85,6 +85,10 @@ public class DefaultABTestContext implements ABTestContext {
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
 		m_groupStrategy = groupStrategy;
 	}
+	
+	public void setCookielets(Map<String, String> cookielets){
+		m_cookielets = cookielets;
+	}
 
 	public void setup(HttpServletRequest request, HttpServletResponse response, Map<String, String> cookielets) {
 		m_request = request;

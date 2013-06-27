@@ -252,31 +252,7 @@ div.controls input {
 						$("#edit").show();
 					}
 				}
-
-				function submit0(form) {
-					$("#successMsg").html('');
-					$("#errorMsg").html('');
-					$.ajax({
-						type : $(form).attr('method'),
-						url : $(form).attr('action'),
-						data : $(form).serialize(),
-						dataType : "json",
-						success : submitDone,
-						error : abtest.httpError
-					});
-					return false;
-				}
-
-				function submitDone(data) {
-					if (data.success == false) {
-						console.log($("#alert_error").html());
-						$("#errorMsg").html($("#alert_error").html());
-						$("#errorMsg > div > span").text(data.errorMsg);
-					} else {
-						//成功了，显示成功，
-						$("#successMsg").html($("#alert_success").html());
-					}
-				}
+				
 				var timeout = 1;
 				function countDown() {
 					$('#countDown').text(timeout);

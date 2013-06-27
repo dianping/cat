@@ -68,34 +68,33 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private AbtestModel fetchAbtestModel() {
+		AbtestModel abtestModel = new AbtestModel();
+		
 		try {
-			AbtestModel abtestModel = new AbtestModel();
-
 			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
 
 			if (abtestRuns != null) {
 				Date now = new Date();
+				
 				for (AbtestRun abtestRun : abtestRuns) {
 					AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
+					
 					if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
-						// fetch Case and GroupStrategy
-						int caseId = abtestRun.getCaseId();
-						Abtest entity = m_abtestDao.findByPK(caseId, AbtestEntity.READSET_FULL);
-						int gid = entity.getGroupStrategy();
-						GroupStrategy groupStrategy = m_groupStrategyDao.findByPK(gid, GroupStrategyEntity.READSET_FULL);
-
+						Abtest entity = m_abtestDao.findByPK(abtestRun.getCaseId(), AbtestEntity.READSET_FULL);
+						GroupStrategy groupStrategy = m_groupStrategyDao.findByPK(entity.getGroupStrategy(), GroupStrategyEntity.READSET_FULL);
 						Case _case = transform(abtestRun, entity, groupStrategy);
+						
 						abtestModel.addCase(_case);
 					}
 				}
 			}
 
-			return abtestModel;
 		} catch (DalException e) {
 			m_logger.error("Error when find all AbtestRun", e);
 			Cat.logError(e);
 		}
-		return null;
+		
+		return abtestModel;
 	}
 
 	private List<GroupStrategy> getAllGroupStrategys() {
@@ -167,7 +166,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (action == Action.VIEW) {
 			handleStatusChangeAction(ctx);
 		}
-		
+
 		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			if (action == Action.ADDABTEST) {
 				handleCreateAction(ctx, payload);
@@ -202,7 +201,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		} catch (DalException e) {
 			Cat.logError(e);
 			ctx.setException(e);
-		}finally{
+		} finally {
 			payload.setAction(Action.ADDABTEST.getName());
 			payload.setAddGs(true);
 		}
