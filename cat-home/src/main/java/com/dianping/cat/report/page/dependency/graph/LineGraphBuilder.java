@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -20,7 +19,7 @@ import com.dianping.cat.report.page.LineChart;
 
 public class LineGraphBuilder extends BaseVisitor {
 
-	public Map<String, Map<String, Item>> m_dependencies = new ConcurrentHashMap<String, Map<String, Item>>();
+	public Map<String, Map<String, Item>> m_dependencies = new HashMap<String, Map<String, Item>>();
 
 	private static final String TOTAL_COUNT = "TotalCount";
 

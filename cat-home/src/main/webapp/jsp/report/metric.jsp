@@ -33,7 +33,7 @@
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&test=${payload.test}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
@@ -49,8 +49,8 @@
 	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}"><strong>${item.title}</strong></a></li>
 	              <c:if test="${payload.product eq item.id }">
 		               <c:forEach var="test" items="${model.display.abtests}" varStatus="status">
-		               	   <c:if test="${test.id ne -1}">
-				              <li id="${test.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.id}">AB-${test.name}</a></li>
+		               	   <c:if test="${test.value.id ne -1}">
+				              <li id="${test.value.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.key}">${test.value.name}-[${test.key}]</a></li>
 		               	   </c:if>
 		       		  </c:forEach>
 	              </c:if>

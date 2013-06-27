@@ -5,6 +5,8 @@ public class GraphConstrant {
 
 	public static final String DATABASE = "database";
 
+	public static final String CACHE = "cache";
+
 	public static int OK = 1;
 
 	public static int WARN = 2;

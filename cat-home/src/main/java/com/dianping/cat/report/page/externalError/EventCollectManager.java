@@ -161,6 +161,7 @@ public class EventCollectManager implements Initializable, LogEnabled {
 						String domain = error.getDomain();
 
 						findOrCreateEvents(minute, domain).add(error);
+						m_events.remove(minute - TimeUtil.ONE_HOUR * 3);
 					}
 				} catch (InterruptedException e) {
 					active = false;
