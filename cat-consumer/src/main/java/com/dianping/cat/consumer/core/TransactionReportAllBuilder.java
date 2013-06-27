@@ -43,11 +43,12 @@ public class TransactionReportAllBuilder extends BaseVisitor {
 		}
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
-		old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
-		old.setLine95Count(old.getLine95Count() + other.getLine95Count());
-		if (old.getLine95Count() > 0) {
-			old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+
+		if (old.getTotalCount() + other.getTotalCount() > 0) {
+			old.setLine95Value((old.getTotalCount() * old.getLine95Value() + other.getTotalCount() * other.getLine95Value())
+			      / (old.getTotalCount() + other.getTotalCount()));
 		}
+
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());

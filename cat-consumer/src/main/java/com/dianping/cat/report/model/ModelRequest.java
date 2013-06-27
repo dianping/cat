@@ -1,29 +1,38 @@
-package com.dianping.cat.report.page.model.spi;
+package com.dianping.cat.report.model;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ModelRequest {
-	public static ModelRequest from(String domain, String period) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
-
-		return request;
-	}
+	private String m_reportName;
 
 	private String m_domain;
+
+	private long m_startTime;
 
 	private ModelPeriod m_period;
 
 	private Map<String, String> m_properties;
 
+	public ModelRequest(String domain, long startTime) {
+		m_domain = domain;
+		m_startTime = startTime;
+		m_period = ModelPeriod.getByTime(startTime);
+	}
+
 	public ModelRequest(String domain, ModelPeriod period) {
 		m_domain = domain;
+		m_startTime = period.getStartTime();
 		m_period = period;
 	}
 
 	public String getDomain() {
 		return m_domain;
+	}
+
+	public String getReportName() {
+		return m_reportName;
 	}
 
 	public ModelPeriod getPeriod() {
@@ -52,12 +61,20 @@ public class ModelRequest {
 		}
 	}
 
+	public long getStartTime() {
+		return m_startTime;
+	}
+
 	public boolean hasProperty(String name) {
 		if (m_properties != null) {
 			return m_properties.containsKey(name);
 		} else {
 			return false;
 		}
+	}
+
+	public void setReportName(String reportName) {
+		m_reportName = reportName;
 	}
 
 	public ModelRequest setProperty(String name, String value) {

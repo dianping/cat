@@ -239,7 +239,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
-				tree.setMessageId(manager.nextMessageId());
+				if (tree.getMessageId() == null) {
+					tree.setMessageId(manager.nextMessageId());
+				}
+
 				tree.setMessage(message);
 				manager.flush(tree);
 			} else {
@@ -321,7 +324,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				addTransactionChild(transaction, entry);
 			} else {
-				m_tree.setMessageId(manager.nextMessageId());
+				if (m_tree.getMessageId() == null) {
+					m_tree.setMessageId(manager.nextMessageId());
+				}
+
 				m_tree.setMessage(transaction);
 			}
 

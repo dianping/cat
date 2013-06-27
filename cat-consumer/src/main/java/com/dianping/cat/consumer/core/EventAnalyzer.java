@@ -55,11 +55,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public EventReport getReport(String domain) {
 		EventReport report = m_reports.get(domain);
 
@@ -205,8 +200,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			for (EventReport report : m_reports.values()) {
 				try {
 					Set<String> domainNames = report.getDomainNames();
+					
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

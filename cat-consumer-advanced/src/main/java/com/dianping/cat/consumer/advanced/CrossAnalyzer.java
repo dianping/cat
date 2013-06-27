@@ -32,7 +32,7 @@ import com.dianping.cat.storage.BucketManager;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
-	
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -51,11 +51,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
 	}
 
 	@Override
@@ -148,7 +143,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		// }
 		// } catch (Exception e) {
 		// //ignore
-		// } 
+		// }
 		try {
 			char first = ip.charAt(0);
 			char next = ip.charAt(1);
@@ -166,13 +161,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
-		
+
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonService.client")) {
 					String name = message.getName();
 					int index = name.indexOf(":");
-					
+
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
@@ -187,10 +182,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		if (crossInfo.getRemoteAddress().equals(UNKNOWN)) {
 			MessageId id = MessageId.parse(tree.getMessageId());
 			String remoteIp = id.getIpAddress();
-			
+
 			crossInfo.setRemoteAddress(remoteIp);
 		}
-		
+
 		crossInfo.setLocalAddress(localIp);
 		crossInfo.setRemoteRole("Pigeon.Client");
 		crossInfo.setDetailType("PigeonService");
@@ -246,7 +241,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				try {
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

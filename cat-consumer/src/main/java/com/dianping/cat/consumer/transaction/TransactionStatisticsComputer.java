@@ -1,5 +1,11 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.transaction;
 
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -58,6 +64,38 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			type.setFailPercent(failPercent);
 			type.setAvg(avg);
 			type.setStd(std);
+
+			double typeValue = compute95LineValue(type.getAllDurations());
+
+			type.setLine95Value(typeValue);
 		}
+	}
+
+	private double compute95LineValue(Map<Integer, AllDuration> durations) {
+		int totalCount = 0;
+		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o2 - o1;
+			}
+		});
+
+		sorted.putAll(durations);
+
+		for (AllDuration duration : durations.values()) {
+			totalCount += duration.getCount();
+		}
+
+		int remaining = totalCount * 5 / 100;
+
+		for (Entry<Integer, AllDuration> entry : sorted.entrySet()) {
+			remaining -= entry.getValue().getCount();
+
+			if (remaining <= 0) {
+				return entry.getKey();
+			}
+		}
+
+		return 0.0;
 	}
 }
