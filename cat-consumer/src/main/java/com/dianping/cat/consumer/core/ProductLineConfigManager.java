@@ -46,7 +46,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	private static final String CONFIG_NAME = "productLineConfig";
 
 	public Company getCompany() {
-		synchronized (m_company) {
+		synchronized (this) {
 			return m_company;
 		}
 	}
@@ -63,7 +63,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
@@ -195,7 +194,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 					if (modifyTime > m_modifyTime) {
 						String content = config.getContent();
 
-						synchronized (getCompany()) {
+						synchronized (this) {
 							m_company = DefaultSaxParser.parse(content);
 						}
 

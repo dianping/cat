@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>test-framework</artifactId>
-			<version>2.0.2</version>
+			<version>2.0.3-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

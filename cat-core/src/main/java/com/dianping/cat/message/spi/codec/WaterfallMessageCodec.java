@@ -10,6 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MockMessageBuilder;
@@ -29,7 +30,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 	private BufferHelper m_bufferHelper;
 
-	private boolean m_mockMode = false;
+	private boolean m_mockMode = true;
 
 	protected int countTransactions(Transaction t) {
 		int count = 1;
@@ -123,14 +124,25 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
 		b.tag1("svg", "x", 0, "y", 0, "width", width, "height", height, "viewBox", "0,0," + width + "," + height, "xmlns",
-		      "http://www.w3.org/2000/svg");
+		      "http://www.w3.org/2000/svg", "version", "1.1");
 		b.tag1("g", "font-size", "12", "stroke", "gray");
 
 		int count = helper.write(buf, sb.toString());
 		return count;
 	}
 
-	protected int encodeLine(MessageTree tree, Transaction t, ChannelBuffer buf, Locator locator, Ruler ruler) {
+	protected int encodeRemoteCall(MessageTree tree, Event event, ChannelBuffer buf, Locator locator, Ruler ruler) {
+		int count = 0;
+
+		locator.downLevel(true);
+		locator.nextLine();
+		count += encodeRemoteCallLine(tree, event, buf, locator, ruler);
+		locator.upLevel();
+
+		return count;
+	}
+
+	protected int encodeRemoteCallLine(MessageTree tree, Event event, ChannelBuffer buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
 		StringBuilder sb = b.getResult();
@@ -138,34 +150,13 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		int height = 18;
 		int x = 0;
 		int y = locator.getLine() * height + ruler.getOffsetY();
-		String rid = "r" + locator.getLine();
-		String tid = "t" + locator.getLine();
+		String logviewId = String.valueOf(event.getData());
 
 		b.branch(locator, x, y, width, height);
 
 		x += locator.getLevel() * width;
-
-		if (t.getStatus().equals("0")) {
-			b.tag1("text", "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0");
-		} else {
-			b.tag1("text", "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0", "fill", "red");
-		}
-
-		b.add(t.getType()).newLine();
-		b.tag("set", "attributeName", "fill", "to", "red", "begin", rid + ".mouseover", "end", rid + ".mouseout");
-		b.tag("set", "attributeName", "fill", "to", "red", "begin", tid + ".mouseover", "end", tid + ".mouseout");
-		b.tag2("text");
-
-		long t0 = tree.getMessage().getTimestamp();
-		long t1 = t.getTimestamp();
-		long d = t.getDurationInMicros();
-
-		int rx = ruler.calcX((t1 - t0) * 1000);
-		int rw = ruler.calcX(d) - ruler.getOffsetX();
-
-		b.tag("rect", "id", rid, "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
-		b.tagWithText("text", String.format("%.2f %s", t.getDurationInMicros() / 1000.0, t.getName()), "id", tid, "x", rx + 5, "y",
-		      y - 3, "font-size", "11", "stroke-width", "0");
+		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width", "0", "fill",
+		      "blue", "onclick", "popup('" + logviewId + "');");
 
 		int count = helper.write(buf, sb.toString());
 		return count;
@@ -209,32 +200,79 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	}
 
 	protected int encodeTransaction(MessageTree tree, Transaction transaction, ChannelBuffer buf, Locator locator, Ruler ruler) {
-		List<Transaction> children = getChildTransactions(transaction);
+		List<Message> children = getVisibleChildren(transaction);
 		int count = 0;
 
 		locator.downLevel(children.isEmpty());
 		locator.nextLine();
-		count += encodeLine(tree, transaction, buf, locator, ruler);
+		count += encodeTransactionLine(tree, transaction, buf, locator, ruler);
 
 		int len = children.size();
 
 		for (int i = 0; i < len; i++) {
-			Transaction child = children.get(i);
+			Message child = children.get(i);
 
-			locator.setLast(i == len - 1);
-			count += encodeTransaction(tree, child, buf, locator, ruler);
+			if (child instanceof Transaction) {
+				locator.setLast(i == len - 1);
+				count += encodeTransaction(tree, (Transaction) child, buf, locator, ruler);
+			} else if (child instanceof Event && "RemoteCall".equals(child.getType())) {
+				count += encodeRemoteCall(tree, (Event) child, buf, locator, ruler);
+			}
 		}
 
 		locator.upLevel();
 		return count;
 	}
 
-	protected List<Transaction> getChildTransactions(Transaction transaction) {
-		List<Transaction> children = new ArrayList<Transaction>();
+	protected int encodeTransactionLine(MessageTree tree, Transaction t, ChannelBuffer buf, Locator locator, Ruler ruler) {
+		BufferHelper helper = m_bufferHelper;
+		XmlBuilder b = new XmlBuilder();
+		StringBuilder sb = b.getResult();
+		int width = 6;
+		int height = 18;
+		int x = 0;
+		int y = locator.getLine() * height + ruler.getOffsetY();
+		String rid = "r" + locator.getLine();
+		String tid = "t" + locator.getLine();
 
-		for (Message child : transaction.getChildren()) {
+		b.branch(locator, x, y, width, height);
+
+		x += locator.getLevel() * width;
+
+		if (t.getStatus().equals("0")) {
+			b.tag1("text", "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0");
+		} else {
+			b.tag1("text", "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0", "fill", "red");
+		}
+
+		b.add(t.getType()).newLine();
+		b.tag("set", "attributeName", "fill", "to", "red", "begin", rid + ".mouseover", "end", rid + ".mouseout");
+		b.tag("set", "attributeName", "fill", "to", "red", "begin", tid + ".mouseover", "end", tid + ".mouseout");
+		b.tag2("text");
+
+		long t0 = tree.getMessage().getTimestamp();
+		long t1 = t.getTimestamp();
+		long d = t.getDurationInMicros();
+
+		int rx = ruler.calcX((t1 - t0) * 1000);
+		int rw = ruler.calcX(d) - ruler.getOffsetX();
+
+		b.tag("rect", "id", rid, "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
+		b.tagWithText("text", String.format("%.2f %s", t.getDurationInMicros() / 1000.0, t.getName()), "id", tid, "x", rx + 5, "y",
+		      y - 3, "font-size", "11", "stroke-width", "0");
+
+		int count = helper.write(buf, sb.toString());
+		return count;
+	}
+
+	protected List<Message> getVisibleChildren(Transaction parent) {
+		List<Message> children = new ArrayList<Message>();
+
+		for (Message child : parent.getChildren()) {
 			if (child instanceof Transaction) {
-				children.add((Transaction) child);
+				children.add(child);
+			} else if (child instanceof Event && "RemoteCall".equals(child.getType())) {
+				children.add(child);
 			}
 		}
 
@@ -260,7 +298,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 				                  .after(4000).child(t("MEMCACHED", "Get", 279))) //
 				            .mark().after(200).child(t("MEMCACHED", "Inc", 319)) //
 				            .reset().after(500).child(t("BIG ASS SERVICE", "getThemDatar", 97155) //
-				                  .after(1000).mark().child(t("SERVICE", "getStuff", 3760)) //
+				                  .after(1000).mark().child(t("SERVICE", "getStuff", 63760)) //
+				                  .child(e("RemoteCall", "mock", "mock-message-id")) //
 				                  .reset().child(t("DATAR", "findThings", 94537)) //
 				                  .after(200).child(t("THINGIE", "getMoar", 1435)) //
 				            ) //
