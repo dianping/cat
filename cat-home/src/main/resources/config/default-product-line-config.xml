@@ -16,4 +16,8 @@
       <domain id="TuanGouApi"/>
       <domain id="TuanGouTracking"/>
    </product-line>
+   <product-line id="arch" owner="zz" email="zz" title="架构" order="2.0" dashboard="true">
+      <domain id="Cat"/>
+      <domain id="Swallow"/>
+   </product-line>
 </company>

@@ -10,7 +10,6 @@ import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -196,35 +195,6 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new EventReport(domain);
-			report.setStartTime(start).setEndTime(end);
-		}
-		return report;
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		HealthReport report = null;
-
-		if (type == s_hourly) {
-			report = m_hourlyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_daily) {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryHealthReport(domain, start);
-		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryHealthReport(domain, start);
-		} else {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		}
-		if (report == null) {
-			report = new HealthReport(domain);
 			report.setStartTime(start).setEndTime(end);
 		}
 		return report;

@@ -9,7 +9,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -30,7 +29,6 @@ import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.service.DailyReportService;
-import com.dianping.cat.report.task.health.HealthReportMerger;
 
 public class DailyReportServiceImpl implements DailyReportService {
 
@@ -121,35 +119,6 @@ public class DailyReportServiceImpl implements DailyReportService {
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
 		return eventReport;
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-
-		try {
-			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "health",
-			      DailyreportEntity.READSET_FULL);
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-
-				try {
-					HealthReport reportModel = com.dianping.cat.consumer.health.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "health", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		HealthReport healthReport = merger.getHealthReport();
-		
-		healthReport.setStartTime(start);
-		healthReport.setEndTime(end);
-		return healthReport;
 	}
 
 	@Override

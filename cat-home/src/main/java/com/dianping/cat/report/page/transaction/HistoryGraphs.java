@@ -53,7 +53,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		item.setStart(start);
 		item.setSize(size);
 		item.setStep(step);
-		item.setTitles(name + " Response Time (ms)");
+		item.setTitle(name + " Response Time (ms)");
 
 		for (Map<String, double[]> data : datas) {
 			double[] sum = data.get("sum");
@@ -78,7 +78,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		item.setStart(start);
 		item.setSize(size);
 		item.setStep(step);
-		item.setTitles(name + " Error (count)");
+		item.setTitle(name + " Error (count)");
 
 		for (Map<String, double[]> data : datas) {
 			item.addValue(data.get("failure_count"));
@@ -194,7 +194,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		item.setStart(start);
 		item.setSize(size);
 		item.setStep(step);
-		item.setTitles(name + " Hits (count)");
+		item.setTitle(name + " Hits (count)");
 
 		for (Map<String, double[]> data : datas) {
 			double[] totalCount = data.get("total_count");

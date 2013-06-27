@@ -17,7 +17,7 @@
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.display.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
-			graphLineChart(document.getElementById('${item.titles}'), data);
+			graphLineChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
 		var product = '${payload.product}';
@@ -33,7 +33,7 @@
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
@@ -45,12 +45,12 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-	            <c:forEach var="item" items="${model.products}" varStatus="status">
-	              <li class='nav-header' id="${item}"><a href="?date=${model.date}&product=${item}"><strong>${item}</strong></a></li>
-	              <c:if test="${payload.product eq item }">
-		               <c:forEach var="item" items="${model.display.abtests}" varStatus="status">
-		               	   <c:if test="${item ne -1}">
-				              <li id="${item}"><a href="?date=${model.date}&product=${payload.product}&test=${item}">AB测试${item}</a></li>
+	            <c:forEach var="item" items="${model.productLines}" varStatus="status">
+	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}"><strong>${item.title}</strong></a></li>
+	              <c:if test="${payload.product eq item.id }">
+		               <c:forEach var="test" items="${model.display.abtests}" varStatus="status">
+		               	   <c:if test="${test.id ne -1}">
+				              <li id="${test.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.id}">AB-${test.name}</a></li>
 		               	   </c:if>
 		       		  </c:forEach>
 	              </c:if>
@@ -62,7 +62,10 @@
         </div><!--/span-->
         <div class="span10">
         	<c:forEach var="item" items="${model.display.lineCharts}" varStatus="status">
-       			<div style="float:left;" id="${item.titles}" class="graph"></div>
+       			<div style="float:left;">
+       				<h5 class="text-center text-error">${item.title}</h5>
+       				<div  id="${item.title}" class="graph"></div>
+       			</div>
 			</c:forEach>
         </div>
 	<table  class="footer">
@@ -77,9 +80,6 @@
 	width: 380px;
 	height: 250px;
 	margin: 4px auto;
-}
-.row-fluid .span2{
-	width:12%;
 }
 .well {
 padding: 10px 10px 10px 19p;

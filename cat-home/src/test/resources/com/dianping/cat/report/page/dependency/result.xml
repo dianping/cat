@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependency-report domain="Cat" startTime="2013-05-08 11:00:00" endTime="2013-05-08 11:59:59">
    <domainName>Cat</domainName>
-   <segment id="16" exception-count="0">
+   <segment id="16">
       <index name="URL" total-count="2" error-count="3" sum="2.00" avg="1.00"/>
    </segment>
-   <segment id="18" exception-count="3">
+   <segment id="18">
       <index name="URL" total-count="4" error-count="0" sum="4.00" avg="1.00"/>
       <index name="Cache" total-count="2" error-count="0" sum="2.00" avg="1.00"/>
       <index name="PigeonCall" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
@@ -21,7 +21,7 @@
       <dependency key="UserWeb3" type="PigeonClient" target="UserWeb3" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
       <dependency key="UserWeb2" type="PigeonClient" target="UserWeb2" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
    </segment>
-   <segment id="19" exception-count="5">
+   <segment id="19">
       <index name="PigeonCall" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
       <index name="PigeonService" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
       <index name="URL" total-count="2" error-count="0" sum="2.00" avg="1.00"/>

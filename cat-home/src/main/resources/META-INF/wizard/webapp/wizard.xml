@@ -32,9 +32,6 @@
          <page name="matrix" title="Matrix" path="matrix" view="/jsp/report/matrix/matrix.jsp">
             <description>Matrix</description>
          </page>
-         <page name="health" title="Health" path="health" view="/jsp/report/health/health.jsp">
-            <description>Health</description>
-         </page>
          <page name="cross" title="Cross" path="cross" view="/jsp/report/cross/cross.jsp">
             <description>Cross</description>
          </page>

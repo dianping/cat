@@ -22,8 +22,6 @@ import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.Task;
-import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -51,9 +49,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ReportDao m_reportDao;
-
-	@Inject
-	private TaskDao m_taskDao;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -278,14 +273,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 						}
 					}
 				}
-
-				Date period = new Date(m_startTime);
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				// Create task for health report
-				for (String domain : m_reports.keySet()) {
-					StateReport report = m_reports.get(domain);
-					new HealthVisitor(ip, period).visitStateReport(report);
-				}
 			} catch (Exception e) {
 				t.setStatus(e);
 				Cat.logError(e);
@@ -319,33 +306,4 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		}
 	}
 
-	public class HealthVisitor extends BaseVisitor {
-
-		private String m_ip;
-
-		private Date m_period;
-
-		public HealthVisitor(String ip, Date period) {
-			m_ip = ip;
-			m_period = period;
-		}
-
-		@Override
-		public void visitProcessDomain(ProcessDomain processDomain) {
-			String domain = processDomain.getName();
-			try {
-				Task task = m_taskDao.createLocal();
-
-				task.setCreationDate(new Date());
-				task.setProducer(m_ip);
-				task.setReportDomain(domain);
-				task.setReportName("health");
-				task.setReportPeriod(m_period);
-				task.setStatus(1); // status todo
-				m_taskDao.insert(task);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-	}
 }

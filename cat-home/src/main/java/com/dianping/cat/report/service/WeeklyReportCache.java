@@ -17,7 +17,6 @@ import com.dianping.cat.consumer.advanced.MatrixReportFilter;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -45,8 +44,6 @@ public class WeeklyReportCache implements Initializable {
 	private Map<String, SqlReport> m_sqlReports = new HashMap<String, SqlReport>();
 
 	private Map<String, DatabaseReport> m_databaseRepors = new HashMap<String, DatabaseReport>();
-
-	private Map<String, HealthReport> m_healthReports = new HashMap<String, HealthReport>();
 
 	private Map<String, StateReport> m_stateReports = new HashMap<String, StateReport>();
 
@@ -76,10 +73,6 @@ public class WeeklyReportCache implements Initializable {
 
 	public EventReport queryEventReport(String domain, Date start) {
 		return m_eventReports.get(domain);
-	}
-
-	public HealthReport queryHealthReport(String domain, Date start) {
-		return m_healthReports.get(domain);
 	}
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start) {
@@ -130,7 +123,6 @@ public class WeeklyReportCache implements Initializable {
 				m_matrixReports.put(domain, matrixReport);
 				new MatrixReportFilter().visitMatrixReport(matrixReport);
 				m_sqlReports.put(domain, m_dailyReportService.querySqlReport(domain, start, end));
-				m_healthReports.put(domain, m_dailyReportService.queryHealthReport(domain, start, end));
 			}
 
 			Set<String> databases = m_hourReportService.queryAllDatabaseNames(start, end, "database");
