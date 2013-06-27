@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.core;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +20,7 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -54,13 +54,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return new HashSet<String>();
-	}
-
-	@Override
 	public synchronized TopReport getReport(String domain) {
-		Set<String> domains = m_transactionAnalyzer.getDomains();
+		Set<String> domains = m_transactionAnalyzer.getDomains(); // TODO to be fixed
 		TopReport topReport = new TopReport("Cat");
 
 		topReport.setStartTime(new Date(m_startTime));
@@ -79,6 +74,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 				new ProblemReportVisitor(topReport).visitProblemReport(report);
 			}
 		}
+
 		return topReport;
 	}
 

@@ -1,6 +1,7 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.transaction;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -12,6 +13,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Ignore
 public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testCommonGenerate() throws Exception {

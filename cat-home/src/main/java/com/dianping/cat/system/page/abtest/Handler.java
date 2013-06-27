@@ -367,7 +367,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void renderModel(Model model) {
-		model.setAbtestModel(fetchAbtestModel().toString());
+		model.setAbtestModel(String.valueOf(fetchAbtestModel()));
 	}
 
 	private void renderReportModel(Context ctx, Model model, Payload payload) {

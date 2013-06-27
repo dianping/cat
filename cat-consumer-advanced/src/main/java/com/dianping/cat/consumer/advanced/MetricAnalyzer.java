@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -66,10 +65,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		m_logger = logger;
 	}
 
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
 
 	public MetricReport getReport(String product) {
 		MetricReport report = m_reports.get(product);

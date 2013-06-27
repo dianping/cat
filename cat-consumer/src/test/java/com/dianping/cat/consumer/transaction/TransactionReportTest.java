@@ -1,6 +1,7 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.transaction;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -8,6 +9,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 
+@Ignore
 public class TransactionReportTest {
 	@Test
 	public void testXml() throws Exception {

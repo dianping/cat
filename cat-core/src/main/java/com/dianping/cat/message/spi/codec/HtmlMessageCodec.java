@@ -181,6 +181,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		} else {
 			count += helper.tr1(buf, null);
 		}
+
 		String link =  message.getData().toString();
 
 		count += helper.td1(buf);
@@ -216,7 +217,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">%s</a>",
+		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">[:: %s ::]</a>",
 		       link, name));
 		count += helper.td2(buf);
 		count += helper.tr2(buf);

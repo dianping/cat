@@ -94,6 +94,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ABTestComponentConfigurator().defineComponents());
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
+		all.addAll(new ABTestComponentConfigurator().defineComponents());
 
 		return all;
 	}

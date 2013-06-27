@@ -145,7 +145,10 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			String newValue = m_cookieCodec.encode(map);
 
 			setCookie(request, response, ABTEST_COOKIE_NAME, newValue);
-			((DefaultMessageManager) m_messageManager).setMetricType(newValue);
+
+			if (newValue != null && newValue.length() > 0) {
+				((DefaultMessageManager) m_messageManager).setMetricType(newValue);
+			}
 		}
 	}
 }

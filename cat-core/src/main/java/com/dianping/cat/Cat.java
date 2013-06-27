@@ -26,8 +26,6 @@ import com.dianping.cat.message.spi.MessageManager;
 public class Cat {
 	private static Cat s_instance = new Cat();
 
-	public static final String MetricType = "_MetricType";
-
 	private MessageProducer m_producer;
 
 	private MessageManager m_manager;
@@ -38,10 +36,12 @@ public class Cat {
 	}
 
 	private static void checkAndInitialize() {
-		synchronized (s_instance) {
-			if (s_instance.m_container == null) {
-				initialize(new File(getCatHome(), "client.xml"));
-				log("WARN", "Cat is lazy initialized!");
+		if (s_instance.m_container == null) {
+			synchronized (s_instance) {
+				if (s_instance.m_container == null) {
+					initialize(new File(getCatHome(), "client.xml"));
+					log("WARN", "Cat is lazy initialized!");
+				}
 			}
 		}
 	}
@@ -165,20 +165,19 @@ public class Cat {
 	 * Increase the counter specified by <code>name</code> by one.
 	 * 
 	 * @param name
-	 *           the name of the metric
-	 *           default count value is 1
+	 *           the name of the metric default count value is 1
 	 */
 	public static void logMetricForCount(String name) {
 		logMetricInternal(name, "C", "1");
 	}
-	
+
 	/**
 	 * Increase the counter specified by <code>name</code> by one.
 	 * 
 	 * @param name
 	 *           the name of the metric
 	 */
-	public static void logMetricForCount(String name,int quantity) {
+	public static void logMetricForCount(String name, int quantity) {
 		logMetricInternal(name, "C", String.valueOf(quantity));
 	}
 

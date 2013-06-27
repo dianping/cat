@@ -11,8 +11,6 @@ public class CatConstants {
 	/**
 	 * Config File
 	 */
-	public static final String CONFIG_FILE = "/data/appdatas/cat/client.xml";
-
 	public static final String CAT_STATE = "cat-state";
 
 	/**
@@ -62,23 +60,17 @@ public class CatConstants {
 
 	public static final String PIGEON_RESPONSE_MESSAGE_ID = "ResponseMessageId";
 
-	/**
-	 * Zebra
-	 */
 	public static final String TYPE_SQL = "SQL";
 
 	public static final String TYPE_SQL_PARAM = "SQL.PARAM";
 
-	/**
-	 * Avatar
-	 */
-
 	public static final String TYPE_URL = "URL";
+
+	public static final String TYPE_URL_FORWARD = "URL.Forward";
 
 	public static final String NAME_CLIENT_INFO = "ClientInfo";
 
 	public static final String TYPE_ACTION = "Action";
-	
 
 	public static final int ERROR_COUNT = 100;
 

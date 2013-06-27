@@ -1,6 +1,5 @@
-package com.dianping.cat.report.page.model.transaction;
+package com.dianping.cat.consumer.transaction;
 
-import com.dianping.cat.consumer.core.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -8,14 +7,11 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.report.ReportConstants;
 
 public class TransactionReportMerger extends DefaultMerger {
-
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
-
-		transactionReport.accept(new TransactionStatisticsComputer());
 	}
 
 	@Override
@@ -30,7 +26,9 @@ public class TransactionReportMerger extends DefaultMerger {
 
 	@Override
 	public void mergeName(TransactionName old, TransactionName other) {
-		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
+		long totalCountSum = old.getTotalCount() + other.getTotalCount();
+
+		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
 
 		if (other.getMin() < old.getMin()) {
@@ -44,11 +42,12 @@ public class TransactionReportMerger extends DefaultMerger {
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 
-		old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
-		old.setLine95Count(old.getLine95Count() + other.getLine95Count());
-		if (old.getLine95Count() > 0) {
-			old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+		if (totalCountSum > 0) {
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+
+			old.setLine95Value(line95Values / totalCountSum);
 		}
+
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
@@ -76,20 +75,22 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	public Machine mergesForAllMachine(TransactionReport report) {
-		Machine machine = new Machine(CatString.ALL);
+		Machine all = new Machine(ReportConstants.ALL);
 
 		for (Machine m : report.getMachines().values()) {
-			if (!m.getIp().equals(CatString.ALL)) {
-				visitMachineChildren(machine, m);
+			if (!m.getIp().equals(ReportConstants.ALL)) {
+				visitMachineChildren(all, m);
 			}
 		}
 
-		return machine;
+		return all;
 	}
 
 	@Override
 	public void mergeType(TransactionType old, TransactionType other) {
-		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
+		long totalCountSum = old.getTotalCount() + other.getTotalCount();
+
+		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
 
 		if (other.getMin() < old.getMin()) {
@@ -99,14 +100,16 @@ public class TransactionReportMerger extends DefaultMerger {
 		if (other.getMax() > old.getMax()) {
 			old.setMax(other.getMax());
 		}
+
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 
-		old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
-		old.setLine95Count(old.getLine95Count() + other.getLine95Count());
-		if (old.getLine95Count() > 0) {
-			old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+		if (totalCountSum > 0) {
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+
+			old.setLine95Value(line95Values / totalCountSum);
 		}
+
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
@@ -122,7 +125,7 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
-	public double std(long count, double avg, double sum2, double max) {
+	double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
 		if (value <= 0 || count <= 1) {
@@ -133,12 +136,11 @@ public class TransactionReportMerger extends DefaultMerger {
 			return Math.sqrt(value);
 		}
 	}
-	
+
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		super.visitTransactionReport(transactionReport);
 		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
 		getTransactionReport().getIps().addAll(transactionReport.getIps());
 	}
-
 }
