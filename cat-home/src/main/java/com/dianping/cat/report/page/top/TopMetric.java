@@ -124,12 +124,12 @@ public class TopMetric extends BaseVisitor {
 			Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
 			String minuteStr = m_sdf.format(minute);
 
-			m_error.add(minuteStr, m_currentDomain, segment.getError());
-			m_url.add(minuteStr, m_currentDomain, segment.getUrlDuration());
-			m_service.add(minuteStr, m_currentDomain, segment.getServiceDuration());
-			m_call.add(minuteStr, m_currentDomain, segment.getCallDuration());
-			m_sql.add(minuteStr, m_currentDomain, segment.getSqlDuration());
-			m_cache.add(minuteStr, m_currentDomain, segment.getCacheDuration());
+			m_error.addIndex(minuteStr, m_currentDomain, segment.getError());
+			m_url.addIndex(minuteStr, m_currentDomain, segment.getUrlDuration());
+			m_service.addIndex(minuteStr, m_currentDomain, segment.getServiceDuration());
+			m_call.addIndex(minuteStr, m_currentDomain, segment.getCallDuration());
+			m_sql.addIndex(minuteStr, m_currentDomain, segment.getSqlDuration());
+			m_cache.addIndex(minuteStr, m_currentDomain, segment.getCacheDuration());
 		}
 		super.visitSegment(segment);
 	}
@@ -179,7 +179,7 @@ public class TopMetric extends BaseVisitor {
 
 				double value = entry.getValue().doubleValue();
 				if (value > 200) {
-					sb.append(buildErrorText(entry.getKey()+" "+value)).append("<br/>");
+					sb.append(buildErrorText(entry.getKey() + " " + value)).append("<br/>");
 				} else {
 					sb.append(entry.getKey()).append(" ");
 					sb.append(value).append("<br/>");
@@ -231,7 +231,7 @@ public class TopMetric extends BaseVisitor {
 			m_itemSize = itemSize;
 		}
 
-		public void add(String minute, String domain, double value) {
+		private Item findOrCreateItem(String minute, String domain) {
 			Map<String, Item> temp = m_items.get(minute);
 
 			if (temp == null) {
@@ -241,16 +241,20 @@ public class TopMetric extends BaseVisitor {
 			Item item = temp.get(domain);
 
 			if (item == null) {
-				item = new Item(domain, value);
+				item = new Item(domain, 0);
 				temp.put(domain, item);
-			} else {
-				item.setValue(item.getValue() + value);
 			}
+
+			return item;
 		}
-		
-		public void addError(String time, String currentDomain, String exception, long count) {
-			Map<String, Item> items = m_items.get(time);
-			Item item = items.get(currentDomain);
+
+		public void addIndex(String minute, String domain, double value) {
+			Item item = findOrCreateItem(minute, domain);
+			item.setValue(item.getValue() + value);
+		}
+
+		public void addError(String minute, String domain, String exception, long count) {
+			Item item = findOrCreateItem(minute, domain);
 			Double d = item.getException().get(exception);
 
 			if (d == null) {

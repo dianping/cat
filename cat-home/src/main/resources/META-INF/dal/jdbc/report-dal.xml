@@ -126,68 +126,6 @@
 				AND type =1;	
 				]]></statement>
 			</query>
-			<query name="find-database-all-by-domain-name-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}
-					AND <FIELD name='domain'/> = ${domain}
-					AND <FIELD name='name'/> = ${name} 
-					AND type = 2
-					]]></statement>
-			</query>
-			<query name="find-database-by-name-domain-period" type="SELECT">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					<IF type='NOT_NULL' field='domain'>
-						AND <FIELD name='domain'/> = ${domain}
-					</IF>
-					<IF type='NOT_NULL' field='name'>
-						AND <FIELD name='name'/> = ${name}
-					</IF>	
-					AND type = 2				
-				]]></statement>
-			</query>
-			<query name="find-database-all-by-period" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}
-					AND type =2			
-				]]></statement>
-			</query>
-
-			<query name="delete-database-by-domain-name-period" type="DELETE">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-				DELETE FROM <TABLE/> 
-				WHERE <FIELD name='period'/> = ${period}
-				<IF type='NOT_NULL' field='domain'>
-					AND <FIELD name='domain'/> = ${domain}
-				</IF>
-				<IF type='NOT_NULL' field='name'>
-					AND <FIELD name='name'/> = ${name}
-				</IF>
-				AND type =2;	
-				]]></statement>
-			</query>
 
 		</query-defs>
 	</entity>

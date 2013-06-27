@@ -77,8 +77,14 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public DependencyReport getReport(String domain) {
-		DependencyReport report = findOrCreateReport(domain);
+		DependencyReport report = m_reports.get(domain);
 
+		if (report == null) {
+			report = new DependencyReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+		}
 		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}
@@ -153,27 +159,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return UNKNOWN;
 	}
 
-	// private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
-	// List<Message> messages = t.getChildren();
-	//
-	// for (Message message : messages) {
-	// if (message instanceof Event) {
-	// if (message.getType().equals("PigeonService.client")) {
-	// String name = message.getName();
-	// int index = name.indexOf(":");
-	//
-	// if (index > 0) {
-	// name = name.substring(0, index);
-	// }
-	// return name;
-	// }
-	// }
-	// }
-	// MessageId id = MessageId.parse(tree.getMessageId());
-	//
-	// return id.getIpAddress();
-	// }
-
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -217,13 +202,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
 			}
 		}
-		// else if ("PigeonService".equals(type) || "Service".equals(type)) {
-		// String ip = parseIpFromPigeonServerTransaction(t, tree);
-		// String domain = m_domainManager.getDomainByIp(ip);
-		//
-		// String callType = "PigeonServer";
-		// updateDependencyInfo(report, t, domain, callType);
-		// }
 	}
 
 	private void processSqlTransaction(DependencyReport report, Transaction t) {
@@ -272,6 +250,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			index.incTotalCount();
 			index.setSum(index.getSum() + t.getDurationInMillis());
 			index.setAvg(index.getSum() / index.getTotalCount());
+		}
+
+		if (isCache(type)) {
+			updateDependencyInfo(report, t, type, "Cache");
 		}
 	}
 

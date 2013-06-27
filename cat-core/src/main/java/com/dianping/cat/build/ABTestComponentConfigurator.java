@@ -17,7 +17,7 @@ import com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.spi.MessageManager;
 
-class ABTestComponentConfigurator extends AbstractResourceConfigurator {
+public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();

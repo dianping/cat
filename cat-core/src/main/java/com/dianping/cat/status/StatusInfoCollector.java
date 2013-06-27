@@ -28,9 +28,12 @@ class StatusInfoCollector extends BaseVisitor {
 	private MessageStatistics m_statistics;
 
 	private boolean m_dumpLocked;
+	
+	private String m_jars;
 
-	public StatusInfoCollector(MessageStatistics statistics) {
+	public StatusInfoCollector(MessageStatistics statistics,String jars) {
 		m_statistics = statistics;
+		m_jars = jars;
 	}
 
 	private int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
@@ -194,7 +197,8 @@ class StatusInfoCollector extends BaseVisitor {
 
 		runtime.setStartTime(bean.getStartTime());
 		runtime.setUpTime(bean.getUptime());
-		runtime.setJavaClasspath(System.getProperty("java.class.path"));
+		//runtime.setJavaClasspath(System.getProperty("java.class.path"));
+		runtime.setJavaClasspath(m_jars);
 		runtime.setJavaVersion(System.getProperty("java.version"));
 		runtime.setUserDir(System.getProperty("user.dir"));
 		runtime.setUserName(System.getProperty("user.name"));

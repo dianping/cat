@@ -104,15 +104,15 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 			return true;
 		} else {
 			config = new MetricItemConfig();
+			
+			config.setId(key);
 			config.setDomain(domain);
 			config.setType(type);
 			config.setMetricKey(metricKey);
-			config.setId(key);
 			config.setTitle(item.getTitle());
 			config.setShowAvg(item.isShowAvg());
 			config.setShowCount(item.isShowCount());
 			config.setShowSum(item.isShowSum());
-
 			return insertMetricItemConfig(config);
 		}
 	}
@@ -155,7 +155,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		if (modifyTime > m_modifyTime) {
 			String content = config.getContent();
 
-			synchronized (getMetricConfig()) {
+			synchronized (m_metricConfig) {
 				m_metricConfig = DefaultSaxParser.parse(content);
 			}
 

@@ -99,6 +99,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
+		//don't process frontEnd domain
+		if ("FrontEnd".equals(domain)) {
+			return;
+		}
 		EventReport report = m_reports.get(domain);
 
 		if (report == null) {

@@ -109,7 +109,8 @@
 				typeMap:{
 					database:'rect',
 					project:'circle',
-					service:'lozenge'
+					service:'lozenge',
+					cache:'lozenge'
 				},
 				colorMap:{
 					 "1":'#2fbf2f',

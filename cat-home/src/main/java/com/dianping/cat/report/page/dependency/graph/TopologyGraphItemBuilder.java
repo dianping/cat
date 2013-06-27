@@ -18,6 +18,8 @@ public class TopologyGraphItemBuilder {
 	private static final String DATABASE = GraphConstrant.DATABASE;
 
 	private static final String PROJECT = GraphConstrant.PROJECT;
+	
+	private static final String CACHE = GraphConstrant.CACHE;
 
 	public TopologyNode createDatabaseNode(String database) {
 		TopologyNode node = new TopologyNode(database);
@@ -27,6 +29,15 @@ public class TopologyGraphItemBuilder {
 		node.setWeight(1);
 		return node;
 	}
+	
+	public TopologyNode createCacheNode(String cache) {
+		TopologyNode node = new TopologyNode(cache);
+
+		node.setStatus(OK);
+		node.setType(CACHE);
+		node.setWeight(1);
+		return node;
+   }
 
 	public TopologyEdge buildEdge(String domain, Dependency dependency) {
 		TopologyEdge edge = new TopologyEdge();

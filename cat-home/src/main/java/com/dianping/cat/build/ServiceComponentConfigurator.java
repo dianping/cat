@@ -14,9 +14,6 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.cross.CompositeCrossService;
 import com.dianping.cat.report.page.model.cross.HistoricalCrossService;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
-import com.dianping.cat.report.page.model.database.CompositeDatabaseService;
-import com.dianping.cat.report.page.model.database.HistoricalDatabaseService;
-import com.dianping.cat.report.page.model.database.LocalDatabaseService;
 import com.dianping.cat.report.page.model.dependency.CompositeDependencyService;
 import com.dianping.cat.report.page.model.dependency.HistoricalDependencyService;
 import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
@@ -124,15 +121,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "database-local", LocalDatabaseService.class) //
-		      .req(BucketManager.class) //
-		      .req(MessageConsumer.class, RealtimeConsumer.ID));
-		all.add(C(ModelService.class, "database-historical", HistoricalDatabaseService.class) //
-		      .req(BucketManager.class, ReportService.class));
-		all.add(C(ModelService.class, "database", CompositeDatabaseService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "database-historical" }, "m_services"));
-
 		all.add(C(ModelService.class, "sql-local", LocalSqlService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, RealtimeConsumer.ID));
@@ -169,7 +157,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
 
-		
 		all.add(C(ModelService.class, "metric-local", LocalMetricService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));

@@ -131,10 +131,13 @@ public class DefaultABTestCodec implements ABTestCodec {
 					sb.append('|');
 				}
 
-				if(e.getValue() == null){
-					sb.append(e.getKey()).append(':');
+				String key = e.getKey();
+				String value = e.getValue();
+				
+				if(value == null){
+					sb.append(key).append(':');
 				}else{
-					sb.append(e.getKey()).append(':').append(e.getValue());
+					sb.append(key).append(':').append(value);
 				}
 			}
 		}
@@ -152,8 +155,10 @@ public class DefaultABTestCodec implements ABTestCodec {
 
 			for (Entry<String, Map<String, String>> entry : maps.entrySet()) {
 				String key = entry.getKey();
-				if (entry.getValue() != null) {
-					String val = entry.getValue().get("ab");
+				Map<String, String> entryValue = entry.getValue();
+				
+				if (entryValue != null) {
+					String val = entryValue.get("ab");
 
 					if (val != null) {
 						code.put(key, val);

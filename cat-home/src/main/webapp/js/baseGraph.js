@@ -68,6 +68,7 @@ var lineChartOptions = {
  }
 function graphLineChart(container, data) {
 	var _data = lineChartParse(data);
+	console.log(_data);
 	new Venus.SvgChart(container, _data, lineChartOptions);
 }
 
