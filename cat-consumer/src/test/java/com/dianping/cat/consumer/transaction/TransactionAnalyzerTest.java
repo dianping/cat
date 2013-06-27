@@ -1,10 +1,9 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.transaction;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -15,7 +14,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-@RunWith(JUnit4.class)
+@Ignore
 public class TransactionAnalyzerTest extends ComponentTestCase {
 	private long timestamp;
 

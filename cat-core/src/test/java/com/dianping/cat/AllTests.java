@@ -15,6 +15,7 @@ import com.dianping.cat.message.internal.MockMessageBuilderTest;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilderTest;
+import com.dianping.cat.servlet.CatFilterTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketTest;
 import com.dianping.cat.storage.report.LocalReportBucketTest;
@@ -51,6 +52,9 @@ MockMessageBuilderTest.class,
 PlainTextMessageCodecTest.class,
 
 HtmlMessageCodecTest.class,
+
+/* .servlet */
+CatFilterTest.class,
 
 /* .storage */
 LocalReportBucketTest.class,

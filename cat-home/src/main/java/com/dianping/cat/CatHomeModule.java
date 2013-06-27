@@ -30,8 +30,6 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
-		// warm up IP seeker
-		// IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class, RealtimeConsumer.ID);

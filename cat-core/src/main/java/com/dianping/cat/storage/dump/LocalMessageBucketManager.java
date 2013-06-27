@@ -406,7 +406,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void run() {
 			try {
-				while (true) {
+				while (true) { 
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
@@ -445,7 +445,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
-				ChannelBuffer buf = tree.getBuf();
+				ChannelBuffer buf = tree.getBuffer();
 				MessageBlock bolck = bucket.storeMessage(buf, id);
 
 				if (bolck != null) {

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.model.spi;
+package com.dianping.cat.report.model;
 
 import java.util.Collections;
 import java.util.HashMap;

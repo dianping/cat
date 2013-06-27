@@ -5,10 +5,6 @@
 	<servlet>
 		<servlet-name>cat-servlet</servlet-name>
 		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
-		<init-param>
-			<param-name>cat-server-xml</param-name>
-			<param-value>/data/appdatas/cat/server.xml</param-value>
-		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
@@ -16,7 +12,7 @@
 		<servlet-class>org.unidal.web.MVC</servlet-class>
 		<init-param>
 			<param-name>cat-client-xml</param-name>
-			<param-value>/data/appdatas/cat/client.xml</param-value>
+			<param-value>config/client.xml</param-value>
 		</init-param>
 		<init-param>
 			<param-name>init-modules</param-name>

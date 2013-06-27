@@ -1,7 +1,8 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.transaction;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -10,6 +11,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
+@Ignore
 public class TransactionReportFilterTest {
 	@Test
 	public void test() throws Exception {

@@ -48,7 +48,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	private static final String CONFIG_NAME = "productLineConfig";
 
 	public Company getCompany() {
-		synchronized (m_company) {
+		synchronized (this) {
 			return m_company;
 		}
 	}
@@ -92,7 +92,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (getCompany() == null) {
+		if (m_company == null) {
 			m_company = new Company();
 		}
 		m_domainToProductLines =buildDomainToProductLines();
