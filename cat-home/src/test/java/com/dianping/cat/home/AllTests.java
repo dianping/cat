@@ -7,7 +7,6 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
-import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
@@ -74,8 +73,6 @@ EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 
 ProblemReportMergerTest.class,
-/* database test */
-DatabaseReportMergerTest.class,
 
 /* sql test */
 SqlReportMergerTest.class,

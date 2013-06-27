@@ -6,7 +6,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -36,20 +35,6 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 			Cat.logError(e);
 		}
 		return new CrossReport(domain);
-	}
-
-	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start) {
-		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, database, "database",
-			      WeeklyreportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.consumer.database.model.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new DatabaseReport(database);
 	}
 
 	@Override

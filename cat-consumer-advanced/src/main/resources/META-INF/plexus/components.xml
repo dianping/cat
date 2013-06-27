@@ -50,26 +50,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
-			<role-hint>database</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.DatabaseAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>sql</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.SqlAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>

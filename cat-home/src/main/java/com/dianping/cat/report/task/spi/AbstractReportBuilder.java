@@ -38,24 +38,6 @@ public abstract class AbstractReportBuilder {
 
 	@Inject
 	protected DailygraphDao m_dailygraphDao;
-	
-	protected Set<String> getDatabasesFromHoulyReport(Date start, Date end) {
-		List<Report> databaseNames = new ArrayList<Report>();
-		Set<String> result = new HashSet<String>();
-
-		try {
-			databaseNames = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
-			      ReportEntity.READSET_DOMAIN_NAME);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		if (databaseNames != null) {
-			for (Report domainName : databaseNames) {
-				result.add(domainName.getDomain());
-			}
-		}
-		return result;
-	}
 
 	protected Set<String> getDomainsFromHourlyReport(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();

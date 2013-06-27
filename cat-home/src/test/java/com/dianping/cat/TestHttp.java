@@ -19,29 +19,21 @@ public class TestHttp {
 	private Server server;
 
 	@After
-	public void after() {
-		try {
-			server.stop();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void after() throws Exception {
+		server.stop();
 	}
 
 	@Before
-	public void before() {
-		try {
-			server = new Server(2281);
-			WebAppContext context = new WebAppContext();
-
-			System.setProperty("devMode", "true");
-			context.setContextPath("/cat");
-			context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-			context.setResourceBase("src/main/webapp");
-			server.setHandler(context);
-			server.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void before() throws Exception {
+		server = new Server(2281);
+		WebAppContext context = new WebAppContext();
+		System.setProperty("devMode", "true");
+		
+		context.setContextPath("/cat");
+		context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
+		context.setResourceBase("src/main/webapp");
+		server.setHandler(context);
+		server.start();
 	}
 
 	private String getContentByUrl(String urlAddress) throws IOException {

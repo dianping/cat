@@ -3,7 +3,6 @@ package com.dianping.cat.report.service;
 import java.util.Date;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -15,8 +14,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 public interface MonthReportService {
 
 	public CrossReport queryCrossReport(String domain, Date start);
-
-	public DatabaseReport queryDatabaseReport(String database, Date start);
 
 	public EventReport queryEventReport(String domain, Date start);
 

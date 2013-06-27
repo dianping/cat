@@ -36,7 +36,8 @@
 		 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 		</div></div>
 		<div id="fullScreenData">
-			<h1>监控仪表盘信息</h1>
+			<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
+			<br/>
 			<%@ include file="../top/topMetric.jsp"%>
 		</div>
     </div>
@@ -48,36 +49,12 @@
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		$('.position').hide();
 		$('.switch').hide();
-		/* $('#topMetric .nav-tabs a').mouseenter(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-		}); */	
 		var data = ${model.dashboardGraph};
-		console.log(data);
-		function parse(data){
-			var nodes = data.nodes;
-			var points = [];
-			var sides = [];
-			for(var o in nodes){
-				if(nodes.hasOwnProperty(o)){
-					points.push(nodes[o]);
-				}
-			}
-			for(var o in data.edges){
-				if(data.edges.hasOwnProperty(o)){
-					sides.push(data.edges[o]);
-				}
-			}
-			data.points = points;
-			data.sides = sides;
-			delete data.nodes;
-			delete data.edges;
-			return data;
-		}
-		new StarTopo('container',parse(data),{
+		
+		new  StarTopoList('container', data ,{
 			typeMap:{
-				database:'rect',
-				project:'circle',
+				database:'circle',
+				project:'rect',
 				service:'lozenge'
 			},
 			colorMap:{
@@ -85,14 +62,16 @@
 				 "2":'#bfa22f',
 				 "3":'#b94a48',
 				 "4":'#772fbf'
-			},
-		radius:300,
-		sideWeight:function(weight){
-			return weight+1
-		},
-		nodeWeight:function(weight){
-			return weight/5+0.8;
-		}});
+                         },
+		            legendMap:{
+		            "1":"good",
+		            "2":"warning",
+		            "3":"error"
+		            },
+			paddingInside:20,
+			col:3,
+			colInside:4
+		});
 	});
 </script>
 <style>

@@ -58,11 +58,11 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private TopologyGraphDao m_topologyGraphDao;
-	
+
 	@Inject
 	private DomainNavManager m_domainNavManager;
 
-	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
+	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(120);
 
 	private Logger m_logger;
 
@@ -236,6 +236,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 				for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
 					m_topologyGraphs.put(entry.getKey(), entry.getValue());
+
+					m_topologyGraphs.remove(entry.getKey() - TimeUtil.ONE_HOUR * 3);
 				}
 				t.setStatus(Message.SUCCESS);
 			} catch (Exception e) {
