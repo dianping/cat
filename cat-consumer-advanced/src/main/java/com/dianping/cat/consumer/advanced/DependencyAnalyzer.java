@@ -251,6 +251,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			index.setSum(index.getSum() + t.getDurationInMillis());
 			index.setAvg(index.getSum() / index.getTotalCount());
 		}
+
+		if (isCache(type)) {
+			updateDependencyInfo(report, t, type, "Cache");
+		}
 	}
 
 	private boolean isCache(String type) {

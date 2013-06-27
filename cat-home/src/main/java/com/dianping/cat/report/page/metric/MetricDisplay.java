@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.metric;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
