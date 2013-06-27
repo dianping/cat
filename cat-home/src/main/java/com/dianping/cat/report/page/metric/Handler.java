@@ -17,12 +17,12 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 	private ProductLineConfigManager m_productLineConfigManager;
 	
 	@Inject
-	private AbtestDao m_abtestDao;
+	private ABTestService m_abtestService;
 	
 	private static final String TUAN = "TuanGou";
 
@@ -88,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 			MetricDisplay display = new MetricDisplay(domainSet,
 			      test, startTime);
 			
-			display.setAbtest(m_abtestDao);
+			display.setAbtest(m_abtestService);
 			
 			display.visitMetricReport(report);
 			model.setDisplay(display);

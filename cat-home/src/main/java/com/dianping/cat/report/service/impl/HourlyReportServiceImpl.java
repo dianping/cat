@@ -16,7 +16,6 @@ import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -31,7 +30,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
@@ -51,26 +49,6 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	
 	@Inject
 	private BusinessReportDao m_businessReportDao;
-
-	@Override
-	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
-		if (end.getTime() == start.getTime()) {
-			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
-		}
-		Set<String> domains = new HashSet<String>();
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, reportName,
-			      ReportEntity.READSET_DOMAIN_NAME);
-
-			for (Report report : reports) {
-				domains.add(report.getDomain());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
-	}
 
 	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
@@ -122,40 +100,6 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		Set<String> domains = queryAllDomainNames(start, end, "cross");
 		crossReport.getDomainNames().addAll(domains);
 		return crossReport;
-	}
-
-	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
-
-				try {
-					DatabaseReport reportModel = com.dianping.cat.consumer.database.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS,
-					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		DatabaseReport databaseReport = merger.getDatabaseReport();
-
-		databaseReport.setStartTime(start);
-		databaseReport.setEndTime(new Date(end.getTime()-1));
-
-		Set<String> domains = queryAllDatabaseNames(start, end, "database");
-		
-		databaseReport.getDomainNames().addAll(domains);
-		return databaseReport;
 	}
 
 	@Override

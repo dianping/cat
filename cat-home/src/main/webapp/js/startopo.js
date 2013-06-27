@@ -17,6 +17,9 @@
 			colorMap:{
 				
 			},
+            col:3,
+            colInside:4,
+            paddingInside:10,
 			size:{
 				circle:{
 					width:100,
@@ -47,8 +50,8 @@
 		this.container = (typeof container ==="string")? document.getElementById(container): container;
 
 		this._initStage();
-		this._sort();
 		if(data.sides && data.sides.length){
+            this._sort();
 			this._initCenter();
 			this._initPoints();
 			this._initSides();
@@ -97,7 +100,11 @@
 					}
 				});
 				data.points = newPoints;
-				this.twoSides = data.sides[0].opposite !== data.sides[data.sides.length-1].opposite;
+                if(data.sides && data.sides.length){
+                    this.twoSides = data.sides[0].opposite !== data.sides[data.sides.length-1].opposite;
+                }else {
+                    this.twoSides = false;
+                }
 			}
 		},
 		_initCenter:function(){
@@ -112,12 +119,10 @@
 			this.centerNode.position(this.stageWidth/2,this.stageHeight/2);
 			this.centerNode.text(this.data.id);
 			this.centerNode.color(this.options.colorMap[data.status]);
-			this.centerNode.node.click(function(){
-				data.link && (location.href = data.link);
-			}).mouseover(function(e){
-					self._showTip(data.des,e.pageX+15,e.pageY+15);
+			this.centerNode.node.mouseover(function(e){
+					Tip.show(data.des,e.pageX+15,e.pageY+15);
 				}).mouseout(function(){
-					self._hideTip();
+                    Tip.hide();
 				});;
 		},
 		_initPoints:function(){
@@ -128,6 +133,10 @@
 				return ;
 			}
 			var averageDegree = 2 * PI/(points.length+(self.twoSides?2:0));
+            var offsetAngel = 0;
+            if(self.twoSides){
+                offsetAngel = PI-(self.posLength + 1 + (self.navLength-1)/2) *　averageDegree;
+            }
 			var centerNode = this.centerNode;
 
 			points.forEach(function(p,i){
@@ -154,6 +163,8 @@
 					angle = averageDegree * i;
 				}
 
+                angle += offsetAngel;
+
 				var x =parseInt( centerNode.position().x + Math.sin(angle) * options.radius ) ;
 				var y =parseInt( centerNode.position().y - Math.cos(angle) * options.radius ) ;
 				var weight =  self.options.nodeWeight(p.weight)
@@ -164,13 +175,10 @@
 				node.color(options.colorMap[p.status])
 				self.points[p.id] = node;
 				node.node.attr('stroke-width',2);
-				node.node.click(function(){
-					p.link && (location.href = p.link);
-				}).mouseover(function(e){
-					console.log(e);
-					self._showTip(p.des,e.pageX+15,e.pageY+15);
+				node.node.mouseover(function(e){
+					Tip.show(p.des,e.pageX+15,e.pageY+15);
 				}).mouseout(function(){
-					self._hideTip();
+                    Tip.hide();
 				});
 				node.textNode.click(function(){
 					p.link && (location.href = p.link);
@@ -229,14 +237,11 @@
 					'stroke-width': self.options.sideWeight(s.weight || 0),
 					'fill':self.options.colorMap[s.status]
 				}).mouseover(function(e){
-					self._showTip(s.des,e.pageX+15,e.pageY+15);
+					Tip.show(s.des,e.pageX+15,e.pageY+15);
 				}).mouseout(function(){
-					self._hideTip();
+                    Tip.hide();
 				});
 
-				//self.stage.text(startPoint.x+length/2,startPoint.y,s.des).rotate(alpha,startPoint.x,startPoint.y).click(function(){
-				//	s.link && (location.href = s.link);
-				//});
 			});
 		},
 		_getNodeType:function(type){
@@ -253,37 +258,40 @@
 			if(!this.data.points){
 				return ;
 			}
-			//4格
-			var col = 4;
-			var width = this.stageWidth/col;
-			var height = 150;
 			var self = this;
-			var options = this.options;
+            var options = this.options;
+			//4格
+			var col = options.colInside;
+			var width = (this.stageWidth-(options.paddingInside * (col+1)))/col;
+            var titleHeight = 30;
 			//title
-			self.stage.text(this.stageWidth/2,50,this.data.id);
+			self.stage.text(this.stageWidth/2,titleHeight/2,this.data.id).attr({
+                'font-size':15
+            });
 			this.data.points.forEach(function(p,i){
-				var x =( i % 4) * width + width/2;
-				var y = parseInt(i/4)* height + height/2;
+				var x =( i % col) * (width+options.paddingInside)+options.paddingInside + width/2;
+				var y = parseInt(i/4)* (width+options.paddingInside) + options.paddingInside+width/2+titleHeight;
 				var type = self._getNodeType(p.type);
 			   	var node = self._createNode(type,p.id);	
-				node.size(options.size[type].width,options.size[type].height);
+				node.size(width,width);
 				node.position(x,y);
 				node.text(p.id);
 				node.color(options.colorMap[p.status]);
-				node.node.click(function(){
-					p.link && (location.href = p.link);
-				}).mouseover(function(e){
-					self._showTip(p.des,e.pageX+15,e.pageY+15);
+				node.node.mouseover(function(e){
+					Tip.show(p.des,e.pageX+15,e.pageY+15);
 				}).mouseout(function(){
-					self._hideTip();
+                    Tip.hide();
 				});
 				node.textNode.click(function(){
 					p.link && (location.href = p.link);
 				});
 				self.points[p.id] = node;
 			});
-		},
-		_showTip:function(content,x,y){
+		}
+	}
+
+    var Tip = {
+		show:function(content,x,y){
 			if(!content){
 				return;
 			}
@@ -296,11 +304,16 @@
 			this._tip.style.left = x+"px";
 			this._tip.style.top = y+"px";
 			this._tip.style.display = "block";
+            //判定是否超过也页面下限
+            var actualHeight = this._tip.clientHeight;
+            if(actualHeight + y > (window.innerHeight+ window.pageYOffset)){
+                this._tip.style.top = y - actualHeight+'px';
+            }
 		},
-		_hideTip:function(){
+		hide:function(){
 			this._tip && (this._tip.style.display = 'none');
 		}
-	}
+    }
 
 
 	var Node = function(type){
@@ -542,6 +555,324 @@
 	}
 	Node.lozenge = LozengeNode;
 
+
+    var StarTopoList = function(container,data,options){
+        var DEFAULT_OPTION = {
+			typeMap:{
+			},
+			colorMap:{
+			},
+            titleMap:{
+            },
+            col:3,
+            colInside:4,
+            paddingInside:10,
+			sideWeight:function(weight){
+				//weight ==> px
+				return weight + 2;
+
+			},
+        }
+		this.options = mix(DEFAULT_OPTION,options);
+		this.data = data;
+		this.points = {};
+		this.container = (typeof container ==="string")? document.getElementById(container): container;
+        this.stage = new Raphael(this.container);
+
+        this._initGrid();
+        this._initNodes();
+        this._initSides();
+
+        this._frontNodes();
+        this._initLegend();
+
+
+    }
+    StarTopoList.prototype = {
+        constructor:StarTopoList,
+        _initGrid:function(){
+            var option = this.options,
+                self = this;
+
+            var colWidth = self.container.clientWidth / option.col;
+            var nodeWidth =( colWidth - option.paddingInside * (option.colInside+1)) / option.colInside;
+
+            this._colWidth = colWidth;
+            this._nodeWidth = nodeWidth;
+            for(var i=0;i<option.col-1;i++){
+                this.stage.path().attr({
+                    path:['M',colWidth*(i+1),40,'v',self.container.clientHeight],
+                    stroke:1
+                });
+            }
+        },
+        _initNodes:function(){
+            var data = this.data;
+            var lines = data.productLines;
+            var nodeWidth = this._nodeWidth;
+            var colWidth = this._colWidth;
+            var titleHeight = 30;
+            var self = this;
+            var option = this.options;
+            if(!lines){
+                return;
+            }
+            var gridIndex = 0;
+            var maxY = 40;
+            var startX=0,startY=40;
+            self.points = {};
+            var nodeSet = this.nodeSet = this.stage.set();
+            for(var line in lines){
+                if(lines.hasOwnProperty(line)){
+                    startX = colWidth * (gridIndex % option.col);
+                    if(gridIndex%option.col===0){
+                        startY = maxY;
+                    }
+                    var title = self.stage.text(startX+colWidth/2,startY+titleHeight/2,line).attr({
+                        'font-size':15
+                    });
+
+                    lines[line].forEach(function(nodeData,i){
+                        var node = Node(option.typeMap[nodeData.type]).create(self.stage,nodeData.id);
+                        self.points[nodeData.id] = node;
+                        node.size(nodeWidth,nodeWidth);
+                        var x = (option.paddingInside+ nodeWidth) * (i%option.colInside) + option.paddingInside + nodeWidth/2; 
+                        var y = (option.paddingInside+ nodeWidth) * Math.floor(i/option.colInside) + option.paddingInside + nodeWidth/2;
+                        maxY = Math.max(startY+y+option.paddingInside+nodeWidth/2+titleHeight,maxY);
+                        node.position(startX+x, startY+titleHeight+y);
+                        node.text(nodeData.id);
+                        node.color(option.colorMap[nodeData.status])
+                        node.node.attr('stroke-width',2);
+                        node.node.mouseover(function(e){
+                            Tip.show(nodeData.des,e.pageX+15,e.pageY+15);
+                        }).mouseout(function(){
+                            Tip.hide();
+                        });
+                        node.textNode.click(function(){
+                            nodeData.link && (location.href = nodeData.link);
+                        });
+                        node.node.data('textNode',node.textNode);
+                        nodeSet.push(node.node);
+                        node.node.data('nodeData',nodeData);
+
+
+                    });
+                    if(gridIndex%option.col===option.col-1){
+                        self.stage.path().attr({
+                            path:['M',0,maxY,'h',self.container.clientWidth],
+                            stroke:1
+                        });
+                    }
+                    gridIndex++;
+                }
+            }
+            //设置container高度
+            this.container.style.height = maxY +"px" 
+            this.stage.setSize(this.container.clientWidth,maxY);  
+
+        },
+        _initSides:function(){
+            var edgesData = this.data.edges;
+            var edgeSet = this.edgeSet = this.stage.set();
+            var self = this;
+            if(!edgesData){
+                return;
+            }
+            edgesData.forEach(function(s){
+				var node = self.points[s.target];
+				if(!node){
+					return ;
+				}
+				var from = self.points[s.self],
+					to = node;
+				if(s.opposite){
+					from = node;
+					to = self.centerNode;
+				}
+				var startPoint = from.getBoundPoint(to.position().x,to.position().y),
+					endPoint = to.getBoundPoint(from.position().x,from.position().y);
+				var length = Math.sqrt(Math.pow((startPoint.x - endPoint.x),2) + Math.pow((startPoint.y - endPoint.y),2));
+				var pathStr = ['M',startPoint.x,startPoint.y];
+				var alpha ;
+				if (startPoint.y === endPoint.y) {
+					if (startPoint.x > endPoint.x ) {
+						alpha = Math.PI;
+					} else {
+						alpha = 0;
+					}
+				} else {
+					alpha = ( Math.acos((endPoint.x - startPoint.x) / length ) * ( startPoint.y > endPoint.y ? 1 : -1));
+				}
+				alpha = 360 - alpha * 180 / Math.PI;
+				if(s.dashed){
+					var dashSpan = 3,lineSpan = 5,currentLength=0;
+					while(currentLength<length){
+						pathStr.push('h',lineSpan,'m',dashSpan,0);
+						currentLength+=(dashSpan+lineSpan);
+					}
+					pathStr.push('h',length - currentLength);
+					pathStr.push();
+				}else {
+					pathStr.push('h',length);
+				}
+				//箭头
+				pathStr.push('l',-10,-5,'l',5,5,'l',-5,5,'l',10,-5);
+				var edge = self.stage.path().attr({
+					'path':pathStr
+				}).rotate(alpha,startPoint.x,startPoint.y).attr({
+					'stroke':self.options.colorMap[s.status],
+					'stroke-width': self.options.sideWeight(s.weight || 0),
+					'fill':self.options.colorMap[s.status]
+				}).mouseover(function(e){
+					Tip.show(s.des,e.pageX+15,e.pageY+15);
+				}).mouseout(function(){
+                    Tip.hide();
+				});
+                edgeSet.push(edge);
+                edge.data('edgeData',s);
+
+
+            });
+            
+
+        },
+        _frontNodes:function(){
+            for(var node in this.points){
+                if(this.points.hasOwnProperty(node)){
+                    this.points[node].node.toFront();
+                    this.points[node].textNode.toFront();
+                }
+            }
+        },
+        _initLegend:function(){
+            var options = this.options;
+            var self = this;
+            var legendMap = options.legendMap; 
+            var stage = this.stage;
+            var totalWidth = 0;
+            var rectWidth = 15;
+            var set = stage.set();
+            var rectSet = stage.set();
+            var padding = 10;
+            var startX = 0 ,startY = 10;
+
+            //all
+            var hideRect = stage.rect(startX,startY,rectWidth,rectWidth).attr({
+                "fill" : 'green',
+                "stroke-width":0,
+                "cursor":"pointer"
+            }).data('fill','green').data('hide',true).data('active',true);
+            rectSet.push(hideRect);
+            var text = stage.text(startX,startY,'依赖关系');
+            var bbox = text.getBBox();
+            text.attr('x',startX+rectWidth+padding+bbox.width/2);
+            text.attr('y',startY+rectWidth/2);
+            set.push(hideRect);
+            set.push(text);
+            startX = startX+rectWidth+padding*2+bbox.width;
+
+            for(var state in legendMap){
+                if(legendMap.hasOwnProperty(state)){
+                    var rect = stage.rect(startX,startY,rectWidth,rectWidth).attr({
+                        "fill" : options.colorMap[state],
+                        "stroke-width":0,
+                        "cursor":"pointer"
+                    }).data("fill",options.colorMap[state]).data('status',state).data('active',true);
+                    rectSet.push(rect);
+                    var text = stage.text(startX,startY,legendMap[state]);
+                    var bbox = text.getBBox();
+                    text.attr('x',startX+rectWidth+padding+bbox.width/2);
+                    text.attr('y',startY+rectWidth/2);
+                    set.push(rect);
+                    set.push(text);
+                    startX = startX+rectWidth+padding*2+bbox.width;
+                }
+            }
+            set.translate((this.container.clientWidth-startX)/2,0);
+
+            self.edgeSet.data("active",true);
+            self.nodeSet.data("active",true);
+
+
+            rectSet.dblclick(function(){
+                rectSet.attr({
+                    fill:'gray'
+                }).data('active',false);
+                this.attr('fill',this.data('fill')).data("active",true);
+                if(this.data('hide')===true){
+                    self.edgeSet.show();
+                }else{
+                    var state = this.data('status');
+                    self.nodeSet.forEach(function(node){
+                        var data = node.data('nodeData');
+                        if(data.status.toString()===state){
+                            node.show().data('active',true);
+                            node.data('textNode').show();
+                        }else {
+                            node.hide().data("active",false);
+                            node.data('textNode').hide();
+                        }
+                    });
+                    self.edgeSet.forEach(function(edge){
+                        var data =edge.data('edgeData');
+                        if(self.points[data.self].node.data('nodeData').status.toString()===state && self.points[data.target].node.data('nodeData').status.toString()===state){
+                            edge.show().data("active",true);
+                        }else {
+                            edge.hide().data("active",false);
+                        }
+                    });
+                }
+            });
+           
+            rectSet.click(function(){
+                if(this.data('active')){
+                    this.attr('fill','gray');
+                    this.data('active',false);
+                }else {
+                    this.attr('fill',this.data('fill'));
+                    this.data('active',true);
+                }
+                var isActive = this.data('active');
+                var state = this.data('status');
+                if(this.data('hide')){
+                    //依赖关系
+                    self.edgeSet.forEach(function(edge){
+                        if(isActive && edge.data("active")){
+                            edge.show();
+                        }else {
+                            edge.hide();
+                        }
+                    });
+                }else {
+                    self.nodeSet.forEach(function(node){
+                        var data = node.data('nodeData');
+                        if(data.status.toString()===state){
+                            isActive?node.show().data('active',true):node.hide().data('active',false);
+                            isActive?node.data('textNode').show():node.data('textNode').hide();
+                        }                    
+                    });
+                    self.edgeSet.forEach(function(edge){
+                        var data = edge.data('edgeData');
+                        if(self.points[data.self].node.data('active') && self.points[data.target].node.data('active')){
+                            edge.data("active",true);
+                            hideRect.data('active') && edge.show();
+                        }else {
+                            edge.data("active",false).hide();
+                        }
+                    });
+                    
+
+                }
+
+
+            });
+
+
+
+        }
+    }
+
 	global.StarTopo = StarTopo;
+    global.StarTopoList = StarTopoList;
 	
 })(window);
