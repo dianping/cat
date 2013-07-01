@@ -1,9 +1,5 @@
 package com.dianping.cat.consumer.transaction;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -14,10 +10,6 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	private TransactionReport m_report;
 
 	public String m_currentDomain;
-
-	public static Set<String> ALL_TYPES = new HashSet<String>(Arrays.asList( //
-	      "URL", "Call", "PigeonCall", "Service", //
-	      "PigeonService", "SQL", "MsgProduceTried", "MsgProduced"));
 
 	public TransactionReportTypeAggregator(TransactionReport report) {
 		m_report = report;
@@ -41,7 +33,8 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 		old.setSum2(old.getSum2() + other.getSum2());
 
 		if (totalCountSum > 0) {
-			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value()
+			      * other.getTotalCount();
 
 			old.setLine95Value(line95Values / totalCountSum);
 		}
@@ -71,11 +64,8 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	public void visitType(TransactionType type) {
 		Machine machine = m_report.findOrCreateMachine(m_currentDomain);
 		String typeName = type.getId();
+		TransactionType result = machine.findOrCreateType(typeName);
 
-		if (typeName.startsWith("Cache.") || ALL_TYPES.contains(typeName)) {
-			TransactionType result = machine.findOrCreateType(typeName);
-
-			mergeType(result, type);
-		}
+		mergeType(result, type);
 	}
 }
