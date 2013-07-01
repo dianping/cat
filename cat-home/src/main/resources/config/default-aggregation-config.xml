@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aggregation>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://w.51ping.com/shop/{shopId}" sample="http://w.51ping.com/shop/5722322" display-name="http://w.51ping.com/shop/{shopId}" creation-date="2013-06-05 15:42:03"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://i{x}.dpfile.com/{*}" sample="http://i1.dpfile.com/s/j" display-name="http://i{x}.dpfile.com/{*}" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/food   " display-name="http://www.dianping.com/{City}/food   " creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/wedding" display-name="http://www.dianping.com/{City}/wedding" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/beauty" display-name="http://www.dianping.com/{City}/beauty" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/shopping" display-name="http://www.dianping.com/{City}/shopping" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/GROUP" display-name="http://www.dianping.com/{City}/GROUP" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/car" display-name="http://www.dianping.com/{City}/car" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/hotel" display-name="http://www.dianping.com/{City}/hotel" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/sports" display-name="http://www.dianping.com/{City}/sports" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/other" display-name="http://www.dianping.com/{City}/other" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/review/{reviewid}  " display-name="http://www.dianping.com/review/{reviewid}  " creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/photos/{photoid}" display-name="http://www.dianping.com/photos/{photoid}" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/shop/{shopid}" display-name="http://www.dianping.com/shop/{shopid}" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/shoplist/{shopListType}" display-name="http://www.dianping.com/shoplist/{shopListType}" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/photoList/{photoListType}" display-name="http://www.dianping.com/photoList/{photoListType}" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://s.dianping.com/{city}/group" display-name="http://s.dianping.com/{city}/group" creation-date="2013-05-20 13:34:00"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://i{x}.static.dp/{*}" sample="http://i{x}.static.dp/s/j" display-name="http://i{x}.static.dp/{*}" creation-date="2013-06-05 15:08:23"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://s.51ping.com/topic/{topicId}" sample="http://s.51ping.com/topic/645646" display-name="http://s.51ping.com/topic/{topicId}" creation-date="2013-06-05 15:39:42"/>
+</aggregation>

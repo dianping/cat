@@ -10,12 +10,11 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Task;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Task;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
-import com.dianping.cat.report.task.database.DatabaseReportBuilder;
+import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
-import com.dianping.cat.report.task.health.HealthReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -32,8 +31,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 	public static final int TYPE_WEEK = 2;
 
 	public static final int TYPE_MONTH = 3;
-
-	public static final int TYPE_DAILY_GRAPH = 4;
 
 	@Inject
 	private EventReportBuilder m_eventBuilder;
@@ -54,16 +51,13 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private CrossReportBuilder m_crossReportBuilder;
 
 	@Inject
-	private DatabaseReportBuilder m_databaseReportBuilder;
-
-	@Inject
 	private SqlReportBuilder m_sqlReportBuilder;
 
 	@Inject
-	private HealthReportBuilder m_healthReportBuilder;
-
-	@Inject
 	private StateReportBuilder m_stateReportBuilder;
+	
+	@Inject
+	private DependencyReportBuilder m_dependendcyReportBuilder;
 
 	private Logger m_logger;
 
@@ -88,19 +82,24 @@ public class ReportFacade implements LogEnabled, Initializable {
 				m_logger.info("no report builder for type:" + " " + reportName);
 				return false;
 			} else {
-				if (type == TYPE_DAILY) {
-					return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
-				} else if (type == TYPE_HOUR) {
-					return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+				boolean result = false;
+
+				if (type == TYPE_HOUR) {
+					result = reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+				} else if (type == TYPE_DAILY) {
+					result = reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_WEEK) {
-					return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_MONTH) {
-					return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+				}
+				if (result) {
+					return result;
+				} else {
+					m_logger.error(task.toString());
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Flowing is error stack trace:");
-			e.printStackTrace();
 			m_logger.error("Error when building report," + e.getMessage(), e);
 			Cat.logError(e);
 			return false;
@@ -125,10 +124,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("transaction", m_tansactionBuilder);
 		m_reportBuilders.put("matrix", m_matrixReportBuilder);
 		m_reportBuilders.put("cross", m_crossReportBuilder);
-		m_reportBuilders.put("database", m_databaseReportBuilder);
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
-		m_reportBuilders.put("health", m_healthReportBuilder);
 		m_reportBuilders.put("state", m_stateReportBuilder);
+		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
 	}
 
 }

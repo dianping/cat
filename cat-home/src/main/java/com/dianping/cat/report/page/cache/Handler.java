@@ -28,7 +28,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -55,12 +55,12 @@ public class Handler implements PageHandler<Context> {
 	private EventMergeManager m_eventMergerMergeManager;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_transactionService;
 
-	private Set<String> m_cacheType = new HashSet<String>(Arrays.asList("Cache.web", "Cache.memcached", "Cache.kvdb",
+	private Set<String> m_cacheTypes = new HashSet<String>(Arrays.asList("Cache.web", "Cache.memcached", "Cache.kvdb",
 	      "Cache.memcached-tuangou"));
 
 	private CacheReport buildCacheReport(TransactionReport transactionReport, EventReport eventReport, String type,
@@ -176,8 +176,8 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(type)) {
 			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
-			for (String temp : m_cacheType) {
-				request.setProperty("type", temp);
+			for (String cacheType : m_cacheTypes) {
+				request.setProperty("type", cacheType);
 				ModelResponse<EventReport> response = m_eventService.invoke(request);
 				EventReport eventReport = response.getModel();
 
@@ -211,7 +211,7 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(type)) {
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
-			for (String temp : m_cacheType) {
+			for (String temp : m_cacheTypes) {
 				request.setProperty("type", temp);
 				ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
 				TransactionReport transactionReport = response.getModel();

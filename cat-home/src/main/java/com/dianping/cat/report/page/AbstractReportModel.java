@@ -6,11 +6,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dainping.cat.consumer.core.dal.Project;
+import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.report.view.DomainNavManager.Department;
@@ -37,8 +39,15 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	private String m_reportType;
 
+	private DomainNavManager m_manager;
+
 	public AbstractReportModel(M ctx) {
 		super(ctx);
+		try {
+			m_manager = ContainerLoader.getDefaultContainer().lookup(DomainNavManager.class);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	public String getBaseUri() {
@@ -93,9 +102,9 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public String getDepartment() {
 		String domain = getDomain();
-		
-		if (domain != null) {
-			Project project = DomainNavManager.getProjectByName(domain);
+
+		if (domain != null && m_manager != null) {
+			Project project = m_manager.getProjectByName(domain);
 			if (project != null) {
 				return project.getDepartment();
 			}
@@ -105,18 +114,18 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public String getProjectLine() {
 		String domain = getDomain();
-		
-		if (domain != null) {
-			Project project = DomainNavManager.getProjectByName(domain);
+
+		if (domain != null && m_manager != null) {
+			Project project = m_manager.getProjectByName(domain);
 			if (project != null) {
 				return project.getProjectLine();
 			}
 		}
 		return "Default";
 	}
-	
+
 	public Map<String, Department> getDomainGroups() {
-		return DomainNavManager.getDepartment(getDomains());
+		return m_manager.getDepartment(getDomains());
 	}
 
 	public Throwable getException() {

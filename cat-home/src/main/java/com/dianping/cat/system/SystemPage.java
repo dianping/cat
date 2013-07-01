@@ -9,7 +9,7 @@ public enum SystemPage implements Page {
 
    LOGIN("login", "login", "Login", "Login", false),
 
-   PROJECT("project", "project", "Project", "Project", true),
+   CONFIG("config", "config", "Config", "Config", true),
 
    ABTEST("abtest", "abtest", "Abtest", "Abtest", true);
 

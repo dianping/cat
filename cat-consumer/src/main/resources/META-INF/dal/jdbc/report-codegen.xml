@@ -140,6 +140,7 @@
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="task_period_domain_name" unique="true" members="report_period ASC, report_domain ASC, report_name ASC, task_type ASC" />
+    <index name="status" members="status ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>

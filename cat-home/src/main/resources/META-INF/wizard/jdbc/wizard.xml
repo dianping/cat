@@ -15,6 +15,8 @@
          <table name="weeklyreport"/>
          <table name="monthreport"/>
          <table name="location"/>
+         <table name="event"/>
+         <table name="topologyGraph"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="alarmTemplate"/>
@@ -30,7 +32,7 @@
          <table name="group_strategy"/>
       </group>
    </jdbc>
-   <jdbc package="com.dainping.cat.home.dal" name="user">
+   <jdbc package="com.dianping.cat.home.dal" name="user">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://192.168.8.44:3306/hawk</url>

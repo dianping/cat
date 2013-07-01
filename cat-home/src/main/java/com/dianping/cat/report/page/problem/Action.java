@@ -11,8 +11,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HISTORY_GRAPH("historyGraph"),
 
-	MOBILE("mobile"),
-
 	THREAD("thread"),
 
 	VIEW("view");

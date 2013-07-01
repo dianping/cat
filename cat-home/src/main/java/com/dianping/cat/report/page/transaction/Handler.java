@@ -27,7 +27,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -60,14 +60,12 @@ public class Handler implements PageHandler<Context> {
 	private TransactionMergeManager m_mergeManager;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
-
-	private Gson m_gson = new Gson();
 
 	private void buildTransactionNameGraph(List<TransactionNameModel> names, Model model) {
 		PieChart chart = new PieChart();
@@ -229,24 +227,6 @@ public class Handler implements PageHandler<Context> {
 		case GRAPHS:
 			showHourlyGraphs(model, payload);
 			break;
-		case MOBILE:
-			showHourlyReport(model, payload);
-			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayNames report = model.getDisplayNameReport();
-				String json = m_gson.toJson(report);
-				model.setMobileResponse(json);
-			} else {
-				DisplayTypes report = model.getDisplayTypeReport();
-				String json = m_gson.toJson(report);
-				model.setMobileResponse(json);
-			}
-			break;
-		case MOBILE_GRAPHS:
-			MobileGraphs graphs = showMobileGraphs(model, payload);
-			if (graphs != null) {
-				model.setMobileResponse(m_gson.toJson(graphs));
-			}
-			break;
 		}
 
 		if (payload.isXml()) {
@@ -314,16 +294,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 			model.setException(e);
 		}
-	}
-
-	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
-		TransactionName name = getTransactionName(payload);
-
-		if (name == null) {
-			return null;
-		}
-		MobileGraphs graphs = new MobileGraphs().display(name);
-		return graphs;
 	}
 
 	private void showSummarizeReport(Model model, Payload payload) {

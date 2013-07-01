@@ -14,7 +14,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -88,7 +87,6 @@ public class ScheduledMailTask implements Task, LogEnabled {
 	}
 
 	private String renderContent(String names, String domain) {
-		int healthFlag = names.indexOf("health");
 		int transactionFlag = names.indexOf("transaction");
 		int eventFlag = names.indexOf("event");
 		int problemFlag = names.indexOf("problem");
@@ -98,13 +96,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 		TransactionReport transactionReport = m_dailyReportService.queryTransactionReport(domain, start, end);
 		EventReport eventReport = m_dailyReportService.queryEventReport(domain, start, end);
 		ProblemReport problemReport = m_dailyReportService.queryProblemReport(domain, start, end);
-		HealthReport heathReport = m_dailyReportService.queryHealthReport(domain, start, end);
 
 		StringBuilder sb = new StringBuilder(10240);
 		sb.append(m_sdf.format(start)).append("</br>");
-		if (healthFlag > -1) {
-			sb.append(m_render.renderReport(heathReport));
-		}
 		if (transactionFlag > -1) {
 			sb.append(m_render.renderReport(transactionReport));
 		}

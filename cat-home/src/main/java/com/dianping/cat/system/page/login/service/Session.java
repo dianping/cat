@@ -1,6 +1,6 @@
 package com.dianping.cat.system.page.login.service;
 
-import com.dainping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.page.login.spi.ISession;
 
 public class Session implements ISession {

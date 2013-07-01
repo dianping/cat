@@ -35,7 +35,8 @@ public class CatCoreModule extends AbstractModule {
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 
 		// tracking thread start/stop
-		// Threads.addListener(new CatThreadListener(ctx));
+		Threads.addListener(new CatThreadListener(ctx));
+
 		File clientConfigFile = ctx.getAttribute("cat-client-config-file");
 		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
 
@@ -60,7 +61,7 @@ public class CatCoreModule extends AbstractModule {
 				Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
 			}
 		}
-		
+
 		ABTestManager.initialize();
 	}
 

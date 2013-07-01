@@ -14,21 +14,30 @@
 	<entity name="segment">
 		<attribute name="id" value-type="int" key="true" />
 		<attribute name="error" value-type="long" primitive="true" />
-		<attribute name="call-error" value-type="long" primitive="true" />
 		<attribute name="url" value-type="long" primitive="true" />
+		<attribute name="url-error" value-type="long" primitive="true" />
 		<attribute name="url-duration" value-type="double" primitive="true" format="0.00" />
 		<attribute name="url-sum" value-type="double" primitive="true" format="0.00" />
 		<attribute name="service" value-type="long" primitive="true" />
+		<attribute name="service-error" value-type="long" primitive="true" />
 		<attribute name="service-duration" value-type="double" primitive="true" format="0.00" />
 		<attribute name="service-sum" value-type="double" primitive="true" format="0.00" />
 		<attribute name="sql" value-type="long" primitive="true" />
+		<attribute name="sql-error" value-type="long" primitive="true" />
 		<attribute name="sql-duration" value-type="double" primitive="true" format="0.00" />
 		<attribute name="sql-sum" value-type="double" primitive="true" format="0.00" />
 		<attribute name="call" value-type="long" primitive="true" />
+		<attribute name="call-error" value-type="long" primitive="true" />
 		<attribute name="call-duration" value-type="double" primitive="true" format="0.00" />
 		<attribute name="call-sum" value-type="double" primitive="true" format="0.00" />
 		<attribute name="cache" value-type="long" primitive="true" />
+		<attribute name="cache-error" value-type="long" primitive="true" />
 		<attribute name="cache-duration" value-type="double" primitive="true" format="0.00" />
 		<attribute name="cache-sum" value-type="double" primitive="true" format="0.00" />
+	    <entity-ref name="error" type="map" names="errors" method-find-or-create="true"/>
+	</entity>
+	<entity name="error">
+		<attribute name="id" value-type="String"  key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 </model>

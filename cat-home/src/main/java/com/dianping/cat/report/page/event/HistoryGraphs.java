@@ -18,11 +18,12 @@ import com.dianping.cat.home.dal.report.DailygraphEntity;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.BaseHistoryGraphs;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
 
-public class HistoryGraphs {
+public class HistoryGraphs extends BaseHistoryGraphs{
 
 	@Inject
 	private GraphDao m_graphDao;
@@ -43,17 +44,18 @@ public class HistoryGraphs {
 		}
 	}
 
-	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name,String queryType) {
+		LineChart item = new LineChart();
 
 		item.setStart(start);
 		item.setSize(size);
 		item.setStep(step);
-		item.setTitles(name + " Error (count)");
+		item.setTitle(name + " Error (count)");
 
 		for (Map<String, double[]> data : datas) {
 			item.addValue(data.get("failure_count"));
 		}
+		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
 	
@@ -137,18 +139,19 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private HistoryGraphItem buildTotal(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size,long step, String name,String queryType) {
+		LineChart item = new LineChart();
 
 		item.setStart(start);
 		item.setSize(size);
 		item.setStep(step);
-		item.setTitles(name + " Hits (count)");
+		item.setTitle(name + " Hits (count)");
 
 		for (Map<String, double[]> data : datas) {
 			double[] totalCount = data.get("total_count");
 			item.addValue(totalCount);
 		}
+		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
 
@@ -190,10 +193,10 @@ public class HistoryGraphs {
 			throw new RuntimeException("Error graph query type");
 		}
 
-		HistoryGraphItem item = buildTotal(allDatas, start, size,step, display);
+		LineChart item = buildTotal(allDatas, start, size,step, display,queryType);
 		model.setHitTrend(item.getJsonString());
 
-		item = buildFail(allDatas, start, size, step,display);
+		item = buildFail(allDatas, start, size, step,display,queryType);
 		model.setFailureTrend(item.getJsonString());
 	}
 	

@@ -7,9 +7,8 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
+import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -104,11 +103,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
-		return m_hourlyReportService.queryAllDatabaseNames(start, end, reportName);
-	}
-
-	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		return m_hourlyReportService.queryAllDomainNames(start, end, reportName);
 	}
@@ -143,35 +137,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		int type = getQueryType(start, end);
-		DatabaseReport report = null;
-
-		if (type == s_hourly) {
-			report = m_hourlyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_daily) {
-			report = m_dailyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryDatabaseReport(database, start);
-		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryDatabaseReport(database, start);
-		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryDatabaseReport(database, start);
-		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryDatabaseReport(database, start);
-		} else {
-			report = m_dailyReportService.queryDatabaseReport(database, start, end);
-		}
-		if (report == null) {
-			report = new DatabaseReport(database);
-			report.setStartTime(start).setEndTime(end);
-		}
-		return report;
-	}
-
-	@Override
 	public EventReport queryEventReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
 		EventReport report = null;
@@ -195,35 +160,6 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new EventReport(domain);
-			report.setStartTime(start).setEndTime(end);
-		}
-		return report;
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		HealthReport report = null;
-
-		if (type == s_hourly) {
-			report = m_hourlyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_daily) {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryHealthReport(domain, start);
-		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryHealthReport(domain, start);
-		} else {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		}
-		if (report == null) {
-			report = new HealthReport(domain);
 			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
@@ -391,6 +327,17 @@ public class ReportServiceImpl implements ReportService {
 		
 		if (type == s_hourly) {
 			return m_hourlyReportService.queryTopReport(domain, start, end);
+		} else {
+			throw new RuntimeException("Top report don't have other report type but houly!");
+		}
+	}
+	
+	@Override
+	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryDependencyReport(domain, start, end);
 		} else {
 			throw new RuntimeException("Top report don't have other report type but houly!");
 		}

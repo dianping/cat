@@ -1,7 +1,7 @@
 function init(){
 	$('#contents').dataTable({
 		"sPaginationType": "full_numbers",
-		'iDisplayLength': 25,
+		'iDisplayLength': 50,
 		"oLanguage": {
             "sProcessing": "正在加载中......",
             "sLengthMenu": "每页显示 _MENU_ 条记录",
@@ -19,5 +19,5 @@ function init(){
         }
 	});
 	var value=$("select[name='contents_length']")[0];
-    value.value=25;
+    value.value=50;
 }

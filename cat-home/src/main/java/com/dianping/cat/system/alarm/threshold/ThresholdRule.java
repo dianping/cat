@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.unidal.lookup.logger.LoggerFactory;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.template.entity.Duration;
@@ -38,7 +39,7 @@ public class ThresholdRule {
 		resetTemplate(template);
 	}
 
-	public ThresholdAlarmMeta addData(ThresholdDataEntity entity, String type) {
+	public Pair<Boolean, ThresholdAlarmMeta> addData(ThresholdDataEntity entity, String type) {
 		if (validateData(entity)) {
 			m_datas.add(entity);
 			m_lastData = entity;
@@ -63,10 +64,11 @@ public class ThresholdRule {
 						meta.setBaseUrl(m_template.getConnection().getBaseUrl());
 
 						if (needAlarm(entity, duration)) {
+							
 							m_lastAlarmTime.put(duration.getId(), date.getTime());
-							return meta;
+							return new Pair<Boolean, ThresholdAlarmMeta>(true, meta);
 						}
-						return null;
+						return new Pair<Boolean, ThresholdAlarmMeta>(false, meta);
 					}
 				}
 			}

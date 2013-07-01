@@ -12,11 +12,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("op")
-	private String m_group;
+	@FieldMeta("product")
+	private String m_product;
 
-	@FieldMeta("channel")
-	private String m_channel;
+	@FieldMeta("test")
+	private String m_test = "-1";
 
 	public Payload() {
 		super(ReportPage.METRIC);
@@ -25,14 +25,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public Action getAction() {
 		return m_action;
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public String getGroup() {
-		return m_group;
 	}
 
 	@Override
@@ -44,17 +36,25 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
-	}
-
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
+	}
+
+	public String getProduct() {
+		return m_product;
+	}
+
+	public void setProduct(String product) {
+		m_product = product;
+	}
+
+	public String getTest() {
+		return m_test;
+	}
+
+	public void setTest(String test) {
+		m_test = test;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.dianping.cat.system.alarm.threshold.listener;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
@@ -27,6 +28,7 @@ public class ExceptionDataListener implements EventListener {
 	@Inject
 	private ThresholdRuleManager m_manager;
 
+
 	@Override
 	public boolean isEligible(Event event) {
 		if (event.getEventType() == EventType.ExceptionDataEvent) {
@@ -42,24 +44,28 @@ public class ExceptionDataListener implements EventListener {
 		List<ThresholdRule> rules = m_manager.getExceptionRuleByDomain(data.getDomain());
 
 		for (ThresholdRule rule : rules) {
-			ThresholdAlarmMeta alarmMeta = rule.addData(data, AlertInfo.EXCEPTION);
+			Pair<Boolean, ThresholdAlarmMeta> alarmMeta = rule.addData(data, AlertInfo.EXCEPTION);
 
 			if (alarmMeta != null) {
-				Transaction t = Cat.newTransaction("SendAlarm", "Exception");
+				ThresholdAlarmMeta value = alarmMeta.getValue();
+				// need send email or sms
+				if (alarmMeta.getKey().booleanValue()) {
+					Transaction t = Cat.newTransaction("SendAlarm", "Exception");
 
-				t.addData(alarmMeta.toString());
-				try {
-					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
-					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS,
-					      String.valueOf(alarmMeta.getRuleId()));
+					t.addData(alarmMeta.toString());
+					try {
+						ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(value);
+						Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS,
+						      String.valueOf(value.getRuleId()));
 
-					m_dispatcher.dispatch(alertEvent);
-					t.setStatus("Alarm");
-				} catch (Exception e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				} finally {
-					t.complete();
+						m_dispatcher.dispatch(alertEvent);
+						t.setStatus("Alarm");
+					} catch (Exception e) {
+						t.setStatus(e);
+						Cat.logError(e);
+					} finally {
+						t.complete();
+					}
 				}
 			}
 		}

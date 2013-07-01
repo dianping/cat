@@ -14,6 +14,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelPeriod;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
@@ -37,7 +38,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportService m_reportService;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 	
 	@Inject
 	private DomainManager m_domainManager;
@@ -163,7 +164,7 @@ public class Handler implements PageHandler<Context> {
 
 					if (detail != null) {
 						detail.setProjectName(projectName);
-						projectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
+						projectInfo.addAllCallProjectInfo(projectName, detail);
 					}
 				}
 			}
@@ -220,7 +221,7 @@ public class Handler implements PageHandler<Context> {
 
 					if (detail != null) {
 						detail.setProjectName(projectName);
-						historyProjectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
+						historyProjectInfo.addAllCallProjectInfo(projectName, detail);
 					}
 				}
 			}

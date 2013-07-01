@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entities do-package="com.dainping.cat.consumer.core.dal" gen="true">
+<entities do-package="com.dianping.cat.consumer.core.dal" gen="true">
+
 	<entity name="task" table="task" alias="t">
 		<member name="count" value-type="int" select-expr="COUNT(*)" all="false" />
 		<var name="start-limit" value-type="int" />

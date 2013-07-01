@@ -5,10 +5,13 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.graph.ValueTranslaterTest;
+import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
-import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
+import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
+import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
+import com.dianping.cat.report.page.jsError.ParseTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
@@ -28,7 +31,6 @@ import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
-import com.dianping.cat.report.task.health.HealthReportBuilderTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
@@ -71,17 +73,12 @@ EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 
 ProblemReportMergerTest.class,
-/* database test */
-DatabaseReportMergerTest.class,
 
 /* sql test */
 SqlReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class,
-
-/* .health report */
-HealthReportBuilderTest.class,
 
 HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 
@@ -100,6 +97,15 @@ ReportServiceImplTest.class, StateReportMergerTest.class,
 DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
 
 /* Metric */
-MetricReportParseTest.class, MetricReportMergerTest.class})
+MetricReportParseTest.class, MetricReportMergerTest.class,
+
+/* Dependency */
+DependencyReportMergerTest.class, GraphConfigManagerTest.class,
+
+/* CMDB */
+CMDBTest.class,
+
+/* jsError */
+ParseTest.class})
 public class AllTests {
 }

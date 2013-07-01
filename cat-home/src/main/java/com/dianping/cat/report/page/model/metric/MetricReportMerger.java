@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model.metric;
 
-import com.dianping.cat.consumer.metric.model.entity.Metric;
+import com.dianping.cat.consumer.metric.model.entity.Group;
+import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.DefaultMerger;
@@ -11,11 +12,23 @@ public class MetricReportMerger extends DefaultMerger {
 		super(metricReport);
 
 	}
+	
+	@Override
+   protected void mergeGroup(Group old, Group group) {
+	   super.mergeGroup(old, group);
+   }
+
 
 	@Override
-	protected void mergeMetric(Metric old, Metric metric) {
-		super.mergeMetric(old, metric);
-	}
+   protected void mergeMetricItem(MetricItem old, MetricItem metricItem) {
+		old.setType(metricItem.getType());
+	   super.mergeMetricItem(old, metricItem);
+   }
+
+	@Override
+   protected void mergeMetricReport(MetricReport old, MetricReport metricReport) {
+	   super.mergeMetricReport(old, metricReport);
+   }
 
 	@Override
 	protected void mergePoint(Point old, Point point) {
@@ -25,13 +38,5 @@ public class MetricReportMerger extends DefaultMerger {
 			old.setAvg(old.getSum() / old.getCount());
 		}
 	}
-	
-
-	@Override
-   public void visitMetricReport(MetricReport metricReport) {
-		MetricReport report = getMetricReport();
-		report.getGroupNames().addAll(metricReport.getGroupNames());
-	   super.visitMetricReport(metricReport);
-   }
 	
 }

@@ -1,17 +1,16 @@
 package com.dianping.cat.system.page.abtest;
 
 public enum JspFile {
-	
-	CREATE("/jsp/system/abtestCreate.jsp"),
-	
-	DETAIL("/jsp/system/abtestDetail.jsp"),
-	
-	VIEW("/jsp/system/abtestAllTest.jsp"),
-	
-	REPORT("/jsp/system/abtestReport.jsp"),
-	
-	MODEL("/jsp/system/abtestModel.jsp")
-	;
+
+	CREATE("/jsp/system/abtest/abtestCreate.jsp"),
+
+	DETAIL("/jsp/system/abtest/abtestDetail.jsp"),
+
+	VIEW("/jsp/system/abtest/abtestAllTest.jsp"),
+
+	REPORT("/jsp/system/abtest/abtestReport.jsp"),
+
+	MODEL("/jsp/system/abtest/abtestModel.jsp");
 
 	private String m_path;
 

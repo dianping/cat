@@ -1,116 +1,170 @@
 package com.dianping.cat.report.page.metric;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.dianping.cat.consumer.metric.model.entity.Metric;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.model.entity.Abtest;
+import com.dianping.cat.consumer.metric.model.entity.Group;
+import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.metric.MetricConfig.MetricFlag;
-import com.google.gson.Gson;
+import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class MetricDisplay extends BaseVisitor {
 
-	private Map<String, GraphItem> m_metrics = new LinkedHashMap<String, GraphItem>();
+	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
-	private String m_key;
+	private Map<Integer, com.dianping.cat.home.dal.abtest.Abtest> m_abtests = new HashMap<Integer, com.dianping.cat.home.dal.abtest.Abtest>();
 
-	private String m_channel;
+	private String m_abtest;
 
 	private Date m_start;
 
-	private MetricConfig m_config;
+	private String m_metricKey;
 
-	private String prefix = "channel=";
+	private String m_currentComputeType;
 
-	private Set<String> m_allChannel = new TreeSet<String>();
+	private ABTestService m_abtestService;
 
-	public MetricDisplay(MetricConfig metricConfig, String channel, Date start) {
-		m_config = metricConfig;
+	private static final String SUM = CatString.SUM;
+
+	private static final String COUNT = CatString.COUNT;
+
+	private static final String AVG = CatString.AVG;
+
+	public List<LineChart> getLineCharts() {
+		return new ArrayList<LineChart>(m_lineCharts.values());
+	}
+
+	public Map<Integer,com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
+		return m_abtests;
+	}
+
+	public MetricDisplay(List<MetricItemConfig> configs, String abtest, Date start) {
 		m_start = start;
-		m_channel = channel;
+		m_abtest = abtest;
 
-		for (MetricFlag flag : m_config.getFlags()) {
-			String title = flag.getTitle();
-			if (flag.isShowSum()) {
-				String key = flag.getKey() + ":sum";
-				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
-			}
-			if (flag.isShowCount()) {
-				String key = flag.getKey() + ":count";
-				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
-			}
-			if (flag.isShowAvg()) {
-				String key = flag.getKey() + ":avg";
-				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
-			}
-		}
-	}
+		for (MetricItemConfig config : configs) {
+			if (config.isShowSum()) {
+				String key = config.getMetricKey() + SUM;
 
-	private void buildGraphItem(Collection<Point> points) {
-		for (Point point : points) {
-
-			int min = point.getId();
-			long count = point.getCount();
-			double sum = point.getSum();
-			double avg = point.getAvg();
-
-			GraphItem graphItem = m_metrics.get(m_key + ":sum");
-			if (graphItem != null) {
-				graphItem.setValue(min, sum);
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_SUM));
 			}
-			graphItem = m_metrics.get(m_key + ":count");
-			if (graphItem != null) {
-				graphItem.setValue(min, count);
+			if (config.isShowCount()) {
+				String key = config.getMetricKey() + COUNT;
+
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_COUNT));
 			}
-			graphItem = m_metrics.get(m_key + ":avg");
-			if (graphItem != null) {
-				graphItem.setValue(min, avg);
+			if (config.isShowAvg()) {
+				String key = config.getMetricKey() + AVG;
+
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_AVG));
 			}
 		}
 	}
 
-	public Set<String> getAllChannel() {
-		return m_allChannel;
-	}
+	private LineChart creatLineChart(String title) {
+		LineChart lineChart = new LineChart();
 
-	public List<GraphItem> getGroups() {
-		return new ArrayList<GraphItem>(m_metrics.values());
+		lineChart.setTitle(title);
+		lineChart.setStart(m_start);
+		lineChart.setSize(60);
+		lineChart.setStep(TimeUtil.ONE_MINUTE);
+		return lineChart;
 	}
 
 	@Override
-	public void visitMetric(Metric metric) {
-		m_key = metric.getId();
+	public void visitAbtest(Abtest abtest) {
+		String abtestId = abtest.getRunId();
+		int id = Integer.parseInt(abtestId);
+		com.dianping.cat.home.dal.abtest.Abtest temp = findAbTest(id);
 
-		Map<String, Metric> metrics = metric.getMetrics();
-		if (metrics != null) {
-			Set<String> keySet = metrics.keySet();
-			for (String temp : keySet) {
-				if (temp.startsWith(prefix)) {
-					m_allChannel.add(temp.substring(prefix.length()));
+		m_abtests.put(id, temp);
+		if (m_abtest.equals(abtestId)) {
+			super.visitAbtest(abtest);
+		}
+	}
+
+	private LineChart findOrCreateChart(String type, String metricKey, String computeType) {
+		String key = metricKey + computeType;
+		LineChart chart = m_lineCharts.get(key);
+
+		if (chart == null) {
+			if (computeType.equals(COUNT)) {
+				if (type.equals("C") || type.equals("S,C")) {
+					chart = creatLineChart(key);
+				}
+			} else if (computeType.equals(AVG)) {
+				if (type.equals("T")) {
+					chart = creatLineChart(key);
+				}
+			} else if (computeType.equals(SUM)) {
+				if (type.equals("S") || type.equals("S,C")) {
+					chart = creatLineChart(key);
 				}
 			}
-		}
-		if (StringUtils.isEmpty(m_channel)) {
-			buildGraphItem(metric.getPoints().values());
-		} else {
-			Metric m = metrics.get(prefix + m_channel);
 
-			if (m != null) {
-				buildGraphItem(m.getPoints().values());
+			if (chart != null) {
+				m_lineCharts.put(key, chart);
 			}
 		}
+
+		return chart;
+	}
+
+	@Override
+	public void visitGroup(Group group) {
+		String id = group.getName();
+
+		if ("".equals(id)) {
+			id = "Default";
+		}
+		double[] sum = new double[60];
+		double[] avg = new double[60];
+		double[] count = new double[60];
+
+		for (Point point : group.getPoints().values()) {
+			int index = point.getId();
+
+			sum[index] = point.getSum();
+			avg[index] = point.getAvg();
+			count[index] = point.getCount();
+		}
+
+		LineChart sumLine = findOrCreateChart(m_currentComputeType, m_metricKey, SUM);
+
+		if (sumLine != null) {
+			sumLine.addSubTitle(id);
+			sumLine.addValue(sum);
+		}
+		LineChart countLine = findOrCreateChart(m_currentComputeType, m_metricKey, COUNT);
+
+		if (countLine != null) {
+			countLine.addSubTitle(id);
+			countLine.addValue(count);
+		}
+		LineChart avgLine = findOrCreateChart(m_currentComputeType, m_metricKey, AVG);
+
+		if (avgLine != null) {
+			avgLine.addSubTitle(id);
+			avgLine.addValue(avg);
+		}
+	}
+
+	@Override
+	public void visitMetricItem(MetricItem metricItem) {
+		m_metricKey = metricItem.getId();
+		m_currentComputeType = metricItem.getType();
+		super.visitMetricItem(metricItem);
 	}
 
 	@Override
@@ -118,93 +172,21 @@ public class MetricDisplay extends BaseVisitor {
 		super.visitMetricReport(metricReport);
 	}
 
-	public static class GraphItem {
-		private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	public void setAbtest(ABTestService service) {
+		m_abtestService = service;
+	}
 
-		private int size = 60;
+	private com.dianping.cat.home.dal.abtest.Abtest findAbTest(int id) {
+		com.dianping.cat.home.dal.abtest.Abtest abtest = m_abtestService.getABTestNameByRunId(id);
 
-		private long step = TimeUtil.ONE_MINUTE;
+		if (abtest == null) {
+			abtest = new com.dianping.cat.home.dal.abtest.Abtest();
 
-		private String start;
-
-		private String title;
-
-		private String key;
-
-		private static final int SIZE = 60;
-
-		private double[] values = new double[SIZE];
-
-		public GraphItem(Date start, String title, String key) {
-			this.start = sdf.format(start);
-			this.title = title;
-			this.key = key;
-
-			for (int i = 0; i < SIZE; i++) {
-				values[i] = -1;
-			}
+			abtest.setId(id);
+			abtest.setName(String.valueOf(id));
 		}
 
-		public GraphItem addSubTitle(String title) {
-			return this;
-		}
-
-		public String getJsonString() {
-			Gson gson = new Gson();
-			return gson.toJson(this);
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public int getSize() {
-			return this.size;
-		}
-
-		public String getStart() {
-			return this.start;
-		}
-
-		public long getStep() {
-			return step;
-		}
-
-		public String getTitle() {
-			return this.title;
-		}
-
-		public double[] getValues() {
-			return values;
-		}
-
-		public GraphItem setSize(int size) {
-			this.size = size;
-			return this;
-		}
-
-		public GraphItem setStart(Date start) {
-			this.start = sdf.format(start);
-			return this;
-		}
-
-		public void setStep(long step) {
-			this.step = step;
-		}
-
-		public GraphItem setTitle(String titles) {
-			this.title = titles;
-			return this;
-		}
-
-		public GraphItem setValue(int minute, double value) {
-			values[minute] = value;
-			return this;
-		}
-
-		public void setValues(double[] values) {
-			this.values = values;
-		}
+		return abtest;
 	}
 
 }

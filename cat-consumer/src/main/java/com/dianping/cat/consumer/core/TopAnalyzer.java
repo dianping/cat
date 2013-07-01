@@ -9,14 +9,15 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -59,20 +60,26 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
+		for (String domainName : domains) {
+			if (validateDomain(domainName)) {
+				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
-		for (String temp : domains) {
-			TransactionReport report = m_transactionAnalyzer.getReport(temp);
-
-			new TransactionReportVisitor(topReport).visitTransactionReport(report);
+				new TransactionReportVisitor(topReport).visitTransactionReport(report);
+			}
 		}
+		for (String domainName : domains) {
+			if (validateDomain(domainName)) {
+				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
-		for (String temp : domains) {
-			ProblemReport report = m_problemAnalyzer.getReport(temp);
-
-			new ProblemReportVisitor(topReport).visitProblemReport(report);
+				new ProblemReportVisitor(topReport).visitProblemReport(report);
+			}
 		}
 
 		return topReport;
+	}
+
+	private boolean validateDomain(String domain) {
+		return !domain.equals("FrontEnd");
 	}
 
 	@Override
@@ -98,7 +105,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
 
-					r.setName("top");
+					r.setName(ID);
 					r.setDomain(domain);
 					r.setPeriod(period);
 					r.setIp(ip);
@@ -161,8 +168,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			int minute = range2.getValue();
 			long count = range2.getCount();
 			double sum = range2.getSum();
-			com.dianping.cat.consumer.top.model.entity.Segment detail = m_report.findOrCreateDomain(m_domain).findOrCreateSegment(
-			      minute);
+			com.dianping.cat.consumer.top.model.entity.Segment detail = m_report.findOrCreateDomain(m_domain)
+			      .findOrCreateSegment(minute);
 			Range2Function function = Range2Function.getByName(m_type);
 
 			if (function != null) {
@@ -180,10 +187,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
 
 				detail.setUrl(count + detail.getUrl());
 				detail.setUrlSum(sum + detail.getUrlSum());
+				detail.setUrlError(errorCount + detail.getUrlError());
 				detail.setUrlDuration(detail.getUrlSum() / detail.getUrl());
 			}
 		},
@@ -192,9 +201,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+
 				detail.setService(count + detail.getService());
 				detail.setServiceSum(sum + detail.getServiceSum());
+				detail.setServiceError(errorCount + detail.getServiceError());
 				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
 			}
 		},
@@ -203,8 +215,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+
 				detail.setService(count + detail.getService());
+				detail.setServiceError(errorCount + detail.getServiceError());
 				detail.setServiceSum(sum + detail.getServiceSum());
 				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
 			}
@@ -214,8 +229,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+
 				detail.setCall(count + detail.getCall());
+				detail.setCallError(errorCount + detail.getCallError());
 				detail.setCallSum(sum + detail.getCallSum());
 				detail.setCallDuration(detail.getCallSum() / detail.getCall());
 
@@ -226,8 +244,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+
 				detail.setCall(count + detail.getCall());
+				detail.setCallError(errorCount + detail.getCallError());
 				detail.setCallSum(sum + detail.getCallSum());
 				detail.setCallDuration(detail.getCallSum() / detail.getCall());
 			}
@@ -237,8 +258,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+
 				detail.setSql(count + detail.getSql());
+				detail.setSqlError(errorCount + detail.getSqlError());
 				detail.setSqlSum(sum + detail.getSqlSum());
 				detail.setSqlDuration(detail.getSqlSum() / detail.getSql());
 			}
@@ -265,6 +289,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		private String m_type;
 
+		private String m_state;
+
 		private TopReport m_report;
 
 		public ProblemReportVisitor(TopReport report) {
@@ -280,6 +306,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		@Override
 		public void visitEntry(Entry entry) {
 			m_type = entry.getType();
+			m_state = entry.getStatus();
 			super.visitEntry(entry);
 		}
 
@@ -289,11 +316,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			int count = segment.getCount();
 
 			if ("error".equals(m_type)) {
-				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain).findOrCreateSegment(id);
+				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
+				      .findOrCreateSegment(id);
 				temp.setError(temp.getError() + count);
-			} else if ("call".equals(m_type)) {
-				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain).findOrCreateSegment(id);
-				temp.setCallError(temp.getCallError() + count);
+
+				Error error = temp.findOrCreateError(m_state);
+				error.setCount(error.getCount() + count);
 			}
 		}
 	}

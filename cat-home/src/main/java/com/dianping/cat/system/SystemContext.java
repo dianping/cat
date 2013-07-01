@@ -18,7 +18,7 @@ import org.unidal.webres.resource.spi.IResourceRegistry;
 import org.unidal.webres.tag.resource.ResourceTagConfigurator;
 import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;
 
-import com.dainping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.home.dal.user.DpAdminLogin;
 
 public class SystemContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
 

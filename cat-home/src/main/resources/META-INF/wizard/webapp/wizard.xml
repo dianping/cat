@@ -2,55 +2,46 @@
 <wizard package="com.dianping.cat">
    <webapp package="com.dianping.cat" webres="true" plugin-management="false">
       <module name="report" path="r">
-         <page name="home" title="Home" default="true">
+         <page name="home" title="Home" default="true" view="/jsp/report/home/home.jsp">
             <description>Home Page</description>
          </page>
-         <page name="problem" title="Problem" path="p" view="/jsp/report/problemGroup.jsp">
+         <page name="problem" title="Problem" path="p" view="/jsp/report/problem/problemGroup.jsp">
             <description>Problem Discovered</description>
          </page>
-         <page name="transaction" title="Transaction" path="t">
+         <page name="transaction" title="Transaction" path="t" view="/jsp/report/transaction/transaction.jsp">
             <description>Transaction Summary Report</description>
          </page>
-         <page name="event" title="Event" path="e">
+         <page name="event" title="Event" path="e" view="/jsp/report/event/event.jsp">
             <description>Event Summary Report</description>
          </page>
-         <page name="heartbeat" title="Heartbeat" path="h">
+         <page name="heartbeat" title="Heartbeat" path="h" view="/jsp/report/heartbeat/heartbeat.jsp">
             <description>Heartbeat Summary Report</description>
          </page>
-         <page name="logview" title="Logview" path="m" standalone="false">
+         <page name="logview" title="Logview" path="m" view="/jsp/report/logview/logview.jsp" standalone="false">
             <description>Log View Details</description>
          </page>
          <page name="model" title="Model" path="model" standalone="false">
             <description>Service Model</description>
          </page>
-         <page name="sql" title="SQL" path="sql">
+         <page name="sql" title="SQL" path="sql" view="/jsp/report/sql/sql.jsp">
             <description>SQL Report</description>
          </page>
          <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
             <description>Dashboard</description>
          </page>
-         <page name="matrix" title="Matrix" path="matrix">
+         <page name="matrix" title="Matrix" path="matrix" view="/jsp/report/matrix/matrix.jsp">
             <description>Matrix</description>
          </page>
-         <page name="health" title="Health" path="health">
-            <description>Health</description>
-         </page>
-         <page name="cross" title="Cross" path="cross">
+         <page name="cross" title="Cross" path="cross" view="/jsp/report/cross/cross.jsp">
             <description>Cross</description>
          </page>
-         <page name="cache" title="Cache" path="cache">
+         <page name="cache" title="Cache" path="cache" view="/jsp/report/cache/cache.jsp">
             <description>Cache</description>
          </page>
-         <page name="database" title="Database" path="database">
-            <description>Database</description>
-         </page>
-         <page name="state" title="State" path="state">
+         <page name="state" title="State" path="state" view="/jsp/report/database/database.jsp">
             <description>State</description>
          </page>
-         <page name="query" title="Query" path="query">
-            <description>Query</description>
-         </page>
-         <page name="top" title="Top" path="top">
+         <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp">
             <description>Top</description>
          </page>
          <page name="metric" title="Metric" path="metric">
@@ -59,18 +50,24 @@
          <page name="jsError" title="JsError" path="jsError">
             <description>jsError</description>
          </page>
+         <page name="dependency" title="Dependency" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
+            <description>Dependency</description>
+         </page>
+         <page name="externalError" title="externalError" path="externalError" template="default">
+            <description>ExternalError</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
-         <page name="alarm" title="Alarm" default="true" path="alarm">
+         <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">
             <description>Alarm</description>
          </page>
          <page name="login" title="Login" default="true" path="login" standalone="false">
             <description>Login</description>
          </page>
-         <page name="project" title="Project" path="project">
-            <description>Project</description>
+         <page name="config" title="Config" path="config" view="/jsp/system/project/project.jsp">
+            <description>Config</description>
          </page>
-         <page name="abtest" title="Abtest" path="abtest">
+         <page name="abtest" title="Abtest" path="abtest" view="/jsp/system/abtest/abtest.jsp">
             <description>Abtest</description>
          </page>
       </module>

@@ -11,11 +11,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.sql.model.entity.Method;
@@ -42,6 +42,9 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	@Inject
 	private SqlParseManager m_sqlParseManager;
 
+	@Inject
+	private DatabaseParser m_parser;
+
 	private Map<String, SqlReport> m_reports = new HashMap<String, SqlReport>();
 
 	private Set<String> m_errorConnectionUrls = new HashSet<String>();
@@ -67,7 +70,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
-			String database = getDataBaseName(connection);
+			String database =  m_parser.parseDatabaseName(connection);
 
 			if (database == null) {
 				m_errorConnectionUrls.add(domain + ":" + connection);
@@ -91,33 +94,6 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	private String getDataBaseName(String url) {
-		if (url != null) {
-			if (url.indexOf("mysql") > -1) {
-				try {
-					int index = url.indexOf("://");
-					String temp = url.substring(index + 3);
-					index = temp.indexOf("/");
-					int index2 = temp.indexOf("?");
-					String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-					return schema;
-				} catch (Exception e) {
-				}
-			} else if (url.indexOf("sqlserver") > -1) {
-				String temp = url.substring(url.indexOf("databaseName"));
-
-				int first = temp.indexOf("=");
-				int end = temp.indexOf(";");
-
-				if (first > -1 && end > -1) {
-					return temp.substring(first + 1, end);
-				}
-			}
-		}
-
-		return null;
 	}
 
 	@Override
@@ -245,7 +221,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("sql");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);

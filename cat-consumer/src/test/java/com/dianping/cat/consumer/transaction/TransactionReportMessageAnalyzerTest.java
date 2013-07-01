@@ -5,7 +5,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -18,11 +17,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testCommonGenerate() throws Exception {
-		long current = System.currentTimeMillis();
-		long start = current - current % (60 * 60 * 1000) - 1000L * 60 * 60;
-
-		MessageAnalyzerManager manager = lookup(MessageAnalyzerManager.class);
-		TransactionAnalyzer analyzer = (TransactionAnalyzer) manager.getAnalyzer("transaction", start);
+		TransactionAnalyzer analyzer = new TransactionAnalyzer();
 
 		for (int i = 1; i <= 1000; i++) {
 			MessageTree tree = new DefaultMessageTree();

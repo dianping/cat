@@ -1,6 +1,5 @@
 package com.dianping.cat.abtest.spi.internal;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.unidal.helper.Splitters;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
@@ -29,6 +27,9 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 	@Inject
 	private MessageManager m_messageManager;
+
+	@Inject
+	private ABTestCodec m_cookieCodec;
 
 	private InheritableThreadLocal<Entry> m_threadLocal = new InheritableThreadLocal<Entry>() {
 		@Override
@@ -57,7 +58,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		m_threadLocal.remove();
 	}
 
-	class Entry {
+	public class Entry {
 		private Map<String, ABTestContext> m_map = new HashMap<String, ABTestContext>(4);
 
 		private ABTestContext createContext(ABTestEntity entity) {
@@ -84,47 +85,24 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			return ctx;
 		}
 
-		private Map<String, String> getGroupsFromCookie(HttpServletRequest request) {
-			Map<String, String> map = new HashMap<String, String>();
+		private String getCookie(HttpServletRequest request, String name) {
 			Cookie[] cookies = request.getCookies();
+			String value = "";
 
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
-					if (ABTEST_COOKIE_NAME.equals(cookie.getName())) {
-						String value = cookie.getValue();
-						List<String> parts = Splitters.by('|').noEmptyItem().trim().split(value);
-
-						for (String part : parts) {
-							int pos = part.indexOf(':');
-
-							if (pos > 0) {
-								map.put(part.substring(0, pos), part.substring(pos + 1));
-							}
-						}
+					if (name.equals(cookie.getName())) {
+						value = cookie.getValue();
+						break;
 					}
 				}
 			}
 
-			return map;
+			return value;
 		}
 
-		private String setGroupsToCookie(HttpServletRequest request, HttpServletResponse response,
-		      Map<String, String> result) {
-			StringBuilder sb = new StringBuilder(64);
-			boolean first = true;
-
-			for (Map.Entry<String, String> e : result.entrySet()) {
-				if (first) {
-					first = false;
-				} else {
-					sb.append('|');
-				}
-
-				sb.append(e.getKey()).append(':').append(e.getValue());
-			}
-
-			String value = sb.toString();
-			Cookie cookie = new Cookie(ABTEST_COOKIE_NAME, value);
+		private void setCookie(HttpServletRequest request, HttpServletResponse response, String name, String value) {
+			Cookie cookie = new Cookie(name, value);
 			String server = request.getServerName();
 
 			if (server.endsWith(".dianping.com")) {
@@ -139,42 +117,38 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			cookie.setPath("/");
 
 			response.addCookie(cookie);
-			return value;
 		}
 
 		public void setup(HttpServletRequest request, HttpServletResponse response) {
 			List<ABTestEntity> activeEntities = m_entityManager.getEntityList();
 			Set<String> activeRuns = m_entityManager.getActiveRun();
-			Map<String, String> map = getGroupsFromCookie(request);
-			Map<String, String> result = new HashMap<String, String>();
+			String value = getCookie(request, ABTEST_COOKIE_NAME);
+			Map<String, Map<String, String>> map = m_cookieCodec.decode(value, activeRuns);
 
-			for (String id : activeRuns) {
-				if (map.containsKey(id)) {
-					result.put(id, map.get(id));
-				}
-			}
-
-			for (ABTestEntity entity : activeEntities) {
+			for (int i = 0; i < activeEntities.size(); i++) {
+				ABTestEntity entity = activeEntities.get(i);
 				DefaultABTestContext ctx = (DefaultABTestContext) getContext(entity);
-				String key = String.valueOf(ctx.getEntity().getRun().getId());
-				String value = result.get(key);
+				String key = String.valueOf(entity.getRun().getId());
+				Map<String, String> cookielets = map.get(key);
 
-				if (value == null) {
-					ctx.setup(request, response, new Date());
+				ctx.setup(request, response, cookielets);
 
-					String groupName = ctx.getGroupName();
+				Map<String, String> newCookielets = ctx.getCookielets();
 
-					if (groupName != null) {
-						result.put(key, groupName);
-					}
+				if (newCookielets != null) {
+					map.put(key, newCookielets);
 				} else {
-					ctx.setGroupName(value);
+					map.remove(key);
 				}
 			}
 
-			String value = setGroupsToCookie(request, response, result);
-			((DefaultMessageManager) m_messageManager).setMetricType(value);
-		}
+			String newValue = m_cookieCodec.encode(map);
 
+			setCookie(request, response, ABTEST_COOKIE_NAME, newValue);
+
+			if (newValue != null && newValue.length() > 0) {
+				((DefaultMessageManager) m_messageManager).setMetricType(newValue);
+			}
+		}
 	}
 }

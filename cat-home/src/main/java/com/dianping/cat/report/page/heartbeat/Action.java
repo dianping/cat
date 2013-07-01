@@ -3,8 +3,6 @@ package com.dianping.cat.report.page.heartbeat;
 public enum Action implements org.unidal.web.mvc.Action {
 	HISTORY("history"), 
 	
-	MOBILE("mobile"), 
-	
 	VIEW("view"),
 	
 	PART_HISTORY("historyPart");

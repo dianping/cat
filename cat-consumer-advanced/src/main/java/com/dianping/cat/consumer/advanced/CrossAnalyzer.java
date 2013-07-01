@@ -10,11 +10,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -263,7 +263,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("cross");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -297,7 +297,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String remoteIp = info.getRemoteAddress();
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
-
 		Local client = report.findOrCreateLocal(localIp);
 		Remote server = client.findOrCreateRemote(remoteIp);
 
@@ -310,6 +309,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			type.setId(info.getDetailType());
 			server.setType(type);
 		}
+		
 		Name name = type.findOrCreateName(transactionName);
 
 		type.incTotalCount();
