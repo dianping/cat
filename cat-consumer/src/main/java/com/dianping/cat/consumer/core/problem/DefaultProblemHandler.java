@@ -98,7 +98,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 	}
 
 	private int processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
-		String type = ProblemType.HEARTBEAT.getName();
+		//String type = ProblemType.HEARTBEAT.getName();
+		String type = heartbeat.getType().toLowerCase();
 		String status = heartbeat.getName();
 		Entry entry = findOrCreateEntry(machine, type, status);
 

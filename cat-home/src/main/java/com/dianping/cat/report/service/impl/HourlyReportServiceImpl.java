@@ -8,17 +8,16 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReport;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportEntity;
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.advanced.dal.BusinessReport;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
+import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -32,7 +31,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
+import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
@@ -42,7 +41,6 @@ import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.top.TopReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
-import com.dianping.cat.report.task.health.HealthReportMerger;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 
@@ -51,26 +49,6 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	
 	@Inject
 	private BusinessReportDao m_businessReportDao;
-
-	@Override
-	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
-		if (end.getTime() == start.getTime()) {
-			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
-		}
-		Set<String> domains = new HashSet<String>();
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, reportName,
-			      ReportEntity.READSET_DOMAIN_NAME);
-
-			for (Report report : reports) {
-				domains.add(report.getDomain());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
-	}
 
 	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
@@ -117,44 +95,11 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		CrossReport crossReport = merger.getCrossReport();
 
 		crossReport.setStartTime(start);
-		crossReport.setEndTime(end);
+		crossReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "cross");
 		crossReport.getDomainNames().addAll(domains);
 		return crossReport;
-	}
-
-	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
-
-				try {
-					DatabaseReport reportModel = com.dianping.cat.consumer.database.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS,
-					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		DatabaseReport databaseReport = merger.getDatabaseReport();
-
-		databaseReport.setStartTime(start);
-		databaseReport.setEndTime(end);
-
-		Set<String> domains = queryAllDomainNames(start, end, "database");
-		databaseReport.getDomainNames().addAll(domains);
-		return databaseReport;
 	}
 
 	@Override
@@ -183,43 +128,11 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		EventReport eventReport = merger.getEventReport();
 
 		eventReport.setStartTime(start);
-		eventReport.setEndTime(end);
+		eventReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "event");
 		eventReport.getDomainNames().addAll(domains);
 		return eventReport;
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-
-		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "health",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
-
-				try {
-					HealthReport reportModel = com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "health", Event.SUCCESS,
-					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		HealthReport healthReport = merger.getHealthReport();
-
-		healthReport.setStartTime(start);
-		healthReport.setEndTime(end);
-
-		Set<String> domains = queryAllDomainNames(start, end, "health");
-		healthReport.getDomainNames().addAll(domains);
-		return healthReport;
 	}
 
 	@Override
@@ -248,7 +161,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 
 		heartbeatReport.setStartTime(start);
-		heartbeatReport.setEndTime(end);
+		heartbeatReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "heartbeat");
 		heartbeatReport.getDomainNames().addAll(domains);
@@ -280,7 +193,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		MatrixReport matrixReport = merger.getMatrixReport();
 
 		matrixReport.setStartTime(start);
-		matrixReport.setEndTime(end);
+		matrixReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "matrix");
 		matrixReport.getDomainNames().addAll(domains);
@@ -313,7 +226,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		MetricReport metricReport = merger.getMetricReport();
 
 		metricReport.setStartTime(start);
-		metricReport.setEndTime(end);
+		metricReport.setEndTime(new Date(end.getTime()-1));
 		return metricReport;
 	}
 
@@ -343,7 +256,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		ProblemReport problemReport = merger.getProblemReport();
 
 		problemReport.setStartTime(start);
-		problemReport.setEndTime(end);
+		problemReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "problem");
 		problemReport.getDomainNames().addAll(domains);
@@ -375,7 +288,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		SqlReport sqlReport = merger.getSqlReport();
 
 		sqlReport.setStartTime(start);
-		sqlReport.setEndTime(end);
+		sqlReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "sql");
 		sqlReport.getDomainNames().addAll(domains);
@@ -408,7 +321,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		StateReport stateReport = merger.getStateReport();
 
 		stateReport.setStartTime(start);
-		stateReport.setEndTime(end);
+		stateReport.setEndTime(new Date(end.getTime()-1));
 		return stateReport;
 	}
 
@@ -438,10 +351,39 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		TopReport topReport = merger.getTopReport();
 
 		topReport.setStartTime(start);
-		topReport.setEndTime(end);
+		topReport.setEndTime(new Date(end.getTime()-1));
 		return topReport;
 	}
 
+	@Override
+	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
+		DependencyReportMerger merger = new DependencyReportMerger(new DependencyReport(domain));
+
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "dependency",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser.parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "dependency", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		DependencyReport dependencyReport = merger.getDependencyReport();
+
+		dependencyReport.setStartTime(start);
+		dependencyReport.setEndTime(new Date(end.getTime()-1));
+		return dependencyReport;
+	}
 	@Override
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
@@ -469,7 +411,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		TransactionReport transactionReport = merger.getTransactionReport();
 
 		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
+		transactionReport.setEndTime(new Date(end.getTime()-1));
 
 		Set<String> domains = queryAllDomainNames(start, end, "transaction");
 		transactionReport.getDomainNames().addAll(domains);

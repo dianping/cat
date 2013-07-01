@@ -2,26 +2,31 @@ package com.dianping.cat.consumer.advanced;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReport;
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
+import com.dianping.cat.abtest.spi.internal.ABTestCodec;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.advanced.dal.BusinessReport;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.core.ProductLineConfigManager;
+import com.dianping.cat.consumer.metric.model.entity.Abtest;
+import com.dianping.cat.consumer.metric.model.entity.Group;
+import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -30,7 +35,7 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implements LogEnabled {
-	public static final Object ID = "metric";
+	public static final String ID = "metric";
 
 	@Inject
 	private BucketManager m_bucketManager;
@@ -38,34 +43,17 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Inject
 	private BusinessReportDao m_businessReportDao;
 
+	@Inject
+	private MetricConfigManager m_configManager;
+
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManager;
+
+	@Inject
+	private ABTestCodec m_codec;
+
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
-
-	private static final String TUANGOU = "TuanGou";
-
-	private static final String CHANNEL = "channel";
-
-	private static Map<String, Set<String>> s_urls = new HashMap<String, Set<String>>();
-
-	private static Map<String, Map<String, String>> s_metric = new HashMap<String, Map<String, String>>();
-
-	static {
-		Set<String> urls = new HashSet<String>();
-
-		urls.add("/index");
-		urls.add("/detail");
-		urls.add("/order/submitOrder");
-		s_urls.put(TUANGOU, urls);
-	}
-
-	static {
-		Map<String, String> tuangou = new HashMap<String, String>();
-
-		tuangou.put("order", "quantity");
-		tuangou.put("payment.pending", "amount");
-		tuangou.put("payment.success", "amount");
-		s_metric.put(TUANGOU, tuangou);
-	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -77,21 +65,16 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		m_logger = logger;
 	}
 
-	public String getGroup(String domain) {
-		return "TuanGou";
-	}
 
-	public MetricReport getReport(String group) {
-		MetricReport report = m_reports.get(group);
+	public MetricReport getReport(String product) {
+		MetricReport report = m_reports.get(product);
 
 		if (report == null) {
-			report = new MetricReport(group);
+			report = new MetricReport(product);
 
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
-
-		report.getGroupNames().addAll(m_reports.keySet());
 		return report;
 	}
 
@@ -105,7 +88,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				String xml = reportBucket.findById(id);
 				MetricReport report = DefaultSaxParser.parse(xml);
 
-				m_reports.put(report.getGroup(), report);
+				m_reports.put(report.getProduct(), report);
 			}
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when loading metric reports of %s!", new Date(m_startTime)), e);
@@ -116,142 +99,118 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
+	private Map<String, String> parseABtests(Transaction transaction) {
+		String abtest = queryAbTest(transaction);
+
+		return parseABTests(abtest);
+	}
+
+	private String queryAbTest(Transaction transaction) {
+		List<Message> messages = transaction.getChildren();
+
+		for (Message message : messages) {
+			if (message instanceof Event) {
+				if ("URL".equals(message.getType()) && "ABTest".equals(message.getName())) {
+					String data = (String) message.getData();
+
+					return data;
+				}
+			}
+		}
+		return "";
+	}
+
+	public Map<String, String> parseABTests(String str) {
+		// -1 is the all metric,design for default
+		Map<String, String> abtests = new HashMap<String, String>();
+		abtests.put("-1", "");
+
+		abtests.putAll(m_codec.decode(str));
+		return abtests;
+	}
+
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		String group = getGroup(domain);
-
-		MetricReport report = m_reports.get(group);
+		String product = m_productLineConfigManager.queryProductLineByDomain(domain);
+		MetricReport report = m_reports.get(product);
 
 		if (report == null) {
-			report = new MetricReport(group);
+			report = new MetricReport(product);
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 
-			m_reports.put(group, report);
+			m_reports.put(product, report);
 		}
 
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			processUrl(group, report, (Transaction) message);
+			processMetricOnTransaction(product, report, (Transaction) message, tree);
 		}
 		if (message instanceof Transaction) {
-			processTransaction(group, report, tree, (Transaction) message);
+			processTransaction(product, report, tree, (Transaction) message);
 		} else if (message instanceof Metric) {
-			processMetric(group, report, tree, (Metric) message);
+			processMetric(product, report, tree, (Metric) message);
 		}
-	}
-
-	private void processUrl(String group, MetricReport report, Transaction transaction) {
-		Set<String> urls = s_urls.get(group);
-		String type = transaction.getType();
-		String name = transaction.getName();
-
-		if (type.equals(CatConstants.TYPE_URL) && urls.contains(name)) {
-			long current = transaction.getTimestamp() / 1000 / 60;
-			int min = (int) (current % (60));
-
-			com.dianping.cat.consumer.metric.model.entity.Metric metric = report.findOrCreateMetric(name);
-			Point point = metric.findOrCreatePoint(min);
-
-			point.setCount(point.getCount() + 1);
-			point.setSum(point.getSum() + transaction.getDurationInMillis());
-			point.setAvg(point.getSum() / point.getCount());
-
-			Object data = transaction.getData();
-			if (data != null) {
-				String channel = parseValue(CHANNEL, (String) data);
-				if (channel != null) {
-					updateChannel(min, metric, channel, transaction.getDurationInMillis());
-				}
-			}
-		}
-	}
-
-	private void updateChannel(int min, com.dianping.cat.consumer.metric.model.entity.Metric metric, String channel,
-	      double value) {
-		com.dianping.cat.consumer.metric.model.entity.Metric detail = metric.findOrCreateMetric(CHANNEL + "=" + channel);
-
-		Point channelPoint = detail.findOrCreatePoint(min);
-
-		channelPoint.setCount(channelPoint.getCount() + 1);
-		channelPoint.setSum(channelPoint.getSum() + value);
-		channelPoint.setAvg(channelPoint.getSum() / channelPoint.getCount());
 	}
 
 	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
+		String type = metric.getType();
 		String name = metric.getName();
-		Map<String, String> metrics = s_metric.get(group);
-		String key = metrics.get(name);
+		String domain = tree.getDomain();
+		String data = (String) metric.getData();
+		String status = metric.getStatus();
+		ConfigItem config = parseValue(status, data);
 
-		if (key != null) {
-			String data = (String) metric.getData();
-			String valueStr = parseValue(key, data);
+		if (config != null) {
+			long current = metric.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+			MetricItem metricItem = report.findOrCreateMetricItem(name);
+			Map<String, String> abtests = parseABTests(type);
 
-			if (valueStr != null) {
-				double value = Double.parseDouble(valueStr);
-				long current = metric.getTimestamp() / 1000 / 60;
-				int min = (int) (current % (60));
+			metricItem.addDomain(domain).setType(status);
+			updateMetric(metricItem, abtests, min, config.getCount(), config.getValue());
 
-				com.dianping.cat.consumer.metric.model.entity.Metric temp = report.findOrCreateMetric(name);
-				Point point = temp.findOrCreatePoint(min);
-
-				point.setCount(point.getCount() + 1);
-				point.setSum(point.getSum() + value);
-				point.setAvg(point.getSum() / point.getCount());
-
-				String channel = parseValue("channel", data);
-				if (channel != null) {
-					updateChannel(min, temp, channel, value);
-				}
-			}
+			config.setTitle(name);
+			m_configManager.insertIfNotExist(domain, "Metric", name, config);
 		}
 		return 0;
 	}
 
-	public String parseValue(final String key, final String data) {
-		int len = data == null ? 0 : data.length();
-		int keyLen = key.length();
-		StringBuilder name = new StringBuilder();
-		StringBuilder value = new StringBuilder();
-		boolean inName = true;
+	private ConfigItem parseValue(String status, String data) {
+		ConfigItem config = new ConfigItem();
 
-		for (int i = 0; i < len; i++) {
-			char ch = data.charAt(i);
+		if ("C".equals(status)) {
+			int count = Integer.parseInt(data);
 
-			switch (ch) {
-			case '&':
-				if (name.length() == keyLen && name.toString().equals(key)) {
-					return value.toString();
-				}
+			config.setCount(count);
+			config.setValue((double) count);
+			config.setShowCount(true);
+		} else if ("T".equals(status)) {
+			double duration = Double.parseDouble(data);
 
-				inName = true;
-				name.setLength(0);
-				value.setLength(0);
-				break;
-			case '=':
-				if (inName) {
-					inName = false;
-				} else {
-					value.append(ch);
-				}
-				break;
-			default:
-				if (inName) {
-					name.append(ch);
-				} else {
-					value.append(ch);
-				}
-				break;
-			}
+			config.setCount(1);
+			config.setValue(duration);
+			config.setShowAvg(true);
+		} else if ("S".equals(status)) {
+			double sum = Double.parseDouble(data);
+
+			config.setCount(1);
+			config.setValue(sum);
+			config.setShowSum(true);
+		} else if ("S,C".equals(status)) {
+			String[] datas = data.split(",");
+
+			config.setCount(Integer.parseInt(datas[0]));
+			config.setValue(Double.parseDouble(datas[1]));
+			config.setShowCount(true);
+			config.setShowSum(true);
+		} else {
+			return null;
 		}
 
-		if (name.length() == keyLen && name.toString().equals(key)) {
-			return value.toString();
-		}
-
-		return null;
+		return config;
 	}
 
 	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
@@ -269,6 +228,32 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return count;
 	}
 
+	private void processMetricOnTransaction(String product, MetricReport report, Transaction transaction,
+	      MessageTree tree) {
+		String type = transaction.getType();
+
+		if (type.equals("Service")) {
+			type = "PigeonService";
+		}
+		if ("URL".equals(type) || "PigeonService".equals(type)) {
+			String name = transaction.getName();
+			String domain = tree.getDomain();
+			String key = m_configManager.buildMetricKey(domain, type, name);
+			MetricItemConfig config = m_configManager.queryMetricItemConfig(key);
+
+			if (config != null) {
+				long current = transaction.getTimestamp() / 1000 / 60;
+				int min = (int) (current % (60));
+				double sum = transaction.getDurationInMicros();
+				MetricItem metricItem = report.findOrCreateMetricItem(name);
+				Map<String, String> abtests = parseABtests(transaction);
+
+				metricItem.addDomain(domain).setType("C");
+				updateMetric(metricItem, abtests, min, 1, sum);
+			}
+		}
+	}
+
 	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
@@ -280,15 +265,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			for (MetricReport report : m_reports.values()) {
 				try {
-					Set<String> groups = report.getGroupNames();
-
-					groups.clear();
-					groups.addAll(m_reports.keySet());
-
 					String xml = builder.buildXml(report);
-					String domain = report.getGroup();
+					String product = report.getProduct();
 
-					reportBucket.storeById(domain, xml);
+					reportBucket.storeById(product, xml);
 				} catch (Exception e) {
 					t.setStatus(e);
 					Cat.logError(e);
@@ -303,19 +283,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				for (MetricReport report : m_reports.values()) {
 					try {
 						BusinessReport r = m_businessReportDao.createLocal();
-						String group = report.getGroup();
+						String product = report.getProduct();
 
-						r.setName("metric");
-						r.setProductLine(group);
+						r.setName(ID);
+						r.setProductLine(product);
 						r.setPeriod(period);
 						r.setIp(ip);
 						r.setType(binary);
-						// r.setBinaryContent(DefaultNativeBuilder.build(report));
 						r.setContent(DefaultNativeBuilder.build(report));
 						r.setCreationDate(new Date());
 
 						m_businessReportDao.insert(r);
 					} catch (Throwable e) {
+						m_logger.error(report.toString());
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}
@@ -331,6 +311,85 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
 			}
+		}
+	}
+
+	private void updateMetric(MetricItem metricItem, Map<String, String> abtests, int minute, int count, double sum) {
+		for (Entry<String, String> entry : abtests.entrySet()) {
+			Abtest abtest = metricItem.findOrCreateAbtest(entry.getKey());
+			Group group = abtest.findOrCreateGroup(entry.getValue());
+			Point point = group.findOrCreatePoint(minute);
+
+			point.setCount(point.getCount() + count);
+			point.setSum(point.getSum() + sum);
+			point.setAvg(point.getSum() / point.getCount());
+		}
+	}
+
+	public static class ConfigItem {
+		private int m_count;
+
+		private double m_value;
+
+		private boolean m_showCount = false;
+
+		private boolean m_showAvg = false;
+
+		private boolean m_showSum = false;
+
+		private String m_title;
+
+		public String getTitle() {
+			return m_title;
+		}
+
+		public void setTitle(String title) {
+			m_title = title;
+		}
+
+		public int getCount() {
+			return m_count;
+		}
+
+		public ConfigItem setCount(int count) {
+			m_count = count;
+			return this;
+		}
+
+		public double getValue() {
+			return m_value;
+		}
+
+		public ConfigItem setValue(double value) {
+			m_value = value;
+			return this;
+		}
+
+		public boolean isShowCount() {
+			return m_showCount;
+		}
+
+		public ConfigItem setShowCount(boolean showCount) {
+			m_showCount = showCount;
+			return this;
+		}
+
+		public boolean isShowAvg() {
+			return m_showAvg;
+		}
+
+		public ConfigItem setShowAvg(boolean showAvg) {
+			m_showAvg = showAvg;
+			return this;
+		}
+
+		public boolean isShowSum() {
+			return m_showSum;
+		}
+
+		public ConfigItem setShowSum(boolean showSum) {
+			m_showSum = showSum;
+			return this;
 		}
 	}
 }

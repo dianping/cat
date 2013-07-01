@@ -11,27 +11,28 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dainping.cat.consumer.core.dal.DailyReport;
-import com.dainping.cat.consumer.core.dal.DailyReportDao;
-import com.dainping.cat.consumer.core.dal.DailyReportEntity;
-import com.dainping.cat.consumer.core.dal.MonthlyReport;
-import com.dainping.cat.consumer.core.dal.MonthlyReportDao;
-import com.dainping.cat.consumer.core.dal.MonthlyReportEntity;
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.ReportEntity;
-import com.dainping.cat.consumer.core.dal.WeeklyReport;
-import com.dainping.cat.consumer.core.dal.WeeklyReportDao;
-import com.dainping.cat.consumer.core.dal.WeeklyReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.core.dal.DailyReport;
+import com.dianping.cat.consumer.core.dal.DailyReportDao;
+import com.dianping.cat.consumer.core.dal.DailyReportEntity;
+import com.dianping.cat.consumer.core.dal.MonthlyReport;
+import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
+import com.dianping.cat.consumer.core.dal.MonthlyReportEntity;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.ReportEntity;
+import com.dianping.cat.consumer.core.dal.WeeklyReport;
+import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
+import com.dianping.cat.consumer.core.dal.WeeklyReportEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.RemoteModelService.HttpServiceCallback;
 import com.dianping.cat.report.model.ModelRequest;
 
 /**
- * Report service to get timed (hourly, daily, weekly, monthly etc.) reports from various medias (memory, database etc.).
+ * Report service to get timed (hourly, daily, weekly, monthly etc.) reports from various medias (memory, database
+ * etc.).
  */
 public class DefaultReportService<T> extends ContainerHolder implements ReportService<T>, Initializable {
 	@Inject
@@ -48,7 +49,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 
 	@Inject
 	private MonthlyReportDao m_monthlyReportDao;
-	
+
 	@Inject
 	private RemoteModelService m_hourlyService;
 
@@ -150,6 +151,8 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 			} else {
 				return getHouylyReportFromDatabase(request);
 			}
+		default:
+			break;
 		}
 
 		throw new UnsupportedOperationException(String.format("Not future report available for %s!", request.getPeriod()));

@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.core;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,18 +12,16 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Hostinfo;
-import com.dainping.cat.consumer.core.dal.HostinfoDao;
-import com.dainping.cat.consumer.core.dal.Project;
-import com.dainping.cat.consumer.core.dal.ProjectDao;
-import com.dainping.cat.consumer.core.dal.ProjectEntity;
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Hostinfo;
+import com.dianping.cat.consumer.core.dal.HostinfoDao;
+import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ProjectEntity;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -52,10 +51,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	private ReportDao m_reportDao;
 
 	@Inject
-	private TaskDao m_taskDao;
-
-	@Inject
 	private ProjectDao m_projectDao;
+
+	private Set<String> m_domains = new HashSet<String>();
 
 	private Map<String, StateReport> m_reports = new HashMap<String, StateReport>();
 
@@ -155,7 +153,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			String xml = builder.buildXml(report);
 			String domain = report.getDomain();
 
-			r.setName("state");
+			r.setName(ID);
 			r.setDomain(domain);
 			r.setPeriod(period);
 			r.setIp(ip);
@@ -235,7 +233,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		ProcessDomain processDomains = machine.findOrCreateProcessDomain(domain);
 
+		if (validate(domain) && !m_domains.contains(domain)) {
+			insertDomainInfo(domain);
+			m_domains.add(domain);
+		}
 		processDomains.addIp(ip);
+	}
+
+	private boolean validate(String domain) {
+		return !domain.equals("PhoenixAgent") && !domain.equals("FrondEnd");
 	}
 
 	private void storeReport(boolean atEnd) {
@@ -261,18 +267,11 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 						long minute = 1000 * 60;
 						long start = m_startTime - minute * 60 * 2;
 						long end = m_startTime - minute * 60;
+
 						for (; start < end; start += minute) {
 							m_serverStateManager.RemoveState(start);
 						}
 					}
-				}
-
-				Date period = new Date(m_startTime);
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				// Create task for health report
-				for (String domain : m_reports.keySet()) {
-					StateReport report = m_reports.get(domain);
-					new HealthVisitor(ip, period).visitStateReport(report);
 				}
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -293,7 +292,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			for (String ip : ips) {
 				try {
 					// Hack For PhoenixAgent
-					if (!domain.equals("PhoenixAgent")) {
+					if (validate(domain)) {
 						Hostinfo info = m_hostInfoDao.createLocal();
 
 						info.setDomain(domain);
@@ -304,42 +303,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 					Cat.logError(e);
 				}
 			}
-
-			try {
-				insertDomainInfo(domain);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
 		}
 	}
 
-	public class HealthVisitor extends BaseVisitor {
-
-		private String m_ip;
-
-		private Date m_period;
-
-		public HealthVisitor(String ip, Date period) {
-			m_ip = ip;
-			m_period = period;
-		}
-
-		@Override
-		public void visitProcessDomain(ProcessDomain processDomain) {
-			String domain = processDomain.getName();
-			try {
-				Task task = m_taskDao.createLocal();
-
-				task.setCreationDate(new Date());
-				task.setProducer(m_ip);
-				task.setReportDomain(domain);
-				task.setReportName("health");
-				task.setReportPeriod(m_period);
-				task.setStatus(1); // status todo
-				m_taskDao.insert(task);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-	}
 }

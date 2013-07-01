@@ -10,7 +10,6 @@
 <a:body>
 
 	<res:useCss value='${res.css.local.report_css}' target="head-css" />
-
 	<div class="report">
 		<table class="header">
 			<tr>

@@ -8,13 +8,12 @@ import com.dianping.cat.system.SystemPage;
 public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
+
 		SystemPage.ABTEST,
 
 		SystemPage.ALARM,
 
-		SystemPage.PROJECT,
-		
-		ReportPage.QUERY,
+		SystemPage.CONFIG,
 
 		SystemPage.LOGIN
 
@@ -42,14 +41,12 @@ public class NavigationBar {
 
 		ReportPage.SQL,
 
-		ReportPage.DATABASE,
-
 		ReportPage.MATRIX,
-		
-		ReportPage.HEALTH,
+
+		ReportPage.DEPENDENCY,
 
 		ReportPage.TOP,
-		
+
 		ReportPage.STATE,
 
 		ReportPage.LOGVIEW,

@@ -10,7 +10,95 @@ body {
 html {
 	margin: 0
 }
+.report .header {
+	background: orange;
+	color: white;
+	font-weight: bold;
+	border-bottom: solid black 1px;
+	width: 100%;
+	margin-top: -11px;
+}
 
+.report .header .title {
+	font-weight: bold;
+	color: black;
+	width:33%;
+}
+
+.report .navbar {
+	background: lightblue;
+	font-weight: bold;
+	border-bottom: solid black 1px;
+	width: 100%;
+}
+
+.report .navbar .domain {
+	text-align: left;
+	font-size: small;
+	font-weight: bold;
+	padding-left:4px;
+}
+
+.report .navbar .domain A {
+	text-decoration: none;
+	color: blue;
+}
+
+.report .navbar .domain .current {
+	color: black;
+}
+
+.report .navbar .domain  A:hover {
+	color: yellow;
+}
+
+.report .navbar .nav {
+	text-align: right;
+	font-size: small;
+	font-weight: bold;
+}
+
+.report .header .nav {
+	text-align: right;
+	font-size: small;
+	font-weight: bold;
+	color: black;
+	width:34%;
+}
+
+.report .header .switch {
+	text-align: center;
+	font-size: small;
+	font-weight: bold;
+	width:33%;
+}
+
+.report .navbar .nav A {
+	text-decoration: none;
+	color: blue;
+}
+
+.report .navbar .nav  A:hover {
+	color: yellow;
+}
+
+.report .footer {
+	background: orange;
+	color: white;
+	font-weight: bold;
+	border-top: solid black 1px;
+	border-bottom: solid black 1px;
+	width: 100%;
+	text-align: center;
+}
+
+.report .position{
+	padding:4px;
+	padding-left:10px;
+	font-weight: bold;
+	font-size: 14px;
+	background: lightBlue;
+}
 a {
 	text-decoration: none;
 }
@@ -110,6 +198,60 @@ tr.even th {
 	text-align: left;
 }
 
+.data {
+	font-size: small;
+	min-width:50%;	
+}
+.data tr th{
+	text-align:right;
+}
+.data .odd td {
+	background-color: #eee;
+	font-size: small;
+	text-align:right;
+}
+
+.data .even td {
+	background-color: white;
+	font-size: small;
+	text-align:right;
+}
+.data th .left{
+	text-align:left;
+}
+
+.data tr .left{
+	text-align:left;
+}
+
+.data tr .left{
+	text-align:left;
+}
+
+.problem tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.problem tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.problem td.odd  {
+	background-color: #eee;
+	white-space: nowrap;
+}
+
+.problem td.even  {
+	background-color: white;
+	white-space: nowrap;
+}
+
 a.error {
 	background-color: red;
 }
@@ -126,28 +268,59 @@ a.long-sql {
 	background-color: #6699CC;
 }
 
-a.long-service {
-	background-color: #7799FF;
-}
-
-a.url {
+a.url{
 	background-color: #cc0000;
 }
-
-a.sql {
+a.sql{
 	background-color: purple;
 }
 
-a.call {
+a.call{
 	background-color: #9966ff;
 }
-
-a.long-cache {
+a.cache{
 	background-color: #aa3faa;
 }
-
-a.heartbeat {
+a.heartbeat{
 	background-color: #009933;
+}
+
+a.abtest-heartbeat{
+	background-color: #009933;
+}
+.detail {
+	font-size: small;
+	border-spacing: 1px;
+}
+.current {
+	background-color: orange;
+	color: white;
+}
+.top{
+	vertical-align: top;
+}
+
+#msgObjRef {
+	position: absolute;
+	text-align: center;
+	border: 1px solid;
+	border-color: #666699;
+	background-color: #FFFFFF;
+	line-height: 22px;
+	z-index: 102;
+}
+
+#titleBar {
+	text-align: left;
+	color: #FFFFFF;
+	cursor: move;
+	background-color: #06C;
+}
+
+#closeBtn {
+	width:10px;
+	cursor: pointer;
+	background-color: #06C;
 }
 
 .version {
@@ -200,5 +373,21 @@ a.heartbeat {
 }
 
 .required{
+	color:red;
+}
+
+.graph {
+	width: 450px;
+	height: 200px;
+	margin: 4px auto;
+}
+
+.pieChart {
+	text-align:left;
+	width: 700px;
+	height: 450px;
+	margin: 4px auto;
+}
+.error{
 	color:red;
 }

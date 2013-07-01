@@ -21,11 +21,9 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 		if (other.getMin() < old.getMin()) {
 			old.setMin(other.getMin());
 		}
-
 		if (other.getMax() > old.getMax()) {
 			old.setMax(other.getMax());
 		}
-
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 		old.setLine95Value(0);
@@ -33,11 +31,9 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
 		}
-
 		if (old.getSuccessMessageUrl() == null) {
 			old.setSuccessMessageUrl(other.getSuccessMessageUrl());
 		}
-
 		if (old.getFailMessageUrl() == null) {
 			old.setFailMessageUrl(other.getFailMessageUrl());
 		}

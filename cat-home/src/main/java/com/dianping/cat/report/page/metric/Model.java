@@ -2,8 +2,8 @@ package com.dianping.cat.report.page.metric;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 
@@ -13,24 +13,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private MetricDisplay m_display;
 
-	private String m_domain;
-
-	private String m_group;
-
-	private String m_channel;
-
-	private Set<String> m_channels;
+	private Collection<ProductLine> m_productLines;
 
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public Set<String> getChannels() {
-		return m_channels;
 	}
 
 	@Override
@@ -44,7 +30,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return m_domain;
+		return getDisplayDomain();
 	}
 
 	@Override
@@ -52,36 +38,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new HashSet<String>();
 	}
 
-	public String getGroup() {
-		return m_group;
-	}
-
 	public MetricReport getReport() {
 		return m_report;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public void setChannels(Set<String> channels) {
-		m_channels = channels;
 	}
 
 	public void setDisplay(MetricDisplay display) {
 		m_display = display;
 	}
 
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
+	public Collection<ProductLine> getProductLines() {
+   	return m_productLines;
+   }
 
-	public void setGroup(String group) {
-		m_group = group;
-	}
+	public void setProductLines(Collection<ProductLine> productLines) {
+   	m_productLines = productLines;
+   }
 
 	public void setReport(MetricReport report) {
-		m_report = report;
-	}
+   	m_report = report;
+   }
 
 }

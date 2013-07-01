@@ -1,0 +1,19 @@
+<dependency-report domain="Cat" startTime="2012-05-16 16:00:00"
+	endTime="2012-05-16 16:59:59">
+	<segment id="1" exception-count="0">
+		<index name="URL" total-count="1234" error-count="123" sum="123.0" avg="123.0"></index>
+		<index name="Cache" total-count="1234" error-count="123" sum="123.0" avg="123.0"></index>
+		
+		<dependency type="PigeonService" target="UserService"
+			total-count="1" avg="1.0" error-count="1" />
+		<dependency type="PigeonCall" target="UserService" total-count="1"
+			avg="1.0" error-count="1" />
+		<dependency type="Database" target="UserService" total-count="1"
+			avg="1.0" error-count="1" />
+		<dependency type="MemoryCache" target="UserService" total-count="1"
+			avg="1.0" error-count="1" />
+		<dependency type="HttpCall"  target="UserService" total-count="1"
+			avg="1.0" error-count="1" />
+	</segment>
+	<segment></segment>
+</dependency-report>

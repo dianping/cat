@@ -59,11 +59,49 @@ public class StateShow extends BaseVisitor {
 		return m_total;
 	}
 
+	public boolean isIp(String ip) {
+		boolean result = false;
+		// try {
+		// if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+		// String s[] = ip.split("\\.");
+		//
+		// if (Integer.parseInt(s[0]) <= 255) {
+		// if (Integer.parseInt(s[1]) <= 255) {
+		// if (Integer.parseInt(s[2]) <= 255) {
+		// if (Integer.parseInt(s[3]) <= 255) {
+		// result = true;
+		// }
+		// }
+		// }
+		// }
+		// }
+		// } catch (Exception e) {
+		// //ignore
+		// }
+		try {
+			char first = ip.charAt(0);
+			char next = ip.charAt(1);
+			if (first >= '0' && first <= '9') {
+				if (next >= '0' && next <= '9') {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 	public int getTotalSize() {
 		Set<String> ips = new HashSet<String>();
 
 		for (ProcessDomain domain : m_processDomains.values()) {
-			ips.addAll(domain.getIps());
+			Set<String> temp = domain.getIps();
+
+			for (String str : temp) {
+				if (isIp(str)) {
+					ips.add(str);
+				}
+			}
 		}
 		return ips.size();
 	}

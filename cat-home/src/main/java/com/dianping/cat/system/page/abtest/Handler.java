@@ -20,13 +20,13 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dainping.cat.consumer.core.dal.Project;
-import com.dainping.cat.consumer.core.dal.ProjectDao;
-import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.model.entity.Case;
 import com.dianping.cat.abtest.model.entity.Run;
+import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -367,7 +367,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void renderModel(Model model) {
-		model.setAbtestModel(fetchAbtestModel().toString());
+		model.setAbtestModel(String.valueOf(fetchAbtestModel()));
 	}
 
 	private void renderReportModel(Context ctx, Model model, Payload payload) {

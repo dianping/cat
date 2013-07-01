@@ -10,13 +10,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -94,6 +94,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
+		//don't process frontEnd domain
+		if ("FrontEnd".equals(domain)) {
+			return;
+		}
 		EventReport report = m_reports.get(domain);
 
 		if (report == null) {
@@ -220,7 +224,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("event");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -233,7 +237,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 						task.setCreationDate(new Date());
 						task.setProducer(ip);
 						task.setReportDomain(domain);
-						task.setReportName("event");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);

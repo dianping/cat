@@ -17,8 +17,8 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.report.page.HistoryGraphItem;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
@@ -37,7 +37,7 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<StateReport> m_service;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 
 	private static final String CAT = "Cat";
 
@@ -84,7 +84,7 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 		String key = payload.getKey();
 		StateReport report = null;
-		HistoryGraphItem item = null;
+		LineChart item = null;
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.aggreation" enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true" >
+    <entity name="aggregation" root="true">
+    <entity-ref name="aggregation-rule" type="map" names="aggregation-rules"  method-find-or-create="true"/>
+  </entity>
+  <entity name="aggregation-rule">
+    <attribute name="pattern" value-type="String" key="true"/>
+    <attribute name="type" value-type="int" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="sample" value-type="String" />
+    <attribute name="display-name" value-type="String" />
+    <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+  </entity>
+</model>

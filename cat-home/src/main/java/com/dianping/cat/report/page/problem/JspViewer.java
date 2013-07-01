@@ -18,8 +18,6 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.THREAD.getPath();
 		case DETAIL:
 			return JspFile.DETAIL.getPath();
-		case MOBILE:
-			return JspFile.MOBILE.getPath();
 		case HISTORY:
 			return JspFile.HISTORY.getPath();
 		case HISTORY_GRAPH:

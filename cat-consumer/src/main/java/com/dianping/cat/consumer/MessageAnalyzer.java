@@ -8,7 +8,7 @@ public interface MessageAnalyzer {
 	public void destroy();
 
 	public void doCheckpoint(boolean atEnd);
-
+	
 	public long getStartTime();
 
 	public void initialize(long startTime, long duration, long extraTime);

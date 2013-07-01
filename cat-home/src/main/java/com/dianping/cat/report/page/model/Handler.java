@@ -14,7 +14,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.database.model.entity.Domain;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -35,7 +34,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
-import com.dianping.cat.report.page.model.database.LocalDatabaseService;
+import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.logview.LocalMessageService;
@@ -74,9 +73,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "cross-local")
 	private LocalCrossService m_crossService;
 
-	@Inject(type = ModelService.class, value = "database-local")
-	private LocalDatabaseService m_databaseService;
-
 	@Inject(type = ModelService.class, value = "sql-local")
 	private LocalSqlService m_sqlService;
 
@@ -85,9 +81,12 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "top-local")
 	private LocalTopService m_topService;
-	
+
 	@Inject(type = ModelService.class, value = "metric-local")
 	private LocalMetricService m_metricService;
+
+	@Inject(type = ModelService.class, value = "dependency-local")
+	private LocalDependencyService m_dependencyService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -124,11 +123,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
-		} else if ("database".equals(report)) {
-			String domain = payload.getDomain();
-			DatabaseReportFilter filter = new DatabaseReportFilter(domain);
-
-			return filter.buildXml((com.dianping.cat.consumer.database.model.IEntity<?>) dataModel);
 		} else if ("sql".equals(report)) {
 			String database = payload.getDatabase();
 			SqlReportFilter filter = new SqlReportFilter(database);
@@ -184,10 +178,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_matrixService.invoke(request);
 			} else if ("cross".equals(report)) {
 				response = m_crossService.invoke(request);
-			} else if ("database".equals(report)) {
-				String databaseName = payload.getDatabase();
-				ModelRequest database = new ModelRequest(databaseName, payload.getPeriod());
-				response = m_databaseService.invoke(database);
 			} else if ("sql".equals(report)) {
 				response = m_sqlService.invoke(request);
 			} else if ("state".equals(report)) {
@@ -196,6 +186,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_topService.invoke(request);
 			} else if ("metric".equals(report)) {
 				response = m_metricService.invoke(request);
+			} else if ("dependency".equals(report)) {
+				response = m_dependencyService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
@@ -212,23 +204,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		m_jspViewer.view(ctx, model);
-	}
-
-	static class DatabaseReportFilter extends com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder {
-
-		private String m_domain;
-
-		public DatabaseReportFilter(String domain) {
-			m_domain = domain;
-		}
-
-		@Override
-		public void visitDomain(Domain domain) {
-			String id = domain.getId();
-			if (m_domain.equals("All") || m_domain.equals(id)) {
-				super.visitDomain(domain);
-			}
-		}
 	}
 
 	static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
@@ -299,7 +274,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
-			if (machine.getIp().equals(m_ip)) {
+			if (machine.getIp().equals(m_ip) || StringUtils.isEmpty(m_ip) || CatString.ALL.equals(m_ip)) {
 				super.visitMachine(machine);
 			}
 		}

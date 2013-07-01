@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
-import com.dainping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 
 public class ProblemDailyGraphMergerTest {

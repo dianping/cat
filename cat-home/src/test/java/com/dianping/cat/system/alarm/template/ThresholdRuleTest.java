@@ -9,6 +9,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.unidal.tuple.Pair;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.home.template.entity.ThresholdTemplate;
@@ -31,6 +32,7 @@ public class ThresholdRuleTest {
 
 			m_rule = new ThresholdRule(1, "Cat", template);
 		} catch (Exception e) {
+			System.err.println(e);
 		}
 		List<ThresholdDataEntity> datas = m_rule.getDatas();
 
@@ -44,16 +46,18 @@ public class ThresholdRuleTest {
 		entity.setCount(420);
 		entity.setDate(new Date(m_lastDate.getTime() + 10));
 
-		ThresholdAlarmMeta meta = m_rule.addData(entity, AlertInfo.EXCEPTION);
+		Pair<Boolean, ThresholdAlarmMeta> meta = m_rule.addData(entity, AlertInfo.EXCEPTION);
 
-		Assert.assertEquals(240, meta.getRealCount());
+		Assert.assertEquals(240, meta.getValue().getRealCount());
 
 		Map<String, Long> lastAlarmTimes = m_rule.getLastAlarmTime();
 		int size = lastAlarmTimes.size();
 		Assert.assertEquals(1, size);
 
-		meta = m_rule.addData(entity, AlertInfo.EXCEPTION);
-		Assert.assertEquals(null, meta);
+		Pair<Boolean, ThresholdAlarmMeta> temp = m_rule.addData(entity, AlertInfo.EXCEPTION);
+		
+		System.out.println(temp);
+		Assert.assertNull(temp);
 	}
 
 	@Test
@@ -115,6 +119,7 @@ public class ThresholdRuleTest {
 
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.MILLISECOND, 0);
+			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MINUTE, -10);
 			cal.add(Calendar.MILLISECOND, 30 * 1000 * i);
 			Date date = cal.getTime();

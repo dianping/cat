@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.problem;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.CatString;
@@ -28,7 +28,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelPeriod;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
@@ -55,7 +55,10 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<ProblemReport> m_service;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private ProblemReportAggregation m_problemReportAggregation;
 
 	private Gson m_gson = new Gson();
 
@@ -67,6 +70,23 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
+		ProblemReport report = getHourlyReportInternal(payload, type);
+		if ("FrontEnd".equals(payload.getDomain())) {
+			//ModelPeriod period = payload.getPeriod();
+
+			//if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
+				report = buildFrontEndByRule(report);
+			//}
+		}
+		return report;
+	}
+
+	private ProblemReport buildFrontEndByRule(ProblemReport report) {
+		report.accept(m_problemReportAggregation);
+		return m_problemReportAggregation.getReport();
+	}
+
+	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
@@ -80,7 +100,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);
 			ProblemReport report = response.getModel();
-
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
 				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "problem");
@@ -175,33 +194,12 @@ public class Handler implements PageHandler<Context> {
 		case DETAIL:
 			showDetail(model, payload);
 			break;
-		case MOBILE:
-			if (ip.equals(CatString.ALL)) {
-				report = getHourlyReport(payload, VIEW);
-
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
-				      .setServiceThreshold(serviceThreshold);
-				problemStatistics.visitProblemReport(report);
-				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
-				String response = m_gson.toJson(problemStatistics);
-				model.setMobileResponse(response);
-			} else {
-				report = showHourlyReport(model, payload);
-
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
-				      .setServiceThreshold(serviceThreshold);
-				problemStatistics.visitProblemReport(report);
-				ProblemStatistics statistics = model.getAllStatistics();
-				statistics.setIps(new ArrayList<String>(report.getIps()));
-				model.setMobileResponse(m_gson.toJson(statistics));
-			}
-			break;
 		case HOUR_GRAPH:
 			report = getHourlyReport(payload, DETAIL);
 			String type = payload.getType();
 			String state = payload.getStatus();
 			Date start = report.getStartTime();
-			ProblemReportVisitor vistor = new ProblemReportVisitor(ip, type, state, start);
+			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
 
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));

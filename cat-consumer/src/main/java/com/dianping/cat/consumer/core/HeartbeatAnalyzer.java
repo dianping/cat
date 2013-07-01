@@ -11,13 +11,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -87,7 +87,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		try {
 			info = com.dianping.cat.status.model.transform.DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
+			System.out.println(xml);
 			m_logger.error("Error when parse status info in heartbeat analyzer." + xml, e);
+			
 			Cat.getProducer().logEvent("HearbeatAnalyzer", "ErrorXml", "Error", xml);
 			return null;
 		}
@@ -220,7 +222,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 				count += processTransaction(report, tree, temp);
 			} else if (message instanceof Heartbeat) {
-				if (message.getType().equals("heartbeat")) {
+				if (message.getType().equalsIgnoreCase("heartbeat")) {
 					count += processHeartbeat(report, (Heartbeat) message, tree);
 				}
 			}
@@ -264,7 +266,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 
-						r.setName("heartbeat");
+						r.setName(ID);
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
@@ -277,7 +279,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 						task.setCreationDate(new Date());
 						task.setProducer(ip);
 						task.setReportDomain(domain);
-						task.setReportName("heartbeat");
+						task.setReportName(ID);
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);

@@ -29,30 +29,7 @@ public class Handler implements PageHandler<Context> {
 
 	private String m_data;
 
-	public String formateFile(String file) {
-		try {
-			String[] args = file.split("/");
-			int length = args.length;
-
-			if (length < 5) {
-				return file;
-			} else if (length >= 5) {
-				String last = args[4];
-				StringBuilder sb = new StringBuilder(64);
-
-				for (int i = 0; i < 4; i++) {
-					sb.append(args[i]).append('/');
-				}
-				if (!isNumeric(last)) {
-					sb.append(last);
-				}
-				return sb.toString();
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return file;
-	}
+	private String m_referer;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -72,21 +49,23 @@ public class Handler implements PageHandler<Context> {
 		String host = parseHost();
 
 		if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
-			file = "unknown";
-		} else {
-			int index = file.indexOf('?');
-
-			if (index > -1) {
-				file = file.substring(0, index);
+			if (m_referer != null) {
+				file = m_referer;
+			} else {
+				file = "unknown";
 			}
+		} 
+		
+		int index = file.indexOf('?');
+		if (index > -1) {
+			file = file.substring(0, index);
 		}
-		file = formateFile(file);
 		Cat.logEvent("Error", file, "Error", error);
 		Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 		      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 
 		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-		
+
 		tree.setDomain("FrontEnd");
 		tree.setHostName(host);
 		tree.setIpAddress(host);
@@ -94,15 +73,6 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.JSERROR);
 		m_jspViewer.view(ctx, model);
-	}
-
-	private boolean isNumeric(String str) {
-		for (int i = str.length(); --i >= 0;) {
-			if (!Character.isDigit(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private String parseHost() {
@@ -117,11 +87,11 @@ public class Handler implements PageHandler<Context> {
 				String type = temp.getType();
 				if (type.equals("URL.Server") || type.equals("ClientInfo")) {
 					m_data = temp.getData().toString();
-					String url = parseValue("Referer", m_data);
+					m_referer = parseValue("Referer", m_data);
 
-					if (url != null) {
+					if (m_referer != null) {
 						try {
-							URL u = new URL(url);
+							URL u = new URL(m_referer);
 							return u.getHost().toLowerCase();
 						} catch (MalformedURLException e) {
 							break;

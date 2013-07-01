@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;

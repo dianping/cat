@@ -7,48 +7,33 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.metric.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 <a:body>
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useCss value='${res.css.local.report_css}' target="head-css" />
+
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
-<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
-<res:useJs value="${res.js.local['metric.js']}" target="head-js"/>
-<style type="text/css">
-.graph {
-	width: 380px;
-	height: 200px;
-	margin: 4px auto;
-}
-.row-fluid .span2{
-	width:12%;
-}
-</style>
+<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+
 <script type="text/javascript">
 	$(document).ready(function() {
-		<c:forEach var="item" items="${model.display.groups}" varStatus="status">
+		<c:forEach var="item" items="${model.display.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
-			graph(document.getElementById('${item.title}'), data);
+			graphLineChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
-		var id = "${model.channel}";
-		if (id == '') {
-			$('#allChannel').addClass("active");
-		} else {
-			$('#' + id).addClass("active");
-		}
+		var product = '${payload.product}';
+		var test = '${payload.test}';
+		
+		$('#'+product).addClass('active');
+		$('#'+test).addClass('active');
 	});
 </script>
 <div class="report">
 	<table class="header">
 		<tr>
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-		<td class="nav">
+			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&test=${payload.test}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
@@ -60,17 +45,27 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li id="allChannel"><a href="?date=${model.date}&group=${model.group}"><strong>团购ALL</strong></a></li>
+	            <c:forEach var="item" items="${model.productLines}" varStatus="status">
+	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}"><strong>${item.title}</strong></a></li>
+	              <c:if test="${payload.product eq item.id }">
+		               <c:forEach var="test" items="${model.display.abtests}" varStatus="status">
+		               	   <c:if test="${test.value.id ne -1}">
+				              <li id="${test.value.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.key}">${test.value.name}-[${test.key}]</a></li>
+		               	   </c:if>
+		       		  </c:forEach>
+	              </c:if>
+	            </c:forEach>
               <li >&nbsp;</li>
-              <c:forEach var="item" items="${model.channels}" varStatus="status">
-	              <li id="${item}"><a href="?date=${model.date}&group=${model.group}&channel=${item}">${item}</a></li>
-       		  </c:forEach>
+             
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span10">
-        	<c:forEach var="item" items="${model.display.groups}" varStatus="status">
-       			<div style="float:left;" id="${item.title}" class="graph"></div>
+        	<c:forEach var="item" items="${model.display.lineCharts}" varStatus="status">
+       			<div style="float:left;">
+       				<h5 class="text-center text-error">${item.title}</h5>
+       				<div  id="${item.title}" class="graph"></div>
+       			</div>
 			</c:forEach>
         </div>
 	<table  class="footer">
@@ -80,3 +75,23 @@
 	</table>
 </div>
 </a:body>
+<style type="text/css">
+.graph {
+	width: 380px;
+	height: 250px;
+	margin: 4px auto;
+}
+.well {
+padding: 10px 10px 10px 19p;
+}
+.nav-list  li  a{
+	padding:2px 15px;
+}
+
+.nav li  +.nav-header{
+	margin-top:2px;
+}
+.nav-header{
+	padding:5px 3px;
+}
+</style>

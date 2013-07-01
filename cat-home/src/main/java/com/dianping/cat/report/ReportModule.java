@@ -27,23 +27,21 @@ com.dianping.cat.report.page.dashboard.Handler.class,
 
 com.dianping.cat.report.page.matrix.Handler.class,
 
-com.dianping.cat.report.page.health.Handler.class,
-
 com.dianping.cat.report.page.cross.Handler.class,
 
 com.dianping.cat.report.page.cache.Handler.class,
 
-com.dianping.cat.report.page.database.Handler.class,
-
 com.dianping.cat.report.page.state.Handler.class,
-
-com.dianping.cat.report.page.query.Handler.class,
 
 com.dianping.cat.report.page.top.Handler.class,
 
 com.dianping.cat.report.page.metric.Handler.class,
 
-com.dianping.cat.report.page.jsError.Handler.class
+com.dianping.cat.report.page.jsError.Handler.class,
+
+com.dianping.cat.report.page.dependency.Handler.class,
+
+com.dianping.cat.report.page.externalError.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

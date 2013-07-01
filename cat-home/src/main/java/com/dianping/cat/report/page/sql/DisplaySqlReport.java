@@ -22,7 +22,7 @@ public class DisplaySqlReport extends BaseVisitor {
 
 	private List<Table> m_results = new ArrayList<Table>();
 
-	private int m_totalCount;
+	private long m_totalCount;
 
 	private long m_duration;
 
@@ -59,7 +59,7 @@ public class DisplaySqlReport extends BaseVisitor {
 		super.visitSqlReport(sqlReport);
 
 		for (Table table : m_results) {
-			int totalCount = table.getTotalCount();
+			long totalCount = table.getTotalCount();
 			table.setTotalPercent(totalCount / (double) m_totalCount);
 
 			for (Method method : table.getMethods().values()) {

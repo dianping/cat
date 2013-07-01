@@ -39,10 +39,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
-	protected String buildLink(Message message) {
-		return message.getData().toString();
-	}
-
 	@Override
 	public MessageTree decode(ChannelBuffer buf) {
 		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
@@ -186,7 +182,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			count += helper.tr1(buf, null);
 		}
 
-		String link = buildLink(message);
+		String link =  message.getData().toString();
 
 		count += helper.td1(buf);
 
@@ -197,6 +193,33 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 
+		count += helper.tr2(buf);
+		count += helper.crlf(buf);
+
+		return count;
+	}
+
+	protected int encodeRemoteLink(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
+		BufferHelper helper = m_bufferHelper;
+		int count = 0;
+
+		if (counter != null) {
+			counter.inc();
+
+			count += helper.tr1(buf, "link");
+		} else {
+			count += helper.tr1(buf, null);
+		}
+
+		String link =  message.getData().toString();
+		String name = message.getName();
+		
+		count += helper.td1(buf);
+
+		count += helper.nbsp(buf, level * 2); // 2 spaces per level
+		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">[:: %s ::]</a>",
+		       link, name));
+		count += helper.td2(buf);
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
 
@@ -232,6 +255,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 			if ("RemoteCall".equals(type)) {
 				return encodeLogViewLink(tree, message, buf, level, counter);
+			} else if ("RemoteLink".equals(type)) {
+				return encodeRemoteLink(tree, message, buf, level, counter);
 			} else {
 				return encodeLine(tree, message, buf, 'E', Policy.DEFAULT, level, counter);
 			}

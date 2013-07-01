@@ -8,7 +8,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.system.notify.render.EventRender;
@@ -49,11 +48,6 @@ public class ReportRenderImpl implements ReportRender, Initializable {
 			Cat.logError(e);
 		}
 		return sw.toString();
-	}
-
-	@Override
-	public String renderReport(HealthReport report) {
-		return "";
 	}
 
 	@Override

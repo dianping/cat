@@ -74,14 +74,14 @@ public class DefaultMessageProducer implements MessageProducer {
 	@Override
 	public void logMetric(String name, String status, String nameValuePairs) {
 		String type = ((DefaultMessageManager) m_manager).getMetricType();
-		Metric event = newMetric(type, name);
+		Metric metric = newMetric(type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
-			event.addData(nameValuePairs);
+			metric.addData(nameValuePairs);
 		}
 
-		event.setStatus(status);
-		event.complete();
+		metric.setStatus(status);
+		metric.complete();
 	}
 
 	@Override

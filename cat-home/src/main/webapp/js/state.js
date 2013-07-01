@@ -1,4 +1,4 @@
-$(document).delegate('.graph_link', 'click', function(e){
+$(document).delegate('.state_graph_link', 'click', function(e){
 	var anchor = this,
 		el = $(anchor),
 		id = el.attr('data-status');
@@ -12,8 +12,8 @@ $(document).delegate('.graph_link', 'click', function(e){
 	var cell = document.getElementById(id);
 	var text = el.html();
 	
-	if (text == '[::show::]') {
-		anchor.innerHTML = '[::hide::]';
+	if (text == '[:: show ::]') {
+		anchor.innerHTML = '[:: hide ::]';
 
 		if (cell.nodeName == 'IMG') { // <img src='...'/>
 			cell.src=anchor.href;
@@ -27,12 +27,12 @@ $(document).delegate('.graph_link', 'click', function(e){
 					cell.innerHTML = response;
 					
 					var data = $('#trendMeta',cell).text();
-					graph($('#trendGraph',cell)[0],eval('('+data+')'));
+					graphLineChart($('#trendGraph',cell)[0],eval('('+data+')'));
 				}
 			});
 		}
 	} else {
-		anchor.innerHTML = '[::show::]';
+		anchor.innerHTML = '[:: show ::]';
 		cell.style.display = 'none';		
 		cell.parentNode.style.display = 'none';
 	}	

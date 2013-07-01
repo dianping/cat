@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -11,13 +13,16 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
+import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.report.page.NormalizePayload;
-import com.dianping.cat.report.page.metric.MetricConfig.MetricFlag;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -27,38 +32,24 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<MetricReport> m_service;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 
+	@Inject
+	private MetricConfigManager m_configManager;
+
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManager;
+	
+	@Inject
+	private ABTestService m_abtestService;
+	
 	private static final String TUAN = "TuanGou";
 
-	private MetricConfig buildTuanGouMetricConfig(String channel) {
-		MetricConfig config = new MetricConfig();
-
-		MetricFlag indexUrl = new MetricFlag("/index", channel, 1, true, false, false, MetricTitle.INDEX);
-		MetricFlag detailUrl = new MetricFlag("/detail", channel, 2, true, false, false, MetricTitle.DETAIL);
-		MetricFlag payUrl = new MetricFlag("/order/submitOrder", channel, 3, true, false, false, MetricTitle.PAY);
-		MetricFlag orderKey = new MetricFlag("order", channel, 4, false, true, false, MetricTitle.ORDER);
-		MetricFlag totalKey = new MetricFlag("payment.success", channel, 5, false, true, false, MetricTitle.SUCCESS);
-		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
-
-		config.put(indexUrl);
-		config.put(detailUrl);
-		config.put(payUrl);
-		config.put(orderKey);
-		config.put(totalKey);
-		return config;
-	}
-
 	private MetricReport getReport(Payload payload) {
-		String group = payload.getGroup();
-		String channel = payload.getChannel();
+		String product = payload.getProduct();
 		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(group, payload.getPeriod()) //
+		ModelRequest request = new ModelRequest(product, payload.getPeriod()) //
 		      .setProperty("date", date);
-
-		if (channel != null) {
-			request.setProperty("channel", channel);
-		}
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();
@@ -80,46 +71,41 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+
 		normalize(model, payload);
 
 		MetricReport report = getReport(payload);
-		String channel = payload.getChannel();
+		String test = payload.getTest();
 
 		if (report != null) {
 			Date startTime = report.getStartTime();
 			if (startTime == null) {
 				startTime = payload.getHistoryStartDate();
 			}
-			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel), channel, startTime);
-
+			String product = payload.getProduct();
+			List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
+			List<MetricItemConfig> domainSet=m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
+			MetricDisplay display = new MetricDisplay(domainSet,
+			      test, startTime);
+			
+			display.setAbtest(m_abtestService);
+			
 			display.visitMetricReport(report);
 			model.setDisplay(display);
-			model.setChannels(display.getAllChannel());
 			model.setReport(report);
+			model.setProductLines(m_productLineConfigManager.queryProductLines().values());
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
 	private void normalize(Model model, Payload payload) {
-		payload.setGroup(TUAN);
-		model.setGroup(payload.getGroup());
-		model.setChannel(payload.getChannel());
 		model.setPage(ReportPage.METRIC);
 		m_normalizePayload.normalize(model, payload);
-	}
 
-	public class MetricTitle {
-
-		public static final String INDEX = "团购首页(次)";
-
-		public static final String DETAIL = "团购详情(次)";
-
-		public static final String PAY = "支付页面(次)";
-
-		public static final String ORDER = "订单创建数量(个)";
-
-		public static final String SUCCESS = "支付金额(元)";
-
+		String poduct = payload.getProduct();
+		if (poduct == null || poduct.length() == 0) {
+			payload.setProduct(TUAN);
+		}
 	}
 
 }
