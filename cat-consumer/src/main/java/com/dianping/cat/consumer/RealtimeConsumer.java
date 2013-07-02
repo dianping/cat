@@ -34,20 +34,15 @@ import com.dianping.cat.status.ServerStateManager;
 
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
 	public static final String ID = "realtime";
+	
+	private static final long MINUTE = 60 * 1000L;
 
+	private static int QUEUE_SIZE = 100000;
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
-
-	private static final long MINUTE = 60 * 1000L;
-
-	@Inject
-	private long m_duration = 60 * MINUTE;
-
-	@Inject
-	private long m_extraTime = 3 * MINUTE;
 
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
@@ -57,7 +52,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long m_networkError;
 
-	private static int QUEUE_SIZE = 300000;
+	private long m_duration = 60 * MINUTE;
+
+	private long m_extraTime = 3 * MINUTE;
 
 	@Override
 	public void consume(MessageTree tree) {

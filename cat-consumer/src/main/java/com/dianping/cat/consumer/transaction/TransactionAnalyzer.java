@@ -56,7 +56,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	protected void loadReports() {
-		// m_reports = m_reportManager.loadReports(getStartTime());
+		m_reports = m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override
