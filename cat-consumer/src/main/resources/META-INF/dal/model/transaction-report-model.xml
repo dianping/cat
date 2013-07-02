@@ -23,6 +23,7 @@
 		<attribute name="max" value-type="double" primitive="true" default-value="-1"/>
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
@@ -41,6 +42,7 @@
 		<attribute name="max" value-type="double" primitive="true" default-value="-1"/>
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />

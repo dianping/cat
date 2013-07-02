@@ -58,7 +58,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 	}
 
 	public MetricConfig getMetricConfig() {
-		synchronized (m_metricConfig) {
+		synchronized (this) {
 			return m_metricConfig;
 		}
 	}
@@ -104,7 +104,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 			return true;
 		} else {
 			config = new MetricItemConfig();
-			
+
 			config.setId(key);
 			config.setDomain(domain);
 			config.setType(type);
@@ -155,27 +155,28 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		if (modifyTime > m_modifyTime) {
 			String content = config.getContent();
 
-			synchronized (m_metricConfig) {
+			synchronized (this) {
 				m_metricConfig = DefaultSaxParser.parse(content);
+				m_modifyTime = modifyTime;
 			}
-
-			m_modifyTime = modifyTime;
 			m_logger.info("metric config refresh done!");
 		}
 	}
 
 	private boolean storeConfig() {
-		try {
-			Config config = m_configDao.createLocal();
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
 
-			config.setId(m_configId);
-			config.setKeyId(m_configId);
-			config.setName(CONFIG_NAME);
-			config.setContent(getMetricConfig().toString());
-			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(getMetricConfig().toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
 		}
 		return true;
 	}
