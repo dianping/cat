@@ -18,8 +18,8 @@
   <entity name="domain">
     <attribute name="id" value-type="String" />
     <attribute name="ip" value-type="String" />
-    <attribute name="max-threads" value-type="int" />
     <attribute name="enabled" value-type="boolean" />
+    <attribute name="max-message-size" value-type="int" />
   </entity>
   <entity name="bind">
     <attribute name="ip" value-type="String" />

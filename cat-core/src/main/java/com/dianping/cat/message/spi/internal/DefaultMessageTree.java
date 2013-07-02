@@ -35,8 +35,8 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadName;
 
 	@Override
-	public DefaultMessageTree copy() {
-		DefaultMessageTree tree = new DefaultMessageTree();
+	public MessageTree copy() {
+		MessageTree tree = new DefaultMessageTree();
 
 		tree.setDomain(m_domain);
 		tree.setHostName(m_hostName);

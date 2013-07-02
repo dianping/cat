@@ -50,7 +50,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	@Override
 	public MessageTree decode(ChannelBuffer buf) {
-		DefaultMessageTree tree = new DefaultMessageTree();
+		MessageTree tree = new DefaultMessageTree();
 
 		decode(buf, tree);
 		return tree;

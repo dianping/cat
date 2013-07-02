@@ -18,7 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
@@ -64,7 +64,7 @@ public class Handler implements PageHandler<Context> {
 		Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 		      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 
-		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
 		tree.setDomain("FrontEnd");
 		tree.setHostName(host);
@@ -76,7 +76,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private String parseHost() {
-		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 		Message message = tree.getMessage();
 
 		if (message.getType().equals("URL") && message instanceof Transaction) {
