@@ -65,8 +65,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		return heartbeat;
 	}
 
-	private DefaultMessageTree newMessageTree() {
-		DefaultMessageTree tree = new DefaultMessageTree();
+	private MessageTree newMessageTree() {
+		MessageTree tree = new DefaultMessageTree();
 
 		tree.setDomain("domain");
 		tree.setHostName("hostName");
@@ -136,7 +136,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	@Test
 	@Ignore
 	public void testMessageTree() throws Exception {
-		DefaultMessageTree tree = newMessageTree();
+		MessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
 		String expected1 = "<table class=\"logview\">\r\n"
 		      + "<tr class=\"header\"><td>HT1</td><td>domain</td><td>hostName</td><td>ipAddress</td><td>threadGroupName</td><td>threadId</td><td>threadName</td><td>messageId</td><td>parentMessageId</td><td>rootMessageId</td><td>sessionToken</td></tr>\r\n"

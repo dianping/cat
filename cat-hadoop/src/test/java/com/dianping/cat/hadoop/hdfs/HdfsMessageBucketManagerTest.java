@@ -20,8 +20,8 @@ import com.dianping.cat.storage.dump.MessageBucketManager;
 
 @RunWith(JUnit4.class)
 public class HdfsMessageBucketManagerTest extends ComponentTestCase {
-	private DefaultMessageTree newMessageTree(String id, int i, long timestamp) {
-		DefaultMessageTree tree = new DefaultMessageTree();
+	private MessageTree newMessageTree(String id, int i, long timestamp) {
+		MessageTree tree = new DefaultMessageTree();
 
 		tree.setDomain("target");
 		tree.setHostName("localhost");
@@ -64,7 +64,7 @@ public class HdfsMessageBucketManagerTest extends ComponentTestCase {
 		localManager.setBaseDir(new File("target/bucket/hdfs/dump")); // make local and hdfs base dir same
 
 		for (int i = 0; i < num; i++) {
-			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
+			MessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
 			MessageId id = MessageId.parse(tree.getMessageId());
 			localManager.storeMessage(tree,id);
 		}

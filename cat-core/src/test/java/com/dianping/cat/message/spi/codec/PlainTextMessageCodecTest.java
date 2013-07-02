@@ -70,8 +70,8 @@ public class PlainTextMessageCodecTest {
 		return heartbeat;
 	}
 
-	private DefaultMessageTree newMessageTree() {
-		DefaultMessageTree tree = new DefaultMessageTree();
+	private MessageTree newMessageTree() {
+		MessageTree tree = new DefaultMessageTree();
 
 		tree.setDomain("domain");
 		tree.setHostName("hostName");
@@ -127,7 +127,7 @@ public class PlainTextMessageCodecTest {
 
 	@Test
 	public void testMessageTree() {
-		DefaultMessageTree tree = newMessageTree();
+		MessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
 		String expected = "PT1\tdomain\thostName\tipAddress\tthreadGroupName\tthreadId\tthreadName\tmessageId\tparentMessageId\trootMessageId\tsessionToken\n";
 
