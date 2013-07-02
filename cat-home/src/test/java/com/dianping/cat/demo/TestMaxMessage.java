@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class TestMaxMessage {
 
@@ -79,7 +79,7 @@ public class TestMaxMessage {
 			t5.setStatus(Message.SUCCESS);
 			t5.complete();
 
-			DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+			MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 			String messageId = tree.getMessageId();
 
 			String[] ids = messageId.split("-");

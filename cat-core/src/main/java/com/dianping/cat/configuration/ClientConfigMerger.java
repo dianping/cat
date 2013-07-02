@@ -46,8 +46,8 @@ public class ClientConfigMerger extends DefaultMerger {
 			old.setEnabled(domain.getEnabled());
 		}
 
-		if (domain.getMaxThreads() > 0) {
-			old.setMaxThreads(domain.getMaxThreads());
+		if (domain.getMaxMessageSize() > 0) {
+			old.setMaxMessageSize(domain.getMaxMessageSize());
 		}
 	}
 }

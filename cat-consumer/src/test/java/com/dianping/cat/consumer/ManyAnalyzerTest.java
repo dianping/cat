@@ -27,7 +27,7 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		Thread.sleep(1000);
 
 		for (int i = 0; i < 100; i++) {
-			DefaultMessageTree tree = new DefaultMessageTree();
+			MessageTree tree = new DefaultMessageTree();
 
 			tree.setMessage(new MockMessage());
 			consumer.consume(tree);

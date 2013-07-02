@@ -6,7 +6,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageManager;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class TestABTestBusinessMessage {
 
@@ -25,7 +25,7 @@ public class TestABTestBusinessMessage {
 		         Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
 		         ((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
 
-		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		         MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 		         tree.setDomain(TuanGou);
 		         t.complete();
 	         }
@@ -36,7 +36,7 @@ public class TestABTestBusinessMessage {
 		         Cat.logEvent("URL", "ABTest", Event.SUCCESS, abtest);
 		         ((DefaultMessageManager) Cat.getManager()).setMetricType(abtest);
 
-		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		         MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 		         tree.setDomain(TuanGou);
 		         t.complete();
 	         }
@@ -53,7 +53,7 @@ public class TestABTestBusinessMessage {
 		         Cat.logMetricForSum("Order2", i);
 		         Cat.logMetricForSum("Order1-10", i);
 
-		         DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		         MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 		         tree.setDomain(PayOrder);
 		         t.complete();
 	         }

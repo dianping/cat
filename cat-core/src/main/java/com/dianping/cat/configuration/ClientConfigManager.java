@@ -40,7 +40,7 @@ public class ClientConfigManager implements LogEnabled {
 		return m_config;
 	}
 
-	public Domain getFirstDomain() {
+	public Domain getDomain() {
 		Domain domain = null;
 
 		if (m_config != null) {
@@ -132,5 +132,19 @@ public class ClientConfigManager implements LogEnabled {
 
 	public boolean isInitialized() {
 		return m_config != null;
+	}
+
+	/**
+	 * Return the max total message node size for the whole message, children after this limit will be split into another child
+	 * message tree.
+	 * 
+	 * @return
+	 */
+	public int getMaxMessageLength() {
+		if (m_config == null) {
+			return 1000;
+		} else {
+			return getDomain().getMaxMessageSize();
+		}
 	}
 }
