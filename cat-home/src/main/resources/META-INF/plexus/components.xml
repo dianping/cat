@@ -1629,12 +1629,6 @@
 				<requirement>
 					<role>com.dianping.cat.status.ServerStateManager</role>
 				</requirement>
-				<requirement>
-					<role>long</role>
-				</requirement>
-				<requirement>
-					<role>long</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
