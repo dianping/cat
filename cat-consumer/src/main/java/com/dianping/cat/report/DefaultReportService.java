@@ -31,7 +31,8 @@ import com.dianping.cat.report.RemoteModelService.HttpServiceCallback;
 import com.dianping.cat.report.model.ModelRequest;
 
 /**
- * Report service to get timed (hourly, daily, weekly, monthly etc.) reports from various medias (memory, database etc.).
+ * Report service to get timed (hourly, daily, weekly, monthly etc.) reports from various medias (memory, database
+ * etc.).
  */
 public class DefaultReportService<T> extends ContainerHolder implements ReportService<T>, Initializable {
 	@Inject
@@ -150,6 +151,8 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 			} else {
 				return getHouylyReportFromDatabase(request);
 			}
+		default:
+			break;
 		}
 
 		throw new UnsupportedOperationException(String.format("Not future report available for %s!", request.getPeriod()));

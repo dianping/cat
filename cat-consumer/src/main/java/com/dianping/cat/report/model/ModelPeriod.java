@@ -41,6 +41,8 @@ public enum ModelPeriod {
 			return current;
 		case LAST:
 			return current - ReportConstants.HOUR;
+		default:
+			break;
 		}
 
 		throw new RuntimeException("Internal error: can't getStartTime() for historical or future period!");
