@@ -21,10 +21,6 @@ import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 PeriodStrategyTest.class,
 
-ManyAnalyzerTest.class,
-
-OneAnalyzerTwoDurationTest.class,
-
 ProblemHandlerTest.class,
 
 FormatTest.class,

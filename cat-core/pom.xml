@@ -9,12 +9,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-core</artifactId>
 	<name>cat-core</name>
-    <packaging>jar</packaging>
+	<packaging>jar</packaging>
 	<dependencies>
+		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-client</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>foundation-service</artifactId>
 			<version>2.0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>dal-jdbc</artifactId>
+			<version>2.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.netty</groupId>
@@ -53,25 +62,36 @@
 						</goals>
 						<configuration>
 							<manifest>
-							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/abtest-manifest.xml,</manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-   </build>
+								${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
+							</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate dal jdbc model</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-jdbc</goal>
+						</goals>
+						<configuration>
+							<manifest>
+								${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
+							</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate plexus component descriptor</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>plexus</goal>
+						</goals>
+						<configuration>
+							<className>com.dianping.cat.build.ComponentsConfigurator</className>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 

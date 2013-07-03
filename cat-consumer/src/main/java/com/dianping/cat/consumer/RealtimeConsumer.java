@@ -20,6 +20,10 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.analysis.PeriodStrategy;
+import com.dianping.cat.analysis.PeriodTask;
 import com.dianping.cat.consumer.core.ProblemAnalyzer;
 import com.dianping.cat.consumer.core.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -27,14 +31,12 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
-import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.status.ServerStateManager;
+import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
-	public static final String ID = "realtime";
-	
 	private static final long MINUTE = 60 * 1000L;
 
 	private static int QUEUE_SIZE = 100000;
@@ -42,7 +44,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private MessageAnalyzerManager m_analyzerManager;
 
 	@Inject
-	private ServerStateManager m_serverStateManager;
+	private ServerStatisticManager m_serverStateManager;
 
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
@@ -270,7 +272,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	class PeriodManager implements Task {
 		private PeriodStrategy m_strategy;
 
-		private List<Period> m_periods = new ArrayList<RealtimeConsumer.Period>();
+		private List<Period> m_periods = new ArrayList<Period>();
 
 		private boolean m_active;
 

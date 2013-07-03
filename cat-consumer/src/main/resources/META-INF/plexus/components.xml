@@ -26,72 +26,39 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
-			<implementation>com.dianping.cat.consumer.DefaultMessageAnalyzerManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumer</role>
-			<role-hint>realtime</role-hint>
+			<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
+					<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.status.ServerStateManager</role>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.RemoteModelService</role>
-			<implementation>com.dianping.cat.report.RemoteModelService</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportService</role>
-			<implementation>com.dianping.cat.report.DefaultReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.RemoteModelService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
+					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>transaction</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
+			<role>com.dianping.cat.service.ReportManager</role>
 			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
 			<configuration>
 				<name>transaction</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role>com.dianping.cat.service.ReportDelegate</role>
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
@@ -106,7 +73,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role>com.dianping.cat.service.ReportDelegate</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
 		</component>
@@ -125,12 +92,12 @@
 			<implementation>com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.consumer.core.ProblemAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -158,7 +125,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.consumer.core.EventAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -175,7 +142,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.consumer.core.StateAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -193,12 +160,12 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.status.ServerStateManager</role>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.consumer.core.HeartbeatAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -215,13 +182,13 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dump</role-hint>
 			<implementation>com.dianping.cat.consumer.core.DumpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.status.ServerStateManager</role>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
@@ -230,7 +197,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.consumer.core.TopAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -256,13 +223,6 @@
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
-			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
-			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>

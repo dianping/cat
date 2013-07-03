@@ -31,8 +31,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
@@ -47,6 +45,8 @@ import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject

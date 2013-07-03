@@ -14,7 +14,7 @@
 			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>
@@ -35,7 +35,7 @@
 			<implementation>com.dianping.cat.consumer.advanced.DatabaseParser</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.CrossAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -49,7 +49,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>sql</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.SqlAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -69,7 +69,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.MatrixAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -83,7 +83,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.DependencyAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -106,7 +106,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.MetricAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
