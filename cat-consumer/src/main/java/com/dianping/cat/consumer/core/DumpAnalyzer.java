@@ -11,12 +11,12 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.status.ServerStateManager;
+import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 
@@ -27,7 +27,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	private LocalMessageBucketManager m_bucketManager;
 
 	@Inject
-	private ServerStateManager m_serverStateManager;
+	private ServerStatisticManager m_serverStateManager;
 
 	private Map<String, Integer> m_oldVersionDomains = new HashMap<String, Integer>();
 

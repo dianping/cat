@@ -6,8 +6,8 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.DefaultBucketManager;

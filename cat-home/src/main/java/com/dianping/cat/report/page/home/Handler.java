@@ -15,14 +15,14 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = MessageConsumer.class, value = RealtimeConsumer.ID)
+	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_realtimeConsumer;
 
 	@Override

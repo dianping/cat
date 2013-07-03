@@ -8,7 +8,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.PathMeta;
 
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelPeriod;
+import com.dianping.cat.service.ModelPeriod;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")

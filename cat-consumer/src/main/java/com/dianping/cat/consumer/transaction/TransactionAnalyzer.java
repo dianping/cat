@@ -9,7 +9,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -19,8 +19,8 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	public static final String ID = "transaction";

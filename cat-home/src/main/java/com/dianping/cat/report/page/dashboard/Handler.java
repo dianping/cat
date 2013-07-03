@@ -27,15 +27,15 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelPeriod;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {

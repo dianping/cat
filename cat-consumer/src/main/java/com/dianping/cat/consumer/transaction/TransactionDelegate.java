@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
-import static com.dianping.cat.report.ReportConstants.ALL;
+import static com.dianping.cat.service.ReportConstants.ALL;
 
 import java.util.Date;
 import java.util.Map;
@@ -9,8 +9,8 @@ import java.util.Set;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.ReportConstants;
-import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.ReportDelegate;
 
 public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	@Override

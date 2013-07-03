@@ -13,8 +13,8 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.core.dal.Hostinfo;
 import com.dianping.cat.consumer.core.dal.HostinfoDao;
 import com.dianping.cat.consumer.core.dal.Project;
@@ -30,8 +30,8 @@ import com.dianping.cat.consumer.state.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.status.ServerState.State;
-import com.dianping.cat.status.ServerStateManager;
+import com.dianping.cat.statistic.ServerStatisticManager;
+import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
@@ -39,7 +39,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	public static final String ID = "state";
 
 	@Inject
-	private ServerStateManager m_serverStateManager;
+	private ServerStatisticManager m_serverStateManager;
 
 	@Inject
 	private BucketManager m_bucketManager;
@@ -69,7 +69,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		double maxTps = 0;
 		for (; start < end; start += minute) {
 			size++;
-			State state = m_serverStateManager.findState(start);
+			Statistic state = m_serverStateManager.findState(start);
 
 			com.dianping.cat.consumer.state.model.entity.Message temp = machine.findOrCreateMessage(start);
 			long messageTotal = state.getMessageTotal();
@@ -269,7 +269,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 						long end = m_startTime - minute * 60;
 
 						for (; start < end; start += minute) {
-							m_serverStateManager.RemoveState(start);
+							m_serverStateManager.removeState(start);
 						}
 					}
 				}
