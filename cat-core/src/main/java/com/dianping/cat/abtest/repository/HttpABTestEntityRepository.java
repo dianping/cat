@@ -58,7 +58,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_domain = m_configManager.getFirstDomain().getId();
+		m_domain = m_configManager.getDomain().getId();
 
 	}
 

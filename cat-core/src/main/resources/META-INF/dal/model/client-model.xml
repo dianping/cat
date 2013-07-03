@@ -17,7 +17,7 @@
 	</entity>
 	<entity name="domain">
 		<attribute name="id" value-type="String" key="true" />
-    	<attribute name="max-threads" value-type="int" primitive="true" default-value="500"/>
+    	<attribute name="max-message-size" value-type="int" primitive="true" default-value="1000" />
 	</entity>
 	<entity name="bind">
 		<attribute name="port" primitive="true" default-value="2280" />

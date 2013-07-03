@@ -51,8 +51,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private boolean m_firstMessage = true;
 
-	private static final int MAX_ITEM = 500;
-
 	@Override
 	public void add(Message message) {
 		Context ctx = getContext();
@@ -141,7 +139,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_domain = m_configManager.getFirstDomain();
+		m_domain = m_configManager.getDomain();
 		m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 
 		if (m_domain.getIp() == null) {
@@ -187,9 +185,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx;
 
 		if (m_domain != null) {
-			ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+			ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp(), m_configManager);
 		} else {
-			ctx = new Context("Unknown", m_hostName, "");
+			ctx = new Context("Unknown", m_hostName, "", m_configManager);
 		}
 
 		m_context.set(ctx);
@@ -220,9 +218,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		private Stack<Transaction> m_stack;
 
-		public Context(String domain, String hostName, String ipAddress) {
+		private ClientConfigManager m_configManager;
+
+		private int m_length;
+
+		public Context(String domain, String hostName, String ipAddress, ClientConfigManager configManager) {
 			m_tree = new DefaultMessageTree();
 			m_stack = new Stack<Transaction>();
+
 			Thread thread = Thread.currentThread();
 			String groupName = thread.getThreadGroup().getName();
 
@@ -233,6 +236,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setDomain(domain);
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
+			m_configManager = configManager;
+			m_length = 1;
 		}
 
 		public void add(DefaultMessageManager manager, Message message) {
@@ -246,34 +251,26 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				tree.setMessage(message);
 				manager.flush(tree);
 			} else {
-				Transaction entry = m_stack.peek();
+				Transaction parent = m_stack.peek();
 
-				addTransactionChild(message, entry);
+				addTransactionChild(manager, message, parent);
 			}
 		}
 
-		private void addTransactionChild(Message message, Transaction transaction) {
-			List<Message> children = transaction.getChildren();
+		private void addTransactionChild(DefaultMessageManager manager, Message message, Transaction transaction) {
+			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
+			long messagePeriod = trimToHour(message.getTimestamp());
 
-			if (children != null && children.size() < MAX_ITEM) {
-				transaction.addChild(message);
-			} else {
-				try {
-					if (children.size() == MAX_ITEM) {
-						DefaultEvent event = new DefaultEvent("CAT", "TooManyChildren");
-
-						event.setStatus(String.valueOf(MAX_ITEM + 1));
-						transaction.addChild(event);
-					} else {
-						Message event = children.get(MAX_ITEM);
-						String count = event.getStatus();
-
-						event.setStatus(String.valueOf((Integer.parseInt(count) + 1)));
-					}
-				} catch (Exception e) {
-					// ignore
-				}
+			if (treePeriod != messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
+				flushTrancatedMessage(manager, message.getTimestamp());
 			}
+
+			transaction.addChild(message);
+			m_length++;
+		}
+
+		private long trimToHour(long timestamp) {
+			return timestamp - timestamp % (3600 * 1000L);
 		}
 
 		/**
@@ -310,6 +307,76 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return false;
 		}
 
+		private void flushTrancatedMessage(DefaultMessageManager manager, long timestamp) {
+			Message message = m_tree.getMessage();
+
+			if (message instanceof DefaultTransaction) {
+				String id = m_tree.getMessageId();
+				String rootId = m_tree.getRootMessageId();
+				String childId = manager.nextMessageId();
+				DefaultTransaction source = (DefaultTransaction) message;
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), manager);
+
+				target.setTimestamp(source.getTimestamp());
+				target.setDurationInMicros(source.getDurationInMicros());
+				target.addData(source.getData().toString());
+				target.setStatus(Message.SUCCESS);
+
+				migrateMessage(manager, source, target, 1);
+
+				for (int i = m_stack.size() - 1; i >= 0; i--) {
+					DefaultTransaction t = (DefaultTransaction) m_stack.get(i);
+
+					t.setTimestamp(timestamp);
+				}
+
+				DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
+
+				next.addData(childId);
+				next.setStatus(Message.SUCCESS);
+				target.addChild(next);
+
+				// tree is the parent, and m_tree is the child.
+				MessageTree tree = m_tree.copy();
+
+				tree.setMessage(target);
+				manager.flush(tree);
+
+				m_tree.setMessageId(childId);
+				m_tree.setParentMessageId(id);
+				m_tree.setRootMessageId(rootId != null ? rootId : id);
+				m_length = m_stack.size();
+			}
+		}
+
+		private void migrateMessage(DefaultMessageManager manager, Transaction source, Transaction target, int level) {
+			Transaction current = level < m_stack.size() ? m_stack.get(level) : null;
+			boolean shouldKeep = false;
+
+			for (Message child : source.getChildren()) {
+				if (child != current) {
+					target.addChild(child);
+				} else {
+					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(), manager);
+
+					cloned.setTimestamp(current.getTimestamp());
+					cloned.setDurationInMicros(current.getDurationInMicros());
+					cloned.addData(current.getData().toString());
+					cloned.setStatus(Message.SUCCESS);
+
+					target.addChild(cloned);
+					migrateMessage(manager, current, cloned, level + 1);
+					shouldKeep = true;
+				}
+			}
+
+			source.getChildren().clear();
+
+			if (shouldKeep) { // add it back
+				source.addChild(current);
+			}
+		}
+
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
@@ -320,9 +387,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		public void start(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
-				Transaction entry = m_stack.peek();
+				Transaction parent = m_stack.peek();
 
-				addTransactionChild(transaction, entry);
+				addTransactionChild(manager, transaction, parent);
 			} else {
 				if (m_tree.getMessageId() == null) {
 					m_tree.setMessageId(manager.nextMessageId());

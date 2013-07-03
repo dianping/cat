@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @RunWith(JUnit4.class)
@@ -32,8 +33,8 @@ public class DumpAnalyzerTest extends ComponentTestCase {
 		analyzer.doCheckpoint(true);
 	}
 
-	private DefaultMessageTree newMessageTree(int i, long timestamp) {
-		DefaultMessageTree tree = new DefaultMessageTree();
+	private MessageTree newMessageTree(int i, long timestamp) {
+		MessageTree tree = new DefaultMessageTree();
 
 		tree.setDomain("domain");
 		tree.setHostName("hostName" + i);
