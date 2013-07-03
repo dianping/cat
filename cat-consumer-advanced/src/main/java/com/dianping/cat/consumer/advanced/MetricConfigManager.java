@@ -154,9 +154,10 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 		if (modifyTime > m_modifyTime) {
 			String content = config.getContent();
+			MetricConfig metricConfig = DefaultSaxParser.parse(content);
 
 			synchronized (this) {
-				m_metricConfig = DefaultSaxParser.parse(content);
+				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
 			m_logger.info("metric config refresh done!");
