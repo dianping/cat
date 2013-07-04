@@ -11,12 +11,12 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.DailyGraph;
-import com.dianping.cat.consumer.core.dal.DailyGraphDao;
-import com.dianping.cat.consumer.core.dal.DailyGraphEntity;
-import com.dianping.cat.consumer.core.dal.Graph;
-import com.dianping.cat.consumer.core.dal.GraphDao;
-import com.dianping.cat.consumer.core.dal.GraphEntity;
+import com.dianping.cat.core.dal.DailyGraph;
+import com.dianping.cat.core.dal.DailyGraphDao;
+import com.dianping.cat.core.dal.DailyGraphEntity;
+import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.core.dal.GraphDao;
+import com.dianping.cat.core.dal.GraphEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;

@@ -10,14 +10,14 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.DailyReport;
-import com.dianping.cat.consumer.core.dal.DailyReportEntity;
-import com.dianping.cat.consumer.core.dal.MonthlyReport;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
-import com.dianping.cat.consumer.core.dal.WeeklyReport;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportEntity;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
@@ -127,8 +127,8 @@ public class CrossReportBuilder extends AbstractReportBuilder implements ReportB
 	private DailyReport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      HourlyReportEntity.READSET_FULL);
 		String content = m_crossMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 
 		DailyReport report = m_dailyReportDao.createLocal();

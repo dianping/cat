@@ -22,11 +22,11 @@ import com.dianping.cat.consumer.advanced.SqlAnalyzer;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.SqltableDao;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.dal.HostinfoDao;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.sql.SqlParseManager;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.HostinfoDao;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.storage.BucketManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -43,16 +43,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, CrossAnalyzer.ID, CrossAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class));
 
 		all.add(C(MessageAnalyzer.class, SqlAnalyzer.ID, SqlAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class, DatabaseParser.class));
+		      .req(BucketManager.class, HourlyReportDao.class, SqlParseManager.class, DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MatrixAnalyzer.ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class));
 
 		all.add(C(MessageAnalyzer.class, DependencyAnalyzer.ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class, DomainManager.class, DatabaseParser.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class, DomainManager.class, DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//

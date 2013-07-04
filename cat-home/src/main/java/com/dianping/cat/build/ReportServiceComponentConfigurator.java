@@ -8,10 +8,10 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.core.dal.DailyReportDao;
-import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.service.MonthReportCache;
@@ -31,7 +31,7 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		List<Component> all = new ArrayList<Component>();
 		
 		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class) //
-		      .req(ReportDao.class, BusinessReportDao.class));
+		      .req(HourlyReportDao.class, BusinessReportDao.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyReportDao.class));

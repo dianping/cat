@@ -11,7 +11,7 @@ import org.unidal.web.mvc.ViewModel;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;

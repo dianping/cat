@@ -5,9 +5,6 @@ import java.util.Date;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.WeeklyReport;
-import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
-import com.dianping.cat.consumer.core.dal.WeeklyReportEntity;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -16,6 +13,9 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.report.service.WeeklyReportService;
 
 public class WeeklyReportServiceImpl implements WeeklyReportService {

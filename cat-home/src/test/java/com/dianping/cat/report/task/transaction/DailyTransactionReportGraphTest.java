@@ -7,9 +7,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
-import com.dianping.cat.consumer.core.dal.DailyGraph;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.DailyGraph;
 
 public class DailyTransactionReportGraphTest {
 

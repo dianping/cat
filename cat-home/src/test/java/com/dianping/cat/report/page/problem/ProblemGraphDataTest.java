@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.consumer.core.dal.Graph;
+import com.dianping.cat.core.dal.Graph;
 
 @RunWith(JUnit4.class)
 public class ProblemGraphDataTest {

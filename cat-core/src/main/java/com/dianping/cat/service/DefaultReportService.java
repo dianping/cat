@@ -13,18 +13,18 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.core.dal.DailyReport;
-import com.dianping.cat.consumer.core.dal.DailyReportDao;
-import com.dianping.cat.consumer.core.dal.DailyReportEntity;
-import com.dianping.cat.consumer.core.dal.MonthlyReport;
-import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
-import com.dianping.cat.consumer.core.dal.MonthlyReportEntity;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
-import com.dianping.cat.consumer.core.dal.WeeklyReport;
-import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
-import com.dianping.cat.consumer.core.dal.WeeklyReportEntity;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.service.RemoteModelService.HttpServiceCallback;
@@ -38,7 +38,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private ReportDao m_hourlyReportDao;
+	private HourlyReportDao m_hourlyReportDao;
 
 	@Inject
 	private DailyReportDao m_dailyReportDao;
@@ -158,10 +158,10 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			List<Report> reports = m_hourlyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
-			      ReportEntity.READSET_CONTENT);
+			List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			      HourlyReportEntity.READSET_CONTENT);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				try {
 					String xml = report.getContent();
 					T model = delegate.parseXml(xml);

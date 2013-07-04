@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entities do-package="com.dianping.cat.consumer.core.dal" gen="true">
+<entities do-package="com.dianping.cat.core.dal" gen="true">
 
 	<entity name="task" table="task" alias="t">
 		<member name="count" value-type="int" select-expr="COUNT(*)" all="false" />
@@ -230,7 +230,7 @@
 		</query-defs>
 	</entity>
 	
-	<entity name="report" table="report" alias="r">
+	<entity name="report" table="report" alias="r"  class-name="HourlyReport">
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-date" value-type="Date" />
 		<var name="end-date" value-type="Date" />

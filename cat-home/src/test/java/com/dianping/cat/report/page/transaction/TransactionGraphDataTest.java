@@ -11,7 +11,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.consumer.core.dal.Graph;
+import com.dianping.cat.core.dal.Graph;
 
 public class TransactionGraphDataTest {
 

@@ -15,7 +15,7 @@ import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.core.dal.Graph;
+import com.dianping.cat.core.dal.Graph;
 
 @RunWith(JUnit4.class)
 public class HeartbeatGraphDataTest extends ComponentTestCase {

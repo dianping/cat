@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.consumer.core.dal.DailyGraph;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
+import com.dianping.cat.core.dal.DailyGraph;
 
 public class ProblemDailyGraphCreator extends BaseVisitor {
 

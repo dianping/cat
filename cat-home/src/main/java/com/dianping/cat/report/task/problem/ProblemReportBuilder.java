@@ -11,16 +11,16 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.DailyGraph;
-import com.dianping.cat.consumer.core.dal.DailyReport;
-import com.dianping.cat.consumer.core.dal.DailyReportEntity;
-import com.dianping.cat.consumer.core.dal.Graph;
-import com.dianping.cat.consumer.core.dal.MonthlyReport;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
-import com.dianping.cat.consumer.core.dal.WeeklyReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.DailyGraph;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportEntity;
+import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
@@ -172,16 +172,16 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      HourlyReportEntity.READSET_FULL);
 
 		return m_problemMerger.mergeForDaily(reportDomain, reports, domainSet);
 	}
 
 	private List<Graph> getHourlyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      HourlyReportEntity.READSET_FULL);
 		ProblemReport problemReport = m_problemMerger.mergeForGraph(reportDomain, reports);
 		
 		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);

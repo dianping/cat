@@ -11,10 +11,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.dianping.cat.consumer.core.dal.Graph;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.GraphCreator;
 import com.dianping.cat.report.task.spi.GraphLine;

@@ -15,18 +15,18 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Hostinfo;
-import com.dianping.cat.consumer.core.dal.HostinfoDao;
-import com.dianping.cat.consumer.core.dal.Project;
-import com.dianping.cat.consumer.core.dal.ProjectDao;
-import com.dianping.cat.consumer.core.dal.ProjectEntity;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.state.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.core.dal.Hostinfo;
+import com.dianping.cat.core.dal.HostinfoDao;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -48,7 +48,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	private HostinfoDao m_hostInfoDao;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -149,7 +149,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 
-			Report r = m_reportDao.createLocal();
+			HourlyReport r = m_reportDao.createLocal();
 			String xml = builder.buildXml(report);
 			String domain = report.getDomain();
 

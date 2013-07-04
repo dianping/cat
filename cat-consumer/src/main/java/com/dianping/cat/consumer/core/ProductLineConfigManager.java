@@ -26,9 +26,9 @@ import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.company.model.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.core.config.Config;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.config.ConfigEntity;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
 
 public class ProductLineConfigManager implements Initializable, LogEnabled {
 

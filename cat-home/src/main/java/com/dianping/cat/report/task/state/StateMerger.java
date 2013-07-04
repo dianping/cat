@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
@@ -16,9 +16,9 @@ import com.dianping.cat.report.task.spi.ReportMerger;
 public class StateMerger implements ReportMerger<StateReport> {
 
 	@Override
-	public StateReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+	public StateReport mergeForDaily(String reportDomain, List<HourlyReport> reports, Set<String> domains) {
 		StateReportMerger merger = new StateReportMerger(new StateReport(reportDomain));
-		for (Report report : reports) {
+		for (HourlyReport report : reports) {
 			String xml = report.getContent();
 			StateReport model;
 			try {
@@ -41,7 +41,7 @@ public class StateMerger implements ReportMerger<StateReport> {
 	}
 
 	@Override
-	public StateReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public StateReport mergeForGraph(String reportDomain, List<HourlyReport> reports) {
 		throw new RuntimeException("State report don't need graph!");
 	}
 }

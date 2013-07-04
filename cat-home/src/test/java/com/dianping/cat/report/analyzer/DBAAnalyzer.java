@@ -11,14 +11,14 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.core.dal.MonthlyReport;
-import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
-import com.dianping.cat.consumer.core.dal.MonthlyReportEntity;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.helper.CatString;
 
 public class DBAAnalyzer extends ComponentTestCase {

@@ -18,11 +18,11 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.core.dal.DailyReport;
-import com.dianping.cat.consumer.core.dal.DailyReportDao;
-import com.dianping.cat.consumer.core.dal.DailyReportEntity;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.view.StringSortHelper;
 

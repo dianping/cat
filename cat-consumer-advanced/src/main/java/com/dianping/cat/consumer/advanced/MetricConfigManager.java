@@ -24,9 +24,9 @@ import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer.ConfigItem;
-import com.dianping.cat.consumer.core.config.Config;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.config.ConfigEntity;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
 
 public class MetricConfigManager implements Initializable, LogEnabled {
 

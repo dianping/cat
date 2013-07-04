@@ -10,14 +10,14 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.DailyGraphDao;
-import com.dianping.cat.consumer.core.dal.DailyReportDao;
-import com.dianping.cat.consumer.core.dal.GraphDao;
-import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
-import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
+import com.dianping.cat.core.dal.DailyGraphDao;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.GraphDao;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportDao;
 
 public abstract class AbstractReportBuilder {
 
@@ -34,23 +34,23 @@ public abstract class AbstractReportBuilder {
 	protected GraphDao m_graphDao;
 
 	@Inject
-	protected ReportDao m_reportDao;
+	protected HourlyReportDao m_reportDao;
 
 	@Inject
 	protected DailyGraphDao m_dailyGraphDao;
 
 	protected Set<String> getDomainsFromHourlyReport(Date start, Date end) {
-		List<Report> domainNames = new ArrayList<Report>();
+		List<HourlyReport> domainNames = new ArrayList<HourlyReport>();
 		Set<String> result = new HashSet<String>();
 		
 		try {
 			domainNames = m_reportDao
-			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
+			      .findAllByDomainNameDuration(start, end, null, null, HourlyReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 		if (domainNames != null) {
-			for (Report domainName : domainNames) {
+			for (HourlyReport domainName : domainNames) {
 				result.add(domainName.getDomain());
 			}
 		}
