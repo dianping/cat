@@ -3,13 +3,18 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>0.6.1-SNAPSHOT</version>
+      <version>0.6.2-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
    <name>CAT Home</name>
    <packaging>war</packaging>
    <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+         <version>2.0.3-SNAPSHOT</version>
+      </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
@@ -66,7 +71,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>web-framework</artifactId>
-         <version>2.0.2</version>
+         <version>2.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
@@ -107,13 +112,13 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>test-framework</artifactId>
-         <version>2.0.2</version>
+         <version>2.0.3-SNAPSHOT</version>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>2.0.1</version>
+         <version>2.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
 	    <groupId>com.google.code.javaparser</groupId>
@@ -187,7 +192,8 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     <manifest><![CDATA[
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]>  <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
 					 ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,

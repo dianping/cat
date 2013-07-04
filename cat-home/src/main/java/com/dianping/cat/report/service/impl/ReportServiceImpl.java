@@ -21,7 +21,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.service.MonthReportCache;
-import com.dianping.cat.report.service.MonthReportService;
+import com.dianping.cat.report.service.MonthlyReportService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.WeeklyReportCache;
 import com.dianping.cat.report.service.WeeklyReportService;
@@ -37,7 +37,7 @@ public class ReportServiceImpl implements ReportService {
 	private WeeklyReportService m_weeklyReportService;
 
 	@Inject
-	private MonthReportService m_monthReportService;
+	private MonthlyReportService m_monthReportService;
 
 	@Inject
 	private WeeklyReportCache m_weeklyReportCache;

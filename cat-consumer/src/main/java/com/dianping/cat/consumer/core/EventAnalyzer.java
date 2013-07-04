@@ -11,18 +11,18 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.Task;
-import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -37,7 +37,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -52,11 +52,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
 	}
 
 	@Override
@@ -205,8 +200,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			for (EventReport report : m_reports.values()) {
 				try {
 					Set<String> domainNames = report.getDomainNames();
+					
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
@@ -224,7 +220,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 				for (EventReport report : m_reports.values()) {
 					try {
-						Report r = m_reportDao.createLocal();
+						HourlyReport r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 

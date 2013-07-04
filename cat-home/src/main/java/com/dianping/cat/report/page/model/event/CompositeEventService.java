@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.model.event;
 import java.util.List;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeEventService extends BaseCompositeModelService<EventReport> {
 	public CompositeEventService() {

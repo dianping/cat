@@ -20,17 +20,17 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.view.StringSortHelper;
 
 @RunWith(JUnit4.class)
 public class ShopWebMonthAnalyzer extends ComponentTestCase {
 
 	@Inject
-	private DailyreportDao m_dailyreportDao;
+	private DailyReportDao m_dailyreportDao;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -49,7 +49,7 @@ public class ShopWebMonthAnalyzer extends ComponentTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		m_dailyreportDao = lookup(DailyreportDao.class);
+		m_dailyreportDao = lookup(DailyReportDao.class);
 	}
 
 	@Test
@@ -65,8 +65,8 @@ public class ShopWebMonthAnalyzer extends ComponentTestCase {
 			for (; start < currentDay.getTime(); start += TimeUtil.ONE_DAY) {
 				System.out.println("Process" + new Date(start));
 				try {
-					Dailyreport dailyreport = m_dailyreportDao.findByNameDomainPeriod(new Date(start), "ShopWeb",
-					      "transaction", DailyreportEntity.READSET_FULL);
+					DailyReport dailyreport = m_dailyreportDao.findReportByDomainNamePeriod("ShopWeb", "transaction",
+					      new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
 					      .parse(dailyreport.getContent());

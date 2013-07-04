@@ -40,7 +40,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		MessageIdFactory factory = new MockMessageIdFactory();
 		LocalMessageBucket bucket = createBucket(factory, "");
 
-		DefaultMessageTree tree = new DefaultMessageTree();
+		MessageTree tree = new DefaultMessageTree();
 
 		PlainTextMessageCodec codec = new PlainTextMessageCodec();
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
@@ -80,7 +80,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 			buckets[i] = bucket;
 		}
 
-		DefaultMessageTree tree = new DefaultMessageTree();
+		MessageTree tree = new DefaultMessageTree();
 		int count = 2000;
 
 		for (int i = 0; i < count; i++) {
@@ -123,7 +123,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 
 		@Override
 		public MessageTree decode(ChannelBuffer buf) {
-			DefaultMessageTree tree = new DefaultMessageTree();
+			MessageTree tree = new DefaultMessageTree();
 
 			decode(buf, tree);
 			return tree;

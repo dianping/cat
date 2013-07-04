@@ -24,11 +24,11 @@ import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

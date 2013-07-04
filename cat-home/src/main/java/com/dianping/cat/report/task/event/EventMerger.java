@@ -11,10 +11,10 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
@@ -23,7 +23,7 @@ public class EventMerger implements ReportMerger<EventReport>,LogEnabled {
 
 	private Logger m_logger;
 
-	private EventReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
+	private EventReport merge(String reportDomain, List<HourlyReport> reports, boolean isDaily) {
 		EventReportMerger merger = null;
 
 		if (isDaily) {
@@ -31,7 +31,7 @@ public class EventMerger implements ReportMerger<EventReport>,LogEnabled {
 		} else {
 			merger = new EventReportMerger(new EventReport(reportDomain));
 		}
-		for (Report report : reports) {
+		for (HourlyReport report : reports) {
 			String xml = report.getContent();
 			EventReport model;
 			try {
@@ -47,7 +47,7 @@ public class EventMerger implements ReportMerger<EventReport>,LogEnabled {
 	}
 
 	@Override
-	public EventReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+	public EventReport mergeForDaily(String reportDomain, List<HourlyReport> reports, Set<String> domains) {
 		EventReport eventReport = merge(reportDomain, reports, true);
 		HistoryEventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
 		EventReport eventReport2 = merge(reportDomain, reports, true);
@@ -65,7 +65,7 @@ public class EventMerger implements ReportMerger<EventReport>,LogEnabled {
 	}
 
 	@Override
-	public EventReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public EventReport mergeForGraph(String reportDomain, List<HourlyReport> reports) {
 		EventReport eventReport = merge(reportDomain, reports, false);
 		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
 		EventReport eventReport2 = merge(reportDomain, reports, false);

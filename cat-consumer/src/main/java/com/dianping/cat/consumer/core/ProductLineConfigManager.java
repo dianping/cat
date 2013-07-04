@@ -26,9 +26,9 @@ import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.company.model.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.core.config.Config;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.config.ConfigEntity;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
 
 public class ProductLineConfigManager implements Initializable, LogEnabled {
 
@@ -48,7 +48,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	private static final String CONFIG_NAME = "productLineConfig";
 
 	public Company getCompany() {
-		synchronized (m_company) {
+		synchronized (this) {
 			return m_company;
 		}
 	}
@@ -65,7 +65,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
@@ -92,10 +91,10 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (getCompany() == null) {
+		if (m_company == null) {
 			m_company = new Company();
 		}
-		m_domainToProductLines =buildDomainToProductLines();
+		m_domainToProductLines = buildDomainToProductLines();
 	}
 
 	public boolean insertProductLine(ProductLine line, String[] domains) {
@@ -125,7 +124,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return domains;
 	}
-	
+
 	public Map<String, ProductLine> queryProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
@@ -141,7 +140,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		});
 	}
 
-	private Map<String, String>  buildDomainToProductLines(){
+	private Map<String, String> buildDomainToProductLines() {
 		Map<String, ProductLine> productLines = getCompany().getProductLines();
 		Map<String, String> domainToProductLines = new HashMap<String, String>();
 
@@ -152,24 +151,27 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return domainToProductLines;
 	}
+
 	private boolean storeConfig() {
-		try {
-			Config config = m_configDao.createLocal();
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
 
-			config.setId(m_configId);
-			config.setKeyId(m_configId);
-			config.setName(CONFIG_NAME);
-			config.setContent(getCompany().toString());
-			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(getCompany().toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+			m_domainToProductLines = buildDomainToProductLines();
 		}
-
-		m_domainToProductLines =buildDomainToProductLines();
 		return true;
 	}
-	public  <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
+
+	public <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
 		Map<K, V> result = new LinkedHashMap<K, V>();
 		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
 		Collections.sort(entries, compator);
@@ -179,21 +181,22 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		return result;
 	}
-	
+
 	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
-      Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-      long modifyTime = config.getModifyDate().getTime();
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
 
-      if (modifyTime > m_modifyTime) {
-      	String content = config.getContent();
+		if (modifyTime > m_modifyTime) {
+			String content = config.getContent();
+			Company company = DefaultSaxParser.parse(content);
 
-      	synchronized (m_company) {
-      		m_company = DefaultSaxParser.parse(content);
-      	}
-
-      	m_modifyTime = modifyTime;
-      	m_logger.info("product line config refresh done!");
-      }
-   }
+			synchronized (this) {
+				m_company = company;
+				m_domainToProductLines = buildDomainToProductLines();
+				m_modifyTime = modifyTime;
+			}
+			m_logger.info("product line config refresh done!");
+		}
+	}
 
 }

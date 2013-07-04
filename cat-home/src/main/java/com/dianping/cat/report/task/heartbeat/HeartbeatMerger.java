@@ -7,23 +7,23 @@ import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 	@Override
-	public HeartbeatReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+	public HeartbeatReport mergeForDaily(String reportDomain, List<HourlyReport> reports, Set<String> domains) {
 		throw new RuntimeException("HeartbeatReport cat't be merged for daily report!");
 	}
 
 	@Override
-	public HeartbeatReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public HeartbeatReport mergeForGraph(String reportDomain, List<HourlyReport> reports) {
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
 
-		for (Report report : reports) {
+		for (HourlyReport report : reports) {
 			String xml = report.getContent();
 			HeartbeatReport model;
 			try {

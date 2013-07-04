@@ -2,7 +2,7 @@ package com.dianping.cat.consumer.performance;
 
 import org.junit.Test;
 
-import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;

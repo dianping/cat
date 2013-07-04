@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeSqlService extends BaseCompositeModelService<SqlReport> {
 	public CompositeSqlService() {

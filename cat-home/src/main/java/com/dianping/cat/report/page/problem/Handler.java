@@ -17,7 +17,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -26,11 +26,11 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -223,7 +223,8 @@ public class Handler implements PageHandler<Context> {
 		Domain d = domains.get(payload.getDomain());
 
 		if (d != null) {
-			int longUrlTime = d.getUrlThreshold();
+			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
+			      .intValue();
 
 			if (payload.getRealLongTime() == 0) {
 				payload.setLongTime(longUrlTime);

@@ -7,13 +7,11 @@ import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
-import com.dianping.cat.message.io.TcpSocketReceiver;
-import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
 import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.view.DomainNavManager;
@@ -30,11 +28,9 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
-		// warm up IP seeker
-		// IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
-		ctx.lookup(MessageConsumer.class, RealtimeConsumer.ID);
+		ctx.lookup(MessageConsumer.class);
 		ctx.lookup(DomainNavManager.class);
 		ctx.lookup(AggregationConfigManager.class);
 

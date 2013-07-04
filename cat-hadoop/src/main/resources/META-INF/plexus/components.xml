@@ -5,7 +5,7 @@
 			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -14,7 +14,7 @@
 			<implementation>com.dianping.cat.hadoop.hdfs.DumpUploader</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
@@ -45,10 +45,10 @@
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

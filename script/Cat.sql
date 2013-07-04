@@ -89,12 +89,14 @@ CREATE TABLE `location` (
 
 CREATE TABLE `report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` tinyint(4) NOT NULL COMMENT '报表类型',
+  `type` tinyint(4) NOT NULL COMMENT '报表类型, 1/xml, 9/binary 默认1',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台机器',
   `domain` varchar(50) NOT NULL,
   `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
-  `content` longtext NOT NULL,
+  `headers` text NOT NULL,  
+  `content` longtext NULL,
+  `binary_content` longblob NULL,
   `creation_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
@@ -282,6 +284,70 @@ CREATE TABLE `config` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储系统的全局配置信息';
+
+CREATE TABLE `abtest` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `name` varchar(45) NOT NULL COMMENT '名字',
+  `owner` varchar(45) NOT NULL COMMENT 'case的Owner',
+  `group_strategy` int(11) DEFAULT NULL COMMENT '分组策略ID',
+  `domains` varchar(200) DEFAULT NULL COMMENT 'Domains，逗号分割',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modified_date` datetime DEFAULT NULL COMMENT '上次修改时间',
+  `description` varchar(512) DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `abtest_run` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `creator` varchar(45) DEFAULT NULL COMMENT 'Creator',
+  `case_id` int(11) NOT NULL COMMENT 'Case ID',
+  `start_date` datetime DEFAULT NULL COMMENT '开始时间',
+  `end_date` datetime DEFAULT NULL COMMENT '结束时间',
+  `disabled` tinyint(4) NOT NULL COMMENT '是否有效',
+  `domains` varchar(100) NOT NULL COMMENT '属于的domain，用逗号分割',
+  `strategy_configuration` text COMMENT '策略配置',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  `modified_date` datetime NOT NULL COMMENT '上次修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `group_strategy` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL COMMENT 'GroupStrategy的名字',
+  `alias` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
+  `classname` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
+  `configuration` text COMMENT '配置的schema',
+  `status` tinyint(4) NOT NULL COMMENT '是否开/关，1是开，0是关',
+  `description` varchar(512) DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL COMMENT '1、运维系统告警，2、DB告警，3、CAT内容告警',
+  `link` varchar(500) DEFAULT NULL COMMENT '详细信息link',
+  `domain` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `ip` varchar(32) DEFAULT NULL COMMENT '错误机器IP',
+  `subject` varchar(200) DEFAULT NULL COMMENT '事件标题',
+  `content` text COMMENT '事件内容',
+  `date` datetime NOT NULL COMMENT '事件发生时间',
+  `creation_date` datetime NOT NULL COMMENT '记录创建时间',
+  PRIMARY KEY (`id`),
+  KEY `ix_date_domain` (`date`,`domain`)
+) ENGINE=InnoDB AUTO_INCREMENT=23106 DEFAULT CHARSET=utf8 COMMENT='事件记录表';
+
+CREATE TABLE `topologyGraph` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台cat-client机器ip',
+  `period` datetime NOT NULL COMMENT '报表时间段,精确到分钟',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/binary',
+  `content` longblob COMMENT '用于存放报表的具体内容',
+  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`),
+  KEY `period` (`period`)
+) ENGINE=InnoDB AUTO_INCREMENT=21912 DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
 
 
 

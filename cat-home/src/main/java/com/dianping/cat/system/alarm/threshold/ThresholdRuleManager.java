@@ -10,12 +10,13 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.home.dal.alarm.AlarmRule;
 import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
 import com.dianping.cat.home.dal.alarm.AlarmRuleEntity;
@@ -130,8 +131,7 @@ public class ThresholdRuleManager implements Initializable {
 			String content = alarmTemplate.getContent();
 			ThresholdTemplate baseTemplate = DefaultSaxParser.parse(content);
 
-			List<AlarmRule> exceptionRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId,
-			      AlarmRuleEntity.READSET_FULL);
+			List<AlarmRule> exceptionRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId, AlarmRuleEntity.READSET_FULL);
 
 			for (AlarmRule rule : exceptionRules) {
 				m_exceptionModifyTimes.put(rule.getId(), rule.getModifyDate());
@@ -146,7 +146,8 @@ public class ThresholdRuleManager implements Initializable {
 					Cat.logError(e);
 				}
 			}
-
+		} catch (DalNotFoundException e) {
+			// ignore it
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -160,8 +161,7 @@ public class ThresholdRuleManager implements Initializable {
 			String content = alarmTemplate.getContent();
 			ThresholdTemplate baseTemplate = DefaultSaxParser.parse(content);
 
-			List<AlarmRule> serviceRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId,
-			      AlarmRuleEntity.READSET_FULL);
+			List<AlarmRule> serviceRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId, AlarmRuleEntity.READSET_FULL);
 
 			for (AlarmRule rule : serviceRules) {
 				m_serviceModifyTimes.put(rule.getId(), rule.getModifyDate());
@@ -176,7 +176,8 @@ public class ThresholdRuleManager implements Initializable {
 					Cat.logError(e);
 				}
 			}
-
+		} catch (DalNotFoundException e) {
+			// ignore it
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -214,14 +215,12 @@ public class ThresholdRuleManager implements Initializable {
 	private void refreshExceptionRules() {
 		synchronized (m_exceptionRules) {
 			try {
-				AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName("exception",
-				      AlarmTemplateEntity.READSET_FULL);
+				AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName("exception", AlarmTemplateEntity.READSET_FULL);
 				int templateId = alarmTemplate.getId();
 				String content = alarmTemplate.getContent();
 				ThresholdTemplate baseTemplate = DefaultSaxParser.parse(content);
 
-				List<AlarmRule> exceptionRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId,
-				      AlarmRuleEntity.READSET_FULL);
+				List<AlarmRule> exceptionRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId, AlarmRuleEntity.READSET_FULL);
 				Set<Integer> allIds = new HashSet<Integer>();
 
 				for (AlarmRule alarmRule : exceptionRules) {
@@ -284,13 +283,11 @@ public class ThresholdRuleManager implements Initializable {
 	private void refreshServiceRules() {
 		synchronized (m_serviceRules) {
 			try {
-				AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName("service",
-				      AlarmTemplateEntity.READSET_FULL);
+				AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName("service", AlarmTemplateEntity.READSET_FULL);
 				int templateId = alarmTemplate.getId();
 				String content = alarmTemplate.getContent();
 				ThresholdTemplate baseTemplate = DefaultSaxParser.parse(content);
-				List<AlarmRule> serviceRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId,
-				      AlarmRuleEntity.READSET_FULL);
+				List<AlarmRule> serviceRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId, AlarmRuleEntity.READSET_FULL);
 				Set<Integer> allIds = new HashSet<Integer>();
 
 				for (AlarmRule alarmRule : serviceRules) {

@@ -9,21 +9,17 @@ import com.dianping.cat.consumer.core.GsonTest;
 import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.ProblemHandlerTest;
 import com.dianping.cat.consumer.core.ProblemReportAggregationTest;
-import com.dianping.cat.consumer.core.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.core.TransactionReportFilterTest;
-import com.dianping.cat.consumer.core.TransactionReportMessageAnalyzerTest;
-import com.dianping.cat.consumer.core.TransactionReportTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
+import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
+import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
+import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
 PeriodStrategyTest.class,
-
-ManyAnalyzerTest.class,
-
-OneAnalyzerTwoDurationTest.class,
 
 ProblemHandlerTest.class,
 

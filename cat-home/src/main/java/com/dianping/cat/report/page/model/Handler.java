@@ -39,14 +39,14 @@ import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.metric.LocalMetricService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject

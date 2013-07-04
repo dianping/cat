@@ -5,9 +5,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class TransactionModelServiceTest extends ComponentTestCase {
 	@Test
@@ -22,7 +23,7 @@ public class TransactionModelServiceTest extends ComponentTestCase {
 	@Test
 	public void testLocal() throws Exception {
 		LocalTransactionService local = (LocalTransactionService) lookup(ModelService.class, "transaction-local");
-		ModelResponse<?> response = local.invoke(ModelRequest.from("Cat", "CURRENT"));
+		ModelResponse<?> response = local.invoke(new ModelRequest("Cat", ModelPeriod.CURRENT));
 
 		Assert.assertEquals(true, response != null);
 	}

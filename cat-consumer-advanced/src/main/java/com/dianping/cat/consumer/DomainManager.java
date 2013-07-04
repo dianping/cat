@@ -14,18 +14,18 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.webres.helper.Files;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.core.dal.Hostinfo;
-import com.dianping.cat.consumer.core.dal.HostinfoDao;
-import com.dianping.cat.consumer.core.dal.HostinfoEntity;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.core.dal.Hostinfo;
+import com.dianping.cat.core.dal.HostinfoDao;
+import com.dianping.cat.core.dal.HostinfoEntity;
 
 public class DomainManager implements Initializable, LogEnabled {
 
