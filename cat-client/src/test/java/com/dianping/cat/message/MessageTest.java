@@ -71,7 +71,7 @@ public class MessageTest extends ComponentTestCase {
 		configManager.initialize(getConfigurationFile());
 
 		m_queue.clear();
-		defineComponent(TransportManager.class, null, MockTransportManager.class);
+		//defineComponent(TransportManager.class, null, MockTransportManager.class);
 
 		MockTransportManager transportManager = (MockTransportManager) lookup(TransportManager.class);
 		transportManager.setQueue(m_queue);

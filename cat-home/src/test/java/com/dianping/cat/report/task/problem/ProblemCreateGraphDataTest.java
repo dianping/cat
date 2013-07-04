@@ -9,7 +9,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
-import com.dianping.cat.home.dal.report.Graph;
+import com.dianping.cat.core.dal.Graph;
 
 public class ProblemCreateGraphDataTest {
 

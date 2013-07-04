@@ -56,7 +56,7 @@
 					<td style="text-align:left"><a href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
-					<td>${w:format(item.hited,'0.00%')}</td>
+					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -88,7 +88,7 @@
 					<td style="text-align:left;word-wrap:break-word;word-break:break-all;">${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
-					<td>${w:format(item.hited,'0.00%')}</td>
+					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>

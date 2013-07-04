@@ -23,9 +23,9 @@ import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.core.dal.Hostinfo;
-import com.dianping.cat.consumer.core.dal.HostinfoDao;
-import com.dianping.cat.consumer.core.dal.HostinfoEntity;
+import com.dianping.cat.core.dal.Hostinfo;
+import com.dianping.cat.core.dal.HostinfoDao;
+import com.dianping.cat.core.dal.HostinfoEntity;
 
 public class DomainManager implements Initializable, LogEnabled {
 

@@ -24,9 +24,9 @@ import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer.ConfigItem;
-import com.dianping.cat.consumer.core.config.Config;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.config.ConfigEntity;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
 
 public class MetricConfigManager implements Initializable, LogEnabled {
 
@@ -58,7 +58,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 	}
 
 	public MetricConfig getMetricConfig() {
-		synchronized (m_metricConfig) {
+		synchronized (this) {
 			return m_metricConfig;
 		}
 	}
@@ -104,7 +104,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 			return true;
 		} else {
 			config = new MetricItemConfig();
-			
+
 			config.setId(key);
 			config.setDomain(domain);
 			config.setType(type);
@@ -154,28 +154,30 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 		if (modifyTime > m_modifyTime) {
 			String content = config.getContent();
+			MetricConfig metricConfig = DefaultSaxParser.parse(content);
 
-			synchronized (m_metricConfig) {
-				m_metricConfig = DefaultSaxParser.parse(content);
+			synchronized (this) {
+				m_metricConfig = metricConfig;
+				m_modifyTime = modifyTime;
 			}
-
-			m_modifyTime = modifyTime;
 			m_logger.info("metric config refresh done!");
 		}
 	}
 
 	private boolean storeConfig() {
-		try {
-			Config config = m_configDao.createLocal();
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
 
-			config.setId(m_configId);
-			config.setKeyId(m_configId);
-			config.setName(CONFIG_NAME);
-			config.setContent(getMetricConfig().toString());
-			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(getMetricConfig().toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
 		}
 		return true;
 	}

@@ -12,24 +12,24 @@ import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
 
 public class UrlTransactionBugTest extends ComponentTestCase {
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		m_reportDao = lookup(ReportDao.class);
+		m_reportDao = lookup(HourlyReportDao.class);
 	}
 
 	public void test() throws Exception {
@@ -37,10 +37,10 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 		String dateStr = "2012-12-16 07:00:00";
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
 
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(date, new Date(date.getTime() + TimeUtil.ONE_HOUR), "ShopWeb",
-		      "transaction", ReportEntity.READSET_FULL);
+		List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(date, new Date(date.getTime() + TimeUtil.ONE_HOUR), "ShopWeb",
+		      "transaction", HourlyReportEntity.READSET_FULL);
 		File file = new File("text.txt");
-		for (Report report : reports) {
+		for (HourlyReport report : reports) {
 			try {
 				DefaultSaxParser.parse(report.getContent());
 			} catch (Exception e) {
@@ -54,7 +54,7 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 		String xml = Files.forIO().readFrom(new File("text.xml"), "utf-8");
 		System.out.println(xml.length());
 		try {
-			Report r = m_reportDao.createLocal();
+			HourlyReport r = m_reportDao.createLocal();
 			// String xml = new TransactionReportUrlFilter().buildXml(report);
 			String domain = "CatTest";
 
@@ -73,10 +73,10 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 			Cat.getProducer().logError(e);
 		}
 
-		List<Report> temp = m_reportDao.findAllByPeriodDomainName(TimeUtil.getCurrentDay(), "CatTest", "transaction",
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> temp = m_reportDao.findAllByPeriodDomainName(TimeUtil.getCurrentDay(), "CatTest", "transaction",
+		      HourlyReportEntity.READSET_FULL);
 		System.out.println(temp.size());
-		for (Report re : temp) {
+		for (HourlyReport re : temp) {
 			TransactionReport report = DefaultSaxParser.parse(re.getContent());
 			new Vistor().visitTransactionReport(report);
 		}
@@ -114,7 +114,7 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 		System.out.println("Old Length" + shopWeb.length());
 		String domain = System.currentTimeMillis() + "";
 		try {
-			Report r = m_reportDao.createLocal();
+			HourlyReport r = m_reportDao.createLocal();
 			// String xml = new TransactionReportUrlFilter().buildXml(report);
 			r.setName("transaction");
 			r.setDomain(domain);
@@ -132,10 +132,10 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 		Files.forIO().writeTo(new File("sfs.xml"), shopWeb.substring(7, shopWeb.length()).trim());
 		TransactionReport report1 = DefaultSaxParser.parse(shopWeb);
 		System.out.println(">>>>>>>" + report1.getMachines().size());
-		List<Report> temp = m_reportDao.findAllByPeriodDomainName(TimeUtil.getCurrentDay(), domain, "transaction",
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> temp = m_reportDao.findAllByPeriodDomainName(TimeUtil.getCurrentDay(), domain, "transaction",
+		      HourlyReportEntity.READSET_FULL);
 		System.out.println("temp size" + temp.size());
-		for (Report re : temp) {
+		for (HourlyReport re : temp) {
 			String content = re.getContent();
 			System.out.println("New Length:" + content.length());
 
