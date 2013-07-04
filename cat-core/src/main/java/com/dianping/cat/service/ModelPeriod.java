@@ -36,7 +36,9 @@ public enum ModelPeriod {
 		current -= current % ReportConstants.HOUR;
 
 		switch (this) {
-		case CURRENT:
+		case CURRENT :
+			return current;
+		case FUTURE:
 			return current;
 		case LAST:
 			return current - ReportConstants.HOUR;
