@@ -84,7 +84,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 			Date date = new Date(startTime);
 
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod( domain, "transaction",date,
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain, "transaction",date,
 				      DailyReportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 

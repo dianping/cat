@@ -97,7 +97,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain, "problem",
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod(domain, "problem",
 						new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 

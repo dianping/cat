@@ -53,7 +53,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain,
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod(domain,
 				      "matrix", new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 				

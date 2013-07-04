@@ -100,7 +100,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain, "event",
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod(domain, "event",
 				      new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 

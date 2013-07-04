@@ -109,7 +109,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod( domain,
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain,
 				      "transaction", new Date(startTime),DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 

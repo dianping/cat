@@ -65,10 +65,9 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		long startTime = request.getStartTime();
 		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 			      DailyReportEntity.READSET_FULL);
 			String xml = report.getContent();
 
@@ -77,7 +76,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 			Cat.logError(e);
 		}
 
-		return result;
+		return delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 	}
 
 	@SuppressWarnings("unchecked")

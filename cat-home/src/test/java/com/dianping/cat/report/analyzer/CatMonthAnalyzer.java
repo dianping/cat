@@ -49,7 +49,7 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 			for (; start < currentDay.getTime(); start += TimeUtil.ONE_DAY) {
 				i++;
 				try {
-					DailyReport dailyreport = m_dailyreportDao.findReportByDomainNamePeriod("Cat",
+					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("Cat",
 					      "transaction", new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser

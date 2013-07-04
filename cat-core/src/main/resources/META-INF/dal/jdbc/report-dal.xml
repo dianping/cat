@@ -344,7 +344,7 @@
 						(<VALUES/>)
 					]]></statement>
 			</query>
-			<query name="find-report-by-domain-name-period" type="SELECT">
+			<query name="find-by-domain-name-period" type="SELECT">
 				<param name="domain" />
 				<param name="name" />
 				<param name="period" />
@@ -506,7 +506,7 @@
 					ORDER BY <FIELD name='period'/> ASC 
 				]]></statement>
 			</query>
-			<query name="find-singal-by-domain-name-ip-duration" type="SELECT">
+			<query name="find-by-domain-name-ip-date" type="SELECT">
 				<param name="start-date" />
 				<param name="ip" />
 				<param name="domain" />
