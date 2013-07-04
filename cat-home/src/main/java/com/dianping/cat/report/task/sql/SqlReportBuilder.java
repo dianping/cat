@@ -1,7 +1,9 @@
 package com.dianping.cat.report.task.sql;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -20,6 +22,9 @@ import com.dianping.cat.report.task.spi.ReportBuilder;
 
 public class SqlReportBuilder implements ReportBuilder {
 
+	@Inject
+	private SqlMerger m_sqlMerger;
+	
 	@Inject
 	protected ReportService m_reportService;
 	
@@ -102,19 +107,16 @@ public class SqlReportBuilder implements ReportBuilder {
 		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, "sql");
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
-		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
+		List<SqlReport> reports = new ArrayList<SqlReport>();
 		
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			Date date = new Date(startTime);
 			SqlReport reportModel = m_reportService.querySqlReport(domain, date, new Date(date.getTime()
 			      + TimeUtil.ONE_HOUR));
 		
-			reportModel.accept(merger);
+			reports.add(reportModel);
 		}
-		SqlReport sqlReport = merger.getSqlReport();
-		sqlReport.getDomainNames().addAll(domainSet);
-		sqlReport.setStartTime(period);
-		sqlReport.setEndTime(endDate);
+		SqlReport sqlReport = m_sqlMerger.mergeForDaily(domain, reports, domainSet);
 		
 		String content = sqlReport.toString();
 		DailyReport report = new DailyReport();

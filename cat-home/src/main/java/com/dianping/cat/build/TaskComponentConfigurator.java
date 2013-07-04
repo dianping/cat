@@ -24,6 +24,7 @@ import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
+import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
@@ -48,6 +49,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TransactionMerger.class));
 		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
+		all.add(C(SqlMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportService.class)//
@@ -67,7 +69,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MatrixReportBuilder.class).req(ReportService.class));
 
-		all.add(C(SqlReportBuilder.class).req(ReportService.class));
+		all.add(C(SqlReportBuilder.class).req(ReportService.class, SqlMerger.class));
 
 		all.add(C(CrossReportBuilder.class).req(ReportService.class));
 

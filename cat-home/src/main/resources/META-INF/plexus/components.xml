@@ -266,6 +266,10 @@
 			<implementation>com.dianping.cat.report.task.problem.ProblemMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.sql.SqlMerger</role>
+			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -358,6 +362,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
 				</requirement>
 			</requirements>
 		</component>
