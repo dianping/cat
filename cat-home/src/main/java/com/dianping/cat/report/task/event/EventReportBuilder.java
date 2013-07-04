@@ -35,7 +35,7 @@ public class EventReportBuilder implements ReportBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Inject
 	private EventGraphCreator m_eventGraphCreator;
 
@@ -192,6 +192,7 @@ public class EventReportBuilder implements ReportBuilder {
 			reports.add(report);
 		}
 		EventReport eventReport = m_eventMerger.mergeForGraph(domain, reports);
+
 		graphs = m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
 		return graphs;
 	}

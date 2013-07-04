@@ -22,7 +22,7 @@ public class MatrixReportBuilder implements ReportBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Override
 	public boolean buildDailyReport(String name, String domain, Date period) {
 		DailyReport report = queryDailyReport(name, domain, period);

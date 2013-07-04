@@ -11,18 +11,18 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 
-public class ProblemMerger  {
+public class ProblemMerger {
 
 	private ProblemReport merge(String reportDomain, List<ProblemReport> reports, boolean isDaily) {
 		ProblemReportMerger merger = null;
-		
+
 		if (isDaily) {
 			merger = new HistoryProblemReportMerger(new ProblemReport(reportDomain));
 		} else {
 			merger = new ProblemReportMerger(new ProblemReport(reportDomain));
 		}
 		for (ProblemReport report : reports) {
-				report.accept(merger);
+			report.accept(merger);
 		}
 
 		ProblemReport problemReport = merger.getProblemReport();

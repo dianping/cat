@@ -22,7 +22,7 @@ public class CrossReportBuilder implements ReportBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Override
 	public boolean buildDailyReport(String name, String domain, Date period) {
 		DailyReport report = queryDailyReport(name, domain, period);
@@ -101,23 +101,23 @@ public class CrossReportBuilder implements ReportBuilder {
 	private DailyReport queryDailyReport(String name, String domain, Date period) {
 		Date endDate = TaskHelper.tomorrowZero(period);
 		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, "cross");
-		
+
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
+
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			Date date = new Date(startTime);
-
 			CrossReport reportModel = m_reportService.queryCrossReport(domain, date, new Date(date.getTime()
 			      + TimeUtil.ONE_HOUR));
-			reportModel.accept(merger);
 
+			reportModel.accept(merger);
 		}
 		CrossReport crossReport = merger.getCrossReport();
 		crossReport.getDomainNames().addAll(domainSet);
 		crossReport.setStartTime(period);
 		crossReport.setEndTime(endDate);
-		
+
 		String content = crossReport.toString();
 		DailyReport report = new DailyReport();
 		report.setContent(content);

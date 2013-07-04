@@ -21,7 +21,7 @@ public class StateReportBuilder implements ReportBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Override
 	public boolean buildDailyReport(String name, String domain, Date period) {
 		DailyReport report = queryDailyReport(name, domain, period);
@@ -41,9 +41,9 @@ public class StateReportBuilder implements ReportBuilder {
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-
 				StateReport reportModel = m_reportService.queryStateReport(domain, new Date(startTime), new Date(startTime
 				      + TimeUtil.ONE_DAY));
+
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -103,20 +103,21 @@ public class StateReportBuilder implements ReportBuilder {
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
+
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			Date date = new Date(startTime);
-
 			StateReport reportModel = m_reportService.queryStateReport(domain, date, new Date(date.getTime()
 			      + TimeUtil.ONE_HOUR));
-			reportModel.accept(merger);
 
+			reportModel.accept(merger);
 		}
 		StateReport crossReport = merger.getStateReport();
 		crossReport.setStartTime(period);
 		crossReport.setEndTime(endDate);
-		
+
 		String content = crossReport.toString();
 		DailyReport report = new DailyReport();
+
 		report.setContent(content);
 		report.setCreationDate(new Date());
 		report.setDomain(domain);

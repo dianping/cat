@@ -38,7 +38,7 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Inject
 	private TransactionGraphCreator m_transactionGraphCreator;
 
@@ -116,6 +116,7 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 			try {
 				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
 				      new Date(startTime + TimeUtil.ONE_DAY));
+
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -148,7 +149,7 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		
+
 		return m_reportService.insertMonthlyReport(report);
 	}
 
@@ -185,8 +186,8 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 		long endTime = endDate.getTime();
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
-			      + TimeUtil.ONE_HOUR));
+			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
+			      startTime + TimeUtil.ONE_HOUR));
 
 			reports.add(report);
 		}
@@ -201,12 +202,11 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 		long endTime = endDate.getTime();
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
-			      + TimeUtil.ONE_HOUR));
+			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
+			      startTime + TimeUtil.ONE_HOUR));
 
 			reports.add(report);
 		}
-
 		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
 		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
 		return graphs;

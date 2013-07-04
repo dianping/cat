@@ -34,7 +34,7 @@ public class ProblemReportBuilder implements ReportBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Inject
 	private ProblemGraphCreator m_problemGraphCreator;
 

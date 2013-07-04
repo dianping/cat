@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 
-public class EventMerger  {
+public class EventMerger {
 
 	private EventReport merge(String reportDomain, List<EventReport> reports, boolean isDaily) {
 		EventReportMerger merger = null;

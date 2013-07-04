@@ -27,7 +27,7 @@ public class HeartbeatReportBuilder implements ReportBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Inject
 	private HeartbeatGraphCreator m_heartbeatGraphCreator;
 

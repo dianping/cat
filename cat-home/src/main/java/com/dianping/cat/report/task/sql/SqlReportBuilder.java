@@ -103,13 +103,13 @@ public class SqlReportBuilder implements ReportBuilder {
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
+		
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			Date date = new Date(startTime);
-
 			SqlReport reportModel = m_reportService.querySqlReport(domain, date, new Date(date.getTime()
 			      + TimeUtil.ONE_HOUR));
+		
 			reportModel.accept(merger);
-
 		}
 		SqlReport sqlReport = merger.getSqlReport();
 		sqlReport.getDomainNames().addAll(domainSet);
