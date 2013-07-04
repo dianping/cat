@@ -157,7 +157,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			List<HourlyReport> reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
 			      HourlyReportEntity.READSET_CONTENT);
 
 			for (HourlyReport report : reports) {

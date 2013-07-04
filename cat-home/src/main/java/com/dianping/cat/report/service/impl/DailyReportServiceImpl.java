@@ -2,6 +2,7 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -239,5 +240,16 @@ public class DailyReportServiceImpl implements DailyReportService {
 		transactionReport.setEndTime(end);
 		return transactionReport;
 	}
+
+	@Override
+   public boolean insert(DailyReport report) {
+		try {
+	      m_dailyReportDao.insert(report);
+	      return true;
+      } catch (DalException e) {
+      	Cat.logError(e);
+			return false;
+      }
+   }
 
 }

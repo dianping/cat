@@ -16,10 +16,9 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
 
-public class DependencyReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class DependencyReportBuilder implements ReportBuilder {
 
 	@Inject
 	private ReportService m_reportService;
@@ -31,14 +30,14 @@ public class DependencyReportBuilder extends AbstractReportBuilder implements Re
 	private TopologyGraphDao m_topologyGraphDao;
 
 	@Override
-	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildDailyReport(String name, String reportDomain, Date reportPeriod) {
 		throw new UnsupportedOperationException("no daily report builder for dependency!");
 	}
 
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildHourReport(String name, String reportDomain, Date reportPeriod) {
 		Date end = new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = getDomainsFromHourlyReport(reportPeriod, end);
+		Set<String> domains = m_reportService.queryAllDomainNames(reportPeriod, end, "dependency");
 		boolean result = true;
 
 		m_graphBuilder.getGraphs().clear();
@@ -73,12 +72,12 @@ public class DependencyReportBuilder extends AbstractReportBuilder implements Re
 	}
 
 	@Override
-	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildMonthReport(String name, String reportDomain, Date reportPeriod) {
 		throw new UnsupportedOperationException("no month report builder for dependency!");
 	}
 
 	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildWeeklyReport(String name, String reportDomain, Date reportPeriod) {
 		throw new UnsupportedOperationException("no week report builder for dependency!");
 	}
 

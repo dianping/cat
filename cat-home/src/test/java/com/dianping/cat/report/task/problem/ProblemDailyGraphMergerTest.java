@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 
 public class ProblemDailyGraphMergerTest {
 	private ProblemMerger m_meger = new ProblemMerger();
@@ -21,7 +21,7 @@ public class ProblemDailyGraphMergerTest {
 
 	private String m_reportDomain = "MobileApi";
 
-	List<HourlyReport> reports = new ArrayList<HourlyReport>();
+	private List<ProblemReport> reports = new ArrayList<ProblemReport>();
 
 	@Before
 	public void setUp() {
@@ -48,15 +48,14 @@ public class ProblemDailyGraphMergerTest {
 		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
 
-	private HourlyReport creatReport() {
-		HourlyReport result = new HourlyReport();
+	private ProblemReport creatReport() {
 		try {
 			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("problemCreator.xml"), "utf-8");
 
-			result.setContent(xml);
+			return DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 }

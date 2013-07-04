@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 
 public interface WeeklyReportService {
 
@@ -28,4 +29,6 @@ public interface WeeklyReportService {
 	public StateReport queryStateReport(String domain, Date start);
 	
 	public TransactionReport queryTransactionReport(String domain, Date start);
+
+	public boolean insert(WeeklyReport report);
 }

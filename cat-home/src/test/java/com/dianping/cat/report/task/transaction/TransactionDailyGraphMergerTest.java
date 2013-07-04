@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
 public class TransactionDailyGraphMergerTest {
 	private TransactionMerger m_meger = new TransactionMerger();
@@ -21,7 +21,7 @@ public class TransactionDailyGraphMergerTest {
 
 	private String m_reportDomain = "MobileApi";
 
-	List<HourlyReport> reports = new ArrayList<HourlyReport>();
+	private List<TransactionReport> reports = new ArrayList<TransactionReport>();
 
 	@Before
 	public void setUp() {
@@ -36,7 +36,7 @@ public class TransactionDailyGraphMergerTest {
 	public void testForMergerDaily() throws Exception {
 		TransactionReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerDaily.xml"), "utf-8");
-		//Assert.assertEquals(expeted, report.toString());
+		// Assert.assertEquals(expeted, report.toString());
 
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
@@ -45,16 +45,16 @@ public class TransactionDailyGraphMergerTest {
 	public void testForMegerGraph() throws Exception {
 		TransactionReport report = m_meger.mergeForGraph(m_reportDomain, reports);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerGraph.xml"), "utf-8");
-		//Assert.assertEquals(expeted, report.toString());
+		// Assert.assertEquals(expeted, report.toString());
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
-	private HourlyReport creatReport() {
-		HourlyReport result = new HourlyReport();
+	private TransactionReport creatReport() {
+		TransactionReport result = new TransactionReport();
 		try {
 			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseTransactionReport.xml"), "utf-8");
 
-			result.setContent(xml);
+			return DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
