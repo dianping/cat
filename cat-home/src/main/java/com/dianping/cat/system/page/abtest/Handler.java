@@ -1,6 +1,8 @@
 package com.dianping.cat.system.page.abtest;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
@@ -174,21 +177,35 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				handleUpdateAction(ctx, payload);
 			} else if (action == Action.ADDGROUPSTRATEGY) {
 				handleCreateGroupStrategyAction(ctx, payload);
+			} else if(action == Action.PARSEGROUPSTRATEGY){
+				handleParseGroupStrategyAction(ctx,payload);
 			}
 		}
 
+	}
+
+	private void handleParseGroupStrategyAction(Context ctx, Payload payload) {
+		InputStream stream;
+      try {
+	      stream = new ByteArrayInputStream(payload.getSrcCode().getBytes("UTF-8"));
+	      GroupstrategyDescriptor descriptor = GroupStrategyParser.parse(stream);
+	      
+	      ctx.setDescriptor(GroupStrategyParser.toJson(descriptor));
+      } catch (Throwable e) {
+      	
+      }
 	}
 
 	private void handleCreateGroupStrategyAction(Context ctx, Payload payload) {
 		GroupStrategy gs = new GroupStrategy();
 
 		String name = payload.getGroupStrategyName();
+		gs.setClassName(payload.getGroupStrategyClassName());
 		gs.setName(name);
-		gs.setAlias(payload.getGroupStrategyAlias());
-		gs.setConfiguration(payload.getGroupStrategyConf());
+		gs.setFullyQualifiedName(payload.getGroupStrategyFullName());
+		gs.setDescriptor(payload.getGroupStrategyDescriptor());
 		gs.setDescription(payload.getGroupStrategyDescription());
 		gs.setStatus(1);
-		gs.setClassname("");
 
 		try {
 			List<GroupStrategy> groupStrategies = m_groupStrategyDao.findByName(name, GroupStrategyEntity.READSET_FULL);
@@ -231,12 +248,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		case MODEL:
 			renderModel(model);
 			break;
+		case PARSEGROUPSTRATEGY:
+			renderGroupStrategy(ctx);
 		}
 
 		model.setAction(action);
 		model.setPage(SystemPage.ABTEST);
 		m_jspViewer.view(ctx, model);
 	}
+
+	private void renderGroupStrategy(Context ctx) {
+		
+   }
 
 	private void handleStatusChangeAction(Context ctx) {
 		Payload payload = ctx.getPayload();

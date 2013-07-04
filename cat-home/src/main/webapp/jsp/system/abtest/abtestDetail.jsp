@@ -155,8 +155,7 @@ div.controls input {
                <div class="controls">
                   <select name="strategyId" check-type="required" required-message="Strategy is required!" disabled="disabled">
                      <c:forEach var="item" items="${model.groupStrategyList}">
-                        <option value="${item.id }" <c:if test="${item.id == model.abtest.groupStrategy}">selected="selected"</c:if>>${item.alias
-                           }</option>
+                        <option value="${item.id }" <c:if test="${item.id == model.abtest.groupStrategy}">selected="selected"</c:if>>${item.name}</option>
                      </c:forEach>
                   </select>
                </div>

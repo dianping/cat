@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<groupstrategy-descriptor name="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
+   <fields>
+      <field name="package" type="String" value=""/>
+      <field name="class" type="String" value=""/>
+      <field name="inject" type="String" value=""/>
+   </fields>
+</groupstrategy-descriptor>

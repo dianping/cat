@@ -7,6 +7,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	ADDGROUPSTRATEGY("addGs"),
 	
+	PARSEGROUPSTRATEGY("parseGs"),
+	
 	DETAIL("detail"),
 	
 	MODEL("model"),

@@ -1,0 +1,32 @@
+<abtest-model>
+	<case id="1001" name="mock" created-date="2013-04-10 17:00:00" last-modified-date="2013-04-10 17:00:00">
+		<description>This is a mock ABTest for test</description>
+		<owner>hao.zhu@dianping.com,kezhu.wu@dianping.com</owner>
+		<group-strategy>roundrobin</group-strategy>
+		<domain>TuanGouApi</domain>
+		<domain>TuanGouWeb</domain>
+		<domain>TuanGouRemote</domain>
+		<runs>
+			<run id="1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" disabled="false">
+				<creator>hao.zhu@dianping.com</creator>
+				<domain>TuanGouWeb</domain>
+				<domain>TuanGouRemote</domain>
+				<groupstrategy-descriptor name="roundrobin" className="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
+					<fields>
+					   <field name="package" type="String" input-type="input">
+					   		<![CDATA[This is value]]>
+					   </field>
+					   <field name="class" type="String" input-type="textarea">
+					  		 <![CDATA[This is value]]>
+					   </field>
+					   <field name="inject" type="String" input-type="input">
+					  		 <![CDATA[This is value]]>
+					   </field>
+					</fields>
+				</groupstrategy-descriptor>
+			</run>
+			<run />
+		</runs>
+	</case>
+	<case/>
+</abtest-model>

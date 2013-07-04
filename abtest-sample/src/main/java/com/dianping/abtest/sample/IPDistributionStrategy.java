@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
 
+import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
@@ -21,8 +22,8 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 	@Override
 	public void apply(ABTestContext ctx) {
 		ABTestEntity entity = ctx.getEntity();
-		String config = entity.getGroupStrategyConfiguration();
-		List<String> ips = Splitters.by(',').trim().noEmptyItem().split(config);
+		GroupstrategyDescriptor config = entity.getGroupStrategyConfiguration();
+		List<String> ips = Splitters.by(',').trim().noEmptyItem().split(config.getFields().get(0).getValue());
 		HttpServletRequest req = ctx.getHttpServletRequest();
 		String address = getRemoteAddr(req);
 		String group = ctx.getCookielet("ab");

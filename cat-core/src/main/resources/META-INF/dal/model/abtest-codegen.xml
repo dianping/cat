@@ -21,7 +21,19 @@
     <attribute name="disabled" value-type="boolean" />
     <element name="creator" value-type="String" />
     <element name="domain" value-type="String" type="list" names="domains" />
-    <element name="group-strategy-configuration" value-type="String" />
+    <entity-ref name="groupstrategy-descriptor" />
+  </entity>
+  <entity name="groupstrategy-descriptor">
+    <attribute name="name" value-type="String" />
+    <attribute name="className" value-type="String" />
+    <attribute name="fullyQualifiedName" value-type="String" />
+    <entity-ref name="field" type="list" names="fields" xml-indent="true" />
+  </entity>
+  <entity name="field">
+    <attribute name="name" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="input-type" value-type="String" />
+    <element name="text" value-type="String" text="true" />
   </entity>
 </model>
 

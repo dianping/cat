@@ -9,4 +9,7 @@
    <model package="com.dianping.cat.home.info" name="info">
       <sample-model>src/test/resources/com/dianping/cat/system/config/info.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.groupstrategy-descriptor" name="groupstrategy-descriptor">
+      <sample-model>src/test/resources/com/dianping/cat/home/abtest/groupstrategy/descriptor.xml</sample-model>
+   </model>
 </wizard>

@@ -6,6 +6,8 @@ public enum JspFile {
 	
 	ADDGROUPSTRATEGY("/jsp/system/abtest/abtestCreate.jsp"),
 	
+	PARSEGROUPSTRATEGY("/jsp/system/abtest/abtestGourpStrategy.jsp"),
+	
 	DETAIL("/jsp/system/abtest/abtestDetail.jsp"),
 	
 	VIEW("/jsp/system/abtest/abtestAllTest.jsp"),

@@ -3,6 +3,7 @@ package com.dianping.cat.abtest.spi;
 import java.util.Date;
 
 import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 
 public class ABTestEntity {
@@ -66,8 +67,8 @@ public class ABTestEntity {
 		return m_groupStrategy;
 	}
 
-	public String getGroupStrategyConfiguration() {
-		return m_run.getGroupStrategyConfiguration() != null ? m_run.getGroupStrategyConfiguration() : null;
+	public GroupstrategyDescriptor getGroupStrategyConfiguration() {
+		return m_run.getGroupstrategyDescriptor() != null ? m_run.getGroupstrategyDescriptor() : null;
 	}
 
 	public String getGroupStrategyName() {

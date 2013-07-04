@@ -1,0 +1,9 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.abtest.spi.ABTestGroupStrategy</role>
+			<role-hint>retina_img_groupstrategy</role-hint>
+			<implementation>com.dianping.cat.abtest.tester.RetinaImgGroupStrategy</implementation>
+		</component>
+	</components>
+</plexus>

@@ -153,75 +153,34 @@
 				<div class="control-group">
 					<label class="control-label">Strategy Name</label>
 					<div class="controls">
-						<select name="strategyId" check-type="required"
+						<select id="strategyId" name="strategyId" check-type="required"
 							required-message="Strategy is required!">
+							<option value="0">请选择一个分组策略</option>
 							<c:forEach var="item" items="${model.groupStrategyList}">
-								<option value="${item.id }"
+								<option value="${item.id}"
 									<c:if test="${item.id == payload.strategyId}">selected="selected"</c:if>>
-									${item.alias }</option>
+									${item.name }</option>
 							</c:forEach>
 						</select> <a href="#groupStrategyModal" role="button" class="btn"
 							data-toggle="modal">Add</a>
 					</div>
 				</div>
+				<div id="groupStrategyDivsub">
+				
+				</div>
+				<!-- 
 				<div class="control-group">
 					<label class="control-label">Strategy Configuration</label>
 					<div class="controls">
 						<textarea name="strategyConfig" class="span6" rows="3" cols="60">${payload.strategyConfig}</textarea>
 					</div>
-				</div>
+				</div> -->
 			</form>
 		</div>
 	</div>
-	<!-- GroupStrategy的输入弹出框 -->
-	<form id="groupStrategyFrom" class="form-horizontal" action="abtest?op=addGs" method="post">
-		<div id="groupStrategyModal" class="modal hide fade" tabindex="-1"
-			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h3 id="myModaaddABTestlLabel">添加分组策略</h3>
-			</div>
-			<div class="modal-body">
-				<div class="control-group">
-					<label class="control-label" style="width: 50px;">名字 </label>
-					<div class="controls" style="margin-left: 100px;">
-						<input type="text" name="groupStrategyName"
-							placeholder="give it a name ..." check-type="required"
-							required-message="Name is required!"
-							value="${payload.groupStrategyName}">
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" style="width: 50px;">别名 </label>
-					<div class="controls" style="margin-left: 100px;">
-						<input type="text" name="groupStrategyAlias"
-							placeholder="give it a name ..." check-type="required"
-							required-message="Alias is required!"
-							value="${payload.groupStrategyAlias}">
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" style="width: 50px;">配置 </label>
-					<div class="controls" style="margin-left: 100px;">
-						<textarea name="groupStrategyConf" placeholder="configuration..."
-							class="span4" rows="4" cols="80">${payload.groupStrategyConf}</textarea>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" style="width: 50px;">描述 </label>
-					<div class="controls" style="margin-left: 100px;">
-						<textarea name="groupStrategyDescription"
-							placeholder="description..." rows="4" class="span4" cols="80">${payload.groupStrategyDescription}</textarea>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-				<button class="btn btn-primary" type="submit">Save</button>
-			</div>
-		</div>
-	</form>
+
+	<%@ include file="groupStrategy.jsp"%>
+
 	<script type="text/template" id="alert_success">
          <div style="position: absolute; width: 200px;" class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -240,17 +199,54 @@
 				<c:forEach var="domain" items="${payload.domains}">
 				initDomains.push("${domain}");
 				</c:forEach>
-
+				
 				var timeout = 1;
 				function countDown() {
 					$('#countDown').text(timeout);
 					timeout--;
 					if (timeout == 0) {
-						window.location.href = "abtest";
+						window.location.href = "abtest";  //bug here
 					} else {
 						setTimeout("countDown()", 1000);
 					}
 				}
+				
+				$("#form" ).on( "submit", function( event ) {
+					event.preventDefault();
+					
+					var params = $(this).serialize();
+					//console.log(params);
+					var jsonObject = $('#strategyId option[value=' + $('#strategyId').val() + ']').data();
+					
+					for(var i in jsonObject['fields']){
+						var field = jsonObject['fields'][i];
+						var name = field["field-name"];
+						var type = field["field-type"];
+						
+						field["field-value"] = $(type + '[name=' + name + ']').val();
+					}
+					/*
+					var params ={
+						"name" : $('input[name=name]').val(),
+						"owner" : $('input[name=owner]').val(),
+						"description" : $('textarea[name=description]').val(),
+						"startDate" : $('input[name=startDate]').val(),
+						"endDate" :  $('input[name=endDate]').val(),
+						"domains" : $('#domains').val(),
+						"strategyId" : $('#strategyId').val(),
+						"strategyConfig" : JSON.stringify(jsonObject)
+					};*/
+					//console.log(jsonObject);
+					params += "&strategyConfig=" + JSON.stringify(jsonObject);
+					console.log(params);
+					$.ajax({
+						type: "POST",
+						url : "abtest?op=addABTest",
+						data: params
+					}).done(function(json) {
+						//$('#groupStrategyModal').modal('hide')
+					});
+				});
 
 				$(function() {
 					$('#datetimepicker1').datetimepicker();
@@ -263,11 +259,16 @@
 										allowClear : true
 									});
 					$("#domains").val(initDomains).trigger("change");
+					
+					<c:forEach var="item" items="${model.groupStrategyList}">
+						$('#strategyId option[value=${item.id}]').data(JSON.parse('${item.descriptor}'));
+					</c:forEach>
+					
 					//tips
 					$('i[tips]').popover();
 					//validate
 					$('#form').validation();
-					$('#groupStrategyFrom').validation();
+					//$('#groupStrategyFrom').validation();
 				});
 			</script>
 </a:body>

@@ -16,6 +16,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.ADDABTEST.getPath();
 		case ADDGROUPSTRATEGY:
 			return JspFile.ADDGROUPSTRATEGY.getPath();
+		case PARSEGROUPSTRATEGY:
+			return JspFile.PARSEGROUPSTRATEGY.getPath();
 		case DETAIL:
 			return JspFile.DETAIL.getPath();
 		case REPORT:

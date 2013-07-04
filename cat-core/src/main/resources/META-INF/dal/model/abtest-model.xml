@@ -8,5 +8,11 @@
     <attribute name="id" value-type="int" key="true" primitive="true"/>
     <element name="domain" value-type="String" type="set" names="domains" />
   </entity>
+  <entity name="field">
+    <attribute name="name" value-type="String" />
+    <attribute name="type" value-type="String" default-value="String"  />
+    <attribute name="input-type" value-type="String" default-value="input" />
+    <element name="text" value-type="String" text="true" alias="value"/>
+  </entity>
 </model>
 

@@ -88,9 +88,9 @@
   <entity name="group-strategy" table="group_strategy" alias="gs">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="100" nullable="false" />
-    <member name="alias" field="alias" value-type="String" length="100" nullable="false" />
-    <member name="classname" field="classname" value-type="String" length="100" nullable="false" />
-    <member name="configuration" field="configuration" value-type="String" length="65535" />
+    <member name="class-name" field="class_name" value-type="String" length="100" nullable="false" />
+    <member name="fully-qualified-name" field="fully_qualified_name" value-type="String" length="100" nullable="false" />
+    <member name="descriptor" field="descriptor" value-type="String" length="65535" />
     <member name="status" field="status" value-type="int" length="3" nullable="false" />
     <member name="description" field="description" value-type="String" length="512" />
     <var name="key-id" value-type="int" key-member="id" />

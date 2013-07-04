@@ -64,14 +64,20 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("groupStrategyName")
 	private String m_groupStrategyName;
 	
-	@FieldMeta("groupStrategyAlias")
-	private String m_groupStrategyAlias;
+	@FieldMeta("groupStrategyClassName")
+	private String m_groupStrategyClassName;
 	
-	@FieldMeta("groupStrategyConf")
-	private String m_groupStrategyConf;
+	@FieldMeta("groupStrategyFullName")
+	private String m_groupStrategyFullName;
+	
+	@FieldMeta("groupStrategyDescriptor")
+	private String m_groupStrategyDescriptor;
 	
 	@FieldMeta("groupStrategyDescription")
 	private String m_groupStrategyDescription;
+	
+	@FieldMeta("srcCode")
+	private String m_srcCode;
 	
 	private boolean m_addGs;
 
@@ -255,20 +261,28 @@ public class Payload implements ActionPayload<SystemPage, Action> {
    	m_groupStrategyName = groupStrategyName;
    }
 
-	public String getGroupStrategyAlias() {
-   	return m_groupStrategyAlias;
+	public String getGroupStrategyClassName() {
+   	return m_groupStrategyClassName;
    }
 
-	public void setGroupStrategyAlias(String groupStrategyAlias) {
-   	m_groupStrategyAlias = groupStrategyAlias;
+	public void setGroupStrategyClassName(String groupStrategyClassName) {
+   	m_groupStrategyClassName = groupStrategyClassName;
    }
 
-	public String getGroupStrategyConf() {
-   	return m_groupStrategyConf;
+	public String getGroupStrategyFullName() {
+   	return m_groupStrategyFullName;
    }
 
-	public void setGroupStrategyConf(String groupStrategyConf) {
-   	m_groupStrategyConf = groupStrategyConf;
+	public void setGroupStrategyFullName(String groupStrategyFullName) {
+   	m_groupStrategyFullName = groupStrategyFullName;
+   }
+
+	public String getGroupStrategyDescriptor() {
+   	return m_groupStrategyDescriptor;
+   }
+
+	public void setGroupStrategyDescriptor(String groupStrategyDescriptor) {
+   	m_groupStrategyDescriptor = groupStrategyDescriptor;
    }
 
 	public String getGroupStrategyDescription() {
@@ -286,6 +300,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setAddGs(boolean addGs) {
    	m_addGs = addGs;
+   }
+
+	public String getSrcCode() {
+   	return m_srcCode;
+   }
+
+	public void setSrcCode(String srcCode) {
+   	m_srcCode = srcCode;
    }
 
 	@Override
@@ -319,7 +341,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			}else if(m_action == Action.ADDGROUPSTRATEGY){
 				try {
 					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyName), "'GroupStrategy Name' is required");
-					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyAlias), "'GroupStrategy Alias' is required");
+					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyClassName), "'GroupStrategy ClassName' is required");
 				} catch (IllegalArgumentException e) {
 					ctx.setException(e);
 				}
