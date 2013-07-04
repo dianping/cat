@@ -22,7 +22,7 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.core.dal.Hostinfo;
 import com.dianping.cat.consumer.core.dal.HostinfoDao;
 import com.dianping.cat.consumer.core.dal.HostinfoEntity;

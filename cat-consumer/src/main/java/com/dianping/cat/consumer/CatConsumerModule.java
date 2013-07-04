@@ -5,9 +5,9 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.CatCoreModule;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
-import com.dianping.cat.message.io.TcpSocketReceiver;
+import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 
 public class CatConsumerModule extends AbstractModule {
 	public static final String ID = "cat-consumer";

@@ -7,11 +7,11 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.DomainManager;
-import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.consumer.advanced.CrossAnalyzer;
 import com.dianping.cat.consumer.advanced.DatabaseParser;
 import com.dianping.cat.consumer.advanced.DependencyAnalyzer;

@@ -15,11 +15,6 @@
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
-         <artifactId>dal-jdbc</artifactId>
-         <version>2.0.2-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-         <groupId>org.unidal.framework</groupId>
          <artifactId>test-framework</artifactId>
          <version>2.0.3-SNAPSHOT</version>
          <scope>test</scope>
@@ -70,19 +65,6 @@
                   <configuration>
                      <className>com.dianping.cat.consumer.build.ComponentsConfigurator</className>
                      <env>dev</env>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate dal jdbc model</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-jdbc</goal>
-                  </goals>
-                  <configuration>
-                     <manifest><![CDATA[
-                     	${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     	${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
-                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>

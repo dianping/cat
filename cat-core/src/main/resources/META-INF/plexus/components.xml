@@ -1,51 +1,16 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.configuration.ClientConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ClientConfigManager</implementation>
+			<role>com.dianping.cat.ServerConfigManager</role>
+			<implementation>com.dianping.cat.ServerConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
+			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.status.ServerStateManager</role>
-			<implementation>com.dianping.cat.status.ServerStateManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageManager</role>
-			<implementation>com.dianping.cat.message.internal.DefaultMessageManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.io.TransportManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStatistics</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.MessageProducer</role>
-			<implementation>com.dianping.cat.message.internal.DefaultMessageProducer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.internal.MessageIdFactory</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.internal.MessageIdFactory</role>
-			<implementation>com.dianping.cat.message.internal.MessageIdFactory</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-			<implementation>com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder</implementation>
+			<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+			<implementation>com.dianping.cat.message.spi.core.DefaultMessagePathBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
@@ -53,104 +18,59 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumer</role>
-			<role-hint>dummy</role-hint>
-			<implementation>com.dianping.cat.message.spi.internal.DummyConsumer</implementation>
+			<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
+			<implementation>com.dianping.cat.analysis.DefaultMessageAnalyzerManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
-			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry</implementation>
+			<role>com.dianping.cat.service.RemoteModelService</role>
+			<implementation>com.dianping.cat.service.RemoteModelService</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportService</role>
+			<implementation>com.dianping.cat.service.DefaultReportService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hints>
-						<role-hint>dummy</role-hint>
-					</role-hints>
-					<field-name>m_consumers</field-name>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.RemoteModelService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.dal.MonthlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.io.MessageSender</role>
-			<role-hint>tcp-socket</role-hint>
-			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStatistics</role>
-					<field-name>m_statistics</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-					<field-name>m_codec</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.io.MessageSender</role>
-			<role-hint>tcp-socket-hierarchy</role-hint>
-			<implementation>com.dianping.cat.message.io.TcpSocketHierarchySender</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStatistics</role>
-					<field-name>m_statistics</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-					<field-name>m_codec</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.io.TcpSocketReceiver</role>
-			<implementation>com.dianping.cat.message.io.TcpSocketReceiver</implementation>
+			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
+			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageHandler</role>
+					<role>com.dianping.cat.message.spi.core.MessageHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.status.ServerStateManager</role>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.io.TransportManager</role>
-			<implementation>com.dianping.cat.message.io.DefaultTransportManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageHandler</role>
-			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageHandler</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageStatistics</role>
-			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageStatistics</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.status.StatusUpdateTask</role>
-			<implementation>com.dianping.cat.status.StatusUpdateTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStatistics</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
+			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
+			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.dump.MessageBucket</role>
@@ -170,13 +90,13 @@
 			<implementation>com.dianping.cat.storage.dump.LocalMessageBucketManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.status.ServerStateManager</role>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -190,70 +110,14 @@
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestContextManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestCodec</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
-			<configuration>
-				<refreshTimeInSeconds>60</refreshTimeInSeconds>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-			<role-hint>escape</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.EscapingBufferWriter</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
 			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>plain-text</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>escape</role-hint>
-				</requirement>
-			</requirements>
+			<implementation>com.dianping.cat.message.spi.core.HtmlEncodingBufferWriter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.HtmlMessageCodec</implementation>
+			<implementation>com.dianping.cat.message.spi.core.HtmlMessageCodec</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
@@ -264,7 +128,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>waterfall</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.WaterfallMessageCodec</implementation>
+			<implementation>com.dianping.cat.message.spi.core.WaterfallMessageCodec</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
@@ -277,7 +141,7 @@
 			<implementation>com.dianping.cat.storage.DefaultBucketManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -288,50 +152,10 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestContextManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestCodec</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
-			<configuration>
-				<refreshTimeInSeconds>60</refreshTimeInSeconds>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
+					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
