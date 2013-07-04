@@ -12,10 +12,10 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Graph;
+import com.dianping.cat.consumer.core.dal.GraphDao;
+import com.dianping.cat.consumer.core.dal.GraphEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.GraphDao;
-import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;

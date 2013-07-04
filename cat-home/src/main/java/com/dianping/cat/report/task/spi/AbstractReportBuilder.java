@@ -10,25 +10,25 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.DailyGraphDao;
+import com.dianping.cat.consumer.core.dal.DailyReportDao;
+import com.dianping.cat.consumer.core.dal.GraphDao;
+import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.ReportEntity;
-import com.dianping.cat.home.dal.report.DailygraphDao;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.GraphDao;
-import com.dianping.cat.home.dal.report.MonthreportDao;
-import com.dianping.cat.home.dal.report.WeeklyreportDao;
+import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
 
 public abstract class AbstractReportBuilder {
 
 	@Inject
-	protected DailyreportDao m_dailyReportDao;
+	protected DailyReportDao m_dailyReportDao;
 	
 	@Inject
-	protected WeeklyreportDao m_weeklyreportDao;
+	protected WeeklyReportDao m_weeklyReportDao;
 	
 	@Inject
-	protected MonthreportDao m_monthreportDao;
+	protected MonthlyReportDao m_monthlyReportDao;
 
 	@Inject
 	protected GraphDao m_graphDao;
@@ -37,7 +37,7 @@ public abstract class AbstractReportBuilder {
 	protected ReportDao m_reportDao;
 
 	@Inject
-	protected DailygraphDao m_dailygraphDao;
+	protected DailyGraphDao m_dailyGraphDao;
 
 	protected Set<String> getDomainsFromHourlyReport(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();

@@ -6,22 +6,22 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.core.dal.DailyReportDao;
+import com.dianping.cat.consumer.core.dal.MonthlyReportDao;
 import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.MonthreportDao;
-import com.dianping.cat.home.dal.report.WeeklyreportDao;
+import com.dianping.cat.consumer.core.dal.WeeklyReportDao;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.service.MonthReportCache;
-import com.dianping.cat.report.service.MonthReportService;
+import com.dianping.cat.report.service.MonthlyReportService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.WeeklyReportCache;
 import com.dianping.cat.report.service.WeeklyReportService;
 import com.dianping.cat.report.service.impl.DailyReportServiceImpl;
 import com.dianping.cat.report.service.impl.HourlyReportServiceImpl;
-import com.dianping.cat.report.service.impl.MonthReportServiceImpl;
+import com.dianping.cat.report.service.impl.MonthlyReportServiceImpl;
 import com.dianping.cat.report.service.impl.ReportServiceImpl;
 import com.dianping.cat.report.service.impl.WeeklyReportServiceImpl;
 
@@ -34,13 +34,13 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      .req(ReportDao.class, BusinessReportDao.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
-		      .req(DailyreportDao.class));
+		      .req(DailyReportDao.class));
 
 		all.add(C(WeeklyReportService.class, WeeklyReportServiceImpl.class)//
-		      .req(WeeklyreportDao.class));
+		      .req(WeeklyReportDao.class));
 
-		all.add(C(MonthReportService.class, MonthReportServiceImpl.class)//
-		      .req(MonthreportDao.class));
+		all.add(C(MonthlyReportService.class, MonthlyReportServiceImpl.class)//
+		      .req(MonthlyReportDao.class));
 
 		all.add(C(WeeklyReportCache.class)//
 		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
@@ -50,7 +50,7 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 
 		all.add(C(ReportService.class, ReportServiceImpl.class)//
 		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class,
-		            MonthReportService.class)//
+		            MonthlyReportService.class)//
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
 
 

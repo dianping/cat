@@ -7,9 +7,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.core.dal.DailyGraph;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.home.dal.report.Dailygraph;
 
 public class DailyTransactionReportGraphTest {
 
@@ -21,7 +21,7 @@ public class DailyTransactionReportGraphTest {
 
 		DailyTransactionGraphCreator creator = new DailyTransactionGraphCreator();
 
-		List<Dailygraph> graphs = creator.buildDailygraph(report1);
+		List<DailyGraph> graphs = creator.buildDailygraph(report1);
 
 		Assert.assertEquals(3, graphs.size());
 	}

@@ -10,15 +10,15 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.core.dal.DailyReport;
+import com.dianping.cat.consumer.core.dal.DailyReportEntity;
+import com.dianping.cat.consumer.core.dal.MonthlyReport;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportEntity;
+import com.dianping.cat.consumer.core.dal.WeeklyReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
@@ -32,7 +32,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
+			DailyReport report = getdailyReport(reportName, reportDomain, reportPeriod);
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (Exception e) {
@@ -53,8 +53,8 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "matrix", DailyreportEntity.READSET_FULL);
+				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain,
+				      "matrix", new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 				
 				MatrixReport reportModel = DefaultSaxParser.parse(xml);
@@ -79,7 +79,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		Date end = cal.getTime();
 
 		MatrixReport matrixReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
+		MonthlyReport report = m_monthlyReportDao.createLocal();
 
 		report.setContent(matrixReport.toString());
 		report.setCreationDate(new Date());
@@ -90,7 +90,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		report.setType(1);
 
 		try {
-			m_monthreportDao.insert(report);
+			m_monthlyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -104,7 +104,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
 		MatrixReport matrixReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
+		WeeklyReport report = m_weeklyReportDao.createLocal();
 		String content = matrixReport.toString();
 
 		report.setContent(content);
@@ -116,7 +116,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		report.setType(1);
 
 		try {
-			m_weeklyreportDao.insert(report);
+			m_weeklyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -124,7 +124,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		return true;
 	}
 
-	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+	private DailyReport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
 		
@@ -132,7 +132,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		      ReportEntity.READSET_FULL);
 		String content = m_matrixMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 
-		Dailyreport report = m_dailyReportDao.createLocal();
+		DailyReport report = m_dailyReportDao.createLocal();
 		report.setContent(content);
 		report.setCreationDate(new Date());
 		report.setDomain(reportDomain);

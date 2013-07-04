@@ -11,17 +11,17 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.core.dal.DailyGraph;
+import com.dianping.cat.consumer.core.dal.DailyReport;
+import com.dianping.cat.consumer.core.dal.DailyReportEntity;
+import com.dianping.cat.consumer.core.dal.Graph;
+import com.dianping.cat.consumer.core.dal.MonthlyReport;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportEntity;
+import com.dianping.cat.consumer.core.dal.WeeklyReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailygraph;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
@@ -40,10 +40,10 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 			ProblemDailyGraphCreator creator = new ProblemDailyGraphCreator();
 			creator.visitProblemReport(report);
 
-			List<Dailygraph> graphs = creator.buildDailyGraph();
+			List<DailyGraph> graphs = creator.buildDailyGraph();
 
-			for (Dailygraph temp : graphs) {
-				m_dailygraphDao.insert(temp);
+			for (DailyGraph temp : graphs) {
+				m_dailyGraphDao.insert(temp);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -57,7 +57,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 			buildDailyGraph(problemReport);
 
 			String content = problemReport.toString();
-			Dailyreport report = m_dailyReportDao.createLocal();
+			DailyReport report = m_dailyReportDao.createLocal();
 
 			report.setContent(content);
 			report.setCreationDate(new Date());
@@ -97,8 +97,8 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "problem",
-				      DailyreportEntity.READSET_FULL);
+				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain, "problem",
+						new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 
 				ProblemReport reportModel = DefaultSaxParser.parse(xml);
@@ -123,7 +123,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		Date end = cal.getTime();
 
 		ProblemReport problemReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
+		MonthlyReport report = m_monthlyReportDao.createLocal();
 
 		report.setContent(problemReport.toString());
 		report.setCreationDate(new Date());
@@ -134,7 +134,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		report.setType(1);
 
 		try {
-			m_monthreportDao.insert(report);
+			m_monthlyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -148,7 +148,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
 		ProblemReport problemReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
+		WeeklyReport report = m_weeklyReportDao.createLocal();
 		String content = problemReport.toString();
 
 		report.setContent(content);
@@ -160,7 +160,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		report.setType(1);
 
 		try {
-			m_weeklyreportDao.insert(report);
+			m_weeklyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;

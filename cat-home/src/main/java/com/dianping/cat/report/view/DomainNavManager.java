@@ -16,7 +16,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ProjectEntity;

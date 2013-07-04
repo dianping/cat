@@ -10,16 +10,16 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.core.dal.DailyReport;
+import com.dianping.cat.consumer.core.dal.DailyReportEntity;
+import com.dianping.cat.consumer.core.dal.Graph;
+import com.dianping.cat.consumer.core.dal.MonthlyReport;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportEntity;
+import com.dianping.cat.consumer.core.dal.WeeklyReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
@@ -60,8 +60,8 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "heartbeat", DailyreportEntity.READSET_FULL);
+				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod( domain,
+				      "heartbeat",new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 				
 				HeartbeatReport reportModel = DefaultSaxParser.parse(xml);
@@ -86,7 +86,7 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 		Date end = cal.getTime();
 
 		HeartbeatReport heartbeatReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
+		MonthlyReport report = m_monthlyReportDao.createLocal();
 
 		report.setContent(heartbeatReport.toString());
 		report.setCreationDate(new Date());
@@ -97,7 +97,7 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 		report.setType(1);
 
 		try {
-			m_monthreportDao.insert(report);
+			m_monthlyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -111,7 +111,7 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
 		HeartbeatReport heartbeatReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
+		WeeklyReport report = m_weeklyReportDao.createLocal();
 		String content = heartbeatReport.toString();
 
 		report.setContent(content);
@@ -123,7 +123,7 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 		report.setType(1);
 
 		try {
-			m_weeklyreportDao.insert(report);
+			m_weeklyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;

@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.report.model.ModelPeriod;
+import com.dianping.cat.service.ModelPeriod;
 
 public class PayloadTest {
 	private static final long ONE_HOUR = 3600 * 1000L;
