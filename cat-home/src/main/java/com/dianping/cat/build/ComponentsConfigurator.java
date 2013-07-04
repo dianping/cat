@@ -55,7 +55,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
-
+		
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportService.class));
 

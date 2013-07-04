@@ -8,12 +8,18 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.TaskDao;
+import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
+import com.dianping.cat.report.baseline.BaselineConfigManager;
+import com.dianping.cat.report.baseline.BaselineCreator;
+import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
+import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.cross.CrossMerger;
@@ -29,6 +35,7 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixMerger;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.metric.MetricBaselineReportBuilderTest;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -65,6 +72,17 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MatrixMerger.class));
 		all.add(C(SqlMerger.class));
 		all.add(C(StateMerger.class));
+		
+		all.add(C(BaselineCreator.class,DefaultBaselineCreator.class));
+		all.add(C(BaselineService.class,DefaultBaselineService.class)
+				.req(BaselineDao.class));
+		
+		all.add(C(MetricBaselineReportBuilderTest.class)
+				.req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class)//
+		      .req(ReportService.class,BaselineConfigManager.class)//
+		      .req(BaselineCreator.class,BaselineService.class));
+
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class,

@@ -473,6 +473,24 @@
       </query>
     </query-defs>
   </entity>
+  <entity name="baseline" table="baseline" alias="b">
+    	<member name="creation-date" insert-expr="NOW()" />
+    	<var name="dataInDoubleArray" value-type="double[]" />
+    	<query-defs>
+			<query name="find-by-report-name-key-time" type="SELECT">
+				<param name="report-period" />
+				<param name="report-name" />
+				<param name="index-key" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report_period'/> = ${report-period}
+					AND <FIELD name='report_name'/> = ${report-name}
+					AND <FIELD name='index_key'/> = ${index-key} 
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 </entities>
 
 

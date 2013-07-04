@@ -12,6 +12,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -20,7 +21,6 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
-import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 
 public class OpDataCollectTest extends ComponentTestCase {
 
@@ -28,14 +28,6 @@ public class OpDataCollectTest extends ComponentTestCase {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-	@Test
-	public void test1()throws Exception{
-		DependencyReportBuilder builder =(DependencyReportBuilder)lookup(DependencyReportBuilder.class);
-		System.out.println(builder.toString());
-		
-		System.out.println(builder.buildHourReport("Cat", "Domain", new Date()));
-	}
-	
 	@Test
 	public void test() throws Exception {
 		m_hourlyReportService = (HourlyReportService) lookup(HourlyReportService.class);
@@ -57,8 +49,17 @@ public class OpDataCollectTest extends ComponentTestCase {
 			buildHeartbeatData(domain, dateStr2);
 			buildHeartbeatData(domain, dateStr3);
 		}
+		
+		buildMetricData("TuanGou", "2013-06-27 00:00:00");
 	}
 
+	private void buildMetricData(String group, String str) throws Exception {
+		Date start = m_sdf.parse(str);
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		MetricReport report = m_hourlyReportService.queryMetricReport(group, start, end);
+		System.out.println(report);
+	}
+	
 	private void buildHeartbeatData(String domain, String str) throws Exception {
 		Date start = m_sdf.parse(str);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);

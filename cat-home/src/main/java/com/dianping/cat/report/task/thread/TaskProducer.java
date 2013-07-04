@@ -15,6 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.core.dal.ReportEntity;
@@ -34,6 +35,9 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	@Inject
 	private TaskDao m_taskDao;
+	
+	@Inject
+	private MetricConfigManager m_configManager;
 
 	private Set<String> m_dailyReportNameSet = new HashSet<String>();
 
@@ -46,6 +50,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 	private void creatReportTask(Date yesterday) {
 		generateDailyReportTasks(yesterday);
 		generateDailyDatabaseTasks(yesterday);
+		generateDailyMetricBaselineTasks(yesterday);
 
 		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
 		Date lastWeekEnd = TimeUtil.getCurrentWeek();
@@ -96,6 +101,24 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 			Cat.logError(e);
 		}
 	}
+	
+	private void generateDailyMetricBaselineTasks(Date date) {
+		try {
+		   Set<String> groups = m_configManager.getMetricConfig().getMetricItemConfigs().keySet();
+			for (String group : groups) {
+				try {
+					m_taskDao.findByDomainNameTypePeriod("metric", group, ReportFacade.TYPE_DAILY, date,
+					      TaskEntity.READSET_FULL);
+				} catch (DalNotFoundException e) {
+					insertTask(group, "metric", date, ReportFacade.TYPE_HOUR);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	   
+   }
+
 
 	private void generateDailyGraphTask(Date start, Date end) {
 		long startTime = start.getTime();
@@ -307,12 +330,13 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_dailyReportNameSet.add("transaction");
 		m_dailyReportNameSet.add("event");
+		m_dailyReportNameSet.add("transaction");
 		m_dailyReportNameSet.add("problem");
 		m_dailyReportNameSet.add("matrix");
 		m_dailyReportNameSet.add("cross");
 		m_dailyReportNameSet.add("sql");
+		m_dailyReportNameSet.add("health");
 
 		m_graphReportNameSet.add("transaction");
 		m_graphReportNameSet.add("event");
