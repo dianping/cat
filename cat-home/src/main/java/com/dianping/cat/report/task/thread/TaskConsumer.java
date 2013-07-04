@@ -2,7 +2,7 @@ package com.dianping.cat.report.task.thread;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.core.dal.Task;
 
 public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 

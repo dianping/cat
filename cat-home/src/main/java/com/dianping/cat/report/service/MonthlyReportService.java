@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
-public interface MonthReportService {
+public interface MonthlyReportService {
 
 	public CrossReport queryCrossReport(String domain, Date start);
 

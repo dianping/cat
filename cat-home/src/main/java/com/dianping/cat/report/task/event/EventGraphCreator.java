@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
-import com.dianping.cat.home.dal.report.Graph;
+import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.spi.GraphCreator;
 import com.dianping.cat.report.task.spi.GraphLine;
 

@@ -13,8 +13,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -22,6 +20,8 @@ import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.cross.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -37,7 +37,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	private Map<String, CrossReport> m_reports = new HashMap<String, CrossReport>();
 
@@ -259,7 +259,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 				for (CrossReport report : m_reports.values()) {
 					try {
-						Report r = m_reportDao.createLocal();
+						HourlyReport r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 

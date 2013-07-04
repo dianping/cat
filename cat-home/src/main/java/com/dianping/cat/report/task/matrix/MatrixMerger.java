@@ -6,9 +6,9 @@ import java.util.Set;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.advanced.MatrixReportFilter;
-import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
@@ -16,9 +16,9 @@ import com.dianping.cat.report.task.spi.ReportMerger;
 public class MatrixMerger implements ReportMerger<MatrixReport> {
 
 	@Override
-	public MatrixReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+	public MatrixReport mergeForDaily(String reportDomain, List<HourlyReport> reports, Set<String> domains) {
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(reportDomain));
-		for (Report report : reports) {
+		for (HourlyReport report : reports) {
 			String xml = report.getContent();
 			MatrixReport model;
 			try {
@@ -41,7 +41,7 @@ public class MatrixMerger implements ReportMerger<MatrixReport> {
 	}
 
 	@Override
-	public MatrixReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public MatrixReport mergeForGraph(String reportDomain, List<HourlyReport> reports) {
 		throw new RuntimeException("Matrix report don't need graph!");
 	}
 }

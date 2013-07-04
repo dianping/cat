@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.report.task.thread.TaskConsumer;
 
 public class TaskConsumerTest {

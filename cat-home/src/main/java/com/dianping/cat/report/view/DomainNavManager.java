@@ -17,9 +17,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.core.dal.Project;
-import com.dianping.cat.consumer.core.dal.ProjectDao;
-import com.dianping.cat.consumer.core.dal.ProjectEntity;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 
 public class DomainNavManager implements Initializable {

@@ -44,8 +44,10 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		if (totalCountSum > 0) {
 			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
-
+			double line99Values = old.getLine99Value() * old.getTotalCount() + other.getLine99Value() * other.getTotalCount();
+			
 			old.setLine95Value(line95Values / totalCountSum);
+			old.setLine99Value(line99Values / totalCountSum);
 		}
 
 		if (old.getTotalCount() > 0) {

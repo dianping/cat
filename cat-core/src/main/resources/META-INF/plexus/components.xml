@@ -36,16 +36,16 @@
 					<role>com.dianping.cat.service.RemoteModelService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.DailyReportDao</role>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.WeeklyReportDao</role>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
