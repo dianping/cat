@@ -27,7 +27,7 @@ public class HistoricalMetricService extends BaseHistoricalModelService<MetricRe
 	@Override
 	protected MetricReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		MetricReport report;
 
 		if (isLocalMode()) {

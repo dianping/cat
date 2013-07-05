@@ -234,7 +234,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private EventReport getEventHourlyReport(String domain, String ip, String type) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime()) //
 		      .setProperty("ip", ip);
 		if (!StringUtils.isEmpty(type)) {
 			request.setProperty("type", type);
@@ -252,7 +252,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProblemReport getProblemHourlyReport(String domain, String ip) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime()) //
 		      .setProperty("type", "view");
 		if (!ip.equalsIgnoreCase(Payload.ALL)) {
 			request.setProperty("ip", ip);
@@ -269,7 +269,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private TransactionReport getTransactionHourlyReport(String domain, String ip, String type) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime()) //
 		      .setProperty("ip", ip);
 		if (!StringUtils.isEmpty(type)) {
 			request.setProperty("type", type);

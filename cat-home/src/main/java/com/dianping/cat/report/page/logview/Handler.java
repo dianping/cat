@@ -17,7 +17,6 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
@@ -35,8 +34,7 @@ public class Handler implements PageHandler<Context> {
 		try {
 			if (messageId != null) {
 				MessageId id = MessageId.parse(messageId);
-				ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
-				ModelRequest request = new ModelRequest(id.getDomain(), period) //
+				ModelRequest request = new ModelRequest(id.getDomain(), id.getTimestamp()) //
 				      .setProperty("messageId", messageId) //
 				      .setProperty("waterfall", String.valueOf(waterfall))
 				      .setProperty("timestamp", String.valueOf(id.getTimestamp()));

@@ -88,9 +88,8 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date).setProperty("type", type);
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
+		     .setProperty("type", type);
 		if (!CatString.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}

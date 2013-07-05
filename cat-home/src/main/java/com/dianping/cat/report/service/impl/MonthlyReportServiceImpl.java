@@ -2,6 +2,7 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -21,12 +22,12 @@ import com.dianping.cat.report.service.MonthlyReportService;
 public class MonthlyReportServiceImpl implements MonthlyReportService {
 
 	@Inject
-	private MonthlyReportDao m_monthReportDao;
+	private MonthlyReportDao m_monthlyReportDao;
 
 	@Override
 	public CrossReport queryCrossReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "cross",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "cross",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -40,7 +41,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	@Override
 	public EventReport queryEventReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "event",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "event",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -54,7 +55,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	@Override
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "heartbeat",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "heartbeat",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -68,7 +69,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	@Override
 	public MatrixReport queryMatrixReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "matrix",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "matrix",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -82,7 +83,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	@Override
 	public ProblemReport queryProblemReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "problem",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "problem",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -96,7 +97,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	@Override
 	public SqlReport querySqlReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "sql",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "sql",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -108,9 +109,9 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	}
 
 	@Override
-   public StateReport queryStateReport(String domain, Date start) {
+	public StateReport queryStateReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "state",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "state",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -119,12 +120,12 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 			Cat.logError(e);
 		}
 		return new StateReport(domain);
-   }
+	}
 
 	@Override
 	public TransactionReport queryTransactionReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthReportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "transaction",
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -133,6 +134,17 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 			Cat.logError(e);
 		}
 		return new TransactionReport(domain);
+	}
+
+	@Override
+	public boolean insert(MonthlyReport report) {
+		try {
+			m_monthlyReportDao.insert(report);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 
 }

@@ -45,6 +45,7 @@ import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
+import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
@@ -152,7 +153,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		try {
 			String report = payload.getReport();
 			String domain = payload.getDomain();
-			ModelRequest request = new ModelRequest(domain, payload.getPeriod());
+			ModelPeriod period = payload.getPeriod();
+			ModelRequest request = new ModelRequest(domain, period.getStartTime());
 			ModelResponse<?> response = null;
 
 			if ("transaction".equals(report)) {

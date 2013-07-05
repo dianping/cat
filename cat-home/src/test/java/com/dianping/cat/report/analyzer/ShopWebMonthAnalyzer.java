@@ -65,7 +65,7 @@ public class ShopWebMonthAnalyzer extends ComponentTestCase {
 			for (; start < currentDay.getTime(); start += TimeUtil.ONE_DAY) {
 				System.out.println("Process" + new Date(start));
 				try {
-					DailyReport dailyreport = m_dailyreportDao.findReportByDomainNamePeriod("ShopWeb", "transaction",
+					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("ShopWeb", "transaction",
 					      new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser

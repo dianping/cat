@@ -27,7 +27,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	@Override
 	protected HeartbeatReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		HeartbeatReport report;
 
 		if (isLocalMode()) {
