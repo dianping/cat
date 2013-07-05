@@ -27,7 +27,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	@Override
 	protected ProblemReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		ProblemReport report;
 
 		if (isLocalMode()) {

@@ -119,10 +119,8 @@ public class Handler implements PageHandler<Context> {
 		String type = payload.getType();
 		String name = payload.getName();
 		String ipAddress = payload.getIpAddress();
-		String date = String.valueOf(payload.getDate());
 		String ip = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType())//
 		      .setProperty("name", payload.getName())//
 		      .setProperty("ip", ipAddress);
@@ -151,9 +149,7 @@ public class Handler implements PageHandler<Context> {
 	private EventReport getReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType())//
 		      .setProperty("ip", ipAddress);
 

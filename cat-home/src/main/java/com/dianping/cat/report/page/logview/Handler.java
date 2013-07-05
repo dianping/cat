@@ -36,7 +36,7 @@ public class Handler implements PageHandler<Context> {
 			if (messageId != null) {
 				MessageId id = MessageId.parse(messageId);
 				ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
-				ModelRequest request = new ModelRequest(id.getDomain(), period) //
+				ModelRequest request = new ModelRequest(id.getDomain(), period.getStartTime()) //
 				      .setProperty("messageId", messageId) //
 				      .setProperty("waterfall", String.valueOf(waterfall))
 				      .setProperty("timestamp", String.valueOf(id.getTimestamp()));

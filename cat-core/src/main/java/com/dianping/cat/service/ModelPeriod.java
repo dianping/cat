@@ -38,8 +38,6 @@ public enum ModelPeriod {
 		switch (this) {
 		case CURRENT :
 			return current;
-		case FUTURE:
-			return current;
 		case LAST:
 			return current - ReportConstants.HOUR;
 		default:

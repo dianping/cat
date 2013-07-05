@@ -27,7 +27,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	@Override
 	protected StateReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		StateReport report;
 
 		if (isLocalMode()) {

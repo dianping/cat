@@ -28,8 +28,8 @@ public class DBAAnalyzer extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		MonthlyReportDao dao = lookup(MonthlyReportDao.class);
-		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-05-01 00:00");
-		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", "Transaction",
+		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-01 00:00");
+		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", "transaction",
 		      MonthlyReportEntity.READSET_FULL);
 		String content = monthreport.getContent();
 		TransactionReport report = DefaultSaxParser.parse(content);

@@ -126,10 +126,8 @@ public class Handler implements PageHandler<Context> {
 
 	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate())
 		      .setProperty("type", payload.getType())//
 		      .setProperty("ip", ipAddress);
 
@@ -163,9 +161,7 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
 		String ipAddress = payload.getIpAddress();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType()) //
 		      .setProperty("name", payload.getName())//
 		      .setProperty("ip", ipAddress);
