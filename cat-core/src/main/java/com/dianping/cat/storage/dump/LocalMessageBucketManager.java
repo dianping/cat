@@ -375,8 +375,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
-			} else {
-				m_logger.error("Error when compute the delay duration, " + delay);
 			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
@@ -406,7 +404,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void run() {
 			try {
-				while (true) { 
+				while (true) {
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
@@ -581,7 +579,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				try {
 					long current = System.currentTimeMillis() / 1000 / 60;
 					int min = (int) (current % (60));
-					
+
 					// make system is 0-10 min is not busy
 					if (min > 10) {
 						moveOldMessages();
