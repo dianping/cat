@@ -68,7 +68,6 @@ public class DomainManager implements Initializable, LogEnabled {
 
 			if (project == null) {
 				if (!m_unknownIps.containsKey(ip)) {
-					m_logger.info("add ip to unknown list,ip:" + ip);
 					m_unknownIps.put(ip, ip);
 				}
 				return UNKNOWN_PROJECT;

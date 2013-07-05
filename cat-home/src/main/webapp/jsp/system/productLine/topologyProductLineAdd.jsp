@@ -22,12 +22,12 @@
 				<h4 class="text-center text-error">修改产品线配置信息</h4>
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<td style="text-align: right" class="text-success">产品线名称</td>
+						<td style="text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
 							value="${model.productLine.id}" required /></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">产品线标题</td>
+						<td style="text-align: right" class="text-success">产品线标题（中文）</td>
 						<td><input name="productLine.title"
 							value="${model.productLine.title}" required /></td>
 					</tr>
