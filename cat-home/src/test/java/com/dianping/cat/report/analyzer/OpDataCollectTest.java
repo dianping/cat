@@ -13,13 +13,13 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
 
 public class OpDataCollectTest extends ComponentTestCase {
@@ -50,7 +50,7 @@ public class OpDataCollectTest extends ComponentTestCase {
 			buildHeartbeatData(domain, dateStr3);
 		}
 		
-		buildMetricData("TuanGou", "2013-06-27 00:00:00");
+		buildMetricData("TuanGou", "2013-07-02 00:00:00");
 	}
 
 	private void buildMetricData(String group, String str) throws Exception {

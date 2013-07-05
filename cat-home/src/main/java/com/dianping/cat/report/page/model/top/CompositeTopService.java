@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.model.top;
 import java.util.List;
 
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeTopService extends BaseCompositeModelService<TopReport> {
 	public CompositeTopService() {

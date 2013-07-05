@@ -11,11 +11,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.TransactionReportUrlFilter;
-import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
+import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
+import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
@@ -28,14 +28,14 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 		m_logger = logger;
 	}
 
-	private TransactionReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
+	private TransactionReport merge(String reportDomain, List<HourlyReport> reports, boolean isDaily) {
 		TransactionReportMerger merger = null;
 		if (isDaily) {
 			merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
 		} else {
 			merger = new TransactionReportMerger(new TransactionReport(reportDomain));
 		}
-		for (Report report : reports) {
+		for (HourlyReport report : reports) {
 			String xml = report.getContent();
 			TransactionReport model;
 			try {
@@ -52,7 +52,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 	}
 
 	@Override
-	public TransactionReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domainSet) {
+	public TransactionReport mergeForDaily(String reportDomain, List<HourlyReport> reports, Set<String> domainSet) {
 		TransactionReport transactionReport = merge(reportDomain, reports, true);
 		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
 		TransactionReport transactionReport2 = merge(reportDomain, reports, true);
@@ -72,7 +72,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 	}
 
 	@Override
-	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public TransactionReport mergeForGraph(String reportDomain, List<HourlyReport> reports) {
 		TransactionReport transactionReport = merge(reportDomain, reports, false);
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
 		TransactionReport transactionReport2 = merge(reportDomain, reports, false);

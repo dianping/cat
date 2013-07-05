@@ -1,16 +1,12 @@
 package com.dianping.cat.report.page.metric;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.dal.jdbc.DalException;
-
-import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.Abtest;
 import com.dianping.cat.consumer.metric.model.entity.Group;
@@ -20,16 +16,10 @@ import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.abtest.AbtestDao;
-import com.dianping.cat.home.dal.abtest.AbtestEntity;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class MetricDisplay extends BaseVisitor {
-	public static final String Suffix_SUM = "(总和)";
-
-	public static final String Suffix_COUNT = "(次数)";
-
-	public static final String Suffix_AVG = "(平均)";
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
@@ -43,7 +33,7 @@ public class MetricDisplay extends BaseVisitor {
 
 	private String m_currentComputeType;
 
-	private AbtestDao m_abtestDao;
+	private ABTestService m_abtestService;
 
 	private static final String SUM = CatString.SUM;
 
@@ -55,8 +45,8 @@ public class MetricDisplay extends BaseVisitor {
 		return new ArrayList<LineChart>(m_lineCharts.values());
 	}
 
-	public Collection<com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
-		return m_abtests.values();
+	public Map<Integer,com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
+		return m_abtests;
 	}
 
 	public MetricDisplay(List<MetricItemConfig> configs, String abtest, Date start) {
@@ -67,17 +57,17 @@ public class MetricDisplay extends BaseVisitor {
 			if (config.isShowSum()) {
 				String key = config.getMetricKey() + SUM;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + Suffix_SUM));
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_SUM));
 			}
 			if (config.isShowCount()) {
 				String key = config.getMetricKey() + COUNT;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + Suffix_COUNT));
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_COUNT));
 			}
 			if (config.isShowAvg()) {
 				String key = config.getMetricKey() + AVG;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + Suffix_AVG));
+				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_AVG));
 			}
 		}
 	}
@@ -182,21 +172,21 @@ public class MetricDisplay extends BaseVisitor {
 		super.visitMetricReport(metricReport);
 	}
 
-	public void setAbtest(AbtestDao abtestDao) {
-		m_abtestDao = abtestDao;
+	public void setAbtest(ABTestService service) {
+		m_abtestService = service;
 	}
 
 	private com.dianping.cat.home.dal.abtest.Abtest findAbTest(int id) {
-		try {
-			return m_abtestDao.findByPK(id, AbtestEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-			com.dianping.cat.home.dal.abtest.Abtest abtest = new com.dianping.cat.home.dal.abtest.Abtest();
+		com.dianping.cat.home.dal.abtest.Abtest abtest = m_abtestService.getABTestNameByRunId(id);
+
+		if (abtest == null) {
+			abtest = new com.dianping.cat.home.dal.abtest.Abtest();
 
 			abtest.setId(id);
 			abtest.setName(String.valueOf(id));
-			return abtest;
 		}
+
+		return abtest;
 	}
 
 }

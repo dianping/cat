@@ -11,15 +11,15 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.MonthreportDao;
-import com.dianping.cat.home.dal.report.MonthreportEntity;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class DBAAnalyzer extends ComponentTestCase {
 
@@ -27,10 +27,10 @@ public class DBAAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		MonthreportDao dao = lookup(MonthreportDao.class);
+		MonthlyReportDao dao = lookup(MonthlyReportDao.class);
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-05-01 00:00");
-		Monthreport monthreport = dao.findReportByDomainNamePeriod(date, "All", "Transaction",
-		      MonthreportEntity.READSET_FULL);
+		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", "Transaction",
+		      MonthlyReportEntity.READSET_FULL);
 		String content = monthreport.getContent();
 		TransactionReport report = DefaultSaxParser.parse(content);
 
@@ -61,14 +61,14 @@ public class DBAAnalyzer extends ComponentTestCase {
 		for (TransactionType type : info.getTypes().values()) {
 			if (type.getId().equals("SQL") || type.getId().startsWith("Cache.")) {
 				System.out.println(type.getId() + '\t' + type.getTotalCount() + '\t' + type.getFailCount() + '\t'
-				      + type.getAvg() + '\t' + type.getLine95Count());
+				      + type.getAvg() + '\t' + type.getLine95Value());
 			}
 		}
 		System.out.println("商务线");
 		for (TransactionType type : biz.getTypes().values()) {
 			if (type.getId().equals("SQL") || type.getId().startsWith("Cache.")) {
 				System.out.println(type.getId() + '\t' + type.getTotalCount() + '\t' + type.getFailCount() + '\t'
-				      + type.getAvg() + '\t' + type.getLine95Count());
+				      + type.getAvg() + '\t' + type.getLine95Value());
 			}
 		}
 	}

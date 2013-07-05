@@ -5,7 +5,7 @@
 			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.config.ConfigDao</role>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -14,10 +14,10 @@
 			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>
+					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -35,7 +35,7 @@
 			<implementation>com.dianping.cat.consumer.advanced.DatabaseParser</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.CrossAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -44,32 +44,12 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
-			<role-hint>database</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.DatabaseAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>sql</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.SqlAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -78,7 +58,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
@@ -89,7 +69,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.MatrixAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -98,12 +78,12 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.DependencyAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -112,10 +92,10 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.dal.TaskDao</role>
+					<role>com.dianping.cat.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.DomainManager</role>
@@ -126,7 +106,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.MetricAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -152,13 +132,6 @@
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer-advanced</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerAdvancedModule</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
-			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
-			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>

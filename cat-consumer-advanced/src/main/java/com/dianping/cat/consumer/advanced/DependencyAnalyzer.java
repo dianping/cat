@@ -13,19 +13,19 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.DomainManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.Task;
-import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -40,7 +40,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -71,14 +71,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public DependencyReport getReport(String domain) {
-		DependencyReport report = findOrCreateReport(domain);
+		DependencyReport report = m_reports.get(domain);
 
+		if (report == null) {
+			report = new DependencyReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+		}
 		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}
@@ -153,27 +154,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return UNKNOWN;
 	}
 
-	// private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
-	// List<Message> messages = t.getChildren();
-	//
-	// for (Message message : messages) {
-	// if (message instanceof Event) {
-	// if (message.getType().equals("PigeonService.client")) {
-	// String name = message.getName();
-	// int index = name.indexOf(":");
-	//
-	// if (index > 0) {
-	// name = name.substring(0, index);
-	// }
-	// return name;
-	// }
-	// }
-	// }
-	// MessageId id = MessageId.parse(tree.getMessageId());
-	//
-	// return id.getIpAddress();
-	// }
-
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -217,13 +197,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
 			}
 		}
-		// else if ("PigeonService".equals(type) || "Service".equals(type)) {
-		// String ip = parseIpFromPigeonServerTransaction(t, tree);
-		// String domain = m_domainManager.getDomainByIp(ip);
-		//
-		// String callType = "PigeonServer";
-		// updateDependencyInfo(report, t, domain, callType);
-		// }
 	}
 
 	private void processSqlTransaction(DependencyReport report, Transaction t) {
@@ -273,6 +246,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			index.setSum(index.getSum() + t.getDurationInMillis());
 			index.setAvg(index.getSum() / index.getTotalCount());
 		}
+
+		if (isCache(type)) {
+			updateDependencyInfo(report, t, type, "Cache");
+		}
 	}
 
 	private boolean isCache(String type) {
@@ -292,7 +269,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				try {
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
@@ -310,7 +287,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 				for (DependencyReport report : m_reports.values()) {
 					try {
-						Report r = m_reportDao.createLocal();
+						HourlyReport r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 

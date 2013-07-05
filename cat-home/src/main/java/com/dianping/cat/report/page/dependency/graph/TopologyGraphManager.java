@@ -20,7 +20,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
@@ -36,11 +36,11 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
@@ -58,11 +58,11 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private TopologyGraphDao m_topologyGraphDao;
-	
+
 	@Inject
 	private DomainNavManager m_domainNavManager;
 
-	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
+	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(120);
 
 	private Logger m_logger;
 
@@ -78,14 +78,18 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String groupName = entry.getKey();
-				Map<String, Domain> domains = entry.getValue().getDomains();
-				for (Domain domain : domains.values()) {
-					String nodeName = domain.getId();
-					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+				boolean isDashboard = entry.getValue().getDashboard();
 
-					m_allDomains.add(nodeName);
-					if (node != null) {
-						dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+				if (isDashboard) {
+					Map<String, Domain> domains = entry.getValue().getDomains();
+					for (Domain domain : domains.values()) {
+						String nodeName = domain.getId();
+						TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+
+						m_allDomains.add(nodeName);
+						if (node != null) {
+							dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+						}
 					}
 				}
 			}
@@ -236,6 +240,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 				for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
 					m_topologyGraphs.put(entry.getKey(), entry.getValue());
+
+					m_topologyGraphs.remove(entry.getKey() - TimeUtil.ONE_HOUR * 3);
 				}
 				t.setStatus(Message.SUCCESS);
 			} catch (Exception e) {

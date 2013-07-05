@@ -9,12 +9,6 @@
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
       <group name="report" package="com.dianping.cat.home.dal.report">
-         <table name="dailygraph"/>
-         <table name="dailyreport"/>
-         <table name="graph"/>
-         <table name="weeklyreport"/>
-         <table name="monthreport"/>
-         <table name="location"/>
          <table name="event"/>
          <table name="topologyGraph"/>
          <table name="baseline"/>
@@ -26,6 +20,11 @@
          <table name="mailRecord"/>
          <table name="scheduledReport"/>
          <table name="scheduledReportSubscription"/>
+      </group>
+      <group name="abtest" package="com.dianping.cat.home.dal.abtest">
+         <table name="abtest"/>
+         <table name="abtest_run"/>
+         <table name="group_strategy"/>
       </group>
    </jdbc>
    <jdbc package="com.dianping.cat.home.dal" name="user">

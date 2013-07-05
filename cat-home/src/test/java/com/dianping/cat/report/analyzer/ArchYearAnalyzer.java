@@ -6,26 +6,20 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.service.ReportService;
 
 @RunWith(JUnit4.class)
@@ -36,31 +30,16 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject
-	private DailyreportDao m_dailyreportDao;
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_reportService = lookup(ReportService.class);
-		m_dailyreportDao = lookup(DailyreportDao.class);
 	}
 
 	private Set<String> getDomains(Date start) {
-		Set<String> domains = new HashSet<String>();
-
-		try {
-			List<Dailyreport> reports = m_dailyreportDao.findAllDomainsByNameDuration(start, new Date(start.getTime()
-			      + TimeUtil.ONE_DAY), "transaction", DailyreportEntity.READSET_DOMAIN_NAME);
-
-			for (Dailyreport report : reports) {
-				domains.add(report.getDomain());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
+		return m_reportService.queryAllDomainNames(start, new Date(start.getTime() + TimeUtil.ONE_DAY), "transaction");
 	}
 
 	@Test
@@ -70,12 +49,12 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 		Date start = m_sdf.parse(startDate);
 		for (long i = start.getTime(); i < System.currentTimeMillis(); i = i + TimeUtil.ONE_DAY) {
 			try {
-	         Indicator state = processOneDay(new Date(i));
+				Indicator state = processOneDay(new Date(i));
 
-	         System.out.println(state);
-         } catch (Exception e) {
-	         e.printStackTrace();
-         }
+				System.out.println(state);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

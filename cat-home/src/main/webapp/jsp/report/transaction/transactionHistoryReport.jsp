@@ -41,12 +41,13 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right">Min(ms)</th>
-						<th class="right">Max(ms)</th>
+			<th class="right">Min(ms)</th>
+			<th class="right">Max(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=avg${model.customDate}">Avg</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=95line${model.customDate}">95Line</a>(ms)</th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=95line${model.customDate}">99Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
-						<th class="right">QPS</th>
+			<th class="right">QPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -64,6 +65,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
+					<td>${w:format(e.line99Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -92,13 +94,14 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}&queryname=${model.queryName}">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right">Min(ms)</th>
-						<th class="right">Max(ms)</th>
+			<th class="right">Min(ms)</th>
+			<th class="right">Max(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=avg${model.customDate}&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=95line${model.customDate}&queryname=${model.queryName}">95Line</a>(ms)</th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=95line${model.customDate}&queryname=${model.queryName}">99Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
-						<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
-						<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -120,6 +123,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
+					<td>${w:format(e.line99Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -17,13 +16,9 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public interface HourlyReportService {
-	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName);
-	
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName);
 
 	public CrossReport queryCrossReport(String domain, Date start, Date end);
-
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end);
 
 	public EventReport queryEventReport(String domain, Date start, Date end);
 

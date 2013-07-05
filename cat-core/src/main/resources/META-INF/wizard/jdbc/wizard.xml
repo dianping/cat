@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat.consumer">
+   <jdbc package="com.dainping.cat.consumer.dal" name="cat">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://192.168.7.43:3306/cat</url>
+         <user>dpcom_cat</user>
+         <password>password</password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="report" package="com.dainping.cat.consumer.dal.report">
+         <table name="hostinfo"/>
+         <table name="task"/>
+         <table name="project"/>
+         <table name="report"/>
+         <table name="dailyreport"/>
+         <table name="weeklyreport"/>
+         <table name="monthreport"/>
+         <table name="graph"/>
+         <table name="dailygraph"/>
+      </group>
+      <group name="config" package="com.dainping.cat.consumer.dal.config">
+         <table name="config"/>
+      </group>
+   </jdbc>
+</wizard>

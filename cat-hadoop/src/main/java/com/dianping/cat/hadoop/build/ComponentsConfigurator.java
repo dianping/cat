@@ -6,14 +6,14 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.DumpUploader;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucket;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 

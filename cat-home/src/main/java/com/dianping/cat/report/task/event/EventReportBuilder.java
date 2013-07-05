@@ -11,17 +11,17 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.DailyGraph;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportEntity;
+import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailygraph;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
@@ -37,11 +37,11 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 
 	private void buildDailyEventGraph(EventReport report) {
 		DailyEventGraphCreator creator = new DailyEventGraphCreator();
-		List<Dailygraph> graphs = creator.buildDailygraph(report);
+		List<DailyGraph> graphs = creator.buildDailygraph(report);
 
-		for (Dailygraph graph : graphs) {
+		for (DailyGraph graph : graphs) {
 			try {
-				m_dailygraphDao.insert(graph);
+				m_dailyGraphDao.insert(graph);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -60,7 +60,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 			}
 
 			String content = eventReport.toString();
-			Dailyreport report = m_dailyReportDao.createLocal();
+			DailyReport report = m_dailyReportDao.createLocal();
 
 			report.setContent(content);
 			report.setCreationDate(new Date());
@@ -100,8 +100,8 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "event",
-				      DailyreportEntity.READSET_FULL);
+				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain, "event",
+				      new Date(startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
 
 				EventReport reportModel = DefaultSaxParser.parse(xml);
@@ -126,7 +126,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		Date end = cal.getTime();
 
 		EventReport eventReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
+		MonthlyReport report = m_monthlyReportDao.createLocal();
 
 		report.setContent(eventReport.toString());
 		report.setCreationDate(new Date());
@@ -137,7 +137,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		report.setType(1);
 
 		try {
-			m_monthreportDao.insert(report);
+			m_monthlyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -151,7 +151,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
 		EventReport eventReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
+		WeeklyReport report = m_weeklyReportDao.createLocal();
 		String content = eventReport.toString();
 
 		report.setContent(content);
@@ -163,7 +163,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		report.setType(1);
 
 		try {
-			m_weeklyreportDao.insert(report);
+			m_weeklyReportDao.insert(report);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -175,8 +175,8 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      HourlyReportEntity.READSET_FULL);
 
 		return m_eventMerger.mergeForDaily(reportDomain, reports, domainSet);
 
@@ -184,8 +184,8 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 
 	private List<Graph> getHourReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+		List<HourlyReport> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      HourlyReportEntity.READSET_FULL);
 		EventReport eventReport = m_eventMerger.mergeForGraph(reportDomain, reports);
 		graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
 		return graphs;

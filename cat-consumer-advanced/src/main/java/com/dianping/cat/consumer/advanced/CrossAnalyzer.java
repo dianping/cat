@@ -11,10 +11,8 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -22,6 +20,8 @@ import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.cross.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -32,12 +32,12 @@ import com.dianping.cat.storage.BucketManager;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
-	
+
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	private Map<String, CrossReport> m_reports = new HashMap<String, CrossReport>();
 
@@ -51,11 +51,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
 	}
 
 	@Override
@@ -148,7 +143,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		// }
 		// } catch (Exception e) {
 		// //ignore
-		// } 
+		// }
 		try {
 			char first = ip.charAt(0);
 			char next = ip.charAt(1);
@@ -166,13 +161,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
-		
+
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonService.client")) {
 					String name = message.getName();
 					int index = name.indexOf(":");
-					
+
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
@@ -187,10 +182,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		if (crossInfo.getRemoteAddress().equals(UNKNOWN)) {
 			MessageId id = MessageId.parse(tree.getMessageId());
 			String remoteIp = id.getIpAddress();
-			
+
 			crossInfo.setRemoteAddress(remoteIp);
 		}
-		
+
 		crossInfo.setLocalAddress(localIp);
 		crossInfo.setRemoteRole("Pigeon.Client");
 		crossInfo.setDetailType("PigeonService");
@@ -246,7 +241,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				try {
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
@@ -264,7 +259,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 				for (CrossReport report : m_reports.values()) {
 					try {
-						Report r = m_reportDao.createLocal();
+						HourlyReport r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 

@@ -12,11 +12,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -27,11 +23,14 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
@@ -41,36 +40,15 @@ import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.top.TopReportMerger;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 	
 	@Inject
 	private BusinessReportDao m_businessReportDao;
-
-	@Override
-	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
-		if (end.getTime() == start.getTime()) {
-			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
-		}
-		Set<String> domains = new HashSet<String>();
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, reportName,
-			      ReportEntity.READSET_DOMAIN_NAME);
-
-			for (Report report : reports) {
-				domains.add(report.getDomain());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
-	}
 
 	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
@@ -80,10 +58,10 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		Set<String> domains = new HashSet<String>();
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, null, reportName,
-			      ReportEntity.READSET_DOMAIN_NAME);
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, null, reportName,
+			      HourlyReportEntity.READSET_DOMAIN_NAME);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				domains.add(report.getDomain());
 			}
 		} catch (DalException e) {
@@ -97,9 +75,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "cross",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "cross",
+			      HourlyReportEntity.READSET_FULL);
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -125,48 +103,14 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
-
-		try {
-			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
-				String xml = report.getContent();
-
-				try {
-					DatabaseReport reportModel = com.dianping.cat.consumer.database.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} catch (Exception e) {
-					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS,
-					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		DatabaseReport databaseReport = merger.getDatabaseReport();
-
-		databaseReport.setStartTime(start);
-		databaseReport.setEndTime(new Date(end.getTime()-1));
-
-		Set<String> domains = queryAllDatabaseNames(start, end, "database");
-		
-		databaseReport.getDomainNames().addAll(domains);
-		return databaseReport;
-	}
-
-	@Override
 	public EventReport queryEventReport(String domain, Date start, Date end) {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "event",
-			      ReportEntity.READSET_FULL);
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "event",
+			      HourlyReportEntity.READSET_FULL);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -196,9 +140,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "heartbeat",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "heartbeat",
+			      HourlyReportEntity.READSET_FULL);
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -229,9 +173,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "matrix",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "matrix",
+			      HourlyReportEntity.READSET_FULL);
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -291,9 +235,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+			      HourlyReportEntity.READSET_FULL);
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -324,9 +268,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "sql",
-			      ReportEntity.READSET_FULL);
-			for (Report report : reports) {
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "sql",
+			      HourlyReportEntity.READSET_FULL);
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -356,10 +300,10 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "state",
-			      ReportEntity.READSET_FULL);
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "state",
+			      HourlyReportEntity.READSET_FULL);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -386,10 +330,10 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		TopReportMerger merger = new TopReportMerger(new TopReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "top",
-			      ReportEntity.READSET_FULL);
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "top",
+			      HourlyReportEntity.READSET_FULL);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -416,10 +360,10 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		DependencyReportMerger merger = new DependencyReportMerger(new DependencyReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "dependency",
-			      ReportEntity.READSET_FULL);
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "dependency",
+			      HourlyReportEntity.READSET_FULL);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {
@@ -445,10 +389,10 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
-			      ReportEntity.READSET_FULL);
+			List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
+			      HourlyReportEntity.READSET_FULL);
 
-			for (Report report : reports) {
+			for (HourlyReport report : reports) {
 				String xml = report.getContent();
 
 				try {

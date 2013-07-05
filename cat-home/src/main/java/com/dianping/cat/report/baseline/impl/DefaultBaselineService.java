@@ -11,10 +11,12 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.task.TaskHelper;
 
 public class DefaultBaselineService implements BaselineService {
 
@@ -23,7 +25,7 @@ public class DefaultBaselineService implements BaselineService {
 
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
-		double[] result = null;
+		double[] result = new double[24 * 60];
 		try {
 			Baseline baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
 			      BaselineEntity.READSET_FULL);
@@ -38,8 +40,21 @@ public class DefaultBaselineService implements BaselineService {
 
 	@Override
 	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) {
-		// TODO Auto-generated method stub
-		return null;
+		double[] result = new double[60];
+		try {
+			Date today = TaskHelper.todayZero(reportPeriod);
+			int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
+			Baseline baseline = m_baselineDao.findByReportNameKeyTime(today, reportName, key, BaselineEntity.READSET_FULL);
+			double[] dayResult = parse(baseline.getData());
+			for (int i = 0; i < 60; i++) {
+				result[i] = dayResult[hour * 60 + i];
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		} catch (IOException e) {
+			Cat.logError(e);
+		}
+		return result;
 	}
 
 	@Override

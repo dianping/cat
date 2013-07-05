@@ -25,7 +25,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private TopologyGraphItemBuilder m_itemBuilder;
 
-	private Map<Long, TopologyGraph> m_graphs = new HashMap<Long, TopologyGraph>(360);
+	private Map<Long, TopologyGraph> m_graphs = new HashMap<Long, TopologyGraph>();
 
 	private int m_minute;
 
@@ -135,6 +135,11 @@ public class TopologyGraphBuilder extends BaseVisitor {
 				TopologyNode nodeOld = graph.findTopologyNode(target);
 
 				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.createDatabaseNode(target)));
+			}else if("Cache".equals(type)){
+				String target = dependency.getTarget();
+				TopologyNode nodeOld = graph.findTopologyNode(target);
+
+				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.createCacheNode(target)));
 			}
 		}
 	}

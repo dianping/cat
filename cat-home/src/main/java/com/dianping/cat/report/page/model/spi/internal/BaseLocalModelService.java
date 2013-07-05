@@ -4,21 +4,21 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
-	@Inject(type = MessageConsumer.class, value = RealtimeConsumer.ID)
+	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_consumer;
 
 	private String m_defaultDomain = "Cat";
