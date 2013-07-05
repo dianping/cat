@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.advanced.metric.config.entity.MetricConfig.METRIC_TYPE;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.baseline.BaselineConfig;
@@ -45,10 +44,6 @@ public class MetricBaselineReportBuilder extends AbstractReportBuilder implement
 
 	private static final int POINT_NUMBER = 60 * 24;
 
-	private static enum METRIC_TYPE {
-		COUNT, AVG, SUM
-	};
-
 	@Override
 	public boolean buildDailyReport(String reportName, String metricID, Date reportPeriod) {
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
@@ -56,7 +51,7 @@ public class MetricBaselineReportBuilder extends AbstractReportBuilder implement
 		String metricDomain = metricConfig.getDomain();
 		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
 		for (METRIC_TYPE type : METRIC_TYPE.values()) {
-			String key = reportName + "+" + metricID + "+" + type;
+			String key = metricID + ":" + type;
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
 			List<Integer> days = baselineConfig.getDays();
 			List<Double> weights = baselineConfig.getWeights();
@@ -72,7 +67,7 @@ public class MetricBaselineReportBuilder extends AbstractReportBuilder implement
 					relatedHour = hourEnd;
 					reports.add(reportItem);
 				}
-				double[] oneDayValue = getOneDayValues(reports, type);
+				double[] oneDayValue = MetricPointParser.getOneDayData(reports, type);
 				values.add(oneDayValue);
 			}
 
@@ -88,35 +83,7 @@ public class MetricBaselineReportBuilder extends AbstractReportBuilder implement
 		return true;
 	}
 
-	private double[] getOneDayValues(List<MetricItem> reports, METRIC_TYPE type) {
-		double[] values = new double[POINT_NUMBER];
-		for (int i = 0; i < POINT_NUMBER; i++) {
-			values[i] = -1;
-		}
-		int hour = 0;
-		for (MetricItem report : reports) {
-			try {
-				Map<Integer, Point> map = report.getAbtests().get("-1").getGroups().get("").getPoints();
-				for (Integer minute : map.keySet()) {
-					int index = hour * 60 + minute;
-					if (index >= 0 && index < POINT_NUMBER) {
-						Point point = map.get(minute);
-						if (type == METRIC_TYPE.AVG) {
-							values[index] = point.getAvg();
-						} else if (type == METRIC_TYPE.COUNT) {
-							values[index] = (double) point.getCount();
-						} else if (type == METRIC_TYPE.SUM) {
-							values[index] = point.getSum();
-						}
-					}
-				}
-			} catch (NullPointerException e) {
-				// Do Nothing
-			}
-			hour++;
-		}
-		return values;
-	}
+	
 
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {

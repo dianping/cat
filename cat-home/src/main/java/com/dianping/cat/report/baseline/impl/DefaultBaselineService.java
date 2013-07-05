@@ -24,35 +24,25 @@ public class DefaultBaselineService implements BaselineService {
 	private BaselineDao m_baselineDao;
 
 	@Override
-	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
+	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) throws DalException,
+	      IOException {
 		double[] result = new double[24 * 60];
-		try {
-			Baseline baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
-			      BaselineEntity.READSET_FULL);
-			result = parse(baseline.getData());
-		} catch (DalException e) {
-			Cat.logError(e);
-		} catch (IOException e) {
-			Cat.logError(e);
-		}
+		Baseline baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
+		      BaselineEntity.READSET_FULL);
+		result = parse(baseline.getData());
 		return result;
 	}
 
 	@Override
-	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) {
+	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) throws DalException,
+	      IOException {
 		double[] result = new double[60];
-		try {
-			Date today = TaskHelper.todayZero(reportPeriod);
-			int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
-			Baseline baseline = m_baselineDao.findByReportNameKeyTime(today, reportName, key, BaselineEntity.READSET_FULL);
-			double[] dayResult = parse(baseline.getData());
-			for (int i = 0; i < 60; i++) {
-				result[i] = dayResult[hour * 60 + i];
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		} catch (IOException e) {
-			Cat.logError(e);
+		Date today = TaskHelper.todayZero(reportPeriod);
+		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
+		Baseline baseline = m_baselineDao.findByReportNameKeyTime(today, reportName, key, BaselineEntity.READSET_FULL);
+		double[] dayResult = parse(baseline.getData());
+		for (int i = 0; i < 60; i++) {
+			result[i] = dayResult[hour * 60 + i];
 		}
 		return result;
 	}

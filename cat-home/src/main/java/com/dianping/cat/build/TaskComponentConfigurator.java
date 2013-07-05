@@ -6,6 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
@@ -34,6 +35,7 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixMerger;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
@@ -84,7 +86,12 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(com.dianping.cat.report.service.ReportService.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
+		
 
+		all.add(C(MetricAlert.class)
+				.req(com.dianping.cat.report.service.ReportService.class,ServerConfigManager.class)//
+		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
+		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, HourlyReportDao.class, DailyReportDao.class,

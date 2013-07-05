@@ -45,7 +45,7 @@ public class MetricBaselineReportBuilderTest  extends ComponentTestCase {
 	@Test
 	public void testBuildDailyReport() throws Exception{
 		MetricBaselineReportBuilder builder = getReportBuilder();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		builder.buildDailyReport("metirc", "TuanGouWeb:URL:/index", format.parse("2013-07-01 00:00:00"));
 	}
 

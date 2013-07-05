@@ -13,9 +13,9 @@ public class BaselineConfigManager {
 		config.setId(1);
 		config.setKey(key);
 		config.setLowerLimit(100);
-		config.setMinValue(20);
+		config.setMinValue(0.2);
 		config.setTargetDate(7);
-		config.setUpperLimit(500);
+		config.setUpperLimit(5);
 		config.setWeights(Arrays.asList(weights));
 		return config;
 	}

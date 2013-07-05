@@ -20,6 +20,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
@@ -39,16 +40,21 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
-	
+
 	@Inject
 	private ABTestService m_abtestService;
-	
+
 	private static final String TUAN = "TuanGou";
 
 	private MetricReport getReport(Payload payload) {
 		String product = payload.getProduct();
 		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(product, payload.getPeriod()) //
+		ModelPeriod period = payload.getPeriod();
+		return getReport(product, date, period);
+	}
+
+	private MetricReport getReport(String product, String date, ModelPeriod period) {
+		ModelRequest request = new ModelRequest(product, period) //
 		      .setProperty("date", date);
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
@@ -83,12 +89,11 @@ public class Handler implements PageHandler<Context> {
 			}
 			String product = payload.getProduct();
 			List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
-			List<MetricItemConfig> domainSet=m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
-			MetricDisplay display = new MetricDisplay(domainSet,
-			      test, startTime);
-			
+			List<MetricItemConfig> domainSet = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
+			MetricDisplay display = new MetricDisplay(domainSet, test, startTime);
+
 			display.setAbtest(m_abtestService);
-			
+
 			display.visitMetricReport(report);
 			model.setDisplay(display);
 			model.setReport(report);
