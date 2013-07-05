@@ -67,6 +67,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 
+		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
 
