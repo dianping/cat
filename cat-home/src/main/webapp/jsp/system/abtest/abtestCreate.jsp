@@ -14,7 +14,7 @@
 </style>
 
 <a:body>
-	<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+	<script src="${res.js.local['jquery-1.7.1.js']}"></script>
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
@@ -26,42 +26,7 @@
 
 	<div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
 		<h4 style="margin: 0 auto;">Create ABTest</h4>
-		<c:choose>
-			<c:when test="${ctx.exception != null}">
-				<div id="errorMsg" style="margin-left: 170px; margin-top:5px;padding: 0; width: 300px;">
-					<div style="position: absolute; width: 400px;"
-						class="alert alert-error">
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						<span style="text-align: center;">${ctx.exception.message}</span>
-					</div>
-				</div>
-			</c:when>
-			<c:when test="${ctx.httpServletRequest.method == 'POST'}">
-				<div id="successMsg"
-					style="margin-left: 170px; margin-top:5px; padding: 0; width: 300px;">
-					<div style="position: absolute; width: 400px;"
-						class="alert alert-success">
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						<c:choose>
-							<c:when test="${payload.addGs eq false}">
-								<span style="text-align: center;">Created! Going to the
-									list page after <span id="countDown"></span> seconds ...
-								</span>
-								<script>
-									 $(function() { 
-										 countDown();
-										 $('#submit').attr("disabled","disabled");
-									});
-								 </script>
-							 </c:when>
-							 <c:when test="${payload.addGs eq true}">
-								 <span style="text-align: center;">Successfully create group-strategy!</span>
-							 </c:when>
-						 </c:choose>
-					</div>
-				</div>
-			</c:when>
-		</c:choose>
+		<div id="alertDiv" style="margin-left: 170px; margin-top:5px;padding: 0; width: 300px;"></div>
 		<div style="width: 90%;">
 			<form id="form" method="post" action="abtest?op=addABTest" class="form-horizontal">
 				<a href="abtest" style="float: right; margin-left: 20px" class="btn">Cancel</a>
@@ -77,7 +42,7 @@
 						data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
 					</label>
 					<div class="controls">
-						<input type="text" name="name" placeholder="give it a name ..."
+						<input type="text" name="name" id="abName" placeholder="give it a name ..."
 							check-type="required" required-message="Name is required!" value="${payload.name}">
 					</div>
 				</div>
@@ -89,7 +54,7 @@
 						data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
 					</label>
 					<div class="controls">
-						<input type="text" name="owner" placeholder="give it a owner ..."
+						<input type="text" name="owner" id="abOwn" placeholder="give it a owner ..."
 							check-type="required" required-message="Owner is required!" value="${payload.owner}">
 					</div>
 				</div>
@@ -157,24 +122,15 @@
 							required-message="Strategy is required!">
 							<option value="0">请选择一个分组策略</option>
 							<c:forEach var="item" items="${model.groupStrategyList}">
-								<option value="${item.id}"
-									<c:if test="${item.id == payload.strategyId}">selected="selected"</c:if>>
-									${item.name }</option>
+								<option value="${item.id}">${item.name }</option>
 							</c:forEach>
-						</select> <a href="#groupStrategyModal" role="button" class="btn"
+						</select> <a href="#groupStrategyModal" role="button" class="btn" id="btnGroupStrategyModel"
 							data-toggle="modal">Add</a>
 					</div>
 				</div>
 				<div id="groupStrategyDivsub">
 				
 				</div>
-				<!-- 
-				<div class="control-group">
-					<label class="control-label">Strategy Configuration</label>
-					<div class="controls">
-						<textarea name="strategyConfig" class="span6" rows="3" cols="60">${payload.strategyConfig}</textarea>
-					</div>
-				</div> -->
 			</form>
 		</div>
 	</div>
@@ -195,80 +151,93 @@
 	</script>
 
 	<script>
-				var initDomains = [];
-				<c:forEach var="domain" items="${payload.domains}">
-				initDomains.push("${domain}");
-				</c:forEach>
+		var initDomains = [];
+		<c:forEach var="domain" items="${payload.domains}">
+		initDomains.push("${domain}");
+		</c:forEach>
+		
+		var timeout = 3;
+		function countDown() {
+			$('#countDown').text(timeout);
+			timeout--;
+			if (timeout == 0) {
+				window.location.href = "abtest";  //bug here
+			} else {
+				setTimeout("countDown()", 1000);
+			}
+		}
+		
+		$("#form" ).on( "submit", function( event ) {
+			event.preventDefault();
+			
+			var abName = $('#abName').val();
+			var abOwn = $('#abOwn').val();
+			
+			if(abName != "" && abOwn != ""){
+				var params = $(this).serialize();
+				//console.log(params);
+				var jsonObject = $('#strategyId option[value=' + $('#strategyId').val() + ']').data();
 				
-				var timeout = 1;
-				function countDown() {
-					$('#countDown').text(timeout);
-					timeout--;
-					if (timeout == 0) {
-						window.location.href = "abtest";  //bug here
-					} else {
-						setTimeout("countDown()", 1000);
-					}
+				for(var i in jsonObject['fields']){
+					var field = jsonObject['fields'][i];
+					var name = field["name"];
+					var type = field["inputType"];
+					
+					field["value"] = $(type + '[name=' + name + ']').val();
 				}
-				
-				$("#form" ).on( "submit", function( event ) {
-					event.preventDefault();
+	
+				params += "&strategyConfig=" + JSON.stringify(jsonObject);
+				//console.log(params);
+				$.ajax({
+					type: "POST",
+					url : "abtest?op=ajax_addABTest",
+					data: params,
+					async:false
+				}).done(function(json) {
+					json = JSON.parse(json);
 					
-					var params = $(this).serialize();
-					//console.log(params);
-					var jsonObject = $('#strategyId option[value=' + $('#strategyId').val() + ']').data();
-					
-					for(var i in jsonObject['fields']){
-						var field = jsonObject['fields'][i];
-						var name = field["field-name"];
-						var type = field["field-type"];
-						
-						field["field-value"] = $(type + '[name=' + name + ']').val();
+					if(json.code == 0){
+						var innerHTML = '<div style="position: absolute; width: 400px;" class="alert alert-success">'
+								+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+								+ '<span style="text-align: center;">Created! Going to the list page after '
+								+ '<span id="countDown"></span> seconds ...</span></div>';
+						$('#alertDiv').html(innerHTML);
+						countDown();
+					}else if(json.code == 1){
+						var innerHTML = '<div style="position: absolute; width: 400px;" class="alert alert-error">'
+								+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+								+ '<span style="text-align: center;">' + json.msg + '</span></div>';
+						$('#alertDiv').html(innerHTML);
 					}
-					/*
-					var params ={
-						"name" : $('input[name=name]').val(),
-						"owner" : $('input[name=owner]').val(),
-						"description" : $('textarea[name=description]').val(),
-						"startDate" : $('input[name=startDate]').val(),
-						"endDate" :  $('input[name=endDate]').val(),
-						"domains" : $('#domains').val(),
-						"strategyId" : $('#strategyId').val(),
-						"strategyConfig" : JSON.stringify(jsonObject)
-					};*/
-					//console.log(jsonObject);
-					params += "&strategyConfig=" + JSON.stringify(jsonObject);
-					console.log(params);
-					$.ajax({
-						type: "POST",
-						url : "abtest?op=addABTest",
-						data: params
-					}).done(function(json) {
-						//$('#groupStrategyModal').modal('hide')
-					});
 				});
+			}
+		});
+		
+		$('#btnGroupStrategyModel').click(function(e){
+			$('#alertErrorDiv').empty();
+			$('#groupStrategyFrom')[0].reset();
+		});
 
-				$(function() {
-					$('#datetimepicker1').datetimepicker();
-					$('#datetimepicker2').datetimepicker();
-					//domain selector
-					$("#domains")
-							.select2(
-									{
-										placeholder : "select which domains to run this ab test",
-										allowClear : true
-									});
-					$("#domains").val(initDomains).trigger("change");
-					
-					<c:forEach var="item" items="${model.groupStrategyList}">
-						$('#strategyId option[value=${item.id}]').data(JSON.parse('${item.descriptor}'));
-					</c:forEach>
-					
-					//tips
-					$('i[tips]').popover();
-					//validate
-					$('#form').validation();
-					//$('#groupStrategyFrom').validation();
-				});
-			</script>
+		$(function() {
+			$('#datetimepicker1').datetimepicker();
+			$('#datetimepicker2').datetimepicker();
+			//domain selector
+			$("#domains").select2({
+				placeholder : "select which domains to run this ab test",
+				allowClear : true
+			});
+			
+			$("#domains").val(initDomains).trigger("change");
+			
+			<c:forEach var="item" items="${model.groupStrategyList}">
+				$('#strategyId option[value=${item.id}]').data(JSON.parse('${item.descriptor}'));
+			</c:forEach>
+			
+			//tips
+			$('i[tips]').popover();
+			//validate
+			$('#form').validation();
+			$('#groupStrategyFrom').validation();
+		});
+	</script>
 </a:body>

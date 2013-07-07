@@ -66,6 +66,12 @@
                     WHERE <FIELD name='name'/> = ${name}
                 ]]></statement>
 			</query>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> ORDER BY <FIELD name='creation-date'/> DESC
+				]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 </entities>

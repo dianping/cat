@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.ErrorObject;
 import org.unidal.web.mvc.PageHandler;
@@ -24,12 +27,8 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
-import com.dianping.cat.abtest.model.entity.Case;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
-import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -41,8 +40,10 @@ import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
+import com.google.gson.Gson;
 
-public class Handler implements PageHandler<Context>, LogEnabled {
+public class Handler implements PageHandler<Context>, LogEnabled, Initializable {
 
 	public static final String CHARSET = "UTF-8";
 
@@ -56,71 +57,21 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private GroupStrategyDao m_groupStrategyDao;
 
 	@Inject
-	private ProjectDao m_projectDao;
-
-	@Inject
 	private JspViewer m_jspViewer;
 
 	private Logger m_logger;
 
 	private final int m_pageSize = 10;
 
+	@Inject
+	private GroupStrategyParser m_parser;
+
+	@Inject
+	private ABTestService m_service;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	private AbtestModel fetchAbtestModel() {
-		AbtestModel abtestModel = new AbtestModel();
-		
-		try {
-			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
-
-			if (abtestRuns != null) {
-				Date now = new Date();
-				
-				for (AbtestRun abtestRun : abtestRuns) {
-					AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
-					
-					if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
-						Abtest entity = m_abtestDao.findByPK(abtestRun.getCaseId(), AbtestEntity.READSET_FULL);
-						GroupStrategy groupStrategy = m_groupStrategyDao.findByPK(entity.getGroupStrategy(), GroupStrategyEntity.READSET_FULL);
-						Case _case = transform(abtestRun, entity, groupStrategy);
-						
-						abtestModel.addCase(_case);
-					}
-				}
-			}
-
-		} catch (DalException e) {
-			m_logger.error("Error when find all AbtestRun", e);
-			Cat.logError(e);
-		}
-		
-		return abtestModel;
-	}
-
-	private List<GroupStrategy> getAllGroupStrategys() {
-		try {
-			return m_groupStrategyDao.findAllByStatus(1, GroupStrategyEntity.READSET_FULL);
-		} catch (DalException e) {
-			m_logger.error(e.getMessage(), e);
-			Cat.logError(e);
-		}
-		return null;
-	}
-
-	private Map<String, List<Project>> getAllProjects() {
-		List<Project> projects = new ArrayList<Project>();
-
-		try {
-			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
-			Cat.logError(e);
-		}
-		// Collections.sort(projects, new ProjectCompartor());
-		return transform(projects);
 	}
 
 	private void handleCreateAction(Context ctx, Payload payload) {
@@ -148,52 +99,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			run.setCaseId(abtest.getId());
 			m_abtestRunDao.insert(run);
+			ctx.setResponseJson(responseJson(0, "successfully create a abtest!"));
 		} catch (DalException e) {
-			m_logger.error("Error when saving abtest", e);
 			Cat.logError(e);
-			ctx.setException(e);
+			ctx.setResponseJson(responseJson(1, e.getMessage()));
 		}
-	}
-
-	@Override
-	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "abtest")
-	public void handleInbound(Context ctx) throws ServletException, IOException {
-		if (ctx.getException() != null) {
-			return;
-		}
-
-		Payload payload = ctx.getPayload();
-		Action action = payload.getAction();
-
-		if (action == Action.VIEW) {
-			handleStatusChangeAction(ctx);
-		}
-
-		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			if (action == Action.ADDABTEST) {
-				handleCreateAction(ctx, payload);
-			} else if (action == Action.DETAIL) {
-				handleUpdateAction(ctx, payload);
-			} else if (action == Action.ADDGROUPSTRATEGY) {
-				handleCreateGroupStrategyAction(ctx, payload);
-			} else if(action == Action.PARSEGROUPSTRATEGY){
-				handleParseGroupStrategyAction(ctx,payload);
-			}
-		}
-
-	}
-
-	private void handleParseGroupStrategyAction(Context ctx, Payload payload) {
-		InputStream stream;
-      try {
-	      stream = new ByteArrayInputStream(payload.getSrcCode().getBytes("UTF-8"));
-	      GroupstrategyDescriptor descriptor = GroupStrategyParser.parse(stream);
-	      
-	      ctx.setDescriptor(GroupStrategyParser.toJson(descriptor));
-      } catch (Throwable e) {
-      	
-      }
 	}
 
 	private void handleCreateGroupStrategyAction(Context ctx, Payload payload) {
@@ -215,12 +125,40 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			} else {
 				throw new DalException("Aready to has a groupstrategy which has the same name...");
 			}
+			
+			ctx.setResponseJson(responseJson(0, "successfully create a groupstrategy!"));
 		} catch (DalException e) {
 			Cat.logError(e);
-			ctx.setException(e);
-		} finally {
-			payload.setAction(Action.ADDABTEST.getName());
-			payload.setAddGs(true);
+			ctx.setResponseJson(responseJson(1, e.getMessage()));
+		}
+	}
+
+	@Override
+	@PayloadMeta(Payload.class)
+	@InboundActionMeta(name = "abtest")
+	public void handleInbound(Context ctx) throws ServletException, IOException {
+		if (ctx.getException() != null) {
+			ctx.setResponseJson(responseJson(1, ctx.getException().getMessage()));
+			return;
+		}
+
+		Payload payload = ctx.getPayload();
+		Action action = payload.getAction();
+
+		if (action == Action.VIEW) {
+			handleStatusChangeAction(ctx);
+		}
+
+		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
+			if (action == Action.AJAXADDABTEST) {
+				handleCreateAction(ctx, payload);
+			} else if (action == Action.AJAXDETAIL) {
+				handleUpdateAction(ctx, payload);
+			} else if (action == Action.ADDGROUPSTRATEGY) {
+				handleCreateGroupStrategyAction(ctx, payload);
+			} else if (action == Action.PARSEGROUPSTRATEGY) {
+				handleParseGroupStrategyAction(ctx, payload);
+			}
 		}
 
 	}
@@ -248,8 +186,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		case MODEL:
 			renderModel(model);
 			break;
-		case PARSEGROUPSTRATEGY:
-			renderGroupStrategy(ctx);
 		}
 
 		model.setAction(action);
@@ -257,9 +193,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void renderGroupStrategy(Context ctx) {
-		
-   }
+	private void handleParseGroupStrategyAction(Context ctx, Payload payload) {
+		InputStream stream;
+		try {
+			stream = new ByteArrayInputStream(payload.getSrcCode().getBytes("UTF-8"));
+			GroupstrategyDescriptor descriptor = m_parser.parse(stream);
+
+			Gson gson = m_parser.getGsonBuilder().create();
+			ctx.setResponseJson(gson.toJson(descriptor, GroupstrategyDescriptor.class));
+		} catch (Throwable e) {
+			ctx.setResponseJson("{}");
+		}
+	}
 
 	private void handleStatusChangeAction(Context ctx) {
 		Payload payload = ctx.getPayload();
@@ -320,16 +265,23 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			// only update run info, do not update abtest meta-info
 			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+			ctx.setResponseJson(responseJson(0, "successfully modify a abtest!"));
 		} catch (DalException e) {
-			m_logger.error("Error when updating abtest", e);
 			Cat.logError(e);
-			ctx.setException(e);
+			ctx.setResponseJson(responseJson(1, e.getMessage()));
+		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		if (m_service instanceof Task) {
+			Threads.forGroup("Cat").start((Task) m_service);
 		}
 	}
 
 	private void renderCreateModel(Model model) {
-		Map<String, List<Project>> projectMap = getAllProjects();
-		List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
+		Map<String, List<Project>> projectMap = m_service.getAllProjects();
+		List<GroupStrategy> groupStrategyList = m_service.getAllGroupStrategies();
 
 		model.setProjectMap(projectMap);
 		model.setGroupStrategyList(groupStrategyList);
@@ -421,7 +373,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void renderModel(Model model) {
-		model.setAbtestModel(String.valueOf(fetchAbtestModel()));
+		AbtestModel abtestModel = m_service.getAbtestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
+
+		model.setAbtestModel(abtestModel.toString());
 	}
 
 	private void renderReportModel(Context ctx, Model model, Payload payload) {
@@ -438,47 +392,41 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			ctx.setException(e);
 		}
 	}
-
-	private Case transform(AbtestRun abtestRun, Abtest entity, GroupStrategy groupStrategy) throws DalException {
-		Case _case = new Case(entity.getId());
-		_case.setCreatedDate(entity.getCreationDate());
-		_case.setDescription(entity.getDescription());
-		_case.setGroupStrategy(groupStrategy.getName());
-		_case.setName(entity.getName());
-		_case.setOwner(entity.getOwner());
-		_case.setLastModifiedDate(entity.getModifiedDate());
-		for (String domain : StringUtils.split(entity.getDomains(), ',')) {
-			_case.addDomain(domain);
-		}
-
-		Run run = new Run(abtestRun.getId());
-		for (String domain : StringUtils.split(abtestRun.getDomains(), ',')) {
-			run.addDomain(domain);
-		}
-		run.setCreator(abtestRun.getCreator());
-		run.setDisabled(false);
-		run.setEndDate(abtestRun.getEndDate());
-		run.setGroupStrategyConfiguration(abtestRun.getStrategyConfiguration());
-		run.setStartDate(abtestRun.getStartDate());
-
-		_case.addRun(run);
-
-		return _case;
+	
+	/**
+	 * 
+	 * @param code 0 for success, 1 for failure
+	 * @param msg
+	 * @return
+	 */
+	public String responseJson(int code, String msg){
+		Gson gson = m_parser.getGsonBuilder().create();
+		return gson.toJson(new ResponseJson(code, msg), ResponseJson.class);
 	}
-
-	private Map<String, List<Project>> transform(List<Project> projects) {
-		Map<String, List<Project>> re = new TreeMap<String, List<Project>>();
-		if (projects != null) {
-			for (Project project : projects) {
-				String key = project.getDepartment() + "-" + project.getProjectLine();
-				List<Project> list = re.get(key);
-				if (list == null) {
-					list = new ArrayList<Project>();
-					re.put(key, list);
-				}
-				list.add(project);
-			}
+	
+	static class ResponseJson{
+		private int m_code;
+		private String m_msg;
+		
+		public ResponseJson(int code, String msg){
+			m_code = code;
+			m_msg = msg;
 		}
-		return re;
+
+		public int getCode() {
+      	return m_code;
+      }
+
+		public void setCode(int code) {
+      	m_code = code;
+      }
+
+		public String getMsg() {
+      	return m_msg;
+      }
+
+		public void setMsg(String msg) {
+      	m_msg = msg;
+      }
 	}
 }

@@ -11,7 +11,19 @@
 				<creator>hao.zhu@dianping.com</creator>
 				<domain>TuanGouWeb</domain>
 				<domain>TuanGouRemote</domain>
-				<group-strategy-configuration><![CDATA[This is the configuration]]></group-strategy-configuration>
+				<groupstrategy-descriptor name="roundrobin" className="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
+					<fields>
+					   <field name="package" type="String" input-type="input">
+					   		<![CDATA[This is value]]>
+					   </field>
+					   <field name="class" type="String" input-type="textarea">
+					  		 <![CDATA[This is value]]>
+					   </field>
+					   <field name="inject" type="String" input-type="input">
+					  		 <![CDATA[This is value]]>
+					   </field>
+					</fields>
+				</groupstrategy-descriptor>
 			</run>
 			<run />
 		</runs>

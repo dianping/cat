@@ -1,4 +1,4 @@
-package com.dianping.cat.abtest.tester;
+package com.dianping.tuangou.web.biz.dealgroup;
 
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
@@ -25,41 +26,51 @@ public class RetinaImgGroupStrategy implements ABTestGroupStrategy, LogEnabled {
 
 	private static Random abRandom = new Random();
 
+	@Inject("percentage")
 	private int m_percentage;
-
+	
+	@Inject("deals")
+	private String m_deals;
+	
 	private Logger m_logger;
 
 	@Override
 	public void apply(ABTestContext ctx) {
 		HttpServletRequest request = ctx.getHttpServletRequest();
-		String dealId = request.getParameter("dealGroupId");
-		String lastDealGroup = ctx.getCookielet("l");
-		String group = ctx.getCookielet("ab");
-
-		if (m_dealIds.contains(dealId)) {
-			if (lastDealGroup == null || lastDealGroup.length() == 0) {
-				int count = abRandom.nextInt(100);
-
-				if (count < m_percentage) {
-					lastDealGroup = "A";
-				} else {
-					lastDealGroup = "B";
+		String uri = request.getRequestURI();
+		
+		if(uri.equals("/detail")){
+			String dealId = request.getParameter("dealGroupId");
+			String lastDealGroup = ctx.getCookielet("l");
+			String group = ctx.getCookielet("ab");
+			
+			if (m_dealIds.contains(dealId)) {
+				if (lastDealGroup == null || lastDealGroup.length() == 0) {
+					int count = abRandom.nextInt(100);
+					
+					if (count < m_percentage) {
+						lastDealGroup = "A";
+					} else {
+						lastDealGroup = "B";
+					}
 				}
+				
+				group = lastDealGroup;
+			} else {
+				group = "";
 			}
-
-			group = lastDealGroup;
-		} else {
-			group = "";
+			
+			if(lastDealGroup != null){
+				ctx.setCookielet("l", lastDealGroup);
+			}
+			ctx.setCookielet("ab", group);
+			ctx.setGroupName(group);
 		}
-
-		ctx.setCookielet("l", lastDealGroup);
-		ctx.setCookielet("ab", group);
-		ctx.setGroupName(group);
 	}
 
 	@Override
 	public void init(ABTestEntity entity) {
-		String configuration = "";//entity.getGroupStrategyConfiguration();
+		String configuration = entity.getGroupStrategyConfiguration();
 		List<String> lines = Splitters.by('\n').noEmptyItem().trim()
 				.split(configuration);
 

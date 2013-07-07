@@ -5,11 +5,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	ADDABTEST("addABTest"),
 	
+	AJAXADDABTEST("ajax_addABTest"),
+	
 	ADDGROUPSTRATEGY("addGs"),
 	
 	PARSEGROUPSTRATEGY("parseGs"),
 	
 	DETAIL("detail"),
+	
+	AJAXDETAIL("ajax_detail"),
 	
 	MODEL("model"),
 	

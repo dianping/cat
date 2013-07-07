@@ -9,7 +9,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.abtest.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="${res.js.local['jquery-1.7.1.js']}"></script>
 <style>
 #content {
 	width: 1300px;

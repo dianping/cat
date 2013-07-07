@@ -4,13 +4,13 @@ import com.dianping.cat.system.SystemContext;
 
 public class Context extends SystemContext<Payload> {
 	
-	private String m_descriptor;
+	private String m_responseJson;
 
-	public String getDescriptor() {
-   	return m_descriptor;
+	public String getResponseJson() {
+   	return m_responseJson;
    }
 
-	public void setDescriptor(String descriptor) {
-   	m_descriptor = descriptor;
+	public void setResponseJson(String responseJson) {
+   	m_responseJson = responseJson;
    }
 }

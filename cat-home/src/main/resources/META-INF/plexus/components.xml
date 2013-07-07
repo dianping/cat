@@ -1167,9 +1167,9 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
-					<user>dpcom_cat</user>
-					<password>password</password>
+					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
+					<user>root</user>
+					<password></password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
@@ -1181,11 +1181,61 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>dailygraph</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>dailygraph</logical-table-name>
+				<physical-table-name>dailygraph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>dailyreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>dailyreport</logical-table-name>
+				<physical-table-name>dailyreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>event</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>event</logical-table-name>
 				<physical-table-name>event</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>graph</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>graph</logical-table-name>
+				<physical-table-name>graph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>location</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>location</logical-table-name>
+				<physical-table-name>location</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>monthreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>monthreport</logical-table-name>
+				<physical-table-name>monthreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1200,6 +1250,34 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>weeklyreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>weeklyreport</logical-table-name>
+				<physical-table-name>weeklyreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.home.dal.report.EventDao</role>
 			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
 			<requirements>
@@ -1209,8 +1287,44 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.home.dal.report.GraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.LocationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.LocationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MonthreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.WeeklyreportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1432,14 +1546,30 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
+			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 			<implementation>com.dianping.cat.system.page.abtest.service.ABTestServiceImpl</implementation>
+			<configuration>
+				<refreshTimeInSeconds>60</refreshTimeInSeconds>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2785,10 +2915,13 @@
 					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
+					<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2827,6 +2960,10 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
+			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>

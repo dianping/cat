@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<groupstrategy-descriptor name="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
+<groupstrategy-descriptor className="RetinaImgGroupStrategy" fullyQualifiedName="com.dianping.tuangou.web.biz.dealgroup.RetinaImgGroupStrategy">
    <fields>
-      <field name="package" type="String" value=""/>
-      <field name="class" type="String" value=""/>
-      <field name="inject" type="String" value=""/>
+      <field name="percentage" type="int" input-type="input"></field>
+      <field name="deals" type="String" input-type="input"></field>
    </fields>
 </groupstrategy-descriptor>

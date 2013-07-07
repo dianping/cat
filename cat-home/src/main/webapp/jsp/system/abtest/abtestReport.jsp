@@ -18,7 +18,7 @@
 </style>
 
 <a:body>
-	<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+	<script src="${res.js.local['jquery-1.7.1.js']}"></script>
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 

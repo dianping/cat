@@ -23,7 +23,7 @@ div.controls input {
 }
 </style>
 <a:body>
-   <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+   <script src="${res.js.local['jquery-1.7.1.js']}"></script>
    <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
    <res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
    <res:useCss value="${res.css.local['select2.css']}" target="head-css" />
@@ -52,24 +52,7 @@ div.controls input {
    </div>
 
    <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
-      <c:choose>
-         <c:when test="${ctx.exception != null}">
-            <div id="errorMsg" style="margin-left: 170px; margin-top:5px; padding: 0; width: 300px;">
-               <div style="position: absolute; width: 400px;" class="alert alert-error">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <span style="text-align: center;">${ctx.exception.message}</span>
-               </div>
-            </div>
-         </c:when>
-         <c:when test="${ctx.httpServletRequest.method == 'POST'}">
-            <div id="successMsg" style="margin-left: 170px; margin-top:5px; padding: 0; width: 300px;">
-               <div style="position: absolute; width: 400px;" class="alert alert-success">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <span style="text-align: center;">Modify successful! </span>
-               </div>
-            </div>
-         </c:when>
-      </c:choose>
+      <div id="alertDiv" style="margin-left: 170px; margin-top:5px;padding: 0; width: 300px;"></div>
       <div style="width: 90%;">
          <form id="form" method="post" action="" class="form-horizontal">
             <button id="cancel" type="button" onclick="disableEdit()" style="float: right; margin-left: 20px" class="btn hide">cancel</button>
@@ -80,19 +63,17 @@ div.controls input {
             <input type="hidden" name="id" value="${model.abtest.id}"> <input type="hidden" name="op" value="detail">
             <c:if test="${model.abtest.caseId != null}">
                <div class="control-group">
-                  <label class="control-label">Case Id <i tips="" data-trigger="hover" class="icon-question-sign"
-                     data-toggle="popover" data-placement="top" data-original-title="tips"
-                     data-content="It's important, because your client's code should use this 'Case Id' to specify a ABTest Case"></i>
+                  <label class="control-label">ID <i class="icon-question-sign"></i>
                   </label>
                   <div class="controls" style="margin-top:4px;">
-                     <strong style="font-size:16px">${model.abtest.caseId}</strong>
+                     <strong style="font-size:16px">${model.abtest.run.id}</strong>
                   </div>
                </div>
             </c:if>
             <div class="control-group">
                <label class="control-label">AB Test Name <i tips="" data-trigger="hover" class="icon-question-sign"
                   data-toggle="popover" data-placement="top" data-original-title="tips"
-                  data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
+                  data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1.It's important, because your client's code should use this 'Name' to specify a ABTest Case"></i>
                </label>
                <div class="controls">
                   <input id="inputName" type="text" name="name" placeholder="give it a name ..." check-type="required"
@@ -153,19 +134,16 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Name</label>
                <div class="controls">
-                  <select name="strategyId" check-type="required" required-message="Strategy is required!" disabled="disabled">
+                  <select id="strategyId" name="strategyId" check-type="required" required-message="Strategy is required!" disabled="disabled">
                      <c:forEach var="item" items="${model.groupStrategyList}">
+                     	<option value="0">请选择一个分组策略</option>
                         <option value="${item.id }" <c:if test="${item.id == model.abtest.groupStrategy}">selected="selected"</c:if>>${item.name}</option>
                      </c:forEach>
                   </select>
                </div>
             </div>
-            <div class="control-group">
-               <label class="control-label">Strategy Configuration</label>
-               <div class="controls">
-                  <textarea id="txtStrategyConfig" name="strategyConfig" class="span6" rows="3" cols="60" readonly="readonly">${model.abtest.strategyConfiguration}</textarea>
-               </div>
-            </div>
+            <div id="groupStrategyDivsub">
+			</div>
          </form>
       </div>
    </div>
@@ -224,7 +202,7 @@ div.controls input {
 				function enableEdit() {
 					//input
 					$('#form input').removeAttr("readonly");
-					$('#txtStrategyConfig').removeAttr("readonly");
+					$('#groupStrategyDivsub textarea').removeAttr("readonly");
 					$('#inputName').attr("readonly", "readonly");
 					//$('#form select').removeAttr("disabled");
 					$("#domains").select2("enable");
@@ -241,6 +219,7 @@ div.controls input {
 						$("#cancleAffirmModal").modal('show');
 					} else {
 						$('#form input').attr("readonly", "readonly");
+						$('#groupStrategyDivsub textarea').attr("readonly", "readonly");
 						$('#form select').attr("disabled", "disabled");
 						$("#domains").select2("disable");
 						$("#datetimepicker1>span").addClass('hide');
@@ -252,17 +231,70 @@ div.controls input {
 					}
 				}
 				
-				var timeout = 1;
-				function countDown() {
-					$('#countDown').text(timeout);
-					timeout--;
-					if (timeout == 0) {
-						window.location.href = "abtest?op=list";
-					} else {
-						setTimeout("countDown()", 1000);
+				function initConf(){
+					var jsonObject = ${model.abtest.strategyConfiguration};
+					//console.log(jsonObject);
+					var innerHTML = "";
+					
+					for(var i in jsonObject['fields']){
+						var field = jsonObject['fields'][i];
+						
+						if(field['inputType'] == "textarea"){
+							innerHTML += '<div class="control-group"><label class="control-label">' + field['name'] + '</label>'
+			                         + '<div class="controls"><textarea readonly class="span6" rows="3" cols="60" name="' + field['name'] + '">' + field['value'] + '</textarea></div>'
+									 + '</div>';
+						}else if(field['inputType'] == "input"){
+							innerHTML += '<div class="control-group"><label class="control-label">' + field['name'] + '</label>'
+							         + '<div class="controls"><input type="text" readonly name="' + field['name'] + '" value="' + field['value'] + '"></div>'
+						             + '</div>';
+						}
 					}
+					
+					//alert(innerHTML);
+					$('#groupStrategyDivsub').empty();
+					$('#groupStrategyDivsub').html(innerHTML);
 				}
 
+				$("#form" ).on( "submit", function( event ) {
+					event.preventDefault();
+					
+					var params = $(this).serialize();
+					//console.log(params);
+					var jsonObject = ${model.abtest.strategyConfiguration};
+					
+					for(var i in jsonObject['fields']){
+						var field = jsonObject['fields'][i];
+						var name = field["name"];
+						var type = field["inputType"];
+						
+						field["value"] = $(type + '[name=' + name + ']').val();
+					}
+
+					params += "&strategyConfig=" + JSON.stringify(jsonObject);
+					//console.log(params);
+					$.ajax({
+						type: "POST",
+						url : "abtest?op=ajax_detail",
+						data: params
+					}).done(function(json) {
+						json = JSON.parse(json);
+						
+						if(json.code == 0){
+							var innerHTML = '<div style="position: absolute; width: 400px;" class="alert alert-success">'
+									+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+									+ '<span style="text-align: center;">' + json.msg + '</span></div>';
+							$('#alertDiv').html(innerHTML);
+							changed = false;
+							disableEdit();
+						}else if(json.code == 1){
+							var innerHTML = '<div style="position: absolute; width: 400px;" class="alert alert-error">'
+									+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+									+ '<span style="text-align: center;">' + json.msg + '</span></div>';
+							$('#alertDiv').html(innerHTML);
+						}
+					});
+				});
+				
 				$(function() {
 					$('#datetimepicker1').datetimepicker({});
 					$('#datetimepicker2').datetimepicker({});
@@ -273,23 +305,24 @@ div.controls input {
 						changed = true;
 					});
 					//domain selector
-					$("#domains")
-							.select2(
-									{
-										placeholder : "select which domains to run this ab test",
-										allowClear : true
-									});
+					$("#domains").select2({
+						placeholder : "select which domains to run this ab test",
+						allowClear : true
+					});
+					
 					$("#domains").val(initDomains).trigger("change");
 					$("#domains").select2("disable");
+					
+					initConf();
 					//tips
 					$('i[tips]').popover();
 					//validate
-					$('#form').validation();
+					//$('#form').validation();
 					//onchange
 					$("#form input, #form textarea,#form select").change(
-							function() {
-								changed = true;
-							});
-				});
+						function() {
+							changed = true;
+						});
+					});
 			</script>
 </a:body>

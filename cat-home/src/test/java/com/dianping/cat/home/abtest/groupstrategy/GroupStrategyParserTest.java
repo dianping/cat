@@ -12,15 +12,23 @@ import org.unidal.helper.Files;
 import com.dianping.cat.abtest.model.entity.Field;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.system.page.abtest.GroupStrategyParser;
+import com.dianping.cat.system.page.abtest.GroupStrategyParser.NonPrexFieldNamingStrategy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-public class GroupStrategyParserTest {
-
+public class GroupStrategyParserTest{
 	@Test
 	public void test() throws IOException, ParseException {
-		GroupstrategyDescriptor descriptor = GroupStrategyParser.parse(getClass().getResourceAsStream("GroupStrategyForTest"));
+		GroupStrategyParser parser = new GroupStrategyParser();
+		GroupstrategyDescriptor descriptor = parser.parse(getClass().getResourceAsStream("RetinaImgGroupStrategy"));
 		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setFieldNamingStrategy(new NonPrexFieldNamingStrategy());
+		Gson gson = builder.create();
+		String json = gson.toJson(descriptor, GroupstrategyDescriptor.class);
+		System.out.println(json);
 		String expectedJson = Files.forIO().readFrom(getClass().getResourceAsStream("descriptor.json"), "utf-8");
-		String actualJson = GroupStrategyParser.toJson(descriptor);
+		String actualJson = gson.toJson(descriptor);
 		System.out.println(actualJson);
 		Assert.assertEquals(expectedJson.replaceAll("\\s*", ""), actualJson.replaceAll("\\s*", ""));
 		
@@ -34,4 +42,5 @@ public class GroupStrategyParserTest {
 		Assert.assertEquals(expected.replaceAll("\\s*", ""), descriptor.toString().replaceAll("\\s*", ""));
 		
 	}
+	
 }

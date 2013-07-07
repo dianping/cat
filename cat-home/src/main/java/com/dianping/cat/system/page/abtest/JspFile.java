@@ -3,10 +3,14 @@ package com.dianping.cat.system.page.abtest;
 public enum JspFile {
 
 	ADDABTEST("/jsp/system/abtest/abtestCreate.jsp"),
+
+	AJAXADDABTEST("/jsp/system/abtest/abtestAjax.jsp"),
 	
-	ADDGROUPSTRATEGY("/jsp/system/abtest/abtestCreate.jsp"),
+	ADDGROUPSTRATEGY("/jsp/system/abtest/abtestAjax.jsp"),
 	
-	PARSEGROUPSTRATEGY("/jsp/system/abtest/abtestGourpStrategy.jsp"),
+	PARSEGROUPSTRATEGY("/jsp/system/abtest/abtestAjax.jsp"),
+	
+	AJAXDETAIL("/jsp/system/abtest/abtestAjax.jsp"),
 	
 	CREATE("/jsp/system/abtest/abtestCreate.jsp"),
 
