@@ -270,11 +270,6 @@
 			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.report.task.state.StateMerger</role>
-			<implementation>com.dianping.cat.report.task.state.StateMerger</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.baseline.BaselineCreator</role>
 			<implementation>com.dianping.cat.report.baseline.impl.DefaultBaselineCreator</implementation>
 		</component>
@@ -361,8 +356,6 @@
 			</requirements>
 		</component>
 		<component>
-=======
->>>>>>> 4b90f93f66d2ec9b867f196405f687dfca4dfd1b
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -493,29 +486,7 @@
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
 				<requirement>
-<<<<<<< HEAD
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ReportService</role>
-=======
 					<role>com.dianping.cat.report.service.ReportService</role>
->>>>>>> 4b90f93f66d2ec9b867f196405f687dfca4dfd1b
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
@@ -533,7 +504,7 @@
 					<role>com.dianping.cat.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ReportService</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
