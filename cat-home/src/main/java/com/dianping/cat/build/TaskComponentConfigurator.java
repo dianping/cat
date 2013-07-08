@@ -6,10 +6,23 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
+import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
+import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.report.baseline.BaselineConfigManager;
+import com.dianping.cat.report.baseline.BaselineCreator;
+import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
+import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
@@ -20,6 +33,8 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.metric.MetricAlert;
+import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -31,6 +46,7 @@ import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -49,6 +65,23 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
 		all.add(C(SqlMerger.class));
+		
+		all.add(C(BaselineCreator.class,DefaultBaselineCreator.class));
+		all.add(C(BaselineService.class,DefaultBaselineService.class)
+				.req(BaselineDao.class));
+		all.add(C(BaselineConfigManager.class,BaselineConfigManager.class));
+		
+		all.add(C(MetricBaselineReportBuilder.class)
+				.req(GraphDao.class, DailyGraphDao.class, HourlyReportDao.class, DailyReportDao.class)//
+		      .req(WeeklyReportDao.class, MonthlyReportDao.class)//
+		      .req(com.dianping.cat.report.service.ReportService.class)//
+		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
+		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
+		
+		all.add(C(MetricAlert.class)
+				.req(com.dianping.cat.report.service.ReportService.class,ServerConfigManager.class)//
+		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
+		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportService.class)//
@@ -81,8 +114,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
-		            , HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
-		            , SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class));
+		            ,HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
+		            ,SqlReportBuilder.class,StateReportBuilder.class, DependencyReportBuilder.class,MetricBaselineReportBuilder.class));
 
 		return all;
 	}
