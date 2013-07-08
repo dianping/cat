@@ -16,4 +16,6 @@ public interface ReportDelegate<T> {
 	public T mergeReport(T old, T other);
 
 	public T parseXml(String xml) throws Exception;
+	
+	public boolean createHourlyTask(T report);
 }

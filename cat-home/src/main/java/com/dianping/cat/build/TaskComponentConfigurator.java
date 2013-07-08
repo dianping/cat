@@ -28,7 +28,6 @@ import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
-import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
@@ -79,9 +78,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
-
-		all.add(C(TaskProducer.class, TaskProducer.class) //
-		      .req(TaskDao.class, ReportService.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //

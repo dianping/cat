@@ -1,6 +1,15 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.task.TaskManager</role>
+			<implementation>com.dianping.cat.task.TaskManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.TaskDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.ServerConfigManager</role>
 			<implementation>com.dianping.cat.ServerConfigManager</implementation>
 		</component>

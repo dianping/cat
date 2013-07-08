@@ -26,6 +26,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implements LogEnabled {
 	public static final String ID = "matrix";
@@ -35,6 +37,9 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	@Inject
 	private HourlyReportDao m_reportDao;
+	
+	@Inject
+	private TaskManager m_taskManager;
 
 	private Map<String, MatrixReport> m_reports = new HashMap<String, MatrixReport>();
 
@@ -224,6 +229,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
+						m_taskManager.createTask(period, domain, ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);

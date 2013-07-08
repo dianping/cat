@@ -24,14 +24,14 @@ import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.Task;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
@@ -43,7 +43,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private HourlyReportDao m_reportDao;
 
 	@Inject
-	private TaskDao m_taskDao;
+	private TaskManager m_taskManager;
 
 	@Inject
 	private DomainManager m_domainManager;
@@ -303,20 +303,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 						Cat.getProducer().logError(e);
 					}
 				}
-				try {
-					Task task = m_taskDao.createLocal();
-
-					task.setCreationDate(new Date());
-					task.setProducer("");
-					task.setReportDomain("Cat");
-					task.setReportName(ID);
-					task.setReportPeriod(period);
-					task.setStatus(1); // status todo
-					task.setTaskType(0);
-					m_taskDao.insert(task);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
+				m_taskManager.createTask(period, "Cat", ID, TaskProlicy.HOULY);
 			}
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);

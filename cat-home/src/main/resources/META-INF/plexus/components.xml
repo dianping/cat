@@ -411,18 +411,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.thread.TaskProducer</role>
-			<implementation>com.dianping.cat.report.task.thread.TaskProducer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
 			<requirements>

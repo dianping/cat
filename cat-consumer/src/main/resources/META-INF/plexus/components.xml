@@ -67,15 +67,17 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.service.ReportDelegate</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.TaskDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>
@@ -109,7 +111,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
+					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
@@ -137,7 +139,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
+					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -155,6 +157,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -177,7 +182,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
+					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 			</requirements>
 		</component>
