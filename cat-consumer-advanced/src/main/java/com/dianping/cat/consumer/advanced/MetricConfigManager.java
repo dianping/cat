@@ -181,5 +181,5 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		}
 		return true;
 	}
-
+	
 }

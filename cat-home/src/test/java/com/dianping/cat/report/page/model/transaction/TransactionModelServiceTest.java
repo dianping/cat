@@ -23,7 +23,7 @@ public class TransactionModelServiceTest extends ComponentTestCase {
 	@Test
 	public void testLocal() throws Exception {
 		LocalTransactionService local = (LocalTransactionService) lookup(ModelService.class, "transaction-local");
-		ModelResponse<?> response = local.invoke(new ModelRequest("Cat", ModelPeriod.CURRENT));
+		ModelResponse<?> response = local.invoke(new ModelRequest("Cat", ModelPeriod.CURRENT.getStartTime()));
 
 		Assert.assertEquals(true, response != null);
 	}

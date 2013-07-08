@@ -36,9 +36,7 @@ public class Handler implements PageHandler<Context> {
 
 	private TopReport getReport(Payload payload) {
 		String domain = CatString.CAT;
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		ModelRequest request = new ModelRequest(domain, payload.getDate());
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<TopReport> response = m_service.invoke(request);

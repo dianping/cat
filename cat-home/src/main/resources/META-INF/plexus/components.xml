@@ -266,22 +266,11 @@
 			<implementation>com.dianping.cat.report.task.problem.ProblemMerger</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
-			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.cross.CrossMerger</role>
-			<implementation>com.dianping.cat.report.task.cross.CrossMerger</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
-			<implementation>com.dianping.cat.report.task.matrix.MatrixMerger</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.sql.SqlMerger</role>
 			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
+<<<<<<< HEAD
 			<role>com.dianping.cat.report.task.state.StateMerger</role>
 			<implementation>com.dianping.cat.report.task.state.StateMerger</implementation>
 		</component>
@@ -372,6 +361,8 @@
 			</requirements>
 		</component>
 		<component>
+=======
+>>>>>>> 4b90f93f66d2ec9b867f196405f687dfca4dfd1b
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -382,22 +373,13 @@
 					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -412,22 +394,13 @@
 					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -442,19 +415,10 @@
 					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.problem.ProblemGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
@@ -469,25 +433,10 @@
 					<role>com.dianping.cat.core.dal.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -496,25 +445,7 @@
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -523,25 +454,19 @@
 			<implementation>com.dianping.cat.report.task.sql.SqlReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
+			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -550,52 +475,7 @@
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -604,25 +484,7 @@
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.state.StateMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -631,6 +493,7 @@
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
 				<requirement>
+<<<<<<< HEAD
 					<role>com.dianping.cat.core.dal.GraphDao</role>
 				</requirement>
 				<requirement>
@@ -650,6 +513,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ReportService</role>
+=======
+					<role>com.dianping.cat.report.service.ReportService</role>
+>>>>>>> 4b90f93f66d2ec9b867f196405f687dfca4dfd1b
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>

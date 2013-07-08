@@ -16,7 +16,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.advanced.metric.config.entity.MetricConfig.METRIC_TYPE;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
@@ -85,7 +84,7 @@ public class MetricAlert implements Initializable, LogEnabled  {
 					for (String metricID : configMap.keySet()) {
 						MetricItemConfig metricConfig = configMap.get(metricID);
 						String domain = metricConfig.getDomain();
-						for (METRIC_TYPE type : METRIC_TYPE.values()) {
+						for (MetricType type : MetricType.values()) {
 							String key = metricID + ":" + type;
 							Date reportPeriod = new Date(new Date().getTime() - DURATION);
 							double[] baseline = m_baselineService.queryHourlyBaseline("metricBaseline", key, reportPeriod);

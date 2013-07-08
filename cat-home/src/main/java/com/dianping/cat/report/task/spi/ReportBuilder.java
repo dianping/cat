@@ -4,12 +4,12 @@ import java.util.Date;
 
 public interface ReportBuilder {
 
-	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod);
+	public boolean buildDailyReport(String name, String domain, Date period);
 
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod);
+	public boolean buildHourReport(String name, String domain, Date period);
 
-	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod);
+	public boolean buildMonthReport(String name, String domain, Date period);
 
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod);
+	public boolean buildWeeklyReport(String name, String domain, Date period);
 
 }

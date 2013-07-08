@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.metric;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricConfig.METRIC_TYPE;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 
@@ -11,17 +10,17 @@ public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;
 
-	public static double[] getOneHourData(MetricItem report, METRIC_TYPE type) {
+	public static double[] getOneHourData(MetricItem report, MetricType type) {
 		double[] result = new double[POINT_NUMBER];
 		Map<Integer, Point> map = report.getAbtests().get("-1").getGroups().get("").getPoints();
 		for (Integer minute : map.keySet()) {
 			if (minute >= 0 && minute < POINT_NUMBER) {
 				Point point = map.get(minute);
-				if (type == METRIC_TYPE.AVG) {
+				if (type == MetricType.AVG) {
 					result[minute] = point.getAvg();
-				} else if (type == METRIC_TYPE.COUNT) {
+				} else if (type == MetricType.COUNT) {
 					result[minute] = (double) point.getCount();
-				} else if (type == METRIC_TYPE.SUM) {
+				} else if (type == MetricType.SUM) {
 					result[minute] = point.getSum();
 				}
 			}
@@ -29,7 +28,7 @@ public class MetricPointParser {
 		return result;
 	}
 	
-	public static double[] getOneDayData(List<MetricItem> reports, METRIC_TYPE type) {
+	public static double[] getOneDayData(List<MetricItem> reports, MetricType type) {
 		double[] values = new double[POINT_NUMBER];
 		for (int i = 0; i < POINT_NUMBER; i++) {
 			values[i] = -1;

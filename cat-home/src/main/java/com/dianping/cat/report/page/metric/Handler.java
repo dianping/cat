@@ -20,7 +20,6 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
@@ -48,14 +47,7 @@ public class Handler implements PageHandler<Context> {
 
 	private MetricReport getReport(Payload payload) {
 		String product = payload.getProduct();
-		String date = String.valueOf(payload.getDate());
-		ModelPeriod period = payload.getPeriod();
-		return getReport(product, date, period);
-	}
-
-	private MetricReport getReport(String product, String date, ModelPeriod period) {
-		ModelRequest request = new ModelRequest(product, period) //
-		      .setProperty("date", date);
+		ModelRequest request = new ModelRequest(product, payload.getDate());
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();

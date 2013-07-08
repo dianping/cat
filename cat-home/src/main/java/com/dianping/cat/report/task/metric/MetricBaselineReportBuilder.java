@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricConfig.METRIC_TYPE;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
@@ -20,10 +19,9 @@ import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineCreator;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
 
-public class MetricBaselineReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class MetricBaselineReportBuilder implements ReportBuilder {
 	@Inject
 	protected ReportService m_reportService;
 	
@@ -50,7 +48,7 @@ public class MetricBaselineReportBuilder extends AbstractReportBuilder implement
 		String metricKey = metricConfig.getMetricKey();
 		String metricDomain = metricConfig.getDomain();
 		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
-		for (METRIC_TYPE type : METRIC_TYPE.values()) {
+		for (MetricType type : MetricType.values()) {
 			String key = metricID + ":" + type;
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
 			List<Integer> days = baselineConfig.getDays();

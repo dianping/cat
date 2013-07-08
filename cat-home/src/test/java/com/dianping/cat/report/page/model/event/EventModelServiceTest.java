@@ -30,7 +30,7 @@ public class EventModelServiceTest extends ComponentTestCase {
 	@Test
 	public void testLocal() throws Exception {
 		LocalEventService local = (LocalEventService) lookup(ModelService.class, "event-local");
-		ModelResponse<?> response = local.invoke(new ModelRequest("Cat", ModelPeriod.CURRENT));
+		ModelResponse<?> response = local.invoke(new ModelRequest("Cat", ModelPeriod.CURRENT.getStartTime()));
 
 		Assert.assertEquals(true, response != null);
 	}
