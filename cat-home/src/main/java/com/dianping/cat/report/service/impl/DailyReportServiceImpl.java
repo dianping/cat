@@ -2,6 +2,7 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -41,7 +42,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				CrossReport reportModel = com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(xml);
@@ -68,7 +69,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
@@ -94,7 +95,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				HeartbeatReport reportModel = com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser
@@ -120,7 +121,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				MatrixReport reportModel = com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser.parse(xml);
@@ -145,7 +146,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
@@ -171,7 +172,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				SqlReport reportModel = com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser.parse(xml);
@@ -197,7 +198,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser.parse(xml);
@@ -223,7 +224,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findReportByDomainNamePeriod(domain, name, new Date(startTime),
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
 				TransactionReport reportModel = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
@@ -239,5 +240,16 @@ public class DailyReportServiceImpl implements DailyReportService {
 		transactionReport.setEndTime(end);
 		return transactionReport;
 	}
+
+	@Override
+   public boolean insert(DailyReport report) {
+		try {
+	      m_dailyReportDao.insert(report);
+	      return true;
+      } catch (DalException e) {
+      	Cat.logError(e);
+			return false;
+      }
+   }
 
 }

@@ -209,7 +209,7 @@ public class ExternalInfoBuilder {
 
 	private ProblemReport queryProblemReport(Payload payload, String domain) {
 		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("date", date).setProperty("type", "view");
 		if (m_problemservice.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemservice.invoke(request);
@@ -223,7 +223,7 @@ public class ExternalInfoBuilder {
 	private TopReport queryTopReport(Payload payload) {
 		String domain = CatString.CAT;
 		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("date", date);
 
 		if (m_topService.isEligable(request)) {

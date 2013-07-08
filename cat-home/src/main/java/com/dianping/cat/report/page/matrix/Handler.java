@@ -37,10 +37,8 @@ public class Handler implements PageHandler<Context> {
 
 	private MatrixReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {

@@ -14,6 +14,9 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 
 public interface ReportService {
 
@@ -40,4 +43,10 @@ public interface ReportService {
 	public DependencyReport queryDependencyReport(String domain,Date start,Date end);
 
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
+	
+	public boolean insertDailyReport(DailyReport report);
+	
+	public boolean insertWeeklyReport(WeeklyReport report);
+	
+	public boolean insertMonthlyReport(MonthlyReport report);
 }

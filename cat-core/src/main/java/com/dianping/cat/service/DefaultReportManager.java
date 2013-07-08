@@ -136,6 +136,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			}
 
 			m_reportDelegate.afterLoad(reports);
+			t.setStatus(Message.SUCCESS);
 		} catch (Throwable e) {
 			t.setStatus(e);
 			Cat.logError(e);

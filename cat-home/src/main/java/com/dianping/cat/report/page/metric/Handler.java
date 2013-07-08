@@ -47,9 +47,7 @@ public class Handler implements PageHandler<Context> {
 
 	private MetricReport getReport(Payload payload) {
 		String product = payload.getProduct();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(product, payload.getPeriod()) //
-		      .setProperty("date", date);
+		ModelRequest request = new ModelRequest(product, payload.getDate());
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();
