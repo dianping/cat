@@ -270,6 +270,92 @@
 			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.baseline.BaselineCreator</role>
+			<implementation>com.dianping.cat.report.baseline.impl.DefaultBaselineCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.baseline.BaselineService</role>
+			<implementation>com.dianping.cat.report.baseline.impl.DefaultBaselineService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.BaselineDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.baseline.BaselineConfigManager</role>
+			<implementation>com.dianping.cat.report.baseline.BaselineConfigManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.MetricAlert</role>
+			<implementation>com.dianping.cat.report.task.metric.MetricAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -452,6 +538,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1018,6 +1107,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>baseline</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>baseline</logical-table-name>
+				<physical-table-name>baseline</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>event</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1035,6 +1134,15 @@
 				<physical-table-name>topologyGraph</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.BaselineDao</role>
+			<implementation>com.dianping.cat.home.dal.report.BaselineDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.EventDao</role>
