@@ -17,6 +17,7 @@ import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
@@ -55,9 +56,12 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
-	
+
 	@Inject
 	private DependencyReportBuilder m_dependendcyReportBuilder;
+	
+	@Inject
+	private MetricBaselineReportBuilder m_metricBaselineReportBuilder;
 
 	private Logger m_logger;
 
@@ -127,6 +131,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
 		m_reportBuilders.put("state", m_stateReportBuilder);
 		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
+		m_reportBuilders.put("metricBaseline", m_metricBaselineReportBuilder);
 	}
 
 }
