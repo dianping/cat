@@ -8,7 +8,7 @@ import com.dianping.cat.message.spi.core.HtmlMessageCodecTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketTest;
 import com.dianping.cat.storage.report.LocalReportBucketTest;
-import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManagerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -23,7 +23,7 @@ LocalMessageBucketTest.class,
 
 LocalMessageBucketManagerTest.class,
 
-TaskManager.class
+TaskManagerTest.class
 
 })
 public class AllTests {
