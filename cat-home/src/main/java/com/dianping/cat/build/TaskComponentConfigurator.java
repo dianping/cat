@@ -87,7 +87,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
 		
-
 		all.add(C(MetricAlert.class)
 				.req(com.dianping.cat.report.service.ReportService.class,ServerConfigManager.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//

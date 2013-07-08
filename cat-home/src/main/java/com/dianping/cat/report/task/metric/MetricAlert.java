@@ -55,6 +55,8 @@ public class MetricAlert implements Initializable, LogEnabled  {
 
 	@Override
 	public void initialize() throws InitializationException {
+		System.out.println("metric alert start");
+		m_logger.info("metric alert start");
 		if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
 			Threads.forGroup("Cat").start(new Redo());
 		}

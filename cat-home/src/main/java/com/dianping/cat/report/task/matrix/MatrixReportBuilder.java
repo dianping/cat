@@ -53,10 +53,10 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain,
-				      "matrix", new Date(startTime), DailyReportEntity.READSET_FULL);
+				DailyReport dailyreport = m_dailyReportDao.findReportByDomainNamePeriod(domain, "matrix", new Date(
+				      startTime), DailyReportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
-				
+
 				MatrixReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -127,9 +127,9 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 	private DailyReport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		
-		List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      HourlyReportEntity.READSET_FULL);
+
+		List<HourlyReport> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain,
+		      reportName, HourlyReportEntity.READSET_FULL);
 		String content = m_matrixMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 
 		DailyReport report = m_dailyReportDao.createLocal();
