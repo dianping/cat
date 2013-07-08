@@ -44,7 +44,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_logger = logger;
 	}
 
-	// TODO remove it
 	public Set<String> getDomains() {
 		return m_reports.keySet();
 	}

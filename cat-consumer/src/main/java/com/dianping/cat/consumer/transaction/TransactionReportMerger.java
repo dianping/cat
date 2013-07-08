@@ -100,7 +100,6 @@ public class TransactionReportMerger extends DefaultMerger {
 			old.setLine99Value(line99Values / totalCountSum);
 		}
 
-		System.out.println(old);
 		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
 

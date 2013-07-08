@@ -169,6 +169,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
+		
 		report = m_mergeManager.mergerAll(report, ipAddress, name);
 		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
@@ -265,7 +266,6 @@ public class Handler implements PageHandler<Context> {
 		try {
 			TransactionReport report = getHourlyReport(payload);
 
-			System.out.println(report);
 			if (report != null) {
 				model.setReport(report);
 
