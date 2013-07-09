@@ -11,6 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.ReportType;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -25,13 +26,13 @@ import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
-	public static final int TYPE_HOUR = 0;
+	public static final int TYPE_HOUR = ReportType.HOUR;
 
-	public static final int TYPE_DAILY = 1;
+	public static final int TYPE_DAILY = ReportType.DAILY;
 
-	public static final int TYPE_WEEK = 2;
+	public static final int TYPE_WEEK = ReportType.WEEK;
 
-	public static final int TYPE_MONTH = 3;
+	public static final int TYPE_MONTH = ReportType.MONTH;
 
 	@Inject
 	private EventReportBuilder m_eventBuilder;

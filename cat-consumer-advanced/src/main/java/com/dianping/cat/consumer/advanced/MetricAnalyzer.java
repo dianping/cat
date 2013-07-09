@@ -54,7 +54,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
-
+	
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);

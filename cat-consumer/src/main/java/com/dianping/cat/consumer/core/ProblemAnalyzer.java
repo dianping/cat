@@ -24,13 +24,13 @@ import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.Task;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled, Initializable {
 	public static final String ID = "problem";
@@ -42,7 +42,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private HourlyReportDao m_reportDao;
 
 	@Inject
-	private TaskDao m_taskDao;
+	private TaskManager m_taskManager;
 
 	@Inject
 	private List<ProblemHandler> m_handlers;
@@ -214,14 +214,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 						m_reportDao.insert(r);
 
-						Task task = m_taskDao.createLocal();
-						task.setCreationDate(new Date());
-						task.setProducer(ip);
-						task.setReportDomain(domain);
-						task.setReportName(ID);
-						task.setReportPeriod(period);
-						task.setStatus(1);
-						m_taskDao.insert(task);
+						m_taskManager.createTask(period, domain, ID, TaskProlicy.ALL);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);

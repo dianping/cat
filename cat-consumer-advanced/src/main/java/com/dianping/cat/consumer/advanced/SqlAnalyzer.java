@@ -29,6 +29,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements LogEnabled {
 	public static final String ID = "sql";
@@ -44,6 +46,9 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 	@Inject
 	private DatabaseParser m_parser;
+	
+	@Inject
+	private TaskManager m_taskManager;
 
 	private Map<String, SqlReport> m_reports = new HashMap<String, SqlReport>();
 
@@ -229,6 +234,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
+						m_taskManager.createTask(period, domain, ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);

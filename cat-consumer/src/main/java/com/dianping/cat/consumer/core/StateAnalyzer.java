@@ -30,10 +30,12 @@ import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
+import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implements LogEnabled {
 	public static final String ID = "state";
@@ -52,6 +54,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ProjectDao m_projectDao;
+	
+	@Inject
+	private TaskManager m_taskManager;
 
 	private Set<String> m_domains = new HashSet<String>();
 
@@ -161,7 +166,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			r.setContent(xml);
 
 			m_reportDao.insert(r);
-
+			
+			m_taskManager.createTask(period, domain, ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);
 		}

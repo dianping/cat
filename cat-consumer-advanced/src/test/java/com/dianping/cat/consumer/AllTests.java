@@ -22,7 +22,6 @@ SqlParsersTest.class,
 
 DatabaseAnalyzerTest.class
 
-
 })
 public class AllTests {
 
