@@ -259,9 +259,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		private void addTransactionChild(DefaultMessageManager manager, Message message, Transaction transaction) {
 			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
-			long messagePeriod = trimToHour(message.getTimestamp());
+			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
 
-			if (treePeriod != messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
+			if (treePeriod < messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
 				flushTrancatedMessage(manager, message.getTimestamp());
 			}
 

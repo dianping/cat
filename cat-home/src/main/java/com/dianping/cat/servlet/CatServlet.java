@@ -40,8 +40,8 @@ public class CatServlet extends AbstractContainerServlet {
 		try {
 			ModuleContext ctx = new DefaultModuleContext(getContainer());
 			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
-			File clientXmlFile = getConfigFile(servletConfig, "cat-client-xml", "config/client.xml");
-			File serverXmlFile = getConfigFile(servletConfig, "cat-server-xml", "config/server.xml");
+			File clientXmlFile = getConfigFile(servletConfig, "cat-client-xml", "client.xml");
+			File serverXmlFile = getConfigFile(servletConfig, "cat-server-xml", "server.xml");
 
 			ctx.setAttribute("cat-client-config-file", clientXmlFile);
 			ctx.setAttribute("cat-server-config-file", serverXmlFile);
