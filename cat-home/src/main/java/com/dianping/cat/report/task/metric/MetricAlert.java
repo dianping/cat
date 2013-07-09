@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.metric;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class MetricAlert implements Initializable, LogEnabled  {
 	}
 
 	private class Redo implements Task {
-		private static final int DURATION_IN_MINUTE = 10;
+		private static final int DURATION_IN_MINUTE = 1;
 
 		private static final long DURATION = DURATION_IN_MINUTE * TimeUtil.ONE_MINUTE;
 
@@ -81,9 +82,11 @@ public class MetricAlert implements Initializable, LogEnabled  {
 				long current = System.currentTimeMillis();
 				try {
 					Map<String, MetricItemConfig> configMap = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
+					Map<String,MetricReport> productLineToMetricReportMap = new HashMap<String,MetricReport>();
 					for (String metricID : configMap.keySet()) {
 						MetricItemConfig metricConfig = configMap.get(metricID);
 						String domain = metricConfig.getDomain();
+						String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);					
 						for (MetricType type : MetricType.values()) {
 							String key = metricID + ":" + type;
 							Date reportPeriod = new Date(new Date().getTime() - DURATION);
@@ -94,7 +97,11 @@ public class MetricAlert implements Initializable, LogEnabled  {
 
 							Date start = TaskHelper.thisHour(reportPeriod);
 							Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-							MetricReport report = m_reportService.queryMetricReport(domain, start, end);
+							MetricReport report = productLineToMetricReportMap.get(productLine);
+							if(report == null){
+								report = m_reportService.queryMetricReport(productLine, start, end);
+								productLineToMetricReportMap.put(productLine, report);
+							}
 							BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
 							MetricItem reportItem = report.getMetricItems().get(metricConfig.getMetricKey());
 							double[] datas = MetricPointParser.getOneHourData(reportItem, type);
@@ -127,7 +134,7 @@ public class MetricAlert implements Initializable, LogEnabled  {
 		private List<Integer> metricAlarm(double[] baseline, double[] datas, int minute, BaselineConfig config) {
 			List<Integer> result = new ArrayList<Integer>();
 			int start = minute / DURATION_IN_MINUTE;
-			int end = minute / DURATION_IN_MINUTE + 10;
+			int end = minute / DURATION_IN_MINUTE + DURATION_IN_MINUTE;
 			double minValue = config.getMinValue();
 			double lowerLimit = config.getLowerLimit();
 			double upperLimit = config.getUpperLimit();

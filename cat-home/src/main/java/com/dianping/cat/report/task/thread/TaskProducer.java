@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -63,18 +64,13 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	private void generateDailyMetricBaselineTasks(Date date) {
 		try {
-			Set<String> groups = m_configManager.getMetricConfig().getMetricItemConfigs().keySet();
-			for (String group : groups) {
-				try {
-					m_taskDao.findByDomainNameTypePeriod("metricBaseline", group, ReportFacade.TYPE_DAILY, date,
-					      TaskEntity.READSET_FULL);
-				} catch (DalNotFoundException e) {
-					insertTask(group, "metricBaseline", ReportFacade.TYPE_DAILY, date);
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+			m_taskDao.findByDomainNameTypePeriod("metricBaseline", "", ReportFacade.TYPE_DAILY, date,
+               TaskEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
+			insertTask("", "metricBaseline", ReportFacade.TYPE_DAILY, date);
+		} catch (DalException e) {
+         Cat.logError(e);
+      } 
 
 	}
 

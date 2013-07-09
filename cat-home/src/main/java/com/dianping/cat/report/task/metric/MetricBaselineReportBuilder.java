@@ -43,41 +43,43 @@ public class MetricBaselineReportBuilder implements ReportBuilder {
 	private static final int POINT_NUMBER = 60 * 24;
 
 	@Override
-	public boolean buildDailyReport(String reportName, String metricID, Date reportPeriod) {
-		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
-		String metricKey = metricConfig.getMetricKey();
-		String metricDomain = metricConfig.getDomain();
-		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
-		for (MetricType type : MetricType.values()) {
-			String key = metricID + ":" + type;
-			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
-			List<Integer> days = baselineConfig.getDays();
-			List<Double> weights = baselineConfig.getWeights();
-			Date targetDate = new Date(reportPeriod.getTime() + baselineConfig.getTargetDate() * TimeUtil.ONE_DAY);
-			List<double[]> values = new ArrayList<double[]>();
-			for (Integer day : days) {
-				List<MetricItem> reports = new ArrayList<MetricItem>();
-				Date relatedHour = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
-				for (int i = 0; i < 24; i++) {
-					Date hourEnd = new Date(relatedHour.getTime() + TimeUtil.ONE_HOUR);
-					MetricReport report = m_reportService.queryMetricReport(productLine, relatedHour, hourEnd);
-					MetricItem reportItem = report.getMetricItems().get(metricKey);
-					relatedHour = hourEnd;
-					reports.add(reportItem);
+	public boolean buildDailyReport(String reportName, String domain, Date reportPeriod) {
+		
+		for(String metricID:m_configManager.getMetricConfig().getMetricItemConfigs().keySet()){
+			MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
+			String metricKey = metricConfig.getMetricKey();
+			String metricDomain = metricConfig.getDomain();
+			String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
+			for (MetricType type : MetricType.values()) {
+				String key = metricID + ":" + type;
+				BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
+				List<Integer> days = baselineConfig.getDays();
+				List<Double> weights = baselineConfig.getWeights();
+				Date targetDate = new Date(reportPeriod.getTime() + baselineConfig.getTargetDate() * TimeUtil.ONE_DAY);
+				List<double[]> values = new ArrayList<double[]>();
+				for (Integer day : days) {
+					List<MetricItem> reports = new ArrayList<MetricItem>();
+					Date relatedHour = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
+					for (int i = 0; i < 24; i++) {
+						Date hourEnd = new Date(relatedHour.getTime() + TimeUtil.ONE_HOUR);
+						MetricReport report = m_reportService.queryMetricReport(productLine, relatedHour, hourEnd);
+						MetricItem reportItem = report.getMetricItems().get(metricKey);
+						relatedHour = hourEnd;
+						reports.add(reportItem);
+					}
+					double[] oneDayValue = MetricPointParser.getOneDayData(reports, type);
+					values.add(oneDayValue);
 				}
-				double[] oneDayValue = MetricPointParser.getOneDayData(reports, type);
-				values.add(oneDayValue);
+
+				double[] result = m_baselineCreator.createBaseLine(values, weights, new HashSet<Integer>(), POINT_NUMBER);
+				Baseline baseline = new Baseline();
+				baseline.setDataInDoubleArray(result);
+				baseline.setIndexKey(key);
+				baseline.setReportName(reportName);
+				baseline.setReportPeriod(targetDate);
+				m_baselineService.insertBaseline(baseline);
 			}
-
-			double[] result = m_baselineCreator.createBaseLine(values, weights, new HashSet<Integer>(), POINT_NUMBER);
-			Baseline baseline = new Baseline();
-			baseline.setDataInDoubleArray(result);
-			baseline.setIndexKey(key);
-			baseline.setReportName(reportName);
-			baseline.setReportPeriod(targetDate);
-			m_baselineService.insertBaseline(baseline);
 		}
-
 		return true;
 	}
 
