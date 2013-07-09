@@ -95,6 +95,7 @@ public class MetricAlert implements Task, LogEnabled {
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
+				Cat.logError(e);
 			} finally {
 				t.complete();
 			}

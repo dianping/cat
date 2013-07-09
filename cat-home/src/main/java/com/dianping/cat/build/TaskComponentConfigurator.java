@@ -10,12 +10,8 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
-import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
-import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
-import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -72,8 +68,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BaselineConfigManager.class,BaselineConfigManager.class));
 		
 		all.add(C(MetricBaselineReportBuilder.class)
-				.req(GraphDao.class, DailyGraphDao.class, HourlyReportDao.class, DailyReportDao.class)//
-		      .req(WeeklyReportDao.class, MonthlyReportDao.class)//
 		      .req(com.dianping.cat.report.service.ReportService.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));

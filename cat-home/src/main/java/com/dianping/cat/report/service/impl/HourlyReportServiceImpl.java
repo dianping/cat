@@ -2,7 +2,9 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
@@ -50,28 +52,35 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	@Inject
 	private BusinessReportDao m_businessReportDao;
 
+	private Map<Long, Set<String>> m_domains = new LinkedHashMap<Long, Set<String>>();
+
 	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
 		if (end.getTime() == start.getTime()) {
 			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
 		}
-		Set<String> domains = new HashSet<String>();
+		Set<String> domains = m_domains.get(start.getTime());
 
-		long startTime = start.getTime();
-		long endTime = end.getTime();
+		if (domains == null) {
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			List<HourlyReport> reports = null;
-			try {
-				reports = m_reportDao.findAllByPeriod(new Date(startTime), HourlyReportEntity.READSET_FULL);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-			if (reports != null) {
-				for (HourlyReport report : reports) {
-					domains.add(report.getDomain());
+			domains = new HashSet<String>();
+			long startTime = start.getTime();
+			long endTime = end.getTime();
+
+			for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+				List<HourlyReport> reports = null;
+				try {
+					reports = m_reportDao.findAllByPeriod(new Date(startTime), HourlyReportEntity.READSET_DOMAIN_NAME);
+				} catch (DalException e) {
+					Cat.logError(e);
+				}
+				if (reports != null) {
+					for (HourlyReport report : reports) {
+						domains.add(report.getDomain());
+					}
 				}
 			}
+			m_domains.put(start.getTime(), domains);
 		}
 		return domains;
 	}

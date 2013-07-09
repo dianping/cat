@@ -34,11 +34,11 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(AggregationConfigManager.class);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+			// MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
+			// Threads.forGroup("Cat").start(metricAlert);
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-         //MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
-         
+
 			Threads.forGroup("Cat").start(taskConsumer);
-			//Threads.forGroup("Cat").start(metricAlert);
 		}
 
 		executeAlarmModule(ctx);
