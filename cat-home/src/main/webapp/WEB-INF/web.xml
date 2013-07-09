@@ -12,7 +12,7 @@
 		<servlet-class>org.unidal.web.MVC</servlet-class>
 		<init-param>
 			<param-name>cat-client-xml</param-name>
-			<param-value>config/client.xml</param-value>
+			<param-value>client.xml</param-value>
 		</init-param>
 		<init-param>
 			<param-name>init-modules</param-name>
