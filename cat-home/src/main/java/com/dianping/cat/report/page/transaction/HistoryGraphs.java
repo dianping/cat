@@ -11,13 +11,13 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.core.dal.DailyGraph;
+import com.dianping.cat.core.dal.DailyGraphDao;
+import com.dianping.cat.core.dal.DailyGraphEntity;
+import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.core.dal.GraphDao;
+import com.dianping.cat.core.dal.GraphEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailygraph;
-import com.dianping.cat.home.dal.report.DailygraphDao;
-import com.dianping.cat.home.dal.report.DailygraphEntity;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.GraphDao;
-import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
@@ -31,7 +31,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 	private GraphDao m_graphDao;
 
 	@Inject
-	private DailygraphDao m_dailyGraphDao;
+	private DailyGraphDao m_dailyGraphDao;
 
 	private void appendArray(double[] src, int index, String str, int size) {
 		String[] values = str.split(",");
@@ -88,7 +88,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 	}
 
 	public Map<String, double[]> buildGraphDatasForDaily(Date start, Date end, String type, String name,
-	      List<Dailygraph> graphs) {
+	      List<DailyGraph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 		double[] total_count = new double[size];
@@ -102,7 +102,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		}
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
-			for (Dailygraph graph : graphs) {
+			for (DailyGraph graph : graphs) {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
@@ -116,7 +116,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				}
 			}
 		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
-			for (Dailygraph graph : graphs) {
+			for (DailyGraph graph : graphs) {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
@@ -259,12 +259,12 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		String name = payload.getName();
 		String ip = model.getIpAddress();
 		String queryIp = "All".equalsIgnoreCase(ip) == true ? "All" : ip;
-		List<Dailygraph> graphs = new ArrayList<Dailygraph>();
+		List<DailyGraph> graphs = new ArrayList<DailyGraph>();
 
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_DAY) {
 			try {
-				Dailygraph graph = m_dailyGraphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-				      "transaction", DailygraphEntity.READSET_FULL);
+				DailyGraph graph = m_dailyGraphDao.findByDomainNameIpDate(new Date(startLong), queryIp, domain,
+				      "transaction", DailyGraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {

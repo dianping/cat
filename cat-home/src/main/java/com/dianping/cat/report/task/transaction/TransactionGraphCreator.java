@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.home.dal.report.Graph;
+import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.spi.GraphCreator;
 import com.dianping.cat.report.task.spi.GraphLine;
 

@@ -15,10 +15,10 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.Task;
-import com.dianping.cat.consumer.core.dal.TaskDao;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.storage.Bucket;
@@ -36,7 +36,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -136,6 +136,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			}
 
 			m_reportDelegate.afterLoad(reports);
+			t.setStatus(Message.SUCCESS);
 		} catch (Throwable e) {
 			t.setStatus(e);
 			Cat.logError(e);
@@ -191,7 +192,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 						try {
 							String domain = m_reportDelegate.getDomain(report);
 							String xml = m_reportDelegate.buildXml(report);
-							Report r = m_reportDao.createLocal();
+							HourlyReport r = m_reportDao.createLocal();
 
 							r.setName(m_name);
 							r.setDomain(domain);

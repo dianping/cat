@@ -27,7 +27,7 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	@Override
 	protected CrossReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		CrossReport report;
 
 		if (isLocalMode()) {

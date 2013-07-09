@@ -27,7 +27,7 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	@Override
 	protected TopReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		TopReport report;
 
 		if (isLocalMode()) {

@@ -95,16 +95,15 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-	private HeartbeatReport getReport(String domain, String ipAddress, long dateLong, ModelPeriod period) {
-		String date = String.valueOf(dateLong);
-		ModelRequest request = new ModelRequest(domain, period) //
-		      .setProperty("date", date).setProperty("ip", ipAddress);
+	private HeartbeatReport getReport(String domain, String ipAddress, long date, ModelPeriod period) {
+		ModelRequest request = new ModelRequest(domain, date) //
+		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
 			if (period.isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(dateLong), new Date(dateLong
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date), new Date(date
 				      + TimeUtil.ONE_HOUR), "heartbeat");
 				Set<String> domainNames = report.getDomainNames();
 

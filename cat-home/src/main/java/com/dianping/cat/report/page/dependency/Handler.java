@@ -282,9 +282,7 @@ public class Handler implements PageHandler<Context> {
 
 	private DependencyReport queryDependencyReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		ModelRequest request = new ModelRequest(domain, payload.getDate());
 
 		if (m_dependencyService.isEligable(request)) {
 			ModelResponse<DependencyReport> response = m_dependencyService.invoke(request);

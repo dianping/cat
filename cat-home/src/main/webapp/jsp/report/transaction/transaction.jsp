@@ -53,6 +53,7 @@
 			<th class="right">Sample Link</th><th class="right">Min(ms)</th><th class="right">Max(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=95line">99.9Line</a>(ms)</th>
 			<th class="right">Std(ms)</th><th class="right">QPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -68,6 +69,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
+					<td>${w:format(e.line99Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -88,6 +90,7 @@
 			<th  class="right">Sample Link</th><th class="right">Min(ms)</th><th class="right">Max(ms)</th>
 			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
@@ -111,6 +114,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
+					<td>${w:format(e.line99Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>

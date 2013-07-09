@@ -10,40 +10,39 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.core.dal.GraphDao;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
-import com.dianping.cat.report.task.spi.AbstractReportBuilder;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.spi.ReportBuilder;
 
-public class HeartbeatReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class HeartbeatReportBuilder implements ReportBuilder {
+
+	@Inject
+	protected GraphDao m_graphDao;
+
+	@Inject
+	protected ReportService m_reportService;
 
 	@Inject
 	private HeartbeatGraphCreator m_heartbeatGraphCreator;
 
-	@Inject
-	private HeartbeatMerger m_heartbeatMerger;
-
 	@Override
-	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildDailyReport(String name, String domain, Date period) {
 		throw new UnsupportedOperationException("no daily report builder for heartbeat!");
 	}
 
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildHourReport(String name, String domain, Date period) {
 		try {
-			List<Graph> graphs = getHourReportData(reportName, reportDomain, reportPeriod);
+			List<Graph> graphs = getHourReportData(name, domain, period);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
-					this.m_graphDao.insert(graph); // use mysql unique index and
+					m_graphDao.insert(graph); // use mysql unique index and
 				}
 			}
 		} catch (Exception e) {
@@ -60,11 +59,9 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "heartbeat", DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
-				
-				HeartbeatReport reportModel = DefaultSaxParser.parse(xml);
+				HeartbeatReport reportModel = m_reportService.queryHeartbeatReport(domain, new Date(startTime), new Date(
+				      startTime + TimeUtil.ONE_DAY));
+
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -77,66 +74,53 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 	}
 
 	@Override
-	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildMonthReport(String name, String domain, Date period) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
+		cal.setTime(period);
 		cal.add(Calendar.MONTH, 1);
 
-		Date start = reportPeriod;
+		Date start = period;
 		Date end = cal.getTime();
 
-		HeartbeatReport heartbeatReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
+		HeartbeatReport heartbeatReport = buildMergedDailyReport(domain, start, end);
+		MonthlyReport report = new MonthlyReport();
 
 		report.setContent(heartbeatReport.toString());
 		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
+		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
+		report.setName(name);
+		report.setPeriod(period);
 		report.setType(1);
 
-		try {
-			m_monthreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
+		return m_reportService.insertMonthlyReport(report);
 	}
 
 	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
+	public boolean buildWeeklyReport(String name, String domain, Date period) {
+		Date start = period;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
-		HeartbeatReport heartbeatReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
+		HeartbeatReport heartbeatReport = buildMergedDailyReport(domain, start, end);
+		WeeklyReport report = new WeeklyReport();
 		String content = heartbeatReport.toString();
 
 		report.setContent(content);
 		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
+		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
+		report.setName(name);
+		report.setPeriod(period);
 		report.setType(1);
 
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
+		return m_reportService.insertWeeklyReport(report);
 	}
 
-	private List<Graph> getHourReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+	private List<Graph> getHourReportData(String name, String domain, Date period) throws DalException {
 		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		HeartbeatReport transactionReport = m_heartbeatMerger.mergeForGraph(reportDomain, reports);
-		graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+		HeartbeatReport transactionReport = m_reportService.queryHeartbeatReport(domain, period,
+		      new Date(period.getTime() + TimeUtil.ONE_HOUR));
+		graphs = m_heartbeatGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
 		return graphs;
 	}
 }

@@ -14,8 +14,8 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.graph.DefaultGraphBuilder;
@@ -48,7 +48,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
-
+		
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportService.class));
 

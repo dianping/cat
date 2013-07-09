@@ -17,11 +17,14 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.service.MonthReportCache;
-import com.dianping.cat.report.service.MonthReportService;
+import com.dianping.cat.report.service.MonthlyReportService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.WeeklyReportCache;
 import com.dianping.cat.report.service.WeeklyReportService;
@@ -37,7 +40,7 @@ public class ReportServiceImpl implements ReportService {
 	private WeeklyReportService m_weeklyReportService;
 
 	@Inject
-	private MonthReportService m_monthReportService;
+	private MonthlyReportService m_monthlyReportService;
 
 	@Inject
 	private WeeklyReportCache m_weeklyReportCache;
@@ -123,7 +126,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryCrossReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryCrossReport(domain, start);
+			report = m_monthlyReportService.queryCrossReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryCrossReport(domain, start);
 		} else {
@@ -152,7 +155,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryEventReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryEventReport(domain, start);
+			report = m_monthlyReportService.queryEventReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryEventReport(domain, start);
 		} else {
@@ -181,7 +184,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryHeartbeatReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryHeartbeatReport(domain, start);
+			report = m_monthlyReportService.queryHeartbeatReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryHeartbeatReport(domain, start);
 		} else {
@@ -210,7 +213,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryMatrixReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryMatrixReport(domain, start);
+			report = m_monthlyReportService.queryMatrixReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryMatrixReport(domain, start);
 		} else {
@@ -250,7 +253,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryProblemReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryProblemReport(domain, start);
+			report = m_monthlyReportService.queryProblemReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryProblemReport(domain, start);
 		} else {
@@ -279,7 +282,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.querySqlReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.querySqlReport(domain, start);
+			report = m_monthlyReportService.querySqlReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.querySqlReport(domain, start);
 		} else {
@@ -308,7 +311,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryStateReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryStateReport(domain, start);
+			report = m_monthlyReportService.queryStateReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryStateReport(domain, start);
 		} else {
@@ -359,7 +362,7 @@ public class ReportServiceImpl implements ReportService {
 		} else if (type == s_currentWeekly) {
 			report = m_weeklyReportCache.queryTransactionReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryTransactionReport(domain, start);
+			report = m_monthlyReportService.queryTransactionReport(domain, start);
 		} else if (type == s_currentMonth) {
 			report = m_monthReportCache.queryTransactionReport(domain, start);
 		} else {
@@ -371,4 +374,20 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return report;
 	}
+
+	@Override
+   public boolean insertDailyReport(DailyReport report) {
+		return m_dailyReportService.insert(report);
+   }
+
+	@Override
+   public boolean insertWeeklyReport(WeeklyReport report) {
+		return m_weeklyReportService.insert(report);
+   }
+
+	@Override
+   public boolean insertMonthlyReport(MonthlyReport report) {
+		return m_monthlyReportService.insert(report);
+   }
+
 }

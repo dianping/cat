@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entities  do-package="com.dianping.cat.consumer.core.config" gen="true" >
+<entities  do-package="com.dianping.cat.core.config" gen="true" >
   <entity name="config" table="config" alias="c">
     <member name="creation-date" insert-expr="NOW()" />
     <member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />

@@ -165,12 +165,10 @@ public class Handler implements PageHandler<Context> {
 
 	private EventReport getHourlyEventReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("ip", ipAddress);
 
 		if (StringUtils.isEmpty(type)) {
@@ -200,12 +198,10 @@ public class Handler implements PageHandler<Context> {
 
 	private TransactionReport getHourlyTransactionReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("ip", ipAddress);
 
 		if (StringUtils.isEmpty(type)) {

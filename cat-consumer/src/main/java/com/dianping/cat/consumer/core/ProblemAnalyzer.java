@@ -16,16 +16,16 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.Task;
-import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -39,7 +39,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private HourlyReportDao m_reportDao;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -201,7 +201,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 				for (ProblemReport report : m_reports.values()) {
 					try {
-						Report r = m_reportDao.createLocal();
+						HourlyReport r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
 

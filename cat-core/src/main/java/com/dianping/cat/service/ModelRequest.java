@@ -21,12 +21,6 @@ public class ModelRequest {
 		m_period = ModelPeriod.getByTime(startTime);
 	}
 
-	public ModelRequest(String domain, ModelPeriod period) {
-		m_domain = domain;
-		m_startTime = period.getStartTime();
-		m_period = period;
-	}
-
 	public String getDomain() {
 		return m_domain;
 	}
@@ -62,7 +56,11 @@ public class ModelRequest {
 	}
 
 	public long getStartTime() {
-		return m_startTime;
+		if (m_startTime >= 0) {
+			return m_startTime;
+		} else {
+			return Long.parseLong(m_properties.get("date"));
+		}
 	}
 
 	public boolean hasProperty(String name) {

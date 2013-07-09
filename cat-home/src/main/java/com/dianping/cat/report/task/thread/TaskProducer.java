@@ -7,15 +7,15 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Task;
-import com.dianping.cat.consumer.core.dal.TaskDao;
-import com.dianping.cat.consumer.core.dal.TaskEntity;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
+import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.core.dal.TaskEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
@@ -31,6 +31,9 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 	@Inject
 	private TaskDao m_taskDao;
 
+	@Inject
+	private MetricConfigManager m_configManager;
+
 	private Set<String> m_dailyReportNameSet = new HashSet<String>();
 
 	private Set<String> m_graphReportNameSet = new HashSet<String>();
@@ -39,125 +42,68 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	private long m_currentDay;
 
-	private void creatReportTask(Date yesterday) {
-		Date lastWeekEnd = TimeUtil.getCurrentWeek();
-		Date lastWeekStart = TimeUtil.getLastWeek();
-		Date currentMonth = TimeUtil.getCurrentMonth();
-		Date lastMonth = TimeUtil.getLastMonth();
-
-		generateDailyReportTasks(yesterday);
-		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
-		generateMonthReportTasks(lastMonth, currentMonth);
+	private void createDailyReportTasks(Date date) {
+		generateReportTasks(date, new Date(date.getTime() + TimeUtil.ONE_DAY), ReportFacade.TYPE_DAILY);
 	}
 
-	private void generateDailyReportTasks(Date date) {
-		try {
-			Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
+	private void createMonthReportTasks(Date date) {
+		Calendar cal = Calendar.getInstance();
 
-			for (String domain : domainSet) {
-				for (String name : m_dailyReportNameSet) {
-					try {
-						m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY, date,
-						      TaskEntity.READSET_FULL);
-					} catch (DalNotFoundException e) {
-						insertTask(domain, name, date, ReportFacade.TYPE_DAILY);
-					}
+		cal.setTime(date);
+
+		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+		if (dayOfMonth == 1) {
+			Calendar monthEnd = Calendar.getInstance();
+
+			monthEnd.setTime(date);
+			monthEnd.add(Calendar.MONTH, 1);
+			generateReportTasks(date, monthEnd.getTime(), ReportFacade.TYPE_WEEK);
+		}
+	}
+
+	private void generateDailyMetricBaselineTasks(Date date) {
+		try {
+			Set<String> groups = m_configManager.getMetricConfig().getMetricItemConfigs().keySet();
+			for (String group : groups) {
+				try {
+					m_taskDao.findByDomainNameTypePeriod("metricBaseline", group, ReportFacade.TYPE_DAILY, date,
+					      TaskEntity.READSET_FULL);
+				} catch (DalNotFoundException e) {
+					insertTask(group, "metricBaseline", ReportFacade.TYPE_DAILY, date);
 				}
-			}
-			try {
-				m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_DAILY, date,
-				      TaskEntity.READSET_FULL);
-			} catch (DalNotFoundException e) {
-				insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_DAILY);
-			} catch (DalException e) {
-				Cat.logError(e);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+
 	}
 
-	private void generateMonthReportTasks(Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
+	private void createWeeklyReportTasks(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			Date date = new Date(startTime);
-			Calendar cal = Calendar.getInstance();
-
-			cal.setTime(date);
-
-			int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-			if (dayOfMonth == 1) {
-				for (String name : m_dailyReportNameSet) {
-					Calendar monthEnd = Calendar.getInstance();
-
-					monthEnd.setTime(date);
-					monthEnd.add(Calendar.MONTH, 1);
-
-					Set<String> domainSet = queryDomainSet(date, monthEnd.getTime());
-					for (String domain : domainSet) {
-						try {
-							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_MONTH, date,
-							      TaskEntity.READSET_FULL);
-						} catch (DalNotFoundException e) {
-							insertTask(domain, name, date, ReportFacade.TYPE_MONTH);
-						} catch (Exception e) {
-							Cat.logError(e);
-						}
-					}
-				}
-
-				try {
-					try {
-						m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_WEEK, date,
-						      TaskEntity.READSET_FULL);
-					} catch (DalNotFoundException e) {
-						insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_MONTH);
-					}
-				} catch (DalException e) {
-					Cat.logError(e);
-				}
-			}
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		if (dayOfWeek == 7) {
+			generateReportTasks(date, new Date(date.getTime() + TimeUtil.ONE_DAY * 7), ReportFacade.TYPE_WEEK);
 		}
 	}
 
-	private void generateWeeklyReportTasks(Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
+	private void creatReportTask(Date date) {
+		generateDailyMetricBaselineTasks(date);
+		createDailyReportTasks(date);
+		createWeeklyReportTasks(date);
+		createMonthReportTasks(date);
+	}
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			Date date = new Date(startTime);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
+	private void generateReportTasks(Date start, Date end, int reportType) {
+		Set<String> domainSet = queryDomainSet(start, end);
 
-			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-			if (dayOfWeek == 7) {
-				for (String name : m_dailyReportNameSet) {
-					Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY * 7));
-					for (String domain : domainSet) {
-						try {
-							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_WEEK, date,
-							      TaskEntity.READSET_FULL);
-						} catch (DalNotFoundException e) {
-							insertTask(domain, name, date, ReportFacade.TYPE_WEEK);
-						} catch (Exception e) {
-							Cat.logError(e);
-						}
-					}
-				}
-				try {
-					try {
-						m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_WEEK, date,
-						      TaskEntity.READSET_FULL);
-					} catch (DalNotFoundException e) {
-						insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_WEEK);
-					}
-				} catch (DalException e) {
-					Cat.logError(e);
-				}
+		for (String domain : domainSet) {
+			for (String name : m_dailyReportNameSet) {
+				insertTask(domain, name, reportType, start);
 			}
 		}
+		insertTask(CatString.CAT, STATE, reportType, start);
 	}
 
 	@Override
@@ -167,12 +113,13 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_dailyReportNameSet.add("transaction");
 		m_dailyReportNameSet.add("event");
+		m_dailyReportNameSet.add("transaction");
 		m_dailyReportNameSet.add("problem");
 		m_dailyReportNameSet.add("matrix");
 		m_dailyReportNameSet.add("cross");
 		m_dailyReportNameSet.add("sql");
+		m_dailyReportNameSet.add("health");
 
 		m_graphReportNameSet.add("transaction");
 		m_graphReportNameSet.add("event");
@@ -180,19 +127,25 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		m_graphReportNameSet.add("heartbeat");
 	}
 
-	private void insertTask(String domain, String name, Date date, int type) {
-		Task task = m_taskDao.createLocal();
-
-		task.setCreationDate(new Date());
-		task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		task.setReportDomain(domain);
-		task.setReportName(name);
-		task.setReportPeriod(date);
-		task.setStatus(1);
-		task.setTaskType(type);
-
+	private void insertTask(String domain, String reportName, int taskType, Date taskPeriod) {
 		try {
-			m_taskDao.insert(task);
+			m_taskDao.findByDomainNameTypePeriod(reportName, domain, taskType, taskPeriod, TaskEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
+			Task task = m_taskDao.createLocal();
+
+			task.setCreationDate(new Date());
+			task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+			task.setReportDomain(domain);
+			task.setReportName(reportName);
+			task.setReportPeriod(taskPeriod);
+			task.setStatus(1);
+			task.setTaskType(taskType);
+
+			try {
+				m_taskDao.insert(task);
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

@@ -78,14 +78,18 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String groupName = entry.getKey();
-				Map<String, Domain> domains = entry.getValue().getDomains();
-				for (Domain domain : domains.values()) {
-					String nodeName = domain.getId();
-					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+				boolean isDashboard = entry.getValue().getDashboard();
 
-					m_allDomains.add(nodeName);
-					if (node != null) {
-						dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+				if (isDashboard) {
+					Map<String, Domain> domains = entry.getValue().getDomains();
+					for (Domain domain : domains.values()) {
+						String nodeName = domain.getId();
+						TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+
+						m_allDomains.add(nodeName);
+						if (node != null) {
+							dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+						}
 					}
 				}
 			}
@@ -256,7 +260,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			try {
 				for (String temp : domains) {
 					try {
-						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date",
+						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT.getStartTime()).setProperty("date",
 						      String.valueOf(currentHour));
 						if (m_service.isEligable(request)) {
 							ModelResponse<DependencyReport> response = m_service.invoke(request);

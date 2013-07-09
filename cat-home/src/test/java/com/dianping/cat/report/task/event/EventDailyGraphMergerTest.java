@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
-import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 
 public class EventDailyGraphMergerTest {
 	private EventMerger m_meger = new EventMerger();
@@ -21,7 +21,7 @@ public class EventDailyGraphMergerTest {
 
 	private String m_reportDomain = "MobileApi";
 
-	List<Report> reports = new ArrayList<Report>();
+	List<EventReport> reports = new ArrayList<EventReport>();
 
 	@Before
 	public void setUp() {
@@ -48,12 +48,12 @@ public class EventDailyGraphMergerTest {
 		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
 
-	private Report creatReport() {
-		Report result = new Report();
+	private EventReport creatReport() {
+		EventReport result = new EventReport();
 		try {
 			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventReport.xml"), "utf-8");
-
-			result.setContent(xml);
+			
+			return DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

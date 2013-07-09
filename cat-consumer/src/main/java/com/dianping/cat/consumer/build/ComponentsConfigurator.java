@@ -23,17 +23,17 @@ import com.dianping.cat.consumer.core.TopAnalyzer;
 import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
 import com.dianping.cat.consumer.core.aggregation.AggregationHandler;
 import com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.dal.HostinfoDao;
-import com.dianping.cat.consumer.core.dal.ProjectDao;
-import com.dianping.cat.consumer.core.dal.ReportDao;
-import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.DefaultProblemHandler;
 import com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.HostinfoDao;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.ReportDelegate;
@@ -67,25 +67,25 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 
 		all.add(C(MessageAnalyzer.class, ProblemAnalyzer.ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class, ProblemReportAggregation.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class, ProblemReportAggregation.class) //
 		      .req(ProblemHandler.class, new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 
 		all.add(C(MessageAnalyzer.class, EventAnalyzer.ID, EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class));
 
 		all.add(C(MessageAnalyzer.class, StateAnalyzer.ID, StateAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class, ReportDao.class, ProjectDao.class)//
+		      .req(HostinfoDao.class, HourlyReportDao.class, ProjectDao.class)//
 		      .req(BucketManager.class, ServerStatisticManager.class));
 
 		all.add(C(MessageAnalyzer.class, HeartbeatAnalyzer.ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class));
 
 		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerStatisticManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
 
 		all.add(C(MessageAnalyzer.class, TopAnalyzer.ID, TopAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class));
 
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
 
@@ -102,7 +102,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportManager.class, ID));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class));
 

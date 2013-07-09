@@ -52,9 +52,7 @@ public class Handler implements PageHandler<Context> {
 	private StateReport getHourlyReport(Payload payload) {
 		// only for cat
 		String domain = CAT;
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date)//
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("ip", payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {

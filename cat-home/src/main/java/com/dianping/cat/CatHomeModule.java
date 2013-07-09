@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
 import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.view.DomainNavManager;
@@ -37,7 +38,8 @@ public class CatHomeModule extends AbstractModule {
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 			TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
-
+			@SuppressWarnings("unused")
+         MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
 			Threads.forGroup("Cat").start(taskConsumer);
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
