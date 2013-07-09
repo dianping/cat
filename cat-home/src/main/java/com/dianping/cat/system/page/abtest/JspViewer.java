@@ -12,23 +12,23 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		switch (action) {
 		case VIEW:
 			return JspFile.VIEW.getPath();
-		case ADDABTEST:
-			return JspFile.ADDABTEST.getPath();
-		case ADDGROUPSTRATEGY:
-			return JspFile.ADDGROUPSTRATEGY.getPath();
-		case PARSEGROUPSTRATEGY:
-			return JspFile.PARSEGROUPSTRATEGY.getPath();
-		case AJAXADDABTEST:
-			return JspFile.PARSEGROUPSTRATEGY.getPath();
-		case AJAXDETAIL:
-			return JspFile.PARSEGROUPSTRATEGY.getPath();
+		case CREATE:
+			return JspFile.CREATE.getPath();
+		case AJAX_ADDGROUPSTRATEGY:
+			return JspFile.AJAX.getPath();
+		case AJAX_PARSEGROUPSTRATEGY:
+			return JspFile.AJAX.getPath();
+		case AJAX_CREATE:
+			return JspFile.AJAX.getPath();
+		case AJAX_DETAIL:
+			return JspFile.AJAX.getPath();
 		case DETAIL:
 			return JspFile.DETAIL.getPath();
 		case REPORT:
 			return JspFile.REPORT.getPath();
 		case MODEL:
 			return JspFile.MODEL.getPath();
-			
+
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

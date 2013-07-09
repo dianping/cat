@@ -73,7 +73,7 @@ $(document).ready(function() {
 				var params = $("#groupStrategyFrom").serialize();
 				$.ajax({
 					type: "POST",
-					url : "abtest?op=parseGs",
+					url : "abtest?op=ajax_parseGs",
 					data: params
 				}).done(function(json) {
 					var json = JSON.parse(json);
@@ -157,7 +157,7 @@ $(document).ready(function() {
 			
 			$.ajax({
 				type: "POST",
-				url : "abtest?op=addGs",
+				url : "abtest?op=ajax_addGs",
 				data: params
 			}).done(function(json) {
 				json = JSON.parse(json);

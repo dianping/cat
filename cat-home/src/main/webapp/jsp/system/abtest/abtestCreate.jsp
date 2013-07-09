@@ -28,7 +28,7 @@
 		<h4 style="margin: 0 auto;">Create ABTest</h4>
 		<div id="alertDiv" style="margin-left: 170px; margin-top:5px;padding: 0; width: 300px;"></div>
 		<div style="width: 90%;">
-			<form id="form" method="post" action="abtest?op=addABTest" class="form-horizontal">
+			<form id="form" method="post" action="abtest?op=create" class="form-horizontal">
 				<a href="abtest" style="float: right; margin-left: 20px" class="btn">Cancel</a>
 				<button id="submit" style="float: right;" type="submit"
 					class="btn btn-success">Submit</button>
@@ -190,7 +190,7 @@
 				//console.log(params);
 				$.ajax({
 					type: "POST",
-					url : "abtest?op=ajax_addABTest",
+					url : "abtest?op=ajax_create",
 					data: params,
 					async:false
 				}).done(function(json) {

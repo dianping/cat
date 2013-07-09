@@ -2,25 +2,17 @@ package com.dianping.cat.system.page.abtest;
 
 public enum JspFile {
 
-	ADDABTEST("/jsp/system/abtest/abtestCreate.jsp"),
+	VIEW("/jsp/system/abtest/abtestAllTest.jsp"),
 
-	AJAXADDABTEST("/jsp/system/abtest/abtestAjax.jsp"),
-	
-	ADDGROUPSTRATEGY("/jsp/system/abtest/abtestAjax.jsp"),
-	
-	PARSEGROUPSTRATEGY("/jsp/system/abtest/abtestAjax.jsp"),
-	
-	AJAXDETAIL("/jsp/system/abtest/abtestAjax.jsp"),
-	
 	CREATE("/jsp/system/abtest/abtestCreate.jsp"),
 
 	DETAIL("/jsp/system/abtest/abtestDetail.jsp"),
 
-	VIEW("/jsp/system/abtest/abtestAllTest.jsp"),
-
 	REPORT("/jsp/system/abtest/abtestReport.jsp"),
 
-	MODEL("/jsp/system/abtest/abtestModel.jsp");
+	MODEL("/jsp/system/abtest/abtestModel.jsp"),
+
+	AJAX("/jsp/system/abtest/abtestAjax.jsp");
 
 	private String m_path;
 

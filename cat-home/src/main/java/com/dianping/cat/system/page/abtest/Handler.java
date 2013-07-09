@@ -125,7 +125,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			} else {
 				throw new DalException("Aready to has a groupstrategy which has the same name...");
 			}
-			
+
 			ctx.setResponseJson(responseJson(0, "successfully create a groupstrategy!"));
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -150,13 +150,13 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		}
 
 		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			if (action == Action.AJAXADDABTEST) {
+			if (action == Action.AJAX_CREATE) {
 				handleCreateAction(ctx, payload);
-			} else if (action == Action.AJAXDETAIL) {
+			} else if (action == Action.AJAX_DETAIL) {
 				handleUpdateAction(ctx, payload);
-			} else if (action == Action.ADDGROUPSTRATEGY) {
+			} else if (action == Action.AJAX_ADDGROUPSTRATEGY) {
 				handleCreateGroupStrategyAction(ctx, payload);
-			} else if (action == Action.PARSEGROUPSTRATEGY) {
+			} else if (action == Action.AJAX_PARSEGROUPSTRATEGY) {
 				handleParseGroupStrategyAction(ctx, payload);
 			}
 		}
@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		case VIEW:
 			renderListModel(model, payload);
 			break;
-		case ADDABTEST:
+		case CREATE:
 			renderCreateModel(model);
 			break;
 		case DETAIL:
@@ -265,6 +265,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 			// only update run info, do not update abtest meta-info
 			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+			m_service.refresh();
 			ctx.setResponseJson(responseJson(0, "successfully modify a abtest!"));
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -392,41 +393,43 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			ctx.setException(e);
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @param code 0 for success, 1 for failure
+	 * @param code
+	 *           0 for success, 1 for failure
 	 * @param msg
 	 * @return
 	 */
-	public String responseJson(int code, String msg){
+	public String responseJson(int code, String msg) {
 		Gson gson = m_parser.getGsonBuilder().create();
 		return gson.toJson(new ResponseJson(code, msg), ResponseJson.class);
 	}
-	
-	static class ResponseJson{
+
+	static class ResponseJson {
 		private int m_code;
+
 		private String m_msg;
-		
-		public ResponseJson(int code, String msg){
+
+		public ResponseJson(int code, String msg) {
 			m_code = code;
 			m_msg = msg;
 		}
 
 		public int getCode() {
-      	return m_code;
-      }
+			return m_code;
+		}
 
 		public void setCode(int code) {
-      	m_code = code;
-      }
+			m_code = code;
+		}
 
 		public String getMsg() {
-      	return m_msg;
-      }
+			return m_msg;
+		}
 
 		public void setMsg(String msg) {
-      	m_msg = msg;
-      }
+			m_msg = msg;
+		}
 	}
 }

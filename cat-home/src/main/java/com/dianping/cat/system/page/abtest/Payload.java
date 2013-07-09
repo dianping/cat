@@ -207,8 +207,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
 			m_action = Action.getByName(action, Action.REPORT);
-		} else if (action.equalsIgnoreCase(Action.ADDABTEST.getName())) {
-			m_action = Action.getByName(action, Action.ADDABTEST);
+		} else if (action.equalsIgnoreCase(Action.CREATE.getName())) {
+			m_action = Action.getByName(action, Action.CREATE);
 		} else {
 			m_action = Action.getByName(action, Action.VIEW);
 		}
@@ -330,7 +330,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		}
 
 		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			if (m_action == Action.ADDABTEST) {
+			if (m_action == Action.CREATE) {
 				try {
 					Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
 					Validate.isTrue(m_domains != null && m_domains.length > 0, "'Domains' is required, choose one at least");
@@ -341,7 +341,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 				} catch (IllegalArgumentException e) {
 					ctx.setException(e);
 				}
-			} else if (m_action == Action.ADDGROUPSTRATEGY) {
+			} else if (m_action == Action.AJAX_ADDGROUPSTRATEGY) {
 				try {
 					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyName), "'GroupStrategy Name' is required");
 					Validate.isTrue(StringUtils.isNotBlank(m_groupStrategyClassName),
