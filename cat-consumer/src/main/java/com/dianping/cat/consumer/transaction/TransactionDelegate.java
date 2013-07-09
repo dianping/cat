@@ -9,19 +9,18 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.core.dal.Task;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
-	private TaskDao m_taskDao;
-
+	private TaskManager m_taskManager;
+	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -102,19 +101,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public boolean createHourlyTask(TransactionReport report) {
-		try {
-			Task task = m_taskDao.createLocal();
-			task.setCreationDate(new Date());
-			task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-			task.setReportDomain(report.getDomain());
-			task.setReportName("transaction");
-			task.setReportPeriod(report.getStartTime());
-			task.setStatus(1);
-
-			m_taskDao.insert(task);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return false;
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), "transaction", TaskProlicy.ALL);
 	}
 }

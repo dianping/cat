@@ -75,7 +75,7 @@
 			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
+					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 			</requirements>
 		</component>

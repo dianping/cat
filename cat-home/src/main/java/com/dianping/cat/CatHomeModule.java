@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
-import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
+import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;

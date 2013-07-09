@@ -110,7 +110,7 @@ public class CrossReportBuilder implements ReportBuilder {
 			Date date = new Date(startTime);
 			CrossReport reportModel = m_reportService.queryCrossReport(domain, date, new Date(date.getTime()
 			      + TimeUtil.ONE_HOUR));
-
+			
 			reportModel.accept(merger);
 		}
 		CrossReport crossReport = merger.getCrossReport();
