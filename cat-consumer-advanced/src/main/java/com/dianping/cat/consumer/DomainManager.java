@@ -68,7 +68,6 @@ public class DomainManager implements Initializable, LogEnabled {
 
 			if (project == null) {
 				if (!m_unknownIps.containsKey(ip)) {
-					m_logger.info("add ip to unknown list,ip:" + ip);
 					m_unknownIps.put(ip, ip);
 				}
 				return UNKNOWN_PROJECT;
@@ -96,6 +95,9 @@ public class DomainManager implements Initializable, LogEnabled {
 	}
 
 	public class ReloadDomainTask implements Task {
+
+		private int m_count;
+
 		@Override
 		public String getName() {
 			return "Reload-CMDB-Ip-Domain-Info";
@@ -128,9 +130,6 @@ public class DomainManager implements Initializable, LogEnabled {
 						if (domain != null) {
 							m_cmdbs.put(ip, domain);
 							addedIps.add(ip);
-							m_logger.info(String.format("get domain info from cmdb. ip: %s,domain: %s", ip, domain));
-						} else {
-							m_logger.error(String.format("can't get domain info from cmdb, ip: %s", ip));
 						}
 					}
 				} catch (Exception e) {
@@ -167,13 +166,18 @@ public class DomainManager implements Initializable, LogEnabled {
 
 			while (active) {
 				try {
+					m_count++;
 					queryFromDatabase();
 					queryFromCMDB();
+					if (m_count % 1000 == 0 && m_unknownIps.size() > 0) {
+						m_logger.error(String.format("can't get domain info from cmdb, ip: %s", m_unknownIps.keySet()
+						      .toString()));
+					}
 				} catch (Throwable e) {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(10 * 1000);
+					Thread.sleep(2 * 60 * 1000);
 				} catch (InterruptedException e) {
 					active = false;
 				}

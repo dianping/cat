@@ -21,14 +21,14 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.Task;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
 	public static final String ID = "event";
@@ -40,7 +40,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	private HourlyReportDao m_reportDao;
 
 	@Inject
-	private TaskDao m_taskDao;
+	private TaskManager m_taskManager;
 
 	private Map<String, EventReport> m_reports = new HashMap<String, EventReport>();
 
@@ -94,7 +94,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		//don't process frontEnd domain
+		// don't process frontEnd domain
 		if ("FrontEnd".equals(domain)) {
 			return;
 		}
@@ -200,7 +200,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			for (EventReport report : m_reports.values()) {
 				try {
 					Set<String> domainNames = report.getDomainNames();
-					
+
 					domainNames.clear();
 					domainNames.addAll(m_reports.keySet());
 
@@ -233,14 +233,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 						m_reportDao.insert(r);
 
-						Task task = m_taskDao.createLocal();
-						task.setCreationDate(new Date());
-						task.setProducer(ip);
-						task.setReportDomain(domain);
-						task.setReportName(ID);
-						task.setReportPeriod(period);
-						task.setStatus(1); // status todo
-						m_taskDao.insert(task);
+						m_taskManager.createTask(period, domain, ID, TaskProlicy.ALL);
 					} catch (Throwable e) {
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
@@ -259,4 +252,5 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			}
 		}
 	}
+
 }

@@ -27,7 +27,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	@Override
 	protected MatrixReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		MatrixReport report;
 
 		if (isLocalMode()) {

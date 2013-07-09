@@ -46,7 +46,7 @@ public class GroupStrategyTester extends ComponentTestCase {
 		
 		if (m_entity.isEligible(new Date())) {
 			if(isFirst){
-				m_groupStrategy.init(m_entity);
+				m_groupStrategy.init();
 				isFirst = false;
 			}
 			m_groupStrategy.apply(context);
@@ -114,7 +114,7 @@ public class GroupStrategyTester extends ComponentTestCase {
 						ABTestGroupStrategy strategy = lookup(
 								ABTestGroupStrategy.class,
 								m_entity.getGroupStrategyName());
-						strategy.init(m_entity);
+						strategy.init();
 						m_entity.setGroupStrategy(strategy);
 
 					} catch (Exception e) {

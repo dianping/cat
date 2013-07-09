@@ -2,6 +2,7 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -108,7 +109,7 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 	}
 
 	@Override
-   public StateReport queryStateReport(String domain, Date start) {
+	public StateReport queryStateReport(String domain, Date start) {
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "state",
 			      WeeklyReportEntity.READSET_FULL);
@@ -119,7 +120,7 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 			Cat.logError(e);
 		}
 		return new StateReport(domain);
-   }
+	}
 
 	@Override
 	public TransactionReport queryTransactionReport(String domain, Date start) {
@@ -133,6 +134,17 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 			Cat.logError(e);
 		}
 		return new TransactionReport(domain);
+	}
+
+	@Override
+	public boolean insert(WeeklyReport report) {
+		try {
+			m_weeklyReportDao.insert(report);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 
 }

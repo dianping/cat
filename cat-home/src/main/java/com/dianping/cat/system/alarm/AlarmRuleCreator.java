@@ -49,7 +49,7 @@ public class AlarmRuleCreator implements Task {
 	 */
 	private Set<String> getAllDomains() throws DalException {
 		String domain = CatString.CAT;
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT)//
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime())//
 		      .setProperty("ip", CatString.ALL);
 
 		if (m_service.isEligable(request)) {

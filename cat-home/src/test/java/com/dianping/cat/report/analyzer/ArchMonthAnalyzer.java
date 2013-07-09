@@ -77,7 +77,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	private void processOneDay(Date date, Set<String> domains) {
 		for (String domain : domains) {
 			try {
-				DailyReport report = m_dailyreportDao.findReportByDomainNamePeriod(domain, "transaction", date,
+				DailyReport report = m_dailyreportDao.findByDomainNamePeriod(domain, "transaction", date,
 				      DailyReportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());

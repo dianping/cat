@@ -144,4 +144,13 @@ public class TaskHelper {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
+	
+	public static Date thisHour(Date  reportPeriod) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
 }

@@ -27,7 +27,7 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	@Override
 	protected TransactionReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		TransactionReport report;
 
 		if (isLocalMode()) {

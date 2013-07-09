@@ -29,6 +29,8 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
@@ -38,6 +40,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Inject
 	private HourlyReportDao m_reportDao;
+	
+	@Inject
+	private TaskManager m_manager;
 
 	private Map<String, CrossReport> m_reports = new HashMap<String, CrossReport>();
 
@@ -271,7 +276,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
-
+						m_manager.createTask(period, domain, ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 					} catch (Throwable e) {
 						Cat.getProducer().logError(e);
 						t.setStatus(e);

@@ -16,8 +16,6 @@ import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
-import com.dianping.cat.report.page.model.event.EventModelServiceTest;
-import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
 import com.dianping.cat.report.page.sql.SqlReportMergerTest;
@@ -48,12 +46,6 @@ import com.dianping.cat.system.notify.RenderTest;
 /*
  * TestHttp.class
  */
-
-/* .report.page.model.event */
-EventModelServiceTest.class,
-
-/* .report.page.model.transaction */
-TransactionModelServiceTest.class,
 
 /* .report.graph */
 ValueTranslaterTest.class,

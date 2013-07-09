@@ -260,7 +260,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			try {
 				for (String temp : domains) {
 					try {
-						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date",
+						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT.getStartTime()).setProperty("date",
 						      String.valueOf(currentHour));
 						if (m_service.isEligable(request)) {
 							ModelResponse<DependencyReport> response = m_service.invoke(request);

@@ -15,6 +15,10 @@ import com.dianping.cat.message.spi.MessageTree;
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	public static final long MINUTE = 60 * 1000L;
 
+	public static final long ONE_HOUR = 60 * 60 * 1000L;
+
+	public static final long ONE_DAY = 24 * ONE_HOUR;
+
 	private long m_extraTime;
 
 	protected long m_startTime;
@@ -132,7 +136,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	}
 
 	protected abstract void process(MessageTree tree);
-
+	
 	protected boolean shouldDiscard(Transaction t) {
 		// pigeon default heartbeat is no use
 		String type = t.getType();
@@ -149,4 +153,5 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 			m_active = false;
 		}
 	}
+	
 }
