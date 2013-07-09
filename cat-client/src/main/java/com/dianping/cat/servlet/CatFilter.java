@@ -31,7 +31,8 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+	      ServletException {
 		Context ctx = new Context((HttpServletRequest) request, (HttpServletResponse) response, chain, m_handlers);
 
 		ctx.handle();
@@ -78,7 +79,6 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
-				HttpServletResponse res = ctx.getResponse();
 				boolean top = !Cat.getManager().hasContext();
 
 				ctx.setTop(top);
@@ -91,13 +91,11 @@ public class CatFilter implements Filter {
 				}
 
 				Cat.setup(getCookie(req, "JSESSIONID"));
-				ABTestManager.onRequestBegin(req, res);
 
 				try {
 					ctx.handle();
 				} finally {
 					Cat.reset();
-					ABTestManager.onRequestEnd();
 				}
 			}
 		},
@@ -168,7 +166,7 @@ public class CatFilter implements Filter {
 				} else {
 					logRequestPayload(req, type);
 				}
-				
+
 				ctx.handle();
 			}
 
@@ -220,9 +218,20 @@ public class CatFilter implements Filter {
 					if (metricType != null && metricType.length() > 0) {
 						Cat.logEvent(ctx.getType(), "ABTest", Message.SUCCESS, metricType);
 					}
-				}
 
-				ctx.handle();
+					HttpServletRequest req = ctx.getRequest();
+					HttpServletResponse res = ctx.getResponse();
+
+					ABTestManager.onRequestBegin(req, res);
+
+					try {
+						ctx.handle();
+					} finally {
+						ABTestManager.onRequestEnd();
+					}
+				} else {
+					ctx.handle();
+				}
 			}
 		},
 
