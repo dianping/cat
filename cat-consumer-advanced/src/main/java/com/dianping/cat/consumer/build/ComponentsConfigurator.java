@@ -26,8 +26,8 @@ import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -43,16 +43,18 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, CrossAnalyzer.ID, CrossAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class));
 
 		all.add(C(MessageAnalyzer.class, SqlAnalyzer.ID, SqlAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class, SqlParseManager.class, DatabaseParser.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class, SqlParseManager.class,
+		            DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MatrixAnalyzer.ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class));
 
 		all.add(C(MessageAnalyzer.class, DependencyAnalyzer.ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class, DomainManager.class, DatabaseParser.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class, DomainManager.class,
+		            DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//

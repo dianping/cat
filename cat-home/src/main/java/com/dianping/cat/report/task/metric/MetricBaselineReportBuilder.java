@@ -81,8 +81,6 @@ public class MetricBaselineReportBuilder implements ReportBuilder {
 		return true;
 	}
 
-	
-
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Metric base line report don't support hourly report!");

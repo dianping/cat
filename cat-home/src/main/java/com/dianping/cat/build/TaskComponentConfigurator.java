@@ -10,12 +10,8 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
-import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
-import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
-import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -43,7 +39,6 @@ import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
-import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
@@ -73,8 +68,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BaselineConfigManager.class,BaselineConfigManager.class));
 		
 		all.add(C(MetricBaselineReportBuilder.class)
-				.req(GraphDao.class, DailyGraphDao.class, HourlyReportDao.class, DailyReportDao.class)//
-		      .req(WeeklyReportDao.class, MonthlyReportDao.class)//
 		      .req(com.dianping.cat.report.service.ReportService.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
@@ -112,9 +105,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
-
-		all.add(C(TaskProducer.class, TaskProducer.class) //
-		      .req(TaskDao.class, ReportService.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //

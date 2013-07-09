@@ -17,16 +17,14 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.Task;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 /**
- * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
- * for a couple of hours.
+ * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in
+ * one machine for a couple of hours.
  */
 public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Inject
@@ -37,9 +35,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Inject
 	private HourlyReportDao m_reportDao;
-
-	@Inject
-	private TaskDao m_taskDao;
 
 	private String m_name;
 
@@ -203,15 +198,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 							m_reportDao.insert(r);
 
-							Task task = m_taskDao.createLocal();
-							task.setCreationDate(new Date());
-							task.setProducer(ip);
-							task.setReportDomain(domain);
-							task.setReportName(m_name);
-							task.setReportPeriod(period);
-							task.setStatus(1); // status todo
-
-							m_taskDao.insert(task);
+							m_reportDelegate.createHourlyTask(report);
 						} catch (Throwable e) {
 							t.setStatus(e);
 							Cat.getProducer().logError(e);
@@ -247,4 +234,5 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			return this == FILE_AND_DB || this == FILE;
 		}
 	}
+
 }
