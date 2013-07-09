@@ -23,4 +23,6 @@ public interface ABTestService {
 	public List<GroupStrategy> getAllGroupStrategies();
 	
 	public Map<String, List<Project>> getAllProjects();
+	
+	public void refresh();
 }

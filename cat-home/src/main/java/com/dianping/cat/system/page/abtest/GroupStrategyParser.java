@@ -5,6 +5,7 @@ import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.body.FieldDeclaration;
 import japa.parser.ast.body.TypeDeclaration;
+import japa.parser.ast.body.VariableDeclarator;
 import japa.parser.ast.expr.AnnotationExpr;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 
@@ -65,19 +66,21 @@ public class GroupStrategyParser implements Initializable {
 			if (annotations != null) {
 				for (AnnotationExpr expr : annotations) {
 					String annotation = expr.toString();
+					
+					int pos = annotation.indexOf("@Inject");
 
-					int index = annotation.indexOf("@Inject");
-
-					if (index >= 0) {
+					if (pos >= 0) {
 						int begin = annotation.indexOf('"');
 						int end = annotation.lastIndexOf('"');
 
 						String name = annotation.substring(begin + 1, end).trim();
 						String type = node.getType().toString();
-
+						List<VariableDeclarator> modifierName = node.getVariables();
+						
 						Field field = new Field();
 						field.setName(name);
 						field.setType(type);
+						field.setModifierName(modifierName.get(0).toString());
 
 						m_descriptor.getFields().add(field);
 					}

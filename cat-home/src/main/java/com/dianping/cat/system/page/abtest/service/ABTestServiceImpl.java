@@ -70,9 +70,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		if (run != null) {
 			ab = m_abtestMap.get(run.getCaseId());
 
-			if (ab != null) {
-				return ab;
-			} else {
+			if (ab == null) {
 				try {
 					ab = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
 
@@ -101,15 +99,15 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 					GroupStrategy groupStrategy = getGroupStrategyById(entity.getGroupStrategy());
 
 					if (groupStrategy != null) {
-						Case _case = transform(entity, run, groupStrategy);
-
 						if (status.length == 0) {
+							Case _case = transform(entity, run, groupStrategy);
 							model.addCase(_case);
 						} else {
 							AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
 
 							for (AbtestStatus st : status) {
 								if (st == _status) {
+									Case _case = transform(entity, run, groupStrategy);
 									model.addCase(_case);
 								}
 							}
@@ -201,7 +199,8 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		refresh();
 	}
 
-	private void refresh() {
+	@Override
+	public void refresh() {
 		try {
 			Map<Integer, Abtest> abtestMap = new ConcurrentHashMap<Integer, Abtest>();
 			Map<Integer, AbtestRun> abtestRunMap = new ConcurrentHashMap<Integer, AbtestRun>();
@@ -250,40 +249,40 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	}
 
 	public void setAbtestDao(AbtestDao abtestDao) {
-   	m_abtestDao = abtestDao;
-   }
+		m_abtestDao = abtestDao;
+	}
 
 	public void setAbtestMap(Map<Integer, Abtest> abtestMap) {
-   	m_abtestMap = abtestMap;
-   }
+		m_abtestMap = abtestMap;
+	}
 
 	public void setAbtestRunDao(AbtestRunDao abtestRunDao) {
-   	m_abtestRunDao = abtestRunDao;
-   }
+		m_abtestRunDao = abtestRunDao;
+	}
 
 	public void setAbtestRunMap(Map<Integer, AbtestRun> abtestRunMap) {
-   	m_abtestRunMap = abtestRunMap;
-   }
+		m_abtestRunMap = abtestRunMap;
+	}
 
 	public void setGroupStrategyDao(GroupStrategyDao groupStrategyDao) {
-   	m_groupStrategyDao = groupStrategyDao;
-   }
+		m_groupStrategyDao = groupStrategyDao;
+	}
 
 	public void setGroupStrategyMap(Map<Integer, GroupStrategy> groupStrategyMap) {
-   	m_groupStrategyMap = groupStrategyMap;
-   }
+		m_groupStrategyMap = groupStrategyMap;
+	}
 
 	public void setParser(GroupStrategyParser parser) {
-   	m_parser = parser;
-   }
+		m_parser = parser;
+	}
 
 	public void setProjectDao(ProjectDao projectDao) {
-   	m_projectDao = projectDao;
-   }
+		m_projectDao = projectDao;
+	}
 
 	public void setRefreshTimeInSeconds(int refreshTimeInSeconds) {
-   	m_refreshTimeInSeconds = refreshTimeInSeconds;
-   }
+		m_refreshTimeInSeconds = refreshTimeInSeconds;
+	}
 
 	@Override
 	public void shutdown() {

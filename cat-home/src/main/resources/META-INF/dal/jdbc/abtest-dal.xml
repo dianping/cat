@@ -69,7 +69,7 @@
 			<query name="find-all" type="SELECT" multiple="true">
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
-					FROM <TABLE/> ORDER BY <FIELD name='creation-date'/> DESC
+					FROM <TABLE/>
 				]]></statement>
 			</query>
 		</query-defs>

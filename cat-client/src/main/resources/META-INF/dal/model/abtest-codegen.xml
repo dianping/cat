@@ -33,6 +33,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="input-type" value-type="String" />
+    <attribute name="modifier-name" value-type="String" />
     <element name="text" value-type="String" text="true" />
   </entity>
 </model>

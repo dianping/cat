@@ -72,7 +72,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 			Transaction t = Cat.newTransaction("ABTest", url);
 
 			try {
-				InputStream inputStream = Urls.forIO().connectTimeout(300).readTimeout(100).openStream(url);
+				InputStream inputStream = Urls.forIO().connectTimeout(300).readTimeout(300).openStream(url);
 				String content = Files.forIO().readFrom(inputStream, "utf-8");
 				AbtestModel abtest = DefaultSaxParser.parse(content);
 				ABTestVisitor visitor = new ABTestVisitor(m_domain);
@@ -155,7 +155,9 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 			} else {
 				try {
 					strategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategyName());
-					strategy.init(entity);
+
+					FieldInjectUtil.inject(strategy, run.getGroupstrategyDescriptor());
+					strategy.init();
 					entity.setGroupStrategy(strategy);
 
 					m_strategies.put(strategyKey, strategy);

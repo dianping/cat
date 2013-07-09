@@ -13,13 +13,13 @@
 				<domain>TuanGouRemote</domain>
 				<groupstrategy-descriptor name="roundrobin" className="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
 					<fields>
-					   <field name="package" type="String" input-type="input">
+					   <field name="package" type="String" input-type="input" modifier-name="m_package">
 					   		<![CDATA[This is value]]>
 					   </field>
-					   <field name="class" type="String" input-type="textarea">
+					   <field name="class" type="String" input-type="textarea" modifier-name="m_class">
 					  		 <![CDATA[This is value]]>
 					   </field>
-					   <field name="inject" type="String" input-type="input">
+					   <field name="inject" type="String" input-type="input" modifier-name="m_inject">
 					  		 <![CDATA[This is value]]>
 					   </field>
 					</fields>
