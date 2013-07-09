@@ -54,33 +54,35 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 	private Map<Long, Set<String>> m_domains = new LinkedHashMap<Long, Set<String>>();
 
-	@Override
-	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
-		if (end.getTime() == start.getTime()) {
-			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
-		}
+	private Set<String> queryAllDomains(Date start) {
 		Set<String> domains = m_domains.get(start.getTime());
 
 		if (domains == null) {
-
 			domains = new HashSet<String>();
-			long startTime = start.getTime();
-			long endTime = end.getTime();
+			try {
+				List<HourlyReport> reports = m_reportDao.findAllByPeriod(start, HourlyReportEntity.READSET_DOMAIN_NAME);
 
-			for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-				List<HourlyReport> reports = null;
-				try {
-					reports = m_reportDao.findAllByPeriod(new Date(startTime), HourlyReportEntity.READSET_DOMAIN_NAME);
-				} catch (DalException e) {
-					Cat.logError(e);
-				}
 				if (reports != null) {
 					for (HourlyReport report : reports) {
 						domains.add(report.getDomain());
 					}
 				}
+				m_domains.put(start.getTime(), domains);
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
-			m_domains.put(start.getTime(), domains);
+		}
+		return domains;
+	}
+
+	@Override
+	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
+		HashSet<String> domains = new HashSet<String>();
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			domains.addAll(queryAllDomains(new Date(startTime)));
 		}
 		return domains;
 	}
