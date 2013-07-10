@@ -2,8 +2,10 @@ package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -40,17 +42,22 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 	@Inject
 	protected BaselineService m_baselineService;
 
+	@Inject
+	protected MetricPointParser m_parser;
+
 	private static final int POINT_NUMBER = 60 * 24;
 
 	@Override
 	public boolean buildDailyTask(String reportName, String domain, Date reportPeriod) {
+		Map<String, MetricReport> reportMap = new HashMap<String, MetricReport>();
 		for (String metricID : m_configManager.getMetricConfig().getMetricItemConfigs().keySet()) {
-			buildDailyReportInternal(reportName, metricID, reportPeriod);
+			buildDailyReportInternal(reportMap, reportName, metricID, reportPeriod);
 		}
 		return true;
 	}
 
-	protected void buildDailyReportInternal(String reportName, String metricID, Date reportPeriod) {
+	protected void buildDailyReportInternal(Map<String, MetricReport> reportMap, String reportName, String metricID,
+	      Date reportPeriod) {
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
 		String metricKey = metricConfig.getMetricKey();
 		String metricDomain = metricConfig.getDomain();
@@ -67,12 +74,17 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 				Date relatedHour = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
 				for (int i = 0; i < 24; i++) {
 					Date hourEnd = new Date(relatedHour.getTime() + TimeUtil.ONE_HOUR);
-					MetricReport report = m_reportService.queryMetricReport(productLine, relatedHour, hourEnd);
+					String metricReportKey = productLine + ":" + relatedHour.getTime();
+					MetricReport report = reportMap.get(metricReportKey);
+					if (report == null) {
+						report = m_reportService.queryMetricReport(productLine, relatedHour, hourEnd);
+						reportMap.put(metricReportKey, report);
+					}
 					MetricItem reportItem = report.getMetricItems().get(metricKey);
 					relatedHour = hourEnd;
 					reports.add(reportItem);
 				}
-				double[] oneDayValue = MetricPointParser.getOneDayData(reports, type);
+				double[] oneDayValue = m_parser.getOneDayData(reports, type);
 				values.add(oneDayValue);
 			}
 
