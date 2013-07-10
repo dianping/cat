@@ -48,25 +48,4 @@ public class TaskHelperTest {
 		Assert.assertEquals(cal.getTimeInMillis(), todayZero.getTime() + 1L);
 	}
 
-	@Test
-	public void testStartDateOfNextTask() {
-		long day = 24 * 60 * 60 * 1000L;
-		long nineMissecond = 9 * 60 * 1000L;
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR, 1);
-
-		Date date = cal.getTime();
-		Date nextTaskTime = TaskHelper.startDateOfNextTask(date);
-
-		Date todayStart = TaskHelper.todayZero(new Date());
-		Assert.assertEquals(new Date(todayStart.getTime() + day + nineMissecond), nextTaskTime);
-
-		cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 1);
-
-		date = cal.getTime();
-		nextTaskTime = TaskHelper.startDateOfNextTask(date);
-		Assert.assertEquals(new Date(todayStart.getTime() + nineMissecond), nextTaskTime);
-	}
 }
