@@ -14,9 +14,9 @@ public class BaselineConfig {
 
 	private List<Integer> m_days;
 
-	private int m_upperLimit;
+	private double m_upperLimit;
 
-	private int m_lowerLimit;
+	private double m_lowerLimit;
 
 	private double m_minValue;
 
@@ -40,11 +40,11 @@ public class BaselineConfig {
 		return m_days;
 	}
 
-	public int getUpperLimit() {
+	public double getUpperLimit() {
 		return m_upperLimit;
 	}
 
-	public int getLowerLimit() {
+	public double getLowerLimit() {
 		return m_lowerLimit;
 	}
 
@@ -72,11 +72,11 @@ public class BaselineConfig {
 		m_days = days;
 	}
 
-	public void setUpperLimit(int upperLimit) {
+	public void setUpperLimit(double upperLimit) {
 		m_upperLimit = upperLimit;
 	}
 
-	public void setLowerLimit(int lowerLimit) {
+	public void setLowerLimit(double lowerLimit) {
 		m_lowerLimit = lowerLimit;
 	}
 
