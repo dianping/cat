@@ -6,6 +6,11 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.abtest.repository.ABTestEntityRepository;
+import com.dianping.cat.abtest.repository.HttpABTestEntityRepository;
+import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.configuration.ClientConfigManager;
+
 public class ABTestServerConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {

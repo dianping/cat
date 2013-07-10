@@ -33,7 +33,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.ReportDelegate;
@@ -42,6 +41,7 @@ import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -66,19 +66,22 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
 		      .req(ServerConfigManager.class));
 
-		all.add(C(MessageAnalyzer.class, ProblemAnalyzer.ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class, ProblemReportAggregation.class) //
-		      .req(ProblemHandler.class, new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
+		all.add(C(MessageAnalyzer.class, ProblemAnalyzer.ID, ProblemAnalyzer.class).is(PER_LOOKUP)
+		      //
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class, ProblemReportAggregation.class)
+		      //
+		      .req(ProblemHandler.class, new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID },
+		            "m_handlers"));
 
 		all.add(C(MessageAnalyzer.class, EventAnalyzer.ID, EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class));
 
 		all.add(C(MessageAnalyzer.class, StateAnalyzer.ID, StateAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class, HourlyReportDao.class, ProjectDao.class)//
+		      .req(HostinfoDao.class, HourlyReportDao.class, ProjectDao.class, TaskManager.class)//
 		      .req(BucketManager.class, ServerStatisticManager.class));
 
 		all.add(C(MessageAnalyzer.class, HeartbeatAnalyzer.ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class));
+		      .req(BucketManager.class, HourlyReportDao.class, TaskManager.class));
 
 		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerStatisticManager.class) //
@@ -91,8 +94,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
-		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
-
 		return all;
 	}
 
@@ -104,9 +105,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportManager.class, ID));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class, TaskDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class));
+		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class));
 
 		return all;
 	}

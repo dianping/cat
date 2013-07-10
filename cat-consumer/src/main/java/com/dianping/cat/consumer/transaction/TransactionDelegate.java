@@ -6,13 +6,21 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class TransactionDelegate implements ReportDelegate<TransactionReport> {
+
+	@Inject
+	private TaskManager m_taskManager;
+	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -89,5 +97,10 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		TransactionReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+
+	@Override
+	public boolean createHourlyTask(TransactionReport report) {
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), "transaction", TaskProlicy.ALL);
 	}
 }

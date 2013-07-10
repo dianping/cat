@@ -169,7 +169,7 @@ public class DomainManager implements Initializable, LogEnabled {
 					m_count++;
 					queryFromDatabase();
 					queryFromCMDB();
-					if (m_count % 100 == 0 && m_unknownIps.size() > 0) {
+					if (m_count % 1000 == 0 && m_unknownIps.size() > 0) {
 						m_logger.error(String.format("can't get domain info from cmdb, ip: %s", m_unknownIps.keySet()
 						      .toString()));
 					}
@@ -177,7 +177,7 @@ public class DomainManager implements Initializable, LogEnabled {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(10 * 1000);
+					Thread.sleep(2 * 60 * 1000);
 				} catch (InterruptedException e) {
 					active = false;
 				}

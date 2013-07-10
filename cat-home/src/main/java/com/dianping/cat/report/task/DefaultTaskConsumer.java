@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.report.task.thread;
+package com.dianping.cat.report.task;
 
 import java.util.Date;
 import java.util.concurrent.locks.LockSupport;
@@ -14,6 +14,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.TaskEntity;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.spi.ReportFacade;
 
 public class DefaultTaskConsumer extends TaskConsumer {
@@ -53,7 +54,19 @@ public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Override
 	protected boolean processTask(Task doing) {
-		return m_reportFacade.builderReport(doing);
+		boolean result = false;
+		Transaction t = Cat.newTransaction("Task", doing.getReportName());
+
+		t.addData(doing.toString());
+		try {
+			result =  m_reportFacade.builderReport(doing);
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+		} finally {
+			t.complete();
+		}
+		return result;
 	}
 
 	@Override

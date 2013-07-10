@@ -33,7 +33,7 @@ public class TransactionReportBuilderTest extends ComponentTestCase {
 		Date reportPeriod = cal.getTime();
 		
 		System.out.println(reportPeriod);
-		m_builder.buildWeeklyReport("transaction", "Cat", reportPeriod);
+		m_builder.buildWeeklyTask("transaction", "Cat", reportPeriod);
 	}
 
 }

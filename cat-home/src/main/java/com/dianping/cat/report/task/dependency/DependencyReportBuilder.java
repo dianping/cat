@@ -16,9 +16,9 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.spi.ReportBuilder;
+import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class DependencyReportBuilder implements ReportBuilder {
+public class DependencyReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	private ReportService m_reportService;
@@ -30,12 +30,12 @@ public class DependencyReportBuilder implements ReportBuilder {
 	private TopologyGraphDao m_topologyGraphDao;
 
 	@Override
-	public boolean buildDailyReport(String name, String reportDomain, Date reportPeriod) {
+	public boolean buildDailyTask(String name, String reportDomain, Date reportPeriod) {
 		throw new UnsupportedOperationException("no daily report builder for dependency!");
 	}
 
 	@Override
-	public boolean buildHourReport(String name, String reportDomain, Date reportPeriod) {
+	public boolean buildHourlyTask(String name, String reportDomain, Date reportPeriod) {
 		Date end = new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(reportPeriod, end, "dependency");
 		boolean result = true;
@@ -72,12 +72,12 @@ public class DependencyReportBuilder implements ReportBuilder {
 	}
 
 	@Override
-	public boolean buildMonthReport(String name, String reportDomain, Date reportPeriod) {
+	public boolean buildMonthlyTask(String name, String reportDomain, Date reportPeriod) {
 		throw new UnsupportedOperationException("no month report builder for dependency!");
 	}
 
 	@Override
-	public boolean buildWeeklyReport(String name, String reportDomain, Date reportPeriod) {
+	public boolean buildWeeklyTask(String name, String reportDomain, Date reportPeriod) {
 		throw new UnsupportedOperationException("no week report builder for dependency!");
 	}
 

@@ -44,14 +44,17 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_logger = logger;
 	}
 
-	// TODO remove it
 	public Set<String> getDomains() {
 		return m_reports.keySet();
 	}
 
 	@Override
 	public TransactionReport getReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		report.accept(new TransactionStatisticsComputer());
+		return report;
 	}
 
 	@Override

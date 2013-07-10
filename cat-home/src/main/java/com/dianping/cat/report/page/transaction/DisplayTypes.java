@@ -19,9 +19,6 @@ public class DisplayTypes {
 
 	private List<TransactionTypeModel> m_results = new ArrayList<TransactionTypeModel>();
 
-	public DisplayTypes() {
-	}
-
 	public DisplayTypes display(String sorted, String ip, TransactionReport report) {
 		Machine machine = report.getMachines().get(ip);
 		if (machine == null) {

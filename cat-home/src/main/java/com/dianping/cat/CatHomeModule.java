@@ -12,9 +12,8 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.metric.MetricAlert;
-import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
-import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;
@@ -34,15 +33,14 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(MessageConsumer.class);
 		ctx.lookup(DomainNavManager.class);
 		ctx.lookup(AggregationConfigManager.class);
-      MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
-		Threads.forGroup("Cat").start(metricAlert);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+			// MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
+			// Threads.forGroup("Cat").start(metricAlert);
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-			TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
-         
+			MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
+			Threads.forGroup("Cat").start(metricAlert);
 			Threads.forGroup("Cat").start(taskConsumer);
-			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
 
 		executeAlarmModule(ctx);

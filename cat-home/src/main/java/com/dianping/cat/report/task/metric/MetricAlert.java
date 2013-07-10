@@ -119,7 +119,7 @@ public class MetricAlert implements Task, LogEnabled {
 				if (datas == null) {
 					continue;
 				}
-				List<Integer> alertList = analyzeDatas(baseline, datas, minute, baselineConfig);
+				List<Integer> alertList = checkData(baseline, datas, minute, baselineConfig);
 				for (int alertItem : alertList) {
 					m_logger.info("ALERT:" + key + "," + reportPeriod + ", minute:" + alertItem);
 				}
@@ -162,7 +162,7 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private List<Integer> analyzeDatas(double[] baseline, double[] datas, int minute, BaselineConfig config) {
+	private List<Integer> checkData(double[] baseline, double[] datas, int minute, BaselineConfig config) {
 		List<Integer> result = new ArrayList<Integer>();
 		int start = minute / DURATION_IN_MINUTE;
 		int end = minute / DURATION_IN_MINUTE + DURATION_IN_MINUTE;

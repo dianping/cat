@@ -62,13 +62,6 @@ public class MetricBaselineReportBuilderTest extends ComponentTestCase {
 			} else if (baseline.getIndexKey().equals("TuanGouWeb:URL:/index:AVG")) {
 				Assert.assertEquals(235669.78113, baseline.getDataInDoubleArray()[0], 0.001);
 			}
-//			System.out.println(baseline.toString());
-//			System.out.print(baseline.getDataInDoubleArray().length + ":");
-//
-//			for (double item : baseline.getDataInDoubleArray()) {
-//				System.out.print(item + ",");
-//			}
-//			System.out.println();
 		}
 	}
 

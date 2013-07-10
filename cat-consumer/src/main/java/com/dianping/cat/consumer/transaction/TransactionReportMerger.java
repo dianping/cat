@@ -27,6 +27,13 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void mergeName(TransactionName old, TransactionName other) {
 		long totalCountSum = old.getTotalCount() + other.getTotalCount();
+		if (totalCountSum > 0) {
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+			double line99Values = old.getLine99Value() * old.getTotalCount() + other.getLine99Value() * other.getTotalCount();
+			
+			old.setLine95Value(line95Values / totalCountSum);
+			old.setLine99Value(line99Values / totalCountSum);
+		}
 
 		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -42,13 +49,7 @@ public class TransactionReportMerger extends DefaultMerger {
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 
-		if (totalCountSum > 0) {
-			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
-			double line99Values = old.getLine99Value() * old.getTotalCount() + other.getLine99Value() * other.getTotalCount();
-			
-			old.setLine95Value(line95Values / totalCountSum);
-			old.setLine99Value(line99Values / totalCountSum);
-		}
+
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
@@ -91,6 +92,13 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void mergeType(TransactionType old, TransactionType other) {
 		long totalCountSum = old.getTotalCount() + other.getTotalCount();
+		if (totalCountSum > 0) {
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+			double line99Values = old.getLine99Value() * old.getTotalCount() + other.getLine99Value() * other.getTotalCount();
+
+			old.setLine95Value(line95Values / totalCountSum);
+			old.setLine99Value(line99Values / totalCountSum);
+		}
 
 		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -106,11 +114,6 @@ public class TransactionReportMerger extends DefaultMerger {
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 
-		if (totalCountSum > 0) {
-			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
-
-			old.setLine95Value(line95Values / totalCountSum);
-		}
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());

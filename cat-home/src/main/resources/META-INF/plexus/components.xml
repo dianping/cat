@@ -226,8 +226,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.thread.DefaultTaskConsumer</role>
-			<implementation>com.dianping.cat.report.task.thread.DefaultTaskConsumer</implementation>
+			<role>com.dianping.cat.report.task.DefaultTaskConsumer</role>
+			<implementation>com.dianping.cat.report.task.DefaultTaskConsumer</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.TaskDao</role>
@@ -476,18 +476,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.thread.TaskProducer</role>
-			<implementation>com.dianping.cat.report.task.thread.TaskProducer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
