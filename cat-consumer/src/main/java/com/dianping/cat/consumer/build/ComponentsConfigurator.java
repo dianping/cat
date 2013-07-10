@@ -33,7 +33,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.ReportDelegate;
@@ -108,7 +107,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskDao.class));
+		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class));
 
 		return all;
 	}

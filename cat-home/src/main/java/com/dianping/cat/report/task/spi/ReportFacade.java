@@ -66,9 +66,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	private Logger m_logger;
 
-	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
+	private Map<String, ReportTaskBuilder> m_reportBuilders = new HashMap<String, ReportTaskBuilder>();
 
-	public void addNewReportBuild(ReportBuilder newReportBuilder, String name) {
+	public void addNewReportBuild(ReportTaskBuilder newReportBuilder, String name) {
 		m_reportBuilders.put(name, newReportBuilder);
 	}
 
@@ -81,7 +81,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 			String reportName = task.getReportName();
 			String reportDomain = task.getReportDomain();
 			Date reportPeriod = task.getReportPeriod();
-			ReportBuilder reportBuilder = getReportBuilder(reportName);
+			ReportTaskBuilder reportBuilder = getReportBuilder(reportName);
 
 			if (reportBuilder == null) {
 				m_logger.info("no report builder for type:" + " " + reportName);
@@ -90,13 +90,13 @@ public class ReportFacade implements LogEnabled, Initializable {
 				boolean result = false;
 
 				if (type == TYPE_HOUR) {
-					result = reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildHourlyTask(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_DAILY) {
-					result = reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildDailyTask(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_WEEK) {
-					result = reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildWeeklyTask(reportName, reportDomain, reportPeriod);
 				} else if (type == TYPE_MONTH) {
-					result = reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+					result = reportBuilder.buildMonthlyTask(reportName, reportDomain, reportPeriod);
 				}
 				if (result) {
 					return result;
@@ -117,7 +117,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_logger = logger;
 	}
 
-	private ReportBuilder getReportBuilder(String reportName) {
+	private ReportTaskBuilder getReportBuilder(String reportName) {
 		return m_reportBuilders.get(reportName);
 	}
 

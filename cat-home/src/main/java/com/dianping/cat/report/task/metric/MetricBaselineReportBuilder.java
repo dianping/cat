@@ -19,9 +19,9 @@ import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineCreator;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.spi.ReportBuilder;
+import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class MetricBaselineReportBuilder implements ReportBuilder {
+public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 	@Inject
 	protected ReportService m_reportService;
 	
@@ -43,7 +43,7 @@ public class MetricBaselineReportBuilder implements ReportBuilder {
 	private static final int POINT_NUMBER = 60 * 24;
 
 	@Override
-	public boolean buildDailyReport(String reportName, String metricID, Date reportPeriod) {
+	public boolean buildDailyTask(String reportName, String metricID, Date reportPeriod) {
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
 		String metricKey = metricConfig.getMetricKey();
 		String metricDomain = metricConfig.getDomain();
@@ -82,17 +82,17 @@ public class MetricBaselineReportBuilder implements ReportBuilder {
 	}
 
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildHourlyTask(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Metric base line report don't support hourly report!");
 	}
 
 	@Override
-	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildMonthlyTask(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Metric base line report don't support monthly report!");
 	}
 
 	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildWeeklyTask(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Metric base line report don't support weekly report!");
 	}
 
