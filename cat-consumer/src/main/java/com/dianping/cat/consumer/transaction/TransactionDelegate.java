@@ -20,7 +20,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
-	
+
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -34,9 +34,11 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 			domainNames.addAll(reports.keySet());
 		}
 
-		TransactionReport all = createAggregatedTypeReport(reports);
+		if (reports.size() > 0) {
+			TransactionReport all = createAggregatedTypeReport(reports);
 
-		reports.put(all.getDomain(), all);
+			reports.put(all.getDomain(), all);
+		}
 	}
 
 	@Override
@@ -65,7 +67,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
 		return all;
 	}
 
