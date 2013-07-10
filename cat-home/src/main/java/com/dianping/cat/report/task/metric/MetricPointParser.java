@@ -11,8 +11,8 @@ public class MetricPointParser {
 	private static final int POINT_NUMBER = 60;
 
 	public static double[] getOneDayData(List<MetricItem> reports, MetricType type) {
-		double[] values = new double[POINT_NUMBER];
-		for (int i = 0; i < POINT_NUMBER; i++) {
+		double[] values = new double[24*POINT_NUMBER];
+		for (int i = 0; i < 24*POINT_NUMBER; i++) {
 			values[i] = -1;
 		}
 		int hour = 0;

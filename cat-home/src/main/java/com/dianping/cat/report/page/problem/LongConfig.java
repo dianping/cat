@@ -1,15 +1,15 @@
 package com.dianping.cat.report.page.problem;
 
 public class LongConfig {
-	private int m_sqlThreshold;
+	private int m_sqlThreshold = 50;
 
-	private int m_urlThreshold;
+	private int m_urlThreshold = 1000;
 
-	private int m_serviceThreshold;
+	private int m_serviceThreshold = 50;
 
-	private int m_cacheThreshold;
+	private int m_cacheThreshold = 10;
 
-	private int m_callThreshold;
+	private int m_callThreshold = 50;
 
 	public int getCacheThreshold() {
 		return m_cacheThreshold;

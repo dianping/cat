@@ -327,13 +327,14 @@
 					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineCreator</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric</role-hint>
 				</requirement>
 			</requirements>
 		</component>

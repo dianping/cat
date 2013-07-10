@@ -393,6 +393,11 @@ a.abtest-heartbeat{
 	margin: 4px auto;
 }
 
+.metricGraph {
+	width: 560px;
+	height: 300px;
+}
+
 .pieChart {
 	text-align:left;
 	width: 700px;

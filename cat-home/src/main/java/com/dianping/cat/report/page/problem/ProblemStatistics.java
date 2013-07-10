@@ -27,7 +27,7 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private List<String> m_ips;
 	
-	private LongConfig m_longConfig;
+	private LongConfig m_longConfig = new LongConfig();
 
 	private List<Duration> getDurationsByType(String type, Entry entry) {
 		List<Duration> durations = new ArrayList<Duration>();

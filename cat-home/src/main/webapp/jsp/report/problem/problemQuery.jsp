@@ -44,19 +44,18 @@
 			type="submit"></div>
 			
 <script>
-
-var urlThreshold='${payload.urlThreshold}';
-$("#p_longUrl").val(urlThreshold) ;
-
-var sqlThreshold='${payload.sqlThreshold}';
-$("#p_longSql").val(sqlThreshold) ;
-
-var serviceThreshold='${payload.serviceThreshold}';
-$("#p_longService").val(serviceThreshold) ;
-
-var cacheThreshold='${payload.cacheThreshold}';
-$("#p_longCache").val(cacheThreshold) ;
-
-var callThreshold='${payload.callThreshold}';
-$("#p_longCall").val(callThreshold) ;
+	var urlThreshold='${payload.urlThreshold}';
+	$("#p_longUrl").val(urlThreshold) ;
+	
+	var sqlThreshold='${payload.sqlThreshold}';
+	$("#p_longSql").val(sqlThreshold) ;
+	
+	var serviceThreshold='${payload.serviceThreshold}';
+	$("#p_longService").val(serviceThreshold) ;
+	
+	var cacheThreshold='${payload.cacheThreshold}';
+	$("#p_longCache").val(cacheThreshold) ;
+	
+	var callThreshold='${payload.callThreshold}';
+	$("#p_longCall").val(callThreshold) ;
 </script>

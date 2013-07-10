@@ -20,6 +20,7 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
@@ -68,14 +69,15 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BaselineConfigManager.class,BaselineConfigManager.class));
 		
 		all.add(C(MetricBaselineReportBuilder.class)
-		      .req(com.dianping.cat.report.service.ReportService.class)//
+		      .req(ReportService.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
 		
 		all.add(C(MetricAlert.class)
-				.req(com.dianping.cat.report.service.ReportService.class,ServerConfigManager.class)//
+				.req(ReportService.class,ServerConfigManager.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
-		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
+		      .req(BaselineService.class,BaselineConfigManager.class)
+		      .req(ModelService.class, "metric"));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportService.class)//

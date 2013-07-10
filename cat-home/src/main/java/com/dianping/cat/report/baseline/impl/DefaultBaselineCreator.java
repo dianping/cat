@@ -74,13 +74,16 @@ public class DefaultBaselineCreator implements BaselineCreator {
 		Collections.sort(oneMinuteDataList);
 
 		double middleValue = 0;
-		if (oneMinuteDataList.size() % 2 == 1) {
+		int size = oneMinuteDataList.size();
+		if (size == 0) {
+			middleValue = -1;
+		} else if (size % 2 == 1) {
 			middleValue = oneMinuteDataList.get((oneMinuteDataList.size() - 1) / 2);
 		} else {
 			middleValue = oneMinuteDataList.get(oneMinuteDataList.size() / 2) / 2
 			      + oneMinuteDataList.get(oneMinuteDataList.size() / 2 - 1) / 2;
 		}
-		if (data > MIN_NOISY_DATA
+		if (middleValue > MIN_NOISY_DATA
 		      && (data / middleValue > NORMAL_DATA_UPPER_LIMIT || data / middleValue < NORMAL_DATA_LOWER_LIMIT)) {
 			return false;
 		}
