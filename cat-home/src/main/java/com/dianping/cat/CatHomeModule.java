@@ -34,12 +34,13 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(MessageConsumer.class);
 		ctx.lookup(DomainNavManager.class);
 		ctx.lookup(AggregationConfigManager.class);
+      MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
+		Threads.forGroup("Cat").start(metricAlert);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 			TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
-			@SuppressWarnings("unused")
-         MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
+         
 			Threads.forGroup("Cat").start(taskConsumer);
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}

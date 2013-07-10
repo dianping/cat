@@ -10,12 +10,8 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
-import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
-import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
-import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -24,6 +20,7 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -73,16 +70,15 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BaselineConfigManager.class,BaselineConfigManager.class));
 		
 		all.add(C(MetricBaselineReportBuilder.class)
-				.req(GraphDao.class, DailyGraphDao.class, HourlyReportDao.class, DailyReportDao.class)//
-		      .req(WeeklyReportDao.class, MonthlyReportDao.class)//
-		      .req(com.dianping.cat.report.service.ReportService.class)//
+		      .req(ReportService.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
 		
 		all.add(C(MetricAlert.class)
-				.req(com.dianping.cat.report.service.ReportService.class,ServerConfigManager.class)//
+				.req(ReportService.class,ServerConfigManager.class)//
 		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
-		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
+		      .req(BaselineService.class,BaselineConfigManager.class)
+		      .req(ModelService.class, "metric"));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportService.class)//
