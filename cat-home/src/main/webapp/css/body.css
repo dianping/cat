@@ -264,8 +264,19 @@ a.long-url {
 	background-color: blue;
 }
 
+a.long-url {
+	background-color: #5599CC;
+}
 a.long-sql {
 	background-color: #6699CC;
+}
+
+a.long-call {
+	background-color: #6688BB;
+}
+
+a.long-cache {
+	background-color: #6677AA;
 }
 
 a.url{

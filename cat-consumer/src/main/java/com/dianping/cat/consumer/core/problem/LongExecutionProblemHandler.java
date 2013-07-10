@@ -18,23 +18,29 @@ import com.dianping.cat.message.spi.MessageTree;
 
 public class LongExecutionProblemHandler extends ProblemHandler implements Initializable {
 	public static final String ID = "long-execution";
-	
+
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private int m_defaultCacheThreshold = 10;
-
 	private int[] m_defaultLongServiceDuration = { 50, 100, 500, 1000, 3000, 5000 };
 
-	private int[] m_defaultLongSqlDuration = { 100, 500, 1000, 3000 };
+	private int[] m_defaultLongSqlDuration = { 100, 500, 1000, 3000, 5000 };
 
 	private int[] m_defaultLongUrlDuration = { 1000, 2000, 3000, 5000 };
+
+	private int[] m_defalutLongCallDuration = { 100, 500, 1000, 3000, 5000 };
+
+	private int[] m_defaultLongCacheDuration = { 10, 50, 100, 500 };
 
 	private Map<String, Integer> m_longServiceThresholds = new HashMap<String, Integer>();
 
 	private Map<String, Integer> m_longSqlThresholds = new HashMap<String, Integer>();
 
 	private Map<String, Integer> m_longUrlThresholds = new HashMap<String, Integer>();
+
+	private Map<String, Integer> m_longCallThresholds = new HashMap<String, Integer>();
+
+	private Map<String, Integer> m_longCacheThresholds = new HashMap<String, Integer>();
 
 	public int computeLongDuration(long duration, String domain, int[] defaultLongDuration,
 	      Map<String, Integer> longThresholds) {
@@ -95,8 +101,10 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 	private int processLongCache(Machine machine, Transaction transaction, MessageTree tree, int count) {
 		long duration = ((Transaction) transaction).getDurationInMillis();
+		long nomarizeDuration = computeLongDuration(duration, tree.getDomain(), m_defaultLongCacheDuration,
+		      m_longCacheThresholds);
 
-		if (duration > m_defaultCacheThreshold) {
+		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CACHE.getName();
 			String status = transaction.getName();
 
@@ -131,6 +139,22 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			}
 		}
 
+		return count;
+	}
+
+	private int processLongCall(Machine machine, Transaction transaction, MessageTree tree, int count) {
+		long duration = transaction.getDurationInMillis();
+		String domain = tree.getDomain();
+
+		long nomarizeDuration = computeLongDuration(duration, domain, m_defalutLongCallDuration, m_longCallThresholds);
+		if (nomarizeDuration > 0) {
+			String type = ProblemType.LONG_CALL.getName();
+			String status = transaction.getName();
+
+			Entry entry = findOrCreateEntry(machine, type, status);
+			updateEntry(tree, entry, (int) nomarizeDuration);
+			count++;
+		}
 		return count;
 	}
 
@@ -181,6 +205,8 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			count = processLongCache(machine, transaction, tree, count);
 		} else if (transactionType.equals("SQL")) {
 			count = processLongSql(machine, transaction, tree, count);
+		} else if (transactionType.equals("Call") || transactionType.equals("PigeonCall")) {
+			count = processLongCall(machine, transaction, tree, count);
 		}
 
 		List<Message> messageList = transaction.getChildren();

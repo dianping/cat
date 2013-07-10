@@ -9,6 +9,8 @@ public enum ProblemType {
 
 	LONG_SQL("long-sql"),
 
+	LONG_CALL("long-call"),
+
 	LONG_URL("long-url"),
 
 	LONG_SERVICE("long-service"),

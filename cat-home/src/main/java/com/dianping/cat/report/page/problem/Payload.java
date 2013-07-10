@@ -16,17 +16,23 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("linkCount")
 	private int m_linkCount;
 
-	@FieldMeta("threshold")
-	private int m_longTime;
+	@FieldMeta("urlThreshold")
+	private int m_urlThreshold = 1000;
 
 	@FieldMeta("minute")
 	private int m_minute;
 
 	@FieldMeta("sqlThreshold")
-	private int m_sqlLongTime;
-	
+	private int m_sqlThreshold = 100;
+
 	@FieldMeta("serviceThreshold")
-	private int m_seviceLongTime;
+	private int m_serviceThreshold = 50;
+
+	@FieldMeta("cacheThreshold")
+	private int m_cacheThreshold = 10;
+
+	@FieldMeta("callThreshold")
+	private int m_callThreshold = 50;
 
 	@FieldMeta("status")
 	private String m_status;
@@ -41,6 +47,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.PROBLEM);
 	}
 
+	public String getQueryString(){
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("&urlThreshold=").append(m_urlThreshold);
+		sb.append("&sqlThreshold=").append(m_sqlThreshold);
+		sb.append("&serviceThreshold=").append(m_serviceThreshold);
+		sb.append("&cacheThreshold=").append(m_cacheThreshold);
+		sb.append("&callThreshold=").append(m_callThreshold);
+		return sb.toString();
+	}
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -57,27 +73,44 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_linkCount;
 	}
 
-	public int getLongTime() {
-		if (m_longTime == 0) {
-			m_longTime = 1000;
-		}
-		return m_longTime;
+	public int getSqlThreshold() {
+		return m_sqlThreshold;
+	}
+
+	public void setSqlThreshold(int sqlThreshold) {
+		m_sqlThreshold = sqlThreshold;
+	}
+
+	public int getServiceThreshold() {
+		return m_serviceThreshold;
+	}
+
+	public void setServiceThreshold(int serviceThreshold) {
+		m_serviceThreshold = serviceThreshold;
+	}
+
+	public int getCacheThreshold() {
+		return m_cacheThreshold;
+	}
+
+	public void setCacheThreshold(int cacheThreshold) {
+		m_cacheThreshold = cacheThreshold;
+	}
+
+	public int getCallThreshold() {
+		return m_callThreshold;
+	}
+
+	public void setCallThreshold(int callThreshold) {
+		m_callThreshold = callThreshold;
+	}
+
+	public int getUrlThreshold() {
+		return m_urlThreshold;
 	}
 
 	public int getMinute() {
 		return m_minute;
-	}
-
-	public int getRealLongTime() {
-		return m_longTime;
-	}
-
-	public int getSeviceLongTime() {
-		return m_seviceLongTime;
-	}
-
-	public int getSqlLongTime() {
-		return m_sqlLongTime;
 	}
 
 	public String getStatus() {
@@ -104,20 +137,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_linkCount = linkSize;
 	}
 
-	public void setLongTime(int longTime) {
-		m_longTime = longTime;
+	public void setUrlThreshold(int longTime) {
+		m_urlThreshold = longTime;
 	}
 
 	public void setMinute(int minute) {
 		m_minute = minute;
-	}
-
-	public void setSeviceLongTime(int seviceLongTime) {
-		m_seviceLongTime = seviceLongTime;
-	}
-
-	public void setSqlLongTime(int sqlLongTime) {
-		m_sqlLongTime = sqlLongTime;
 	}
 
 	public void setStatus(String status) {
