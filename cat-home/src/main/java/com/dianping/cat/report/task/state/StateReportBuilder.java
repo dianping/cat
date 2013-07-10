@@ -41,27 +41,6 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		throw new RuntimeException("State report don't support HourReport!");
 	}
 
-	private StateReport queryDailyReportsByDuration(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				StateReport reportModel = m_reportService.queryStateReport(domain, new Date(startTime), new Date(startTime
-				      + TimeUtil.ONE_DAY));
-
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		StateReport stateReport = merger.getStateReport();
-		stateReport.setStartTime(start);
-		stateReport.setEndTime(end);
-		return stateReport;
-	}
-
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		StateReport stateReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
@@ -74,7 +53,6 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertMonthlyReport(report);
 	}
 
@@ -94,8 +72,29 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertWeeklyReport(report);
+	}
+
+	private StateReport queryDailyReportsByDuration(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				StateReport reportModel = m_reportService.queryStateReport(domain, new Date(startTime), new Date(startTime
+				      + TimeUtil.ONE_DAY));
+
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		StateReport stateReport = merger.getStateReport();
+		
+		stateReport.setStartTime(start);
+		stateReport.setEndTime(end);
+		return stateReport;
 	}
 
 	private StateReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
@@ -111,9 +110,9 @@ public class StateReportBuilder implements ReportTaskBuilder {
 			reportModel.accept(merger);
 		}
 		StateReport stateReport = merger.getStateReport();
+	
 		stateReport.setStartTime(period);
 		stateReport.setEndTime(endDate);
-
 		return stateReport;
 	}
 

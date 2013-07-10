@@ -48,14 +48,43 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
+	private static final int DURATION_IN_MINUTE = 10;
+
+	private static final long DURATION = TimeUtil.ONE_MINUTE;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	private static final int DURATION_IN_MINUTE = 10;
+	@Override
+	public String getName() {
+		return "MetricAlertRedo";
+	}
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private List<Integer> metricAlarm(double[] baseline, double[] datas, int minute, BaselineConfig config) {
+		List<Integer> result = new ArrayList<Integer>();
+		int start = minute / DURATION_IN_MINUTE;
+		int end = minute / DURATION_IN_MINUTE + 10;
+		double minValue = config.getMinValue();
+		double lowerLimit = config.getLowerLimit();
+		double upperLimit = config.getUpperLimit();
+		for (int i = start; i < end; i++) {
+			if (baseline[i] < 0) {
+				continue;
+			} else if (baseline[i] == 0) {
+				if (datas[i] >= minValue) {
+					result.add(i);
+				}
+			} else {
+				double percent = datas[i] / baseline[i];
+				if (datas[i] >= minValue && (percent < lowerLimit || percent > upperLimit)) {
+					result.add(i);
+				}
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public void run() {
@@ -109,35 +138,6 @@ public class MetricAlert implements Task, LogEnabled {
 				active = false;
 			}
 		}
-	}
-
-	private List<Integer> metricAlarm(double[] baseline, double[] datas, int minute, BaselineConfig config) {
-		List<Integer> result = new ArrayList<Integer>();
-		int start = minute / DURATION_IN_MINUTE;
-		int end = minute / DURATION_IN_MINUTE + 10;
-		double minValue = config.getMinValue();
-		double lowerLimit = config.getLowerLimit();
-		double upperLimit = config.getUpperLimit();
-		for (int i = start; i < end; i++) {
-			if (baseline[i] < 0) {
-				continue;
-			} else if (baseline[i] == 0) {
-				if (datas[i] >= minValue) {
-					result.add(i);
-				}
-			} else {
-				double percent = datas[i] / baseline[i];
-				if (datas[i] >= minValue && (percent < lowerLimit || percent > upperLimit)) {
-					result.add(i);
-				}
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public String getName() {
-		return "MetricAlertRedo";
 	}
 
 	@Override

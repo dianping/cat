@@ -40,21 +40,6 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	@Inject
 	private ProblemMerger m_problemMerger;
 
-	private void buildProblemDailyGraph(ProblemReport report) {
-		try {
-			ProblemDailyGraphCreator creator = new ProblemDailyGraphCreator();
-			creator.visitProblemReport(report);
-
-			List<DailyGraph> graphs = creator.buildDailyGraph();
-
-			for (DailyGraph temp : graphs) {
-				m_dailyGraphDao.insert(temp);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
@@ -79,6 +64,20 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		}
 	}
 
+	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<ProblemReport> reports = new ArrayList<ProblemReport>();
+		long startTime = period.getTime();
+		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
+		      + TimeUtil.ONE_HOUR));
+
+		reports.add(report);
+		ProblemReport problemReport = m_problemMerger.mergeForGraph(domain, reports);
+
+		graphs = m_problemGraphCreator.splitReportToGraphs(period, domain, name, problemReport);
+		return graphs;
+	}
+
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		try {
@@ -93,6 +92,53 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+		MonthlyReport report = new MonthlyReport();
+
+		report.setContent(problemReport.toString());
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertMonthlyReport(report);
+	}
+
+	private void buildProblemDailyGraph(ProblemReport report) {
+		try {
+			ProblemDailyGraphCreator creator = new ProblemDailyGraphCreator();
+			creator.visitProblemReport(report);
+
+			List<DailyGraph> graphs = creator.buildDailyGraph();
+
+			for (DailyGraph temp : graphs) {
+				m_dailyGraphDao.insert(temp);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	@Override
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
+		WeeklyReport report = new WeeklyReport();
+		String content = problemReport.toString();
+
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertWeeklyReport(report);
 	}
 
 	private ProblemReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -110,43 +156,10 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 			}
 		}
 		ProblemReport problemReport = merger.getProblemReport();
+	
 		problemReport.setStartTime(start);
 		problemReport.setEndTime(end);
 		return problemReport;
-	}
-
-	@Override
-	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
-		MonthlyReport report = new MonthlyReport();
-
-		report.setContent(problemReport.toString());
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-
-		return m_reportService.insertMonthlyReport(report);
-	}
-
-	@Override
-	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
-		WeeklyReport report = new WeeklyReport();
-		String content = problemReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-
-		return m_reportService.insertWeeklyReport(report);
 	}
 
 	private ProblemReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end)
@@ -163,19 +176,5 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 			reports.add(report);
 		}
 		return m_problemMerger.mergeForDaily(domain, reports, domainSet);
-	}
-
-	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<ProblemReport> reports = new ArrayList<ProblemReport>();
-		long startTime = period.getTime();
-		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
-		      + TimeUtil.ONE_HOUR));
-
-		reports.add(report);
-		ProblemReport problemReport = m_problemMerger.mergeForGraph(domain, reports);
-
-		graphs = m_problemGraphCreator.splitReportToGraphs(period, domain, name, problemReport);
-		return graphs;
 	}
 }

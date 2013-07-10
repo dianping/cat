@@ -10,24 +10,6 @@ public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;
 
-	public static double[] getOneHourData(MetricItem report, MetricType type) {
-		double[] result = new double[POINT_NUMBER];
-		Map<Integer, Point> map = report.getAbtests().get("-1").getGroups().get("").getPoints();
-		for (Integer minute : map.keySet()) {
-			if (minute >= 0 && minute < POINT_NUMBER) {
-				Point point = map.get(minute);
-				if (type == MetricType.AVG) {
-					result[minute] = point.getAvg();
-				} else if (type == MetricType.COUNT) {
-					result[minute] = (double) point.getCount();
-				} else if (type == MetricType.SUM) {
-					result[minute] = point.getSum();
-				}
-			}
-		}
-		return result;
-	}
-	
 	public static double[] getOneDayData(List<MetricItem> reports, MetricType type) {
 		double[] values = new double[POINT_NUMBER];
 		for (int i = 0; i < POINT_NUMBER; i++) {
@@ -48,5 +30,23 @@ public class MetricPointParser {
 			hour++;
 		}
 		return values;
+	}
+	
+	public static double[] getOneHourData(MetricItem report, MetricType type) {
+		double[] result = new double[POINT_NUMBER];
+		Map<Integer, Point> map = report.getAbtests().get("-1").getGroups().get("").getPoints();
+		for (Integer minute : map.keySet()) {
+			if (minute >= 0 && minute < POINT_NUMBER) {
+				Point point = map.get(minute);
+				if (type == MetricType.AVG) {
+					result[minute] = point.getAvg();
+				} else if (type == MetricType.COUNT) {
+					result[minute] = (double) point.getCount();
+				} else if (type == MetricType.SUM) {
+					result[minute] = point.getSum();
+				}
+			}
+		}
+		return result;
 	}
 }
