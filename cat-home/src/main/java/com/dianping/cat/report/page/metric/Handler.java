@@ -51,6 +51,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();
+			System.out.println(report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");

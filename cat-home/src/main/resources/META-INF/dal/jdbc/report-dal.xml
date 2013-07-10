@@ -41,9 +41,9 @@
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='report_period'/> = ${report-period}
-					AND <FIELD name='report_name'/> = ${report-name}
-					AND <FIELD name='index_key'/> = ${index-key} 
+					WHERE <FIELD name='report-period'/> = ${report-period}
+					AND <FIELD name='report-name'/> = ${report-name}
+					AND <FIELD name='index-key'/> = ${index-key} 
 					]]></statement>
 			</query>
 		</query-defs>

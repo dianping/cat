@@ -50,12 +50,12 @@ public class OpDataCollectTest extends ComponentTestCase {
 			buildHeartbeatData(domain, dateStr3);
 		}
 		
-		buildMetricData("TuanGou", "2013-07-02 00:00:00");
+		buildMetricData("TuanGou", "2013-07-01 00:00:00");
 	}
 
 	private void buildMetricData(String group, String str) throws Exception {
 		Date start = m_sdf.parse(str);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		MetricReport report = m_hourlyReportService.queryMetricReport(group, start, end);
 		System.out.println(report);
 	}

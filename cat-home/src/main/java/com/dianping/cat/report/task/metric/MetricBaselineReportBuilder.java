@@ -24,7 +24,7 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 	@Inject
 	protected ReportService m_reportService;
-	
+
 	@Inject
 	protected MetricConfigManager m_configManager;
 
@@ -43,7 +43,14 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 	private static final int POINT_NUMBER = 60 * 24;
 
 	@Override
-	public boolean buildDailyTask(String reportName, String metricID, Date reportPeriod) {
+	public boolean buildDailyTask(String reportName, String domain, Date reportPeriod) {
+		for (String metricID : m_configManager.getMetricConfig().getMetricItemConfigs().keySet()) {
+			buildDailyReportInternal(reportName, metricID, reportPeriod);
+		}
+		return true;
+	}
+
+	protected void buildDailyReportInternal(String reportName, String metricID, Date reportPeriod) {
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
 		String metricKey = metricConfig.getMetricKey();
 		String metricDomain = metricConfig.getDomain();
@@ -77,8 +84,6 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 			baseline.setReportPeriod(targetDate);
 			m_baselineService.insertBaseline(baseline);
 		}
-
-		return true;
 	}
 
 	@Override

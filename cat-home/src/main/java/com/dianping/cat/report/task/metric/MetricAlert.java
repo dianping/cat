@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.metric;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,12 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.baseline.BaselineConfig;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class MetricAlert implements Task, LogEnabled {
 
@@ -32,10 +37,10 @@ public class MetricAlert implements Task, LogEnabled {
 	protected MetricConfigManager m_metricConfigManager;
 
 	@Inject
-	protected BaselineService m_baselineService;
+	protected ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	protected ProductLineConfigManager m_productLineConfigManager;
+	protected BaselineService m_baselineService;
 
 	@Inject
 	protected BaselineConfigManager m_baselineConfigManager;
@@ -46,56 +51,33 @@ public class MetricAlert implements Task, LogEnabled {
 	@Inject
 	protected ReportService m_reportService;
 
+	@Inject(type = ModelService.class, value = "metric")
+	protected ModelService<MetricReport> m_service;
+
 	private Logger m_logger;
+
+	private static final int DURATION_IN_MINUTE = 1;
+
+	private static final long DURATION = DURATION_IN_MINUTE * TimeUtil.ONE_MINUTE;
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	private static final int DURATION_IN_MINUTE = 10;
-
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
-
 	@Override
 	public void run() {
-
 		boolean active = true;
-
 		while (active) {
 			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
 			long current = System.currentTimeMillis();
 			try {
-				Map<String, MetricItemConfig> configMap = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
-				for (String metricID : configMap.keySet()) {
-					MetricItemConfig metricConfig = configMap.get(metricID);
-					String domain = metricConfig.getDomain();
-					for (MetricType type : MetricType.values()) {
-						String key = metricID + ":" + type;
-						Date reportPeriod = new Date(new Date().getTime() - DURATION);
-						double[] baseline = m_baselineService.queryHourlyBaseline("metricBaseline", key, reportPeriod);
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(reportPeriod);
-						int minute = calendar.get(Calendar.MINUTE);
-
-						Date start = TaskHelper.thisHour(reportPeriod);
-						Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-						MetricReport report = m_reportService.queryMetricReport(domain, start, end);
-						BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
-						MetricItem reportItem = report.getMetricItems().get(metricConfig.getMetricKey());
-						double[] datas = MetricPointParser.getOneHourData(reportItem, type);
-						List<Integer> alertList = metricAlarm(baseline, datas, minute, baselineConfig);
-						String alert = "";
-						for (int alertItem : alertList) {
-							alert = alert + alertItem + ",";
-						}
-						m_logger.info("ALERT:" + alert);
-					}
-				}
+				Date reportPeriod = new Date(new Date().getTime() - DURATION);
+				metricAlert(reportPeriod);
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
-				Cat.logError(e);
+
 			} finally {
 				t.complete();
 			}
@@ -111,10 +93,79 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private List<Integer> metricAlarm(double[] baseline, double[] datas, int minute, BaselineConfig config) {
+	protected void metricAlert(Date reportPeriod) {
+		Map<String, MetricItemConfig> metricConfigMap = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
+		Map<String, double[]> baselineMap = new HashMap<String, double[]>();
+		Date hourStart = TaskHelper.thisHour(reportPeriod);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(reportPeriod);
+		int minute = calendar.get(Calendar.MINUTE);
+		for (String metricID : metricConfigMap.keySet()) {
+			MetricItemConfig metricConfig = metricConfigMap.get(metricID);
+			String domain = metricConfig.getDomain();
+			String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+			for (MetricType type : MetricType.values()) {
+				String key = metricID + ":" + type;
+				BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
+				String baselineKey = key + "+" + reportPeriod.getTime();
+				double[] baseline = queryBaseline(baselineMap, baselineKey, key, reportPeriod);
+				if (baseline == null) {
+					continue;
+				}
+
+				MetricReport report = queryMetricReport(productLine, hourStart.getTime());
+				double[] datas = extractDatasFromReport(report, metricConfig, type);
+				if (datas == null) {
+					continue;
+				}
+				List<Integer> alertList = checkData(baseline, datas, minute, baselineConfig);
+				for (int alertItem : alertList) {
+					m_logger.info("ALERT:" + key + "," + reportPeriod + ", minute:" + alertItem);
+				}
+				
+			}
+		}
+	}
+
+	private double[] queryBaseline(Map<String, double[]> baselineMap, String baselineKey, String key, Date reportPeriod) {
+		double[] result = baselineMap.get(baselineKey);
+		if (result == null) {
+			try {
+				result = m_baselineService.queryHourlyBaseline("metric", key, reportPeriod);
+				baselineMap.put(baselineKey, result);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return result;
+	}
+
+	private double[] extractDatasFromReport(MetricReport report, MetricItemConfig metricConfig, MetricType type) {
+		try {
+			MetricItem reportItem = report.getMetricItems().get(metricConfig.getMetricKey());
+			double[] datas = MetricPointParser.getOneHourData(reportItem, type);
+			return datas;
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	private MetricReport queryMetricReport(String product, long dateTime) {
+		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
+		if (m_service.isEligable(request)) {
+			ModelResponse<MetricReport> response = m_service.invoke(request);
+			MetricReport report = response.getModel();
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
+		}
+	}
+
+	private List<Integer> checkData(double[] baseline, double[] datas, int minute, BaselineConfig config) {
 		List<Integer> result = new ArrayList<Integer>();
 		int start = minute / DURATION_IN_MINUTE;
-		int end = minute / DURATION_IN_MINUTE + 10;
+		int end = minute / DURATION_IN_MINUTE + DURATION_IN_MINUTE;
 		double minValue = config.getMinValue();
 		double lowerLimit = config.getLowerLimit();
 		double upperLimit = config.getUpperLimit();
