@@ -6,7 +6,7 @@ public class BaselineConfigManager {
 
 	public BaselineConfig queryBaseLineConfig(String key) {
 		BaselineConfig config = new BaselineConfig();
-		Integer[] days = { -1, -2, -3, -4, -5 };
+		Integer[] days = { -6, -13, -1, -2, -3 };
 		Double[] weights = { 1.0, 1.0, 1.0, 1.0, 1.0 };
 
 		config.setDays(Arrays.asList(days));
@@ -14,7 +14,7 @@ public class BaselineConfigManager {
 		config.setKey(key);
 		config.setLowerLimit(0.2);
 		config.setMinValue(100);
-		config.setTargetDate(7);
+		config.setTargetDate(1);
 		config.setUpperLimit(5);
 		config.setWeights(Arrays.asList(weights));
 		return config;
