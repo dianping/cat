@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.thread;
+package com.dianping.cat.report.task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
