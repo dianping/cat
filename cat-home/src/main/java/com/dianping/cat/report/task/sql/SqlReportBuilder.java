@@ -85,10 +85,7 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		SqlReport sqlReport = queryDailyReportsByDuration(domain, start, end);
+		SqlReport sqlReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime() + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 		String content = sqlReport.toString();
 

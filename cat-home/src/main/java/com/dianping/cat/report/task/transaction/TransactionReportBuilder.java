@@ -128,7 +128,8 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period,
+		      TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
 		report.setContent(transactionReport.toString());
@@ -144,10 +145,8 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		TransactionReport transactionReport = queryDailyReportsByDuration(domain, start, end);
+		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 		String content = transactionReport.toString();
 

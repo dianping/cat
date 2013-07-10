@@ -58,7 +58,8 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
+			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period,
+			      TaskHelper.tomorrowZero(period));
 			buildProblemDailyGraph(problemReport);
 
 			String content = problemReport.toString();
@@ -132,10 +133,8 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		ProblemReport problemReport = queryDailyReportsByDuration(domain, start, end);
+		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 		String content = problemReport.toString();
 

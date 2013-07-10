@@ -81,10 +81,8 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		MatrixReport matrixReport = queryDailyReportsByDuration(domain, start, end);
+		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 		String content = matrixReport.toString();
 

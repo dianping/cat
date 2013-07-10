@@ -24,7 +24,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		CrossReport crossReport = queryHourlyReportsByDuration(name, domain, period,TaskHelper.tomorrowZero(period));
+		CrossReport crossReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
 		report.setContent(crossReport.toString());
@@ -80,10 +80,8 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		CrossReport crossReport = queryDailyReportsByDuration(domain, start, end);
+		CrossReport crossReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 		String content = crossReport.toString();
 
@@ -98,7 +96,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertWeeklyReport(report);
 	}
 
-	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period,Date endDate) {
+	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
 		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, "cross");
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
@@ -108,7 +106,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 			Date date = new Date(startTime);
 			CrossReport reportModel = m_reportService.queryCrossReport(domain, date, new Date(date.getTime()
 			      + TimeUtil.ONE_HOUR));
-			
+
 			reportModel.accept(merger);
 		}
 		CrossReport crossReport = merger.getCrossReport();
