@@ -16,10 +16,9 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.GraphCreator;
 import com.dianping.cat.report.task.spi.GraphLine;
 
-public class HeartbeatGraphCreator implements GraphCreator<HeartbeatReport> {
+public class HeartbeatGraphCreator  {
 
 	private void cacheHeartbeatColumn(Map<String, GraphLine> detailCache, int minute, Number value, String key) {
 		GraphLine detailLine = detailCache.get(key);
@@ -31,7 +30,6 @@ public class HeartbeatGraphCreator implements GraphCreator<HeartbeatReport> {
 		detailLine.minuteNumbers[minute] = value.doubleValue();
 	}
 
-	@Override
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String domainName, String reportName,
 	      HeartbeatReport heartbeatReport) {
 		Set<String> ips = heartbeatReport.getIps();

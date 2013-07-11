@@ -49,9 +49,9 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String reportName, String domain, Date reportPeriod) {
-		Map<String, MetricReport> reportMap = new HashMap<String, MetricReport>();
+		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 		for (String metricID : m_configManager.getMetricConfig().getMetricItemConfigs().keySet()) {
-			buildDailyReportInternal(reportMap, reportName, metricID, reportPeriod);
+			buildDailyReportInternal(reports, reportName, metricID, reportPeriod);
 		}
 		return true;
 	}
@@ -69,22 +69,25 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 			List<Double> weights = baselineConfig.getWeights();
 			Date targetDate = new Date(reportPeriod.getTime() + baselineConfig.getTargetDate() * TimeUtil.ONE_DAY);
 			List<double[]> values = new ArrayList<double[]>();
+
 			for (Integer day : days) {
 				List<MetricItem> reports = new ArrayList<MetricItem>();
-				Date relatedHour = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
+				Date currentDate = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
 				for (int i = 0; i < 24; i++) {
-					Date hourEnd = new Date(relatedHour.getTime() + TimeUtil.ONE_HOUR);
-					String metricReportKey = productLine + ":" + relatedHour.getTime();
+					Date start = new Date(currentDate.getTime() + i * TimeUtil.ONE_HOUR);
+					Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+					String metricReportKey = productLine + ":" + start.getTime();
 					MetricReport report = reportMap.get(metricReportKey);
+					
 					if (report == null) {
-						report = m_reportService.queryMetricReport(productLine, relatedHour, hourEnd);
+						report = m_reportService.queryMetricReport(productLine, start, end);
 						reportMap.put(metricReportKey, report);
 					}
-					MetricItem reportItem = report.getMetricItems().get(metricKey);
-					relatedHour = hourEnd;
+					MetricItem reportItem = report.findOrCreateMetricItem(metricKey);
+					
 					reports.add(reportItem);
 				}
-				double[] oneDayValue = m_parser.getOneDayData(reports, type);
+				double[] oneDayValue = m_parser.queryOneDayData(reports, type);
 				values.add(oneDayValue);
 			}
 

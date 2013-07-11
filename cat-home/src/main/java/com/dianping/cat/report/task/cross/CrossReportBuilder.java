@@ -42,6 +42,38 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		throw new RuntimeException("Cross report don't support HourReport!");
 	}
 
+	@Override
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		CrossReport crossReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+		MonthlyReport report = new MonthlyReport();
+
+		report.setContent(crossReport.toString());
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertMonthlyReport(report);
+	}
+
+	@Override
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		CrossReport crossReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
+		WeeklyReport report = new WeeklyReport();
+		String content = crossReport.toString();
+
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertWeeklyReport(report);
+	}
+
 	private CrossReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -60,40 +92,6 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		crossReport.setStartTime(start);
 		crossReport.setEndTime(end);
 		return crossReport;
-	}
-
-	@Override
-	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		CrossReport crossReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
-		MonthlyReport report = new MonthlyReport();
-
-		report.setContent(crossReport.toString());
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-
-		return m_reportService.insertMonthlyReport(report);
-	}
-
-	@Override
-	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		CrossReport crossReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
-		WeeklyReport report = new WeeklyReport();
-		String content = crossReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-
-		return m_reportService.insertWeeklyReport(report);
 	}
 
 	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {

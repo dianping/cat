@@ -531,18 +531,6 @@
 	<entity name="monthreport" table="monthreport" alias="m" class-name="MonthlyReport">
 		<member name="creation-date" insert-expr="NOW()" />
 		<query-defs>
-			<query name="find-all-by-period-domain-name" type="SELECT" multiple="true">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='domain'/> = ${domain}
-					AND <FIELD name='name'/> = ${name}
-					]]></statement>
-			</query>
 			<query name="find-report-by-domain-name-period" type="SELECT">
 				<param name="period" />
 				<param name="domain" />
@@ -561,19 +549,6 @@
 	<entity name="weeklyreport" table="weeklyreport" alias="w" class-name="WeeklyReport">
 		<member name="creation-date" insert-expr="NOW()" />
 		<query-defs>
-			<query name="find-all-by-period-domain-name" type="SELECT" multiple="true">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='domain'/> = ${domain}
-					AND <FIELD name='name'/> = ${name}
-					]]></statement>
-			</query>
-			
 			<query name="find-report-by-domain-name-period" type="SELECT">
 				<param name="period" />
 				<param name="domain" />

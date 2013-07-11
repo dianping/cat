@@ -128,29 +128,29 @@ public class TaskManager {
 			}
 
 		},
-		
-		HOULY{
+
+		HOULY {
 
 			@Override
-         public boolean shouldCreateHourlyTask() {
-	         return true;
-         }
+			public boolean shouldCreateHourlyTask() {
+				return true;
+			}
 
 			@Override
-         public boolean shouldCreateDailyTask() {
-	         return false;
-         }
+			public boolean shouldCreateDailyTask() {
+				return false;
+			}
 
 			@Override
-         public boolean shouldCreateWeeklyTask() {
-	         return false;
-         }
+			public boolean shouldCreateWeeklyTask() {
+				return false;
+			}
 
 			@Override
-         public boolean shouldCreateMonthTask() {
-	         return false;
-         }
-			
+			public boolean shouldCreateMonthTask() {
+				return false;
+			}
+
 		},
 
 		ALL_EXCLUED_HOURLY {
@@ -173,6 +173,29 @@ public class TaskManager {
 			@Override
 			public boolean shouldCreateMonthTask() {
 				return true;
+			}
+		},
+
+		DAILY {
+
+			@Override
+			public boolean shouldCreateHourlyTask() {
+				return false;
+			}
+
+			@Override
+			public boolean shouldCreateDailyTask() {
+				return true;
+			}
+
+			@Override
+			public boolean shouldCreateWeeklyTask() {
+				return false;
+			}
+
+			@Override
+			public boolean shouldCreateMonthTask() {
+				return false;
 			}
 		};
 	}

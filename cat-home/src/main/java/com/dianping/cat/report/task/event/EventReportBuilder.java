@@ -41,19 +41,6 @@ public class EventReportBuilder implements ReportTaskBuilder {
 	@Inject
 	private EventMerger m_eventMerger;
 
-	private void buildEventDailyGraph(EventReport report) {
-		DailyEventGraphCreator creator = new DailyEventGraphCreator();
-		List<DailyGraph> graphs = creator.buildDailygraph(report);
-
-		for (DailyGraph graph : graphs) {
-			try {
-				m_dailyGraphDao.insert(graph);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
@@ -71,12 +58,38 @@ public class EventReportBuilder implements ReportTaskBuilder {
 			report.setName(name);
 			report.setPeriod(period);
 			report.setType(1);
-
 			return m_reportService.insertDailyReport(report);
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	private void buildEventDailyGraph(EventReport report) {
+		DailyEventGraphCreator creator = new DailyEventGraphCreator();
+		List<DailyGraph> graphs = creator.buildDailygraph(report);
+
+		for (DailyGraph graph : graphs) {
+			try {
+				m_dailyGraphDao.insert(graph);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
+	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<EventReport> reports = new ArrayList<EventReport>();
+		long startTime = period.getTime();
+		EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
+		      + TimeUtil.ONE_HOUR));
+
+		reports.add(report);
+		EventReport eventReport = m_eventMerger.mergeForGraph(domain, reports);
+
+		graphs = m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
+		return graphs;
 	}
 
 	@Override
@@ -95,26 +108,6 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		return true;
 	}
 
-	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				EventReport reportModel = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
-				      + TimeUtil.ONE_DAY));
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		EventReport eventReport = merger.getEventReport();
-		eventReport.setStartTime(start);
-		eventReport.setEndTime(end);
-		return eventReport;
-	}
-
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		EventReport eventReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
@@ -127,7 +120,6 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertMonthlyReport(report);
 	}
 
@@ -145,8 +137,28 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertWeeklyReport(report);
+	}
+
+	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				EventReport reportModel = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
+				      + TimeUtil.ONE_DAY));
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		EventReport eventReport = merger.getEventReport();
+		
+		eventReport.setStartTime(start);
+		eventReport.setEndTime(end);
+		return eventReport;
 	}
 
 	private EventReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end)
@@ -163,20 +175,6 @@ public class EventReportBuilder implements ReportTaskBuilder {
 			reports.add(report);
 		}
 		return m_eventMerger.mergeForDaily(domain, reports, domainSet);
-	}
-
-	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<EventReport> reports = new ArrayList<EventReport>();
-		long startTime = period.getTime();
-		EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
-		      + TimeUtil.ONE_HOUR));
-
-		reports.add(report);
-		EventReport eventReport = m_eventMerger.mergeForGraph(domain, reports);
-
-		graphs = m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
-		return graphs;
 	}
 
 }

@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.report.baseline.BaselineCreatorTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
@@ -96,6 +97,11 @@ DependencyReportMergerTest.class, GraphConfigManagerTest.class,
 
 /* CMDB */
 CMDBTest.class,
+
+/* BaseLine */
+BaselineCreatorTest.class,
+
+MetricReportParseTest.class,
 
 /* jsError */
 ParseTest.class})

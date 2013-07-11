@@ -64,7 +64,6 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 			report.setName(name);
 			report.setPeriod(period);
 			report.setType(1);
-
 			return m_reportService.insertDailyReport(report);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
@@ -86,6 +85,19 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		}
 	}
 
+	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<TransactionReport> reports = new ArrayList<TransactionReport>();
+		long startTime = period.getTime();
+		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
+		      + TimeUtil.ONE_HOUR));
+
+		reports.add(report);
+		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
+		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
+		return graphs;
+	}
+
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		try {
@@ -101,29 +113,6 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 			return false;
 		}
 		return true;
-	}
-
-	private TransactionReport queryDailyReportsByDuration(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
-				      new Date(startTime + TimeUtil.ONE_DAY));
-
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		TransactionReport transactionReport = merger.getTransactionReport();
-		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
-
-		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
-		return transactionReport;
 	}
 
 	@Override
@@ -166,6 +155,29 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		m_logger = logger;
 	}
 
+	private TransactionReport queryDailyReportsByDuration(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
+				      new Date(startTime + TimeUtil.ONE_DAY));
+
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		TransactionReport transactionReport = merger.getTransactionReport();
+		
+		transactionReport.setStartTime(start);
+		transactionReport.setEndTime(end);
+		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+		return transactionReport;
+	}
+
 	private TransactionReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
 	      throws DalException {
 		Set<String> domainSet = m_reportService.queryAllDomainNames(start, endDate, "transaction");
@@ -180,18 +192,5 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 			reports.add(report);
 		}
 		return m_transactionMerger.mergeForDaily(domain, reports, domainSet);
-	}
-
-	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<TransactionReport> reports = new ArrayList<TransactionReport>();
-		long startTime = period.getTime();
-		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
-		      + TimeUtil.ONE_HOUR));
-
-		reports.add(report);
-		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
-		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
-		return graphs;
 	}
 }
