@@ -10,7 +10,7 @@ public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;
 
-	public double[] queryOneHourData(MetricItem item, MetricType type) {
+	public double[] buildHourlyData(MetricItem item, MetricType type) {
 		double[] result = new double[POINT_NUMBER];
 		Map<Integer, Point> map = item.getAbtests().get("-1").getGroups().get("").getPoints();
 		for (Integer minute : map.keySet()) {
@@ -26,7 +26,7 @@ public class MetricPointParser {
 		return result;
 	}
 
-	public double[] queryOneDayData(List<MetricItem> items, MetricType type) {
+	public double[] buildDailyData(List<MetricItem> items, MetricType type) {
 		int size = items.size();
 		double[] values = new double[24 * POINT_NUMBER];
 
@@ -36,14 +36,14 @@ public class MetricPointParser {
 		for (int hour = 0; hour < size; hour++) {
 			MetricItem item = items.get(hour);
 			try {
-				double[] oneHourValues = queryOneHourData(item, type);
+				double[] oneHourValues = buildHourlyData(item, type);
 
 				for (int minute = 0; minute < 60; minute++) {
 					int index = hour * 60 + minute;
 					values[index] = oneHourValues[minute];
 				}
 			} catch (NullPointerException e) {
-				// Do Nothing
+				continue;
 			}
 		}
 		return values;
