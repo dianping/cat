@@ -10,7 +10,7 @@ public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;
 
-	public static double[] getOneHourData(MetricItem report, MetricType type) {
+	public double[] getOneHourData(MetricItem report, MetricType type) {
 		double[] result = new double[POINT_NUMBER];
 		Map<Integer, Point> map = report.getAbtests().get("-1").getGroups().get("").getPoints();
 		for (Integer minute : map.keySet()) {
@@ -28,7 +28,7 @@ public class MetricPointParser {
 		return result;
 	}
 	
-	public static double[] getOneDayData(List<MetricItem> reports, MetricType type) {
+	public double[] getOneDayData(List<MetricItem> reports, MetricType type) {
 		double[] values = new double[24*POINT_NUMBER];
 		for (int i = 0; i < 24*POINT_NUMBER; i++) {
 			values[i] = -1;
@@ -36,7 +36,7 @@ public class MetricPointParser {
 		int hour = 0;
 		for (MetricItem report : reports) {
 			try {
-				double[] oneHourValues = MetricPointParser.getOneHourData(report, type);
+				double[] oneHourValues = getOneHourData(report, type);
 				
 				for (int minute = 0; minute < 60; minute ++) {
 					int index = hour * 60 + minute;

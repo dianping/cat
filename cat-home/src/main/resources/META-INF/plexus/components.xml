@@ -270,6 +270,10 @@
 			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.MetricPointParser</role>
+			<implementation>com.dianping.cat.report.task.metric.MetricPointParser</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.baseline.BaselineCreator</role>
 			<implementation>com.dianping.cat.report.baseline.impl.DefaultBaselineCreator</implementation>
 		</component>
@@ -292,6 +296,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.MetricPointParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
@@ -319,6 +326,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.MetricPointParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>

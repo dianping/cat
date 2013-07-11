@@ -6,6 +6,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -23,14 +25,41 @@ public class DefaultBaselineService implements BaselineService {
 	@Inject
 	private BaselineDao m_baselineDao;
 
+	private Map<String, Map<String, Baseline>> m_baselineMap = new HashMap<String, Map<String, Baseline>>();
+
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) throws DalException,
 	      IOException {
 		double[] result = new double[24 * 60];
-		Baseline baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
-		      BaselineEntity.READSET_FULL);
+		Baseline baseline = queryFromMap(reportName, key, reportPeriod);
+		if (baseline == null) {
+			baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+			addBaselineToMap(m_baselineMap, baseline, reportName, key);
+		}
 		result = parse(baseline.getData());
 		return result;
+	}
+
+	private void addBaselineToMap(Map<String, Map<String, Baseline>> allBaselineMap, Baseline baseline,
+	      String reportName, String key) {
+		Map<String, Baseline> baselineMap = m_baselineMap.get(reportName);
+		if (baselineMap == null) {
+			baselineMap = new HashMap<String, Baseline>();
+			m_baselineMap.put(reportName, baselineMap);
+		}
+		baselineMap.put(key, baseline);
+	}
+
+	private Baseline queryFromMap(String reportName, String key, Date reportPeriod) {
+		Map<String, Baseline> baselineMap = m_baselineMap.get(reportName);
+		if (baselineMap == null) {
+			return null;
+		}
+		Baseline result = baselineMap.get(key);
+		if (result != null && result.getReportPeriod().equals(reportPeriod)) {
+			return result;
+		}
+		return null;
 	}
 
 	@Override
