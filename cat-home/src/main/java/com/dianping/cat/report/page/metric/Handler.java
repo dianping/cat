@@ -51,7 +51,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();
-			System.out.println(report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
@@ -82,8 +81,8 @@ public class Handler implements PageHandler<Context> {
 			}
 			String product = payload.getProduct();
 			List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
-			List<MetricItemConfig> domainSet = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
-			MetricDisplay display = new MetricDisplay(domainSet, test, startTime);
+			List<MetricItemConfig> configs = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
+			MetricDisplay display = new MetricDisplay(configs, test, startTime);
 
 			display.setAbtest(m_abtestService);
 
