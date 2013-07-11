@@ -12,9 +12,9 @@ import org.unidal.helper.Files;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
-import com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler;
-import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
+import com.dianping.cat.consumer.problem.ProblemReportAggregation;
+import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
+import com.dianping.cat.consumer.problem.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 

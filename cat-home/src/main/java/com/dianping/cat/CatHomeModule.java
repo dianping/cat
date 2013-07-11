@@ -9,7 +9,7 @@ import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
+import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.task.DefaultTaskConsumer;

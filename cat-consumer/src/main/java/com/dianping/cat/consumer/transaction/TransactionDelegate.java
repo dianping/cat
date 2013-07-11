@@ -20,7 +20,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
-
+	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -35,7 +35,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		}
 
 		if (reports.size() > 0) {
-			TransactionReport all = createAggregatedTypeReport(reports);
+			TransactionReport all = createAggregatedReport(reports);
 
 			reports.put(all.getDomain(), all);
 		}
@@ -50,7 +50,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		return xml;
 	}
 
-	private TransactionReport createAggregatedTypeReport(Map<String, TransactionReport> reports) {
+	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
 		TransactionReport first = reports.values().iterator().next();
 		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), ReportConstants.HOUR);
 		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all);
@@ -68,6 +68,11 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 			Cat.logError(e);
 		}
 		return all;
+	}
+
+	@Override
+	public boolean createHourlyTask(TransactionReport report) {
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID, TaskProlicy.ALL);
 	}
 
 	@Override
@@ -98,10 +103,5 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		TransactionReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public boolean createHourlyTask(TransactionReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), "transaction", TaskProlicy.ALL);
 	}
 }

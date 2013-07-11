@@ -56,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 		if (type == EventCollectManager.DB_ERROR) {
 			event.setDomain(payload.getDatabase());
 		} else {
-			String domain = m_domainManager.getDomainByIp(ip);
+			String domain = m_domainManager.queryDomainByIp(ip);
 
 			event.setDomain(domain);
 		}

@@ -106,7 +106,7 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -128,7 +128,7 @@
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -304,7 +304,7 @@
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineCreator</role>
@@ -334,7 +334,7 @@
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -1445,7 +1445,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
+					<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1502,23 +1502,23 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
-			<implementation>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</implementation>
+			<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
+			<implementation>com.dianping.cat.consumer.problem.ProblemReportAggregation</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
-			<implementation>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</implementation>
+			<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+					<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2222,7 +2222,7 @@
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
@@ -2248,8 +2248,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.core.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -2287,7 +2287,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
@@ -2313,7 +2313,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
@@ -2666,10 +2666,10 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>

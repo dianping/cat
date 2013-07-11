@@ -8,6 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.dianping.cat.consumer.problem.aggregation.DefaultFormat;
+import com.dianping.cat.consumer.problem.aggregation.Format;
+
 public class DefaultFormatTest {
 
 	@Rule

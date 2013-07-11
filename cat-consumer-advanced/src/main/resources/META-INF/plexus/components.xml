@@ -10,14 +10,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.DomainManager</role>
-			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
+			<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -31,21 +28,52 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.advanced.DatabaseParser</implementation>
+			<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.sql.DatabaseParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.CrossAnalyzer</implementation>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.consumer.sql.SqlAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportManager</role>
+					<role-hint>sql</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<configuration>
+				<name>sql</name>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>sql</role-hint>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.consumer.sql.SqlDelegate</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
@@ -53,39 +81,83 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.SqlAnalyzer</implementation>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.consumer.cross.CrossAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportManager</role>
+					<role-hint>cross</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<configuration>
+				<name>cross</name>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>cross</role-hint>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.consumer.cross.CrossDelegate</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.MatrixAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.matrix.MatrixAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportManager</role>
+					<role-hint>matrix</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>matrix</role-hint>
+			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<configuration>
+				<name>matrix</name>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>matrix</role-hint>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>matrix</role-hint>
+			<implementation>com.dianping.cat.consumer.matrix.MatrixDelegate</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
@@ -94,23 +166,48 @@
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dependency</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.DependencyAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.dependency.DependencyAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportManager</role>
+					<role-hint>dependency</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.DomainManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<configuration>
+				<name>dependency</name>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>dependency</role-hint>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.consumer.dependency.DependencyDelegate</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.DomainManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -130,7 +227,7 @@
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.core.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
