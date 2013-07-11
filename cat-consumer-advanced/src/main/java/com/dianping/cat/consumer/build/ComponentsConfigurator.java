@@ -8,7 +8,6 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
@@ -29,7 +28,6 @@ import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlDelegate;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.ReportDelegate;
@@ -42,22 +40,27 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(MetricConfigManager.class).req(ConfigDao.class));
-
-		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
-
 		all.addAll(defineSqlComponents());
 		all.addAll(defineCrossComponents());
 		all.addAll(defineMatrixComponents());
 		all.addAll(defineDependencyComponents());
-
-		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
-		      .req(ProductLineConfigManager.class, ABTestCodec.class, TaskManager.class));
+		all.addAll(defineMetricComponents());
 
 		all.add(C(Module.class, CatConsumerAdvancedModule.ID, CatConsumerAdvancedModule.class));
 
 		all.addAll(new CatAdvancedDatabaseConfigurator().defineComponents());
+
+		return all;
+	}
+
+	private Collection<Component> defineMetricComponents() {
+		final List<Component> all = new ArrayList<Component>();
+
+		all.add(C(MetricConfigManager.class).req(ConfigDao.class));
+		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
+		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
+		      .req(ProductLineConfigManager.class, ABTestCodec.class, TaskManager.class));
 
 		return all;
 	}

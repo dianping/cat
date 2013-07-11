@@ -13,31 +13,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
-			<implementation>com.dianping.cat.consumer.problem.aggregation.DefaultAggregationHandler</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
-			<implementation>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
-			<implementation>com.dianping.cat.consumer.problem.ProblemReportAggregation</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<requirements>
@@ -153,6 +128,31 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
+			<implementation>com.dianping.cat.consumer.problem.aggregation.DefaultAggregationHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
+			<implementation>com.dianping.cat.consumer.problem.ProblemReportAggregation</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

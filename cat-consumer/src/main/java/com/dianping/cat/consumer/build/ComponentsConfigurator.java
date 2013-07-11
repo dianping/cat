@@ -49,17 +49,15 @@ import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
-
-		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
-
-		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
-
-		all.add(C(ProblemReportAggregation.class).req(AggregationConfigManager.class));
+		all.add(C(DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class));
@@ -73,6 +71,68 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineStateComponents());
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineDumpComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ServerStatisticManager.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
+		return all;
+	}
+
+	private Collection<Component> defineEventComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = EventAnalyzer.ID;
+
+		all.add(C(MessageAnalyzer.class, ID, EventAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, EventDelegate.class).req(TaskManager.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineHeartbeatComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = HeartbeatAnalyzer.ID;
+
+		all.add(C(MessageAnalyzer.class, ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineProblemComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = ProblemAnalyzer.ID;
+
+		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
+
+		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
+
+		all.add(C(ProblemReportAggregation.class).req(AggregationConfigManager.class));
+
+		all.add(C(MessageAnalyzer.class, ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID) //
+		      .req(ProblemHandler.class, //
+		            new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, ProblemDelegate.class) //
+		      .req(ProblemReportAggregation.class, TaskManager.class));
 
 		return all;
 	}
@@ -92,11 +152,18 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		return all;
 	}
 
-	private Collection<Component> defineDumpComponents() {
+	private Collection<Component> defineTopComponents() {
 		final List<Component> all = new ArrayList<Component>();
-		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerStatisticManager.class) //
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
+		final String ID = TopAnalyzer.ID;
+
+		all.add(C(MessageAnalyzer.class, ID, TopAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, TopDelegate.class));
+
 		return all;
 	}
 
@@ -120,72 +187,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class));
 
 		return all;
-	}
-
-	private Collection<Component> defineEventComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = EventAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, EventDelegate.class).req(TaskManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineProblemComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = ProblemAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID) //
-		      .req(ProblemHandler.class, //
-		            new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, ProblemDelegate.class) //
-		      .req(ProblemReportAggregation.class, TaskManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineHeartbeatComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = HeartbeatAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineTopComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = TopAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, TopAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, TopDelegate.class));
-
-		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }

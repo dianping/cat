@@ -104,7 +104,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
 			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
-				analyzer.doCheckpoint(false);
+				try{
+					analyzer.doCheckpoint(false);
+				}catch(Exception e){
+					Cat.logError(e);
+				}
 			}
 
 			try {

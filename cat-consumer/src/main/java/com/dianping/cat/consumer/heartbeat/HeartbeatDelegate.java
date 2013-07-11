@@ -38,7 +38,7 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Override
 	public boolean createHourlyTask(HeartbeatReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), "event", TaskProlicy.HOULY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), HeartbeatAnalyzer.ID, TaskProlicy.HOULY);
 	}
 
 	@Override

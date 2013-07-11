@@ -1,24 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
-			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.advanced.ProductLineConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
 			<implementation>com.dianping.cat.consumer.sql.SqlParseManager</implementation>
 			<requirements>
@@ -208,6 +190,24 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.ProductLineConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
