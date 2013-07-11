@@ -23,6 +23,20 @@
 					  		 <![CDATA[This is value]]>
 					   </field>
 					</fields>
+					<filters>
+						<filter name="url" seq="1" operator="equals">
+							<![CDATA[This is value]]>
+						</filter>
+						<filter name="url-pattern" seq="2" operator="equals">
+							<![CDATA[This is value]]>
+						</filter>
+						<filter name="url" seq="3" operator="equals">
+							<![CDATA[This is value]]>
+						</filter>
+						<filter name="url" seq="4" operator="equals">
+							<![CDATA[This is value]]>
+						</filter>
+					</filters>
 				</groupstrategy-descriptor>
 			</run>
 			<run />

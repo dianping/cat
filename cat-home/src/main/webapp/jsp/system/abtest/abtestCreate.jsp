@@ -11,6 +11,12 @@
 	div.controls input {
 		height: 30px;
 	}
+	
+	.logic-button-selected {
+		border: 1px solid #A7A7A7;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	}
+	
 </style>
 
 <a:body>
@@ -18,11 +24,13 @@
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useCss value="${res.css.local['slider.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap-slider.js']}" target="head-js" />
 
 	<div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
 		<h4 style="margin: 0 auto;">Create ABTest</h4>
@@ -42,7 +50,7 @@
 						data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
 					</label>
 					<div class="controls">
-						<input type="text" name="name" id="abName" placeholder="give it a name ..."
+						<input type="text" name="name" id="abName" placeholder="Test1" class="input-xlarge"
 							check-type="required" required-message="Name is required!" value="${payload.name}">
 					</div>
 				</div>
@@ -54,16 +62,8 @@
 						data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
 					</label>
 					<div class="controls">
-						<input type="text" name="owner" id="abOwn" placeholder="give it a owner ..."
+						<input type="text" name="owner" id="abOwn" placeholder="DamonZhu" class="input-xlarge"
 							check-type="required" required-message="Owner is required!" value="${payload.owner}">
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Description</label>
-					<div class="controls">
-						<textarea name="description"
-							placeholder="say something about the abtest ... " class="span6"
-							rows="3" cols="60">${payload.description}</textarea>
 					</div>
 				</div>
 				<div class="control-group">
@@ -113,6 +113,63 @@
 						</select>
 					</div>
 				</div>
+				<div class="control-group">
+					<label class="control-label">Description</label>
+					<div class="controls">
+						<textarea name="description"
+							placeholder="say something about the abtest ... " class="span6"
+							rows="3">${payload.description}</textarea>
+					</div>
+				</div>
+				<h5>Traffic Filter</h5>
+				<hr style="margin-top: 20px;">
+				<div class="control-group">
+					<label class="control-label">Test Page URL</label>
+					<div class="controls">
+						<input type="url" name="url" placeholder="http://www.example.com" check-type="required" required-message="URL is required!"  class="input-xlarge">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Test Page Pattern</label>
+					<div class="controls">
+						<input type="url" name="pattern" placeholder="http://www.example.com/*" check-type="required" required-message="URL Pattern is required!"  class="input-xlarge">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Exclude URLs</label>
+					<div class="controls">
+						<span>No URL excluded</span>
+						<input type="url" name="excludedUrl" placeholder="http://www.example.com/1" class="input-xlarge hide">
+						<a class="pull-right active" href="javascript:void(0);" id="edit1">Edit</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="save1">Save</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="cancel1">Cancel &nbsp;</a> 
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Traffic Segment</label>
+					<div class="controls">
+						<span>All visitors</span>
+						<div id="div2" class="hide">
+						</div>
+						<a class="pull-right active" href="javascript:void(0);" id="edit2">Edit</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="save2">Save</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="cancel2">Cancel &nbsp;</a> 
+						<a href="javascript:void(0)" id="addVistorCondition" class="pull-right active hide"><i class="icon-plus"></i>Add visitor condition &nbsp;</a>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Traffic Included in Test</label>
+					<div class="controls">
+							<input class="slider" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
+						<span class="add-on hide">&nbsp;&nbsp;</span>
+						<span class="add-on">100</span>
+						<span class="add-on">%</span>
+						<a class="pull-right active" href="javascript:void(0);" id="edit3">Edit</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="save3">Save</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="cancel3">Cancel &nbsp;</a> 
+					</div>
+				</div>
+				
 				<h5>Group Strategy</h5>
 				<hr style="margin-top: 5px;">
 				<div class="control-group">
@@ -173,7 +230,7 @@
 			var abName = $('#abName').val();
 			var abOwn = $('#abOwn').val();
 			
-			if(abName != "" && abOwn != ""){
+			if(abName && abOwn ){
 				var params = $(this).serialize();
 				//console.log(params);
 				var jsonObject = $('#strategyId option[value=' + $('#strategyId').val() + ']').data();
@@ -196,14 +253,14 @@
 				}).done(function(json) {
 					json = JSON.parse(json);
 					
-					if(json.code == 0){
+					if(json && json.code == 0){
 						var innerHTML = '<div style="position: absolute; width: 400px;" class="alert alert-success">'
 								+ '<button type="button" class="close" data-dismiss="alert">×</button>'
 								+ '<span style="text-align: center;">Created! Going to the list page after '
 								+ '<span id="countDown"></span> seconds ...</span></div>';
 						$('#alertDiv').html(innerHTML);
 						countDown();
-					}else if(json.code == 1){
+					}else if(json && json.code == 1){
 						var innerHTML = '<div style="position: absolute; width: 400px;" class="alert alert-error">'
 								+ '<button type="button" class="close" data-dismiss="alert">×</button>'
 								+ '<span style="text-align: center;">' + json.msg + '</span></div>';
@@ -217,7 +274,110 @@
 			$('#alertErrorDiv').empty();
 			$('#groupStrategyFrom')[0].reset();
 		});
+		
+		$("#edit1,#save1,#cancel1").click(function(e){
+			var parent = $(this).parent();
+			$("span",parent).toggleClass("hide");
+			$("input",parent).toggleClass("hide");
+			$("a",parent).toggleClass("hide");
+			
+			var id = $(this).attr("id");
+			
+			if(id == "save1"){
+				if($("input",parent).val() != ""){
+					$("span",parent).text($("input",parent).val());
+				}else{
+					$("span",parent).text("No URL excluded");
+				}
+			}else if(id == "edit1"){
+				$("input",parent).val("");
+			}
+		});
+		
+		$("#edit2,#save2,#cancel2").click(function(e){
+			var parent = $(this).parent();
+			$("span",parent).toggleClass("hide");
+			$("a",parent).toggleClass("hide");
+			$("div",parent).toggleClass("hide");
+			
+			var id = $(this).attr("id");
+			
+			if(id == "save2"){
+				
+			}else if(id == "edit2"){
+				var innerHTML = "<div><table>";
+				innerHTML += "<tbody>"
+				//innerHTML += insertTr();
+				innerHTML += "</tbody></table></div>";
+				
+				table = $(innerHTML);
+				$('#div2').empty();
+				table.appendTo($('#div2'));
+			}
+		});
+		
+		$("#edit3,#save3,#cancel3").click(function(e){
+			var parent = $(this).parent();
+			$("span:first",parent).toggleClass("hide");
+			$("a",parent).toggleClass("hide");
+			$('.slider').toggleClass('hide');
+		});
 
+		function insertTr(){
+			var innerHTML = "<tr>";
+			innerHTML += '<td><select><option value="url">Current URL</option><option value="city">City</option>'
+					+ '<option value="platform">Platform</option><option value="vistorType">VisitorType</option>'
+					+ '<option value="cookie">Cookie</option></select></td>';
+					
+			innerHTML += '<td><select><option value="1">Is equal to (case insens.)</option>'
+				+ '<option value="2">Is not equal to (case insens.)</option><option value="3">Is equal to (case sens.)</option>'
+				+ '<option value="4">Is not equal to (case sens.)</option><option value="5">Marches Regex (case insens.)</option>'
+				+ '<option value="6">Marches Regex (case sens.)</option><option value="7">Contains</option>'
+				+ '<option value="8">Does not contains</option></select></td>';
+			
+			innerHTML += '<td><input class="input-large"></td>';
+			innerHTML += '<td><a class="btn btn-link"><i class="icon-remove"></i></a></td>';
+			innerHTML += '</tr>';
+			
+			return innerHTML;
+		}
+		
+		function insertOperator(){
+			var innerHTML = "<tr>";
+			innerHTML += '<td colspan="1"></td>';
+			innerHTML += '<td colspan="1"><a class="btn btn-primary">AND</a><a class="btn pull-right">OR</a></td>';
+			innerHTML += '<td colspan="1"></td>';
+			innerHTML += '<td colspan="1"></td>';
+			innerHTML += '</tr>';
+			
+			return innerHTML;
+		}
+		
+		$('#addVistorCondition').click(function(){
+			var tr = $(insertTr());
+			$('a',tr).click(function(){
+				var index = $(this).closest("tr").index();
+				if(index > 0){
+					$(this).closest("tr").prev().remove();
+					$(this).closest("tr").remove();
+				}else if(index == 0){
+					$(this).closest("tr").next().remove();
+					$(this).closest("tr").remove();
+				}
+			});
+			
+			if($('#div2 tbody tr:last').size() == 0){
+				$('#div2 tbody').html(tr);
+			}else{
+				var innerHTML = $(insertOperator());
+				$('a',innerHTML).click(function(){
+					$('a',$(innerHTML)).toggleClass("btn-primary");
+				});
+				$('#div2 tbody tr:last').after(innerHTML);
+				$('#div2 tbody tr:last').after(tr);
+			}
+		});
+		
 		$(function() {
 			$('#datetimepicker1').datetimepicker();
 			$('#datetimepicker2').datetimepicker();
@@ -226,6 +386,13 @@
 				placeholder : "select which domains to run this ab test",
 				allowClear : true
 			});
+			
+			var showData = function(){
+				$("span:eq(1)",$(this).parent().parent().parent()).text(data.getValue());
+			}
+			var data = $('.slider').slider().on('slide',showData).data('slider');
+			
+			$('.slider').toggleClass("hide");
 			
 			$("#domains").val(initDomains).trigger("change");
 			
