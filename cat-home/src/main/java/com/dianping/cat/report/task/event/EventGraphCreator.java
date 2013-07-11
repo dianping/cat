@@ -17,10 +17,9 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.report.task.spi.GraphCreator;
 import com.dianping.cat.report.task.spi.GraphLine;
 
-public class EventGraphCreator implements GraphCreator<EventReport> {
+public class EventGraphCreator {
 
 	private long[] arrayAdd(long[] src, long added[]) {
 		int size = added.length;
@@ -63,7 +62,6 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 		return value;
 	}
 
-	@Override
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String domainName, String reportName,
 	      EventReport eventReport) {
 		Set<String> ips = eventReport.getIps();

@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -58,6 +60,17 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	@Override
+	public Set<String> getDomains(long startTime) {
+		Map<String, T> reports = m_map.get(startTime);
+
+		if (reports == null) {
+			return new HashSet<String>();
+		} else {
+			return reports.keySet();
+		}
 	}
 
 	@Override
@@ -197,7 +210,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 							r.setContent(xml);
 
 							m_reportDao.insert(r);
-
 							m_reportDelegate.createHourlyTask(report);
 						} catch (Throwable e) {
 							t.setStatus(e);

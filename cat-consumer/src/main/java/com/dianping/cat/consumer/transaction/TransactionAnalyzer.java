@@ -52,6 +52,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	public TransactionReport getReport(String domain) {
 		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 		
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		report.accept(new TransactionStatisticsComputer());
 		return report;
 	}

@@ -35,15 +35,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private ProblemReport m_report;
 
-	private int m_sqlThreshold;
-	
-	private int m_serviceThreshold;
-
 	private String m_threadId;
 
 	private ThreadLevelInfo m_threadLevelInfo;
-
-	private int m_threshold;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -151,24 +145,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_report;
 	}
 
-	public int getServiceThreshold() {
-		return m_serviceThreshold;
-	}
-
-	public int getSqlThreshold() {
-		return m_sqlThreshold;
-	}
-
 	public String getThreadId() {
 		return m_threadId;
 	}
 
 	public ThreadLevelInfo getThreadLevelInfo() {
 		return m_threadLevelInfo;
-	}
-
-	public int getThreshold() {
-		return m_threshold;
 	}
 
 	public void setAllStatistics(ProblemStatistics allStatistics) {
@@ -223,24 +205,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_report = report;
 	}
 
-	public void setServiceThreshold(int serviceLongTime) {
-		m_serviceThreshold=serviceLongTime;
-   }
-
-	public void setSqlThreshold(int sqlThreshold) {
-		m_sqlThreshold = sqlThreshold;
-	}
-
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
 	}
 
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
 		m_threadLevelInfo = threadLevelInfo;
-	}
-
-	public void setThreshold(int threshold) {
-		m_threshold = threshold;
 	}
 
 }

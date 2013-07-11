@@ -135,6 +135,9 @@
 				<requirement>
 					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

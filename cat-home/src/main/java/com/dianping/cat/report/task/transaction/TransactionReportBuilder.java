@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.transaction;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -26,9 +25,9 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.ReportBuilder;
+import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
+public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 	@Inject
 	protected GraphDao m_graphDao;
@@ -48,15 +47,12 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 	private Logger m_logger;
 
 	@Override
-	public boolean buildDailyReport(String name, String domain, Date period) {
+	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			TransactionReport transactionReport = queryDailyReport(name, domain, period);
+			Date end = TaskHelper.tomorrowZero(period);
+			TransactionReport transactionReport = queryHourlyReportsByDuration(name, domain, period, end);
 
-			try {
-				buildDailyTransactionGraph(transactionReport);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			buildDailyTransactionGraph(transactionReport);
 
 			String content = transactionReport.toString();
 			DailyReport report = new DailyReport();
@@ -68,7 +64,6 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 			report.setName(name);
 			report.setPeriod(period);
 			report.setType(1);
-
 			return m_reportService.insertDailyReport(report);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
@@ -90,10 +85,23 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 		}
 	}
 
+	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<TransactionReport> reports = new ArrayList<TransactionReport>();
+		long startTime = period.getTime();
+		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
+		      + TimeUtil.ONE_HOUR));
+
+		reports.add(report);
+		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
+		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
+		return graphs;
+	}
+
 	@Override
-	public boolean buildHourReport(String name, String domain, Date period) {
+	public boolean buildHourlyTask(String name, String domain, Date period) {
 		try {
-			List<Graph> graphs = queryHourReport(name, domain, period);
+			List<Graph> graphs = buildHourlyGraphs(name, domain, period);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
 					m_graphDao.insert(graph); // use mysql unique index and insert
@@ -107,39 +115,10 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 		return true;
 	}
 
-	private TransactionReport buildMergedDailyReport(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
-				      new Date(startTime + TimeUtil.ONE_DAY));
-
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		TransactionReport transactionReport = merger.getTransactionReport();
-		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
-
-		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
-		return transactionReport;
-	}
-
 	@Override
-	public boolean buildMonthReport(String name, String domain, Date period) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(period);
-		cal.add(Calendar.MONTH, 1);
-
-		Date start = period;
-		Date end = cal.getTime();
-
-		TransactionReport transactionReport = buildMergedDailyReport(domain, start, end);
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period,
+		      TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
 		report.setContent(transactionReport.toString());
@@ -154,11 +133,9 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 	}
 
 	@Override
-	public boolean buildWeeklyReport(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		TransactionReport transactionReport = buildMergedDailyReport(domain, start, end);
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 		String content = transactionReport.toString();
 
@@ -178,11 +155,34 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 		m_logger = logger;
 	}
 
-	private TransactionReport queryDailyReport(String name, String domain, Date period) throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(period);
-		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, "transaction");
+	private TransactionReport queryDailyReportsByDuration(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
+				      new Date(startTime + TimeUtil.ONE_DAY));
+
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		TransactionReport transactionReport = merger.getTransactionReport();
+		
+		transactionReport.setStartTime(start);
+		transactionReport.setEndTime(end);
+		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+		return transactionReport;
+	}
+
+	private TransactionReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
+	      throws DalException {
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, endDate, "transaction");
 		List<TransactionReport> reports = new ArrayList<TransactionReport>();
-		long startTime = period.getTime();
+		long startTime = start.getTime();
 		long endTime = endDate.getTime();
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
@@ -192,23 +192,5 @@ public class TransactionReportBuilder implements ReportBuilder, LogEnabled {
 			reports.add(report);
 		}
 		return m_transactionMerger.mergeForDaily(domain, reports, domainSet);
-	}
-
-	private List<Graph> queryHourReport(String name, String domain, Date period) throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(period);
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<TransactionReport> reports = new ArrayList<TransactionReport>();
-		long startTime = period.getTime();
-		long endTime = endDate.getTime();
-
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
-			      startTime + TimeUtil.ONE_HOUR));
-
-			reports.add(report);
-		}
-		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
-		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
-		return graphs;
 	}
 }
