@@ -47,26 +47,6 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 		throw new RuntimeException("Sql report don't support HourReport!");
 	}
 
-	private SqlReport queryDailyReportsByDuration(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				SqlReport reportModel = m_reportService.querySqlReport(domain, new Date(startTime), new Date(startTime
-				      + TimeUtil.ONE_DAY));
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		SqlReport sqlReport = merger.getSqlReport();
-		sqlReport.setStartTime(start);
-		sqlReport.setEndTime(end);
-		return sqlReport;
-	}
-
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		SqlReport sqlReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
@@ -79,7 +59,6 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertMonthlyReport(report);
 	}
 
@@ -96,8 +75,28 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertWeeklyReport(report);
+	}
+
+	private SqlReport queryDailyReportsByDuration(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				SqlReport reportModel = m_reportService.querySqlReport(domain, new Date(startTime), new Date(startTime
+				      + TimeUtil.ONE_DAY));
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		SqlReport sqlReport = merger.getSqlReport();
+
+		sqlReport.setStartTime(start);
+		sqlReport.setEndTime(end);
+		return sqlReport;
 	}
 
 	private SqlReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end) {

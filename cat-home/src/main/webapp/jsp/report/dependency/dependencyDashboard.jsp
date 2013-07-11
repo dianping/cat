@@ -63,11 +63,11 @@
 				 "3":'#b94a48',
 				 "4":'#772fbf'
                          },
-		            legendMap:{
-		            "1":"good",
-		            "2":"warning",
-		            "3":"error"
-		            },
+	            legendMap:{
+	            "1":"good",
+	            "2":"warning",
+	            "3":"error"
+	            },
 			paddingInside:20,
 			col:3,
 			colInside:4

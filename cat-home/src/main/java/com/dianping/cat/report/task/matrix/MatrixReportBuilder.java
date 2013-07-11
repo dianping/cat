@@ -42,27 +42,6 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		throw new RuntimeException("Matrix report don't support hourly report!");
 	}
 
-	private MatrixReport queryDailyReportsByDuration(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
-
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				MatrixReport reportModel = m_reportService.queryMatrixReport(domain, new Date(startTime), new Date(
-				      startTime + TimeUtil.ONE_DAY));
-
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		MatrixReport matrixReport = merger.getMatrixReport();
-		matrixReport.setStartTime(start);
-		matrixReport.setEndTime(end);
-		return matrixReport;
-	}
-
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
@@ -75,7 +54,6 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertMonthlyReport(report);
 	}
 
@@ -93,8 +71,29 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
 		return m_reportService.insertWeeklyReport(report);
+	}
+
+	private MatrixReport queryDailyReportsByDuration(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				MatrixReport reportModel = m_reportService.queryMatrixReport(domain, new Date(startTime), new Date(
+				      startTime + TimeUtil.ONE_DAY));
+
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		MatrixReport matrixReport = merger.getMatrixReport();
+		
+		matrixReport.setStartTime(start);
+		matrixReport.setEndTime(end);
+		return matrixReport;
 	}
 
 	private MatrixReport queryHourlyReportByDuration(String name, String domain, Date start, Date end) {

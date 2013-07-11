@@ -188,27 +188,17 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		long startTime = request.getStartTime();
 		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			List<MonthlyReport> reports = m_monthlyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			MonthlyReport report = m_monthlyReportDao.findReportByDomainNamePeriod(new Date(startTime), domain, name,
 			      MonthlyReportEntity.READSET_FULL);
 
-			for (MonthlyReport report : reports) {
-				try {
-					String xml = report.getContent();
-					T model = delegate.parseXml(xml);
-
-					result = delegate.mergeReport(result, model);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
+			String xml = report.getContent();
+			return delegate.parseXml(xml);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
-		return result;
+		return delegate.makeReport(domain, startTime, ReportConstants.DAY * 30);
 	}
 
 	@Override
@@ -222,27 +212,17 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		long startTime = request.getStartTime();
 		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			List<WeeklyReport> reports = m_weeklyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			WeeklyReport report = m_weeklyReportDao.findReportByDomainNamePeriod(new Date(startTime), domain, name,
 			      WeeklyReportEntity.READSET_FULL);
+			String xml = report.getContent();
 
-			for (WeeklyReport report : reports) {
-				try {
-					String xml = report.getContent();
-					T model = delegate.parseXml(xml);
-
-					result = delegate.mergeReport(result, model);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
+			return delegate.parseXml(xml);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
-		return result;
+		return delegate.makeReport(domain, startTime, ReportConstants.WEEK);
 	}
 
 	@Override

@@ -1,11 +1,9 @@
 package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -52,13 +50,15 @@ public class MetricAlert implements Task, LogEnabled {
 
 	@Inject(type = ModelService.class, value = "metric")
 	protected ModelService<MetricReport> m_service;
-	
+
 	@Inject
 	protected MetricPointParser m_parser;
 
 	private Logger m_logger;
 
-	private static final long TEN_SECONDS = 10 * TimeUtil.ONE_MINUTE;
+	private static final String METRIC = "metric";
+
+	private static final long TEN_SECONDS = 10 * 1000;
 
 	private static final int DURATION_IN_MINUTE = 1;
 
@@ -76,8 +76,9 @@ public class MetricAlert implements Task, LogEnabled {
 			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
 			long current = System.currentTimeMillis();
 			try {
-				Date reportPeriod = new Date(new Date().getTime() - DURATION - TEN_SECONDS); 
-				metricAlert(reportPeriod);
+				Date date = new Date(System.currentTimeMillis() - DURATION - TEN_SECONDS);
+
+				metricAlert(date);
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -97,53 +98,63 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected void metricAlert(Date reportPeriod) {
-		Map<String, MetricItemConfig> metricConfigMap = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
-		Map<String,MetricReport> metricReportMap = new HashMap<String,MetricReport>();
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(reportPeriod);
-		int minute = calendar.get(Calendar.MINUTE);
-		for (String metricID : metricConfigMap.keySet()) {
-			MetricItemConfig metricConfig = metricConfigMap.get(metricID);
-			String domain = metricConfig.getDomain();
-			String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
-			for (MetricType type : MetricType.values()) {
-				String key = metricID + ":" + type;
-				BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
-				double[] baseline = null;
-            try {
-	            baseline = m_baselineService.queryHourlyBaseline("metric", key, reportPeriod);
-            } catch (Exception e) {
-	            continue;
-            }
-	         
-				MetricReport report = metricReportMap.get(productLine);
-				if(report == null){
-					report = queryMetricReport(productLine);
-					metricReportMap.put(productLine, report);
+	private List<Integer> check(double[] realDatas, double[] baseLineDatas, BaselineConfig config) {
+		int size = realDatas.length;
+		for (int i = 0; i <= size; i++) {
+
+		}
+
+		return null;
+	}
+
+	protected void metricAlert(Date date) {
+		long current = date.getTime() / 1000 / 60;
+		int minute = (int) (current % (60));
+		Set<String> productLines = m_productLineConfigManager.queryProductLines().keySet();
+
+		for (String productLine : productLines) {
+			MetricReport report = queryMetricReport(productLine);
+
+			for (MetricItem item : report.getMetricItems().values()) {
+				String key = item.getId();
+				MetricItemConfig metricConfig = m_metricConfigManager.queryMetricItemConfig(key);
+				List<Integer> alerts = new ArrayList<Integer>();
+
+				if (metricConfig.isShowCount()) {
+					alerts.addAll(buildAlertInfo(date, MetricType.COUNT, item, key));
 				}
-				double[] datas = extractDatasFromReport(report, metricConfig, type);
-				if (datas == null) {
-					continue;
+				if (metricConfig.isShowAvg()) {
+					alerts.addAll(buildAlertInfo(date, MetricType.AVG, item, key));
 				}
-				List<Integer> alertList = checkData(baseline, datas, minute, baselineConfig);
-				for (int alertItem : alertList) {
-					m_logger.info("ALERT:" + key + "," + reportPeriod + ", minute:" + alertItem);
+				if (metricConfig.isShowSum()) {
+					alerts.addAll(buildAlertInfo(date, MetricType.SUM, item, key));
 				}
-				
+
+				if (alerts.size() > 0) {
+					String alertInfo = buildAlertInfo(alerts, minute);
+					m_logger.info(alertInfo);
+				}
 			}
 		}
 	}
 
-	private double[] extractDatasFromReport(MetricReport report, MetricItemConfig metricConfig, MetricType type) {
-		try {
-			MetricItem reportItem = report.getMetricItems().get(metricConfig.getMetricKey());
-			double[] datas = m_parser.getOneHourData(reportItem, type);
-			return datas;
-		} catch (NullPointerException e) {
-			return null;
+	private String buildAlertInfo(List<Integer> alerts, int minute) {
+		return null;
+	}
+
+	private List<Integer> buildAlertInfo(Date date, MetricType type, MetricItem item, String key) {
+		String baseLineKey = key + ":" + type;
+		double[] baseline = m_baselineService.queryHourlyBaseline(METRIC, baseLineKey, date);
+		if (baseline != null) {
+			double[] realDatas = extractDatasFromReport(item, type);
+			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(baseLineKey);
+			return check(baseline, realDatas, baselineConfig);
 		}
+		return new ArrayList<Integer>();
+	}
+
+	private double[] extractDatasFromReport(MetricItem item, MetricType type) {
+		return m_parser.queryOneHourData(item, type);
 	}
 
 	private MetricReport queryMetricReport(String product) {
