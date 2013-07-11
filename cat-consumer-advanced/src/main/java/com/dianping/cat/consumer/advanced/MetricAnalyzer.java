@@ -171,7 +171,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
-			MetricItem metricItem = report.findOrCreateMetricItem(name);
+			String key = m_configManager.buildMetricKey(domain, "Metric", name);
+			MetricItem metricItem = report.findOrCreateMetricItem(key);
 			Map<String, String> abtests = parseABTests(type);
 
 			metricItem.addDomain(domain).setType(status);
@@ -250,7 +251,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				long current = transaction.getTimestamp() / 1000 / 60;
 				int min = (int) (current % (60));
 				double sum = transaction.getDurationInMicros();
-				MetricItem metricItem = report.findOrCreateMetricItem(name);
+				MetricItem metricItem = report.findOrCreateMetricItem(key);
 				Map<String, String> abtests = parseABtests(transaction);
 
 				metricItem.addDomain(domain).setType("C");

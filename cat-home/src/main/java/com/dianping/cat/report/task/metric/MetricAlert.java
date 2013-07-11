@@ -1,11 +1,9 @@
 package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -26,7 +24,6 @@ import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -54,11 +51,122 @@ public class MetricAlert implements Task, LogEnabled {
 	@Inject(type = ModelService.class, value = "metric")
 	protected ModelService<MetricReport> m_service;
 
+	@Inject
+	protected MetricPointParser m_parser;
+
 	private Logger m_logger;
+
+	private static final String METRIC = "metric";
+
+	private static final long TEN_SECONDS = 10 * 1000;
 
 	private static final int DURATION_IN_MINUTE = 1;
 
 	private static final long DURATION = DURATION_IN_MINUTE * TimeUtil.ONE_MINUTE;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public void run() {
+		boolean active = true;
+		while (active) {
+			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
+			long current = System.currentTimeMillis();
+			try {
+				Date date = new Date(System.currentTimeMillis() - DURATION - TEN_SECONDS);
+
+				metricAlert(date);
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+
+			} finally {
+				t.complete();
+			}
+			long duration = System.currentTimeMillis() - current;
+
+			try {
+				if (duration < DURATION) {
+					Thread.sleep(DURATION - duration);
+				}
+			} catch (InterruptedException e) {
+				active = false;
+			}
+		}
+	}
+
+	private List<Integer> check(double[] realDatas, double[] baseLineDatas, BaselineConfig config) {
+		int size = realDatas.length;
+		for (int i = 0; i <= size; i++) {
+
+		}
+
+		return null;
+	}
+
+	protected void metricAlert(Date date) {
+		long current = date.getTime() / 1000 / 60;
+		int minute = (int) (current % (60));
+		Set<String> productLines = m_productLineConfigManager.queryProductLines().keySet();
+
+		for (String productLine : productLines) {
+			MetricReport report = queryMetricReport(productLine);
+
+			for (MetricItem item : report.getMetricItems().values()) {
+				String key = item.getId();
+				MetricItemConfig metricConfig = m_metricConfigManager.queryMetricItemConfig(key);
+				List<Integer> alerts = new ArrayList<Integer>();
+
+				if (metricConfig.isShowCount()) {
+					alerts.addAll(buildAlertInfo(date, MetricType.COUNT, item, key));
+				}
+				if (metricConfig.isShowAvg()) {
+					alerts.addAll(buildAlertInfo(date, MetricType.AVG, item, key));
+				}
+				if (metricConfig.isShowSum()) {
+					alerts.addAll(buildAlertInfo(date, MetricType.SUM, item, key));
+				}
+
+				if (alerts.size() > 0) {
+					String alertInfo = buildAlertInfo(alerts, minute);
+					m_logger.info(alertInfo);
+				}
+			}
+		}
+	}
+
+	private String buildAlertInfo(List<Integer> alerts, int minute) {
+		return null;
+	}
+
+	private List<Integer> buildAlertInfo(Date date, MetricType type, MetricItem item, String key) {
+		String baseLineKey = key + ":" + type;
+		double[] baseline = m_baselineService.queryHourlyBaseline(METRIC, baseLineKey, date);
+		if (baseline != null) {
+			double[] realDatas = extractDatasFromReport(item, type);
+			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(baseLineKey);
+			return check(baseline, realDatas, baselineConfig);
+		}
+		return new ArrayList<Integer>();
+	}
+
+	private double[] extractDatasFromReport(MetricItem item, MetricType type) {
+		return m_parser.queryOneHourData(item, type);
+	}
+
+	private MetricReport queryMetricReport(String product) {
+		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
+		if (m_service.isEligable(request)) {
+			ModelResponse<MetricReport> response = m_service.invoke(request);
+			MetricReport report = response.getModel();
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
+		}
+	}
 
 	private List<Integer> checkData(double[] baseline, double[] datas, int minute, BaselineConfig config) {
 		List<Integer> result = new ArrayList<Integer>();
@@ -85,109 +193,8 @@ public class MetricAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	private double[] extractDatasFromReport(MetricReport report, MetricItemConfig metricConfig, MetricType type) {
-		try {
-			MetricItem reportItem = report.getMetricItems().get(metricConfig.getMetricKey());
-			double[] datas = MetricPointParser.getOneHourData(reportItem, type);
-			return datas;
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-
-	@Override
 	public String getName() {
 		return "MetricAlertRedo";
-	}
-
-	protected void metricAlert(Date reportPeriod) {
-		Map<String, MetricItemConfig> metricConfigMap = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
-		Map<String, double[]> baselineMap = new HashMap<String, double[]>();
-		Date hourStart = TaskHelper.thisHour(reportPeriod);
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(reportPeriod);
-		int minute = calendar.get(Calendar.MINUTE);
-		for (String metricID : metricConfigMap.keySet()) {
-			MetricItemConfig metricConfig = metricConfigMap.get(metricID);
-			String domain = metricConfig.getDomain();
-			String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
-			for (MetricType type : MetricType.values()) {
-				String key = metricID + ":" + type;
-				BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
-				String baselineKey = key + "+" + reportPeriod.getTime();
-				double[] baseline = queryBaseline(baselineMap, baselineKey, key, reportPeriod);
-				if (baseline == null) {
-					continue;
-				}
-
-				MetricReport report = queryMetricReport(productLine, hourStart.getTime());
-				double[] datas = extractDatasFromReport(report, metricConfig, type);
-				if (datas == null) {
-					continue;
-				}
-				List<Integer> alertList = checkData(baseline, datas, minute, baselineConfig);
-				for (int alertItem : alertList) {
-					m_logger.info("ALERT:" + key + "," + reportPeriod + ", minute:" + alertItem);
-				}
-			}
-		}
-	}
-
-	private double[] queryBaseline(Map<String, double[]> baselineMap, String baselineKey, String key, Date reportPeriod) {
-		double[] result = baselineMap.get(baselineKey);
-		if (result == null) {
-			try {
-				result = m_baselineService.queryHourlyBaseline("metric", key, reportPeriod);
-				baselineMap.put(baselineKey, result);
-			} catch (Exception e) {
-				return null;
-			}
-		}
-		return result;
-	}
-
-	private MetricReport queryMetricReport(String product, long dateTime) {
-		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
-		if (m_service.isEligable(request)) {
-			ModelResponse<MetricReport> response = m_service.invoke(request);
-			MetricReport report = response.getModel();
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
-		}
-	}
-
-	@Override
-	public void run() {
-		boolean active = true;
-		while (active) {
-			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
-			long current = System.currentTimeMillis();
-			try {
-				Date reportPeriod = new Date(new Date().getTime() - DURATION);
-				metricAlert(reportPeriod);
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-
-			} finally {
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
-			}
-		}
 	}
 
 	@Override
