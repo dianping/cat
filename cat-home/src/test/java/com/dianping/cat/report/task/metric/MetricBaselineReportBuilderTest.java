@@ -3,11 +3,13 @@ package com.dianping.cat.report.task.metric;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.baseline.BaselineConfig;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -69,7 +71,7 @@ public class MetricBaselineReportBuilderTest extends ComponentTestCase {
 	public void testBuildDailyReport() throws Exception {
 		MetricBaselineReportBuilder builder = getReportBuilder();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		builder.buildDailyReportInternal("metric", "TuanGouWeb:URL:/index", format.parse("2013-07-01 00:00:00"));
+		builder.buildDailyReportInternal(new HashMap<String, MetricReport>(), "metric", "TuanGouWeb:URL:/index", format.parse("2013-07-01 00:00:00"));
 	}
 
 }

@@ -33,6 +33,7 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
+import com.dianping.cat.report.task.metric.MetricPointParser;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -43,7 +44,6 @@ import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -62,21 +62,19 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
 		all.add(C(SqlMerger.class));
-		
-		all.add(C(BaselineCreator.class,DefaultBaselineCreator.class));
-		all.add(C(BaselineService.class,DefaultBaselineService.class)
-				.req(BaselineDao.class));
-		all.add(C(BaselineConfigManager.class,BaselineConfigManager.class));
-		
-		all.add(C(MetricBaselineReportBuilder.class)
-		      .req(ReportService.class)//
-		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
-		      .req(BaselineCreator.class,BaselineService.class,BaselineConfigManager.class));
-		
-		all.add(C(MetricAlert.class)
-				.req(ReportService.class,ServerConfigManager.class)//
-		      .req(MetricConfigManager.class,ProductLineConfigManager.class)//
-		      .req(BaselineService.class,BaselineConfigManager.class)
+
+		all.add(C(MetricPointParser.class));
+		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
+		all.add(C(BaselineService.class, DefaultBaselineService.class).req(BaselineDao.class));
+		all.add(C(BaselineConfigManager.class, BaselineConfigManager.class));
+
+		all.add(C(MetricBaselineReportBuilder.class).req(ReportService.class, MetricPointParser.class)//
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
+		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
+
+		all.add(C(MetricAlert.class).req(ReportService.class, ServerConfigManager.class, MetricPointParser.class)//
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
+		      .req(BaselineService.class, BaselineConfigManager.class)//
 		      .req(ModelService.class, "metric"));
 
 		all.add(C(TransactionReportBuilder.class) //
@@ -109,9 +107,12 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      TopologyGraphDao.class));
 
 		all.add(C(ReportFacade.class)//
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
-		            ,HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
-		            ,SqlReportBuilder.class,StateReportBuilder.class, DependencyReportBuilder.class,MetricBaselineReportBuilder.class));
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class,
+		            ProblemReportBuilder.class //
+		            , HeartbeatReportBuilder.class, MatrixReportBuilder.class,
+		            CrossReportBuilder.class //
+		            , SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
+		            MetricBaselineReportBuilder.class));
 
 		return all;
 	}

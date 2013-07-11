@@ -26,7 +26,6 @@ import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -53,8 +52,13 @@ public class MetricAlert implements Task, LogEnabled {
 
 	@Inject(type = ModelService.class, value = "metric")
 	protected ModelService<MetricReport> m_service;
+	
+	@Inject
+	protected MetricPointParser m_parser;
 
 	private Logger m_logger;
+
+	private static final long TEN_SECONDS = 10 * TimeUtil.ONE_MINUTE;
 
 	private static final int DURATION_IN_MINUTE = 1;
 
@@ -72,7 +76,7 @@ public class MetricAlert implements Task, LogEnabled {
 			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
 			long current = System.currentTimeMillis();
 			try {
-				Date reportPeriod = new Date(new Date().getTime() - DURATION);
+				Date reportPeriod = new Date(new Date().getTime() - DURATION - TEN_SECONDS); 
 				metricAlert(reportPeriod);
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
@@ -95,9 +99,8 @@ public class MetricAlert implements Task, LogEnabled {
 
 	protected void metricAlert(Date reportPeriod) {
 		Map<String, MetricItemConfig> metricConfigMap = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
-		Map<String, double[]> baselineMap = new HashMap<String, double[]>();
-		Date hourStart = TaskHelper.thisHour(reportPeriod);
-
+		Map<String,MetricReport> metricReportMap = new HashMap<String,MetricReport>();
+		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(reportPeriod);
 		int minute = calendar.get(Calendar.MINUTE);
@@ -108,13 +111,18 @@ public class MetricAlert implements Task, LogEnabled {
 			for (MetricType type : MetricType.values()) {
 				String key = metricID + ":" + type;
 				BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
-				String baselineKey = key + "+" + reportPeriod.getTime();
-				double[] baseline = queryBaseline(baselineMap, baselineKey, key, reportPeriod);
-				if (baseline == null) {
-					continue;
+				double[] baseline = null;
+            try {
+	            baseline = m_baselineService.queryHourlyBaseline("metric", key, reportPeriod);
+            } catch (Exception e) {
+	            continue;
+            }
+	         
+				MetricReport report = metricReportMap.get(productLine);
+				if(report == null){
+					report = queryMetricReport(productLine);
+					metricReportMap.put(productLine, report);
 				}
-
-				MetricReport report = queryMetricReport(productLine, hourStart.getTime());
 				double[] datas = extractDatasFromReport(report, metricConfig, type);
 				if (datas == null) {
 					continue;
@@ -128,30 +136,17 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private double[] queryBaseline(Map<String, double[]> baselineMap, String baselineKey, String key, Date reportPeriod) {
-		double[] result = baselineMap.get(baselineKey);
-		if (result == null) {
-			try {
-				result = m_baselineService.queryHourlyBaseline("metric", key, reportPeriod);
-				baselineMap.put(baselineKey, result);
-			} catch (Exception e) {
-				return null;
-			}
-		}
-		return result;
-	}
-
 	private double[] extractDatasFromReport(MetricReport report, MetricItemConfig metricConfig, MetricType type) {
 		try {
 			MetricItem reportItem = report.getMetricItems().get(metricConfig.getMetricKey());
-			double[] datas = MetricPointParser.getOneHourData(reportItem, type);
+			double[] datas = m_parser.getOneHourData(reportItem, type);
 			return datas;
 		} catch (NullPointerException e) {
 			return null;
 		}
 	}
 
-	private MetricReport queryMetricReport(String product, long dateTime) {
+	private MetricReport queryMetricReport(String product) {
 		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
