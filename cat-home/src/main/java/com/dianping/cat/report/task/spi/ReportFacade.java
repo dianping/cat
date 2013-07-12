@@ -132,7 +132,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
 		m_reportBuilders.put("state", m_stateReportBuilder);
 		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
-		m_reportBuilders.put("metricBaseline", m_metricBaselineReportBuilder);
+		m_reportBuilders.put("metric", m_metricBaselineReportBuilder);
 	}
 
 }
