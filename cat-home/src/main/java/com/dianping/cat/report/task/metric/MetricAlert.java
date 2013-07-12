@@ -2,6 +2,7 @@ package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +63,8 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private static final long DURATION = 1 * TimeUtil.ONE_MINUTE;
 
+	private Set<AlertInfo> alertInfoSet = new HashSet<AlertInfo>();
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -96,19 +99,25 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected void metricAlert(Date date) {
+	protected List<AlertInfo> metricAlert(Date date) {
 		long current = date.getTime() / 1000 / 60;
 		int minute = (int) (current % (60));
+		if (minute == 0) {
+			alertInfoSet = new HashSet<AlertInfo>();
+		}
 		Set<String> productLines = m_productLineConfigManager.queryProductLines().keySet();
+		List<AlertInfo> alerts = new ArrayList<AlertInfo>();
 
 		for (String productLine : productLines) {
 			MetricReport report = queryMetricReport(productLine);
+			if (report == null) {
+				continue;
+			}
 			for (MetricItem item : report.getMetricItems().values()) {
 				MetricItemConfig metricConfig = m_metricConfigManager.queryMetricItemConfig(item.getId());
 				if (metricConfig == null) {
 					continue;
 				}
-				List<AlertInfo> alerts = new ArrayList<AlertInfo>();
 
 				if (metricConfig.isShowCount()) {
 					alerts.addAll(buildAlertInfo(date, productLine, MetricType.COUNT, item, minute));
@@ -119,17 +128,22 @@ public class MetricAlert implements Task, LogEnabled {
 				if (metricConfig.isShowSum()) {
 					alerts.addAll(buildAlertInfo(date, productLine, MetricType.SUM, item, minute));
 				}
-
-				if (alerts.size() > 0) {
-					for (AlertInfo alert : alerts) {
-						m_logger.info(alert.toString());
-					}
+			}
+		}
+		List<AlertInfo> result = new ArrayList<AlertInfo>();
+		if (alerts.size() > 0) {
+			for (AlertInfo alert : alerts) {
+				if (!alertInfoSet.contains(alert)) {
+					m_logger.info(alert.toString());
+					result.add(alert);
+					alertInfoSet.add(alert);
 				}
 			}
 		}
+		return result;
 	}
 
-	private class AlertInfo {
+	protected class AlertInfo {
 		Date date;
 
 		MetricType metricType;
@@ -181,6 +195,9 @@ public class MetricAlert implements Task, LogEnabled {
 		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
+			if (response == null) {
+				return null;
+			}
 			MetricReport report = response.getModel();
 			return report;
 		} else {
