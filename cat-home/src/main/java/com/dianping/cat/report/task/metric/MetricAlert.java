@@ -2,6 +2,7 @@ package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -60,9 +61,9 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private static final long TEN_SECONDS = 10 * 1000;
 
-	private static final int DURATION_IN_MINUTE = 1;
+	private static final long DURATION = 1 * TimeUtil.ONE_MINUTE;
 
-	private static final long DURATION = DURATION_IN_MINUTE * TimeUtil.ONE_MINUTE;
+	private Set<AlertInfo> alertInfoSet = new HashSet<AlertInfo>();
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -98,69 +99,105 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private List<Integer> check(double[] realDatas, double[] baseLineDatas, BaselineConfig config) {
-		int size = realDatas.length;
-		for (int i = 0; i <= size; i++) {
-
-		}
-
-		return null;
-	}
-
-	protected void metricAlert(Date date) {
+	protected List<AlertInfo> metricAlert(Date date) {
 		long current = date.getTime() / 1000 / 60;
 		int minute = (int) (current % (60));
+		if (minute == 0) {
+			alertInfoSet = new HashSet<AlertInfo>();
+		}
 		Set<String> productLines = m_productLineConfigManager.queryProductLines().keySet();
+		List<AlertInfo> alerts = new ArrayList<AlertInfo>();
 
 		for (String productLine : productLines) {
 			MetricReport report = queryMetricReport(productLine);
-
+			if (report == null) {
+				continue;
+			}
 			for (MetricItem item : report.getMetricItems().values()) {
-				String key = item.getId();
-				MetricItemConfig metricConfig = m_metricConfigManager.queryMetricItemConfig(key);
-				List<Integer> alerts = new ArrayList<Integer>();
+				MetricItemConfig metricConfig = m_metricConfigManager.queryMetricItemConfig(item.getId());
+				if (metricConfig == null) {
+					continue;
+				}
 
 				if (metricConfig.isShowCount()) {
-					alerts.addAll(buildAlertInfo(date, MetricType.COUNT, item, key));
+					alerts.addAll(buildAlertInfo(date, productLine, MetricType.COUNT, item, minute));
 				}
 				if (metricConfig.isShowAvg()) {
-					alerts.addAll(buildAlertInfo(date, MetricType.AVG, item, key));
+					alerts.addAll(buildAlertInfo(date, productLine, MetricType.AVG, item, minute));
 				}
 				if (metricConfig.isShowSum()) {
-					alerts.addAll(buildAlertInfo(date, MetricType.SUM, item, key));
-				}
-
-				if (alerts.size() > 0) {
-					String alertInfo = buildAlertInfo(alerts, minute);
-					m_logger.info(alertInfo);
+					alerts.addAll(buildAlertInfo(date, productLine, MetricType.SUM, item, minute));
 				}
 			}
 		}
+		List<AlertInfo> result = new ArrayList<AlertInfo>();
+		if (alerts.size() > 0) {
+			for (AlertInfo alert : alerts) {
+				if (!alertInfoSet.contains(alert)) {
+					m_logger.info(alert.toString());
+					result.add(alert);
+					alertInfoSet.add(alert);
+				}
+			}
+		}
+		return result;
 	}
 
-	private String buildAlertInfo(List<Integer> alerts, int minute) {
-		return null;
+	protected class AlertInfo {
+		Date date;
+
+		MetricType metricType;
+
+		String productLine;
+
+		String metricId;
+
+		public AlertInfo(Date date, MetricType metricType, String productLine, String metricId) {
+			super();
+			this.date = date;
+			this.metricType = metricType;
+			this.productLine = productLine;
+			this.metricId = metricId;
+		}
+
+		@Override
+		public String toString() {
+			return "AlertInfo [date=" + date + ", metricType=" + metricType + ", productLine=" + productLine
+			      + ", metricId=" + metricId + "]";
+		}
+
 	}
 
-	private List<Integer> buildAlertInfo(Date date, MetricType type, MetricItem item, String key) {
-		String baseLineKey = key + ":" + type;
+	private List<AlertInfo> buildAlertInfo(Date date, String productLine, MetricType type, MetricItem item, int minute) {
+		List<AlertInfo> result = new ArrayList<AlertInfo>();
+		String id = item.getId();
+		String baseLineKey = id + ":" + type;
 		double[] baseline = m_baselineService.queryHourlyBaseline(METRIC, baseLineKey, date);
 		if (baseline != null) {
-			double[] realDatas = extractDatasFromReport(item, type);
+			double[] realDatas = m_parser.buildHourlyData(item, type);
+			if (realDatas == null) {
+				return result;
+			}
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(baseLineKey);
-			return check(baseline, realDatas, baselineConfig);
+			List<Integer> minutes = checkData(baseline, realDatas, minute, baselineConfig);
+			for (int resultMinuteInHour : minutes) {
+				long current = date.getTime() / TimeUtil.ONE_MINUTE;
+				long resultMinute = current - minute + resultMinuteInHour;
+				Date resultDate = new Date(resultMinute * TimeUtil.ONE_MINUTE);
+				AlertInfo info = new AlertInfo(resultDate, type, productLine, item.getId());
+				result.add(info);
+			}
 		}
-		return new ArrayList<Integer>();
-	}
-
-	private double[] extractDatasFromReport(MetricItem item, MetricType type) {
-		return m_parser.queryOneHourData(item, type);
+		return result;
 	}
 
 	private MetricReport queryMetricReport(String product) {
 		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
+			if (response == null) {
+				return null;
+			}
 			MetricReport report = response.getModel();
 			return report;
 		} else {
@@ -170,12 +207,10 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private List<Integer> checkData(double[] baseline, double[] datas, int minute, BaselineConfig config) {
 		List<Integer> result = new ArrayList<Integer>();
-		int start = minute / DURATION_IN_MINUTE;
-		int end = minute / DURATION_IN_MINUTE + DURATION_IN_MINUTE;
 		double minValue = config.getMinValue();
 		double lowerLimit = config.getLowerLimit();
 		double upperLimit = config.getUpperLimit();
-		for (int i = start; i < end; i++) {
+		for (int i = 0; i <= minute; i++) {
 			if (baseline[i] < 0) {
 				continue;
 			} else if (baseline[i] == 0) {
