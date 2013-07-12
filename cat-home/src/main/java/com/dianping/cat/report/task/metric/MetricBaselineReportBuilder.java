@@ -87,7 +87,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 					
 					reports.add(reportItem);
 				}
-				double[] oneDayValue = m_parser.queryOneDayData(reports, type);
+				double[] oneDayValue = m_parser.buildDailyData(reports, type);
 				values.add(oneDayValue);
 			}
 
