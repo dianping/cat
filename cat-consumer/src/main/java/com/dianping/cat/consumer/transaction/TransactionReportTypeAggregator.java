@@ -56,7 +56,8 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		m_currentDomain = transactionReport.getDomain();
-
+		m_report.setStartTime(transactionReport.getStartTime());
+		m_report.setEndTime(transactionReport.getEndTime());
 		super.visitTransactionReport(transactionReport);
 	}
 

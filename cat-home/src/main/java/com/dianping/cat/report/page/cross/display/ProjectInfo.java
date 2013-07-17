@@ -113,7 +113,7 @@ public class ProjectInfo extends BaseVisitor {
 		if (ip.indexOf(':') > 0) {
 			ip = ip.substring(0, ip.indexOf(':'));
 		}
-		return m_domainManager.getDomainByIp(ip);
+		return m_domainManager.queryDomainByIp(ip);
 	}
 
 	public long getReportDuration() {

@@ -43,7 +43,7 @@ public class CrossMethodVisitor extends BaseVisitor {
 	@Override
 	public void visitName(Name name) {
 		String methodName = name.getId();
-		String domain = m_manager.getDomainByIp(m_remoteIp);
+		String domain = m_manager.queryDomainByIp(m_remoteIp);
 		String ip = m_remoteIp;
 		
 		if(ip.indexOf(":")>-1){

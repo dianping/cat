@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 
 public class EventMerger {

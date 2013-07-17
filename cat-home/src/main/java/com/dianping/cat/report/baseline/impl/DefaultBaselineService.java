@@ -6,14 +6,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -30,9 +28,9 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 	@Inject
 	private BaselineDao m_baselineDao;
 
-	private Map<String, Map<String, Baseline>> m_baselines = new HashMap<String, Map<String, Baseline>>();
+	private Logger m_logger;
 
-	private Map<String, Baseline> m_baselineMaps = new LinkedHashMap<String, Baseline>(1000) {
+	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>(1000) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -41,44 +39,23 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 			return true;
 		}
 	};
-	
-	private Logger m_logger;
 
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
-		double[] result = new double[24 * 60];
-		Baseline baseline = queryFromMap(reportName, key, reportPeriod);
+		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
+		Baseline baseline = m_baselineMap.get(baselineKey);
+
 		if (baseline == null) {
 			try {
 				baseline = m_baselineDao
 				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
-				addBaselineToMap(baseline, reportName, key);
-				result = parse(baseline.getData());
-				return result;
+				m_baselineMap.put(baselineKey, baseline);
+				return parse(baseline.getData());
+			} catch (DalNotFoundException e) {
+				m_logger.info("Baseline not found: " + baselineKey);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
-		}
-		return result;
-	}
-
-	private void addBaselineToMap(Baseline baseline, String reportName, String key) {
-		Map<String, Baseline> baselineMap = m_baselines.get(reportName);
-		if (baselineMap == null) {
-			baselineMap = new HashMap<String, Baseline>();
-			m_baselines.put(reportName, baselineMap);
-		}
-		baselineMap.put(key, baseline);
-	}
-
-	private Baseline queryFromMap(String reportName, String key, Date reportPeriod) {
-		Map<String, Baseline> baselineMap = m_baselines.get(reportName);
-		if (baselineMap == null) {
-			return null;
-		}
-		Baseline result = baselineMap.get(key);
-		if (result != null && result.getReportPeriod().equals(reportPeriod)) {
-			return result;
 		}
 		return null;
 	}
@@ -88,19 +65,16 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 		double[] result = new double[60];
 		Date today = TaskHelper.todayZero(reportPeriod);
 		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
-		try {
-			Baseline baseline = m_baselineDao.findByReportNameKeyTime(today, reportName, key, BaselineEntity.READSET_FULL);
-			double[] dayResult = parse(baseline.getData());
-			for (int i = 0; i < 60; i++) {
-				result[i] = dayResult[hour * 60 + i];
-			}
-			return result;
-		} catch (DalNotFoundException e) {
-			m_logger.warn("base line cant't be fonund!" + reportName + " " + key + " " + reportPeriod);
-		} catch (Exception e) {
-			Cat.logError(e);
+		double[] dayResult = queryDailyBaseline(reportName, key, today);
+
+		if (dayResult == null) {
+			return null;
 		}
-		return null;
+		for (int i = 0; i < 60; i++) {
+			result[i] = dayResult[hour * 60 + i];
+		}
+
+		return result;
 	}
 
 	@Override
@@ -108,9 +82,7 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 		try {
 			baseline.setData(build(baseline.getDataInDoubleArray()));
 			m_baselineDao.insert(baseline);
-		} catch (DalException e) {
-			Cat.logError(e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 	}

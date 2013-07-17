@@ -11,7 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -87,7 +87,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 					
 					reports.add(reportItem);
 				}
-				double[] oneDayValue = m_parser.queryOneDayData(reports, type);
+				double[] oneDayValue = m_parser.buildDailyData(reports, type);
 				values.add(oneDayValue);
 			}
 

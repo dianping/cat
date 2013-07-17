@@ -4,6 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.dianping.cat.consumer.sql.DatabaseParser;
+
 public class DatabaseAnalyzerTest {
 	@Test
 	public void testParseDatabaseName() {

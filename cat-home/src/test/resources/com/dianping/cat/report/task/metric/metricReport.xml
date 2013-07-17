@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metric-report product="TuanGou" startTime="2013-07-10 11:00:00" endTime="2013-07-01 11:59:59">
-   <metric-item id="/index" type="C">
+   <metric-item id="TuanGouWeb:URL:/index" type="C">
       <abtest run-id="66">
          <group name="">
             <point id="0" count="1622" sum="4.56243375E8" avg="281284.44821208384"/>

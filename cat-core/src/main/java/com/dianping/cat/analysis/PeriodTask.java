@@ -25,7 +25,8 @@ public class PeriodTask implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	public PeriodTask(ServerStatisticManager serverStateManager, MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
+	public PeriodTask(ServerStatisticManager serverStateManager, MessageAnalyzer analyzer, MessageQueue queue,
+	      long startTime) {
 		m_serverStateManager = serverStateManager;
 		m_analyzer = analyzer;
 		m_queue = queue;
@@ -54,6 +55,8 @@ public class PeriodTask implements Task, LogEnabled {
 	public void finish() {
 		try {
 			m_analyzer.doCheckpoint(true);
+		} catch (Exception e) {
+			Cat.logError(e);
 		} finally {
 			m_analyzer.destroy();
 		}

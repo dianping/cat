@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,8 +19,9 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.ReportManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	public static final String ID = "transaction";
@@ -28,7 +29,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
 
-	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
+	@Inject
+	private TransactionDelegate m_delegate;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -45,33 +47,39 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	public Set<String> getDomains() {
-		return m_reports.keySet();
+		return m_reportManager.getDomains(getStartTime());
 	}
 
 	@Override
 	public TransactionReport getReport(String domain) {
-		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-		
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		report.accept(new TransactionStatisticsComputer());
-		return report;
+		if (!ReportConstants.ALL.equals(domain)) {
+			TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+			if (report == null) {
+				report = new TransactionReport(domain);
+				report.setStartTime(new Date(getStartTime()));
+				report.setEndTime(new Date(getStartTime() + ReportConstants.HOUR - 1));
+			}
+			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+			report.accept(new TransactionStatisticsComputer());
+			return report;
+		} else {
+			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());
+
+			return m_delegate.createAggregatedReport(reports);
+		}
 	}
 
 	@Override
 	protected void loadReports() {
-		m_reports = m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		TransactionReport report = m_reports.get(domain);
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 		Message message = tree.getMessage();
-
-		if (report == null) {
-			report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-			m_reports.put(domain, report);
-		}
 
 		report.addIp(tree.getIpAddress());
 

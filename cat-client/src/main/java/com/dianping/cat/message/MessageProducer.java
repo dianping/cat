@@ -138,6 +138,14 @@ public interface MessageProducer {
 	 *           root cause exception
 	 */
 	public void logError(Throwable cause);
+	
+	/**
+	 * Log an error.
+	 * 
+	 * @param cause
+	 *           root cause exception
+	 */
+	public void logError(String message,Throwable cause);
 
 	/**
 	 * Log an event in one shot with SUCCESS status.
@@ -228,4 +236,6 @@ public interface MessageProducer {
 	 *           transaction name
 	 */
 	public Transaction newTransaction(String type, String name);
+
+	
 }

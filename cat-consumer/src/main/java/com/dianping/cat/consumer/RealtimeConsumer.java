@@ -24,8 +24,8 @@ import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.analysis.PeriodStrategy;
 import com.dianping.cat.analysis.PeriodTask;
-import com.dianping.cat.consumer.core.ProblemAnalyzer;
-import com.dianping.cat.consumer.core.TopAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -104,7 +104,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
 			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
-				analyzer.doCheckpoint(false);
+				try{
+					analyzer.doCheckpoint(false);
+				}catch(Exception e){
+					Cat.logError(e);
+				}
 			}
 
 			try {

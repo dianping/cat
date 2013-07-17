@@ -31,6 +31,21 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public void logError(String message, Throwable cause) {
+		StringWriter writer = new StringWriter(2048);
+
+		cause.printStackTrace(new PrintWriter(writer));
+
+		if (cause instanceof Error) {
+			logEvent("Error", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+		} else if (cause instanceof RuntimeException) {
+			logEvent("RuntimeException", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+		} else {
+			logEvent("Exception", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+		}
+	}
+
+	@Override
 	public void logError(Throwable cause) {
 		StringWriter writer = new StringWriter(2048);
 

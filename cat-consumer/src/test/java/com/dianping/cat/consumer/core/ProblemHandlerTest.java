@@ -7,7 +7,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler;
+import com.dianping.cat.consumer.problem.LongExecutionProblemHandler;
 
 public class ProblemHandlerTest {
 	private LongExecutionProblemHandler m_handler;
