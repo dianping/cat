@@ -2,15 +2,20 @@ package com.dianping.cat.abtest.spi.internal;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.unidal.lookup.ContainerLoader;
+
 import com.dianping.cat.Cat;
+import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -85,8 +90,8 @@ public class DefaultABTestContext implements ABTestContext {
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
 		m_groupStrategy = groupStrategy;
 	}
-	
-	public void setCookielets(Map<String, String> cookielets){
+
+	public void setCookielets(Map<String, String> cookielets) {
 		m_cookielets = cookielets;
 	}
 
@@ -99,7 +104,14 @@ public class DefaultABTestContext implements ABTestContext {
 			Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
 
 			try {
-				m_groupStrategy.apply(this);
+				List<Condition> conditions = m_entity.getConditions();
+				ABTestConditionManager manager = ContainerLoader.getDefaultContainer().lookup(ABTestConditionManager.class);
+
+				boolean isAccept = manager.accept(conditions,request);
+				
+				if(isAccept){
+					m_groupStrategy.apply(this);
+				}
 
 				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {

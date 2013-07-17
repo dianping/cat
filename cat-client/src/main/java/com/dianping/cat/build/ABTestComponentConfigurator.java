@@ -8,6 +8,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.repository.HttpABTestEntityRepository;
+import com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 import com.dianping.cat.abtest.spi.internal.ABTestEntityManager;
@@ -31,6 +32,8 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class) //
 		      .req(ABTestEntityRepository.class));
+
+		all.add(C(ABTestConditionManager.class, ABTestConditionManager.class));
 
 		return all;
 	}

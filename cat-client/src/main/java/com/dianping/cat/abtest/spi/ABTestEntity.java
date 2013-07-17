@@ -1,8 +1,10 @@
 package com.dianping.cat.abtest.spi;
 
 import java.util.Date;
+import java.util.List;
 
 import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 
@@ -28,36 +30,36 @@ public class ABTestEntity {
 	}
 
 	@Override
-   public boolean equals(Object obj) {
-	   if (this == obj)
-		   return true;
-	   if (obj == null)
-		   return false;
-	   if (getClass() != obj.getClass())
-		   return false;
-	   ABTestEntity other = (ABTestEntity) obj;
-	   if (m_groupStrategy == null) {
-		   if (other.m_groupStrategy != null)
-			   return false;
-	   } else if (!m_groupStrategy.equals(other.m_groupStrategy))
-		   return false;
-	   if (m_groupStrategyName == null) {
-		   if (other.m_groupStrategyName != null)
-			   return false;
-	   } else if (!m_groupStrategyName.equals(other.m_groupStrategyName))
-		   return false;
-	   if (m_name == null) {
-		   if (other.m_name != null)
-			   return false;
-	   } else if (!m_name.equals(other.m_name))
-		   return false;
-	   if (m_run == null) {
-		   if (other.m_run != null)
-			   return false;
-	   } else if (!m_run.equals(other.m_run))
-		   return false;
-	   return true;
-   }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ABTestEntity other = (ABTestEntity) obj;
+		if (m_groupStrategy == null) {
+			if (other.m_groupStrategy != null)
+				return false;
+		} else if (!m_groupStrategy.equals(other.m_groupStrategy))
+			return false;
+		if (m_groupStrategyName == null) {
+			if (other.m_groupStrategyName != null)
+				return false;
+		} else if (!m_groupStrategyName.equals(other.m_groupStrategyName))
+			return false;
+		if (m_name == null) {
+			if (other.m_name != null)
+				return false;
+		} else if (!m_name.equals(other.m_name))
+			return false;
+		if (m_run == null) {
+			if (other.m_run != null)
+				return false;
+		} else if (!m_run.equals(other.m_run))
+			return false;
+		return true;
+	}
 
 	public Date getEndDate() {
 		return m_run.getEndDate();
@@ -67,8 +69,12 @@ public class ABTestEntity {
 		return m_groupStrategy;
 	}
 
-	public GroupstrategyDescriptor getGroupStrategyConfiguration() {
+	public GroupstrategyDescriptor getGroupStrategyDescriptor() {
 		return m_run.getGroupstrategyDescriptor() != null ? m_run.getGroupstrategyDescriptor() : null;
+	}
+
+	public List<Condition> getConditions() {
+		return m_run.getConditions() != null ? m_run.getConditions() : null;
 	}
 
 	public String getGroupStrategyName() {
@@ -88,20 +94,20 @@ public class ABTestEntity {
 	}
 
 	@Override
-   public int hashCode() {
-	   final int prime = 31;
-	   int result = 1;
-	   result = prime * result + ((m_groupStrategy == null) ? 0 : m_groupStrategy.hashCode());
-	   result = prime * result + ((m_groupStrategyName == null) ? 0 : m_groupStrategyName.hashCode());
-	   result = prime * result + ((m_name == null) ? 0 : m_name.hashCode());
-	   result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
-	   return result;
-   }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((m_groupStrategy == null) ? 0 : m_groupStrategy.hashCode());
+		result = prime * result + ((m_groupStrategyName == null) ? 0 : m_groupStrategyName.hashCode());
+		result = prime * result + ((m_name == null) ? 0 : m_name.hashCode());
+		result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
+		return result;
+	}
 
 	public boolean isDisabled() {
 		return m_run.isDisabled();
 	}
-	
+
 	public boolean isEligible(Date date) {
 		if (m_run.isDisabled()) {
 			return false;
@@ -133,12 +139,12 @@ public class ABTestEntity {
 	}
 
 	public void setName(String name) {
-   	m_name = name;
-   }
+		m_name = name;
+	}
 
 	@Override
-   public String toString() {
-	   return "ABTestEntity [m_name=" + m_name + ", m_groupStrategyName=" + m_groupStrategyName + ", m_run=" + m_run
-	         + ", m_groupStrategy=" + m_groupStrategy + "]";
-   }
+	public String toString() {
+		return "ABTestEntity [m_name=" + m_name + ", m_groupStrategyName=" + m_groupStrategyName + ", m_run=" + m_run
+		      + ", m_groupStrategy=" + m_groupStrategy + "]";
+	}
 }

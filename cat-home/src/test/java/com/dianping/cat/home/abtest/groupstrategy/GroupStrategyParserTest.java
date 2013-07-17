@@ -3,12 +3,15 @@ package com.dianping.cat.home.abtest.groupstrategy;
 import japa.parser.ParseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.Field;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.system.page.abtest.GroupStrategyParser;
@@ -40,6 +43,25 @@ public class GroupStrategyParserTest{
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("descriptor.xml"), "utf-8");
 		
 		Assert.assertEquals(expected.replaceAll("\\s*", ""), descriptor.toString().replaceAll("\\s*", ""));
+		
+		
+		Condition condition = new Condition();
+		condition.setComparator(1);
+		condition.setName("url");
+		condition.setOperator("and");
+		condition.setText("http://www.dianping.com");
+		
+		Condition condition1 = new Condition();
+		condition1.setComparator(1);
+		condition1.setName("url");
+		condition1.setOperator("and");
+		condition1.setText("http://www.dianping.com");
+		
+		List<Condition> conditions = new ArrayList<Condition>();
+		conditions.add(condition);
+		conditions.add(condition1);
+		
+		System.out.println(gson.toJson(conditions));
 		
 	}
 	

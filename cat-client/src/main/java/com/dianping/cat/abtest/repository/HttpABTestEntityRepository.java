@@ -147,7 +147,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		private void prepareEntity(Case _case, Run run) {
 			ABTestEntity entity = new ABTestEntity(_case, run);
 			String strategyKey = String.format("%s:%s:%s", _case.getId(), entity.getGroupStrategyName(),
-			      entity.getGroupStrategyConfiguration());
+			      entity.getGroupStrategyDescriptor());
 			ABTestGroupStrategy strategy = m_strategies.get(strategyKey);
 
 			if (strategy != null) {
