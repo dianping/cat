@@ -30,13 +30,13 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 
 	private Logger m_logger;
 
-	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>(1000) {
+	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>() {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected boolean removeEldestEntry(Entry<String, Baseline> eldest) {
-			return true;
+			return size() > 1000;
 		}
 	};
 
@@ -51,15 +51,21 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 				baseline = m_baselineDao
 				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				m_baselineMap.put(baselineKey, baseline);
-				result = parse(baseline.getData());
-				return result;
 			} catch (DalNotFoundException e) {
 				m_logger.info("Baseline not found: " + baselineKey);
+				return null;
 			} catch (Exception e) {
 				Cat.logError(e);
+				return null;
 			}
 		}
-		return null;
+		try {
+	      result = parse(baseline.getData());
+      }  catch (Exception e) {
+			Cat.logError(e);
+			return null;
+		}
+		return result;
 	}
 
 	@Override

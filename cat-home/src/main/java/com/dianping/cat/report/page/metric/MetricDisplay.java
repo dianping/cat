@@ -7,6 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.Abtest;
 import com.dianping.cat.consumer.metric.model.entity.Group;
@@ -16,10 +19,13 @@ import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 
-public class MetricDisplay extends BaseVisitor {
+public class MetricDisplay extends BaseVisitor implements LogEnabled {
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
@@ -35,17 +41,35 @@ public class MetricDisplay extends BaseVisitor {
 
 	private ABTestService m_abtestService;
 
-	private static final String SUM = CatString.SUM;
+	private BaselineService m_baselineService;
 
-	private static final String COUNT = CatString.COUNT;
+	private Map<String, String> m_metricConfigkeyToIdMap = new HashMap<String, String>();
 
-	private static final String AVG = CatString.AVG;
+	private Logger m_logger;
+
+	private int m_index;
+
+	private static final String SUM = MetricType.SUM.name();
+
+	private static final String COUNT = MetricType.COUNT.name();
+
+	private static final String AVG = MetricType.AVG.name();
+
+	private static final int INTERVAL = 10;
+
+	private static final int HOUR = 24;
+
+	private static final int MINUTE = 60;
+
+	private static final int POINT_NUM = HOUR * MINUTE / INTERVAL;
+
+	private static final String METRIC_STRING = "metric";
 
 	public List<LineChart> getLineCharts() {
 		return new ArrayList<LineChart>(m_lineCharts.values());
 	}
 
-	public Map<Integer,com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
+	public Map<Integer, com.dianping.cat.home.dal.abtest.Abtest> getAbtests() {
 		return m_abtests;
 	}
 
@@ -54,31 +78,36 @@ public class MetricDisplay extends BaseVisitor {
 		m_abtest = abtest;
 
 		for (MetricItemConfig config : configs) {
+			// TODO change to String configKey = config.getId();
+			String configId = config.getId();
+			String configKey = config.getMetricKey();
 			if (config.isShowSum()) {
-				String key = config.getMetricKey() + SUM;
-
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_SUM));
+				String key = configKey + ":" + SUM;
+				m_metricConfigkeyToIdMap.put(key, configId + ":" + SUM);
+				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_SUM));
 			}
 			if (config.isShowCount()) {
-				String key = config.getMetricKey() + COUNT;
+				String key = configKey + ":" + COUNT;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_COUNT));
+				m_metricConfigkeyToIdMap.put(key, configId + ":" + COUNT);
+				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_COUNT));
 			}
 			if (config.isShowAvg()) {
-				String key = config.getMetricKey() + AVG;
+				String key = configKey + ":" + AVG;
 
-				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_AVG));
+				m_metricConfigkeyToIdMap.put(key, configId + ":" + AVG);
+				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_AVG));
 			}
 		}
 	}
 
-	private LineChart creatLineChart(String title) {
+	private LineChart createLineChart(String title) {
 		LineChart lineChart = new LineChart();
 
 		lineChart.setTitle(title);
 		lineChart.setStart(m_start);
-		lineChart.setSize(60);
-		lineChart.setStep(TimeUtil.ONE_MINUTE);
+		lineChart.setSize(POINT_NUM);
+		lineChart.setStep(TimeUtil.ONE_MINUTE * INTERVAL);
 		return lineChart;
 	}
 
@@ -95,21 +124,21 @@ public class MetricDisplay extends BaseVisitor {
 	}
 
 	private LineChart findOrCreateChart(String type, String metricKey, String computeType) {
-		String key = metricKey + computeType;
+		String key = metricKey + ":" + computeType;
 		LineChart chart = m_lineCharts.get(key);
 
 		if (chart == null) {
 			if (computeType.equals(COUNT)) {
 				if (type.equals("C") || type.equals("S,C")) {
-					chart = creatLineChart(key);
+					chart = createLineChart(key);
 				}
 			} else if (computeType.equals(AVG)) {
 				if (type.equals("T")) {
-					chart = creatLineChart(key);
+					chart = createLineChart(key);
 				}
 			} else if (computeType.equals(SUM)) {
 				if (type.equals("S") || type.equals("S,C")) {
-					chart = creatLineChart(key);
+					chart = createLineChart(key);
 				}
 			}
 
@@ -128,6 +157,8 @@ public class MetricDisplay extends BaseVisitor {
 		if ("".equals(id)) {
 			id = "Default";
 		}
+
+		id = id + ":" + m_index;
 		double[] sum = new double[60];
 		double[] avg = new double[60];
 		double[] count = new double[60];
@@ -187,6 +218,93 @@ public class MetricDisplay extends BaseVisitor {
 		}
 
 		return abtest;
+	}
+
+	public void generateBaselineChart() {
+		for (String key : m_lineCharts.keySet()) {
+			LineChart lineChart = m_lineCharts.get(key);
+			String id = m_metricConfigkeyToIdMap.get(key);
+			Date yesterday = TaskHelper.todayZero(m_start);
+			int index = (int) ((m_start.getTime() + 8 * TimeUtil.ONE_HOUR) % TimeUtil.ONE_DAY / TimeUtil.ONE_MINUTE);
+			double[] yesterdayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, id, yesterday);
+			Date today = TaskHelper.tomorrowZero(m_start);
+			double[] todayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, id, today);
+			double[] value = new double[POINT_NUM];
+			double[] day = yesterdayBaseline;
+			for (int i = 0; i < POINT_NUM; i++) {
+				int j = (index + i * INTERVAL) % (HOUR * MINUTE);
+				if (j == 0 && index !=0) {
+					day = todayBaseline;
+				}
+				if (day == null) {
+					continue;
+				}
+				value[i] = avgOfArray(day, j);
+			}
+			lineChart.addSubTitle("Baseline");
+			lineChart.addValue(value);
+		}
+	}
+
+	public void generateDailyLineCharts() {
+		for (String key : m_lineCharts.keySet()) {
+			LineChart lineChart = m_lineCharts.get(key);
+			List<double[]> values = lineChart.getValues();
+			List<String> subTitles = lineChart.getSubTitles();
+			Map<String, double[]> resultMap = new HashMap<String, double[]>();
+			int i = 0;
+			for (String subTitle : subTitles) {
+				int splitIndex = subTitle.lastIndexOf(':');
+				int index = Integer.parseInt(subTitle.substring(splitIndex + 1));
+				subTitle = subTitle.substring(0, splitIndex);
+				double[] value = values.get(i);
+				double[] newValue = resultMap.get(subTitle);
+				if (newValue == null) {
+					newValue = new double[POINT_NUM];
+					resultMap.put(subTitle, newValue);
+				}
+				for (int j = 0; j < MINUTE / INTERVAL; j++) {
+					newValue[index * 6 + j] = avgOfArray(value,j*INTERVAL);
+				}
+				i++;
+			}
+			values.clear();
+			subTitles.clear();
+			for (String subTitle : resultMap.keySet()) {
+				subTitles.add(subTitle);
+				values.add(resultMap.get(subTitle));
+			}
+		}
+	}
+
+	 private double avgOfArray(double[]values, int j){
+		 double result = 0;
+		 int size = 0;
+		 for(int i = j; i < j+INTERVAL; j++){
+			 if(values[j] != -1){
+				 result +=values[j];
+				 size ++;
+			 }
+		 }
+		 if(size == 0){
+			 return result;
+		 } else{
+			 return result /size;
+		 }
+	 }
+
+	public void setBaselineService(BaselineService baselineService) {
+		m_baselineService = baselineService;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	public void visitMetricReport(int index, MetricReport report) {
+		m_index = index;
+		visitMetricReport(report);
 	}
 
 }
