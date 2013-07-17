@@ -86,11 +86,6 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private MetricReport getReport(ModelPeriod period, String product, long date) {
-		//TODO delete
-		date = System.currentTimeMillis();
-		date = date - date%TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR;
-		period =  ModelPeriod.CURRENT;
-		//TODO end
 		if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
 			ModelRequest request = new ModelRequest(product, date);
 			if (m_service.isEligable(request)) {

@@ -7,9 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.Abtest;
 import com.dianping.cat.consumer.metric.model.entity.Group;
@@ -25,7 +22,7 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 
-public class MetricDisplay extends BaseVisitor implements LogEnabled {
+public class MetricDisplay extends BaseVisitor{
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
@@ -42,10 +39,6 @@ public class MetricDisplay extends BaseVisitor implements LogEnabled {
 	private ABTestService m_abtestService;
 
 	private BaselineService m_baselineService;
-
-	private Map<String, String> m_metricConfigkeyToIdMap = new HashMap<String, String>();
-
-	private Logger m_logger;
 
 	private int m_index;
 
@@ -78,24 +71,17 @@ public class MetricDisplay extends BaseVisitor implements LogEnabled {
 		m_abtest = abtest;
 
 		for (MetricItemConfig config : configs) {
-			// TODO change to String configKey = config.getId();
-			String configId = config.getId();
-			String configKey = config.getMetricKey();
+			String configKey = config.getId();
 			if (config.isShowSum()) {
 				String key = configKey + ":" + SUM;
-				m_metricConfigkeyToIdMap.put(key, configId + ":" + SUM);
 				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_SUM));
 			}
 			if (config.isShowCount()) {
 				String key = configKey + ":" + COUNT;
-
-				m_metricConfigkeyToIdMap.put(key, configId + ":" + COUNT);
 				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_COUNT));
 			}
 			if (config.isShowAvg()) {
 				String key = configKey + ":" + AVG;
-
-				m_metricConfigkeyToIdMap.put(key, configId + ":" + AVG);
 				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_AVG));
 			}
 		}
@@ -223,12 +209,11 @@ public class MetricDisplay extends BaseVisitor implements LogEnabled {
 	public void generateBaselineChart() {
 		for (String key : m_lineCharts.keySet()) {
 			LineChart lineChart = m_lineCharts.get(key);
-			String id = m_metricConfigkeyToIdMap.get(key);
 			Date yesterday = TaskHelper.todayZero(m_start);
 			int index = (int) ((m_start.getTime() + 8 * TimeUtil.ONE_HOUR) % TimeUtil.ONE_DAY / TimeUtil.ONE_MINUTE);
-			double[] yesterdayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, id, yesterday);
+			double[] yesterdayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, key, yesterday);
 			Date today = TaskHelper.tomorrowZero(m_start);
-			double[] todayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, id, today);
+			double[] todayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, key, today);
 			double[] value = new double[POINT_NUM];
 			double[] day = yesterdayBaseline;
 			for (int i = 0; i < POINT_NUM; i++) {
@@ -281,7 +266,7 @@ public class MetricDisplay extends BaseVisitor implements LogEnabled {
 		 double result = 0;
 		 int size = 0;
 		 for(int i = j; i < j+INTERVAL; j++){
-			 if(values[j] != -1){
+			 if(values[j] >= 0){
 				 result +=values[j];
 				 size ++;
 			 }
@@ -295,11 +280,6 @@ public class MetricDisplay extends BaseVisitor implements LogEnabled {
 
 	public void setBaselineService(BaselineService baselineService) {
 		m_baselineService = baselineService;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	public void visitMetricReport(int index, MetricReport report) {
