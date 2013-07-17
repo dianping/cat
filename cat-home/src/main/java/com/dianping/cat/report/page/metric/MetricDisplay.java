@@ -55,17 +55,17 @@ public class MetricDisplay extends BaseVisitor {
 
 		for (MetricItemConfig config : configs) {
 			if (config.isShowSum()) {
-				String key = config.getMetricKey() + SUM;
+				String key = config.getId() + SUM;
 
 				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_SUM));
 			}
 			if (config.isShowCount()) {
-				String key = config.getMetricKey() + COUNT;
+				String key = config.getId() + COUNT;
 
 				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_COUNT));
 			}
 			if (config.isShowAvg()) {
-				String key = config.getMetricKey() + AVG;
+				String key = config.getId() + AVG;
 
 				m_lineCharts.put(key, creatLineChart(config.getTitle() + CatString.Suffix_AVG));
 			}

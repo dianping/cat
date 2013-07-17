@@ -144,7 +144,6 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		default:
 			break;
 		}
-
 		throw new UnsupportedOperationException(String.format("Not future report available for %s!", request.getPeriod()));
 	}
 

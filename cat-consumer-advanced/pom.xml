@@ -34,11 +34,6 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.unidal.webres</groupId>
-         <artifactId>WebResBase</artifactId>
-         <version>1.2.0</version>
-      </dependency>
-      <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
          <scope>test</scope>

@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 
 public class DependencyReportMergerTest {
 	@Test

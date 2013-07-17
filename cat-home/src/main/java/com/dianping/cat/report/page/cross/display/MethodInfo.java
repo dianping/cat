@@ -200,7 +200,7 @@ public class MethodInfo extends BaseVisitor {
 			if (ip.indexOf(':') > 0) {
 				ip = ip.substring(0, ip.indexOf(':'));
 			}
-			String domain = m_domainManager.getDomainByIp(ip);
+			String domain = m_domainManager.queryDomainByIp(ip);
 
 			if (projectName.equalsIgnoreCase(domain)) {
 				return true;

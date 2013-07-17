@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 
 public class SqlReportMergerTest {
 	@Test

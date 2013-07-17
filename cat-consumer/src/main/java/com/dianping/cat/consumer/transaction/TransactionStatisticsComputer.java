@@ -12,6 +12,34 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
 public class TransactionStatisticsComputer extends BaseVisitor {
+	private double computeLineValue(Map<Integer, AllDuration> durations, double percent) {
+		int totalCount = 0;
+		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o2 - o1;
+			}
+		});
+
+		sorted.putAll(durations);
+
+		for (AllDuration duration : durations.values()) {
+			totalCount += duration.getCount();
+		}
+
+		int remaining = (int) (totalCount * (100 - percent) / 100);
+
+		for (Entry<Integer, AllDuration> entry : sorted.entrySet()) {
+			remaining -= entry.getValue().getCount();
+
+			if (remaining <= 0) {
+				return entry.getKey();
+			}
+		}
+
+		return 0.0;
+	}
+
 	double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
@@ -75,33 +103,5 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			type.setLine95Value(line95);
 			type.setLine99Value(line999);
 		}
-	}
-
-	private double computeLineValue(Map<Integer, AllDuration> durations, double percent) {
-		int totalCount = 0;
-		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o2 - o1;
-			}
-		});
-
-		sorted.putAll(durations);
-
-		for (AllDuration duration : durations.values()) {
-			totalCount += duration.getCount();
-		}
-
-		int remaining = (int) (totalCount * (100 - percent) / 100);
-
-		for (Entry<Integer, AllDuration> entry : sorted.entrySet()) {
-			remaining -= entry.getValue().getCount();
-
-			if (remaining <= 0) {
-				return entry.getKey();
-			}
-		}
-
-		return 0.0;
 	}
 }
