@@ -47,7 +47,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			@Override
 			public void run() {
 				try {
-					m_logger.info("Dump analyzer starting archive! " + new Date(startTime));
 					m_bucketManager.archive(startTime);
 					m_logger.info("Dump analyzer end archive!");
 				} catch (Exception e) {
