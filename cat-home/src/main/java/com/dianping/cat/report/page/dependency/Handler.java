@@ -18,8 +18,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
+import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -38,7 +39,6 @@ import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;

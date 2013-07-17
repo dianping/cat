@@ -17,7 +17,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.EventStatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -58,13 +57,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	private EventStatisticsComputer m_computer = new EventStatisticsComputer();
-
 	private void buildEventNameGraph(String ip, String type, EventReport report, Model model) {
 		PieChart chart = new PieChart();
 		Collection<EventName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
 		List<Item> items = new ArrayList<Item>();
-		
+
 		for (EventName name : values) {
 			Item item = new Item();
 			item.setNumber(name.getTotalCount()).setTitle(name.getId());
@@ -80,14 +77,14 @@ public class Handler implements PageHandler<Context> {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
 			Machine machine = report.getMachines().get(ip);
-		
+
 			if (machine == null) {
 				return;
 			}
 			for (EventType eventType : machine.getTypes().values()) {
 				long totalCount = eventType.getTotalCount();
 				double tps = 0;
-			
+
 				if (isCurrent) {
 					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					tps = totalCount / seconds;
@@ -99,7 +96,7 @@ public class Handler implements PageHandler<Context> {
 				for (EventName transName : eventType.getNames().values()) {
 					long totalNameCount = transName.getTotalCount();
 					double nameTps = 0;
-					
+
 					if (isCurrent) {
 						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 						nameTps = totalNameCount / seconds;
@@ -136,12 +133,7 @@ public class Handler implements PageHandler<Context> {
 		EventType t = report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
-			EventName n = t.findName(name);
-
-			if (n != null) {
-				n.accept(m_computer);
-			}
-			return n;
+			return t.findName(name);
 		}
 		return null;
 	}
@@ -239,7 +231,6 @@ public class Handler implements PageHandler<Context> {
 			}
 
 			if (report != null) {
-				report.accept(m_computer);
 				model.setReport(report);
 			}
 

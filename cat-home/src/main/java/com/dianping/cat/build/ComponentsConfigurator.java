@@ -13,7 +13,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;

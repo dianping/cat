@@ -113,7 +113,7 @@ public class Cat {
 	}
 
 	public static void logError(String message, Throwable cause) {
-		Cat.getProducer().logError(new Throwable(message, cause));
+		Cat.getProducer().logError(message, cause);
 	}
 
 	public static void logError(Throwable cause) {

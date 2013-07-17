@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.event.EventReportMerger;
 
 public class EventReportMergerTest {
 	@Test

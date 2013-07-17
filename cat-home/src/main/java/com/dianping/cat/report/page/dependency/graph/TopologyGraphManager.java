@@ -21,9 +21,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -77,7 +77,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
-				String groupName = entry.getKey();
+				String realName = entry.getValue().getTitle();
 				boolean isDashboard = entry.getValue().getDashboard();
 
 				if (isDashboard) {
@@ -88,7 +88,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 						m_allDomains.add(nodeName);
 						if (node != null) {
-							dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+							dashboardGraph.addNode(realName, m_graphBuilder.cloneNode(node));
 						}
 					}
 				}
