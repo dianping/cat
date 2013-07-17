@@ -22,7 +22,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String productLine;
 	
 	@FieldMeta("count")
-	private int m_minuteCounts = 10;
+	private int m_minuteCounts = 8;
 
 	@FieldMeta("frequency")
 	private int m_frequency = 10;

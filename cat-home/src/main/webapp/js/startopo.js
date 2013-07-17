@@ -55,6 +55,7 @@
 			this._initCenter();
 			this._initPoints();
 			this._initSides();
+			
 		}else{
 			//平铺
 			this._initList();
@@ -64,7 +65,7 @@
 	StarTopo.prototype = {
 		constructor:StarTopo,
 		_initStage:function(){
-			//生成rapheal 实例
+			//生成raphael 实例
 			this.stage = new Raphael(this.container);
 			this.stageWidth = this.stage.width;
 			this.stageHeight = this.stage.height;
@@ -567,6 +568,7 @@
             col:3,
             colInside:4,
             paddingInside:10,
+            //paddingLeft:50,
 			sideWeight:function(weight){
 				//weight ==> px
 				return weight + 2;
@@ -581,6 +583,7 @@
 
         this._initGrid();
         this._initNodes();
+        //默认不显示关系边
         this._initSides();
 
         this._frontNodes();
@@ -595,8 +598,7 @@
                 self = this;
 
             var colWidth = self.container.clientWidth / option.col;
-            var nodeWidth =( colWidth - option.paddingInside * (option.colInside+1)) / option.colInside;
-
+            var nodeWidth =( colWidth - option.paddingInside * (option.colInside)-30) / option.colInside;
             this._colWidth = colWidth;
             this._nodeWidth = nodeWidth;
             for(var i=0;i<option.col-1;i++){
@@ -607,7 +609,9 @@
             }
         },
         _initNodes:function(){
+            console.log(this.data);
             var data = this.data;
+            //由对象组成的二维数组，其中lines表示所有模块？后面的line表示一个模块，productLines 是json中的属性
             var lines = data.productLines;
             var nodeWidth = this._nodeWidth;
             var colWidth = this._colWidth;
@@ -618,27 +622,68 @@
                 return;
             }
             var gridIndex = 0;
-            var maxY = 40;
-            var startX=0,startY=40;
+            var maxY;
+            //初始化时的作图点 根据不同的标题位置改变页面
+            if(option.showLeft==true){
+            maxY = 35;
+            }else if(option.showUp==true){
+            maxY= 40;
+            }
+            //初始化，值不影响页面
+            var startX=0,startY=0;
             self.points = {};
             var nodeSet = this.nodeSet = this.stage.set();
+            //line是关键词
             for(var line in lines){
                 if(lines.hasOwnProperty(line)){
-                    startX = colWidth * (gridIndex % option.col);
-                    if(gridIndex%option.col===0){
-                        startY = maxY;
+                //右移30px，option.paddingInside + nodeWidth/2=40，10=40-30
+                    startX = 10+colWidth * (gridIndex % option.col);
+                    if(gridIndex%option.col==0){
+                        if(option.showLeft==true){  
+                           startY = maxY-23+option.paddingUp;
+                        }else if(option.showUp==true){
+                           startY = maxY;
+                        }
+                        
                     }
+                    
+                    //上标题，默认不显示
+                    if(option.showUp==true){
                     var title = self.stage.text(startX+colWidth/2,startY+titleHeight/2,line).attr({
                         'font-size':15
                     });
-
+                    }
+                    
+                    //左列标题（不针对首大列，因为第大列模块的底坐标要等到大行的底确定后才确定）默认显示
+                    if(option.showLeft==true){
+                   if(gridIndex!=0){
+                     console.log(line.length);
+                     var length = line.length;
+                     
+                     for(index=0;index<length;index++){
+                     var title = self.stage.text(startX,(startY+maxY/4+index*12),line.charAt(index)).attr({
+                    'font-size':15
+                     });
+                     
+                     }
+                    }
+                    }
+                    //这一段代码执行一次，就画出来一个模块中的所有小方块
                     lines[line].forEach(function(nodeData,i){
                         var node = Node(option.typeMap[nodeData.type]).create(self.stage,nodeData.id);
                         self.points[nodeData.id] = node;
-                        node.size(nodeWidth,nodeWidth);
-                        var x = (option.paddingInside+ nodeWidth) * (i%option.colInside) + option.paddingInside + nodeWidth/2; 
-                        var y = (option.paddingInside+ nodeWidth) * Math.floor(i/option.colInside) + option.paddingInside + nodeWidth/2;
-                        maxY = Math.max(startY+y+option.paddingInside+nodeWidth/2+titleHeight,maxY);
+						//改动的地方，高度变成二分之一 nodeWidth/2
+                        node.size(nodeWidth,nodeWidth/2);
+                        //x,y 的第一部分动态变化，后两部分(option.paddingInside + nodeWidth/2)是确定的,,option.paddingInside + nodeWidth/2改成30即paddingLeft
+                        var x = (option.paddingInside+ nodeWidth) * (i%option.colInside) +option.paddingInside + nodeWidth/2; 
+                        //方框间距nodeWidth/2，option.paddingInside + nodeWidth/8是与原点的距离
+                        var y = (option.paddingInside+ nodeWidth*option.blockPaddingRatio) * Math.floor(i/option.colInside) + option.paddingInside + nodeWidth/16;
+                        //maxY是新行的开始坐标，，，option.paddingInside+nodeWidth/4=20
+                      
+                        maxY = Math.max(startY+y+option.paddingInside+nodeWidth/8+titleHeight,maxY);
+                        
+                        console.log('maxY  '+maxY);
+
                         node.position(startX+x, startY+titleHeight+y);
                         node.text(nodeData.id);
                         node.color(option.colorMap[nodeData.status])
@@ -655,19 +700,58 @@
                         nodeSet.push(node.node);
                         node.node.data('nodeData',nodeData);
 
-
                     });
+                    
+                   
+                        //左列标题(只针对于第一个) 默认显示
+                    if(option.showLeft==true){    
+                     if(gridIndex===0){
+                     
+                     console.log(line.length);
+                     var length = line.length;
+                     
+                     for(index=0;index<length;index++){
+                     var title = self.stage.text(startX,(startY+maxY/4+index*12),line.charAt(index)).attr({
+                    'font-size':15
+                     });
+                     
+                     }
+                     }
+                   
+                   }
+   
+                    
+                    if(line=='TuanGou'){
+                     console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
+                       console.log(line+' '+startX+' '+(startY+maxY/2));
+                    }else if(line=='shop'){
+                     console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
+                       console.log(line+' '+startX+' '+(startY+maxY/2));
+                    }else if(line=='Mobile-Info'){
+                     console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
+                       console.log(line+' '+startX+' '+(startY+maxY/2));
+                    }else if(line=='PAY'){
+                       console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
+                       console.log(line+' '+startX+' '+(startY+maxY/2));
+                    }
+
+                    
                     if(gridIndex%option.col===option.col-1){
                         self.stage.path().attr({
                             path:['M',0,maxY,'h',self.container.clientWidth],
                             stroke:1
                         });
                     }
+                   
+                
                     gridIndex++;
+                        
                 }
+                     
             }
+ 
             //设置container高度
-            this.container.style.height = maxY +"px" 
+            this.container.style.height = maxY +"px";
             this.stage.setSize(this.container.clientWidth,maxY);  
 
         },
@@ -730,7 +814,8 @@
 				});
                 edgeSet.push(edge);
                 edge.data('edgeData',s);
-
+                //默认不显示
+                edge.hide();
 
             });
             
@@ -758,10 +843,10 @@
 
             //all
             var hideRect = stage.rect(startX,startY,rectWidth,rectWidth).attr({
-                "fill" : 'green',
+                "fill" : 'gray',
                 "stroke-width":0,
                 "cursor":"pointer"
-            }).data('fill','green').data('hide',true).data('active',true);
+            }).data('fill','green').data('hide',true).data('active',false);//默认为不显示
             rectSet.push(hideRect);
             var text = stage.text(startX,startY,'依赖关系');
             var bbox = text.getBBox();
@@ -789,7 +874,7 @@
                 }
             }
             set.translate((this.container.clientWidth-startX)/2,0);
-
+            //默认关系边不显示
             self.edgeSet.data("active",true);
             self.nodeSet.data("active",true);
 
@@ -860,15 +945,8 @@
                             edge.data("active",false).hide();
                         }
                     });
-                    
-
                 }
-
-
             });
-
-
-
         }
     }
 

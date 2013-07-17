@@ -5,18 +5,13 @@ import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportConstants;
@@ -35,9 +30,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private DomainManager m_domainManager;
-
-	@Inject
-	private ProjectDao m_projectDao;
 
 	private void buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
@@ -171,27 +163,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		return report;
 	}
 
-	private void insertDomainInfo(String domain) {
-		try {
-			m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalNotFoundException e) {
-			Project project = m_projectDao.createLocal();
-
-			project.setDomain(domain);
-			project.setProjectLine("Default");
-			project.setDepartment("Default");
-
-			try {
-				m_projectDao.insert(project);
-			} catch (Exception ex) {
-				Cat.logError(ex);
-			}
-
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	@Override
 	protected void process(MessageTree tree) {
 		StateReport report = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
@@ -202,7 +173,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
 		if (validate(domain)) {
 			if (!m_domainManager.containsDomainInCat(domain)) {
-				insertDomainInfo(domain);
+				m_domainManager.insertDomain(domain);
 			}
 			if (!m_domainManager.contaninsIpInCat(ip)) {
 				m_domainManager.insert(domain, ip);

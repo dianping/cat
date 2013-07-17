@@ -77,7 +77,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
-				String groupName = entry.getKey();
+				String realName = entry.getValue().getTitle();
 				boolean isDashboard = entry.getValue().getDashboard();
 
 				if (isDashboard) {
@@ -88,7 +88,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 						m_allDomains.add(nodeName);
 						if (node != null) {
-							dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+							dashboardGraph.addNode(realName, m_graphBuilder.cloneNode(node));
 						}
 					}
 				}

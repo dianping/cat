@@ -57,7 +57,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
+		all.add(C(DomainManager.class).//
+		      req(ServerConfigManager.class, ProjectDao.class, HostinfoDao.class));
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class));
@@ -142,7 +143,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = StateAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ProjectDao.class, DomainManager.class, ServerStatisticManager.class));
+		      .req(ReportManager.class, ID).req(DomainManager.class, ServerStatisticManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //
