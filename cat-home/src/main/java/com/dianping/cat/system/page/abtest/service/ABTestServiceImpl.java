@@ -1,5 +1,6 @@
 package com.dianping.cat.system.page.abtest.service;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.core.dal.Project;
@@ -35,6 +37,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.page.abtest.AbtestStatus;
 import com.dianping.cat.system.page.abtest.GroupStrategyParser;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
@@ -61,6 +64,8 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private Map<Integer, AbtestRun> m_abtestRunMap = new ConcurrentHashMap<Integer, AbtestRun>();
 
 	private Map<Integer, GroupStrategy> m_groupStrategyMap = new ConcurrentHashMap<Integer, GroupStrategy>();
+	
+	private Type m_listType = new TypeToken<ArrayList<Condition>>() {}.getType();
 
 	@Override
 	public Abtest getABTestByRunId(int id) {
@@ -310,8 +315,17 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		abRun.setCreator(run.getCreator());
 		abRun.setDisabled(false);
 		abRun.setEndDate(run.getEndDate());
-		abRun.setGroupstrategyDescriptor(gson.fromJson(run.getStrategyConfiguration(), GroupstrategyDescriptor.class));
 		abRun.setStartDate(run.getStartDate());
+		
+		if (StringUtils.isNotBlank(run.getStrategyConfiguration())) {
+			abRun.setGroupstrategyDescriptor(gson.fromJson(run.getStrategyConfiguration(), GroupstrategyDescriptor.class));
+		}
+
+		if (StringUtils.isNotBlank(run.getConditions())) {
+			List<Condition> conditions = gson.fromJson(run.getConditions(), m_listType);
+
+			abRun.getConditions().addAll(conditions);
+		}
 
 		abCase.addRun(abRun);
 		return abCase;

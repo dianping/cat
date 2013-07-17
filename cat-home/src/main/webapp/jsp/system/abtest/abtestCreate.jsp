@@ -126,20 +126,24 @@
 				<div class="control-group">
 					<label class="control-label">Test Page URL</label>
 					<div class="controls">
-						<input type="url" name="url" placeholder="http://www.example.com" check-type="required" required-message="URL is required!"  class="input-xlarge">
+						<input type="url" name="1" placeholder="http://www.example.com" check-type="required" required-message="URL is required!"  class="input-xlarge">
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Test Page Pattern</label>
 					<div class="controls">
-						<input type="url" name="pattern" placeholder="http://www.example.com/*" check-type="required" required-message="URL Pattern is required!"  class="input-xlarge">
+						<span>No Pattern specified</span>
+						<input type="url" name="5" placeholder="http://www.example.com/*" class="input-xlarge hide">
+						<a class="pull-right active" href="javascript:void(0);" id="edit0">Edit</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="save0">Save</a> 
+						<a class="pull-right active hide" href="javascript:void(0);" id="cancel0">Cancel &nbsp;</a> 
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Exclude URLs</label>
 					<div class="controls">
 						<span>No URL excluded</span>
-						<input type="url" name="excludedUrl" placeholder="http://www.example.com/1" class="input-xlarge hide">
+						<input type="url" name="2" placeholder="http://www.example.com/1" class="input-xlarge hide">
 						<a class="pull-right active" href="javascript:void(0);" id="edit1">Edit</a> 
 						<a class="pull-right active hide" href="javascript:void(0);" id="save1">Save</a> 
 						<a class="pull-right active hide" href="javascript:void(0);" id="cancel1">Cancel &nbsp;</a> 
@@ -150,6 +154,7 @@
 					<div class="controls">
 						<span>All visitors</span>
 						<div id="div2" class="hide">
+							<table><tbody></tbody></table>
 						</div>
 						<a class="pull-right active" href="javascript:void(0);" id="edit2">Edit</a> 
 						<a class="pull-right active hide" href="javascript:void(0);" id="save2">Save</a> 
@@ -230,6 +235,7 @@
 			var abName = $('#abName').val();
 			var abOwn = $('#abOwn').val();
 			
+			//console.log(getConditions());
 			if(abName && abOwn ){
 				var params = $(this).serialize();
 				//console.log(params);
@@ -244,6 +250,10 @@
 				}
 	
 				params += "&strategyConfig=" + JSON.stringify(jsonObject);
+				
+				var conditions = getConditions();
+				params += "&conditions=" + JSON.stringify(conditions);
+				
 				//console.log(params);
 				$.ajax({
 					type: "POST",
@@ -275,6 +285,27 @@
 			$('#groupStrategyFrom')[0].reset();
 		});
 		
+		$("#edit0,#save0,#cancel0").click(function(e){
+			var parent = $(this).parent();
+			$("span",parent).toggleClass("hide");
+			$("input",parent).toggleClass("hide");
+			$("a",parent).toggleClass("hide");
+			
+			var id = $(this).attr("id");
+			
+			if(id == "save0"){
+				if($("input",parent).val() != ""){
+					$("span",parent).text($("input",parent).val());
+				}else{
+					$("span",parent).text("No Pattern specified");
+				}
+			}else if(id == "edit0"){
+				if($("span",parent).text() != "No Pattern specified"){
+					$("input",parent).val($("span",parent).text());
+				}
+			}
+		});
+		
 		$("#edit1,#save1,#cancel1").click(function(e){
 			var parent = $(this).parent();
 			$("span",parent).toggleClass("hide");
@@ -290,7 +321,9 @@
 					$("span",parent).text("No URL excluded");
 				}
 			}else if(id == "edit1"){
-				$("input",parent).val("");
+				if($("span",parent).text() != "No URL excluded"){
+					$("input",parent).val($("span",parent).text());
+				}
 			}
 		});
 		
@@ -298,21 +331,15 @@
 			var parent = $(this).parent();
 			$("span",parent).toggleClass("hide");
 			$("a",parent).toggleClass("hide");
-			$("div",parent).toggleClass("hide");
+			$("div:first",parent).toggleClass("hide");
 			
 			var id = $(this).attr("id");
 			
 			if(id == "save2"){
+				var conditions = getConditionsHTML();
 				
+				$("span",parent).html(conditions);
 			}else if(id == "edit2"){
-				var innerHTML = "<div><table>";
-				innerHTML += "<tbody>"
-				//innerHTML += insertTr();
-				innerHTML += "</tbody></table></div>";
-				
-				table = $(innerHTML);
-				$('#div2').empty();
-				table.appendTo($('#div2'));
 			}
 		});
 		
@@ -321,61 +348,6 @@
 			$("span:first",parent).toggleClass("hide");
 			$("a",parent).toggleClass("hide");
 			$('.slider').toggleClass('hide');
-		});
-
-		function insertTr(){
-			var innerHTML = "<tr>";
-			innerHTML += '<td><select><option value="url">Current URL</option><option value="city">City</option>'
-					+ '<option value="platform">Platform</option><option value="vistorType">VisitorType</option>'
-					+ '<option value="cookie">Cookie</option></select></td>';
-					
-			innerHTML += '<td><select><option value="1">Is equal to (case insens.)</option>'
-				+ '<option value="2">Is not equal to (case insens.)</option><option value="3">Is equal to (case sens.)</option>'
-				+ '<option value="4">Is not equal to (case sens.)</option><option value="5">Marches Regex (case insens.)</option>'
-				+ '<option value="6">Marches Regex (case sens.)</option><option value="7">Contains</option>'
-				+ '<option value="8">Does not contains</option></select></td>';
-			
-			innerHTML += '<td><input class="input-large"></td>';
-			innerHTML += '<td><a class="btn btn-link"><i class="icon-remove"></i></a></td>';
-			innerHTML += '</tr>';
-			
-			return innerHTML;
-		}
-		
-		function insertOperator(){
-			var innerHTML = "<tr>";
-			innerHTML += '<td colspan="1"></td>';
-			innerHTML += '<td colspan="1"><a class="btn btn-primary">AND</a><a class="btn pull-right">OR</a></td>';
-			innerHTML += '<td colspan="1"></td>';
-			innerHTML += '<td colspan="1"></td>';
-			innerHTML += '</tr>';
-			
-			return innerHTML;
-		}
-		
-		$('#addVistorCondition').click(function(){
-			var tr = $(insertTr());
-			$('a',tr).click(function(){
-				var index = $(this).closest("tr").index();
-				if(index > 0){
-					$(this).closest("tr").prev().remove();
-					$(this).closest("tr").remove();
-				}else if(index == 0){
-					$(this).closest("tr").next().remove();
-					$(this).closest("tr").remove();
-				}
-			});
-			
-			if($('#div2 tbody tr:last').size() == 0){
-				$('#div2 tbody').html(tr);
-			}else{
-				var innerHTML = $(insertOperator());
-				$('a',innerHTML).click(function(){
-					$('a',$(innerHTML)).toggleClass("btn-primary");
-				});
-				$('#div2 tbody tr:last').after(innerHTML);
-				$('#div2 tbody tr:last').after(tr);
-			}
 		});
 		
 		$(function() {
@@ -388,7 +360,7 @@
 			});
 			
 			var showData = function(){
-				$("span:eq(1)",$(this).parent().parent().parent()).text(data.getValue());
+				$(".add-on:eq(3)").text(data.getValue());
 			}
 			var data = $('.slider').slider().on('slide',showData).data('slider');
 			

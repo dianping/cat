@@ -11,6 +11,29 @@
 				<creator>hao.zhu@dianping.com</creator>
 				<domain>TuanGouWeb</domain>
 				<domain>TuanGouRemote</domain>
+				<conditions>
+					<condition name="url" seq="1" operator="and" comparator="1">
+						<![CDATA[This is value]]>
+					</condition>
+					<condition name="url-pattern" seq="2"  operator="and" comparator="1">
+						<![CDATA[This is value]]>
+					</condition>
+					<condition name="url-excluded" seq="3" operator="and" comparator="1">
+						<![CDATA[This is value]]>
+					</condition>
+					<condition name="url-current" seq="4"  operator="or" comparator="1">
+						<![CDATA[This is value]]>
+					</condition>
+					<condition name="city" seq="5" operator="or" comparator="1">
+						<![CDATA[This is value]]>
+					</condition>
+					<condition name="platform" seq="4" operator="and" comparator="1">
+						<![CDATA[This is value]]>
+					</condition>
+					<condition name="traffic-percentage" seq="5" next="" operator="" comparator="">
+						<![CDATA[This is value]]>
+					</condition>
+				</conditions>
 				<groupstrategy-descriptor name="roundrobin" className="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
 					<fields>
 					   <field name="package" type="String" input-type="input" modifier-name="m_package">
@@ -23,20 +46,6 @@
 					  		 <![CDATA[This is value]]>
 					   </field>
 					</fields>
-					<filters>
-						<filter name="url" seq="1" operator="equals">
-							<![CDATA[This is value]]>
-						</filter>
-						<filter name="url-pattern" seq="2" operator="equals">
-							<![CDATA[This is value]]>
-						</filter>
-						<filter name="url" seq="3" operator="equals">
-							<![CDATA[This is value]]>
-						</filter>
-						<filter name="url" seq="4" operator="equals">
-							<![CDATA[This is value]]>
-						</filter>
-					</filters>
 				</groupstrategy-descriptor>
 			</run>
 			<run />

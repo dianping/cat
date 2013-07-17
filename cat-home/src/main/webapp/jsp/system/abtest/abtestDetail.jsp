@@ -27,11 +27,14 @@ div.controls input {
    <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
    <res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
    <res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+   <res:useCss value="${res.css.local['slider.css']}" target="head-css" />
    <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
+   <res:useJs value="${res.js.local['bootstrap-slider.js']}" target="head-js" />
+   
    <div id="content" class="row-fluid">
       <div class="span12 column">
          <h3>
@@ -129,6 +132,59 @@ div.controls input {
                   </select>
                </div>
             </div>
+            <h5>Traffic Filter</h5>
+			<hr style="margin-top: 20px;">
+			<div class="control-group">
+				<label class="control-label">Test Page URL</label>
+				<div class="controls">
+					<input id="input1" type="url" name="1" placeholder="http://www.example.com" check-type="required" required-message="URL is required!"  class="input-xlarge" readonly="readonly">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Test Page Pattern</label>
+				<div class="controls">
+					<span  id="forInput2">No Pattern specified</span>
+					<input  id="input2" type="url" name="5" placeholder="http://www.example.com/*" class="input-xlarge hide" readonly="readonly">
+					<a class="pull-right active hide" href="javascript:void(0);" id="edit0">Edit</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="save0">Save</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="cancel0">Cancel &nbsp;</a> 
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Exclude URLs</label>
+				<div class="controls">
+					<span id="forInput3">No URL excluded</span>
+					<input id="input3" type="url" name="2" placeholder="http://www.example.com/1" class="input-xlarge hide" readonly="readonly">
+					<a class="pull-right active hide" href="javascript:void(0);" id="edit1">Edit</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="save1">Save</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="cancel1">Cancel &nbsp;</a> 
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Traffic Segment</label>
+				<div class="controls">
+					<span id="input4">All visitors</span>
+					<div id="div2" class="hide">
+						<table><tbody></tbody></table>
+					</div>
+					<a class="pull-right active hide" href="javascript:void(0);" id="edit2">Edit</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="save2">Save</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="cancel2">Cancel &nbsp;</a> 
+					<a href="javascript:void(0)" id="addVistorCondition" class="pull-right active hide"><i class="icon-plus"></i>Add visitor condition &nbsp;</a>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Traffic Included in Test</label>
+				<div class="controls">
+						<input class="slider" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show" readonly="readonly">
+					<span class="add-on hide">&nbsp;&nbsp;</span>
+					<span class="add-on">100</span>
+					<span class="add-on">%</span>
+					<a class="pull-right active hide" href="javascript:void(0);" id="edit3">Edit</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="save3">Save</a> 
+					<a class="pull-right active hide" href="javascript:void(0);" id="cancel3">Cancel &nbsp;</a> 
+				</div>
+			</div>
             <h5>Group Strategy</h5>
             <hr style="margin-top: 5px;">
             <div class="control-group">
@@ -196,6 +252,11 @@ div.controls input {
 				<c:forEach var="domain" items="${model.abtest.domains}">
 				initDomains.push("${domain}");
 				</c:forEach>
+				
+				var comparators = ["is equal to (case insens.)","is not equal to (case insens.)",
+				                  "is equal to (case sens.)","is not equal to (case sens.)",
+				                  "marches Regex (case insens.)","marches Regex (case sens.)",
+				                  "contains","does not contains"];
 
 				var changed = false;
 
@@ -212,6 +273,11 @@ div.controls input {
 					$("#submit").show();
 					$("#cancel").show();
 					$("#edit").hide();
+					
+					$("#edit0").toggleClass("hide");
+					$("#edit1").toggleClass("hide");
+					$("#edit2").toggleClass("hide");
+					$("#edit3").toggleClass("hide");
 				}
 
 				function disableEdit() {
@@ -228,11 +294,88 @@ div.controls input {
 						$("#submit").hide();
 						$("#cancel").hide();
 						$("#edit").show();
+						
+						$("#edit0").toggleClass("hide");
+						$("#edit1").toggleClass("hide");
+						$("#edit2").toggleClass("hide");
+						$("#edit3").toggleClass("hide");
 					}
 				}
 				
-				function initConf(){
+				$("#edit0,#save0,#cancel0").click(function(e){
+					var parent = $(this).parent();
+					$("span",parent).toggleClass("hide");
+					$("input",parent).toggleClass("hide");
+					$("a",parent).toggleClass("hide");
+					
+					var id = $(this).attr("id");
+					
+					if(id == "save0"){
+						if($("input",parent).val() != ""){
+							$("span",parent).text($("input",parent).val());
+						}else{
+							$("span",parent).text("No Pattern specified");
+						}
+					}else if(id == "edit0"){
+						if($("span",parent).text() != "No Pattern specified"){
+							$("input",parent).val($("span",parent).text());
+						}
+					}
+				});
+				
+				$("#edit1,#save1,#cancel1").click(function(e){
+					var parent = $(this).parent();
+					$("span",parent).toggleClass("hide");
+					$("input",parent).toggleClass("hide");
+					$("a",parent).toggleClass("hide");
+					
+					var id = $(this).attr("id");
+					
+					if(id == "save1"){
+						if($("input",parent).val() != ""){
+							$("span",parent).text($("input",parent).val());
+						}else{
+							$("span",parent).text("No URL excluded");
+						}
+					}else if(id == "edit1"){
+						if($("span",parent).text() != "No URL excluded"){
+							$("input",parent).val($("span",parent).text());
+						}
+					}
+				});
+				
+				$("#edit2,#save2,#cancel2").click(function(e){
+					var parent = $(this).parent();
+					$("span",parent).toggleClass("hide");
+					$("#addVistorCondition").toggleClass("hide");
+					$("#edit2").toggleClass("hide");
+					$("#save2").toggleClass("hide");
+					$("#cancel2").toggleClass("hide");
+					$("div:first",parent).toggleClass("hide");
+					
+					var id = $(this).attr("id");
+					
+					if(id == "save2"){
+						var conditions = getConditionsHTML();
+						
+						$("span",parent).html(conditions);
+					}else if(id == "edit2"){
+					}
+					
+				});
+				
+				$("#edit3,#save3,#cancel3").click(function(e){
+					var parent = $(this).parent();
+					$("span:first",parent).toggleClass("hide");
+					$("a",parent).toggleClass("hide");
+					$('.slider').toggleClass('hide');
+				});
+				
+				function initConf(slider){
 					var jsonObject = ${model.abtest.strategyConfiguration};
+					var conditions = ${model.abtest.conditions};
+					
+					//console.log(conditions);
 					//console.log(jsonObject);
 					var innerHTML = "";
 					
@@ -247,6 +390,67 @@ div.controls input {
 							innerHTML += '<div class="control-group"><label class="control-label">' + field['name'] + '</label>'
 							         + '<div class="controls"><input type="text" readonly name="' + field['name'] + '" value="' + field['value'] + '"></div>'
 						             + '</div>';
+						}
+					}
+					
+					for(var i = 0 ; i < conditions.length; i++){
+						var condition = conditions[i];
+						var seq = condition['seq'];
+						var text = condition["text"];
+						
+						if(seq == 0){
+							$("#input1").val(text);
+						}else if(seq == 1){
+							$("#forInput2").text(text);
+							$("#input2").val(text);
+						}else if(seq == 2){
+							$("#forInput3").text(text);
+							$("#input3").val(text);
+						}else if(seq == 3){
+							var html = "";
+							var lastOp = "";
+							while(true){
+								var tmp = conditions[i+1];
+								var index = parseInt(condition['comparator']) - 1;
+								
+								$('#addVistorCondition').trigger('click');
+								//console.log(condition['comparator']);
+								$('#div2 tr:last select:eq(0)').val(condition['name']);
+								$('#div2 tr:last select:eq(1)').val(condition['comparator']);
+								$('#div2 tr:last input').val(condition['text']);
+								
+								if(lastOp != ""){
+									if(lastOp == "or"){
+										$("a",$('#div2 tr:last').prev()).toggleClass("btn-primary");
+									}
+								}
+								
+								lastOp = condition["operator"];
+								
+								if(tmp && tmp['seq'] == 3){
+									var op = "AND";
+									
+									if(condition['operator'] == "or"){
+										op = "OR";
+									}
+									
+									html += "<p><strong>" + condition['name'] + " " + comparators[index] + " " + condition['text'] + " <span class='label label-info'>" + op + "</span><strong></p>";
+									
+								}else if(tmp && tmp['seq'] != 3){
+									html += "<p><strong>" + condition['name'] + " " + comparators[index] + " " + condition['text'] + " <strong></p>";
+									$('#input4').html(html);
+									
+									break;
+								}
+								
+								condition = tmp;
+								i++;
+							}
+						}else if(seq == 4){
+							var value = condition['text'];
+							
+							$(".add-on:eq(3)").text(value);
+							slider.slider('setValue', value)
 						}
 					}
 					
@@ -271,6 +475,10 @@ div.controls input {
 					}
 
 					params += "&strategyConfig=" + JSON.stringify(jsonObject);
+					
+					var conditions = getConditions();
+					params += "&conditions=" + JSON.stringify(conditions);
+					
 					//console.log(params);
 					$.ajax({
 						type: "POST",
@@ -313,7 +521,15 @@ div.controls input {
 					$("#domains").val(initDomains).trigger("change");
 					$("#domains").select2("disable");
 					
-					initConf();
+					var showData = function(){
+						$(".add-on:eq(3)").text(data.getValue());
+					}
+					var slider = $('.slider').slider();
+					var data = slider.on('slide',showData).data('slider');
+					
+					$('.slider').toggleClass("hide");
+					
+					initConf(slider);
 					//tips
 					$('i[tips]').popover();
 					//validate

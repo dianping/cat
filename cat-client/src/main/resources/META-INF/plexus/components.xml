@@ -155,5 +155,9 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager</role>
+			<implementation>com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager</implementation>
+		</component>
 	</components>
 </plexus>

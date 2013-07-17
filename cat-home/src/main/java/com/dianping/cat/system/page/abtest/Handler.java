@@ -90,6 +90,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		run.setEndDate(payload.getEndDate());
 		run.setDomains(StringUtils.join(payload.getDomains(), ','));
 		run.setStrategyConfiguration(payload.getStrategyConfig());
+		run.setConditions(payload.getConditions());
 		run.setDisabled(false);
 		Date now = new Date();
 		run.setCreationDate(now);
@@ -260,6 +261,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			run.setEndDate(payload.getEndDate());
 			run.setDomains(StringUtils.join(payload.getDomains(), ','));
 			run.setStrategyConfiguration(payload.getStrategyConfig());
+			run.setConditions(payload.getConditions());
 			Date now = new Date();
 			run.setModifiedDate(now);
 

@@ -38,6 +38,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("domains")
 	private String[] m_domains;
+	
+	@FieldMeta("conditions")
+	private String m_conditions;
 
 	/* ===============Abtest Controls================ */
 
@@ -200,6 +203,11 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_strategyId;
 	}
 
+	public String getConditions() {
+   	return m_conditions;
+   }
+
+	
 	public boolean isEnableAbtest() {
 		return m_enableAbtest;
 	}
@@ -314,6 +322,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setStrategyId(int strategyId) {
 		this.m_strategyId = strategyId;
 	}
+
+	public void setConditions(String conditions) {
+   	m_conditions = conditions;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

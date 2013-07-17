@@ -14,5 +14,10 @@
     <attribute name="input-type" value-type="String" default-value="input" />
     <element name="text" value-type="String" text="true" alias="value"/>
   </entity>
+  <entity name="condition">
+    <attribute name="seq" value-type="int" key="true" primitive="true"/>
+     <attribute name="comparator" value-type="int" default-value="1" />
+     <attribute name="operator" value-type="String" default-value="and" />
+  </entity>
 </model>
 

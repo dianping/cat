@@ -232,6 +232,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		public String getStrategyConfiguration() {
 			return m_run.getStrategyConfiguration();
 		}
+		
+		public String getConditions() {
+	      return m_run.getConditions();
+      }
 
 		public void setAbtest(Abtest abtest) {
 			m_abtest = abtest;
