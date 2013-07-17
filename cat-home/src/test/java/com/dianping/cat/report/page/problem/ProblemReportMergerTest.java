@@ -6,11 +6,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.task.problem.HistoryProblemReportMerger;
 
 public class ProblemReportMergerTest {

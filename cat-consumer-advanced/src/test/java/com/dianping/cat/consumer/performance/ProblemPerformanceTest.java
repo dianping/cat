@@ -3,7 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.core.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;

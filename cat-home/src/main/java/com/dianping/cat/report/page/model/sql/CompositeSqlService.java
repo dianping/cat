@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.sql;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;

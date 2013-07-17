@@ -68,9 +68,15 @@
 	            "2":"warning",
 	            "3":"error"
 	            },
-			paddingInside:20,
+			paddingInside:10,
 			col:3,
-			colInside:4
+			colInside:5,
+			//模块距上沿距离
+			paddingUp: 0,
+			//小方块间的间隔比率
+			blockPaddingRatio: 0.5,
+			showLeft: true,
+			showUp: false
 		});
 	});
 </script>

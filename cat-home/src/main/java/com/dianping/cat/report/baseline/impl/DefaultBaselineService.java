@@ -42,7 +42,6 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
-		double[] result = new double[24 * 60];
 
 		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
 		Baseline baseline = m_baselineMap.get(baselineKey);
@@ -59,13 +58,13 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 				return null;
 			}
 		}
+		
 		try {
-	      result = parse(baseline.getData());
+	      return parse(baseline.getData());
       }  catch (Exception e) {
 			Cat.logError(e);
 			return null;
 		}
-		return result;
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.advanced.MatrixAnalyzer;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;

@@ -15,6 +15,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -28,7 +29,6 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.event.EventMergeManager;
-import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.MergeAllMachine;
 import com.dianping.cat.report.page.transaction.MergeAllName;

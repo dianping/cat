@@ -3,7 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.advanced.DependencyAnalyzer;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
