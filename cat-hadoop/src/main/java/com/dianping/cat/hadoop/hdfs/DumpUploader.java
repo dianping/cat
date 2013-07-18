@@ -22,7 +22,6 @@ import org.unidal.helper.Files.AutoClose;
 import org.unidal.helper.Formats;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -33,7 +32,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
-public class DumpUploader implements Initializable, LogEnabled {
+public class DumpUploader implements Initializable, Task, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
@@ -44,9 +43,9 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private Thread m_job;
-
 	private long m_sleepPeriod = 1000L * 60;
+
+	private volatile boolean m_active = true;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -54,12 +53,18 @@ public class DumpUploader implements Initializable, LogEnabled {
 	}
 
 	@Override
+	public String getName() {
+		return "DumpUploader";
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
-		if (!m_configManager.isLocalMode()) {
-			if (m_job == null) {
-				m_job = Threads.forGroup("Cat").start(new WriteJob());
-			}
+	}
+
+	private boolean isActive() {
+		synchronized (this) {
+			return m_active;
 		}
 	}
 
@@ -72,163 +77,148 @@ public class DumpUploader implements Initializable, LogEnabled {
 		return out;
 	}
 
+	@Override
+	public void run() {
+		while (isActive()) {
+			try {
+				if (Cat.isInitialized()) {
+					Calendar cal = Calendar.getInstance();
+
+					if (cal.get(Calendar.MINUTE) >= 10) {
+						upload();
+					}
+				}
+			} catch (Exception e) {
+				m_logger.warn("Error when dumping message to HDFS. " + e.getMessage());
+			}
+			try {
+				Thread.sleep(m_sleepPeriod);
+			} catch (InterruptedException e) {
+				m_active = false;
+			}
+		}
+	}
+
 	public void setSleepPeriod(long period) {
 		m_sleepPeriod = period;
 	}
 
-	class WriteJob implements Task {
-		private volatile boolean m_active = true;
-
-		@Override
-		public String getName() {
-			return "DumpUploader";
+	@Override
+	public void shutdown() {
+		synchronized (this) {
+			m_active = false;
 		}
+	}
 
-		private boolean isActive() {
-			synchronized (this) {
-				return m_active;
+	private void upload() {
+		File baseDir = new File(m_baseDir, "outbox");
+		final List<String> paths = new ArrayList<String>();
+
+		Scanners.forDir().scan(baseDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					paths.add(path);
+				}
+
+				return Direction.DOWN;
 			}
-		}
+		});
 
-		@Override
-		public void run() {
-			while (isActive()) {
+		int len = paths.size();
+
+		if (len > 0) {
+			Cat.setup("DumpUploader");
+
+			MessageProducer cat = Cat.getProducer();
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			Transaction root = cat.newTransaction("System", "Dump-" + ip);
+
+			Collections.sort(paths);
+
+			root.addData("files", paths);
+			root.setStatus(Message.SUCCESS);
+
+			for (int i = 0; i < len; i++) {
+				String path = paths.get(i);
+				Transaction t = cat.newTransaction("System", "UploadDump");
+				File file = new File(baseDir, path);
+
+				t.addData("file", path);
+
+				FSDataOutputStream fdos = null;
 				try {
-					if (Cat.isInitialized()) {
-						Calendar cal = Calendar.getInstance();
+					fdos = makeHdfsOutputStream(path);
+					FileInputStream fis = new FileInputStream(file);
 
-						if (cal.get(Calendar.MINUTE) >= 10) {
-							upload();
-						}
+					long start = System.currentTimeMillis();
+
+					Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
+
+					double sec = (System.currentTimeMillis() - start) / 1000d;
+					String size = Formats.forNumber().format(file.length(), "0.#", "B");
+					String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
+
+					t.addData("size", size);
+					t.addData("speed", speed);
+					t.setStatus(Message.SUCCESS);
+
+					if (!file.delete()) {
+						m_logger.warn("Can't delete file: " + file);
 					}
+				} catch (AlreadyBeingCreatedException e) {
+					Cat.logError(e);
+					t.setStatus(e);
+					m_logger.error(String.format("Already being created (%s)!", path), e);
+				} catch (AccessControlException e) {
+					cat.logError(e);
+					t.setStatus(e);
+					m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 				} catch (Exception e) {
-					m_logger.warn("Error when dumping message to HDFS. " + e.getMessage());
+					cat.logError(e);
+					t.setStatus(e);
+					m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
+				} finally {
+					try {
+						if (fdos != null) {
+							fdos.close();
+						}
+					} catch (IOException e) {
+						Cat.logError(e);
+					}
+					t.complete();
 				}
+
 				try {
-					Thread.sleep(m_sleepPeriod);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					m_active = false;
+					break;
 				}
 			}
+
+			root.complete();
 		}
 
-		@Override
-		public void shutdown() {
-			synchronized (this) {
-				m_active = false;
-			}
-		}
-
-		private void upload() {
-			File baseDir = new File(m_baseDir, "outbox");
-			final List<String> paths = new ArrayList<String>();
+		// the path has two depth
+		for (int i = 0; i < 2; i++) {
+			final List<String> directionPaths = new ArrayList<String>();
 
 			Scanners.forDir().scan(baseDir, new FileMatcher() {
 				@Override
 				public Direction matches(File base, String path) {
-					if (new File(base, path).isFile()) {
-						paths.add(path);
+					if (new File(base, path).isDirectory()) {
+						directionPaths.add(path);
 					}
 
 					return Direction.DOWN;
 				}
 			});
-
-			int len = paths.size();
-
-			if (len > 0) {
-				Cat.setup("DumpUploader");
-
-				MessageProducer cat = Cat.getProducer();
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				Transaction root = cat.newTransaction("System", "Dump-" + ip);
-
-				Collections.sort(paths);
-
-				root.addData("files", paths);
-				root.setStatus(Message.SUCCESS);
-
-				for (int i = 0; i < len; i++) {
-					String path = paths.get(i);
-					Transaction t = cat.newTransaction("System", "UploadDump");
+			for (String path : directionPaths) {
+				try {
 					File file = new File(baseDir, path);
 
-					t.addData("file", path);
-
-					FSDataOutputStream fdos = null;
-					try {
-						fdos = makeHdfsOutputStream(path);
-						FileInputStream fis = new FileInputStream(file);
-
-						long start = System.currentTimeMillis();
-
-						Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-
-						double sec = (System.currentTimeMillis() - start) / 1000d;
-						String size = Formats.forNumber().format(file.length(), "0.#", "B");
-						String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
-
-						t.addData("size", size);
-						t.addData("speed", speed);
-						t.setStatus(Message.SUCCESS);
-
-						if (!file.delete()) {
-							m_logger.warn("Can't delete file: " + file);
-						}
-					} catch (AlreadyBeingCreatedException e) {
-						Cat.logError(e);
-						t.setStatus(e);
-						m_logger.error(String.format("Already being created (%s)!", path), e);
-					} catch (AccessControlException e) {
-						cat.logError(e);
-						t.setStatus(e);
-						m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-					} catch (Exception e) {
-						cat.logError(e);
-						t.setStatus(e);
-						m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
-					} finally {
-						try {
-							if (fdos != null) {
-								fdos.close();
-							}
-						} catch (IOException e) {
-							Cat.logError(e);
-						}
-						t.complete();
-					}
-
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						break;
-					}
-				}
-
-				root.complete();
-			}
-
-			// the path has two depth
-			for (int i = 0; i < 2; i++) {
-				final List<String> directionPaths = new ArrayList<String>();
-
-				Scanners.forDir().scan(baseDir, new FileMatcher() {
-					@Override
-					public Direction matches(File base, String path) {
-						if (new File(base, path).isDirectory()) {
-							directionPaths.add(path);
-						}
-
-						return Direction.DOWN;
-					}
-				});
-				for (String path : directionPaths) {
-					try {
-						File file = new File(baseDir, path);
-
-						file.delete();
-					} catch (Exception e) {
-					}
+					file.delete();
+				} catch (Exception e) {
 				}
 			}
 		}

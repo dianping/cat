@@ -9,7 +9,6 @@ import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 import com.dianping.cat.hadoop.hdfs.DumpUploader;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
@@ -21,6 +20,7 @@ import com.dianping.cat.system.alarm.AlarmTask;
 import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
+import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
 
@@ -30,26 +30,30 @@ public class CatHomeModule extends AbstractModule {
 	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-		ctx.lookup(DumpUploader.class);
+		
 		ctx.lookup(MessageConsumer.class);
-		ctx.lookup(DomainNavManager.class);
-		ctx.lookup(AggregationConfigManager.class);
+		if (!serverConfigManager.isLocalMode()) {
+			ConfigReloadTask configReloadTask = ctx.lookup(ConfigReloadTask.class);
+			DumpUploader uploader = ctx.lookup(DumpUploader.class);
 
+			Threads.forGroup("Cat").start(configReloadTask);
+			Threads.forGroup("Cat").start(uploader);
+		}
+		
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
-			// MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
-			// Threads.forGroup("Cat").start(metricAlert);
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 			MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
+			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
+			
+			Threads.forGroup("Cat").start(domainNavManager);
 			Threads.forGroup("Cat").start(metricAlert);
 			Threads.forGroup("Cat").start(taskConsumer);
 		}
-
 		executeAlarmModule(ctx);
 	}
 
 	private void executeAlarmModule(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-
 		EventListenerRegistry registry = ctx.lookup(EventListenerRegistry.class);
 		ExceptionDataListener exceptionDataListener = ctx.lookup(ExceptionDataListener.class);
 		ServiceDataListener serviceDataListener = ctx.lookup(ServiceDataListener.class);

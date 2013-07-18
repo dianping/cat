@@ -50,9 +50,6 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -187,8 +184,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.MonthReportCache</role>
-			<implementation>com.dianping.cat.report.service.MonthReportCache</implementation>
+			<role>com.dianping.cat.report.service.MonthlyReportCache</role>
+			<implementation>com.dianping.cat.report.service.MonthlyReportCache</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.DailyReportService</role>
@@ -221,7 +218,7 @@
 					<role>com.dianping.cat.report.service.WeeklyReportCache</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.MonthReportCache</role>
+					<role>com.dianping.cat.report.service.MonthlyReportCache</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2357,9 +2354,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
