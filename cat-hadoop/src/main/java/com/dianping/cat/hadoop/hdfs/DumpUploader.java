@@ -56,6 +56,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
+		if (!m_configManager.isLocalMode()) {
+			if (m_job == null) {
+				m_job = Threads.forGroup("Cat").start(new WriteJob());
+			}
+		}
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
@@ -69,13 +74,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 	public void setSleepPeriod(long period) {
 		m_sleepPeriod = period;
-	}
-
-	public void start() {
-		// only start at first time and long running
-		if (m_job == null) {
-			m_job = Threads.forGroup("Cat").start(new WriteJob());
-		}
 	}
 
 	class WriteJob implements Task {

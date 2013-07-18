@@ -10,6 +10,7 @@ import org.unidal.initialization.ModuleContext;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
+import com.dianping.cat.hadoop.hdfs.DumpUploader;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
@@ -29,7 +30,7 @@ public class CatHomeModule extends AbstractModule {
 	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-
+		ctx.lookup(DumpUploader.class);
 		ctx.lookup(MessageConsumer.class);
 		ctx.lookup(DomainNavManager.class);
 		ctx.lookup(AggregationConfigManager.class);
