@@ -55,7 +55,7 @@ public class Model extends AbstractReportModel<Action, Context> {
    }
 
 	public void setReport(MetricReport report) {
-   	m_report = report;
-   }
+		m_report = report;
+	}
 
 }

@@ -25,8 +25,11 @@ public enum JspFile {
 	
 	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("/jsp/system/metric/metricConfigs.jsp"), 
 	
-	METRIC_CONFIG_LIST("/jsp/system/metric/metricConfigs.jsp")
+	METRIC_CONFIG_LIST("/jsp/system/metric/metricConfigs.jsp"),
 	
+	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
+	
+	EXCEPTION_THRESHOLD_CONFIG("/jsp/system/exception/exceptionThresholdConfig.jsp")
 	;
 
 	private String m_path;
