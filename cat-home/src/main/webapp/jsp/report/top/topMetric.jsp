@@ -28,8 +28,12 @@
 	           <c:forEach var="detail" items="${item.value}" varStatus="status">
 	              <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 	                 <c:choose>
-						<c:when test="${detail.alert}">
+						<c:when test="${detail.alert == 2}">
 							 <td><a class="hreftip" style="color:red" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a></td>
+	                		 <td style="text-align:right;color:red">${w:format(detail.value,'0')}</td>
+						</c:when>
+						<c:when test="${detail.alert == 1}">
+							 <td><a class="hreftip" style="color:rgb(213, 96, 51)" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a></td>
 	                		 <td style="text-align:right;color:red">${w:format(detail.value,'0')}</td>
 						</c:when>
 						<c:otherwise>

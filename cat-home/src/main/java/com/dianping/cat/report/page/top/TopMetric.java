@@ -154,11 +154,15 @@ public class TopMetric extends BaseVisitor {
 
 	public static class Item {
 
+		private static final String ERROR_COLOR = "red";
+
+		private static final String WARN_COLOR = "#bfa22f";
+
 		private String m_domain;
 
 		private double m_value;
 
-		private boolean m_alert = false;
+		private int m_alert ;
 
 		private ExceptionThresholdConfigManager m_configManager;
 
@@ -170,7 +174,7 @@ public class TopMetric extends BaseVisitor {
 			m_configManager = configManager;
 		}
 
-		public boolean isAlert() {
+		public int getAlert() {
 			return m_alert;
 		}
 
@@ -178,9 +182,9 @@ public class TopMetric extends BaseVisitor {
 			return m_domain;
 		}
 
-		private String buildErrorText(String str) {
+		private String buildErrorText(String str, String color) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("<span style='color:red'>").append("<strong>");
+			sb.append("<span style='color:" + color + "'>").append("<strong>");
 			sb.append(str).append("</strong>").append("</span>");
 
 			return sb.toString();
@@ -192,15 +196,19 @@ public class TopMetric extends BaseVisitor {
 			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
 
 				double value = entry.getValue().doubleValue();
-				double limit = -1;
+				double warnLimit = -1;
+				double errorLimit = -1;
 				if (m_configManager != null) {
 					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_domain, entry.getKey());
 					if (exceptionLimit != null) {
-						limit = exceptionLimit.getWarning();
+						warnLimit = exceptionLimit.getWarning();
+						errorLimit = exceptionLimit.getError();
 					}
 				}
-				if (limit > 0 && value > limit) {
-					sb.append(buildErrorText(entry.getKey() + " " + value)).append("<br/>");
+				if (errorLimit > 0 && value > errorLimit) {
+					sb.append(buildErrorText(entry.getKey() + " " + value, ERROR_COLOR)).append("<br/>");
+				} else if (warnLimit > 0 && value > warnLimit) {
+					sb.append(buildErrorText(entry.getKey() + " " + value, WARN_COLOR)).append("<br/>");
 				} else {
 					sb.append(entry.getKey()).append(" ");
 					sb.append(value).append("<br/>");
@@ -227,15 +235,19 @@ public class TopMetric extends BaseVisitor {
 
 		public void setValue(double value) {
 			m_value = value;
-			double limit = -1;
+			double warningLimit = -1;
+			double errorLimit = -1;
 			if (m_configManager != null) {
 				ExceptionLimit totalLimit = m_configManager.queryDomainTotalLimit(m_domain);
 				if (totalLimit != null) {
-					limit = totalLimit.getWarning();
+					warningLimit = totalLimit.getWarning();
+					errorLimit = totalLimit.getError();
 				}
 			}
-			if (limit > 0 && value > limit) {
-				m_alert = true;
+			if (errorLimit > 0 && value > errorLimit) {
+				m_alert =2;
+			}else if (warningLimit > 0 && value > warningLimit) {
+				m_alert = 1;
 			}
 		}
 	}

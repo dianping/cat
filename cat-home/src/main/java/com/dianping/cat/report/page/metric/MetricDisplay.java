@@ -265,9 +265,9 @@ public class MetricDisplay extends BaseVisitor{
 	 private double avgOfArray(double[]values, int j){
 		 double result = 0;
 		 int size = 0;
-		 for(int i = j; i < j+INTERVAL; j++){
-			 if(values[j] >= 0){
-				 result +=values[j];
+		 for(int i = j; i < j+INTERVAL; i++){
+			 if(values[i] >= 0){
+				 result +=values[i];
 				 size ++;
 			 }
 		 }
