@@ -26,7 +26,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
 
-public class MonthReportCache implements Initializable {
+public class MonthlyReportCache implements Initializable {
 
 	private long m_end;
 

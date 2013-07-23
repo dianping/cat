@@ -26,9 +26,8 @@ public class TestSendMessage {
 			t.addData("key and value");
 			t.setStatus(new NullPointerException());
 			t.complete();
-
 		}
-		Thread.sleep(1000);
+		Thread.sleep(10000);
 	}
 
 	@Test
