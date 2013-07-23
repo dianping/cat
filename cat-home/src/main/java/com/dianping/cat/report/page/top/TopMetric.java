@@ -17,8 +17,12 @@ import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class TopMetric extends BaseVisitor {
+
+	private ExceptionThresholdConfigManager m_configManager;
 
 	private String m_currentDomain;
 
@@ -56,8 +60,9 @@ public class TopMetric extends BaseVisitor {
 		return this;
 	}
 
-	public TopMetric(int count, int tops) {
-		m_error = new MetricItem(count, tops);
+	public TopMetric(int count, int tops, ExceptionThresholdConfigManager configManager) {
+		m_configManager = configManager;
+		m_error = new MetricItem(count, tops, m_configManager);
 		m_url = new MetricItem(count, tops);
 		m_service = new MetricItem(count, tops);
 		m_call = new MetricItem(count, tops);
@@ -153,11 +158,20 @@ public class TopMetric extends BaseVisitor {
 
 		private double m_value;
 
+		private boolean m_alert = false;
+
+		private ExceptionThresholdConfigManager m_configManager;
+
 		private Map<String, Double> m_exceptions = new HashMap<String, Double>();
 
-		public Item(String domain, double value) {
+		public Item(String domain, double value, ExceptionThresholdConfigManager configManager) {
 			m_domain = domain;
 			m_value = value;
+			m_configManager = configManager;
+		}
+
+		public boolean isAlert() {
+			return m_alert;
 		}
 
 		public String getDomain() {
@@ -178,7 +192,14 @@ public class TopMetric extends BaseVisitor {
 			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
 
 				double value = entry.getValue().doubleValue();
-				if (value > 200) {
+				double limit = -1;
+				if (m_configManager != null) {
+					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_domain, entry.getKey());
+					if (exceptionLimit != null) {
+						limit = exceptionLimit.getWarning();
+					}
+				}
+				if (limit > 0 && value > limit) {
 					sb.append(buildErrorText(entry.getKey() + " " + value)).append("<br/>");
 				} else {
 					sb.append(entry.getKey()).append(" ");
@@ -206,6 +227,16 @@ public class TopMetric extends BaseVisitor {
 
 		public void setValue(double value) {
 			m_value = value;
+			double limit = -1;
+			if (m_configManager != null) {
+				ExceptionLimit totalLimit = m_configManager.queryDomainTotalLimit(m_domain);
+				if (totalLimit != null) {
+					limit = totalLimit.getWarning();
+				}
+			}
+			if (limit > 0 && value > limit) {
+				m_alert = true;
+			}
 		}
 	}
 
@@ -226,6 +257,14 @@ public class TopMetric extends BaseVisitor {
 
 		private Map<String, List<Item>> m_result;
 
+		private ExceptionThresholdConfigManager m_configManager;
+
+		public MetricItem(int minuteCount, int itemSize, ExceptionThresholdConfigManager configManager) {
+			m_minuteCount = minuteCount;
+			m_itemSize = itemSize;
+			m_configManager = configManager;
+		}
+
 		public MetricItem(int minuteCount, int itemSize) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
@@ -241,7 +280,7 @@ public class TopMetric extends BaseVisitor {
 			Item item = temp.get(domain);
 
 			if (item == null) {
-				item = new Item(domain, 0);
+				item = new Item(domain, 0, m_configManager);
 				temp.put(domain, item);
 			}
 

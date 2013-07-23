@@ -17,6 +17,9 @@ public class ConfigReloadTask implements Initializable {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
+	
+	@Inject
+	private ExceptionThresholdConfigManager m_exceptionConfigManager;
 
 	@Override
 	public void initialize() throws InitializationException {
