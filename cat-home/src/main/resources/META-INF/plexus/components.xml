@@ -74,6 +74,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionThresholdConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -2201,6 +2210,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2209,6 +2221,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionThresholdConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2235,6 +2256,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2376,6 +2403,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2670,6 +2700,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>

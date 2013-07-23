@@ -33,6 +33,7 @@ import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
+import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -60,6 +61,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
+		
+		all.add(C(ExceptionThresholdConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 

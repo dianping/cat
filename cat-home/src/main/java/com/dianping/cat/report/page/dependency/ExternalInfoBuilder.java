@@ -26,6 +26,7 @@ import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class ExternalInfoBuilder {
 
@@ -40,6 +41,9 @@ public class ExternalInfoBuilder {
 	
 	@Inject
 	private ReportService m_reportService;
+	
+	@Inject
+	private ExceptionThresholdConfigManager m_configManager;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 	
@@ -149,7 +153,7 @@ public class ExternalInfoBuilder {
 		int minuteCount = payload.getMinuteCounts();
 		int minute = model.getMinute();
 		TopReport report = queryTopReport(payload);
-		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts());
+		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts(),m_configManager);
 		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
 		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
 

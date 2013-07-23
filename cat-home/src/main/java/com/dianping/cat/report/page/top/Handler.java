@@ -20,6 +20,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -33,6 +34,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+	
+	@Inject
+	private ExceptionThresholdConfigManager m_configManager;
 
 	private TopReport getReport(Payload payload) {
 		String domain = CatString.CAT;
@@ -74,7 +78,7 @@ public class Handler implements PageHandler<Context> {
 		}else{
 			minuteCount = payload.getMinuteCounts();
 		}
-		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts());
+		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts(),m_configManager);
 
 		displayTop.visitTopReport(report);
 		model.setTopReport(report);

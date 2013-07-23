@@ -45,7 +45,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("metricConfigAddSumbit"),
 
-	METRIC_CONFIG_DELETE("metricConfigDelete")
+	METRIC_CONFIG_DELETE("metricConfigDelete"),
+	
+	EXCEPTION_THRESHOLDS("exceptionThresholds"),
+	
+	EXCEPTION_THRESHOLD_UPDATE("exceptionThresholdUpdate"),
+	
+	EXCEPTION_THRESHOLD_UPDATE_SUBMIT("exceptionThresholdUpdateSubmit"),
+	
+	EXCEPTION_THRESHOLD_DELETE("exceptionThresholdDelete"),
 	;
 
 	private String m_name;

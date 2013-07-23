@@ -34,9 +34,11 @@ import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -58,10 +60,17 @@ public class Handler implements PageHandler<Context> {
 	private MetricConfigManager m_metricConfigManager;
 
 	@Inject
+	private ExceptionThresholdConfigManager m_exceptionConfigManager;
+
+	@Inject
 	private DomainNavManager m_manager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
+	}
+
+	private void deleteExceptionLimit(Payload payload) {
+		m_exceptionConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
 	}
 
 	private void graphEdgeConfigAdd(Payload payload, Model model) {
@@ -237,9 +246,25 @@ public class Handler implements PageHandler<Context> {
 			metricConfigList(payload, model);
 			break;
 		case METRIC_CONFIG_DELETE:
-			model.setOpState(m_metricConfigManager.deleteDomainConfig(m_metricConfigManager.buildMetricKey(payload.getDomain(),
-			      payload.getType(), payload.getMetricKey())));
+			model.setOpState(m_metricConfigManager.deleteDomainConfig(m_metricConfigManager.buildMetricKey(
+			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
+			break;
+
+		case EXCEPTION_THRESHOLDS:
+			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+			break;
+		case EXCEPTION_THRESHOLD_DELETE:
+			deleteExceptionLimit(payload);
+			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+			break;
+		case EXCEPTION_THRESHOLD_UPDATE:
+			model.setExceptionLimit(m_exceptionConfigManager.queryDomainExceptionLimit(payload.getDomain(),
+			      payload.getException()));
+			break;
+		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
+			updateExceptionLimit(payload);
+			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -257,7 +282,7 @@ public class Handler implements PageHandler<Context> {
 		String type = config.getType();
 		String metricKey = config.getMetricKey();
 
-		if (!StringUtil.isEmpty(domain)&&!StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
+		if (!StringUtil.isEmpty(domain) && !StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
 			config.setId(m_metricConfigManager.buildMetricKey(domain, type, metricKey));
 			return m_metricConfigManager.insertMetricItemConfig(config);
 		} else {
@@ -298,6 +323,12 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return project;
+	}
+
+	private void updateExceptionLimit(Payload payload) {
+		ExceptionLimit limit = payload.getExceptionLimit();
+		m_exceptionConfigManager.insertExceptionLimit(limit);
+
 	}
 
 	private void updateAggregationRule(Payload payload) {
