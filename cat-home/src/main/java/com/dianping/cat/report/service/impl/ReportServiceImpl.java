@@ -23,7 +23,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
-import com.dianping.cat.report.service.MonthReportCache;
+import com.dianping.cat.report.service.MonthlyReportCache;
 import com.dianping.cat.report.service.MonthlyReportService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.WeeklyReportCache;
@@ -46,7 +46,7 @@ public class ReportServiceImpl implements ReportService {
 	private WeeklyReportCache m_weeklyReportCache;
 
 	@Inject
-	private MonthReportCache m_monthReportCache;
+	private MonthlyReportCache m_monthReportCache;
 
 	public static final int s_hourly = 1;
 

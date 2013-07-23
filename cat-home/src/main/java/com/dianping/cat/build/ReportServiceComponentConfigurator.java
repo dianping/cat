@@ -14,7 +14,7 @@ import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
-import com.dianping.cat.report.service.MonthReportCache;
+import com.dianping.cat.report.service.MonthlyReportCache;
 import com.dianping.cat.report.service.MonthlyReportService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.WeeklyReportCache;
@@ -45,13 +45,13 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		all.add(C(WeeklyReportCache.class)//
 		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
 
-		all.add(C(MonthReportCache.class)//
+		all.add(C(MonthlyReportCache.class)//
 		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
 
 		all.add(C(ReportService.class, ReportServiceImpl.class)//
 		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class,
 		            MonthlyReportService.class)//
-		      .req(WeeklyReportCache.class, MonthReportCache.class));
+		      .req(WeeklyReportCache.class, MonthlyReportCache.class));
 
 
 		return all;

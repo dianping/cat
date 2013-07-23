@@ -49,14 +49,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
-		
+
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportService.class));
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
+		all.add(C(DomainNavManager.class).req(ProjectDao.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
@@ -73,7 +73,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, "dependency"));
 
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
-		
+
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -87,7 +87,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
-		
+
 		// for abtest module
 		all.addAll(new ABTestComponentConfigurator().defineComponents());
 
@@ -96,7 +96,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
-		
+
 		return all;
 	}
 }
