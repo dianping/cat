@@ -76,6 +76,8 @@
          </servers>
       </config>
   </xmp>
+  <p class="text-error">alpha、beta这个配置需要自己在此目录添加</p>
+  <p class="text-error">预发以及生产环境这个配置需要通知到对应OP团队，让他们统一添加，自己上线时候做下检查即可</p>
   <p>a、192.168.7.70:2280端口是指向测试环境的cat地址</p>
   <p>b、<span class="text-error">配置可以加入CAT的开关，用于关闭CAT消息发送,将enabled改为false，如下表示将MobileApi这个项目关闭</span></p>
   <xmp>
