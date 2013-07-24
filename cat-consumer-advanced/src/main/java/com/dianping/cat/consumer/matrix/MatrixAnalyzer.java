@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.matrix;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +42,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	@Override
 	public MatrixReport getReport(String domain) {
 		MatrixReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		if (report == null) {
-			report = new MatrixReport(domain);
-
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-		}
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;

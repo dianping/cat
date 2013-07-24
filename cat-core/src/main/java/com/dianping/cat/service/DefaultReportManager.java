@@ -75,6 +75,10 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Override
 	public T getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
+		if (createIfNotExist) {
+			cleanup();
+		}
+
 		Map<String, T> reports = m_map.get(startTime);
 
 		if (reports == null && createIfNotExist) {
@@ -156,7 +160,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				m_bucketManager.closeBucket(bucket);
 			}
 		}
-
 		return reports;
 	}
 
@@ -218,7 +221,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 					}
 				}
 			}
-
 			t.setStatus(Message.SUCCESS);
 		} catch (Throwable e) {
 			Cat.logError(e);

@@ -183,7 +183,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
-			Threads.forGroup("Cat").start(new Reload());
+			Threads.forGroup("Cat").start(new DependencyReload());
 		}
 	}
 
@@ -227,7 +227,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return graph;
 	}
 
-	private class Reload implements Task {
+	private class DependencyReload implements Task {
 
 		private void buildGraph(List<DependencyReport> reports) {
 			Transaction t = Cat.newTransaction(DEPENDENCY, "BuildGraph");

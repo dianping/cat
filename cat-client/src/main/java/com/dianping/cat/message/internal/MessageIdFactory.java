@@ -45,10 +45,9 @@ public class MessageIdFactory {
 			}
 
 			index = m_index++;
+			saveMark();
 		}
-
-		saveMark();
-
+		
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
 		sb.append(m_domain);
