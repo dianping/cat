@@ -21,8 +21,6 @@
             col:3,
             colInside:4,
             paddingInside:10,
-			blockPaddingRatio:0.5,
-            leftTitlePaddingRatio: 0.5,
 			size:{
 				circle:{
 					width:100,
@@ -578,6 +576,8 @@
             col:3,
             colInside:4,
             paddingInside:10,
+            leftTitlePaddingRatio: 0.5,
+            blockPaddingRatio: 0.4,
             //paddingLeft:50,
 			sideWeight:function(weight){
 				//weight ==> px
