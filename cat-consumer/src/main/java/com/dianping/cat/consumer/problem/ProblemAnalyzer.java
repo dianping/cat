@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.problem;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +49,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		if (!ALL.equals(domain)) {
 			ProblemReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-			if (report == null) {
-				report = new ProblemReport(domain);
-				report.setStartTime(new Date(getStartTime()));
-				report.setEndTime(new Date(getStartTime() + ReportConstants.HOUR - 1));
-			}
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 
 			if (ReportConstants.FRONT_END.equals(domain)) {

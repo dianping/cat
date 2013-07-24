@@ -21,6 +21,8 @@
             col:3,
             colInside:4,
             paddingInside:10,
+			blockPaddingRatio:0.5,
+            leftTitlePaddingRatio: 0.5,
 			size:{
 				circle:{
 					width:100,

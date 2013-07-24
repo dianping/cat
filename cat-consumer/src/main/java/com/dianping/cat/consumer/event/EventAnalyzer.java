@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.event;
 
-import java.util.Date;
 import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -25,7 +24,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Inject(ID)
 	private ReportManager<EventReport> m_reportManager;
-
+	
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
@@ -43,13 +42,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public EventReport getReport(String domain) {
 		EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		if (report == null) {
-			report = new EventReport(domain);
-
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-		}
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;

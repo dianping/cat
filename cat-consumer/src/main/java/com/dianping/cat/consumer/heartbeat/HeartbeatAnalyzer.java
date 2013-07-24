@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -126,13 +125,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		if (report == null) {
-			report = new HeartbeatReport(domain);
-
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-		}
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;

@@ -75,6 +75,7 @@
 			paddingUp: 0,
 			//小方块间的间隔比率
 			blockPaddingRatio: 0.5,
+            leftTitlePaddingRatio: 0.5,
 			showLeft: true,
 			showUp: false
 		});

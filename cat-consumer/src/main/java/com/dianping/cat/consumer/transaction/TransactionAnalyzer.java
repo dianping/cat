@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.transaction;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,11 +54,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (!ReportConstants.ALL.equals(domain)) {
 			TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-			if (report == null) {
-				report = new TransactionReport(domain);
-				report.setStartTime(new Date(getStartTime()));
-				report.setEndTime(new Date(getStartTime() + ReportConstants.HOUR - 1));
-			}
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 			report.accept(new TransactionStatisticsComputer());
 			return report;
