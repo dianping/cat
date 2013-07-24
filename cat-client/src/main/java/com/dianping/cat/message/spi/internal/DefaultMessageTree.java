@@ -33,7 +33,7 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadId;
 
 	private String m_threadName;
-
+	
 	@Override
 	public MessageTree copy() {
 		MessageTree tree = new DefaultMessageTree();

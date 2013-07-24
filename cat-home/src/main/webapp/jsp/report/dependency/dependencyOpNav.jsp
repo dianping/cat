@@ -16,13 +16,6 @@
 	</div>
 </div>
 <script type="text/javascript">
-function fullScreen(e){
-	if(e!=null){
-	 e.preventDefault();
-	}
-	 var container = $('#fullScreenData')[0];
-	 container.requestFullScreen ? container.requestFullScreen() : (container.webkitRequestFullScreen ? container.webkitRequestFullScreen() : (container.mozRequestFullScreen && container.mozRequestFullScreen()));
-}
 
 $(document).ready(function() {
 	var id = '${payload.action.name}';

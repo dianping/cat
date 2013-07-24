@@ -2,9 +2,7 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
@@ -52,25 +50,18 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	@Inject
 	private BusinessReportDao m_businessReportDao;
 
-	private Map<Long, Set<String>> m_domains = new LinkedHashMap<Long, Set<String>>();
-
 	private Set<String> queryAllDomains(Date start) {
-		Set<String> domains = m_domains.get(start.getTime());
+		Set<String> domains = new HashSet<String>();
+		try {
+			List<HourlyReport> reports = m_reportDao.findAllByPeriod(start, HourlyReportEntity.READSET_DOMAIN_NAME);
 
-		if (domains == null) {
-			domains = new HashSet<String>();
-			try {
-				List<HourlyReport> reports = m_reportDao.findAllByPeriod(start, HourlyReportEntity.READSET_DOMAIN_NAME);
-
-				if (reports != null) {
-					for (HourlyReport report : reports) {
-						domains.add(report.getDomain());
-					}
+			if (reports != null) {
+				for (HourlyReport report : reports) {
+					domains.add(report.getDomain());
 				}
-				m_domains.put(start.getTime(), domains);
-			} catch (DalException e) {
-				Cat.logError(e);
 			}
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
 		return domains;
 	}
