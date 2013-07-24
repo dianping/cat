@@ -222,6 +222,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		private int m_length;
 
+		private long m_totalDurationInMicros; // for truncate message
+
 		public Context(String domain, String hostName, String ipAddress, ClientConfigManager configManager) {
 			m_tree = new DefaultMessageTree();
 			m_stack = new Stack<Transaction>();
@@ -262,15 +264,20 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
 
 			if (treePeriod < messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
-				flushTrancatedMessage(manager, message.getTimestamp());
+				truncateAndFlushMessage(manager, message.getTimestamp());
 			}
 
 			transaction.addChild(message);
 			m_length++;
 		}
 
-		private long trimToHour(long timestamp) {
-			return timestamp - timestamp % (3600 * 1000L);
+		private void adjustForTruncatedMessage(Transaction root) {
+			DefaultEvent next = new DefaultEvent("TruncatedTransaction", "TotalDuration");
+			long actualDurationInMicros = m_totalDurationInMicros + root.getDurationInMicros();
+
+			next.addData(String.valueOf(actualDurationInMicros));
+			next.setStatus(Message.SUCCESS);
+			root.addChild(next);
 		}
 
 		/**
@@ -299,54 +306,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 					m_tree.setMessageId(null);
 					m_tree.setMessage(null);
+
+					if (m_totalDurationInMicros > 0) {
+						adjustForTruncatedMessage(current);
+					}
+
 					manager.flush(tree);
 					return true;
 				}
 			}
 
 			return false;
-		}
-
-		private void flushTrancatedMessage(DefaultMessageManager manager, long timestamp) {
-			Message message = m_tree.getMessage();
-
-			if (message instanceof DefaultTransaction) {
-				String id = m_tree.getMessageId();
-				String rootId = m_tree.getRootMessageId();
-				String childId = manager.nextMessageId();
-				DefaultTransaction source = (DefaultTransaction) message;
-				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), manager);
-
-				target.setTimestamp(source.getTimestamp());
-				target.setDurationInMicros(source.getDurationInMicros());
-				target.addData(source.getData().toString());
-				target.setStatus(Message.SUCCESS);
-
-				migrateMessage(manager, source, target, 1);
-
-				for (int i = m_stack.size() - 1; i >= 0; i--) {
-					DefaultTransaction t = (DefaultTransaction) m_stack.get(i);
-
-					t.setTimestamp(timestamp);
-				}
-
-				DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
-
-				next.addData(childId);
-				next.setStatus(Message.SUCCESS);
-				target.addChild(next);
-
-				// tree is the parent, and m_tree is the child.
-				MessageTree tree = m_tree.copy();
-
-				tree.setMessage(target);
-				manager.flush(tree);
-
-				m_tree.setMessageId(childId);
-				m_tree.setParentMessageId(id);
-				m_tree.setRootMessageId(rootId != null ? rootId : id);
-				m_length = m_stack.size();
-			}
 		}
 
 		private void migrateMessage(DefaultMessageManager manager, Transaction source, Transaction target, int level) {
@@ -399,6 +369,53 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 
 			m_stack.push(transaction);
+		}
+
+		private long trimToHour(long timestamp) {
+			return timestamp - timestamp % (3600 * 1000L);
+		}
+
+		private void truncateAndFlushMessage(DefaultMessageManager manager, long timestamp) {
+			Message message = m_tree.getMessage();
+
+			if (message instanceof DefaultTransaction) {
+				String id = m_tree.getMessageId();
+				String rootId = m_tree.getRootMessageId();
+				String childId = manager.nextMessageId();
+				DefaultTransaction source = (DefaultTransaction) message;
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), manager);
+
+				target.setTimestamp(source.getTimestamp());
+				target.setDurationInMicros(source.getDurationInMicros());
+				target.addData(source.getData().toString());
+				target.setStatus(Message.SUCCESS);
+
+				migrateMessage(manager, source, target, 1);
+
+				for (int i = m_stack.size() - 1; i >= 0; i--) {
+					DefaultTransaction t = (DefaultTransaction) m_stack.get(i);
+
+					t.setTimestamp(timestamp);
+				}
+
+				DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
+
+				next.addData(childId);
+				next.setStatus(Message.SUCCESS);
+				target.addChild(next);
+
+				// tree is the parent, and m_tree is the child.
+				MessageTree tree = m_tree.copy();
+
+				tree.setMessage(target);
+				manager.flush(tree);
+
+				m_tree.setMessageId(childId);
+				m_tree.setParentMessageId(id);
+				m_tree.setRootMessageId(rootId != null ? rootId : id);
+				m_length = m_stack.size();
+				m_totalDurationInMicros += source.getDurationInMicros();
+			}
 		}
 
 		void validateTransaction(Transaction transaction) {
