@@ -29,15 +29,15 @@
 	              <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 	                 <c:choose>
 						<c:when test="${detail.alert == 2}">
-							 <td><a class="hreftip" style="color:red" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a></td>
-	                		 <td style="text-align:right;color:red">${w:format(detail.value,'0')}</td>
+							 <td style="background-color:red;color:white;"><a class="hreftip"  style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 22)}</a></td>
+	                		 <td style="background-color:red;color:white;text-align:right">${w:format(detail.value,'0')}</td>
 						</c:when>
 						<c:when test="${detail.alert == 1}">
-							 <td><a class="hreftip" style="color:rgb(213, 96, 51)" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a></td>
-	                		 <td style="text-align:right;color:red">${w:format(detail.value,'0')}</td>
+							 <td style="background-color:#bfa22f;color:white;"><a class="hreftip" style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 22)}</a></td>
+	                		 <td style="background-color:#bfa22f;color:white;text-align:right">${w:format(detail.value,'0')}</td>
 						</c:when>
 						<c:otherwise>
-							 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${detail.domain}</a></td>
+							 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 22)}</a></td>
 	                		 <td style="text-align:right">${w:format(detail.value,'0')}</td>
 						</c:otherwise>
 					 </c:choose>
