@@ -78,7 +78,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		report.addIp(tree.getIpAddress());
 
 		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+			Transaction root = (Transaction) message;
+
+			processTransaction(report, tree, root);
 		}
 	}
 
@@ -103,7 +105,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.setSum(range.getSum() + d);
 	}
 
-	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
+	protected int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		if (shouldDiscard(t)) {
 			return 0;
 		}
