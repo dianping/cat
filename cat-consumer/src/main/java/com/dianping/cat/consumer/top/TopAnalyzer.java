@@ -75,7 +75,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 				new ProblemReportVisitor(topReport).visitProblemReport(report);
 			}
 		}
-
 		return topReport;
 	}
 
@@ -93,7 +92,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	private boolean validateDomain(String domain) {
-		return !domain.equals("FrontEnd");
+		return !domain.equals(ReportConstants.FRONT_END) && !domain.equals(ReportConstants.ALL);
 	}
 
 	static class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {

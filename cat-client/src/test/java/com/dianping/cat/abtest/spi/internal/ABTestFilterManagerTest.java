@@ -11,9 +11,9 @@ import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.abtest.model.entity.Condition;
-import com.dianping.cat.abtest.spi.interanl.conditions.ABTestCondition;
-import com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager;
-import com.dianping.cat.abtest.spi.interanl.conditions.AbstractABTestCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager;
+import com.dianping.cat.abtest.spi.internal.conditions.AbstractABTestCondition;
 
 public class ABTestFilterManagerTest extends ComponentTestCase {
 	

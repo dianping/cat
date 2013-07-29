@@ -10,6 +10,7 @@
 	PI = Math.PI;
 
 	var StarTopo = function(container, data , options){
+	    
 		var DEFAULT_OPTION = {
 			typeMap:{
 				
@@ -310,6 +311,13 @@
             if(actualHeight + y > (window.innerHeight+ window.pageYOffset)){
                 this._tip.style.top = y - actualHeight+'px';
             }
+            //判定是否超过页面右边界
+            var actualWidth = this._tip.clientWidth;
+            console.log('actualWidth '+actualWidth);
+            if(actualWidth + x > (window.innerWidth+ window.pageXOffset)){
+               this._tip.style.left = x - actualWidth+'px';
+            }
+            console.log('this._tip.style.left '+this._tip.style.left);
 		},
 		hide:function(){
 			this._tip && (this._tip.style.display = 'none');
@@ -568,6 +576,8 @@
             col:3,
             colInside:4,
             paddingInside:10,
+            leftTitlePaddingRatio: 0.5,
+            blockPaddingRatio: 0.4,
             //paddingLeft:50,
 			sideWeight:function(weight){
 				//weight ==> px
@@ -618,6 +628,7 @@
             var titleHeight = 30;
             var self = this;
             var option = this.options;
+            var leftTitlePadding = option.leftTitlePaddingRatio*nodeWidth;
             if(!lines){
                 return;
             }
@@ -659,9 +670,8 @@
                    if(gridIndex!=0){
                      console.log(line.length);
                      var length = line.length;
-                     
                      for(index=0;index<length;index++){
-                     var title = self.stage.text(startX,(startY+maxY/4+index*12),line.charAt(index)).attr({
+                     var title = self.stage.text(startX,(startY+leftTitlePadding+index*18),line.charAt(index)).attr({
                     'font-size':15
                      });
                      
@@ -689,7 +699,7 @@
                         node.color(option.colorMap[nodeData.status])
                         node.node.attr('stroke-width',2);
                         node.node.mouseover(function(e){
-                            Tip.show(nodeData.des,e.pageX+15,e.pageY+15);
+                        Tip.show(nodeData.des,e.pageX+15,e.pageY+15);
                         }).mouseout(function(){
                             Tip.hide();
                         });
@@ -711,7 +721,7 @@
                      var length = line.length;
                      
                      for(index=0;index<length;index++){
-                     var title = self.stage.text(startX,(startY+maxY/4+index*12),line.charAt(index)).attr({
+                     var title = self.stage.text(startX,(startY+leftTitlePadding+index*18),line.charAt(index)).attr({
                     'font-size':15
                      });
                      
@@ -874,7 +884,6 @@
                 }
             }
             set.translate((this.container.clientWidth-startX)/2,0);
-            //默认关系边不显示
             self.edgeSet.data("active",true);
             self.nodeSet.data("active",true);
 

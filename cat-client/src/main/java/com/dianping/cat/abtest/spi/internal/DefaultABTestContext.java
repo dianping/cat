@@ -15,7 +15,7 @@ import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
-import com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -109,9 +109,15 @@ public class DefaultABTestContext implements ABTestContext {
 
 				boolean isAccept = manager.accept(conditions,request);
 				
-				if(isAccept){
+				//if(isAccept){
 					m_groupStrategy.apply(this);
-				}
+//				}else{
+//					String group = this.getCookielet("ab");
+//					
+//					if (group != null && group.equals("A")) {
+//						setGroupName("A");
+//					} 
+//				}
 
 				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {

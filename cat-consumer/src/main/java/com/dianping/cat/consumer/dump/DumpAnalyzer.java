@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.dump;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

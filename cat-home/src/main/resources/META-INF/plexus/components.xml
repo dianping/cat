@@ -50,9 +50,6 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -70,6 +67,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionThresholdConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -187,8 +193,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.MonthReportCache</role>
-			<implementation>com.dianping.cat.report.service.MonthReportCache</implementation>
+			<role>com.dianping.cat.report.service.MonthlyReportCache</role>
+			<implementation>com.dianping.cat.report.service.MonthlyReportCache</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.DailyReportService</role>
@@ -221,7 +227,7 @@
 					<role>com.dianping.cat.report.service.WeeklyReportCache</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.MonthReportCache</role>
+					<role>com.dianping.cat.report.service.MonthlyReportCache</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2220,6 +2226,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2228,6 +2237,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionThresholdConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2254,6 +2272,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2374,9 +2398,6 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2398,6 +2419,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2692,6 +2716,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>

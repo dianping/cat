@@ -8,13 +8,16 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.repository.HttpABTestEntityRepository;
-import com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 import com.dianping.cat.abtest.spi.internal.ABTestEntityManager;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestCodec;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager;
+import com.dianping.cat.abtest.spi.internal.conditions.PercentageCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.URLCondition;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.spi.MessageManager;
 
@@ -34,6 +37,10 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ABTestEntityRepository.class));
 
 		all.add(C(ABTestConditionManager.class, ABTestConditionManager.class));
+
+		all.add(C(ABTestCondition.class, URLCondition.ID, URLCondition.class));
+
+		all.add(C(ABTestCondition.class, PercentageCondition.ID, PercentageCondition.class));
 
 		return all;
 	}

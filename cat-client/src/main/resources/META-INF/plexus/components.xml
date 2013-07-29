@@ -156,8 +156,18 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager</role>
-			<implementation>com.dianping.cat.abtest.spi.interanl.conditions.ABTestConditionManager</implementation>
+			<role>com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition</role>
+			<role-hint>url</role-hint>
+			<implementation>com.dianping.cat.abtest.spi.internal.conditions.URLCondition</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition</role>
+			<role-hint>percent</role-hint>
+			<implementation>com.dianping.cat.abtest.spi.internal.conditions.PercentageCondition</implementation>
 		</component>
 	</components>
 </plexus>

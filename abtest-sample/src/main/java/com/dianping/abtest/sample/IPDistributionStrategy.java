@@ -25,7 +25,6 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 
 	@Override
 	public void apply(ABTestContext ctx) {
-		
 		HttpServletRequest req = ctx.getHttpServletRequest();
 		String address = getRemoteAddr(req);
 		String group = ctx.getCookielet("ab");

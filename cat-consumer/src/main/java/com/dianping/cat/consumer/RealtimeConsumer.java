@@ -39,7 +39,7 @@ import com.dianping.cat.statistic.ServerStatisticManager;
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
 	private static final long MINUTE = 60 * 1000L;
 
-	private static int QUEUE_SIZE = 100000;
+	private static int QUEUE_SIZE = 300000;
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 

@@ -169,7 +169,6 @@ div.controls input {
 					</div>
 					<a class="pull-right active hide" href="javascript:void(0);" id="edit2">Edit</a> 
 					<a class="pull-right active hide" href="javascript:void(0);" id="save2">Save</a> 
-					<a class="pull-right active hide" href="javascript:void(0);" id="cancel2">Cancel &nbsp;</a> 
 					<a href="javascript:void(0)" id="addVistorCondition" class="pull-right active hide"><i class="icon-plus"></i>Add visitor condition &nbsp;</a>
 				</div>
 			</div>
@@ -344,7 +343,7 @@ div.controls input {
 					}
 				});
 				
-				$("#edit2,#save2,#cancel2").click(function(e){
+				$("#edit2,#save2").click(function(e){
 					var parent = $(this).parent();
 					$("span",parent).toggleClass("hide");
 					$("#addVistorCondition").toggleClass("hide");
@@ -358,7 +357,11 @@ div.controls input {
 					if(id == "save2"){
 						var conditions = getConditionsHTML();
 						
-						$("span",parent).html(conditions);
+						if(conditions){
+							$("span",parent).html(conditions);
+						}else{
+							$("span",parent).html("All visitors");
+						}
 					}else if(id == "edit2"){
 					}
 					

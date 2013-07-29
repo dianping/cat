@@ -116,6 +116,11 @@ public class DomainManager implements Initializable, LogEnabled {
 					m_domainsInCat.add(info.getDomain());
 					m_ipsInCat.add(info.getIp());
 				}
+				
+				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+				for(Project project:projects){
+					m_domainsInCat.add(project.getDomain());
+				}
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -228,7 +233,6 @@ public class DomainManager implements Initializable, LogEnabled {
 			project.setDomain(domain);
 			project.setProjectLine("Default");
 			project.setDepartment("Default");
-
 			try {
 				m_projectDao.insert(project);
 				m_domainsInCat.add(domain);

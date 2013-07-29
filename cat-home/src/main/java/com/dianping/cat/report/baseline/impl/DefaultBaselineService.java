@@ -30,34 +30,41 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 
 	private Logger m_logger;
 
-	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>(1000) {
+	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>() {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected boolean removeEldestEntry(Entry<String, Baseline> eldest) {
-			return true;
+			return size() > 1000;
 		}
 	};
 
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
+
 		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
 		Baseline baseline = m_baselineMap.get(baselineKey);
-
 		if (baseline == null) {
 			try {
 				baseline = m_baselineDao
 				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				m_baselineMap.put(baselineKey, baseline);
-				return parse(baseline.getData());
 			} catch (DalNotFoundException e) {
 				m_logger.info("Baseline not found: " + baselineKey);
+				return null;
 			} catch (Exception e) {
 				Cat.logError(e);
+				return null;
 			}
 		}
-		return null;
+		
+		try {
+	      return parse(baseline.getData());
+      }  catch (Exception e) {
+			Cat.logError(e);
+			return null;
+		}
 	}
 
 	@Override
@@ -65,11 +72,10 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 		double[] result = new double[60];
 		Date today = TaskHelper.todayZero(reportPeriod);
 		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
-		double[] dayResult = queryDailyBaseline(reportName, key, today);
 
-		if (dayResult == null) {
+		double[] dayResult = queryDailyBaseline(reportName, key, today);
+		if (dayResult == null)
 			return null;
-		}
 		for (int i = 0; i < 60; i++) {
 			result[i] = dayResult[hour * 60 + i];
 		}

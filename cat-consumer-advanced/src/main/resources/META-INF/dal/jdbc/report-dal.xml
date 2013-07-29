@@ -41,16 +41,6 @@
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
-			<query name="find-all-by-productLine-id" type="SELECT" multiple="true">
-				<param name="id" />
-				<param name="product-line" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='id'/> >= ${id}
-					AND <FIELD name='product-line'/> = ${product-line}
-					]]></statement>
-			</query>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
 					INSERT 

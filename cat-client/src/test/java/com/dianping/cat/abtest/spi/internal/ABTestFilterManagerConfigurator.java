@@ -6,8 +6,8 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.abtest.spi.interanl.conditions.ABTestCondition;
 import com.dianping.cat.abtest.spi.internal.ABTestFilterManagerTest.TestCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition;
 
 public class ABTestFilterManagerConfigurator extends AbstractResourceConfigurator {
 	@Override
