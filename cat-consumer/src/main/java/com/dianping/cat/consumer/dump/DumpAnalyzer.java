@@ -47,7 +47,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			public void run() {
 				try {
 					m_bucketManager.archive(startTime);
-					m_logger.info("Dump analyzer end archive!");
+					m_logger.info("Dump analyzer checkpoint is completed!");
 				} catch (Exception e) {
 					Cat.logError(e);
 				}

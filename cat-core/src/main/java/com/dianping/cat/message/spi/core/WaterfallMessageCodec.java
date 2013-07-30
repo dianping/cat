@@ -31,7 +31,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 	private BufferHelper m_bufferHelper;
 
-	private boolean m_mockMode = true;
+	private boolean m_mockMode = false;
 
 	protected int countTransactions(Transaction t) {
 		int count = 1;
