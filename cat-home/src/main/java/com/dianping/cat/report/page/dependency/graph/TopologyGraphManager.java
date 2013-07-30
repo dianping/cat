@@ -182,9 +182,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		//if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
+		if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
 			Threads.forGroup("Cat").start(new DependencyReload());
-		//}
+		}
 	}
 
 	private TopologyGraph queryTopologyGraph(long time) {
