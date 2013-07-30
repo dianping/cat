@@ -13,11 +13,6 @@
 	<entity name="entry">
 		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
 		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
-		<entity-ref name="stacktrace" type="map" names="stacktraces" method-find-or-create="true" />
-	</entity>
-	<entity name="stacktrace" class-name="stacktrace">
-		<attribute name="key" value-type="String" key="true" />
-		<attribute name="detail" value-type="String" />
 	</entity>
 	<entity name="thread" class-name="java-thread">
 		<attribute name="id" value-type="String" key="true" />
