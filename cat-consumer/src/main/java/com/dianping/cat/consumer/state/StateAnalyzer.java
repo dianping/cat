@@ -178,16 +178,16 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				m_domainManager.insertDomain(domain);
 				m_logger.info("inserted domain info " + domain);
 			}
-			Hostinfo hostInfo = m_domainManager.queryHostInfoByIp(ip);
+			Hostinfo ipInfo = m_domainManager.queryHostInfoByIp(ip);
 
-			if (hostInfo == null) {
+			if (ipInfo == null) {
 				m_logger.info("inserting domain info " + domain + " " + ip);
 				m_domainManager.insert(domain, ip);
 				m_logger.info("inserted domain info " + domain + " " + ip);
-			} else if (!hostInfo.getDomain().equals(domain)) {
+			} else if (!ipInfo.getDomain().equals(domain)) {
 				// ip is change
 				m_logger.info("inserting domain info " + domain + " " + ip + ", because ip changed to other domain!");
-				m_domainManager.update(hostInfo.getId(), domain, ip);
+				m_domainManager.update(ipInfo.getId(), domain, ip);
 				m_logger.info("inserted domain info " + domain + " " + ip + ", because ip changed to other domain!");
 			}
 		}

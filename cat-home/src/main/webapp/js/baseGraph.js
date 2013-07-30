@@ -62,7 +62,7 @@ var lineChartOptions = {
     legend:{
     },
     tooltip:function(obj){
-    	return obj.label+" "+obj.y.toFixed(0);
+    	return obj.x+" "+obj.y.toFixed(0);
     }
     
  }
