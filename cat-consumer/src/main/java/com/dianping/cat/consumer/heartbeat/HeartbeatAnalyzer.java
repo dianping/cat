@@ -147,34 +147,29 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 	}
 
-	private int processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
+	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
 		String ip = tree.getIpAddress();
 		Period period = getHeartBeatInfo(heartbeat, tree.getMessage().getTimestamp());
 
 		if (period != null) {
 			report.findOrCreateMachine(ip).getPeriods().add(period);
 		}
-
-		return 1;
 	}
 
-	private int processTransaction(HeartbeatReport report, MessageTree tree, Transaction transaction) {
+	private void processTransaction(HeartbeatReport report, MessageTree tree, Transaction transaction) {
 		List<Message> children = transaction.getChildren();
-		int count = 0;
 
 		for (Message message : children) {
 			if (message instanceof Transaction) {
 				Transaction temp = (Transaction) message;
 
-				count += processTransaction(report, tree, temp);
+				processTransaction(report, tree, temp);
 			} else if (message instanceof Heartbeat) {
 				if (message.getType().equalsIgnoreCase("heartbeat")) {
-					count += processHeartbeat(report, (Heartbeat) message, tree);
+					processHeartbeat(report, (Heartbeat) message, tree);
 				}
 			}
 		}
-
-		return count;
 	}
 
 }

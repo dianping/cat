@@ -18,6 +18,9 @@
 			colorMap:{
 				
 			},
+            format:{
+
+			},
             col:3,
             colInside:4,
             paddingInside:10,
@@ -313,11 +316,9 @@
             }
             //判定是否超过页面右边界
             var actualWidth = this._tip.clientWidth;
-            console.log('actualWidth '+actualWidth);
             if(actualWidth + x > (window.innerWidth+ window.pageXOffset)){
                this._tip.style.left = x - actualWidth+'px';
             }
-            console.log('this._tip.style.left '+this._tip.style.left);
 		},
 		hide:function(){
 			this._tip && (this._tip.style.display = 'none');
@@ -573,10 +574,13 @@
 			},
             titleMap:{
             },
+            format:{
+
+			},
             col:3,
             colInside:4,
             paddingInside:10,
-            leftTitlePaddingRatio: 0.5,
+            leftTitlePaddingRatio: 0.1,
             blockPaddingRatio: 0.4,
             //paddingLeft:50,
 			sideWeight:function(weight){
@@ -611,34 +615,35 @@
             var nodeWidth =( colWidth - option.paddingInside * (option.colInside)-30) / option.colInside;
             this._colWidth = colWidth;
             this._nodeWidth = nodeWidth;
-            for(var i=0;i<option.col-1;i++){
-                this.stage.path().attr({
-                    path:['M',colWidth*(i+1),40,'v',self.container.clientHeight],
-                    stroke:1
-                });
-            }
+            self.stage.path().attr({
+                path:['M',0,40,'h',self.container.clientWidth],
+                stroke:1
+            });
         },
         _initNodes:function(){
-            console.log(this.data);
             var data = this.data;
             //由对象组成的二维数组，其中lines表示所有模块？后面的line表示一个模块，productLines 是json中的属性
             var lines = data.productLines;
             var nodeWidth = this._nodeWidth;
+            var nodeHight = nodeWidth/2;
             var colWidth = this._colWidth;
             var titleHeight = 30;
             var self = this;
             var option = this.options;
             var leftTitlePadding = option.leftTitlePaddingRatio*nodeWidth;
+            var const_leftY=40;
+            var const_upY=40;
             if(!lines){
                 return;
             }
             var gridIndex = 0;
             var maxY;
+
             //初始化时的作图点 根据不同的标题位置改变页面
             if(option.showLeft==true){
-            maxY = 35;
+            maxY = const_leftY;
             }else if(option.showUp==true){
-            maxY= 40;
+            maxY= const_upY;
             }
             //初始化，值不影响页面
             var startX=0,startY=0;
@@ -647,20 +652,47 @@
             //line是关键词
             for(var line in lines){
                 if(lines.hasOwnProperty(line)){
+                    var colInside=option.colInside;
+                    var blockPaddingRatio=option.blockPaddingRatio;
+                    var paddingInside=option.paddingInside;
+                    var nodeWidth = this._nodeWidth;
+                    var format=option.format;
+                    var maxLength = 1;
+
+                    
                 //右移30px，option.paddingInside + nodeWidth/2=40，10=40-30
                     startX = 10+colWidth * (gridIndex % option.col);
                     if(gridIndex%option.col==0){
-                        if(option.showLeft==true){  
-                           startY = maxY-23+option.paddingUp;
+                        if(option.showLeft==true){
+                           startY = maxY+nodeWidth/4+option.paddingUp;
                         }else if(option.showUp==true){
-                           startY = maxY;
+                           startY = maxY+nodeWidth/2+option.paddingUp;
                         }
-                        
                     }
                     
+                    lines[line].forEach(function(nodeData,i){
+                        console.log('nodeData is '+nodeData.id.length);
+                        maxLength = Math.max(nodeData.id.length,maxLength);
+                    })
+                    console.log('maxLength is '+maxLength);
+                    //console.log('nodeWidth is '+nodeWidth);
+                    //平均一个字母占6.6px
+                    while(maxLength*6.6>nodeWidth){
+                        colInside=colInside-1;
+                        nodeWidth=( colWidth - option.paddingInside * colInside-30) /colInside;
+                    }
+                    for(var category in format){
+                       if(format.hasOwnProperty(category)){
+                           if(category==line){
+                                colInside=format[category].colInside;
+                                nodeWidth=( colWidth - option.paddingInside * colInside-30) /colInside;
+                           }
+                        }
+                    
+                    } 
                     //上标题，默认不显示
                     if(option.showUp==true){
-                    var title = self.stage.text(startX+colWidth/2,startY+titleHeight/2,line).attr({
+                    var title = self.stage.text(startX+colWidth/2,startY-nodeHight*0.75,line).attr({
                         'font-size':15
                     });
                     }
@@ -668,7 +700,6 @@
                     //左列标题（不针对首大列，因为第大列模块的底坐标要等到大行的底确定后才确定）默认显示
                     if(option.showLeft==true){
                    if(gridIndex!=0){
-                     console.log(line.length);
                      var length = line.length;
                      for(index=0;index<length;index++){
                      var title = self.stage.text(startX,(startY+leftTitlePadding+index*18),line.charAt(index)).attr({
@@ -680,21 +711,18 @@
                     }
                     //这一段代码执行一次，就画出来一个模块中的所有小方块
                     lines[line].forEach(function(nodeData,i){
-                        var node = Node(option.typeMap[nodeData.type]).create(self.stage,nodeData.id);
+                        var node = Node(option.typeMap[nodeData.type]).create(self.stage,nodeData.id);    
                         self.points[nodeData.id] = node;
 						//改动的地方，高度变成二分之一 nodeWidth/2
-                        node.size(nodeWidth,nodeWidth/2);
+                        node.size(nodeWidth,nodeHight);
                         //x,y 的第一部分动态变化，后两部分(option.paddingInside + nodeWidth/2)是确定的,,option.paddingInside + nodeWidth/2改成30即paddingLeft
-                        var x = (option.paddingInside+ nodeWidth) * (i%option.colInside) +option.paddingInside + nodeWidth/2; 
+                        var x = (paddingInside+ nodeWidth) * (i%colInside) +paddingInside + nodeWidth/2; 
                         //方框间距nodeWidth/2，option.paddingInside + nodeWidth/8是与原点的距离
-                        var y = (option.paddingInside+ nodeWidth*option.blockPaddingRatio) * Math.floor(i/option.colInside) + option.paddingInside + nodeWidth/16;
+                        var y = (nodeHight+nodeHight*blockPaddingRatio) * Math.floor(i/colInside);
                         //maxY是新行的开始坐标，，，option.paddingInside+nodeWidth/4=20
-                      
-                        maxY = Math.max(startY+y+option.paddingInside+nodeWidth/8+titleHeight,maxY);
                         
-                        console.log('maxY  '+maxY);
-
-                        node.position(startX+x, startY+titleHeight+y);
+                        maxY = Math.max(startY+y+nodeHight/2,maxY);
+                        node.position(startX+x, startY+y);
                         node.text(nodeData.id);
                         node.color(option.colorMap[nodeData.status])
                         node.node.attr('stroke-width',2);
@@ -712,41 +740,22 @@
 
                     });
                     
-                   
+
                         //左列标题(只针对于第一个) 默认显示
                     if(option.showLeft==true){    
                      if(gridIndex===0){
-                     
-                     console.log(line.length);
                      var length = line.length;
                      
                      for(index=0;index<length;index++){
                      var title = self.stage.text(startX,(startY+leftTitlePadding+index*18),line.charAt(index)).attr({
                     'font-size':15
                      });
-                     
                      }
                      }
                    
                    }
-   
-                    
-                    if(line=='TuanGou'){
-                     console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
-                       console.log(line+' '+startX+' '+(startY+maxY/2));
-                    }else if(line=='shop'){
-                     console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
-                       console.log(line+' '+startX+' '+(startY+maxY/2));
-                    }else if(line=='Mobile-Info'){
-                     console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
-                       console.log(line+' '+startX+' '+(startY+maxY/2));
-                    }else if(line=='PAY'){
-                       console.log('startY '+ startY+''+'maxY/2 '+maxY/2)
-                       console.log(line+' '+startX+' '+(startY+maxY/2));
-                    }
 
-                    
-                    if(gridIndex%option.col===option.col-1){
+                    if(gridIndex%option.col==option.col-1){
                         self.stage.path().attr({
                             path:['M',0,maxY,'h',self.container.clientWidth],
                             stroke:1
@@ -761,8 +770,18 @@
             }
  
             //设置container高度
-            this.container.style.height = maxY +"px";
-            this.stage.setSize(this.container.clientWidth,maxY);  
+            this.container.style.height = maxY+30+"px";
+            this.stage.setSize(this.container.clientWidth,maxY+30); 
+            self.stage.path().attr({
+                path:['M',0,this.container.clientHeight-10,'h',self.container.clientWidth],
+                stroke:1
+            });
+            for(var i=0;i<option.col-1;i++){
+                this.stage.path().attr({
+                    path:['M',colWidth*(i+1),40,'v',self.container.clientHeight-50],
+                    stroke:1
+                });
+            }
 
         },
         _initSides:function(){
