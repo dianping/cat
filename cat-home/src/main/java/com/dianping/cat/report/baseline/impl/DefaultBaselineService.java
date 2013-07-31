@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -23,12 +21,10 @@ import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.task.TaskHelper;
 
-public class DefaultBaselineService implements BaselineService, LogEnabled {
+public class DefaultBaselineService implements BaselineService {
 
 	@Inject
 	private BaselineDao m_baselineDao;
-
-	private Logger m_logger;
 
 	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>() {
 
@@ -42,26 +38,25 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
-
 		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
 		Baseline baseline = m_baselineMap.get(baselineKey);
+
 		if (baseline == null) {
 			try {
-				baseline = m_baselineDao
-				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+				baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				m_baselineMap.put(baselineKey, baseline);
 			} catch (DalNotFoundException e) {
-				m_logger.info("Baseline not found: " + baselineKey);
+				Cat.logEvent("BaselineNotFound", baselineKey);
 				return null;
 			} catch (Exception e) {
 				Cat.logError(e);
 				return null;
 			}
 		}
-		
+
 		try {
-	      return parse(baseline.getData());
-      }  catch (Exception e) {
+			return parse(baseline.getData());
+		} catch (Exception e) {
 			Cat.logError(e);
 			return null;
 		}
@@ -116,10 +111,4 @@ public class DefaultBaselineService implements BaselineService, LogEnabled {
 		}
 		return out.toByteArray();
 	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
 }

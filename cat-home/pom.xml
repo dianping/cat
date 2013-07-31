@@ -13,7 +13,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>foundation-service</artifactId>
-         <version>2.0.3-SNAPSHOT</version>
+         <version>2.0.3</version>
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
@@ -71,7 +71,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>web-framework</artifactId>
-         <version>2.0.3-SNAPSHOT</version>
+         <version>2.0.3</version>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
@@ -123,7 +123,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>2.0.2-SNAPSHOT</version>
+         <version>2.0.3</version>
       </dependency>
    </dependencies>
    <build>
