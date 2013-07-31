@@ -74,4 +74,5 @@ E Event Name18 0
 E Event Name19 0 
 T URL2 MyPage unset 
 T URL1 MyPage unset 
+E TruncatedTransaction TotalDuration 0
 T URL MyPage 0 k1=v1
