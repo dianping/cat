@@ -7,8 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
@@ -23,7 +26,7 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class MetricBaselineReportBuilder implements ReportTaskBuilder {
+public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnabled {
 	@Inject
 	protected ReportService m_reportService;
 
@@ -45,25 +48,30 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 	@Inject
 	protected MetricPointParser m_parser;
 
+	private Logger m_logger;
+
 	private static final int POINT_NUMBER = 60 * 24;
 
 	@Override
 	public boolean buildDailyTask(String reportName, String domain, Date reportPeriod) {
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 		for (String metricID : m_configManager.getMetricConfig().getMetricItemConfigs().keySet()) {
-			buildDailyReportInternal(reports, reportName, metricID, reportPeriod);
+			try {
+				buildDailyReportInternal(reports, reportName, metricID, reportPeriod);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 		return true;
 	}
 
-	protected void buildDailyReportInternal(Map<String, MetricReport> reportMap, String reportName, String metricID,
+	protected void buildDailyReportInternal(Map<String, MetricReport> reports, String reportName, String metricId,
 	      Date reportPeriod) {
-		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricID);
-		String metricKey = metricConfig.getMetricKey();
+		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricId);
 		String metricDomain = metricConfig.getDomain();
 		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
 		for (MetricType type : MetricType.values()) {
-			String key = metricID + ":" + type;
+			String key = metricId + ":" + type;
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
 			List<Integer> days = baselineConfig.getDays();
 			List<Double> weights = baselineConfig.getWeights();
@@ -71,23 +79,28 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 			List<double[]> values = new ArrayList<double[]>();
 
 			for (Integer day : days) {
-				List<MetricItem> reports = new ArrayList<MetricItem>();
+				List<MetricItem> metricItems = new ArrayList<MetricItem>();
 				Date currentDate = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
 				for (int i = 0; i < 24; i++) {
 					Date start = new Date(currentDate.getTime() + i * TimeUtil.ONE_HOUR);
 					Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 					String metricReportKey = productLine + ":" + start.getTime();
-					MetricReport report = reportMap.get(metricReportKey);
-					
+					MetricReport report = reports.get(metricReportKey);
+
 					if (report == null) {
 						report = m_reportService.queryMetricReport(productLine, start, end);
-						reportMap.put(metricReportKey, report);
+						reports.put(metricReportKey, report);
 					}
-					MetricItem reportItem = report.findOrCreateMetricItem(metricKey);
-					
-					reports.add(reportItem);
+					MetricItem reportItem = report.findMetricItem(metricId);
+
+					if (reportItem == null) {
+						m_logger.warn(String.format("no %s metric item found where computing baseline, %s", metricId,
+						      reportPeriod.toString()));
+						reportItem = new MetricItem(metricId);
+					}
+					metricItems.add(reportItem);
 				}
-				double[] oneDayValue = m_parser.buildDailyData(reports, type);
+				double[] oneDayValue = m_parser.buildDailyData(metricItems, type);
 				values.add(oneDayValue);
 			}
 
@@ -114,6 +127,11 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Metric base line report don't support weekly report!");
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }
