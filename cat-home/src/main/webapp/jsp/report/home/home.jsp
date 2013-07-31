@@ -29,6 +29,7 @@
    			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>开发者文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>用户文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>常见问题</strong></a></li>
+   			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>插件扩展</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1"><%@ include file="releasenotes.jsp"%></div>
@@ -36,6 +37,7 @@
 	    		<div class="tab-pane" id="tab3"><%@ include file="developDocument.jsp"%></div>
 	    		<div class="tab-pane" id="tab4"><%@ include file="userDocument.jsp"%></div>
 	    		<div class="tab-pane" id="tab5"><%@ include file="problem.jsp"%></div>
+	    		<div class="tab-pane" id="tab6"><%@ include file="plugin.jsp"%></div>
 			</div>
 	</div>
 </div>

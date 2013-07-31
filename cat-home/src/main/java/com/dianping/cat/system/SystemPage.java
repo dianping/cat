@@ -11,7 +11,9 @@ public enum SystemPage implements Page {
 
    CONFIG("config", "config", "Config", "Config", true),
 
-   ABTEST("abtest", "abtest", "Abtest", "Abtest", true);
+   ABTEST("abtest", "abtest", "Abtest", "Abtest", true),
+
+   PLUGIN("plugin", "plugin", "Plugin", "Plugin", true);
 
    private String m_name;
 

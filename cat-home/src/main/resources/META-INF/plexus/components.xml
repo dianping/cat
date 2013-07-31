@@ -2785,6 +2785,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.plugin.Handler</role>
+			<implementation>com.dianping.cat.system.page.plugin.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.plugin.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.plugin.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.plugin.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
 			<implementation>com.dianping.cat.system.alarm.AlarmContentBuilder</implementation>
 		</component>

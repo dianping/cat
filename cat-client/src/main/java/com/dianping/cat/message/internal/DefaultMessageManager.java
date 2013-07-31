@@ -94,6 +94,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	public ClientConfigManager getConfigManager() {
+		return m_configManager;
+	}
+
 	Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
