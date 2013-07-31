@@ -9,9 +9,11 @@ public class CatConstants {
 	public static final int MAX_ITEM_LENGTH = 50;
 
 	/**
-	 * Config File
+	 * Cat instrument attribute names
 	 */
 	public static final String CAT_STATE = "cat-state";
+	
+	public static final String CAT_PAGE_URI = "cat-page-uri";
 
 	/**
 	 * Pigeon Transation Type
@@ -45,8 +47,6 @@ public class CatConstants {
 
 	public static final String NAME_RESPONSE = "PigeonRespone";
 
-	public static final String NAME_PAYLOAD = "Payload";
-
 	public static final String NAME_TIME_OUT = "ClientTimeOut";
 
 	/**
@@ -67,8 +67,6 @@ public class CatConstants {
 	public static final String TYPE_URL = "URL";
 
 	public static final String TYPE_URL_FORWARD = "URL.Forward";
-
-	public static final String NAME_CLIENT_INFO = "ClientInfo";
 
 	public static final String TYPE_ACTION = "Action";
 
