@@ -24,7 +24,7 @@ function disksGraph(size, diskHistoryGraph) {
 	}
 }
 
-$(document).delegate('.graph_link', 'click', function(e){
+$(document).delegate('.heartbeat_graph_link', 'click', function(e){
 	var anchor = this;
 	var el = $(anchor);
 	var div = el.attr('data-status');

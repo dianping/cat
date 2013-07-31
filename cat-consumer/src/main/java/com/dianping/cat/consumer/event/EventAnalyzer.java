@@ -69,12 +69,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	private int processEvent(EventReport report, MessageTree tree, Event event) {
+	private void processEvent(EventReport report, MessageTree tree, Event event) {
 		String ip = tree.getIpAddress();
 		EventType type = report.findOrCreateMachine(ip).findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
 		String messageId = tree.getMessageId();
-		int count = 0;
 
 		report.addIp(tree.getIpAddress());
 		type.incTotalCount();
@@ -83,12 +82,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		if (event.isSuccess()) {
 			if (type.getSuccessMessageUrl() == null) {
 				type.setSuccessMessageUrl(messageId);
-				count++;
 			}
 
 			if (name.getSuccessMessageUrl() == null) {
 				name.setSuccessMessageUrl(messageId);
-				count++;
 			}
 		} else {
 			type.incFailCount();
@@ -96,20 +93,16 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 			if (type.getFailMessageUrl() == null) {
 				type.setFailMessageUrl(messageId);
-				count++;
 			}
 
 			if (name.getFailMessageUrl() == null) {
 				name.setFailMessageUrl(messageId);
-				count++;
 			}
 		}
 		type.setFailPercent(type.getFailCount() * 100.0 / type.getTotalCount());
 		name.setFailPercent(name.getFailCount() * 100.0 / name.getTotalCount());
 
 		processEventGrpah(name, event);
-
-		return count;
 	}
 
 	private void processEventGrpah(EventName name, Event t) {
@@ -127,19 +120,16 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	private int processTransaction(EventReport report, MessageTree tree, Transaction t) {
-		int count = 0;
+	private void processTransaction(EventReport report, MessageTree tree, Transaction t) {
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Transaction) {
-				count += processTransaction(report, tree, (Transaction) child);
+				processTransaction(report, tree, (Transaction) child);
 			} else if (child instanceof Event) {
-				count += processEvent(report, tree, (Event) child);
+				processEvent(report, tree, (Event) child);
 			}
 		}
-
-		return count;
 	}
 
 }

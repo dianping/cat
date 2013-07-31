@@ -37,7 +37,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("metricItemConfig")
 	private MetricItemConfig m_metricItemConfig = new MetricItemConfig();
-	
+
 	@ObjectMeta("exceptionLimit")
 	private ExceptionLimit m_exceptionLimit = new ExceptionLimit();
 
@@ -234,6 +234,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public String getMetricKey() {
+		if (m_metricKey != null) {
+			m_metricKey = m_metricKey.trim();
+		}
 		return m_metricKey;
 	}
 

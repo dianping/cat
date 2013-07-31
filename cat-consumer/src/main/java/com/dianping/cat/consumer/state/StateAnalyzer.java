@@ -12,6 +12,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportConstants;
@@ -177,7 +178,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				m_domainManager.insertDomain(domain);
 				m_logger.info("inserted domain info " + domain);
 			}
-			if (!m_domainManager.contaninsIpInCat(ip)) {
+			Hostinfo ipInfo = m_domainManager.queryHostInfoByIp(ip);
+
+			if (ipInfo == null) {
 				m_logger.info("inserting domain info " + domain + " " + ip);
 				m_domainManager.insert(domain, ip);
 				m_logger.info("inserted domain info " + domain + " " + ip);
