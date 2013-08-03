@@ -11,4 +11,5 @@ E Event2 Name0 0
 E Event2 Name1 0 
 E Event2 Name2 0 
 T URL2 MyPage 0 
+E TruncatedTransaction TotalDuration 0
 T URL MyPage 0 k1=v1
