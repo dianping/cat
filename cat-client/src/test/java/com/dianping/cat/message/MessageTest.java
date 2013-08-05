@@ -231,7 +231,7 @@ public class MessageTest extends ComponentTestCase {
 			m_sb.append(' ').append(e.getName());
 			m_sb.append(' ').append(e.getStatus());
 
-			if (!e.getType().equals("RemoteCall")) {
+			if (!e.getType().equals("RemoteCall") && !e.getType().equals("TruncatedTransaction")) {
 				m_sb.append(' ').append(e.getData());
 			}
 
