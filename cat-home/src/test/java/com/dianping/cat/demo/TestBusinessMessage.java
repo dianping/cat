@@ -6,6 +6,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestBusinessMessage {
 	private static final String TuanGou = "TuanGouWeb";
@@ -45,7 +46,7 @@ public class TestBusinessMessage {
 				t.addData("channel=channel" + i % 5);
 				t.complete();
 			}
-			
+
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "t");
 				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
@@ -63,11 +64,10 @@ public class TestBusinessMessage {
 				t.complete();
 			}
 
-
 			Thread.sleep(1000);
 		}
 	}
-	
+
 	@Test
 	public void test2() throws Exception {
 		while (true) {
@@ -96,6 +96,21 @@ public class TestBusinessMessage {
 			Thread.sleep(1000);
 			break;
 		}
+	}
+
+	@Test
+	public void test3() throws InterruptedException {
+		for (int i = 0; i < 500; i++) {
+			Transaction t = Cat.newTransaction("test", "test");
+
+			Cat.logMetricForCount("MemberCardSuccess");
+			Cat.logMetricForCount("MemberCardFail", 2);
+
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+			((DefaultMessageTree) tree).setDomain("MobileMembercardMainApiWeb");
+			t.complete();
+		}
+		Thread.sleep(100000);
 	}
 
 }

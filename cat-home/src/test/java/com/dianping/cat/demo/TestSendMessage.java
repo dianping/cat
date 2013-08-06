@@ -11,11 +11,22 @@ public class TestSendMessage {
 
 	@Test
 	public void sendException() throws Exception {
+
 		for (int i = 0; i < 10; i++) {
-			Cat.getProducer().logError(new OutOfMemoryError());
-			Cat.getProducer().logError(new NullPointerException());
+			Transaction t = Cat.newTransaction("Midas", "XXName");
+			try{
+				//your bussiness code
+				//for see the message on cat in problem report
+				t.setStatus("Fail");
+			}catch(Exception e){
+				t.setStatus(Transaction.SUCCESS);
+				Cat.logError(e);
+				throw e;
+			}finally{
+				t.complete();
+			}
 		}
-		Thread.sleep(1000);
+		Thread.sleep(10000);
 	}
 
 	@Test
