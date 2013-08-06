@@ -249,7 +249,7 @@ public class MetricDisplay extends BaseVisitor{
 					resultMap.put(subTitle, newValue);
 				}
 				for (int j = 0; j < MINUTE / INTERVAL; j++) {
-					newValue[index * 6 + j] = value[j*INTERVAL];
+					newValue[index * MINUTE / INTERVAL + j] = value[j*INTERVAL];
 				}
 				i++;
 			}
@@ -276,7 +276,7 @@ public class MetricDisplay extends BaseVisitor{
 //		 } else{
 //			 return result /size;
 //		 }
-//	 }
+	// }
 
 	public void setBaselineService(BaselineService baselineService) {
 		m_baselineService = baselineService;
