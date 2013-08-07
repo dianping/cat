@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bug-report startTime="2012-05-16 16:00:00"
+	endTime="2012-05-16 16:59:59">
+	<domain id="Cat">
+		<exception id="NPE" count="123">
+			<message id="http://cat.dianpingoa.com/cat/r/ShopServer"></message>
+			<message id="http://cat.dianpingoa.com/cat/r/ShopServer"></message>
+			<message id="http://cat.dianpingoa.com/cat/r/ShopServer"></message>
+		</exception>
+		<excpetion></excpetion>
+	</domain>
+	<domain>
+	</domain>
+</bug-report>

@@ -48,7 +48,7 @@ public class MetricDisplay extends BaseVisitor{
 
 	private static final String AVG = MetricType.AVG.name();
 
-	private static final int INTERVAL = 10;
+	private static final int INTERVAL = 1;
 
 	private static final int HOUR = 24;
 
@@ -224,7 +224,7 @@ public class MetricDisplay extends BaseVisitor{
 				if (day == null) {
 					continue;
 				}
-				value[i] = avgOfArray(day, j);
+				value[i] = day[j];
 			}
 			lineChart.addSubTitle("Baseline");
 			lineChart.addValue(value);
@@ -249,7 +249,7 @@ public class MetricDisplay extends BaseVisitor{
 					resultMap.put(subTitle, newValue);
 				}
 				for (int j = 0; j < MINUTE / INTERVAL; j++) {
-					newValue[index * 6 + j] = avgOfArray(value,j*INTERVAL);
+					newValue[index * MINUTE / INTERVAL + j] = value[j*INTERVAL];
 				}
 				i++;
 			}
@@ -262,21 +262,21 @@ public class MetricDisplay extends BaseVisitor{
 		}
 	}
 
-	 private double avgOfArray(double[]values, int j){
-		 double result = 0;
-		 int size = 0;
-		 for(int i = j; i < j+INTERVAL; i++){
-			 if(values[i] >= 0){
-				 result +=values[i];
-				 size ++;
-			 }
-		 }
-		 if(size == 0){
-			 return result;
-		 } else{
-			 return result /size;
-		 }
-	 }
+//	 private double avgOfArray(double[]values, int j){
+//		 double result = 0;
+//		 int size = 0;
+//		 for(int i = j; i < j+INTERVAL; i++){
+//			 if(values[i] >= 0){
+//				 result +=values[i];
+//				 size ++;
+//			 }
+//		 }
+//		 if(size == 0){
+//			 return result;
+//		 } else{
+//			 return result /size;
+//		 }
+	// }
 
 	public void setBaselineService(BaselineService baselineService) {
 		m_baselineService = baselineService;

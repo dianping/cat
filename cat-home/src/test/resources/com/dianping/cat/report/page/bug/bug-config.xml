@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bug-config>
+	<exception id="NetTimexception"/>
+	<exception id="NetTimexception2"/>
+	<exception id="exception"/>
+	<exception id="exception"/>
+	<domain id="Cat" additivity="false">
+		<exception id="exception"/>
+		<exception id="exception"/>
+		<exception id="exception"/>
+	</domain>
+</bug-config>
