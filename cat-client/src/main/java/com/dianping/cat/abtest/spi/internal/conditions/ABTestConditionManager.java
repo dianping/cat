@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.unidal.lookup.ContainerHolder;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.Condition;
 
 public class ABTestConditionManager extends ContainerHolder {
@@ -18,15 +19,6 @@ public class ABTestConditionManager extends ContainerHolder {
 
 		int size = conditions.size();
 
-		if (size == 1) {
-			Condition condition = conditions.get(0);
-			AbstractABTestCondition filter = (AbstractABTestCondition) lookup(ABTestCondition.class, condition.getName());
-
-			filter.setRequest(request);
-
-			return filter.accept(condition);
-		}
-
 		Stack<Boolean> operation = new Stack<Boolean>();
 		Stack<String> operator = new Stack<String>();
 
@@ -35,10 +27,16 @@ public class ABTestConditionManager extends ContainerHolder {
 			AbstractABTestCondition filter = (AbstractABTestCondition) lookup(ABTestCondition.class, condition.getName());
 
 			filter.setRequest(request);
+			boolean isMarch = false;
 
-			boolean isMarch = filter.accept(condition);
+			try {
+				isMarch = filter.accept(condition);
+			} catch (Throwable e) {
+				Cat.logError(e);
+				return false; // if one condition has exception, return false directly.
+			}
+
 			operation.push(isMarch);
-
 			if (i == 0) {
 				operator.push(condition.getOperator());
 				continue;

@@ -17,15 +17,16 @@
 		box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 	}
 	
+	.inline-space{
+		margin-bottom: 5px;
+	}
+	
 </style>
 
 <a:body>
-	<script src="${res.js.local['jquery-1.7.1.js']}"></script>
-	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useCss value="${res.css.local['slider.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
@@ -102,7 +103,7 @@
 						<select multiple="" name="domains" id="domains"
 							style="width: 350px;" class="populate select2-offscreen"
 							tabindex="-1" check-type="required"
-							required-message="End Time is required!">
+							required-message="Domain is required!">
 							<c:forEach var="item" items="${model.projectMap}">
 								<optgroup label="${item.key}">
 									<c:forEach var="listItem" items="${item.value}">
@@ -174,6 +175,18 @@
 					</div>
 				</div>
 				
+				<h5>Conversion Goals</h5>
+				<hr style="margin-top: 20px;">
+				<div class="control-group">
+					<label class="control-label">Convertion Goals</label>
+					<div class="controls">
+						<div id="div3">
+						
+						</div>
+						<a href="javascript:void(0)" id="addConvertionGoal" class="pull-right active"><i class="icon-plus"></i>Add another goal</a>
+					</div>
+				</div>
+				
 				<h5>Group Strategy</h5>
 				<hr style="margin-top: 5px;">
 				<div class="control-group">
@@ -233,7 +246,6 @@
 			
 			var abName = $('#abName').val();
 			var abOwn = $('#abOwn').val();
-			
 			//console.log(getConditions());
 			if(abName && abOwn ){
 				var params = $(this).serialize();
@@ -252,6 +264,10 @@
 				
 				var conditions = getConditions();
 				params += "&conditions=" + JSON.stringify(conditions);
+				
+				var goals = getConvertionGoals();
+				params += "&goals=" + JSON.stringify(goals);
+				
 				
 				//console.log(params);
 				$.ajax({

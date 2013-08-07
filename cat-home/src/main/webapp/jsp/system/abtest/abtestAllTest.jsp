@@ -9,71 +9,66 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.abtest.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
-<script src="${res.js.local['jquery-1.7.1.js']}"></script>
-<style>
-#content {
-	width: 1300px;
-	margin: 0 auto;
-}
-</style>
+
 <a:body>
-   <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-   <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-   <res:useCss value="${res.css.local['bootstrap-rowlink.css']}" target="head-css" />
-   <res:useJs value="${res.js.local['bootstrap-rowlink.min.js']}" target="head-js" />
-   <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
-
-   <style>
-.statusSpan {
-	float: right;
-	margin-right: 0.5em;
-	padding-right: 5px;
-	padding-left: 5px;
-}
-
-.liHover>li {
-	line-height: 1.3em;
-}
-
-input.search-query {
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-}
-
-#search-submit {
-	position: absolute;
-	top: 6px;
-	right: 10px;
-	display: inline-block;
-	width: 14px;
-	height: 14px;
-	*margin-right: .3em;
-	line-height: 14px;
-	text-indent: -9999px;
-	vertical-align: text-top;
-	cursor: pointer;
-	background-color: transparent;
-	background-image: url("${model.webapp}/img/glyphicons-halflings.png");
-	background-position: -48px 0;
-	background-repeat: no-repeat;
-	border: 0 none;
-	opacity: 0.75;
-}
-
-tr.middle>td {
-	vertical-align: middle;
-	padding-bottom: 0;
-}
-
-tr.center>td {
-	text-align: center;
-}
-
-tr.centerth>th {
-	text-align: center;
-}
-</style>
+	<res:useCss value="${res.css.local['bootstrap-rowlink.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['bootstrap-rowlink.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
+	<style>
+		#content {
+			width: 1300px;
+			margin: 0 auto;
+		}
+		.statusSpan {
+			float: right;
+			margin-right: 0.5em;
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		
+		.liHover>li {
+			line-height: 1.3em;
+		}
+		
+		input.search-query {
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+		}
+		
+		#search-submit {
+			position: absolute;
+			top: 6px;
+			right: 10px;
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			*margin-right: .3em;
+			line-height: 14px;
+			text-indent: -9999px;
+			vertical-align: text-top;
+			cursor: pointer;
+			background-color: transparent;
+			background-image: url("${model.webapp}/img/glyphicons-halflings.png");
+			background-position: -48px 0;
+			background-repeat: no-repeat;
+			border: 0 none;
+			opacity: 0.75;
+		}
+		
+		tr.middle>td {
+			vertical-align: middle;
+			padding-bottom: 0;
+		}
+		
+		tr.center>td {
+			text-align: center;
+		}
+		
+		tr.centerth>th {
+			text-align: center;
+		}
+	</style>
    <br>
    <div id="content" class="row-fluid clearfix">
       <div class="span2 column">
@@ -104,6 +99,10 @@ tr.centerth>th {
                </a></li>
             </ul>
          </div>
+     	 <ul class="nav nav-list">
+			<li class="nav-header">Tools</li>
+			<li class=""><a href="?op=caculator">A/B Test Calculator</a></li>
+		</ul>
       </div>
       <div class="span10 column">
          <c:if test="${not empty ctx.errors}">

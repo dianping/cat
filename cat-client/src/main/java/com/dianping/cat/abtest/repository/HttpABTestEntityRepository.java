@@ -163,7 +163,6 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 					m_strategies.put(strategyKey, strategy);
 				} catch (Exception e) {
 					Cat.logError(e);
-
 					ABTestEntity origin = HttpABTestEntityRepository.this.m_entities.get(_case.getId());
 
 					if (origin != null) {

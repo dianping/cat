@@ -41,6 +41,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	
 	@FieldMeta("conditions")
 	private String m_conditions;
+	
+	@FieldMeta("goals")
+	private String m_conversionGoals;
 
 	/* ===============Abtest Controls================ */
 
@@ -207,6 +210,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
    	return m_conditions;
    }
 
+	public String getConversionGoals() {
+   	return m_conversionGoals;
+   }
 	
 	public boolean isEnableAbtest() {
 		return m_enableAbtest;
@@ -325,6 +331,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setConditions(String conditions) {
    	m_conditions = conditions;
+   }
+
+	public void setGoals(String goals) {
+   	m_conversionGoals = goals;
    }
 
 	@Override

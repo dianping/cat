@@ -21,14 +21,16 @@ div.controls input {
 	background-color: #F7F7F9;
 	cursor: text;
 }
+
+.inline-space{
+	margin-bottom: 5px;
+}
+	
 </style>
 <a:body>
-   <script src="${res.js.local['jquery-1.7.1.js']}"></script>
-   <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
    <res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
    <res:useCss value="${res.css.local['select2.css']}" target="head-css" />
    <res:useCss value="${res.css.local['slider.css']}" target="head-css" />
-   <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
@@ -184,6 +186,19 @@ div.controls input {
 					<a class="pull-right active hide" href="javascript:void(0);" id="cancel3">Cancel &nbsp;</a> 
 				</div>
 			</div>
+			
+			<h5>Conversion Goals</h5>
+			<hr style="margin-top: 20px;">
+			<div class="control-group">
+				<label class="control-label">Convertion Goals</label>
+				<div class="controls">
+					<div id="div3">
+					
+					</div>
+					<a href="javascript:void(0)" id="addConvertionGoal" class="pull-right active"><i class="icon-plus"></i>Add another goal</a>
+				</div>
+			</div>
+			
             <h5>Group Strategy</h5>
             <hr style="margin-top: 5px;">
             <div class="control-group">
@@ -377,6 +392,7 @@ div.controls input {
 				function initConf(slider){
 					var jsonObject = ${model.abtest.strategyConfiguration};
 					var conditions = ${model.abtest.conditions};
+					var goals = ${model.abtest.conversionGoals};
 					
 					//console.log(conditions);
 					//console.log(jsonObject);
@@ -460,6 +476,16 @@ div.controls input {
 					//alert(innerHTML);
 					$('#groupStrategyDivsub').empty();
 					$('#groupStrategyDivsub').html(innerHTML);
+					
+					for(var i in goals){
+						var goal = goals[i];
+						
+						$('#addConvertionGoal').trigger('click');
+						$('#div3 div:last input:eq(0)').val(goal["name"]);
+						$('#div3 div:last input:eq(0)').attr("readonly","readonly");
+						$('#div3 div:last input:eq(1)').val(goal["text"]);
+						$('#div3 div:last input:eq(1)').attr("readonly","readonly");
+					}
 				}
 
 				$("#form" ).on( "submit", function( event ) {
@@ -482,6 +508,8 @@ div.controls input {
 					var conditions = getConditions();
 					params += "&conditions=" + JSON.stringify(conditions);
 					
+					var goals = getConvertionGoals();
+					params += "&goals=" + JSON.stringify(goals);
 					//console.log(params);
 					$.ajax({
 						type: "POST",

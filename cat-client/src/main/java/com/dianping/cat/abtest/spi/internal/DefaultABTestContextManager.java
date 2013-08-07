@@ -146,8 +146,25 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 			setCookie(request, response, ABTEST_COOKIE_NAME, newValue);
 
-			if (newValue != null && newValue.length() > 0) {
-				((DefaultMessageManager) m_messageManager).setMetricType(newValue);
+			String actual = request.getRequestURL().toString();
+			
+			boolean isAccept = false;
+			for(int i = 0 ; i < activeEntities.size(); i++){
+				ABTestEntity entity = activeEntities.get(i);
+				
+				for(String rule : entity.getConversionRules().getConversionRules()){
+					if(actual.equalsIgnoreCase(rule)){
+						if (newValue != null && newValue.length() > 0) {
+							((DefaultMessageManager) m_messageManager).setMetricType(newValue);
+							isAccept = true;
+							break;
+						}
+					}
+				}
+				
+				if(isAccept){
+					break;
+				}
 			}
 		}
 	}

@@ -21,15 +21,19 @@
     <attribute name="disabled" value-type="boolean" />
     <element name="creator" value-type="String" />
     <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="conversion-rules" />
     <entity-ref name="condition" type="list" names="conditions" xml-indent="true" />
     <entity-ref name="groupstrategy-descriptor" />
+  </entity>
+  <entity name="conversion-rules">
+    <element name="conversion-rule" value-type="String" type="list" names="conversion-rules" />
   </entity>
   <entity name="condition">
     <attribute name="name" value-type="String" />
     <attribute name="seq" value-type="int" />
-    <attribute name="next" value-type="String" />
     <attribute name="operator" value-type="String" />
-    <attribute name="comparator" value-type="int" />
+    <attribute name="comparator" value-type="String" />
+    <attribute name="next" value-type="String" />
     <element name="text" value-type="String" text="true" />
   </entity>
   <entity name="groupstrategy-descriptor">

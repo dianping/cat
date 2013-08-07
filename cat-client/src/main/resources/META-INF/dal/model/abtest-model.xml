@@ -7,6 +7,7 @@
   <entity name="run">
     <attribute name="id" value-type="int" key="true" primitive="true"/>
     <element name="domain" value-type="String" type="set" names="domains" />
+    <entity-ref name="conversion-rules" required="true"/>
   </entity>
   <entity name="field">
     <attribute name="name" value-type="String" />

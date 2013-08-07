@@ -20,27 +20,22 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 
 	@Inject("IP")
 	private String m_ipAddress;
-	
+
 	private List<String> m_ips;
 
 	@Override
 	public void apply(ABTestContext ctx) {
 		HttpServletRequest req = ctx.getHttpServletRequest();
 		String address = getRemoteAddr(req);
-		String group = ctx.getCookielet("ab");
 
-		if (group != null && group.equals("A")) {
-			ctx.setGroupName("A");
-		} else {
-			for (String ip : m_ips) {
-				if (ip.equals(address)) {
-					ctx.setGroupName("A");
-					ctx.setCookielet("ab", "A");
-					ctx.setCookielet("hit", "1");
-					return;
-				}
+		for (String ip : m_ips) {
+			if (ip.equals(address)) {
+				ctx.setGroupName("A");
+				return;
 			}
 		}
+		
+		ctx.setGroupName("B");
 	}
 
 	public String getRemoteAddr(HttpServletRequest req) {

@@ -51,6 +51,7 @@
     <member name="disabled" field="disabled" value-type="int" length="3" nullable="false" />
     <member name="domains" field="domains" value-type="String" length="100" nullable="false" />
     <member name="conditions" field="conditions" value-type="String" length="65535" />
+    <member name="conversion-goals" field="conversion_goals" value-type="String" length="65535" />
     <member name="strategy-configuration" field="strategy_configuration" value-type="String" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="modified-date" field="modified_date" value-type="Date" nullable="false" />

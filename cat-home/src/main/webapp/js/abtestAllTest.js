@@ -10,7 +10,7 @@ function insertTr(){
 		+ '<option value="6">marches Regex (case sens.)</option><option value="7">contains</option>'
 		+ '<option value="8">does not contains</option></select></td>';
 	
-	innerHTML += '<td><input class="input-large"></td>';
+	innerHTML += '<td><input class="input-large" check-type="required" ></td>';
 	innerHTML += '<td><a class="btn btn-link"><i class="icon-remove"></i></a></td>';
 	innerHTML += '</tr>';
 	
@@ -104,6 +104,25 @@ function getCondition(name,operator,comparator,text,seq){
 	
 	return condition;
 }
+
+function getConvertionGoals(){
+	var goals = [];
+	
+	$('#div3 div').each(function(){
+		var name = $("input:eq(0)",$(this));
+		var url = $("input:eq(1)",$(this));
+		
+		var goal = {
+			"name":name.val(),
+			"text":url.val()
+		};
+		
+		goals.push(goal);
+	});
+	
+	return goals;
+}
+
 $(document).ready(function() {
 	$('#ckall').click(function() {
 		if ($('#ckall').is(':checked')) {
@@ -182,6 +201,26 @@ $(document).ready(function() {
 			$('#div2 tbody tr:last').after(innerHTML);
 			$('#div2 tbody tr:last').after(tr);
 		}
+	});
+	
+	var goalCounter = 1;
+	$('#addConvertionGoal').click(function(e){
+		var innerHtml = [];
+		
+		innerHtml.push('<div class="inline-block inline-space">');
+		innerHtml.push('<input placeholder="Goal ' + goalCounter + '" check-type="required" class="input-small">');
+		innerHtml.push('<span>&nbsp;triggers when visitor&nbsp;</span>');
+		innerHtml.push('<input placeholder="http://www.example.com" check-type="required" class="input-xlarge">');
+		innerHtml.push('<a class="btn btn-link"><i class="icon-remove"></i></a>');
+		innerHtml.push('</div>');
+		
+		var line = $(innerHtml.join(""));
+		$('a',line).click(function(){
+			$(this).closest("div").remove();
+		});
+		
+		$('#div3').append(line);
+		goalCounter += 1;
 	});
 
 });

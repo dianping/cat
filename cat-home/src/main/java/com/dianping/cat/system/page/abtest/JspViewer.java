@@ -28,6 +28,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.REPORT.getPath();
 		case MODEL:
 			return JspFile.MODEL.getPath();
+		case ABTEST_CACULATOR:
+			return JspFile.ABTEST_CACULATOR.getPath();
 
 		}
 

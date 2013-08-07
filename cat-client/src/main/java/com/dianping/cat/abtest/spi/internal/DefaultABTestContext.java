@@ -85,6 +85,7 @@ public class DefaultABTestContext implements ABTestContext {
 	@Override
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
+		setCookielet("ab", groupName);
 	}
 
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
@@ -94,7 +95,7 @@ public class DefaultABTestContext implements ABTestContext {
 	public void setCookielets(Map<String, String> cookielets) {
 		m_cookielets = cookielets;
 	}
-
+	
 	public void setup(HttpServletRequest request, HttpServletResponse response, Map<String, String> cookielets) {
 		m_request = request;
 		m_response = response;
@@ -109,15 +110,11 @@ public class DefaultABTestContext implements ABTestContext {
 
 				boolean isAccept = manager.accept(conditions,request);
 				
-				//if(isAccept){
+				if(isAccept){
 					m_groupStrategy.apply(this);
-//				}else{
-//					String group = this.getCookielet("ab");
-//					
-//					if (group != null && group.equals("A")) {
-//						setGroupName("A");
-//					} 
-//				}
+				}else{
+					setGroupName(DEFAULT_GROUP);
+				}
 
 				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {

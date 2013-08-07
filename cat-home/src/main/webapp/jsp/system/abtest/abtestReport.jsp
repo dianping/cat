@@ -18,10 +18,6 @@
 </style>
 
 <a:body>
-	<script src="${res.js.local['jquery-1.7.1.js']}"></script>
-	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-
 	<div id="content" lass="row-fluid">
 		<div class="span12 column">
 			<h3>Report <small>${model.abtest.name} #${model.abtest.id}</small></h3>

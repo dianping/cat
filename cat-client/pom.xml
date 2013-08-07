@@ -16,6 +16,11 @@
          <version>2.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>java-fragment</artifactId>
+         <version>0.1.0</version>
+      </dependency>
+      <dependency>
          <groupId>org.jboss.netty</groupId>
          <artifactId>netty</artifactId>
       </dependency>

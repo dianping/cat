@@ -237,6 +237,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	      return m_run.getConditions();
       }
 
+		public String getConversionGoals() {
+	      return m_run.getConversionGoals();
+      }
+
 		public void setAbtest(Abtest abtest) {
 			m_abtest = abtest;
 		}

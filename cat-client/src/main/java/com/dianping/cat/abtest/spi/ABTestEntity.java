@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dianping.cat.abtest.model.entity.Case;
 import com.dianping.cat.abtest.model.entity.Condition;
+import com.dianping.cat.abtest.model.entity.ConversionRules;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 
@@ -76,6 +77,10 @@ public class ABTestEntity {
 	public List<Condition> getConditions() {
 		return m_run.getConditions() != null ? m_run.getConditions() : null;
 	}
+	
+	public ConversionRules getConversionRules() {
+	   return m_run.getConversionRules();
+   }
 
 	public String getGroupStrategyName() {
 		return m_groupStrategyName != null ? m_groupStrategyName : null;

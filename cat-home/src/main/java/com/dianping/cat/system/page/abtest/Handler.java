@@ -91,6 +91,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		run.setDomains(StringUtils.join(payload.getDomains(), ','));
 		run.setStrategyConfiguration(payload.getStrategyConfig());
 		run.setConditions(payload.getConditions());
+		run.setConversionGoals(payload.getConversionGoals());
 		run.setDisabled(false);
 		Date now = new Date();
 		run.setCreationDate(now);
@@ -161,7 +162,6 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 				handleParseGroupStrategyAction(ctx, payload);
 			}
 		}
-
 	}
 
 	@Override
@@ -262,6 +262,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			run.setDomains(StringUtils.join(payload.getDomains(), ','));
 			run.setStrategyConfiguration(payload.getStrategyConfig());
 			run.setConditions(payload.getConditions());
+			run.setConversionGoals(payload.getConversionGoals());
 			Date now = new Date();
 			run.setModifiedDate(now);
 

@@ -11,6 +11,11 @@
 				<creator>hao.zhu@dianping.com</creator>
 				<domain>TuanGouWeb</domain>
 				<domain>TuanGouRemote</domain>
+				<conversion-rules>
+					<conversion-rule name="Goal-1"><![CDATA[This is value]]></conversion-rule>
+					<conversion-rule name="Goal-2"><![CDATA[This is value]]></conversion-rule>
+					<conversion-rule name="Goal-3"><![CDATA[This is value]]></conversion-rule>
+				</conversion-rules>
 				<conditions>
 					<condition name="url" seq="1" operator="and" comparator="1">
 						<![CDATA[This is value]]>

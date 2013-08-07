@@ -14,6 +14,8 @@ public class URLCondition extends AbstractABTestCondition implements ABTestCondi
 		}
 
 		String actual = m_request.getRequestURL().toString();
+		int pos = url.indexOf('*');
+		String subUrl = url.substring(0, pos);
 
 		ABTestComparator comparator = ABTestComparator.getByValue(condition.getComparator(),
 		      ABTestComparator.EQUAL_INSENS);
@@ -27,14 +29,15 @@ public class URLCondition extends AbstractABTestCondition implements ABTestCondi
 		case NOT_EQUAL_SENS:
 			return !url.equals(actual);
 		case MARCHES_INSENS:
-			// TODO
+			return actual.toLowerCase().startsWith(subUrl.toLowerCase());
 		case MARCHES_SENS:
-			// TODO
+			return actual.startsWith(subUrl);
 		case CONTAIN:
 			return url.contains(actual);
 		case NOT_CONTAIN:
 			return !url.contains(actual);
 		}
+
 		return false;
 	}
 }
