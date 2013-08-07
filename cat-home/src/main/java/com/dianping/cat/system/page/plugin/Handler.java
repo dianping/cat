@@ -98,7 +98,7 @@ public class Handler implements PageHandler<Context> {
 			ZipOutputStream zos = new ZipOutputStream(res.getOutputStream());
 			res.setContentType("application/x-zip-compressed");
 			res.addHeader("Content-Disposition", "attachment;filename=cat.zip");
-			addResourceFiles(zos, "/chrome", "manifest.json", "cat.png", "cat.js");
+			addResourceFiles(zos, "/chrome/cat", "manifest.json", "cat.png", "cat.js");
 			zos.close();
 		} else {
 			InputStream is = getClass().getResourceAsStream("/chrome/cat.crx");
