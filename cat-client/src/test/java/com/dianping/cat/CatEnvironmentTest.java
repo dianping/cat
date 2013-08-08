@@ -1,7 +1,6 @@
 package com.dianping.cat;
 
 import java.io.File;
-import java.io.IOException;
 
 import junit.framework.Assert;
 
