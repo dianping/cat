@@ -1,6 +1,7 @@
 package com.dianping.cat;
 
 import java.io.File;
+import java.io.IOException;
 
 import junit.framework.Assert;
 
@@ -57,5 +58,20 @@ public class CatEnvironmentTest {
 		Assert.assertEquals(true, Cat.isInitialized());
 		Cat.destroy();
 		System.out.println();
+	}
+	
+	
+	@Test
+	public void testJobTest() throws Exception{
+		Cat.initialize("192.168.7.70","192.168.7.71");
+		
+		Transaction t = Cat.newTransaction("TestType", "TestName");
+
+		t.addData("data here");
+		t.setStatus("TestStatus");
+		t.complete();
+
+		Thread.sleep(10000);
+
 	}
 }
