@@ -61,6 +61,7 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span10">
+        	<h3 class='text-red'>说明：图中纵轴数据为10分钟数据之和</h3>
         	<c:forEach var="item" items="${model.display.lineCharts}" varStatus="status">
        			<div style="float:left;">
        				<h5 class="text-center text-error">${item.title}</h5>
