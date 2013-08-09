@@ -241,8 +241,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			type = "PigeonService";
 		}
 		if ("URL".equals(type) || "PigeonService".equals(type)) {
-			String name = transaction.getName();
 			String domain = tree.getDomain();
+			String name = transaction.getName();
 			String key = m_configManager.buildMetricKey(domain, type, name);
 			MetricItemConfig config = m_configManager.queryMetricItemConfig(key);
 
