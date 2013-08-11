@@ -2,13 +2,13 @@
 <bug-report startTime="2012-05-16 16:00:00" domain="All"
 	endTime="2012-05-16 16:59:59">
 	<domain id="Cat">
-		<problem-url>http://cat.dianpingoa.com/cat/r/p?domain=Cat&ip=All&date=2013080716&reportType=&op=view</problem-url>
-		<exception id="NPE" count="123">
-			<message url="http://cat.dianpingoa.com/cat/r/ShopServer"></message>
-			<message url="http://cat.dianpingoa.com/cat/r/ShopServer"></message>
-			<message url="http://cat.dianpingoa.com/cat/r/ShopServer"></message>
-		</exception>
-		<excpetion></excpetion>
+		<problem-url>http://cat.dianpingoa.com/cat/r/p</problem-url>
+		<exception-item id="NPE" count="123">
+			<message>http://cat.dianpingoa.com/cat/r/ShopServer</message>
+			<message>http://cat.dianpingoa.com/cat/r/ShopServer</message>
+			<message>http://cat.dianpingoa.com/cat/r/ShopServer</message>
+		</exception-item>
+		<exception-item></exception-item>
 	</domain>
 	<domain>
 	</domain>

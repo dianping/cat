@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.report.service.WeeklyReportService;
 
 public class WeeklyReportServiceImpl implements WeeklyReportService {
@@ -134,6 +135,20 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 			Cat.logError(e);
 		}
 		return new TransactionReport(domain);
+	}
+	
+	@Override
+	public BugReport queryBugReport(String domain, Date start) {
+		try {
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "bug",
+			      WeeklyReportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new BugReport(domain);
 	}
 
 	@Override

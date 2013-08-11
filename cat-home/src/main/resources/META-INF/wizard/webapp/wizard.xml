@@ -56,6 +56,9 @@
          <page name="externalError" title="externalError" path="externalError" template="default">
             <description>ExternalError</description>
          </page>
+         <page name="bug" title="Bug" path="bug" template="default">
+            <description>Bug</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">

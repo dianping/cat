@@ -69,6 +69,9 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.EXCEPTION_THRESHOLD.getPath();
 		case EXCEPTION_THRESHOLD_UPDATE:
 			return JspFile.EXCEPTION_THRESHOLD_CONFIG.getPath();
+		//Bug
+		case BUG_CONFIG_UPDATE:
+			return JspFile.BUG_CONFIG_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);
