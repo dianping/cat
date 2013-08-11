@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.bug;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
@@ -49,6 +51,11 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		for (String domainName : domains) {
 			ProblemReport problemReport = m_reportService.queryProblemReport(domainName, start, end);
 			visitor.visitProblemReport(problemReport);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		for (Domain d : bugReport.getDomains().values()) {
+			d.setProblemUrl(String.format("http://%s/cat/r/p?domain=%s&date=%s", getDomainName(), d.getId(), sdf.format(start)));
 		}
 		HourlyReport report = new HourlyReport();
 
@@ -128,5 +135,17 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		com.dianping.cat.home.bug.entity.BugReport bugReport = merger.getBugReport();
 
 		return bugReport;
+	}
+
+	private String getDomainName() {
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		if ("10.1.6.128".equals(ip)) {
+			return "cat.dianpingoa.com";
+		} else if ("192.168.7.70".equals(ip)) {
+			return "cat.qa.dianpingoa.com";
+		} else {
+			return ip + ":2281";
+		}
 	}
 }

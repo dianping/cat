@@ -28,7 +28,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 		Domain domainInfo = m_report.findOrCreateDomain(m_currentDomain);
 		ExceptionItem target = domainInfo.findOrCreateExceptionItem(m_exception);
 		List<String> oldMessages = target.getMessages();
-
+		
 		target.setCount(target.getCount() + count);
 		oldMessages.addAll(messages);
 		if (oldMessages.size() > 10) {

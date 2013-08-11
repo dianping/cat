@@ -23,6 +23,7 @@ public class BugReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeDomain(Domain old, Domain domain) {
+		old.setProblemUrl(domain.getProblemUrl());
 		super.mergeDomain(old, domain);
 	}
 
@@ -32,11 +33,10 @@ public class BugReportMerger extends DefaultMerger {
 		old.getMessages().addAll(exceptionItem.getMessages());
 
 		List<String> oldMessages = old.getMessages();
-		
+
 		if (oldMessages.size() > 10) {
 			oldMessages = oldMessages.subList(0, 10);
 		}
-
 	}
 
 }

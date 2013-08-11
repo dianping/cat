@@ -1,7 +1,7 @@
 package com.dianping.cat.system.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -32,21 +32,21 @@ public class BugConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "bugConfig";
 
-	public List<String> queryBugConfigsByDomain(String domain) {
+	public Set<String> queryBugConfigsByDomain(String domain) {
 		Domain config = m_bugConfig.findDomain(domain);
 
 		if (config == null) {
-			return m_bugConfig.getExceptions();
+			return new HashSet<String>(m_bugConfig.getExceptions());
 		} else {
 			if (config.getAdditivity() == true) {
-				List<String> result = new ArrayList<String>();
+				Set<String> result = new HashSet<String>();
 
 				result.addAll(m_bugConfig.getExceptions());
 				result.addAll(config.getExceptions());
 
 				return result;
 			} else {
-				return config.getExceptions();
+				return new HashSet<String>(config.getExceptions());
 			}
 		}
 	}

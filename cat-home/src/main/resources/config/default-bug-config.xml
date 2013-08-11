@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bug-config>
-	<exception>om.dianping.dpsf.exception.NetTimeoutException</exception>
+	<exception>com.dianping.dpsf.exception.NetTimeoutException</exception>
 	<exception>com.dianping.dpsf.exception.DPSFTimeoutException</exception>
 	<exception>org.apache.http.conn.HttpHostConnectException</exception>
 	<exception>net.spy.memcached.internal.CheckedOperationTimeoutException</exception>
