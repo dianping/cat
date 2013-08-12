@@ -4,6 +4,8 @@ public enum JspFile {
 	HOURLY_REPORT("/jsp/report/bug/bug.jsp"),
 	
 	HISTORY_REPORT("/jsp/report/bug/bugHistory.jsp"), 
+	
+	HTTP_JSON("/jsp/report/bug/bugApi.jsp"), 
 
 	;
 

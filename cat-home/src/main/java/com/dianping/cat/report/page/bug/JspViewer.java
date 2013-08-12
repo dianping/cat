@@ -13,6 +13,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.HOURLY_REPORT.getPath();
 		case HISTORY_REPORT:
 			return JspFile.HISTORY_REPORT.getPath();
+		case HTTP_JSON:
+			return JspFile.HTTP_JSON.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

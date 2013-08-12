@@ -78,10 +78,9 @@ public class Handler implements PageHandler<Context> {
 
 		Map<String, ErrorStatis> errors = visitor.getErrors();
 		errors = sortErrorStatis(errors);
-
+		System.out.println(errors.size()+"=======");
 		model.setBugReport(bugReport);
 		model.setErrorStatis(errors);
-		model.setAction(payload.getAction());
 		model.setPage(ReportPage.BUG);
 		m_jspViewer.view(ctx, model);
 	}
@@ -179,10 +178,10 @@ public class Handler implements PageHandler<Context> {
 				String productLine = project.getProjectLine();
 				String department = project.getDepartment();
 				ErrorStatis statis = findOrCreateErrorStatis(productLine);
-				
+
 				statis.setDepartment(department);
 				statis.setProductLine(productLine);
-				
+
 				Map<String, ExceptionItem> items = null;
 
 				if (isBug(m_domain, exception)) {

@@ -8,6 +8,7 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.bug.Handler.ErrorStatis;
+import com.google.gson.Gson;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -34,6 +35,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Model(Context ctx) {
 		super(ctx);
 	}
+	
+	public String getBugs() {
+		Gson gson = new Gson();
+		return gson.toJson(m_errorStatis);
+   }
 
 	@Override
 	public Action getDefaultAction() {
