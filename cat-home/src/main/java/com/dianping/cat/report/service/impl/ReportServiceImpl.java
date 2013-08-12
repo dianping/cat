@@ -18,9 +18,11 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.service.MonthlyReportCache;
@@ -374,6 +376,35 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return report;
 	}
+	
+	@Override
+	public BugReport queryBugReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		BugReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryBugReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryBugReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryBugReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryBugReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryBugReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthlyReportService.queryBugReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryBugReport(domain, start);
+		} else {
+			report = m_dailyReportService.queryBugReport(domain, start, end);
+		}
+		if (report == null) {
+			report = new BugReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
 
 	@Override
    public boolean insertDailyReport(DailyReport report) {
@@ -388,6 +419,11 @@ public class ReportServiceImpl implements ReportService {
 	@Override
    public boolean insertMonthlyReport(MonthlyReport report) {
 		return m_monthlyReportService.insert(report);
+   }
+
+	@Override
+   public boolean insertHourlyReport(HourlyReport report) {
+		return m_hourlyReportService.insert(report);
    }
 
 }

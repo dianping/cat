@@ -23,6 +23,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
@@ -93,6 +94,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportService.class) //
 		      .req(HeartbeatGraphCreator.class));
 
+		all.add(C(BugReportBuilder.class)
+		      .req( ReportService.class));
+
 		all.add(C(MatrixReportBuilder.class).req(ReportService.class));
 
 		all.add(C(SqlReportBuilder.class).req(ReportService.class, SqlMerger.class));
@@ -107,11 +111,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      TopologyGraphDao.class));
 
 		all.add(C(ReportFacade.class)//
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class,
-		            ProblemReportBuilder.class //
-		            , HeartbeatReportBuilder.class, MatrixReportBuilder.class,
-		            CrossReportBuilder.class //
-		            , SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
+		      		, HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
+		      		, SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,BugReportBuilder.class,
 		            MetricBaselineReportBuilder.class));
 
 		return all;

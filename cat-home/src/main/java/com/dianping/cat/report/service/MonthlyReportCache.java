@@ -24,6 +24,7 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.message.Transaction;
 
 public class MonthlyReportCache implements Initializable {
@@ -157,5 +158,10 @@ public class MonthlyReportCache implements Initializable {
 		public void shutdown() {
 		}
 	}
+
+	public BugReport queryBugReport(String domain, Date start) {
+	   // TODO Auto-generated method stub
+	   return null;
+   }
 
 }

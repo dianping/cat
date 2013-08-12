@@ -74,6 +74,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("exception")
 	private String m_exception;
 
+	@FieldMeta("bug")
+	private String m_bug;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -259,5 +262,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
 		m_exceptionLimit = exceptionLimit;
 	}
+
+	public String getBug() {
+   	return m_bug;
+   }
+
+	public void setBug(String bug) {
+   	m_bug = bug;
+   }
 
 }

@@ -8,7 +8,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>
-	<name>CAT Hadoop Support</name>
+	<name>cat-hadoop</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
