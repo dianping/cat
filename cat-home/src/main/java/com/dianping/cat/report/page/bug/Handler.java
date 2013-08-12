@@ -102,7 +102,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
-				end = new Date(start.getTime());
+				end = new Date(start.getTime()+ TimeUtil.ONE_HOUR);
 			} else {
 				start = new Date(payload.getDate());
 				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
@@ -152,24 +152,6 @@ public class Handler implements PageHandler<Context> {
 		return errors;
 	}
 
-	public class ClearBugReport extends BaseVisitor{
-
-		@Override
-      public void visitDomain(Domain domain) {
-			String domainName = domain.getId();
-			Set<String> removes= new HashSet<String>();
-			Map<String, ExceptionItem> items = domain.getExceptionItems();
-			
-			for (ExceptionItem item : items.values()){
-				if(!isBug(domainName, item.getId())){
-					removes.add(item.getId());
-				}
-			}
-			for(String remove:removes){
-				items.remove(remove);
-			}
-      }
-	}
 	public class BugReportVisitor extends BaseVisitor {
 		private String m_domain;
 
@@ -235,6 +217,24 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 		}
+	}
+	public class ClearBugReport extends BaseVisitor{
+
+		@Override
+      public void visitDomain(Domain domain) {
+			String domainName = domain.getId();
+			Set<String> removes= new HashSet<String>();
+			Map<String, ExceptionItem> items = domain.getExceptionItems();
+			
+			for (ExceptionItem item : items.values()){
+				if(!isBug(domainName, item.getId())){
+					removes.add(item.getId());
+				}
+			}
+			for(String remove:removes){
+				items.remove(remove);
+			}
+      }
 	}
 
 	public static class ErrorStatis {
