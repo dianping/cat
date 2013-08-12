@@ -94,8 +94,14 @@ public class Handler implements PageHandler<Context> {
 		Date start = null;
 		Date end = null;
 		if (payload.getAction() == Action.HOURLY_REPORT) {
-			start = new Date(payload.getDate());
-			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+
+			if (payload.getPeriod().isCurrent()) {
+				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
+				end = new Date(start.getTime());
+			} else {
+				start = new Date(payload.getDate());
+				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			}
 		} else {
 			start = payload.getHistoryStartDate();
 			end = payload.getHistoryEndDate();
