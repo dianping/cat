@@ -31,7 +31,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Override
 	public boolean createHourlyTask(StateReport report) {
-		m_taskManager.createTask(report.getStartTime(), report.getDomain(), "bug", TaskProlicy.ALL_EXCLUED_HOURLY);
+		m_taskManager.createTask(report.getStartTime(), report.getDomain(), "bug", TaskProlicy.ALL);
 		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
