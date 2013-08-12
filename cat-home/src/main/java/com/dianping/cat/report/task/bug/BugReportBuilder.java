@@ -20,6 +20,7 @@ import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.service.ReportConstants;
 
 public class BugReportBuilder implements ReportTaskBuilder {
 
@@ -41,6 +42,10 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertDailyReport(report);
 	}
 
+	private boolean validateDomain(String domain) {
+		return !domain.equals(ReportConstants.FRONT_END) && !domain.equals(ReportConstants.ALL);
+	}
+
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		BugReport bugReport = new BugReport(CatString.CAT);
@@ -49,13 +54,16 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "problem");
 
 		for (String domainName : domains) {
-			ProblemReport problemReport = m_reportService.queryProblemReport(domainName, start, end);
-			visitor.visitProblemReport(problemReport);
+			if (validateDomain(domainName)) {
+				ProblemReport problemReport = m_reportService.queryProblemReport(domainName, start, end);
+				visitor.visitProblemReport(problemReport);
+			}
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 		for (Domain d : bugReport.getDomains().values()) {
-			d.setProblemUrl(String.format("http://%s/cat/r/p?domain=%s&date=%s", getDomainName(), d.getId(), sdf.format(start)));
+			d.setProblemUrl(String.format("http://%s/cat/r/p?domain=%s&date=%s", getDomainName(), d.getId(),
+			      sdf.format(start)));
 		}
 		HourlyReport report = new HourlyReport();
 
