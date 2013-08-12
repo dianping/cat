@@ -40,7 +40,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 	public void visitEntry(Entry entry) {
 		String type = entry.getType();
 
-		if (ProblemType.ERROR.equals(type)) {
+		if (ProblemType.ERROR.getName().equals(type)) {
 			m_exception = entry.getStatus();
 			super.visitEntry(entry);
 		}

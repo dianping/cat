@@ -1,6 +1,8 @@
 package com.dianping.cat.system.config;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -32,23 +34,28 @@ public class BugConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "bugConfig";
 
+	private Map<String, Set<String>> m_configs = new HashMap<String, Set<String>>();
+
 	public Set<String> queryBugConfigsByDomain(String domain) {
-		Domain config = m_bugConfig.findDomain(domain);
+		Set<String> result = m_configs.get(domain);
 
-		if (config == null) {
-			return new HashSet<String>(m_bugConfig.getExceptions());
-		} else {
-			if (config.getAdditivity() == true) {
-				Set<String> result = new HashSet<String>();
+		if (result == null) {
+			result = new HashSet<String>();
+			Domain config = m_bugConfig.findDomain(domain);
 
-				result.addAll(m_bugConfig.getExceptions());
-				result.addAll(config.getExceptions());
-
-				return result;
+			if (config == null) {
+				result = new HashSet<String>(m_bugConfig.getExceptions());
 			} else {
-				return new HashSet<String>(config.getExceptions());
+				if (config.getAdditivity() == true) {
+					result.addAll(m_bugConfig.getExceptions());
+					result.addAll(config.getExceptions());
+				} else {
+					result = new HashSet<String>(config.getExceptions());
+				}
 			}
+			m_configs.put(domain, result);
 		}
+		return result;
 	}
 
 	public BugConfig getBugConfig() {
@@ -58,7 +65,9 @@ public class BugConfigManager implements Initializable, LogEnabled {
 	public boolean insert(String xml) {
 		try {
 			m_bugConfig = DefaultSaxParser.parse(xml);
-			return storeConfig();
+			boolean result = storeConfig();
+			m_configs.clear();
+			return result;
 		} catch (Exception e) {
 			Cat.logError(e);
 			m_logger.error(e.getMessage(), e);

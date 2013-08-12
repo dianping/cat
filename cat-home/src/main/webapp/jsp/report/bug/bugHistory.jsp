@@ -7,9 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.bug.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.bug.Model" scope="request"/>
 
-
-
-
 <a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
@@ -17,7 +14,7 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;Bug Report</td>
+			<td class="title">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="switch"><a href="?domain=${model.domain}">Switch To Hourly Mode</a>
 			</td>
 			<td class="nav">

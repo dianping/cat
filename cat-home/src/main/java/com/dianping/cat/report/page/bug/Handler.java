@@ -17,6 +17,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -44,16 +45,15 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
-	
+
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-
 
 	public Project findByDomain(String domain) {
 		try {
 			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 		return null;
 	}
@@ -71,13 +71,13 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		m_normalizePayload.normalize(model, payload);
-		
+
 		BugReport bugReport = queryBugReport(payload);
 		BugReportVisitor visitor = new BugReportVisitor();
 		visitor.visitBugReport(bugReport);
 
 		Map<String, ErrorStatis> errors = visitor.getErrors();
-		sortErrorStatis(errors);
+		errors = sortErrorStatis(errors);
 
 		model.setBugReport(bugReport);
 		model.setErrorStatis(errors);
@@ -89,7 +89,7 @@ public class Handler implements PageHandler<Context> {
 	private boolean isBug(String domain, String exception) {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
-		return bugConfig.contains(exception);
+		return !bugConfig.contains(exception);
 	}
 
 	private BugReport queryBugReport(Payload payload) {
@@ -106,8 +106,8 @@ public class Handler implements PageHandler<Context> {
 		return m_reportService.queryBugReport(CatString.CAT, start, end);
 	}
 
-	private void sortErrorStatis(Map<String, ErrorStatis> errors) {
-		errors = MapUtils.sortMap(errors, new Comparator<java.util.Map.Entry<String, ErrorStatis>>() {
+	private Map<String, ErrorStatis> sortErrorStatis(Map<String, ErrorStatis> errors) {
+		Comparator<java.util.Map.Entry<String, ErrorStatis>> errorCompator = new Comparator<java.util.Map.Entry<String, ErrorStatis>>() {
 
 			@Override
 			public int compare(java.util.Map.Entry<String, ErrorStatis> o1, java.util.Map.Entry<String, ErrorStatis> o2) {
@@ -118,10 +118,12 @@ public class Handler implements PageHandler<Context> {
 
 				if (department1.equals(department2)) {
 					return productLine1.compareTo(productLine2);
+				} else {
+					return department1.compareTo(department2);
 				}
-				return department1.compareTo(department2);
 			}
-		});
+		};
+		errors = MapUtils.sortMap(errors, errorCompator);
 
 		for (ErrorStatis temp : errors.values()) {
 			Comparator<java.util.Map.Entry<String, ExceptionItem>> compator = new Comparator<java.util.Map.Entry<String, ExceptionItem>>() {
@@ -138,6 +140,8 @@ public class Handler implements PageHandler<Context> {
 			temp.setBugs(MapUtils.sortMap(bugs, compator));
 			temp.setExceptions(MapUtils.sortMap(exceptions, compator));
 		}
+
+		return errors;
 	}
 
 	public class BugReportVisitor extends BaseVisitor {
@@ -173,25 +177,27 @@ public class Handler implements PageHandler<Context> {
 
 			if (project != null) {
 				String productLine = project.getProjectLine();
+				String department = project.getDepartment();
 				ErrorStatis statis = findOrCreateErrorStatis(productLine);
-				statis.setDepartment(project.getDepartment());
-				statis.setProductLine(project.getProjectLine());
-
-				Map<String, ExceptionItem> exceptions = null;
+				
+				statis.setDepartment(department);
+				statis.setProductLine(productLine);
+				
+				Map<String, ExceptionItem> items = null;
 
 				if (isBug(m_domain, exception)) {
-					exceptions = statis.getBugs();
+					items = statis.getBugs();
 				} else {
-					exceptions = statis.getExceptions();
+					items = statis.getExceptions();
 				}
 
-				ExceptionItem item = exceptions.get(exception);
+				ExceptionItem item = items.get(exception);
 
 				if (item == null) {
 					item = new ExceptionItem(exception);
 					item.setCount(count);
 					item.getMessages().addAll(exceptionItem.getMessages());
-					exceptions.put(exception, item);
+					items.put(exception, item);
 				} else {
 					List<String> messages = item.getMessages();
 					item.setCount(item.getCount() + count);

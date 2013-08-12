@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bug-config>
-	<exception>com.dianping.dpsf.exception.NetTimeoutException</exception>
-	<exception>com.dianping.dpsf.exception.DPSFTimeoutException</exception>
-	<exception>org.apache.http.conn.HttpHostConnectException</exception>
-	<exception>net.spy.memcached.internal.CheckedOperationTimeoutException</exception>
-	<exception>net.spy.memcached.internal.CheckedOperationTimeoutException</exception>
-	<exception>java.net.ConnectException</exception>
+   <exception>com.dianping.dpsf.exception.NetTimeoutException</exception>
+   <exception>com.dianping.dpsf.exception.DPSFTimeoutException</exception>
+   <exception>com.dianping.dpsf.exception.DPSFException</exception>
+   <exception>com.dianping.dpsf.exception.NetException</exception>
+   <exception>java.net.SocketTimeoutException</exception>
+   <exception>org.apache.http.conn.HttpHostConnectException</exception>
+   <exception>net.spy.memcached.internal.CheckedOperationTimeoutException</exception>
+   <exception>java.net.ConnectException</exception>
 </bug-config>

@@ -16,7 +16,7 @@
   </entity>
   <entity name="exception-item">
     <attribute name="id" value-type="String" key="true"/>
-    <attribute name="count" value-type="int" />
+    <attribute name="count" value-type="int" primitive="true"/>
     <element name="message" value-type="String" type="list" names="messages" />
   </entity>
 </model>
