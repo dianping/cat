@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,12 +79,16 @@ public class Handler implements PageHandler<Context> {
 
 		Map<String, ErrorStatis> errors = visitor.getErrors();
 		errors = sortErrorStatis(errors);
-		model.setBugReport(bugReport);
 		model.setErrorStatis(errors);
+
+		if (payload.getAction() == Action.HTTP_JSON) {
+			new ClearBugReport().visitBugReport(bugReport);
+		}
+		model.setBugReport(bugReport);
 		model.setPage(ReportPage.BUG);
 		m_jspViewer.view(ctx, model);
 	}
-
+	
 	private boolean isBug(String domain, String exception) {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
@@ -106,7 +111,6 @@ public class Handler implements PageHandler<Context> {
 			start = payload.getHistoryStartDate();
 			end = payload.getHistoryEndDate();
 		}
-
 		return m_reportService.queryBugReport(CatString.CAT, start, end);
 	}
 
@@ -148,6 +152,24 @@ public class Handler implements PageHandler<Context> {
 		return errors;
 	}
 
+	public class ClearBugReport extends BaseVisitor{
+
+		@Override
+      public void visitDomain(Domain domain) {
+			String domainName = domain.getId();
+			Set<String> removes= new HashSet<String>();
+			Map<String, ExceptionItem> items = domain.getExceptionItems();
+			
+			for (ExceptionItem item : items.values()){
+				if(!isBug(domainName, item.getId())){
+					removes.add(item.getId());
+				}
+			}
+			for(String remove:removes){
+				items.remove(remove);
+			}
+      }
+	}
 	public class BugReportVisitor extends BaseVisitor {
 		private String m_domain;
 

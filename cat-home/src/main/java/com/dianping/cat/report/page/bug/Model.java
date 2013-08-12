@@ -6,10 +6,9 @@ import java.util.Map;
 
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.NonPrexFieldNamingStrategy;
 import com.dianping.cat.report.page.bug.Handler.ErrorStatis;
-import com.google.gson.GsonBuilder;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -38,10 +37,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 	
 	public String getBugs() {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.setFieldNamingStrategy(new NonPrexFieldNamingStrategy());
-
-		return gsonBuilder.create().toJson(m_errorStatis);
+		return new DefaultJsonBuilder().buildJson(m_bugReport);
    }
 
 	@Override
