@@ -78,7 +78,6 @@ public class Handler implements PageHandler<Context> {
 
 		Map<String, ErrorStatis> errors = visitor.getErrors();
 		errors = sortErrorStatis(errors);
-		System.out.println(errors.size()+"=======");
 		model.setBugReport(bugReport);
 		model.setErrorStatis(errors);
 		model.setPage(ReportPage.BUG);
