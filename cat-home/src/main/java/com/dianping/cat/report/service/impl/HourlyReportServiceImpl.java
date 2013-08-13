@@ -38,9 +38,11 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
+import com.dianping.cat.report.task.bug.BugReportMerger;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 
@@ -503,5 +505,56 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		transactionReport.getDomainNames().addAll(domains);
 		return transactionReport;
 	}
+	
+	@Override
+	public BugReport queryBugReport(String domain, Date start, Date end) {
+		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		String name = "bug";
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			List<HourlyReport> reports = null;
+			try {
+				reports = m_reportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
+				      HourlyReportEntity.READSET_FULL);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+			if (reports != null) {
+				for (HourlyReport report : reports) {
+					String xml = report.getContent();
+
+					try {
+						BugReport reportModel = com.dianping.cat.home.bug.transform.DefaultSaxParser
+						      .parse(xml);
+						reportModel.accept(merger);
+					} catch (Exception e) {
+						Cat.logError(e);
+						Cat.getProducer().logEvent("ErrorXML", name, Event.SUCCESS,
+						      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+					}
+				}
+			}
+		}
+		BugReport bugReport = merger.getBugReport();
+
+		bugReport.setStartTime(start);
+		bugReport.setEndTime(new Date(end.getTime() - 1));
+
+		return bugReport;
+	}
+	
+	@Override
+   public boolean insert(HourlyReport report) {
+		try {
+			m_reportDao.insert(report);
+	      return true;
+      } catch (DalException e) {
+      	Cat.logError(e);
+			return false;
+      }
+   }
+
 
 }

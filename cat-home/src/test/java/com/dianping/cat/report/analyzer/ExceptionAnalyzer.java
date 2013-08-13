@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -80,7 +81,7 @@ public class ExceptionAnalyzer extends ComponentTestCase {
 		try {
 			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 		return null;
 	}
@@ -115,7 +116,6 @@ public class ExceptionAnalyzer extends ComponentTestCase {
 		public void setErrors(Map<String, Integer> errors) {
 			m_errors = errors;
 		}
-
 	}
 
 	public class Visitor extends BaseVisitor {

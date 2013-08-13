@@ -14,6 +14,8 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.home.bug.entity.BugReport;
 
 public interface HourlyReportService {
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName);
@@ -39,4 +41,8 @@ public interface HourlyReportService {
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
 	public DependencyReport queryDependencyReport(String domain, Date start, Date end);
+
+	public BugReport queryBugReport(String domain, Date start, Date end);
+	
+	public boolean insert(HourlyReport report);
 }

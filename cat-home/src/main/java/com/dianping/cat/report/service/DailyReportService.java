@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.home.bug.entity.BugReport;
 
 public interface DailyReportService {
 
@@ -31,4 +32,6 @@ public interface DailyReportService {
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
 	public boolean insert(DailyReport report);
+
+	public BugReport queryBugReport(String domain, Date start, Date end);
 }
