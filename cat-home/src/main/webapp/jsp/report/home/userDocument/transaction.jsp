@@ -13,8 +13,8 @@
 <p>4. Failures Over Time表示5分钟内的Transaction失败次数。</p>
 <img src="${model.webapp}/images/transaction03.jpg"/>
 <br/>
-<h4 class="text-success">Transaction历史统计报表</h4>
 <img src="${model.webapp}/images/transaction04.png"/>
+<h4 class="text-success">Transaction历史统计报表</h4>
 <p class="text-error">a）Transaction\Event月报表支持每天的趋势图，以天为单位,如下图</p>
 <img src="${model.webapp}/images/transaction06.png"/>
 <p class="text-error">b）Transaction\Event报表日报表、周报表支持同比、环比对比,时间精度为5分钟</p>
