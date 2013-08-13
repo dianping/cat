@@ -99,7 +99,6 @@ public class Handler implements PageHandler<Context> {
 		Date start = null;
 		Date end = null;
 		if (payload.getAction() == Action.HOURLY_REPORT) {
-
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
 				end = new Date(start.getTime()+ TimeUtil.ONE_HOUR);
