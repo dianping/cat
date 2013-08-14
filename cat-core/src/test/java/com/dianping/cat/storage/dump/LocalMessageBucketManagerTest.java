@@ -87,8 +87,6 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			Assert.assertNotNull("Message " + i + " not found.", tree);
 			Assert.assertEquals(messageId, tree.getMessageId());
 		}
-
-		manager.close();
 	}
 
 	static class MockMessageIdFactory extends MessageIdFactory {

@@ -78,8 +78,6 @@ public class HdfsMessageBucketManagerTest extends ComponentTestCase {
 			Assert.assertNotNull("Message " + i + " not found.", tree);
 			Assert.assertEquals(messageId, tree.getMessageId());
 		}
-
-		hdfsManager.close();
 	}
 
 	static class MockMessageIdFactory extends MessageIdFactory {
