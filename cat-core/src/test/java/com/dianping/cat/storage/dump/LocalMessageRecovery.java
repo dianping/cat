@@ -27,7 +27,10 @@ public class LocalMessageRecovery extends ComponentTestCase {
 		MessageBlockReader reader = new MessageBlockReader(dataFile);
 		String message = readMessage(reader, 27);
 		
-		System.out.println(message);
+		String id="midasMerchantServerWorker-0a01084d-382328-27";
+		if(message.indexOf(id)>-1){
+			System.out.println(message);
+		}
 	}
 
 	private String readMessage(MessageBlockReader reader, int index) throws Exception {

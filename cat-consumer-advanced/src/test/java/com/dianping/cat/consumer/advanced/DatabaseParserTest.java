@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.dianping.cat.consumer.sql.DatabaseParser;
 
-public class DatabaseAnalyzerTest {
+public class DatabaseParserTest {
 	@Test
 	public void testParseDatabaseName() {
 		String mysql = "jdbc:mysql://127.0.0.1:3306/cat";

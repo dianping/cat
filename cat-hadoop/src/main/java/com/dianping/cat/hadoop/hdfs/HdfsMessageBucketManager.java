@@ -125,7 +125,8 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	            	}
 	            }
             } catch (Exception e) {
-            	//ingore
+            	t.setStatus(e);
+            	Cat.logError(e);
             }
 			}
 

@@ -16,7 +16,7 @@ public class DisplayNames {
 	private List<EventNameModel> m_results = new ArrayList<EventNameModel>();
 
 	public DisplayNames display(String sorted, String type, String ip, EventReport report) {
-		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
+		Map<String, EventType> types = report.findOrCreateMachine(ip).getTypes();
 		EventName all = new EventName("TOTAL");
 		all.setTotalPercent(1);
 		if (types != null) {
