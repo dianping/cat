@@ -49,7 +49,7 @@ public class MetricDisplay extends BaseVisitor{
 	private static final String AVG = MetricType.AVG.name();
 
 	private static final int INTERVAL = 10;
-
+	
 	private static final int HOUR = 24;
 
 	private static final int MINUTE = 60;
@@ -224,8 +224,9 @@ public class MetricDisplay extends BaseVisitor{
 				if (day == null) {
 					continue;
 				}
-				value[i] = avgOfArray(day, j);
+				value[i] = sumOfArray(day, j);
 			}
+			
 			lineChart.addSubTitle("Baseline");
 			lineChart.addValue(value);
 		}
@@ -240,7 +241,7 @@ public class MetricDisplay extends BaseVisitor{
 			int i = 0;
 			for (String subTitle : subTitles) {
 				int splitIndex = subTitle.lastIndexOf(':');
-				int index = Integer.parseInt(subTitle.substring(splitIndex + 1));
+				int hour = Integer.parseInt(subTitle.substring(splitIndex + 1));
 				subTitle = subTitle.substring(0, splitIndex);
 				double[] value = values.get(i);
 				double[] newValue = resultMap.get(subTitle);
@@ -249,7 +250,7 @@ public class MetricDisplay extends BaseVisitor{
 					resultMap.put(subTitle, newValue);
 				}
 				for (int j = 0; j < MINUTE / INTERVAL; j++) {
-					newValue[index * 6 + j] = avgOfArray(value,j*INTERVAL);
+					newValue[hour * MINUTE / INTERVAL + j] = sumOfArray(value,j*INTERVAL);
 				}
 				i++;
 			}
@@ -262,22 +263,15 @@ public class MetricDisplay extends BaseVisitor{
 		}
 	}
 
-	 private double avgOfArray(double[]values, int j){
+	 private double sumOfArray(double[]values, int j){
 		 double result = 0;
-		 int size = 0;
 		 for(int i = j; i < j+INTERVAL; i++){
 			 if(values[i] >= 0){
 				 result +=values[i];
-				 size ++;
 			 }
 		 }
-		 if(size == 0){
-			 return result;
-		 } else{
-			 return result /size;
-		 }
+		 return result;
 	 }
-
 	public void setBaselineService(BaselineService baselineService) {
 		m_baselineService = baselineService;
 	}

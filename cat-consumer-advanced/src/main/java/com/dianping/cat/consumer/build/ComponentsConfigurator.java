@@ -8,10 +8,10 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
-import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;

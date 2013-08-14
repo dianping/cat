@@ -7,10 +7,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.state.model.entity.Machine;
+import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
@@ -47,10 +48,31 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Statistic state = m_serverStateManager.findState(start);
 
 			com.dianping.cat.consumer.state.model.entity.Message temp = machine.findOrCreateMessage(start);
-			long messageTotal = state.getMessageTotal();
+			Map<String, Long> totals = state.getMessageTotal();
+			long messageTotal = totals.get(Statistic.TOTAL);
 			temp.setTotal(messageTotal);
-			machine.setTotal(machine.getTotal() + messageTotal);
-
+			
+			Map<String,Long> totalLosses = state.getMessageTotalLoss();
+			long messageTotalLoss = totalLosses.get(Statistic.TOTAL);
+			temp.setTotalLoss(messageTotalLoss);
+			
+			Map<String,Double> sizes = state.getMessageSizes();
+			double messageSize = sizes.get(Statistic.TOTAL);
+			temp.setSize(messageSize);
+			
+			for (String key : totals.keySet()) {
+				if(key.equals(Statistic.TOTAL)){
+					machine.setTotal(totals.get(key) + machine.getTotal());
+					machine.setTotalLoss(totalLosses.get(key) + machine.getTotalLoss());
+					machine.setSize(sizes.get(key) + machine.getSize());
+				} else{
+					ProcessDomain domain = machine.findOrCreateProcessDomain(key);
+					domain.setTotal(totals.get(key) + domain.getTotal());
+					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
+					domain.setSize(sizes.get(key) + domain.getSize());
+				}
+			}
+			
 			if (messageTotal > maxTps) {
 				maxTps = messageTotal;
 			}
@@ -75,10 +97,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setNetworkTimeError(networkTimeError);
 			machine.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError);
 
-			long messageTotalLoss = state.getMessageTotalLoss();
-			temp.setTotalLoss(messageTotalLoss);
-			machine.setTotalLoss(machine.getTotalLoss() + messageTotalLoss);
-
 			long messageDump = state.getMessageDump();
 			temp.setDump(messageDump);
 			machine.setDump(machine.getDump() + messageDump);
@@ -87,9 +105,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setDumpLoss(messageDumpLoss);
 			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss);
 
-			double messageSize = state.getMessageSize();
-			temp.setSize(messageSize);
-			machine.setSize(machine.getSize() + messageSize);
+
 
 			int processDelayCount = state.getProcessDelayCount();
 			temp.setDelayCount(processDelayCount);
@@ -124,7 +140,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		reports.put(ReportConstants.CAT, stateReport);
 		long startTime = getStartTime();
-
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
 		} else {

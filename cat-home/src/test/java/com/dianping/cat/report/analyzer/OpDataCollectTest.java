@@ -20,17 +20,21 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.service.HourlyReportService;
 
 public class OpDataCollectTest extends ComponentTestCase {
 
 	private HourlyReportService m_hourlyReportService;
 
+	private BaselineService m_baselineService;
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	@Test
 	public void test() throws Exception {
 		m_hourlyReportService = (HourlyReportService) lookup(HourlyReportService.class);
+		m_baselineService = lookup(BaselineService.class);
 		String dateStr1 = "2013-03-22 16:00";
 		String dateStr2 = "2013-04-26 16:00";
 		String dateStr3 = "2013-05-24 16:00";
@@ -49,8 +53,22 @@ public class OpDataCollectTest extends ComponentTestCase {
 			buildHeartbeatData(domain, dateStr2);
 			buildHeartbeatData(domain, dateStr3);
 		}
-		
-		buildMetricData("TuanGou", "2013-07-01 00:00:00");
+
+		buildMetricData("TuanGou", "2013-07-24 00:00:00");
+		buildBaselineData("metric", "MovieWeb:URL:/index:COUNT", "2013-07-25 00:00:00");
+		buildBaselineData("metric", "MovieWeb:URL:/index:COUNT", "2013-07-26 00:00:00");
+		buildBaselineData("metric", "MovieWeb:URL:/index:COUNT", "2013-07-27 00:00:00");
+		buildBaselineData("metric", "MovieWeb:URL:/index:COUNT", "2013-07-28 00:00:00");
+		buildBaselineData("metric", "MovieWeb:URL:/index:COUNT", "2013-07-29 00:00:00");
+	}
+
+	private void buildBaselineData(String reportName, String key, String date) throws Exception {
+		Date reportPeriod = m_sdf.parse(date);
+		double[] report = m_baselineService.queryDailyBaseline(reportName, key, reportPeriod);
+		for (double value : report) {
+			System.out.print(value + ", ");
+		}
+		System.out.println();
 	}
 
 	private void buildMetricData(String group, String str) throws Exception {
@@ -59,7 +77,7 @@ public class OpDataCollectTest extends ComponentTestCase {
 		MetricReport report = m_hourlyReportService.queryMetricReport(group, start, end);
 		System.out.println(report);
 	}
-	
+
 	private void buildHeartbeatData(String domain, String str) throws Exception {
 		Date start = m_sdf.parse(str);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);

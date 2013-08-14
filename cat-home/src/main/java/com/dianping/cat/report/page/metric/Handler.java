@@ -138,7 +138,7 @@ public class Handler implements PageHandler<Context> {
 			date = date + TimeUtil.ONE_HOUR;
 		}
 		display.generateDailyLineCharts();
-		if (!test.equals("66")) {
+		if (test.equals("-1")) {
 			display.generateBaselineChart();
 		}
 		report = new MetricReport();

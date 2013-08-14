@@ -1,5 +1,6 @@
 package com.dianping.cat.statistic;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,15 +23,15 @@ public class ServerStatistic {
 
 	public static class Statistic {
 
-		private long m_messageTotal;
+		private Map<String, Long> m_messageTotals = new HashMap<String, Long>();
 
 		private long m_messageDump;
 
-		private long m_messageTotalLoss;
+		private Map<String, Long> m_messageTotalLosses = new HashMap<String, Long>();
 
 		private long m_messageDumpLoss;
 
-		private double m_messageSize;
+		private Map<String, Double> m_messageSizes = new HashMap<String, Double>();
 
 		private double m_processDelaySum;
 
@@ -49,6 +50,8 @@ public class ServerStatistic {
 		private long m_pigeonTimeError;
 
 		private long m_networkTimeError;
+
+		public static String TOTAL = "Total";
 
 		public void addBlockTotal(long block) {
 			m_blockTotal += block;
@@ -74,16 +77,40 @@ public class ServerStatistic {
 			m_messageDumpLoss += messageDumpLoss;
 		}
 
-		public void addMessageSize(double messageSize) {
-			m_messageSize += messageSize;
+		public void addMessageSize(String domain, double messageSize) {
+			Double value = m_messageSizes.get(domain);
+			if (value != null) {
+				m_messageSizes.put(domain, value + messageSize);
+			} else {
+				m_messageSizes.put(domain, messageSize);
+			}
+			if(!domain.equals(TOTAL)){
+				addMessageSize(TOTAL,messageSize);
+			}
 		}
 
-		public void addMessageTotal(long messageTotal) {
-			m_messageTotal += messageTotal;
+		public void addMessageTotal(String domain, long messageTotal) {
+			Long value = m_messageTotals.get(domain);
+			if (value != null) {
+				m_messageTotals.put(domain, value + messageTotal);
+			} else {
+				m_messageTotals.put(domain, messageTotal);
+			}
+			if(!domain.equals(TOTAL)){
+				addMessageTotal(TOTAL,messageTotal);
+			}
 		}
 
-		public void addMessageTotalLoss(long messageTotalLoss) {
-			m_messageTotalLoss += messageTotalLoss;
+		public void addMessageTotalLoss(String domain, long messageTotalLoss) {
+			Long value = m_messageTotalLosses.get(domain);
+			if (value != null) {
+				m_messageTotalLosses.put(domain, value + messageTotalLoss);
+			} else {
+				m_messageTotalLosses.put(domain, messageTotalLoss);
+			}
+			if(!domain.equals(TOTAL)){
+				addMessageTotalLoss(TOTAL,messageTotalLoss);
+			}
 		}
 
 		public void addBlockTime(long blockTime) {
@@ -126,16 +153,16 @@ public class ServerStatistic {
 			return m_messageDumpLoss;
 		}
 
-		public double getMessageSize() {
-			return m_messageSize;
+		public Map<String,Double> getMessageSizes() {
+			return m_messageSizes;
 		}
 
-		public long getMessageTotal() {
-			return m_messageTotal;
+		public Map<String, Long> getMessageTotal() {
+			return m_messageTotals;
 		}
 
-		public long getMessageTotalLoss() {
-			return m_messageTotalLoss;
+		public Map<String, Long> getMessageTotalLoss() {
+			return m_messageTotalLosses;
 		}
 
 		public int getProcessDelayCount() {

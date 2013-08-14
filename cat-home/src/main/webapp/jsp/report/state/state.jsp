@@ -155,7 +155,10 @@
 <table width="100%">
 	<tr class='odd'>
 		<td width="15%">处理项目列表</td>
-				<td width="15%">机器总数</td>
+				<td width="5%">处理消息总量</td>
+				<td width="5%">丢失消息总量</td>
+				<td width="5%">压缩前消息大小(GB)</td>
+				<td width="5%">机器总数</td>
 				<td>项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
@@ -163,12 +166,18 @@
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 			<c:set var="lastIndex" value="${status.index}" />
 			<td>${item.name}</td>
+			<td>${item.total}</td>
+			<td>${item.totalLoss}</td>
+			<td>${item.size}</td>
 			<td>${w:size(item.ips)}</td>
 			<td style="white-space: normal">${item.ips}</td>
 		</tr>
 	</c:forEach>
 	<tr style="color: white;">
 				<td>${lastIndex+1}</td>
+				<td></td>
+				<td></td>
+				<td></td>
 				<td>${model.state.totalSize}</td>
 			</tr>
 </table>

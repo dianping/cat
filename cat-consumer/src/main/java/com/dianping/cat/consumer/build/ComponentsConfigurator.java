@@ -8,11 +8,11 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
@@ -35,9 +35,7 @@ import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.ReportDelegate;
@@ -56,9 +54,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(DomainManager.class).//
-		      req(ServerConfigManager.class, ProjectDao.class, HostinfoDao.class));
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class));

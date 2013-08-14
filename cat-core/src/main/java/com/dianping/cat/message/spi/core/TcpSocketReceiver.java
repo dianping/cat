@@ -1,6 +1,7 @@
 package com.dianping.cat.message.spi.core;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -45,6 +47,9 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
+	@Inject
+	private DomainManager m_domainManager;
+	
 	@Inject
 	private MessageCodec m_codec;
 
@@ -260,11 +265,14 @@ public class TcpSocketReceiver implements LogEnabled {
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
 			boolean result = m_queue.offer(buf);
-
+			SocketAddress socket = event.getRemoteAddress();
+			String ip = ((InetSocketAddress)socket).getAddress().getHostAddress();
+			String domain = m_domainManager.queryDomainByIp(ip);
+			//TODO
 			if (result == false) {
 				m_errorCount++;
 				if (m_errorCount % CatConstants.ERROR_COUNT == 0) {
-					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
+					m_serverStateManager.addMessageTotalLoss(domain, CatConstants.ERROR_COUNT);
 
 					if (m_errorCount % (CatConstants.ERROR_COUNT * 100) == 0) {
 						m_logger.warn("The server can't process the tree! overflow : " + m_errorCount
@@ -276,7 +284,7 @@ public class TcpSocketReceiver implements LogEnabled {
 				long flag = m_processCount % CatConstants.SUCCESS_COUNT;
 
 				if (flag == 0) {
-					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+					m_serverStateManager.addMessageTotal(domain, CatConstants.SUCCESS_COUNT);
 
 					if (m_processCount % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
 						m_logger.info("The server processes message number " + m_processCount);

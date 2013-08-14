@@ -48,22 +48,21 @@ public class ServerStatisticManager {
 		m_serverState.findOrCreate(time).addMessageDumpLoss(total);
 	}
 
-	public void addMessageSize(double size) {
+	public void addMessageSize(String domain, double size) {
 		Long time = getCurrentMinute();
 
-		m_serverState.findOrCreate(time).addMessageSize(size);
+		m_serverState.findOrCreate(time).addMessageSize(domain, size);
 	}
 
-	public void addMessageTotal(long total) {
+	public void addMessageTotal(String domain, long total) {
 		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addMessageTotal(total);
+		m_serverState.findOrCreate(time).addMessageTotal(domain, total);
 	}
 
-	public void addMessageTotalLoss(long total) {
+	public void addMessageTotalLoss(String domain, long total) {
 		Long time = getCurrentMinute();
 
-		m_serverState.findOrCreate(time).addMessageTotalLoss(total);
+		m_serverState.findOrCreate(time).addMessageTotalLoss(domain, total);
 	}
 
 	public void addProcessDelay(double delay) {
