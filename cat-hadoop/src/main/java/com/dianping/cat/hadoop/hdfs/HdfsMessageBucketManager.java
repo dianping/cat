@@ -106,23 +106,27 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 			t.addData(paths.toString());
 			for (String dataFile : paths) {
-				Cat.getProducer().logEvent("HDFSBucket", dataFile);
-				HdfsMessageBucket bucket = m_buckets.get(dataFile);
+				try {
+	            Cat.getProducer().logEvent("HDFSBucket", dataFile);
+	            HdfsMessageBucket bucket = m_buckets.get(dataFile);
 
-				if (bucket == null) {
-					bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
-					bucket.initialize(dataFile);
-					m_buckets.put(dataFile, bucket);
-				}
+	            if (bucket == null) {
+	            	bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
+	            	bucket.initialize(dataFile);
+	            	m_buckets.put(dataFile, bucket);
+	            }
 
-				if (bucket != null) {
-					MessageTree tree = bucket.findById(messageId);
+	            if (bucket != null) {
+	            	MessageTree tree = bucket.findById(messageId);
 
-					if (tree != null && tree.getMessageId().equals(messageId)) {
-						t.addData("path", dataFile);
-						return tree;
-					}
-				}
+	            	if (tree != null && tree.getMessageId().equals(messageId)) {
+	            		t.addData("path", dataFile);
+	            		return tree;
+	            	}
+	            }
+            } catch (Exception e) {
+            	//ingore
+            }
 			}
 
 			return null;
@@ -137,7 +141,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		} finally {
 			t.complete();
 		}
-
 	}
 
 	@Override
