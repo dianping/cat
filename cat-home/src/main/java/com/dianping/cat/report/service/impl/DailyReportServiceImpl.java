@@ -26,7 +26,9 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.report.task.bug.BugReportMerger;
 
 public class DailyReportServiceImpl implements DailyReportService {
 
@@ -240,6 +242,33 @@ public class DailyReportServiceImpl implements DailyReportService {
 		transactionReport.setEndTime(end);
 		return transactionReport;
 	}
+	
+	@Override
+	public BugReport queryBugReport(String domain, Date start, Date end) {
+		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		String name = "bug";
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
+			try {
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
+				      DailyReportEntity.READSET_FULL);
+				String xml = report.getContent();
+				BugReport reportModel = com.dianping.cat.home.bug.transform.DefaultSaxParser
+				      .parse(xml);
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		BugReport bugReport = merger.getBugReport();
+
+		bugReport.setStartTime(start);
+		bugReport.setEndTime(end);
+		return bugReport;
+	}
+
 
 	@Override
    public boolean insert(DailyReport report) {

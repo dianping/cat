@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bug-config>
-	<exception id="NetTimexception1"/>
-	<exception id="NetTimexception2"/>
-	<exception id="NetTimexception3"/>
-	<exception id="NetTimexception4"/>
+	<exception>NetTimexception2</exception>
+	<exception>NetTimexception2</exception>
+	<exception>NetTimexception2</exception>
+	<exception>NetTimexception2</exception>
 	<domain id="Cat" additivity="false">
-		<exception id="NetTimexception4"/>
-		<exception id="NetTimexception5"/>
-		<exception id="NetTimexception6"/>
+		<exception>NetTimexception2</exception>
+		<exception>NetTimexception2</exception>
+		<exception>NetTimexception2</exception>
+		<exception>NetTimexception2</exception>
 	</domain>
 	<domain id="Cat1" additivity="true">
-		<exception id="NetTimexception5"/>
+		<exception>NetTimexception2</exception>
+		<exception>NetTimexception2</exception>
+		<exception>NetTimexception2</exception>
+		<exception>NetTimexception2</exception>
 	</domain>
 </bug-config>

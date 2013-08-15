@@ -1,6 +1,8 @@
 package com.dianping.cat.analysis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,5 +83,17 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
+
+		Collections.sort(m_analyzerNames, new Comparator<String>() {
+			@Override
+			public int compare(String str1, String str2) {
+				if ("state".equals(str1)) {
+					return 1;
+				} else if ("state".equals(str2)) {
+					return -1;
+				}
+				return str1.compareTo(str2);
+			}
+		});
 	}
 }

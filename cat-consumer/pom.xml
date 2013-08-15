@@ -7,7 +7,7 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-consumer</artifactId>
-   <name>CAT Consumer</name>
+   <name>cat-consumer</name>
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>

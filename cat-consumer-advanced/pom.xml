@@ -7,7 +7,7 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-consumer-advanced</artifactId>
-   <name>CAT Consumer - Advanced</name>
+   <name>cat-consumer-advanced</name>
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
