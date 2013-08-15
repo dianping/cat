@@ -14,8 +14,6 @@ import com.dianping.cat.consumer.advanced.SqlParsersTest;
 
 CrossInfoTest.class,
 
-DatabaseParserTest.class,
-
 MatrixModelTest.class,
 
 SqlParsersTest.class,

@@ -1,7 +1,6 @@
 package com.dianping.cat.message.internal;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -19,16 +18,6 @@ public class MessageIdFactoryTest {
 			return m_timestamp;
 		}
 	};
-	
-	@Test
-	public void parse(){
-		String id = "midasMerchantServerWorker-0a01084d-382328-27";
-	MessageId messageId = MessageId.parse(id);
-	System.out.println(messageId.getIpAddress());
-	System.out.println(messageId.getDomain());
-	System.out.println(new SimpleDateFormat("yyyyMMddHH").format(new Date(messageId.getTimestamp())));
-	
-	}
 	
 	@Test
 	public void test(){

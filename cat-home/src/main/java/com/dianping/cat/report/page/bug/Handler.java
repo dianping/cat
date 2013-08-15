@@ -11,17 +11,13 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
@@ -32,6 +28,7 @@ import com.dianping.cat.home.bug.transform.BaseVisitor;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -42,7 +39,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportService m_reportService;
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private DomainNavManager m_domainManager;
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
@@ -51,12 +48,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	public Project findByDomain(String domain) {
-		try {
-			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return null;
+		return m_domainManager.getProjectByName(domain);
 	}
 
 	@Override
@@ -88,7 +80,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.BUG);
 		m_jspViewer.view(ctx, model);
 	}
-	
+
 	private boolean isBug(String domain, String exception) {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
@@ -101,7 +93,7 @@ public class Handler implements PageHandler<Context> {
 		if (payload.getAction() == Action.HOURLY_REPORT) {
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
-				end = new Date(start.getTime()+ TimeUtil.ONE_HOUR);
+				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 			} else {
 				start = new Date(payload.getDate());
 				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
@@ -217,23 +209,24 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 	}
-	public class ClearBugReport extends BaseVisitor{
+
+	public class ClearBugReport extends BaseVisitor {
 
 		@Override
-      public void visitDomain(Domain domain) {
+		public void visitDomain(Domain domain) {
 			String domainName = domain.getId();
-			Set<String> removes= new HashSet<String>();
+			Set<String> removes = new HashSet<String>();
 			Map<String, ExceptionItem> items = domain.getExceptionItems();
-			
-			for (ExceptionItem item : items.values()){
-				if(!isBug(domainName, item.getId())){
+
+			for (ExceptionItem item : items.values()) {
+				if (!isBug(domainName, item.getId())) {
 					removes.add(item.getId());
 				}
 			}
-			for(String remove:removes){
+			for (String remove : removes) {
 				items.remove(remove);
 			}
-      }
+		}
 	}
 
 	public static class ErrorStatis {
