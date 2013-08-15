@@ -72,7 +72,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 			Transaction t = Cat.newTransaction("ABTest", url);
 
 			try {
-				InputStream inputStream = Urls.forIO().connectTimeout(100).readTimeout(100).openStream(url);
+				InputStream inputStream = Urls.forIO().connectTimeout(300).readTimeout(2000).openStream(url);
 				String content = Files.forIO().readFrom(inputStream, "utf-8");
 				AbtestModel abtest = DefaultSaxParser.parse(content);
 				ABTestVisitor visitor = new ABTestVisitor(m_domain);

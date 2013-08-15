@@ -174,22 +174,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
 		if (validate(domain)) {
 			if (!m_domainManager.containsDomainInCat(domain)) {
-				m_logger.info("inserting domain info " + domain);
 				m_domainManager.insertDomain(domain);
-				m_logger.info("inserted domain info " + domain);
 			}
 			Hostinfo ipInfo = m_domainManager.queryHostInfoByIp(ip);
 
 			if (ipInfo == null) {
-				m_logger.info("inserting domain info " + domain + " " + ip);
 				m_domainManager.insert(domain, ip);
-				m_logger.info("inserted domain info " + domain + " " + ip);
 			}
 		}
-	}
-
-	private boolean validate(String domain) {
-		return !domain.equals("PhoenixAgent") && !domain.equals(ReportConstants.FRONT_END);
 	}
 
 }
