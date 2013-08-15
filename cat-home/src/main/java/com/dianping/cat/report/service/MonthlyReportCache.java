@@ -45,6 +45,8 @@ public class MonthlyReportCache implements Initializable {
 
 	private Map<String, StateReport> m_stateReports = new HashMap<String, StateReport>();
 
+	private Map<String, BugReport> m_bugReports = new HashMap<String, BugReport>();
+
 	@Inject
 	private DailyReportService m_dailyReportService;
 
@@ -122,6 +124,7 @@ public class MonthlyReportCache implements Initializable {
 			String cat = "Cat";
 
 			m_stateReports.put(cat, m_dailyReportService.queryStateReport(cat, start, end));
+			m_bugReports.put(cat, m_dailyReportService.queryBugReport(cat, start, end));
 			m_end = end.getTime();
 		}
 
@@ -160,8 +163,7 @@ public class MonthlyReportCache implements Initializable {
 	}
 
 	public BugReport queryBugReport(String domain, Date start) {
-	   // TODO Auto-generated method stub
-	   return null;
+		return m_bugReports.get(domain);
    }
 
 }

@@ -33,24 +33,22 @@ public class DomainNavManager implements Task, Initializable {
 	public Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
 
-		synchronized (m_projects) {
-			for (String domain : domains) {
-				Project project = m_projects.get(domain);
-				String department = DEFAULT;
-				String projectLine = DEFAULT;
+		for (String domain : domains) {
+			Project project = m_projects.get(domain);
+			String department = DEFAULT;
+			String projectLine = DEFAULT;
 
-				if (project != null) {
-					department = project.getDepartment();
-					projectLine = project.getProjectLine();
-				}
-				Department temp = result.get(department);
-
-				if (temp == null) {
-					temp = new Department();
-					result.put(department, temp);
-				}
-				temp.findOrCreatProjectLine(projectLine).addDomain(domain);
+			if (project != null) {
+				department = project.getDepartment();
+				projectLine = project.getProjectLine();
 			}
+			Department temp = result.get(department);
+
+			if (temp == null) {
+				temp = new Department();
+				result.put(department, temp);
+			}
+			temp.findOrCreatProjectLine(projectLine).addDomain(domain);
 		}
 
 		return result;
@@ -66,15 +64,11 @@ public class DomainNavManager implements Task, Initializable {
 	}
 
 	public Project getProjectByName(String domain) {
-		synchronized (m_projects) {
-			return m_projects.get(domain);
-		}
+		return m_projects.get(domain);
 	}
 
 	public Map<String, Project> getProjects() {
-		synchronized (m_projects) {
-			return m_projects;
-		}
+		return m_projects;
 	}
 
 	@Override

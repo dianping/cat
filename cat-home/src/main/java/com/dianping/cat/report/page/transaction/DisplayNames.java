@@ -19,7 +19,7 @@ public class DisplayNames {
 	}
 
 	public DisplayNames display(String sorted, String type, String ip, TransactionReport report, String queryName) {
-		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
+		Map<String, TransactionType> types = report.findOrCreateMachine(ip).getTypes();
 		TransactionName all = new TransactionName("TOTAL");
 		all.setTotalPercent(1);
 		if (types != null) {

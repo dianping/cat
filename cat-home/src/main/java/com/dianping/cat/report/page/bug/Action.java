@@ -5,7 +5,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	HOURLY_REPORT("view"), 
 	
-	HTTP_JSON("json");
+	HTTP_JSON("json")
+	;
 
 	private String m_name;
 
