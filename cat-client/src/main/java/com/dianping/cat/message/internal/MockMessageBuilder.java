@@ -47,6 +47,18 @@ public abstract class MockMessageBuilder {
 		return e;
 	}
 
+	protected HeartbeatHolder h(String type, String name) {
+		HeartbeatHolder h = new HeartbeatHolder(type, name);
+
+		TransactionHolder parent = m_stack.isEmpty() ? null : m_stack.peek();
+
+		if (parent != null) {
+			h.setTimestampInMicros(parent.getCurrentTimestampInMicros());
+		}
+
+		return h;
+	}
+
 	protected MetricHolder m(String type, String name) {
 		MetricHolder e = new MetricHolder(type, name);
 
@@ -71,18 +83,6 @@ public abstract class MockMessageBuilder {
 		return e;
 	}
 
-	protected HeartbeatHolder h(String type, String name) {
-		HeartbeatHolder h = new HeartbeatHolder(type, name);
-
-		TransactionHolder parent = m_stack.isEmpty() ? null : m_stack.peek();
-
-		if (parent != null) {
-			h.setTimestampInMicros(parent.getCurrentTimestampInMicros());
-		}
-
-		return h;
-	}
-
 	protected TransactionHolder t(String type, String name, long durationInMillis) {
 		TransactionHolder t = new TransactionHolder(type, name, durationInMillis);
 		TransactionHolder parent = m_stack.isEmpty() ? null : m_stack.peek();
@@ -94,9 +94,9 @@ public abstract class MockMessageBuilder {
 		m_stack.push(t);
 		return t;
 	}
-	
-	protected TransactionHolder t(String type, String name,String data, long durationInMillis) {
-		TransactionHolder t = new TransactionHolder(type, name,data, durationInMillis);
+
+	protected TransactionHolder t(String type, String name, String data, long durationInMillis) {
+		TransactionHolder t = new TransactionHolder(type, name, data, durationInMillis);
 		TransactionHolder parent = m_stack.isEmpty() ? null : m_stack.peek();
 
 		if (parent != null) {
@@ -129,6 +129,18 @@ public abstract class MockMessageBuilder {
 			m_data = data;
 		}
 
+		public void addData(String key, String value) {
+			if (m_data == null) {
+				m_data = key + "=" + value;
+			} else {
+				m_data = m_data + "&" + key + "=" + value;
+			}
+		}
+
+		public String getData() {
+			return m_data;
+		}
+
 		public String getName() {
 			return m_name;
 		}
@@ -152,10 +164,6 @@ public abstract class MockMessageBuilder {
 
 		public void setStatus(String status) {
 			m_status = status;
-		}
-
-		public String getData() {
-			return m_data;
 		}
 
 		@Override
@@ -192,34 +200,6 @@ public abstract class MockMessageBuilder {
 		}
 	}
 
-	protected static class MetricHolder extends AbstractMessageHolder {
-		private DefaultMetric m_metric;
-
-		public MetricHolder(String type, String name) {
-			super(type, name);
-		}
-
-		public MetricHolder(String type, String name, String data) {
-			super(type, name, data);
-
-		}
-
-		@Override
-		public Metric build() {
-			m_metric = new DefaultMetric(getType(), getName());
-			m_metric.setTimestamp(getTimestampInMillis());
-			m_metric.setStatus(getStatus());
-			m_metric.addData(getData());
-			m_metric.complete();
-			return m_metric;
-		}
-
-		public MetricHolder status(String status) {
-			setStatus(status);
-			return this;
-		}
-	}
-
 	protected static class HeartbeatHolder extends AbstractMessageHolder {
 		private DefaultHeartbeat m_heartbeat;
 
@@ -250,6 +230,34 @@ public abstract class MockMessageBuilder {
 		public void setTimestampInMicros(long timestampInMicros);
 	}
 
+	protected static class MetricHolder extends AbstractMessageHolder {
+		private DefaultMetric m_metric;
+
+		public MetricHolder(String type, String name) {
+			super(type, name);
+		}
+
+		public MetricHolder(String type, String name, String data) {
+			super(type, name, data);
+
+		}
+
+		@Override
+		public Metric build() {
+			m_metric = new DefaultMetric(getType(), getName());
+			m_metric.setTimestamp(getTimestampInMillis());
+			m_metric.setStatus(getStatus());
+			m_metric.addData(getData());
+			m_metric.complete();
+			return m_metric;
+		}
+
+		public MetricHolder status(String status) {
+			setStatus(status);
+			return this;
+		}
+	}
+
 	protected class TransactionHolder extends AbstractMessageHolder {
 		private long m_durationInMicros;
 
@@ -266,13 +274,12 @@ public abstract class MockMessageBuilder {
 
 			m_durationInMicros = durationInMicros;
 		}
-		
-		public TransactionHolder(String type, String name,String data, long durationInMicros) {
-			super(type, name,data);
+
+		public TransactionHolder(String type, String name, String data, long durationInMicros) {
+			super(type, name, data);
 
 			m_durationInMicros = durationInMicros;
 		}
-
 
 		public TransactionHolder after(long periodInMicros) {
 			m_currentTimestampInMicros += periodInMicros;
@@ -308,6 +315,11 @@ public abstract class MockMessageBuilder {
 			}
 
 			m_children.add(child);
+			return this;
+		}
+
+		public TransactionHolder data(String key, String value) {
+			addData(key, value);
 			return this;
 		}
 
