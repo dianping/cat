@@ -34,7 +34,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 	private String[] m_colors = { "#0066ff", "#006699", "#006633", "#0033ff", "#003399", "#003333" };
 
-	private boolean m_mockMode = true;
+	private boolean m_mockMode = false;
 
 	protected int calculateLines(Transaction t) {
 		int count = 1;
