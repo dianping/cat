@@ -54,4 +54,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
 	}
+	
 }

@@ -62,11 +62,11 @@
 <br>
 <table class='problem'>
 	<tr>
-		<th>Type</th>
-		<th>Total</th>
-		<th>Status</th>
-		<th>Count</th>
-		<th>SampleLinks</th>
+		<th width="15%">Type</th>
+		<th width="5%">Total</th>
+		<th width="45%">Status</th>
+		<th width="5%">Count</th>
+		<th width="30%">SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">

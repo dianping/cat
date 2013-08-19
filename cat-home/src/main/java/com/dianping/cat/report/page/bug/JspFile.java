@@ -6,7 +6,7 @@ public enum JspFile {
 	HISTORY_REPORT("/jsp/report/bug/bugHistory.jsp"), 
 	
 	HTTP_JSON("/jsp/report/bug/bugApi.jsp"), 
-
+	
 	;
 
 	private String m_path;

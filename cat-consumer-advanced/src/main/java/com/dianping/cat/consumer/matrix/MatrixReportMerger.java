@@ -25,6 +25,7 @@ public class MatrixReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeRatio(Ratio old, Ratio ratio) {
+		old.setUrl(ratio.getUrl());
 		old.setTotalCount(old.getTotalCount() + ratio.getTotalCount());
 		old.setTotalTime(old.getTotalTime() + ratio.getTotalTime());
 		if (old.getMin() == 0) {

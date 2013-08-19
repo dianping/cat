@@ -215,6 +215,13 @@ public class Handler implements PageHandler<Context> {
 		@Override
 		public void visitDomain(Domain domain) {
 			String domainName = domain.getId();
+			Project project = findByDomain(domainName);
+
+			if (project != null) {
+				domain.setDepartment(project.getDepartment());
+				domain.setProductLine(project.getProjectLine());
+			}
+
 			Set<String> removes = new HashSet<String>();
 			Map<String, ExceptionItem> items = domain.getExceptionItems();
 

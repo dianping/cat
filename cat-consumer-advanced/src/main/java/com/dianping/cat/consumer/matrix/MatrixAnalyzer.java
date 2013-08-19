@@ -92,6 +92,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 					}
 					if (real.getMax() < count) {
 						real.setMax(count);
+						real.setUrl(tree.getMessageId());
 					}
 					real.setTotalCount(real.getTotalCount() + count);
 					real.setTotalTime(real.getTotalTime() + time);
