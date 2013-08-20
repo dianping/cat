@@ -394,8 +394,8 @@ a.abtest-heartbeat{
 }
 
 .metricGraph {
-	width: 560px;
-	height: 300px;
+	width: 500px;
+	height: 250px;
 }
 
 .pieChart {

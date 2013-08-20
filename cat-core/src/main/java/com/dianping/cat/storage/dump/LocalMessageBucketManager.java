@@ -113,7 +113,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	@Override
 	public void close() throws IOException {
 		synchronized (m_buckets) {
 			for (LocalMessageBucket bucket : m_buckets.values()) {
@@ -598,7 +597,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					long current = System.currentTimeMillis() / 1000 / 60;
 					int min = (int) (current % (60));
 
-					// make system is 0-10 min is not busy
+					// make system 0-10 min is not busy
 					if (min > 10) {
 						moveOldMessages();
 					}

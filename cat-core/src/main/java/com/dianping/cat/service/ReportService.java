@@ -1,7 +1,7 @@
 package com.dianping.cat.service;
 
-
 public interface ReportService<T> {
+
 	public T getHouylyReport(ModelRequest request);
 
 	public T getDailyReport(ModelRequest request);

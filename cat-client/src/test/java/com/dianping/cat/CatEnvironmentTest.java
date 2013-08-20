@@ -63,7 +63,6 @@ public class CatEnvironmentTest {
 	@Test
 	public void testJobTest() throws Exception{
 		Cat.initialize("192.168.7.70","192.168.7.71");
-		
 		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");

@@ -154,7 +154,13 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			String report = payload.getReport();
 			String domain = payload.getDomain();
 			ModelPeriod period = payload.getPeriod();
-			ModelRequest request = new ModelRequest(domain, period.getStartTime());
+			ModelRequest request = null;
+
+			if ("logview".equals(report)) {
+				request = new ModelRequest(domain, MessageId.parse(payload.getMessageId()).getTimestamp());
+			} else {
+				request = new ModelRequest(domain, period.getStartTime());
+			}
 			ModelResponse<?> response = null;
 
 			if ("transaction".equals(report)) {
