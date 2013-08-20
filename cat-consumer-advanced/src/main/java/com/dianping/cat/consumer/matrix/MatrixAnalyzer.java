@@ -97,7 +97,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 					real.setTotalCount(real.getTotalCount() + count);
 					real.setTotalTime(real.getTotalTime() + time);
 				}
-				// the message is required by some matrixs
 				if (matrix.getUrl() == null) {
 					matrix.setUrl(tree.getMessageId());
 				}

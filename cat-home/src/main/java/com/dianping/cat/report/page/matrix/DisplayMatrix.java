@@ -201,7 +201,6 @@ public class DisplayMatrix {
 		}
 
 		public void setCacheInfo(Matrix matrix) {
-
 			Ratio ratio = matrix.getRatios().get("Cache");
 			if (ratio == null) {
 				return;

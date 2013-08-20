@@ -25,7 +25,7 @@
 			</td>
 		</tr>
 	</table>
-	${model.test}
+	<%@ include file="detail.jsp"%>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>
