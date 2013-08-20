@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="bug-report" root="true">
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <element name="problem-url" value-type="String" />
+    <entity-ref name="exception-item" type="list" names="exception-items" />
+  </entity>
+  <entity name="exception-item">
+    <attribute name="id" value-type="String" />
+    <attribute name="count" value-type="int" />
+    <element name="message" value-type="String" type="list" names="messages" />
+  </entity>
+</model>
+

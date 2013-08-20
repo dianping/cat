@@ -1,7 +1,7 @@
 
 function TabManager() {
 	this.htmlTypeRegex = new RegExp("^text/html.*");
-	this.tabId2Tid = {};
+	this.tabId2Txid = {};
 	this.serverMapping = {};
 	this.serverMappingUpdated = false;
 
@@ -14,9 +14,7 @@ function TabManager() {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState == 4) {	// 4 = DONE
 					this.serverMapping = JSON.parse(xhr.responseText);
-					console.log("got server mappinag " + this.serverMapping);
-				} else {
-					console.error("error get server mapping from " + mappingUrl);
+					console.debug("got server mappinag " + this.serverMapping);
 				}
 			}
 			xhr.send();
@@ -24,8 +22,8 @@ function TabManager() {
 	};
 	
 	this.iconClicked = function(tabId) {
-		var rootId = this.tabId2Tid["" + tabId].rootId;
-		var server = this.tabId2Tid["" + tabId].server;
+		var rootId = this.tabId2Txid["" + tabId].rootId;
+		var server = this.tabId2Txid["" + tabId].server;
 		server = server.split(",")[0];
 		var newServer = this.serverMapping[server];
 		if(newServer) {
@@ -35,7 +33,7 @@ function TabManager() {
 		chrome.tabs.create({url: "http://" + server + "/cat/r/m/" + rootId});
 	};
 	
-	this.hasCatRootId = function(tabId, headers) {
+	this.inspectAndRecordCatRootId = function(tabId, headers, url) {
 		for (var i = 0; i < headers.length; i++) {
 			var name = headers[i]["name"];
 			var value = headers[i]["value"];
@@ -47,11 +45,9 @@ function TabManager() {
 		}
 		
 		if(rootId && server) {
-			this.tabId2Tid["" + tabId] = {rootId: rootId, server: server};
+			this.tabId2Txid["" + tabId] = {rootId: rootId, server: server, url: url};
+			console.debug(tabId + " recognized as cat enabled with rootId " + rootId);
 			this.updateServerMapping(server);
-			return true;
-		} else {
-			return false;
 		}
 	};
 	
@@ -66,14 +62,18 @@ function TabManager() {
 		return false;
 	};
 	
-	this.headersReceived = function(tabId, headers) {
-		if(this.tabId2Tid["" + tabId]) {
-			chrome.pageAction.show(tabId);
-		} else {
-			if(this.hasCatRootId(tabId, headers)) {
-				chrome.pageAction.show(tabId);
-			}
+	this.headersReceived = function(tabId, headers, url) {
+		console.debug("header for " + tabId + " with url " + url);
+		for (var i = 0; i < headers.length; i++) {
+			var name = headers[i]["name"];
+			var value = headers[i]["value"];
+			console.debug("\t" + name + " : " + value);
 		}
+		if(tabId <= 0) {
+			return;
+		}
+
+		this.inspectAndRecordCatRootId(tabId, headers, url);
 	};
 	
 	this.headersWillBeSent = function(tabId, headers) {
@@ -82,10 +82,34 @@ function TabManager() {
 	};
 	
 	this.tabRemoved = function(tabId) {
-		delete this.tabId2Tid["" + tabId];
+		delete this.tabId2Txid["" + tabId];
 	};
 	
-	this.tabUrlUpdated = this.tabRemoved;
+	this.tabUrlUpdated = function(tabId, url) {
+		var tabCatInfo = this.tabId2Txid["" + tabId];
+		if(tabCatInfo && tabCatInfo["url"] != url) {
+			console.debug(tabId + " url updated, reset cat info");
+			delete this.tabId2Txid["" + tabId];
+		}
+	};
+	
+	this.tabCompleted = function(tabId) {
+		if(this.tabId2Txid["" + tabId]) {
+			this.showIcon(tabId);
+		}
+	};
+	
+	this.tabReplaced = function(addedTabId, removedTabId) {
+		console.debug("replacing " + removedTabId + " with " + addedTabId);
+		if(this.tabId2Txid["" + addedTabId]) {
+			this.showIcon(addedTabId);
+		}
+	};
+	
+	this.showIcon = function(tabId) {
+		console.debug("show pageAction for " + tabId);
+		chrome.pageAction.show(tabId);
+	};
 
 }
 
@@ -93,7 +117,8 @@ var tabMgr = new TabManager();
 var responseCallback = function(details) {
 	var headers = details.responseHeaders;
 	var tabId = details.tabId;
-	tabMgr.headersReceived(tabId, headers);
+	var url = details.url;
+	tabMgr.headersReceived(tabId, headers, url);
 };
 var requestCallback = function(details) {
 	var headers = details.requestHeaders;
@@ -111,11 +136,24 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 });
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+	console.debug(tabId + " removed");
 	tabMgr.tabRemoved(tabId);	
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	if(changeInfo.url) {
-		tabMgr.tabUrlUpdated(tabId);		
+	console.debug(tabId + " updated");
+	for(var x in changeInfo) {
+		console.debug("\t" + x + " : " + changeInfo[x]);
+	}
+	var url = changeInfo.url;
+	if(url) {
+		console.debug(tabId + "'s url has changed");
+		tabMgr.tabUrlUpdated(tabId, url);		
+	} else if(changeInfo["status"] === "complete") {
+		tabMgr.tabCompleted(tabId);	
 	}	
+});
+
+chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
+	tabMgr.tabReplaced(addedTabId, removedTabId);
 });

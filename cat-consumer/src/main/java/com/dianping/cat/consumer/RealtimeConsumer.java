@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -173,7 +174,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			m_endTime = endTime;
 			m_tasks = new ArrayList<PeriodTask>(names.size());
 
-			Map<String, MessageAnalyzer> analyzers = new HashMap<String, MessageAnalyzer>();
+			Map<String, MessageAnalyzer> analyzers = new LinkedHashMap<String, MessageAnalyzer>();
 
 			for (String name : names) {
 				MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
@@ -197,9 +198,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		public void distribute(MessageTree tree) {
+			m_serverStateManager.addMessageTotal(tree.getDomain(), 1);
 			for (PeriodTask task : m_tasks) {
 				task.enqueue(tree);
 			}
+			
 		}
 
 		public void finish() {

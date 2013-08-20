@@ -22,7 +22,7 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 
-public class MetricDisplay extends BaseVisitor{
+public class MetricDisplay extends BaseVisitor {
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
 
@@ -49,7 +49,9 @@ public class MetricDisplay extends BaseVisitor{
 	private static final String AVG = MetricType.AVG.name();
 
 	private static final int INTERVAL = 10;
-	
+
+	// private static final int INTERVAL_POINT = 5;
+
 	private static final int HOUR = 24;
 
 	private static final int MINUTE = 60;
@@ -218,7 +220,7 @@ public class MetricDisplay extends BaseVisitor{
 			double[] day = yesterdayBaseline;
 			for (int i = 0; i < POINT_NUM; i++) {
 				int j = (index + i * INTERVAL) % (HOUR * MINUTE);
-				if (j == 0 && index !=0) {
+				if (j == 0 && index != 0) {
 					day = todayBaseline;
 				}
 				if (day == null) {
@@ -226,7 +228,7 @@ public class MetricDisplay extends BaseVisitor{
 				}
 				value[i] = sumOfArray(day, j);
 			}
-			
+
 			lineChart.addSubTitle("Baseline");
 			lineChart.addValue(value);
 		}
@@ -250,7 +252,7 @@ public class MetricDisplay extends BaseVisitor{
 					resultMap.put(subTitle, newValue);
 				}
 				for (int j = 0; j < MINUTE / INTERVAL; j++) {
-					newValue[hour * MINUTE / INTERVAL + j] = sumOfArray(value,j*INTERVAL);
+					newValue[hour * MINUTE / INTERVAL + j] = sumOfArray(value, j * INTERVAL);
 				}
 				i++;
 			}
@@ -263,15 +265,16 @@ public class MetricDisplay extends BaseVisitor{
 		}
 	}
 
-	 private double sumOfArray(double[]values, int j){
-		 double result = 0;
-		 for(int i = j; i < j+INTERVAL; i++){
-			 if(values[i] >= 0){
-				 result +=values[i];
-			 }
-		 }
-		 return result;
-	 }
+	private double sumOfArray(double[] values, int j) {
+		double result = 0;
+		for (int i = j; i < j + INTERVAL; i++) {
+			if (values[i] >= 0) {
+				result += values[i];
+			}
+		}
+		return result;
+	}
+
 	public void setBaselineService(BaselineService baselineService) {
 		m_baselineService = baselineService;
 	}

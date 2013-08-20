@@ -23,13 +23,19 @@ public class ServerStatistic {
 
 	public static class Statistic {
 
-		private Map<String, Long> m_messageTotals = new HashMap<String, Long>();
+		private long m_messageTotal;
+
+		private long m_messageTotalLoss;
+
+		private double m_messageSize;
 
 		private long m_messageDump;
 
-		private Map<String, Long> m_messageTotalLosses = new HashMap<String, Long>();
-
 		private long m_messageDumpLoss;
+
+		private Map<String, Long> m_messageTotals = new HashMap<String, Long>();
+
+		private Map<String, Long> m_messageTotalLosses = new HashMap<String, Long>();
 
 		private Map<String, Double> m_messageSizes = new HashMap<String, Double>();
 
@@ -50,8 +56,6 @@ public class ServerStatistic {
 		private long m_pigeonTimeError;
 
 		private long m_networkTimeError;
-
-		public static String TOTAL = "Total";
 
 		public void addBlockTotal(long block) {
 			m_blockTotal += block;
@@ -77,27 +81,12 @@ public class ServerStatistic {
 			m_messageDumpLoss += messageDumpLoss;
 		}
 
-		public void addMessageSize(String domain, double messageSize) {
-			Double value = m_messageSizes.get(domain);
-			if (value != null) {
-				m_messageSizes.put(domain, value + messageSize);
-			} else {
-				m_messageSizes.put(domain, messageSize);
-			}
-			if(!domain.equals(TOTAL)){
-				addMessageSize(TOTAL,messageSize);
-			}
-		}
-
 		public void addMessageTotal(String domain, long messageTotal) {
 			Long value = m_messageTotals.get(domain);
 			if (value != null) {
 				m_messageTotals.put(domain, value + messageTotal);
 			} else {
 				m_messageTotals.put(domain, messageTotal);
-			}
-			if(!domain.equals(TOTAL)){
-				addMessageTotal(TOTAL,messageTotal);
 			}
 		}
 
@@ -108,9 +97,27 @@ public class ServerStatistic {
 			} else {
 				m_messageTotalLosses.put(domain, messageTotalLoss);
 			}
-			if(!domain.equals(TOTAL)){
-				addMessageTotalLoss(TOTAL,messageTotalLoss);
+		}
+
+		public void addMessageSize(String domain, double messageSize) {
+			Double value = m_messageSizes.get(domain);
+			if (value != null) {
+				m_messageSizes.put(domain, value + messageSize);
+			} else {
+				m_messageSizes.put(domain, messageSize);
 			}
+		}
+
+		public void addMessageTotal(long messageTotal) {
+			m_messageTotal += messageTotal;
+		}
+
+		public void addMessageTotalLoss(long messageTotalLoss) {
+			m_messageTotalLoss += messageTotalLoss;
+		}
+
+		public void addMessageSize(double messageSize) {
+			m_messageSize += messageSize;
 		}
 
 		public void addBlockTime(long blockTime) {
@@ -153,15 +160,15 @@ public class ServerStatistic {
 			return m_messageDumpLoss;
 		}
 
-		public Map<String,Double> getMessageSizes() {
+		public Map<String, Double> getMessageSizes() {
 			return m_messageSizes;
 		}
 
-		public Map<String, Long> getMessageTotal() {
+		public Map<String, Long> getMessageTotals() {
 			return m_messageTotals;
 		}
 
-		public Map<String, Long> getMessageTotalLoss() {
+		public Map<String, Long> getMessageTotalLosses() {
 			return m_messageTotalLosses;
 		}
 
@@ -199,6 +206,18 @@ public class ServerStatistic {
 
 		public long getBlockTime() {
 			return m_blockTime;
+		}
+
+		public long getMessageTotal() {
+			return m_messageTotal;
+		}
+
+		public long getMessageTotalLoss() {
+			return m_messageTotalLoss;
+		}
+
+		public double getMessageSize() {
+			return m_messageSize;
 		}
 
 	}

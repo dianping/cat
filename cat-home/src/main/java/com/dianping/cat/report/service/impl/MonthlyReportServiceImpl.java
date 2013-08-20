@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.report.service.MonthlyReportService;
 
 public class MonthlyReportServiceImpl implements MonthlyReportService {
@@ -134,6 +135,20 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 			Cat.logError(e);
 		}
 		return new TransactionReport(domain);
+	}
+	
+	@Override
+	public BugReport queryBugReport(String domain, Date start) {
+		try {
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "bug",
+			      MonthlyReportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new BugReport(domain);
 	}
 
 	@Override

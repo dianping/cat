@@ -1,11 +1,13 @@
 package com.dianping.cat;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.unidal.helper.Files;
 import org.unidal.helper.Properties;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
@@ -13,6 +15,8 @@ import org.unidal.initialization.ModuleContext;
 import org.unidal.initialization.ModuleInitializer;
 import org.unidal.lookup.ContainerLoader;
 
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -82,6 +86,24 @@ public class Cat {
 		PlexusContainer container = ContainerLoader.getDefaultContainer();
 
 		initialize(container, configFile);
+	}
+
+	public static void initialize(String... servers) {
+		File configFile = null;
+
+		try {
+			configFile = File.createTempFile("cat-client", ".xml");
+			ClientConfig config = new ClientConfig().setMode("client");
+
+			for (String server : servers) {
+				config.addServer(new Server(server));
+			}
+
+			Files.forIO().writeTo(configFile, config.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		initialize(configFile);
 	}
 
 	public static void initialize(PlexusContainer container, File configFile) {

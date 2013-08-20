@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.6.2-SNAPSHOT</version>
+		<version>0.6.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>
-	<name>CAT Hadoop Support</name>
+	<name>cat-hadoop</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>

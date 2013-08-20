@@ -48,27 +48,31 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Statistic state = m_serverStateManager.findState(start);
 
 			com.dianping.cat.consumer.state.model.entity.Message temp = machine.findOrCreateMessage(start);
-			Map<String, Long> totals = state.getMessageTotal();
-			long messageTotal = totals.get(Statistic.TOTAL);
+			Map<String, Long> totals = state.getMessageTotals();
+			long messageTotal = state.getMessageTotal();
 			temp.setTotal(messageTotal);
 			
-			Map<String,Long> totalLosses = state.getMessageTotalLoss();
-			long messageTotalLoss = totalLosses.get(Statistic.TOTAL);
+			Map<String,Long> totalLosses = state.getMessageTotalLosses();
+			long messageTotalLoss = state.getMessageTotalLoss();
 			temp.setTotalLoss(messageTotalLoss);
 			
 			Map<String,Double> sizes = state.getMessageSizes();
-			double messageSize = sizes.get(Statistic.TOTAL);
+			double messageSize = state.getMessageSize();
 			temp.setSize(messageSize);
 			
+			machine.setTotal(messageTotal + machine.getTotal());
+			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
+			machine.setSize(messageSize + machine.getSize());
+		
 			for (String key : totals.keySet()) {
-				if(key.equals(Statistic.TOTAL)){
-					machine.setTotal(totals.get(key) + machine.getTotal());
-					machine.setTotalLoss(totalLosses.get(key) + machine.getTotalLoss());
-					machine.setSize(sizes.get(key) + machine.getSize());
-				} else{
-					ProcessDomain domain = machine.findOrCreateProcessDomain(key);
+				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
+				if(totals.containsKey(key)){
 					domain.setTotal(totals.get(key) + domain.getTotal());
+				}
+				if(totalLosses.containsKey(key)){
 					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
+				}
+				if(sizes.containsKey(key)){
 					domain.setSize(sizes.get(key) + domain.getSize());
 				}
 			}
@@ -174,8 +178,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		buildStateInfo(machine);
 		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
-
-		machine.getProcessDomains().putAll(startReport.findOrCreateMachine(ip).getProcessDomains());
+		for(String key:machine.getProcessDomains().keySet()){
+				machine.getProcessDomains().get(key).getIps().addAll(startReport.findOrCreateMachine(ip).getProcessDomains().get(key).getIps());
+		}
+//		machine.getProcessDomains().putAll(startReport.findOrCreateMachine(ip).getProcessDomains());
 		return report;
 	}
 

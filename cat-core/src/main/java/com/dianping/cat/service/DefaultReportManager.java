@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -40,7 +41,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	private String m_name;
 
-	private Map<Long, Map<String, T>> m_map = new HashMap<Long, Map<String, T>>();
+	private Map<Long, Map<String, T>> m_map = new ConcurrentHashMap<Long, Map<String, T>>();
 
 	private Logger m_logger;
 

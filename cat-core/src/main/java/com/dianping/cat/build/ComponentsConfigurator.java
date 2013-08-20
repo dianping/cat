@@ -61,7 +61,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 
 		all.add(C(TcpSocketReceiver.class) //
-				.req(DomainManager.class)//
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID)//
 		      .req(ServerConfigManager.class, MessageHandler.class)//
 		      .req(ServerStatisticManager.class));

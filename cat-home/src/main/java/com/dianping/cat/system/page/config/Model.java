@@ -51,6 +51,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private MetricItemConfig m_metricItemConfig;
 
 	private Map<ProductLine, List<MetricItemConfig>> m_productMetricConfigs;
+	
+	private String m_bug;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -216,6 +218,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setExceptionLimits(List<ExceptionLimit> exceptionLimits) {
 		m_exceptionLimits = exceptionLimits;
 	}
+
+	public String getBug() {
+   	return m_bug;
+   }
+
+	public void setBug(String bug) {
+   	m_bug = bug;
+   }
 
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;

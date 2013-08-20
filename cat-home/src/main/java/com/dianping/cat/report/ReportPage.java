@@ -39,7 +39,9 @@ public enum ReportPage implements Page {
 
    DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true),
 
-   EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true);
+   EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true),
+
+   BUG("bug", "bug", "Bug", "Bug", true);
 
    private String m_name;
 

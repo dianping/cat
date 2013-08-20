@@ -96,9 +96,6 @@ public class StateReportMerger extends DefaultMerger {
 	protected void mergeProcessDomain(ProcessDomain old, ProcessDomain processDomain) {
 		super.mergeProcessDomain(old, processDomain);
 		old.getIps().addAll(processDomain.getIps());
-		old.setTotal(old.getTotal() + processDomain.getTotal());
-		old.setTotalLoss(old.getTotalLoss() + processDomain.getTotalLoss());
-		old.setSize(old.getSize() + processDomain.getSize());
 	}
 
 	@Override

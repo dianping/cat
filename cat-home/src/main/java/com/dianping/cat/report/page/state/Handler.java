@@ -86,6 +86,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);
+			System.out.println(report);
 			break;
 		case HISTORY:
 			report = getHistoryReport(payload);

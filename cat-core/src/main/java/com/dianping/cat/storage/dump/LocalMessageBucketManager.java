@@ -368,16 +368,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			logState(tree);
 		}
+		if(value%CatConstants.SUCCESS_COUNT==0){
+			double amount = m_totalSizes.get(domain) - m_lastTotalSizes.get(domain);
+			m_lastTotalSizes.put(domain, m_totalSizes.get(domain));
+			m_serverStateManager.addMessageSize(domain,amount);
+			m_serverStateManager.addMessageSize(amount);
+		}
 	}
 
 	private void logState(final MessageTree tree) {
-		
-		String domain= tree.getDomain();
-		double amount = m_totalSizes.get(domain) - m_lastTotalSizes.get(domain);
-		m_lastTotalSizes.put(domain, m_totalSizes.get(domain));
 		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-		m_serverStateManager.addMessageSize(domain,amount);
-
 		Message message = tree.getMessage();
 		if (message instanceof Transaction) {
 			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()

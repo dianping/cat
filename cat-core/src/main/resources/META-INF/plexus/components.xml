@@ -78,9 +78,6 @@
 			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 				</requirement>

@@ -119,10 +119,10 @@
 			col:3,
 			colInside:5,
 			//模块距上沿距离
-			paddingUp: 0,
+			paddingUp: 10,
 			//小方块间的间隔比率
-			blockPaddingRatio: 0.5,
-            leftTitlePaddingRatio: 0.5,
+			blockPaddingRatio: 0.2,
+            leftTitlePaddingRatio: 0.05,
 			showLeft: true,
 			showUp: false
 		});
