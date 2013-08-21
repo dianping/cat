@@ -11,11 +11,16 @@
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
+<script type="text/javascript">
+		$(document).ready(function() {
+			$('#bug').addClass('active');
+		});
+	</script>
 <div class="report">
 	<table class="header">
 		<tr>
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.bugReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.bugReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-			<td class="switch"><a href="?op=history">Switch To History Mode</a>
+			<td class="switch"><a href="?op=historyBug">Switch To History Mode</a>
 			</td>
 			<td class="nav" >
 				<c:forEach var="nav" items="${model.navs}">
@@ -25,7 +30,18 @@
 			</td>
 		</tr>
 	</table>
-	<%@ include file="detail.jsp"%>
+</div>
+<div class="row-fluid">
+    <div class="span2">
+		<%@include file="../bugTree.jsp"%>
+	</div>
+	<div class="span10">
+		<div class="report">
+			<%@ include file="detail.jsp"%>
+		</div>
+	</div>
+</div>
+<div class="report">
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>

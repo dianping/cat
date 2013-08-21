@@ -10,6 +10,8 @@
   </entity>
   <entity name="domain">
     <attribute name="id" value-type="String" key="true"/>
+    <attribute name="department" value-type="String"/>
+    <attribute name="productLine" value-type="String"/>
     <element name="problem-url" value-type="String" />
     <element name="excpetion" value-type="String" />
     <entity-ref name="exception-item" type="map" names="exception-items"  method-find-or-create="true"/>

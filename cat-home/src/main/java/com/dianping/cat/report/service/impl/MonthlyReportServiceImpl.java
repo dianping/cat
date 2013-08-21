@@ -18,12 +18,38 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.report.service.MonthlyReportService;
 
 public class MonthlyReportServiceImpl implements MonthlyReportService {
 
 	@Inject
 	private MonthlyReportDao m_monthlyReportDao;
+
+	@Override
+	public boolean insert(MonthlyReport report) {
+		try {
+			m_monthlyReportDao.insert(report);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public BugReport queryBugReport(String domain, Date start) {
+		try {
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "bug",
+			      MonthlyReportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new BugReport(domain);
+	}
 
 	@Override
 	public CrossReport queryCrossReport(String domain, Date start) {
@@ -96,6 +122,20 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	}
 
 	@Override
+	public ServiceReport queryServiceReport(String domain, Date start) {
+		try {
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "service",
+			      MonthlyReportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.home.service.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new ServiceReport(domain);
+	}
+	
+	@Override
 	public SqlReport querySqlReport(String domain, Date start) {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "sql",
@@ -135,31 +175,6 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 			Cat.logError(e);
 		}
 		return new TransactionReport(domain);
-	}
-	
-	@Override
-	public BugReport queryBugReport(String domain, Date start) {
-		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "bug",
-			      MonthlyReportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new BugReport(domain);
-	}
-
-	@Override
-	public boolean insert(MonthlyReport report) {
-		try {
-			m_monthlyReportDao.insert(report);
-			return true;
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
 	}
 
 }

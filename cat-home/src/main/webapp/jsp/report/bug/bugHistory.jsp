@@ -34,7 +34,16 @@
 			</td>
 		</tr>
 	</table>
-	<%@ include file="detail.jsp"%>
+	<div class="row-fluid">
+    <div class="span2">
+		<%@include file="../bugTree.jsp"%>
+	</div>
+	<div class="span10">
+		<div class="report">
+			<%@ include file="detail.jsp"%>
+		</div>
+	</div>
+</div>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>

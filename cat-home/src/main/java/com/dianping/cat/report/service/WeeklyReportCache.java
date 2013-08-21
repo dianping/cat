@@ -25,6 +25,7 @@ import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.message.Transaction;
 
 public class WeeklyReportCache implements Initializable {
@@ -44,8 +45,10 @@ public class WeeklyReportCache implements Initializable {
 	private Map<String, SqlReport> m_sqlReports = new HashMap<String, SqlReport>();
 
 	private Map<String, StateReport> m_stateReports = new HashMap<String, StateReport>();
-	
+
 	private Map<String, BugReport> m_bugReports = new HashMap<String, BugReport>();
+
+	private Map<String, ServiceReport> m_serviceReports = new HashMap<String, ServiceReport>();
 
 	@Inject
 	private DailyReportService m_dailyReportService;
@@ -61,6 +64,10 @@ public class WeeklyReportCache implements Initializable {
 		if (m_serverConfigManager.isJobMachine()) {
 			Threads.forGroup("Cat").start(new Reload());
 		}
+	}
+
+	public BugReport queryBugReport(String domain, Date start) {
+		return m_bugReports.get(domain);
 	}
 
 	public CrossReport queryCrossReport(String domain, Date start) {
@@ -81,6 +88,10 @@ public class WeeklyReportCache implements Initializable {
 
 	public ProblemReport queryProblemReport(String domain, Date start) {
 		return m_problemReports.get(domain);
+	}
+
+	public ServiceReport queryServiceReport(String domain, Date start) {
+		return m_serviceReports.get(domain);
 	}
 
 	public SqlReport querySqlReport(String domain, Date start) {
@@ -109,13 +120,13 @@ public class WeeklyReportCache implements Initializable {
 			for (String domain : domains) {
 				TransactionReport transactionReport = m_dailyReportService.queryTransactionReport(domain, start, end);
 				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
-				
+
 				m_transactionReports.put(domain, transactionReport);
 				m_eventReports.put(domain, m_dailyReportService.queryEventReport(domain, start, end));
 				m_problemReports.put(domain, m_dailyReportService.queryProblemReport(domain, start, end));
 				m_crossReports.put(domain, m_dailyReportService.queryCrossReport(domain, start, end));
 				MatrixReport matrixReport = m_dailyReportService.queryMatrixReport(domain, start, end);
-				
+
 				m_matrixReports.put(domain, matrixReport);
 				new MatrixReportFilter().visitMatrixReport(matrixReport);
 				m_sqlReports.put(domain, m_dailyReportService.querySqlReport(domain, start, end));
@@ -124,6 +135,7 @@ public class WeeklyReportCache implements Initializable {
 
 			m_stateReports.put(cat, m_dailyReportService.queryStateReport(cat, start, end));
 			m_bugReports.put(cat, m_dailyReportService.queryBugReport(cat, start, end));
+			m_serviceReports.put(cat, m_dailyReportService.queryServiceReport(cat, start, end));
 			m_end = end.getTime();
 		}
 
@@ -160,9 +172,5 @@ public class WeeklyReportCache implements Initializable {
 		}
 
 	}
-
-	public BugReport queryBugReport(String domain, Date start) {
-		return m_bugReports.get(domain);
-   }
 
 }

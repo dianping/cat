@@ -41,7 +41,7 @@ public enum ReportPage implements Page {
 
    EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true),
 
-   BUG("bug", "bug", "Bug", "Bug", true);
+   BUG("bug", "bug", "Statistics", "Bug", true);
 
    private String m_name;
 
