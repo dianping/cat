@@ -28,6 +28,8 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 
 			domainNames.clear();
 			domainNames.addAll(reports.keySet());
+
+			new MatrixReportFilter().visitMatrixReport(report);
 		}
 	}
 

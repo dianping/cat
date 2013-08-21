@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.bug;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,13 +13,17 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
@@ -25,10 +31,10 @@ import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
 import com.dianping.cat.home.bug.transform.BaseVisitor;
+import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -39,7 +45,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportService m_reportService;
 
 	@Inject
-	private DomainNavManager m_domainManager;
+	private ProjectDao m_projectDao;
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
@@ -48,7 +54,12 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	public Project findByDomain(String domain) {
-		return m_domainManager.getProjectByName(domain);
+		try {
+			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return null;
 	}
 
 	@Override
@@ -64,21 +75,84 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		m_normalizePayload.normalize(model, payload);
+		switch (payload.getAction()) {
+		case SERVICE_REPORT:
+			ServiceReport serviceReport = queryServiceReport(payload);
+			List<com.dianping.cat.home.service.entity.Domain> dList = sort(serviceReport, payload.getSortBy());
 
-		BugReport bugReport = queryBugReport(payload);
-		BugReportVisitor visitor = new BugReportVisitor();
-		visitor.visitBugReport(bugReport);
+			model.setServiceList(dList);
+			model.setServiceReport(serviceReport);
+			break;
+		case SERVICE_HISTORY_REPORT:
+			serviceReport = queryServiceReport(payload);
 
-		Map<String, ErrorStatis> errors = visitor.getErrors();
-		errors = sortErrorStatis(errors);
-		model.setErrorStatis(errors);
+			List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
+			model.setServiceList(dHisList);
+			model.setServiceReport(serviceReport);
+			break;
+		case HISTORY_REPORT:
+		case HOURLY_REPORT:
+		case HTTP_JSON:
+			BugReport bugReport = queryBugReport(payload);
+			BugReportVisitor visitor = new BugReportVisitor();
+			visitor.visitBugReport(bugReport);
 
-		if (payload.getAction() == Action.HTTP_JSON) {
-			new ClearBugReport().visitBugReport(bugReport);
+			model.setBugReport(bugReport);
+			bugReport = queryBugReport(payload);
+			visitor = new BugReportVisitor();
+			visitor.visitBugReport(bugReport);
+
+			Map<String, ErrorStatis> errors = visitor.getErrors();
+			errors = sortErrorStatis(errors);
+			model.setErrorStatis(errors);
+
+			if (payload.getAction() == Action.HTTP_JSON) {
+				new ClearBugReport().visitBugReport(bugReport);
+			}
+			model.setBugReport(bugReport);
+			model.setPage(ReportPage.BUG);
+			break;
 		}
-		model.setBugReport(bugReport);
-		model.setPage(ReportPage.BUG);
+
 		m_jspViewer.view(ctx, model);
+	}
+
+	private ServiceReport queryServiceReport(Payload payload) {
+		Date start = null;
+		Date end = null;
+		if (payload.getAction() == Action.SERVICE_REPORT) {
+			if (payload.getPeriod().isCurrent()) {
+				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
+				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			} else {
+				start = new Date(payload.getDate());
+				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			}
+		} else {
+			start = payload.getHistoryStartDate();
+			end = payload.getHistoryEndDate();
+		}
+		return m_reportService.queryServiceReport(CatString.CAT, start, end);
+	}
+
+	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
+		List<com.dianping.cat.home.service.entity.Domain> result = new ArrayList<com.dianping.cat.home.service.entity.Domain>(
+		      serviceReport.getDomains().values());
+		Collections.sort(result, new Comparator<com.dianping.cat.home.service.entity.Domain>() {
+			public int compare(com.dianping.cat.home.service.entity.Domain d1,
+			      com.dianping.cat.home.service.entity.Domain d2) {
+				if (sortBy.equals("failure")) {
+					return (int) (d2.getFailureCount() - d1.getFailureCount());
+				} else if (sortBy.equals("total")) {
+					return (int) (d2.getTotalCount() - d1.getTotalCount());
+				} else if (sortBy.equals("failurePercent")) {
+					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
+				} else {
+					return (int) (d2.getAvg() - d1.getAvg());
+				}
+			}
+		});
+		return result;
 	}
 
 	private boolean isBug(String domain, String exception) {
@@ -91,6 +165,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = null;
 		Date end = null;
 		if (payload.getAction() == Action.HOURLY_REPORT) {
+
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
 				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
