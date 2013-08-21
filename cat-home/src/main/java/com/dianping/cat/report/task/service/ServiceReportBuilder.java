@@ -81,7 +81,6 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(start);
 		report.setType(1);
-		System.out.println(report);
 		return m_reportService.insertHourlyReport(report);
 	}
 
@@ -122,7 +121,6 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		System.out.println(report);
 		return m_reportService.insertMonthlyReport(report);
 	}
 
