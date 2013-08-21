@@ -17,6 +17,7 @@ import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.BufferWriter;
+import com.site.helper.Splitters;
 
 /**
  * Local use only, do not use it over network since it only supports one-way encoding
@@ -24,21 +25,27 @@ import com.dianping.cat.message.spi.codec.BufferWriter;
 public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	public static final String ID = "waterfall";
 
-	private static final String VERSION = "WF1"; // Waterfall version 1
+	private static final String VERSION = "WF2"; // Waterfall version 2
 
 	@Inject
 	private BufferWriter m_writer;
 
 	private BufferHelper m_bufferHelper;
 
+	private String[] m_colors = { "#0066ff", "#006699", "#006633", "#0033ff", "#003399", "#003333" };
+
 	private boolean m_mockMode = false;
 
-	protected int countTransactions(Transaction t) {
+	protected int calculateLines(Transaction t) {
 		int count = 1;
 
 		for (Message child : t.getChildren()) {
 			if (child instanceof Transaction) {
-				count += countTransactions((Transaction) child);
+				count += calculateLines((Transaction) child);
+			} else if (child instanceof Event) {
+				if (child.getType().equals("RemoteCall")) {
+					count++;
+				}
 			}
 		}
 
@@ -73,7 +80,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			Ruler ruler = new Ruler((int) t.getDurationInMicros());
 
 			ruler.setWidth(1400);
-			ruler.setHeight(18 * countTransactions(t) + 10);
+			ruler.setHeight(18 * calculateLines(t) + 10);
 			ruler.setOffsetX(200);
 			ruler.setOffsetY(10);
 
@@ -154,7 +161,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		String logviewId = String.valueOf(event.getData());
 
 		b.branch(locator, x, y, width, height);
-
 		x += locator.getLevel() * width;
 		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width", "0", "fill",
 		      "blue", "onclick", "popup('" + logviewId + "');");
@@ -213,8 +219,9 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		for (int i = 0; i < len; i++) {
 			Message child = children.get(i);
 
+			locator.setLast(i == len - 1);
+
 			if (child instanceof Transaction) {
-				locator.setLast(i == len - 1);
 				count += encodeTransaction(tree, (Transaction) child, buf, locator, ruler);
 			} else if (child instanceof Event && "RemoteCall".equals(child.getType())) {
 				count += encodeRemoteCall(tree, (Event) child, buf, locator, ruler);
@@ -228,16 +235,18 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	protected int encodeTransactionLine(MessageTree tree, Transaction t, ChannelBuffer buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
-		StringBuilder sb = b.getResult();
 		int width = 6;
 		int height = 18;
 		int x = 0;
 		int y = locator.getLine() * height + ruler.getOffsetY();
-		String rid = "r" + locator.getLine();
 		String tid = "t" + locator.getLine();
+		long t0 = tree.getMessage().getTimestamp();
+		long t1 = t.getTimestamp();
+		int rx = ruler.calcX((t1 - t0) * 1000);
+		int rw = ruler.calcWidth(t.getDurationInMicros() * 1000);
+		int[] segments = getTransactionDurationSegments(t);
 
 		b.branch(locator, x, y, width, height);
-
 		x += locator.getLevel() * width;
 
 		if (t.getStatus().equals("0")) {
@@ -247,23 +256,93 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		}
 
 		b.add(t.getType()).newLine();
-		b.tag("set", "attributeName", "fill", "to", "red", "begin", rid + ".mouseover", "end", rid + ".mouseout");
 		b.tag("set", "attributeName", "fill", "to", "red", "begin", tid + ".mouseover", "end", tid + ".mouseout");
 		b.tag2("text");
 
-		long t0 = tree.getMessage().getTimestamp();
-		long t1 = t.getTimestamp();
-		long d = t.getDurationInMicros();
+		if (segments == null) {
+			String durationInMillis = String.format("%.2f %s", t.getDurationInMicros() / 1000.0, t.getName());
 
-		int rx = ruler.calcX((t1 - t0) * 1000);
-		int rw = ruler.calcX(d) - ruler.getOffsetX();
+			b.tag("rect", "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
+			b.tagWithText("text", durationInMillis, "x", rx + 5, "y", y - 3, "font-size", "11", "stroke-width", "0");
+		} else {
+			int index = 0;
 
-		b.tag("rect", "id", rid, "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
-		b.tagWithText("text", String.format("%.2f %s", t.getDurationInMicros() / 1000.0, t.getName()), "id", tid, "x", rx + 5, "y",
-		      y - 3, "font-size", "11", "stroke-width", "0");
+			for (int segment : segments) {
+				int w = ruler.calcWidth(segment);
+				String durationInMillis = String.format("%.2f %s", segment / 1000.0 / 1000.0, index == 0 ? t.getName() : "");
+				String color = m_colors[index % m_colors.length];
 
-		int count = helper.write(buf, sb.toString());
+				b.tag("rect", "x", rx + 1, "y", y - 15, "width", w, "height", height - 2, "fill", color, "opacity", "0.5");
+				b.tagWithText("text", durationInMillis, "x", rx + 5, "y", y - 3, "font-size", "11", "stroke-width", "0");
+
+				index++;
+				rx += w;
+			}
+		}
+
+		b.tag("rect", "id", tid, "x", ruler.getOffsetX() + 1, "y", y - 15, "width", ruler.getWidth(), "height", height, "fill",
+		      "#ffffff", "stroke-width", "0", "opacity", "0.01");
+
+		int count = helper.write(buf, b.getResult().toString());
 		return count;
+	}
+
+	private int[] getTransactionDurationSegments(Transaction t) {
+		String data = t.getData().toString();
+
+		if (data.startsWith("_m=")) {
+			int pos = data.indexOf('&');
+			String str;
+
+			if (pos < 0) {
+				str = data.substring(3);
+			} else {
+				str = data.substring(3, pos);
+			}
+
+			List<String> parts = Splitters.by(',').split(str);
+			int len = parts.size();
+			int[] segments = new int[len];
+
+			for (int i = 0; i < len; i++) {
+				String part = parts.get(i);
+
+				try {
+					segments[i] = Integer.parseInt(part) * 1000;
+				} catch (Exception e) {
+					// ignore it
+				}
+			}
+
+			return segments;
+		} else if (data.startsWith("_u=")) {
+			int pos = data.indexOf('&');
+			String str;
+
+			if (pos < 0) {
+				str = data.substring(3);
+			} else {
+				str = data.substring(3, pos);
+			}
+
+			List<String> parts = Splitters.by(',').split(str);
+			int len = parts.size();
+			int[] segments = new int[len];
+
+			for (int i = 0; i < len; i++) {
+				String part = parts.get(i);
+
+				try {
+					segments[i] = Integer.parseInt(part);
+				} catch (Exception e) {
+					// ignore it
+				}
+			}
+
+			return segments;
+		} else {
+			return null;
+		}
 	}
 
 	protected List<Message> getVisibleChildren(Transaction parent) {
@@ -278,6 +357,10 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		}
 
 		return children;
+	}
+
+	public boolean isMockMode() {
+		return m_mockMode;
 	}
 
 	@Override
@@ -300,9 +383,9 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 				            .mark().after(200).child(t("MEMCACHED", "Inc", 319)) //
 				            .reset().after(500).child(t("BIG ASS SERVICE", "getThemDatar", 97155) //
 				                  .after(1000).mark().child(t("SERVICE", "getStuff", 63760)) //
-				                  .child(e("RemoteCall", "mock", "mock-message-id")) //
-				                  .reset().child(t("DATAR", "findThings", 94537)) //
+				                  .reset().child(t("DATAR", "findThings", 94537).data("_m", "10000,30000,15000,39537")) //
 				                  .after(200).child(t("THINGIE", "getMoar", 1435)) //
+				                  .child(e("RemoteCall", "mock", "mock-message-id")) //
 				            ) //
 				            .after(100).mark().child(t("OTHER DATA SERVICE", "get", 4394) //
 				                  .after(800).mark().child(t("MEMCACHED", "Get", 378)) //
@@ -311,7 +394,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 				            .reset().child(t("FINAL DATA SERVICE", "get", 1902) //
 				                  .after(1000).mark().child(t("MEMCACHED", "Get", 386)) //
 				                  .reset().child(t("MEMCACHED", "Get", 322)) //
-				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				                  .reset().child(t("MEMCACHED", "Get", 542)) //
 				            ) //
 				      ) //
 				;
@@ -674,14 +757,24 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		public int calcX(long value) {
-			int w = (int) (value * getUnit() / m_unitStep);
+		public int calcX(long timeInMillis) {
+			int w = (int) (timeInMillis * getUnit() / m_unitStep);
 
-			if (w == 0 && value > 0) {
+			if (w == 0 && timeInMillis > 0) {
 				w = 1;
 			}
 
 			return w + m_offsetX;
+		}
+
+		public int calcWidth(long timeInMicros) {
+			int w = (int) (timeInMicros * getUnit() / m_unitStep / 1000);
+
+			if (w == 0 && timeInMicros > 0) {
+				w = 1;
+			}
+
+			return w;
 		}
 
 		public int getHeight() {

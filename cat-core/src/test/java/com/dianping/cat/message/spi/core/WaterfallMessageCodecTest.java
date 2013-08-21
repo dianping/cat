@@ -3,10 +3,19 @@ package com.dianping.cat.message.spi.core;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodec.Ruler;
 
-public class WaterfallMessageCodecTest {
+public class WaterfallMessageCodecTest extends ComponentTestCase {
+	@Test
+	public void testNotMockMode() throws Exception {
+		WaterfallMessageCodec codec = (WaterfallMessageCodec) lookup(MessageCodec.class, WaterfallMessageCodec.ID);
+
+		Assert.assertEquals("WaterfallMessageCodec is in mock mode.", false, codec.isMockMode());
+	}
+
 	@Test
 	public void testRuler() {
 		checkRuler(0, 0, 1);

@@ -14,6 +14,7 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.abtest.ABTestManager;
+import com.dianping.cat.agent.MmapConsumerTask;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ClientConfigReloader;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -48,8 +49,8 @@ public class CatClientModule extends AbstractModule {
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
 
-		// start status update task
 		if (clientConfigManager.isCatEnabled()) {
+			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);
 
 			Threads.forGroup("Cat").start(statusUpdateTask);
@@ -60,9 +61,12 @@ public class CatClientModule extends AbstractModule {
 			if (config != null) {
 				Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
 			}
-		}
 
-		ABTestManager.initialize();
+			MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
+			Threads.forGroup("Cat").start(mmapReaderTask);
+			
+			ABTestManager.initialize();
+		}
 	}
 
 	@Override
