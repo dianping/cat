@@ -15,7 +15,7 @@ public class ServiceBuilderTest  extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildHourlyTask("service", "cat", new SimpleDateFormat("yyyyMMddHH").parse("2013071210"));
+		builder.buildHourlyTask("service", "cat", new SimpleDateFormat("yyyyMMddHH").parse("2013082011"));
 	}
 	
 	@Test
