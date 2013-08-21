@@ -182,11 +182,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				m_domainManager.insert(domain, ip);
 			} else if (!ipInfo.getIp().equals(ip)) {
 				String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-				// only work on online anlyzer
+				// only work on online enviroment
 				if (localIp.startsWith("10.")) {
-					m_domainManager.update(ipInfo.getId(), domain, ip);
-					m_logger.info(String.format("change ip %s to domain %", ipInfo.getIp(), domain));
+					long current = System.currentTimeMillis();
+					long lastModifyTime = ipInfo.getLastModifiedDate().getTime();
+
+					if (current - lastModifyTime > ONE_HOUR) {
+						m_domainManager.update(ipInfo.getId(), domain, ip);
+						m_logger.info(String.format("change ip %s to domain %", ipInfo.getIp(), domain));
+					}
 				}
 			}
 		}

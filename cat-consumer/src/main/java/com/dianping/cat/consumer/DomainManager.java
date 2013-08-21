@@ -3,6 +3,7 @@ package com.dianping.cat.consumer;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +108,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-//		if (!m_manager.isLocalMode()) {
+		if (!m_manager.isLocalMode()) {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
@@ -124,9 +125,8 @@ public class DomainManager implements Initializable, LogEnabled {
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
-
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
-//		}
+		}
 	}
 
 	public class ReloadDomainTask implements Task {
@@ -251,6 +251,7 @@ public class DomainManager implements Initializable, LogEnabled {
 			info.setId(id);
 			info.setDomain(domain);
 			info.setIp(ip);
+			info.setLastModifiedDate(new Date());
 			m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
 			m_domainsInCat.add(domain);
 			m_ipsInCat.put(ip, info);
