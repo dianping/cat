@@ -180,6 +180,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			if (ipInfo == null) {
 				m_domainManager.insert(domain, ip);
+			} else if (!ipInfo.getIp().equals(ip)) {
+				String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+				// only work on online anlyzer
+				if (localIp.startsWith("10.")) {
+					m_domainManager.update(ipInfo.getId(), domain, ip);
+					m_logger.info(String.format("change ip %s to domain %", ipInfo.getIp(), domain));
+				}
 			}
 		}
 	}

@@ -62,14 +62,14 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 		for (String domainName : domains) {
-			if (validateDomain(domainName)) {
+			if (validate(domainName)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
 				new TransactionReportVisitor(topReport).visitTransactionReport(report);
 			}
 		}
 		for (String domainName : domains) {
-			if (validateDomain(domainName)) {
+			if (validate(domainName)) {
 				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
 				new ProblemReportVisitor(topReport).visitProblemReport(report);
@@ -91,11 +91,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		m_transactionAnalyzer = transactionAnalyzer;
 	}
 
-	private boolean validateDomain(String domain) {
-		return !domain.equals(ReportConstants.FRONT_END) && !domain.equals(ReportConstants.ALL);
-	}
-
-	static class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {
+	public static class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {
 		private String m_domain;
 
 		private String m_type;
