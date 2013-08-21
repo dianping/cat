@@ -18,4 +18,7 @@
    <model package="com.dianping.cat.home.bug.config" name="bug-config">
       <sample-model>src/test/resources/com/dianping/cat/report/page/bug/bug-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.service" name="service-report">
+      <sample-model>src\test\resources\com\dianping\cat\report\page\service\service.xml</sample-model>
+   </model>
 </wizard>

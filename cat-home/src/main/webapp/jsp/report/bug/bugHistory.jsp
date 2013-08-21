@@ -14,18 +14,36 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(model.bugReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.bugReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-			<td class="switch"><a href="?op=history">Switch To History Mode</a>
+			<td class="title">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
+			<td class="switch"><a href="?domain=${model.domain}">Switch To Hourly Mode</a>
 			</td>
-			<td class="nav" >
-				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+			<td class="nav">
+					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
+					<c:choose>
+						<c:when test="${nav.title eq model.reportType}">
+								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
+						</c:when>
+						<c:otherwise>
+								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]&nbsp;&nbsp;
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
 			</td>
 		</tr>
 	</table>
-	<%@ include file="detail.jsp"%>
+	<div class="row-fluid">
+    <div class="span2">
+		<%@include file="../bugTree.jsp"%>
+	</div>
+	<div class="span10">
+		<div class="report">
+			<%@ include file="detail.jsp"%>
+		</div>
+	</div>
+</div>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>

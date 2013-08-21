@@ -12,8 +12,13 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
 
 public interface MonthlyReportService {
+
+	public boolean insert(MonthlyReport report);
+
+	public BugReport queryBugReport(String domain, Date start);
 
 	public CrossReport queryCrossReport(String domain, Date start);
 
@@ -25,13 +30,11 @@ public interface MonthlyReportService {
 
 	public ProblemReport queryProblemReport(String domain, Date start);
 
+	public ServiceReport queryServiceReport(String domain, Date start);
+
 	public SqlReport querySqlReport(String domain, Date start);
 
 	public StateReport queryStateReport(String domain, Date start);
 
 	public TransactionReport queryTransactionReport(String domain, Date start);
-
-	public boolean insert(MonthlyReport report);
-
-	public BugReport queryBugReport(String domain, Date start);
 }
