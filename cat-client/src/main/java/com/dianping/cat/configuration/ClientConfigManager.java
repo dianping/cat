@@ -13,6 +13,7 @@ import org.unidal.helper.Files;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.configuration.client.entity.Property;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 
@@ -54,6 +55,38 @@ public class ClientConfigManager implements LogEnabled {
 		} else {
 			return new Domain("UNKNOWN").setEnabled(false);
 		}
+	}
+
+	/**
+	 * Return the max total message node size for the whole message, children after this limit will be split into another child
+	 * message tree.
+	 * 
+	 * @return
+	 */
+	public int getMaxMessageLength() {
+		if (m_config == null) {
+			return 1000;
+		} else {
+			return getDomain().getMaxMessageSize();
+		}
+	}
+
+	public String getMmapName() {
+		return getPropertyValue("mmap-name", "/data/appdatas/cat/mmap");
+	}
+
+	private String getPropertyValue(String name, String defaultValue) {
+		String value = defaultValue;
+
+		if (m_config != null) {
+			Property property = m_config.getProperties().get(name);
+
+			if (property != null) {
+				value = property.getText();
+			}
+		}
+
+		return value;
 	}
 
 	public List<Server> getServers() {
@@ -132,19 +165,5 @@ public class ClientConfigManager implements LogEnabled {
 
 	public boolean isInitialized() {
 		return m_config != null;
-	}
-
-	/**
-	 * Return the max total message node size for the whole message, children after this limit will be split into another child
-	 * message tree.
-	 * 
-	 * @return
-	 */
-	public int getMaxMessageLength() {
-		if (m_config == null) {
-			return 1000;
-		} else {
-			return getDomain().getMaxMessageSize();
-		}
 	}
 }
