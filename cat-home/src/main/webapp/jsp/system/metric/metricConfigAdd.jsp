@@ -94,7 +94,7 @@
 			<td style="text-align:right" class="text-success">显示求和曲线</td>
 			<td>
 				<c:choose>
-					<c:when test="${model.metricItemConfig.showAvg}">
+					<c:when test="${model.metricItemConfig.showSum}">
 						<input type="radio" name="metricItemConfig.showSum" value="true" checked />是	
 						<input type="radio" name="metricItemConfig.showSum" value="false" />否
 					</c:when>
