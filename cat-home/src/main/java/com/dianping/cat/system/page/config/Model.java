@@ -19,6 +19,7 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.consumer.company.model.entity.Domain;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
@@ -53,6 +54,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<ProductLine, List<MetricItemConfig>> m_productMetricConfigs;
 	
 	private String m_bug;
+	
+	private Map<String, Domain> m_productLineToDomains;
+
+
+	public Map<String, Domain> getProductLineToDomains() {
+		return m_productLineToDomains;
+	}
+
+	public void setProductLineToDomains(Map<String, Domain> productLineToDomains) {
+		m_productLineToDomains = productLineToDomains;
+	}
 
 	public Model(Context ctx) {
 		super(ctx);

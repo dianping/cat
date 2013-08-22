@@ -61,12 +61,35 @@
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
-						<td><select style="width: 500px;" name="domains" multiple=""
+						<td>
+							<table>
+								<tr>
+								<c:forEach var="item" items="${model.projects}" varStatus="status">
+									<c:choose>
+										<c:when test="${status.index mod 4 ne 0}">
+											<td>
+												<input type="checkbox" name=domains value="${item.domain}" />${item.domain}
+											</td>
+										</c:when>
+										<c:otherwise>
+											</tr>
+											<tr>
+												<td>
+													<input type="checkbox" name=domains value="${item.domain}" />${item.domain}
+												</td>
+										</c:otherwise>
+									</c:choose>											
+								</c:forEach>
+								</tr>
+							</table>
+						</td>
+						
+<!-- 						<td><select style="width: 500px;" name="domains" multiple=""
 							id="domainSelect">
 								<c:forEach var="item" items="${model.projects}">
 									<option value="${item.domain}">${item.domain}</option>
 								</c:forEach>
-						</select></td>
+						</select></td> -->
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
