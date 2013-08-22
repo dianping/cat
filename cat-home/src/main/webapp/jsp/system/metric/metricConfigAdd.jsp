@@ -25,9 +25,6 @@
 						<c:forEach var="item" items="${model.productLineToDomains}">
 	                        <option value="${item.key}">${item.key}</option> 							
 						</c:forEach>
-<!-- 	                     <c:forEach var="item" items="${model.projects}">
-	                           <option value="${item.domain}">${item.domain}</option> 
-	                     </c:forEach> -->
                  	 </select>
 				</c:if>
 			</td>
