@@ -393,3 +393,7 @@ a.abtest-heartbeat{
 .error{
 	color:red;
 }
+
+.dashboard{
+	background: url('../img/checked.gif') no-repeat;
+}
