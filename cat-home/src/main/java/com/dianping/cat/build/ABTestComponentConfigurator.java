@@ -11,6 +11,8 @@ import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestRunDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.system.page.abtest.GroupStrategyParser;
+import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
+import com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 import com.dianping.cat.system.page.abtest.service.ABTestServiceImpl;
 
@@ -22,13 +24,13 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(GroupStrategyParser.class));
-		
-		all.add(C(ABTestService.class, ABTestServiceImpl.class)
-				.req(AbtestDao.class).req(AbtestRunDao.class).req(GroupStrategyDao.class)
-				.req(ProjectDao.class)
-				.req(GroupStrategyParser.class).config(E("refreshTimeInSeconds").value("60")));
-		
+
+		all.add(C(ABTestAdvisor.class, DefaultABTestAdvisor.class));
+
+		all.add(C(ABTestService.class, ABTestServiceImpl.class).req(AbtestDao.class).req(AbtestRunDao.class)
+		      .req(GroupStrategyDao.class).req(ProjectDao.class).req(GroupStrategyParser.class)
+		      .config(E("refreshTimeInSeconds").value("60")));
+
 		return all;
 	}
-
 }

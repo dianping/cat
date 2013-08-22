@@ -34,7 +34,7 @@ public class ABTestSampleServlet extends HttpServlet {
 	}
 
 	public static enum MyABTestId implements ABTestName {
-		CASE1("TestConditions");
+		CASE1("SampleTest");
 
 		private String m_id;
 

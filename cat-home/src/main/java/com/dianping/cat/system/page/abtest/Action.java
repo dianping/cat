@@ -19,7 +19,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	AJAX_PARSEGROUPSTRATEGY("ajax_parseGs"),
 	
-	ABTEST_CACULATOR("caculator");
+	ABTEST_CACULATOR("caculator"),
+	
+	SCRIPT_FRAGEMENT("script");
 
 	private String m_name;
 

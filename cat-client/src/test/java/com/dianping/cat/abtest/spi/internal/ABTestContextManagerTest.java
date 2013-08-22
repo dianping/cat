@@ -50,4 +50,20 @@ public class ABTestContextManagerTest extends ComponentTestCase {
 
 		Assert.assertEquals(expected, map.toString());
 	}
+	
+	@Test
+	public void testCodec3() throws Exception{
+		check3("1", "1=ab:A");
+	}
+	
+	private void check3(String runId, String source) throws Exception {
+		ABTestCodec codec = lookup(ABTestCodec.class);
+		 Map<String, Map<String, String>> map = codec.decode(source,null);
+		 
+		System.out.println(map.get(runId));
+		
+		String actual = codec.encode(runId,map.get(runId));
+
+		Assert.assertEquals(source, actual);
+	}
 }

@@ -5,19 +5,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.Invocable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.unidal.lookup.ContainerLoader;
-
 import com.dianping.cat.Cat;
-import com.dianping.cat.abtest.model.entity.Condition;
+import com.dianping.cat.abtest.model.entity.ConversionRule;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
-import com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultMessageManager;
 
 public class DefaultABTestContext implements ABTestContext {
 	private String m_groupName = DEFAULT_GROUP;
@@ -95,33 +94,56 @@ public class DefaultABTestContext implements ABTestContext {
 	public void setCookielets(Map<String, String> cookielets) {
 		m_cookielets = cookielets;
 	}
-	
+
 	public void setup(HttpServletRequest request, HttpServletResponse response, Map<String, String> cookielets) {
 		m_request = request;
 		m_response = response;
 		m_cookielets = cookielets;
 
-		if (m_entity.isEligible(new Date())) {
+		Invocable inv = m_entity.getInvocable();
+
+		if (inv != null && m_entity.isEligible(new Date())) {
+			boolean isAccept = false;
 			Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
 
 			try {
-				List<Condition> conditions = m_entity.getConditions();
-				ABTestConditionManager manager = ContainerLoader.getDefaultContainer().lookup(ABTestConditionManager.class);
+				isAccept = (Boolean) inv.invokeFunction("isEligible", request);
 
-				boolean isAccept = manager.accept(conditions,request);
-				
-				if(isAccept){
+				if (isAccept) {
 					m_groupStrategy.apply(this);
-				}else{
-					setGroupName(DEFAULT_GROUP);
+					t.setStatus(Message.SUCCESS);
 				}
-
-				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {
 				t.setStatus(e);
 				Cat.logError(e);
 			} finally {
 				t.complete();
+			}
+		}
+
+		String actual = (String) request.getAttribute("url-rewrite-original-url");
+		List<ConversionRule> conversionRules = m_entity.getConversionRules();
+
+		if (conversionRules != null) {
+			for (ConversionRule rule : conversionRules) {
+				if (actual.equalsIgnoreCase(rule.getText())) {
+					String key = String.valueOf(m_entity.getRun().getId());
+					String appendMetricType = m_entity.getCookieCodec().encode(key, m_cookielets);
+
+					if (appendMetricType != null && appendMetricType.length() > 0) {
+						// DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
+						DefaultMessageManager defaultMessageManager = (DefaultMessageManager) m_entity.getMessageManager();
+						String metricType = defaultMessageManager.getMetricType();
+
+						if (metricType != null && metricType.length() > 0) {
+							defaultMessageManager.setMetricType(metricType + "&" + appendMetricType);
+						} else {
+							defaultMessageManager.setMetricType(appendMetricType);
+						}
+					}
+
+					break;
+				}
 			}
 		}
 	}

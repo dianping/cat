@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-core</artifactId>
+			<artifactId>cat-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

@@ -6,13 +6,15 @@ import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class FieldInjectUtil {
 
-	public static void inject(ABTestGroupStrategy targetGroupStrategy, GroupstrategyDescriptor descriptor)
+	public void inject(ABTestGroupStrategy targetGroupStrategy, GroupstrategyDescriptor descriptor)
 	      throws Exception {
 		for (Field field : descriptor.getFields()) {
 			java.lang.reflect.Field modifiersField = targetGroupStrategy.getClass().getDeclaredField(
 			      field.getModifierName());
 
 			modifiersField.setAccessible(true);
+			
+			//modifiersField.set(targetGroupStrategy, field.getValue());
 
 			if (field.getType().equals("String")) {
 				modifiersField.set(targetGroupStrategy, field.getValue());

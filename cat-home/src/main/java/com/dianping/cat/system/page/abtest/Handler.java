@@ -3,8 +3,10 @@ package com.dianping.cat.system.page.abtest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +29,12 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
+import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
+import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.home.abtest.ScriptFragementTest;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -39,9 +45,16 @@ import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.abtest.conditions.URLScriptProvider;
 import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
+import com.dianping.cat.system.page.abtest.advisor.ABTestAdvice;
+import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 public class Handler implements PageHandler<Context>, LogEnabled, Initializable {
 
@@ -59,53 +72,106 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 	@Inject
 	private JspViewer m_jspViewer;
 
-	private Logger m_logger;
-
-	private final int m_pageSize = 10;
-
 	@Inject
 	private GroupStrategyParser m_parser;
 
 	@Inject
 	private ABTestService m_service;
 
+	@Inject
+	private ABTestAdvisor m_advisor;
+
+	private Logger m_logger;
+
+	private final int m_pageSize = 10;
+
+	private Configuration m_configuration;
+
+	private URLScriptProvider m_urlScriptProvider;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	private void handleCreateAction(Context ctx, Payload payload) {
-		Abtest abtest = new Abtest();
-
-		abtest.setName(payload.getName());
-		abtest.setOwner(payload.getOwner());
-		abtest.setDescription(payload.getDescription());
-		abtest.setGroupStrategy(payload.getStrategyId());
-		abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-
-		AbtestRun run = new AbtestRun();
-
-		run.setCreator(payload.getOwner());
-		run.setStartDate(payload.getStartDate());
-		run.setEndDate(payload.getEndDate());
-		run.setDomains(StringUtils.join(payload.getDomains(), ','));
-		run.setStrategyConfiguration(payload.getStrategyConfig());
-		run.setConditions(payload.getConditions());
-		run.setConversionGoals(payload.getConversionGoals());
-		run.setDisabled(false);
-		Date now = new Date();
-		run.setCreationDate(now);
-		run.setModifiedDate(now);
+	private void handleCreateOrUpdateAction(Context ctx, Payload payload, boolean isUpdate) {
 		try {
-			m_abtestDao.insert(abtest);
+			int caseID = 0;
 
-			run.setCaseId(abtest.getId());
-			m_abtestRunDao.insert(run);
-			ctx.setResponseJson(responseJson(0, "successfully create a abtest!"));
+			if (!isUpdate) {
+				Abtest abtest = new Abtest();
+
+				abtest.setName(payload.getName());
+				abtest.setOwner(payload.getOwner());
+				abtest.setDescription(payload.getDescription());
+				abtest.setGroupStrategy(payload.getStrategyId());
+				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
+
+				m_abtestDao.insert(abtest);
+				m_service.setModified();
+				caseID = abtest.getId();
+			}
+
+			AbtestRun run = new AbtestRun();
+			Date now = new Date();
+
+			if (isUpdate) {
+				run.setId(payload.getId());
+				run.setKeyId(payload.getId());
+			} else {
+				run.setCaseId(caseID);
+				run.setCreationDate(now);
+			}
+			run.setCreator(payload.getOwner());
+			run.setStartDate(payload.getStartDate());
+			run.setEndDate(payload.getEndDate());
+			run.setDomains(StringUtils.join(payload.getDomains(), ','));
+			run.setStrategyConfiguration(payload.getStrategyConfig());
+			run.setConditions(payload.getConditions());
+			run.setConversionGoals(payload.getConversionGoals());
+			run.setJavaFragement(getJavaFragement(run));
+			run.setDisabled(false);
+			run.setModifiedDate(now);
+
+			if (isUpdate) {
+				// only update run info, do not update abtest meta-info
+				m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+				m_service.setModified();
+				ctx.setResponseJson(responseJson(0, "successfully modify a abtest!"));
+			} else {
+				m_abtestRunDao.insert(run);
+				m_service.setModified();
+				ctx.setResponseJson(responseJson(0, "successfully create a abtest!"));
+			}
 		} catch (DalException e) {
 			Cat.logError(e);
 			ctx.setResponseJson(responseJson(1, e.getMessage()));
 		}
+	}
+
+	private String getJavaFragement(AbtestRun run) {
+		Gson gson = m_parser.getGsonBuilder().create();
+		List<Condition> conditions = gson.fromJson(run.getConditions(), new TypeToken<ArrayList<Condition>>() {
+		}.getType());
+		Run abstractRun = new Run();
+		Map<Object, Object> root = new HashMap<Object, Object>();
+
+		abstractRun.getConditions().addAll(conditions);
+
+		root.put("run", abstractRun);
+		root.put("urlScriptProvider", m_urlScriptProvider);
+
+		StringWriter sw = new StringWriter(5000);
+
+		try {
+			Template t = m_configuration.getTemplate("scriptFragement.ftl");
+
+			t.process(root, sw);
+		} catch (Exception e) {
+			Cat.logError(e);
+			e.printStackTrace();
+		}
+		return sw.toString();
 	}
 
 	private void handleCreateGroupStrategyAction(Context ctx, Payload payload) {
@@ -124,6 +190,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 			if (groupStrategies == null || groupStrategies.size() == 0) {
 				m_groupStrategyDao.insert(gs);
+				m_service.setModified();
 			} else {
 				throw new DalException("Aready to has a groupstrategy which has the same name...");
 			}
@@ -153,15 +220,26 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			if (action == Action.AJAX_CREATE) {
-				handleCreateAction(ctx, payload);
+				handleCreateOrUpdateAction(ctx, payload, false);
 			} else if (action == Action.AJAX_DETAIL) {
-				handleUpdateAction(ctx, payload);
+				handleCreateOrUpdateAction(ctx, payload, true);
 			} else if (action == Action.AJAX_ADDGROUPSTRATEGY) {
 				handleCreateGroupStrategyAction(ctx, payload);
 			} else if (action == Action.AJAX_PARSEGROUPSTRATEGY) {
 				handleParseGroupStrategyAction(ctx, payload);
+			} else if (action == Action.ABTEST_CACULATOR) {
+				handleCaculatorAction(ctx, payload);
 			}
 		}
+	}
+
+	private void handleCaculatorAction(Context ctx, Payload payload) {
+		float actualCtr = payload.getConversionRate() / 100.00f;
+		
+		m_advisor.setCurrentPv(payload.getPv());
+		List<ABTestAdvice> advices = m_advisor.offer(actualCtr, actualCtr + 0.10f); 
+		
+		ctx.setAdvice(advices);
 	}
 
 	@Override
@@ -185,7 +263,10 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			renderReportModel(ctx, model, payload);
 			break;
 		case MODEL:
-			renderModel(model);
+			renderModel(model, payload);
+			break;
+		case SCRIPT_FRAGEMENT:
+			renderModelByRunId(payload, model);
 			break;
 		}
 
@@ -223,6 +304,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 						if (!run.isDisabled()) {
 							run.setDisabled(true);
 							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
+							m_service.setModified();
 						} else {
 							error.addArgument(id, String.format("Abtest %d has been already suspended!", id));
 						}
@@ -231,6 +313,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 						if (run.isDisabled()) {
 							run.setDisabled(false);
 							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
+							m_service.setModified();
 						} else {
 							error.addArgument(id, String.format("Abtest %d has been already active!", id));
 						}
@@ -250,37 +333,21 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		}
 	}
 
-	private void handleUpdateAction(Context ctx, Payload payload) {
-		try {
-			AbtestRun run = new AbtestRun();
-
-			run.setId(payload.getId());
-			run.setKeyId(payload.getId());
-			run.setCreator(payload.getOwner());
-			run.setStartDate(payload.getStartDate());
-			run.setEndDate(payload.getEndDate());
-			run.setDomains(StringUtils.join(payload.getDomains(), ','));
-			run.setStrategyConfiguration(payload.getStrategyConfig());
-			run.setConditions(payload.getConditions());
-			run.setConversionGoals(payload.getConversionGoals());
-			Date now = new Date();
-			run.setModifiedDate(now);
-
-			// only update run info, do not update abtest meta-info
-			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
-			m_service.refresh();
-			ctx.setResponseJson(responseJson(0, "successfully modify a abtest!"));
-		} catch (DalException e) {
-			Cat.logError(e);
-			ctx.setResponseJson(responseJson(1, e.getMessage()));
-		}
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_service instanceof Task) {
 			Threads.forGroup("Cat").start((Task) m_service);
 		}
+
+		m_configuration = new Configuration();
+		m_configuration.setDefaultEncoding("UTF-8");
+		try {
+			m_configuration.setClassForTemplateLoading(ScriptFragementTest.class, "/freemaker");
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		m_urlScriptProvider = new URLScriptProvider();
 	}
 
 	private void renderCreateModel(Model model) {
@@ -376,10 +443,42 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		model.setReports(reports);
 	}
 
-	private void renderModel(Model model) {
-		AbtestModel abtestModel = m_service.getAbtestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
+	private void renderModel(Model model, Payload payload) {
+		long lastUpdateTime = payload.getLastUpdateTime();
+		AbtestModel filteredModel = new AbtestModel();
 
-		model.setAbtestModel(abtestModel.toString());
+		if (lastUpdateTime < m_service.getModifiedTime()) {
+			AbtestModel abtestModel = m_service.getAbtestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
+
+			for (Case _case : abtestModel.getCases()) {
+				Case newCase = new Case();
+
+				for (Run run : _case.getRuns()) {
+					if (run.getLastModifiedDate().getTime() > lastUpdateTime) {
+						newCase.addRun(run);
+					}
+				}
+
+				if (newCase.getRuns().size() > 0) {
+					newCase.setId(_case.getId());
+					newCase.setGroupStrategy(_case.getGroupStrategy());
+					newCase.setOwner(_case.getOwner());
+					newCase.setDescription(_case.getDescription());
+					newCase.getDomains().addAll(_case.getDomains());
+					newCase.mergeAttributes(_case);
+
+					filteredModel.addCase(newCase);
+				}
+			}
+		}
+
+		model.setAbtestModel(filteredModel);
+	}
+
+	private void renderModelByRunId(Payload payload, Model model) {
+		AbtestModel abtestModel = m_service.getAbtestModelByRunID(payload.getId());
+
+		model.setAbtestModel(abtestModel);
 	}
 
 	private void renderReportModel(Context ctx, Model model, Payload payload) {

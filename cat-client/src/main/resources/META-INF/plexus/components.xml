@@ -123,9 +123,6 @@
 					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
 				</requirement>
 			</requirements>
@@ -153,21 +150,18 @@
 				<requirement>
 					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.conditions.ABTestConditionManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition</role>
-			<role-hint>url</role-hint>
-			<implementation>com.dianping.cat.abtest.spi.internal.conditions.URLCondition</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition</role>
-			<role-hint>percent</role-hint>
-			<implementation>com.dianping.cat.abtest.spi.internal.conditions.PercentageCondition</implementation>
+			<role>com.dianping.cat.abtest.spi.ABTestGroupStrategy</role>
+			<role-hint>OneVariationStrategy</role-hint>
+			<implementation>com.dianping.cat.abtest.spi.internal.groupstrategy.TrafficDistributionGroupStrategy</implementation>
 		</component>
 	</components>
 </plexus>

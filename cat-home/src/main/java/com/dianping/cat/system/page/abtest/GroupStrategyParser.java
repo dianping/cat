@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.abtest;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.ImportDeclaration;
 import japa.parser.ast.body.FieldDeclaration;
 import japa.parser.ast.body.TypeDeclaration;
 import japa.parser.ast.body.VariableDeclarator;
@@ -54,35 +55,51 @@ public class GroupStrategyParser implements Initializable {
 
 	class AnnotationVisitor extends VoidVisitorAdapter<Object> {
 
-		public GroupstrategyDescriptor m_descriptor;
-
+		private GroupstrategyDescriptor m_descriptor;
+		
+		private boolean m_isImportInjectClass = false;
+		
 		public AnnotationVisitor(GroupstrategyDescriptor descriptor) {
 			m_descriptor = descriptor;
 		}
 
+		public void visit(ImportDeclaration n, Object arg) {
+			if(n.getName().toString().equals("org.unidal.lookup.annotation.Inject")){
+				m_isImportInjectClass = true;
+			}
+		}
+
 		public void visit(FieldDeclaration node, Object arg) {
-			List<AnnotationExpr> annotations = node.getAnnotations();
-
-			if (annotations != null) {
-				for (AnnotationExpr expr : annotations) {
-					String annotation = expr.toString();
-					
-					int pos = annotation.indexOf("@Inject");
-
-					if (pos >= 0) {
-						int begin = annotation.indexOf('"');
-						int end = annotation.lastIndexOf('"');
-
-						String name = annotation.substring(begin + 1, end).trim();
-						String type = node.getType().toString();
-						List<VariableDeclarator> modifierName = node.getVariables();
+			if(m_isImportInjectClass){
+				List<AnnotationExpr> annotations = node.getAnnotations();
+				
+				if (annotations != null) {
+					for (AnnotationExpr expr : annotations) {
+						String annotation = expr.toString();
 						
-						Field field = new Field();
-						field.setName(name);
-						field.setType(type);
-						field.setModifierName(modifierName.get(0).toString());
-
-						m_descriptor.getFields().add(field);
+						int pos = annotation.indexOf("@Inject");
+						
+						System.out.println(expr.getData());
+						if (pos >= 0) {
+							int begin = annotation.indexOf('"');
+							int end = annotation.lastIndexOf('"');
+							
+							String name = annotation.substring(begin + 1, end).trim();
+							String type = node.getType().toString();
+							List<VariableDeclarator> modifierName = node.getVariables();
+							VariableDeclarator firstVar = modifierName.get(0);
+							
+							Field field = new Field();
+							field.setName(name);
+							field.setType(type);
+							field.setModifierName(firstVar.getId().getName());
+							
+							if (firstVar.getInit() != null) {
+								field.setValue(firstVar.getInit().toString());
+							}
+							
+							m_descriptor.getFields().add(field);
+						}
 					}
 				}
 			}

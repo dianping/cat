@@ -27,6 +27,7 @@
     			<member name="end-date" field="end_date" value-type="Date" />
     			<member name="domains" field="domains" value-type="String" length="100" nullable="false" />
     			<member name="conditions" field="conditions" value-type="String" length="65535" />
+    			<member name="java-fragement" field="java_fragement" value-type="String" length="65535" />
     			<member name="conversion-goals" field="conversion_goals" value-type="String" length="65535" />
     			<member name="strategy-configuration" field="strategy_configuration" value-type="String" length="65535" />
       			<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />

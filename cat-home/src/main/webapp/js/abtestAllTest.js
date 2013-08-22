@@ -57,7 +57,11 @@ function getConditions(){
 		var name = $(this).attr("name");
 		
 		if(name && $(this).val()){
-			var condition = getCondition("url","and",name,$(this).val(),i);
+			var op = "and";
+			if(name == "1"){
+				op = "or";
+			}
+			var condition = getCondition("url",op,name,$(this).val(),i);
 			conditions.push(condition);
 		}
 		
@@ -90,6 +94,11 @@ function getConditions(){
 	var condition = getCondition("percent","and",1,$(".add-on:eq(3)").text(),4);
 	conditions.push(condition);
 	
+	if(conditions.length == 2){
+		var firstCondition = conditions[0];
+		
+		firstCondition["operator"] = "and";
+	}
 	return conditions;
 }
 

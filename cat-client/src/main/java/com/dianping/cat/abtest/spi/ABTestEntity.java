@@ -3,11 +3,15 @@ package com.dianping.cat.abtest.spi;
 import java.util.Date;
 import java.util.List;
 
+import javax.script.Invocable;
+
 import com.dianping.cat.abtest.model.entity.Case;
 import com.dianping.cat.abtest.model.entity.Condition;
-import com.dianping.cat.abtest.model.entity.ConversionRules;
+import com.dianping.cat.abtest.model.entity.ConversionRule;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
+import com.dianping.cat.abtest.spi.internal.ABTestCodec;
+import com.dianping.cat.message.spi.MessageManager;
 
 public class ABTestEntity {
 
@@ -16,6 +20,12 @@ public class ABTestEntity {
 	private Run m_run;
 
 	private ABTestGroupStrategy m_groupStrategy;
+	
+	private Invocable m_invocable;
+	
+	private MessageManager m_messageManager;
+	
+	private ABTestCodec m_cookieCodec;
 
 	private String m_groupStrategyName;
 
@@ -62,6 +72,22 @@ public class ABTestEntity {
 		return true;
 	}
 
+	public List<Condition> getConditions() {
+		return m_run.getConditions() != null ? m_run.getConditions() : null;
+	}
+
+	public String getConditionsFragement() {
+		return m_run.getConditionsFragement();
+	}
+
+	public List<ConversionRule> getConversionRules() {
+		return m_run.getConversionRules();
+	}
+
+	public ABTestCodec getCookieCodec() {
+   	return m_cookieCodec;
+   }
+
 	public Date getEndDate() {
 		return m_run.getEndDate();
 	}
@@ -74,17 +100,17 @@ public class ABTestEntity {
 		return m_run.getGroupstrategyDescriptor() != null ? m_run.getGroupstrategyDescriptor() : null;
 	}
 
-	public List<Condition> getConditions() {
-		return m_run.getConditions() != null ? m_run.getConditions() : null;
-	}
-	
-	public ConversionRules getConversionRules() {
-	   return m_run.getConversionRules();
-   }
-
 	public String getGroupStrategyName() {
 		return m_groupStrategyName != null ? m_groupStrategyName : null;
 	}
+
+	public Invocable getInvocable() {
+   	return m_invocable;
+   }
+
+	public MessageManager getMessageManager() {
+   	return m_messageManager;
+   }
 
 	public String getName() {
 		return m_name;
@@ -108,7 +134,7 @@ public class ABTestEntity {
 		result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
 		return result;
 	}
-
+	
 	public boolean isDisabled() {
 		return m_run.isDisabled();
 	}
@@ -135,6 +161,10 @@ public class ABTestEntity {
 		return true;
 	}
 
+	public void setCookieCodec(ABTestCodec cookieCodec) {
+   	m_cookieCodec = cookieCodec;
+   }
+
 	public void setDisabled(boolean disabled) {
 		m_run.setDisabled(disabled);
 	}
@@ -142,6 +172,14 @@ public class ABTestEntity {
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
 		m_groupStrategy = groupStrategy;
 	}
+
+	public void setInvocable(Invocable invocable) {
+   	m_invocable = invocable;
+   }
+	
+	public void setMessageManager(MessageManager messageManager) {
+   	m_messageManager = messageManager;
+   }
 
 	public void setName(String name) {
 		m_name = name;

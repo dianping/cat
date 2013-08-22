@@ -2,7 +2,7 @@ package com.dianping.cat.home.abtest;
 
 import org.junit.Test;
 
-import com.dianping.cat.system.page.abtest.ABTestEvaluator;
+import com.dianping.cat.system.page.abtest.advisor.ABTestEvaluator;
 
 public class ABTestCaculatorTest {
 

@@ -1368,6 +1368,10 @@
 			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
+			<implementation>com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 			<implementation>com.dianping.cat.system.page.abtest.service.ABTestServiceImpl</implementation>
 			<configuration>
@@ -2764,6 +2768,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -18,22 +18,25 @@
     <attribute name="id" value-type="int" />
     <attribute name="start-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="end-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="created-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="disabled" value-type="boolean" />
     <element name="creator" value-type="String" />
     <element name="domain" value-type="String" type="list" names="domains" />
-    <entity-ref name="conversion-rules" />
+    <element name="conditions-fragement" value-type="String" />
+    <entity-ref name="conversion-rule" type="list" names="conversion-rules" xml-indent="true" />
     <entity-ref name="condition" type="list" names="conditions" xml-indent="true" />
     <entity-ref name="groupstrategy-descriptor" />
   </entity>
-  <entity name="conversion-rules">
-    <element name="conversion-rule" value-type="String" type="list" names="conversion-rules" />
+  <entity name="conversion-rule">
+    <attribute name="name" value-type="String" />
+    <element name="text" value-type="String" text="true" />
   </entity>
   <entity name="condition">
     <attribute name="name" value-type="String" />
     <attribute name="seq" value-type="int" />
     <attribute name="operator" value-type="String" />
-    <attribute name="comparator" value-type="String" />
-    <attribute name="next" value-type="String" />
+    <attribute name="comparator" value-type="int" />
     <element name="text" value-type="String" text="true" />
   </entity>
   <entity name="groupstrategy-descriptor">

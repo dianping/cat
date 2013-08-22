@@ -20,6 +20,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.model.entity.Case;
 import com.dianping.cat.abtest.model.entity.Condition;
+import com.dianping.cat.abtest.model.entity.ConversionRule;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.core.dal.Project;
@@ -64,8 +65,16 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private Map<Integer, AbtestRun> m_abtestRunMap = new ConcurrentHashMap<Integer, AbtestRun>();
 
 	private Map<Integer, GroupStrategy> m_groupStrategyMap = new ConcurrentHashMap<Integer, GroupStrategy>();
+
+	private long m_lastRefreshTime = -1;
 	
-	private Type m_listType = new TypeToken<ArrayList<Condition>>() {}.getType();
+	private long m_modifyTime = 0;
+
+	private Type m_listType = new TypeToken<ArrayList<Condition>>() {
+	}.getType();
+
+	private Type m_ruleType = new TypeToken<ArrayList<ConversionRule>>() {
+	}.getType();
 
 	@Override
 	public Abtest getABTestByRunId(int id) {
@@ -97,7 +106,6 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 			Date now = new Date();
 
 			for (AbtestRun run : m_abtestRunMap.values()) {
-
 				Abtest entity = getABTestByRunId(run.getId());
 
 				if (entity != null) {
@@ -121,6 +129,23 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 				}
 			}
 		}
+
+		return model;
+	}
+
+	public AbtestModel getAbtestModelByRunID(int runId) {
+		AbtestModel model = new AbtestModel();
+
+		Abtest abtest = getABTestByRunId(runId);
+		AbtestRun run = getAbtestRunById(runId);
+
+		if (abtest != null && run != null) {
+			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
+			Case _case = transform(abtest, run, groupStrategy);
+
+			model.addCase(_case);
+		}
+
 		return model;
 	}
 
@@ -148,6 +173,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
+
 		return null;
 	}
 
@@ -206,35 +232,39 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	@Override
 	public void refresh() {
-		try {
-			Map<Integer, Abtest> abtestMap = new ConcurrentHashMap<Integer, Abtest>();
-			Map<Integer, AbtestRun> abtestRunMap = new ConcurrentHashMap<Integer, AbtestRun>();
-			Map<Integer, GroupStrategy> groupStrategyMap = new ConcurrentHashMap<Integer, GroupStrategy>();
+		if (m_modifyTime > m_lastRefreshTime) {
+			try {
+				Map<Integer, Abtest> abtestMap = new ConcurrentHashMap<Integer, Abtest>();
+				Map<Integer, AbtestRun> abtestRunMap = new ConcurrentHashMap<Integer, AbtestRun>();
+				Map<Integer, GroupStrategy> groupStrategyMap = new ConcurrentHashMap<Integer, GroupStrategy>();
 
-			List<Abtest> abtests = m_abtestDao.findAll(AbtestEntity.READSET_FULL);
+				List<Abtest> abtests = m_abtestDao.findAll(AbtestEntity.READSET_FULL);
 
-			for (Abtest abtest : abtests) {
-				abtestMap.put(abtest.getId(), abtest);
+				for (Abtest abtest : abtests) {
+					abtestMap.put(abtest.getId(), abtest);
+				}
+
+				List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+
+				for (AbtestRun abtestRun : abtestRuns) {
+					abtestRunMap.put(abtestRun.getId(), abtestRun);
+				}
+
+				List<GroupStrategy> groupStrategies = m_groupStrategyDao.findAll(GroupStrategyEntity.READSET_FULL);
+
+				for (GroupStrategy groupStrategy : groupStrategies) {
+					groupStrategyMap.put(groupStrategy.getId(), groupStrategy);
+				}
+
+				// switch
+				m_abtestMap = abtestMap;
+				m_abtestRunMap = abtestRunMap;
+				m_groupStrategyMap = groupStrategyMap;
+				
+				m_lastRefreshTime = m_modifyTime;
+			} catch (Throwable e) {
+				Cat.logError(e);
 			}
-
-			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
-
-			for (AbtestRun abtestRun : abtestRuns) {
-				abtestRunMap.put(abtestRun.getId(), abtestRun);
-			}
-
-			List<GroupStrategy> groupStrategies = m_groupStrategyDao.findAll(GroupStrategyEntity.READSET_FULL);
-
-			for (GroupStrategy groupStrategy : groupStrategies) {
-				groupStrategyMap.put(groupStrategy.getId(), groupStrategy);
-			}
-
-			// switch
-			m_abtestMap = abtestMap;
-			m_abtestRunMap = abtestRunMap;
-			m_groupStrategyMap = groupStrategyMap;
-		} catch (Throwable e) {
-			Cat.logError(e);
 		}
 	}
 
@@ -290,6 +320,16 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	}
 
 	@Override
+	public synchronized void setModified() {
+		m_modifyTime = System.currentTimeMillis();
+	}
+	
+	@Override
+	public long getModifiedTime(){
+		return m_modifyTime;
+	}
+
+	@Override
 	public void shutdown() {
 	}
 
@@ -313,10 +353,13 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 			abRun.addDomain(domain);
 		}
 		abRun.setCreator(run.getCreator());
+		abRun.setConditionsFragement(run.getJavaFragement());
 		abRun.setDisabled(false);
 		abRun.setEndDate(run.getEndDate());
 		abRun.setStartDate(run.getStartDate());
-		
+		abRun.setCreatedDate(run.getCreationDate());
+		abRun.setLastModifiedDate(run.getModifiedDate());
+
 		if (StringUtils.isNotBlank(run.getStrategyConfiguration())) {
 			abRun.setGroupstrategyDescriptor(gson.fromJson(run.getStrategyConfiguration(), GroupstrategyDescriptor.class));
 		}
@@ -325,6 +368,12 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 			List<Condition> conditions = gson.fromJson(run.getConditions(), m_listType);
 
 			abRun.getConditions().addAll(conditions);
+		}
+
+		if (StringUtils.isNotBlank(run.getConversionGoals())) {
+			List<ConversionRule> conversions = gson.fromJson(run.getConversionGoals(), m_ruleType);
+
+			abRun.getConversionRules().addAll(conversions);
 		}
 
 		abCase.addRun(abRun);

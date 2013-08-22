@@ -7,6 +7,8 @@ import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class TrafficDistributionGroupStrategy implements ABTestGroupStrategy {
 
+	public static final String ID = "OneVariationStrategy";
+
 	@Inject("Control")
 	private int m_percentControl = 50;
 
@@ -28,7 +30,7 @@ public class TrafficDistributionGroupStrategy implements ABTestGroupStrategy {
 			ctx.setGroupName("A");
 			m_scoreA -= m_total;
 		} else {
-			ctx.setGroupName("Control");
+			ctx.setGroupName(ABTestContext.DEFAULT_GROUP);
 			m_scoreControl -= m_total;
 		}
 	}

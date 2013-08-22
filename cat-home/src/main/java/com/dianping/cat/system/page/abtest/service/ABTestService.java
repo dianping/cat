@@ -16,6 +16,8 @@ public interface ABTestService {
 
 	public AbtestModel getAbtestModelByStatus(AbtestStatus... status);
 
+	public AbtestModel getAbtestModelByRunID(int runId);
+
 	public GroupStrategy getGroupStrategyById(int id);
 	
 	public AbtestRun getAbtestRunById(int id);
@@ -25,4 +27,8 @@ public interface ABTestService {
 	public Map<String, List<Project>> getAllProjects();
 	
 	public void refresh();
+
+	public void setModified();
+
+	public long getModifiedTime();
 }

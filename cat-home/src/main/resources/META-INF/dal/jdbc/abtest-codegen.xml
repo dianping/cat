@@ -42,7 +42,45 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="abtest-run" table="abtest_run" alias="ar">
+  <entity name="abtest-report" table="abtest_report" alias="ar">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="run-id" field="run_id" value-type="int" length="10" />
+    <member name="period" field="period" value-type="Date" />
+    <member name="content" field="content" value-type="String" length="65535" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="abtest-run" table="abtest_run" alias="ar2">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="creator" field="creator" value-type="String" length="45" />
     <member name="case-id" field="case_id" value-type="int" length="10" nullable="false" />
@@ -51,6 +89,7 @@
     <member name="disabled" field="disabled" value-type="int" length="3" nullable="false" />
     <member name="domains" field="domains" value-type="String" length="100" nullable="false" />
     <member name="conditions" field="conditions" value-type="String" length="65535" />
+    <member name="java-fragement" field="java_fragement" value-type="String" length="65535" />
     <member name="conversion-goals" field="conversion_goals" value-type="String" length="65535" />
     <member name="strategy-configuration" field="strategy_configuration" value-type="String" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />

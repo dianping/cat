@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dal.abtest.Abtest;
@@ -39,11 +40,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private List<GroupStrategy> m_groupStrategyList;
 
 	private AbtestDaoModel m_abtest;
-
-	private String m_abtestModel;
+	
+	private AbtestModel m_abtestModel;
 
 	private String m_ipAddress;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -52,7 +53,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_abtest;
 	}
 
-	public String getAbtestModel() {
+	public AbtestModel getAbtestModel() {
 		return m_abtestModel;
 	}
 
@@ -117,7 +118,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_abtest = abtest;
 	}
 
-	public void setAbtestModel(String abtestModel) {
+	public void setAbtestModel(AbtestModel abtestModel) {
 		m_abtestModel = abtestModel;
 	}
 

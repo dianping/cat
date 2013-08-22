@@ -65,6 +65,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("id")
 	private int id;
 
+	@FieldMeta("lastUpdateTime")
+	private long m_lastUpdateTime;
 	/* ===============GroupStrategy================ */
 
 	@FieldMeta("strategyId")
@@ -90,6 +92,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("srcCode")
 	private String m_srcCode;
+	
+	/* ===============Caculator================ */
+	@FieldMeta("pv")
+	private int m_pv = 0;
+	
+	@FieldMeta("conversionRate")
+	private int m_conversionRate;
 
 	private boolean m_addGs;
 
@@ -107,6 +116,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public boolean getAddGs() {
 		return m_addGs;
 	}
+
+	public String getConditions() {
+   	return m_conditions;
+   }
+
+	public String getConversionGoals() {
+   	return m_conversionGoals;
+   }
+
+	public int getConversionRate() {
+   	return m_conversionRate;
+   }
 
 	public String getDescription() {
 		return m_description;
@@ -161,6 +182,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		}
 	}
 
+	public long getLastUpdateTime() {
+   	return m_lastUpdateTime;
+   }
+
 	public String getName() {
 		return m_name;
 	}
@@ -177,6 +202,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public int getPageNum() {
 		return m_pageNum;
 	}
+
+	public int getPv() {
+   	return m_pv;
+   }
 
 	public String getReportType() {
 		return "";
@@ -206,14 +235,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_strategyId;
 	}
 
-	public String getConditions() {
-   	return m_conditions;
-   }
-
-	public String getConversionGoals() {
-   	return m_conversionGoals;
-   }
-	
 	public boolean isEnableAbtest() {
 		return m_enableAbtest;
 	}
@@ -227,10 +248,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			m_action = Action.getByName(action, Action.VIEW);
 		}
 	}
-
+	
 	public void setAddGs(boolean addGs) {
 		m_addGs = addGs;
 	}
+
+	public void setConditions(String conditions) {
+   	m_conditions = conditions;
+   }
+
+	public void setConversionRate(int conversionRate) {
+   	m_conversionRate = conversionRate;
+   }
 
 	public void setDescription(String description) {
 		this.m_description = description;
@@ -252,6 +281,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			Cat.logError(e);
 		}
 	}
+
+	public void setGoals(String goals) {
+   	m_conversionGoals = goals;
+   }
 
 	public void setGroupStrategyClassName(String groupStrategyClassName) {
 		m_groupStrategyClassName = groupStrategyClassName;
@@ -281,6 +314,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_ids = ids;
 	}
 
+	public void setLastUpdateTime(long lastUpdateTime) {
+   	m_lastUpdateTime = lastUpdateTime;
+   }
+
 	public void setName(String name) {
 		this.m_name = name;
 	}
@@ -297,6 +334,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setPageNum(int pageNum) {
 		m_pageNum = pageNum;
 	}
+
+	public void setPv(int pv) {
+   	m_pv = pv;
+   }
 
 	public void setSrcCode(String srcCode) {
 		m_srcCode = srcCode;
@@ -328,14 +369,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setStrategyId(int strategyId) {
 		this.m_strategyId = strategyId;
 	}
-
-	public void setConditions(String conditions) {
-   	m_conditions = conditions;
-   }
-
-	public void setGoals(String goals) {
-   	m_conversionGoals = goals;
-   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

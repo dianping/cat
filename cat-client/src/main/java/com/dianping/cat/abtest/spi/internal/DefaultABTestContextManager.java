@@ -16,17 +16,12 @@ import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
-import com.dianping.cat.message.internal.DefaultMessageManager;
-import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestContextManager extends ContainerHolder implements ABTestContextManager {
 	private static final String ABTEST_COOKIE_NAME = "ab";
 
 	@Inject
 	private ABTestEntityManager m_entityManager;
-
-	@Inject
-	private MessageManager m_messageManager;
 
 	@Inject
 	private ABTestCodec m_cookieCodec;
@@ -49,8 +44,11 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	@Override
 	public void onRequestBegin(HttpServletRequest request, HttpServletResponse response) {
 		Entry entry = m_threadLocal.get();
+		String requestUrl = (String) request.getAttribute("url-rewrite-original-url");
 
-		entry.setup(request, response);
+		if (requestUrl == null || !requestUrl.contains("ajax")) {
+			entry.setup(request, response);
+		}
 	}
 
 	@Override
@@ -145,27 +143,6 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			String newValue = m_cookieCodec.encode(map);
 
 			setCookie(request, response, ABTEST_COOKIE_NAME, newValue);
-
-			String actual = request.getRequestURL().toString();
-			
-			boolean isAccept = false;
-			for(int i = 0 ; i < activeEntities.size(); i++){
-				ABTestEntity entity = activeEntities.get(i);
-				
-				for(String rule : entity.getConversionRules().getConversionRules()){
-					if(actual.equalsIgnoreCase(rule)){
-						if (newValue != null && newValue.length() > 0) {
-							((DefaultMessageManager) m_messageManager).setMetricType(newValue);
-							isAccept = true;
-							break;
-						}
-					}
-				}
-				
-				if(isAccept){
-					break;
-				}
-			}
 		}
 	}
 }
