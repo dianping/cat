@@ -18,11 +18,11 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(payload.historyBugStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyBugDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
+			<td class="title">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="switch"><a href="?domain=${model.domain}">Switch To Hourly Mode</a>
 			</td>
 			<td class="nav">
-					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyBugNavs}">
+					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
 								&nbsp;&nbsp;[ <a href="?op=historyBug&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
