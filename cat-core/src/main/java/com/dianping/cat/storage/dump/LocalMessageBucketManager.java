@@ -63,14 +63,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private long m_error;
 
 	private long m_total;
-	
-	private Map<String,Long> m_totals;
+
+	private Map<String, Long> m_totals = new HashMap<String,Long>();
 
 	private long m_totalSize;
-	
-	private Map<String,Long> m_totalSizes;
 
-	private Map<String,Long> m_lastTotalSizes;
+	private Map<String, Long> m_totalSizes = new HashMap<String,Long>();
+
+	private Map<String, Long> m_lastTotalSizes = new HashMap<String,Long>();
 
 	private Logger m_logger;
 
@@ -359,18 +359,22 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		m_total++;
 		Long value = m_totals.get(domain);
-		if(value == null){
+		if (value == null) {
 			m_totals.put(domain, 1L);
 		} else {
-			m_totals.put(domain, value+1);
+			m_totals.put(domain, value + 1);
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			logState(tree);
 		}
-		if(value%CatConstants.SUCCESS_COUNT==0){
-			double amount = m_totalSizes.get(domain) - m_lastTotalSizes.get(domain);
+		if (value != null && value % CatConstants.SUCCESS_COUNT == 0) {
+			Long lastTotalSize =  m_lastTotalSizes.get(domain);
+			if(lastTotalSize == null){
+				lastTotalSize = 0L;
+			}
+			double amount = m_totalSizes.get(domain) - lastTotalSize;
 			m_lastTotalSizes.put(domain, m_totalSizes.get(domain));
-			m_serverStateManager.addMessageSize(domain,amount);
+			m_serverStateManager.addMessageSize(domain, amount);
 			m_serverStateManager.addMessageSize(amount);
 		}
 	}
@@ -465,7 +469,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				String domain = id.getDomain();
 				m_totalSize += buf.readableBytes();
 				Long lastTotalSize = m_totalSizes.get(domain);
-				if(lastTotalSize == null){
+				if (lastTotalSize == null) {
 					m_totalSizes.put(domain, (long) buf.readableBytes());
 				} else {
 					m_totalSizes.put(domain, lastTotalSize + buf.readableBytes());

@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.state;
 
+import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
@@ -94,9 +95,19 @@ public class StateReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeProcessDomain(ProcessDomain old, ProcessDomain processDomain) {
-		super.mergeProcessDomain(old, processDomain);
 		old.getIps().addAll(processDomain.getIps());
+		old.setSize(old.getSize()+processDomain.getSize());
+		old.setTotal(old.getTotal()+processDomain.getTotal());
+		old.setTotalLoss(old.getTotalLoss()+processDomain.getTotalLoss());
+
 	}
+	
+	@Override
+	protected void mergeDetail(Detail old, Detail detail) {
+      old.setSize(detail.getSize() + old.getSize());
+      old.setTotal(detail.getTotal() + old.getTotal());
+      old.setTotalLoss(detail.getTotalLoss() + old.getTotalLoss());
+   }
 
 	@Override
 	public void visitStateReport(StateReport stateReport) {
@@ -107,5 +118,7 @@ public class StateReportMerger extends DefaultMerger {
 		report.setStartTime(stateReport.getStartTime());
 		report.setEndTime(stateReport.getEndTime());
 	}
+	
+
 
 }

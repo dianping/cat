@@ -33,7 +33,16 @@
 		<attribute name="totalLoss" value-type="long" primitive="true"/>
 		<attribute name="size" value-type="double" primitive="true"/>
 		<element name="ip" value-type="String" type="set" names="ips" />
+		<entity-ref name="detail" type="map" names="details" method-find-or-create="true" />
 	</entity>
+	
+	<entity name="detail">
+		<attribute name="id" value-type="long" key="true" />
+		<attribute name="total" value-type="long" primitive="true" />
+		<attribute name="size" value-type="double" primitive="true" format="0.0" />
+		<attribute name="totalLoss" value-type="long" primitive="true" />
+	</entity>
+	
 	<entity name="message">
 		<attribute name="id" value-type="long" key="true" />
 		<attribute name="time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />

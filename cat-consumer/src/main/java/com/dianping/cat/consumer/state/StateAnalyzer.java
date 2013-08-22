@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.DomainManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -66,14 +67,18 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		
 			for (String key : totals.keySet()) {
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
+				Detail detail = domain.findOrCreateDetail(start);
 				if(totals.containsKey(key)){
 					domain.setTotal(totals.get(key) + domain.getTotal());
+					detail.setTotal(totals.get(key));
 				}
 				if(totalLosses.containsKey(key)){
 					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
+					detail.setTotalLoss(totalLosses.get(key));
 				}
 				if(sizes.containsKey(key)){
 					domain.setSize(sizes.get(key) + domain.getSize());
+					detail.setSize(sizes.get(key));
 				}
 			}
 			
