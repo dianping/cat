@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="utilization-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="machine-number" value-type="int" />
+    <attribute name="url-count" value-type="int" />
+    <attribute name="url-response-time" value-type="double" />
+    <attribute name="sql-count" value-type="int" />
+    <attribute name="pigeon-call-count" value-type="int" />
+    <attribute name="swallow-call-count" value-type="int" />
+    <attribute name="memcache-count" value-type="int" />
+  </entity>
+</model>
+

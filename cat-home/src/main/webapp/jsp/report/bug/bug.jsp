@@ -12,10 +12,10 @@
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
 <script type="text/javascript">
-		$(document).ready(function() {
-			$('#bug').addClass('active');
-		});
-	</script>
+	$(document).ready(function() {
+		$('#bug').addClass('active');
+	});
+</script>
 <div class="report">
 	<table class="header">
 		<tr>

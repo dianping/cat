@@ -1,8 +1,9 @@
 package com.dianping.cat.report.page.metric;
 
 public enum JspFile {
-	VIEW("/jsp/report/metric.jsp"),
-
+	METRIC("/jsp/report/metric/metric.jsp"),
+	
+	DASHBOARD("/jsp/report/metric/dashboard.jsp"),
 	;
 
 	private String m_path;

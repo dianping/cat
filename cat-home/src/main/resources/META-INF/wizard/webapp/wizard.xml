@@ -44,7 +44,7 @@
          <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp">
             <description>Top</description>
          </page>
-         <page name="metric" title="Metric" path="metric">
+         <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>
          <page name="jsError" title="JsError" path="jsError">

@@ -5,12 +5,14 @@ import java.text.SimpleDateFormat;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.DomainManager;
 
 public class ServiceBuilderTest  extends ComponentTestCase{
 	
 	@Test
 	public void testHourlyReport() throws Exception{
+		Cat.initialize("192.168.7.43");
 		ServiceReportBuilder builder = lookup(ServiceReportBuilder.class);
 		DomainManager manager = lookup(DomainManager.class);
 		
