@@ -8,7 +8,7 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.transform.DefaultSaxParser;
 
 
-public class ServiceReportTest {
+public class ServiceReportMergerTest {
 	@Test
 	public void testServiceReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("ServiceReportOld.xml"), "utf-8");
