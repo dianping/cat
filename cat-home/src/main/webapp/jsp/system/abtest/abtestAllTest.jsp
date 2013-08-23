@@ -81,21 +81,21 @@
                <li class="nav-header">ABTest Status</li>
                <li class="divider" />
                <li ${payload.status eq 'created' ? ' class="selected"' : ''}><a href="?status=created"> <img height="12"
-                     width="12" src="${res.img.local['CREATED_black_small.png']}"> created <span class="badge statusSpan">${model.createdCount}</span>
+                     width="12" src="${res.img.local['CREATED_black_small.png']}"> created <span class="badge statusSpan">${model.listViewModel.createdCount}</span>
                </a></li>
                <li ${payload.status eq 'ready' ? ' class="selected"' : ''}><a href="?status=ready"> <img height="12"
-                     width="12" src="${res.img.local['READY_black_small.png']}"> ready to start <span class="badge statusSpan">${model.readyCount}</span>
+                     width="12" src="${res.img.local['READY_black_small.png']}"> ready to start <span class="badge statusSpan">${model.listViewModel.readyCount}</span>
                </a></li>
                <li ${payload.status eq 'running' ? ' class="selected"' : ''}><a href="?status=running"> <img height="12"
-                     width="12" src="${res.img.local['RUNNING_black_small.png']}"> running <span class="badge statusSpan">${model.runningCount}</span>
+                     width="12" src="${res.img.local['RUNNING_black_small.png']}"> running <span class="badge statusSpan">${model.listViewModel.runningCount}</span>
                </a></li>
                <li ${payload.status eq 'terminated' ? ' class="selected"' : ''}><a href="?status=terminated"> <img
                      height="12" width="12" src="${res.img.local['STOPPED_black_small.png']}"> terminated <span
-                     class="badge statusSpan">${model.terminatedCount}</span>
+                     class="badge statusSpan">${model.listViewModel.terminatedCount}</span>
                </a></li>
                <li ${payload.status eq 'suspended' ? ' class="selected"' : ''}><a href="?status=suspended"> <img
                      height="12" width="12" src="${res.img.local['PAUSED_black_small.png']}"> suspended <span
-                     class="badge statusSpan">${model.suspendedCount}</span>
+                     class="badge statusSpan">${model.listViewModel.suspendedCount}</span>
                </a></li>
             </ul>
          </div>
@@ -150,12 +150,12 @@
                </tr>
             </thead>
             <tbody>
-               <c:forEach var="item" items="${model.reports}">
+               <c:forEach var="item" items="${model.listViewModel.items}">
                   <tr class="middle center rowlink">
                      <td class="nolink" style="padding-bottom: 8px"><input type="checkbox" /></td>
                      <td style="display: none;">${item.run.id}</td>
                      <td style="font-size: 15px; font-weight: bold;">${item.run.id}</td>
-                     <td><a href="abtest?op=detail&id=${item.run.id}">${item.entity.name}</a></td>
+                     <td><a href="abtest?op=detail&id=${item.run.id}">${item.abtest.name}</a></td>
                      <c:choose>
                         <c:when test="${fn:length(item.run.domains) > 20}">
                           <td title="${item.run.domains }">${fn:substring(item.run.domains,0,20)}...</td>
@@ -216,16 +216,16 @@
                   <fmt:parseNumber var="beginPage" integerOnly="true" value="${beginPage - 1}" />
                </c:if>
                <c:forEach var="pageNum" step="1"
-                  begin="${(beginPage * 5 + 1)<= model.totalPages ? (beginPage * 5 + 1) : model.totalPages }"
-                  end="${(beginPage + 1) * 5 <= model.totalPages ? (beginPage + 1) * 5 : model.totalPages}">
+                  begin="${(beginPage * 5 + 1)<= model.listViewModel.totalPages ? (beginPage * 5 + 1) : model.listViewModel.totalPages }"
+                  end="${(beginPage + 1) * 5 <= model.listViewModel.totalPages ? (beginPage + 1) * 5 : model.listViewModel.totalPages}">
                   <li ${payload.pageNum == pageNum ? ' class="disabled"' : ''}><a
                      href="?status=${payload.status}&pageNum=${pageNum}">${pageNum}</a></li>
                </c:forEach>
-               <li id="next" ${payload.pageNum >= model.totalPages ? ' class="disabled"' : ''}><a
-                  href="?status=${payload.status}&pageNum=${payload.pageNum < model.totalPages ? (payload.pageNum + 1) : model.totalPages}">Next
+               <li id="next" ${payload.pageNum >= model.listViewModel.totalPages ? ' class="disabled"' : ''}><a
+                  href="?status=${payload.status}&pageNum=${payload.pageNum < model.listViewModel.totalPages ? (payload.pageNum + 1) : model.listViewModel.totalPages}">Next
                      &rarr;</a></li>
-               <li ${payload.pageNum >= model.totalPages ? ' class="disabled"' : ''}><a
-                  href="?status=${payload.status}&pageNum=${model.totalPages}">Last</a></li>
+               <li ${payload.pageNum >= model.listViewModel.totalPages ? ' class="disabled"' : ''}><a
+                  href="?status=${payload.status}&pageNum=${model.listViewModel.totalPages}">Last</a></li>
             </ul>
          </div>
       </div>

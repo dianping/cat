@@ -496,6 +496,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.abtest.ABTestReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
 			<requirements>
@@ -528,6 +540,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1275,6 +1290,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>abtest-report</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>abtest-report</logical-table-name>
+				<physical-table-name>abtest_report</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>abtest-run</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1296,6 +1321,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
 			<implementation>com.dianping.cat.home.dal.abtest.AbtestDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+			<implementation>com.dianping.cat.home.dal.abtest.AbtestReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1370,6 +1404,25 @@
 		<component>
 			<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
 			<implementation>com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.ListViewHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.ListViewHandler</implementation>
+			<configuration>
+				<pageSize>10</pageSize>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
@@ -2772,6 +2825,12 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.ListViewHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2813,6 +2872,25 @@
 		<component>
 			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
 			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.ListViewHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.ListViewHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+				</requirement>
+				<requirement>
+					<role>int</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>

@@ -4,9 +4,9 @@
     <attribute name="runId" value-type="int" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="group" type="list" names="groups" />
+    <entity-ref name="variation" type="list" names="variations" />
   </entity>
-  <entity name="group">
+  <entity name="variation">
     <attribute name="name" value-type="String" />
     <entity-ref name="goal" type="list" names="goals" />
   </entity>
@@ -14,7 +14,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="count" value-type="int" />
-    <attribute name="sum" value-type="int" />
+    <attribute name="sum" value-type="double" />
     <attribute name="avg" value-type="double" />
   </entity>
 </model>

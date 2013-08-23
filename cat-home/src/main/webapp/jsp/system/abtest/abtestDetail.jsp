@@ -44,9 +44,9 @@ div.controls input {
          </h3>
          <ul class="nav nav-tabs">
             <li><a href="?op=report&id=${payload.id }"> <img style="vertical-align: text-bottom;" height="15" width="15"
-                  src="${res.img.local['star_black_small.png']}"> Summary
+    <%--               src="${res.img.local['star_black_small.png']}"> Summary
             </a></li>
-            <li><a href="#detail"> <img style="vertical-align: text-bottom;" height="15" width="15"
+            <li><a href="#detail"> <img style="vertical-align: text-bottom;" height="15" width="15" --%>
                   src="${res.img.local['details_black_small.png']}"> Detail Report
             </a></li>
             <li class="active"><a href="?op=detail&id=${payload.id }"> <img style="vertical-align: text-bottom;"

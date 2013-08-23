@@ -11,6 +11,8 @@ import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestRunDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.system.page.abtest.GroupStrategyParser;
+import com.dianping.cat.system.page.abtest.ListViewHandler;
+import com.dianping.cat.system.page.abtest.ReportHandler;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
 import com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
@@ -26,6 +28,10 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(GroupStrategyParser.class));
 
 		all.add(C(ABTestAdvisor.class, DefaultABTestAdvisor.class));
+
+		all.add(C(ListViewHandler.class).req(AbtestDao.class).req(AbtestRunDao.class).config(E("pageSize").value("10")));
+		
+		all.add(C(ReportHandler.class));
 
 		all.add(C(ABTestService.class, ABTestServiceImpl.class).req(AbtestDao.class).req(AbtestRunDao.class)
 		      .req(GroupStrategyDao.class).req(ProjectDao.class).req(GroupStrategyParser.class)

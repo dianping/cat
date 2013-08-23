@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.home.dal.abtest.AbtestReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -23,6 +24,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
@@ -106,13 +108,15 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
+		all.add(C(ABTestReportBuilder.class).req(ReportService.class, AbtestReportDao.class));
+
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class,
 		            ProblemReportBuilder.class //
 		            , HeartbeatReportBuilder.class, MatrixReportBuilder.class,
 		            CrossReportBuilder.class //
 		            , SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
-		            MetricBaselineReportBuilder.class));
+		            MetricBaselineReportBuilder.class, ABTestReportBuilder.class));
 
 		return all;
 	}

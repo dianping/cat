@@ -4,13 +4,13 @@
 	enable-native-builder="true" enable-base-visitor="true">
 
 	<entity name="abtest-report" root="true">
-		<attribute name="runId" value-type="int" />
+		<attribute name="runId" value-type="String" />
 		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-		<entity-ref name="group" type="list" names="groups"
+		<entity-ref name="variation" type="list" names="variations"
 			method-find-or-create="true" />
 	</entity>
-	<entity name="group">
+	<entity name="variation">
 		<attribute name="name" value-type="String" key="true" />
 		<entity-ref name="goal" type="list" names="goals"
 			method-find-or-create="true" />
@@ -18,9 +18,9 @@
 	<entity name="goal">
 		<attribute name="name" value-type="String" key="true" />
 		<attribute name="type" value-type="String" />
-		<attribute name="count" value-type="int" />
-		<attribute name="sum" value-type="int" />
-		<attribute name="avg" value-type="double" />
+		<attribute name="count" value-type="int" default-value="0" />
+		<attribute name="sum" value-type="double" default-value="0.0" />
+		<attribute name="avg" value-type="double" default-value="0.0" />
 	</entity>
 </model>
 

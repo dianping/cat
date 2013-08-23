@@ -46,7 +46,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.abtest.conditions.URLScriptProvider;
-import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
+import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvice;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
@@ -81,9 +81,13 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 	@Inject
 	private ABTestAdvisor m_advisor;
 
-	private Logger m_logger;
+	@Inject
+	private ListViewHandler m_listViewHandler;
+	
+	@Inject
+	private ReportHandler m_reportHandler;
 
-	private final int m_pageSize = 10;
+	private Logger m_logger;
 
 	private Configuration m_configuration;
 
@@ -235,10 +239,10 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 	private void handleCaculatorAction(Context ctx, Payload payload) {
 		float actualCtr = payload.getConversionRate() / 100.00f;
-		
+
 		m_advisor.setCurrentPv(payload.getPv());
-		List<ABTestAdvice> advices = m_advisor.offer(actualCtr, actualCtr + 0.10f); 
-		
+		List<ABTestAdvice> advices = m_advisor.offer(actualCtr, actualCtr + 0.10f);
+
 		ctx.setAdvice(advices);
 	}
 
@@ -251,7 +255,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 		switch (action) {
 		case VIEW:
-			renderListModel(model, payload);
+			m_listViewHandler.handle(ctx, model, payload);
 			break;
 		case CREATE:
 			renderCreateModel(model);
@@ -260,7 +264,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			renderDetailModel(ctx, model, payload);
 			break;
 		case REPORT:
-			renderReportModel(ctx, model, payload);
+			m_reportHandler.handle(ctx, model, payload);
 			break;
 		case MODEL:
 			renderModel(model, payload);
@@ -360,87 +364,20 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 	private void renderDetailModel(Context ctx, Model model, Payload payload) {
 		renderCreateModel(model);
-		renderReportModel(ctx, model, payload);
-	}
-
-	private void renderListModel(Model model, Payload payload) {
-		List<ABTestReport> reports = new ArrayList<ABTestReport>();
-		AbtestStatus status = AbtestStatus.getByName(payload.getStatus(), null);
-		Date now = new Date();
-
-		List<ABTestReport> filterReports = new ArrayList<ABTestReport>();
-		List<ABTestReport> totalReports = new ArrayList<ABTestReport>();
-		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
-
-		List<AbtestRun> runs = new ArrayList<AbtestRun>();
+		int runId = payload.getId();
 
 		try {
-			runs = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
+			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
 
-			for (AbtestRun run : runs) {
-				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
-				ABTestReport report = new ABTestReport(abtest, run, now);
+			AbtestItem item = new AbtestItem(abtest, run);
 
-				totalReports.add(report);
-				if (status != null && report.getStatus() == status) {
-					filterReports.add(report);
-				}
-				switch (report.getStatus()) {
-				case CREATED:
-					createdCount++;
-					break;
-				case READY:
-					readyCount++;
-					break;
-				case RUNNING:
-					runningCount++;
-					break;
-				case TERMINATED:
-					terminatedCount++;
-					break;
-				case SUSPENDED:
-					suspendedCount++;
-					break;
-				}
-			}
-		} catch (Throwable e) {
+			model.setAbtest(item);
+		} catch (DalException e) {
 			Cat.logError(e);
+			m_logger.error("Error when fetching abtest", e);
+			ctx.setException(e);
 		}
-
-		model.setCreatedCount(createdCount);
-		model.setReadyCount(readyCount);
-		model.setRunningCount(runningCount);
-		model.setTerminatedCount(terminatedCount);
-		model.setSuspendedCount(suspendedCount);
-
-		if (status != null) {
-			totalReports = null;
-			totalReports = filterReports;
-		}
-
-		int totalSize = totalReports.size();
-		int totalPages = totalSize % m_pageSize == 0 ? (totalSize / m_pageSize) : (totalSize / m_pageSize + 1);
-
-		// safe guarder for pageNum
-		if (payload.getPageNum() >= totalPages) {
-			if (totalPages == 0) {
-				payload.setPageNum(1);
-			} else {
-				payload.setPageNum(totalPages);
-			}
-		} else if (payload.getPageNum() <= 0) {
-			payload.setPageNum(1);
-		}
-
-		int fromIndex = (payload.getPageNum() - 1) * m_pageSize;
-		int toIndex = (fromIndex + m_pageSize) <= totalSize ? (fromIndex + m_pageSize) : totalSize;
-		for (int i = fromIndex; i < toIndex; i++) {
-			reports.add(totalReports.get(i));
-		}
-
-		model.setTotalPages(totalPages);
-		model.setDate(now);
-		model.setReports(reports);
 	}
 
 	private void renderModel(Model model, Payload payload) {
@@ -479,21 +416,6 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		AbtestModel abtestModel = m_service.getAbtestModelByRunID(payload.getId());
 
 		model.setAbtestModel(abtestModel);
-	}
-
-	private void renderReportModel(Context ctx, Model model, Payload payload) {
-		try {
-			int runId = payload.getId();
-			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
-			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
-			AbtestDaoModel abtestModel = new AbtestDaoModel(abtest, run);
-
-			model.setAbtest(abtestModel);
-		} catch (DalException e) {
-			Cat.logError(e);
-			m_logger.error("Error when fetching abtest", e);
-			ctx.setException(e);
-		}
 	}
 
 	/**

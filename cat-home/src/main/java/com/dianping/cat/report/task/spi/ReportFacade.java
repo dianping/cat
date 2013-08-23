@@ -13,6 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ReportType;
 import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
@@ -63,6 +64,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 	
 	@Inject
 	private MetricBaselineReportBuilder m_metricBaselineReportBuilder;
+	
+	@Inject
+	private ABTestReportBuilder m_abtestReportBuilder;
 
 	private Logger m_logger;
 
@@ -133,6 +137,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("state", m_stateReportBuilder);
 		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
 		m_reportBuilders.put("metric", m_metricBaselineReportBuilder);
+		m_reportBuilders.put("abtest", m_abtestReportBuilder);
 	}
 
 }
