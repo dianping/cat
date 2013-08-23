@@ -158,6 +158,5 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public boolean validate(String domain) {
 		return !domain.equals("PhoenixAgent") && !domain.equals(ReportConstants.FRONT_END);
 	}
-
 	
 }

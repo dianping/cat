@@ -84,8 +84,8 @@ public class Handler implements PageHandler<Context> {
 			List<Message> messages = t.getChildren();
 
 			for (Message temp : messages) {
-				String type = temp.getType();
-				if (type.equals("URL.Server") || type.equals("ClientInfo")) {
+				String name = temp.getName();
+				if (name.equals("URL.Server") || name.equals("ClientInfo")) {
 					m_data = temp.getData().toString();
 					m_referer = parseValue("Referer", m_data);
 
