@@ -228,28 +228,14 @@ tr.even th {
 	text-align:left;
 }
 
-.problem tr.odd td {
-	background-color: #eee;
-	font-size: small;
-	white-space: nowrap;
-	vertical-align: top;
-}
-
-.problem tr.even td {
-	background-color: white;
-	font-size: small;
-	white-space: nowrap;
-	vertical-align: top;
-}
-
 .problem td.odd  {
 	background-color: #eee;
-	white-space: nowrap;
+	word-break:break-all;
 }
 
 .problem td.even  {
 	background-color: white;
-	white-space: nowrap;
+	word-break:break-all;
 }
 
 a.error {
@@ -394,8 +380,8 @@ a.abtest-heartbeat{
 }
 
 .metricGraph {
-	width: 560px;
-	height: 300px;
+	width: 600px;
+	height: 250px;
 }
 
 .pieChart {
@@ -406,4 +392,8 @@ a.abtest-heartbeat{
 }
 .error{
 	color:red;
+}
+
+.dashboard{
+	background: url('../img/checked.gif') no-repeat;
 }

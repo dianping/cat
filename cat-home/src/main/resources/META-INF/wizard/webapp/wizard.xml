@@ -38,13 +38,13 @@
          <page name="cache" title="Cache" path="cache" view="/jsp/report/cache/cache.jsp">
             <description>Cache</description>
          </page>
-         <page name="state" title="State" path="state" view="/jsp/report/database/database.jsp">
+         <page name="state" title="State" path="state" view="/jsp/report/state/state.jsp">
             <description>State</description>
          </page>
          <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp">
             <description>Top</description>
          </page>
-         <page name="metric" title="Metric" path="metric">
+         <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>
          <page name="jsError" title="JsError" path="jsError">
@@ -55,6 +55,9 @@
          </page>
          <page name="externalError" title="externalError" path="externalError" template="default">
             <description>ExternalError</description>
+         </page>
+         <page name="bug" title="Statistics" path="bug" view="/jsp/report/bug/bug.jsp" template="default">
+            <description>Bug</description>
          </page>
       </module>
       <module name="system" path="s" default="false">
@@ -69,6 +72,9 @@
          </page>
          <page name="abtest" title="Abtest" path="abtest" view="/jsp/system/abtest/abtest.jsp">
             <description>Abtest</description>
+         </page>
+         <page name="plugin" title="Plugin" path="plugin" view="/jsp/system/plugin/plugin.jsp">
+            <description>Plugin</description>
          </page>
       </module>
    </webapp>

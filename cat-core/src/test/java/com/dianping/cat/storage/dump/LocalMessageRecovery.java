@@ -1,9 +1,6 @@
 package com.dianping.cat.storage.dump;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -21,38 +18,19 @@ public class LocalMessageRecovery extends ComponentTestCase {
 
 	@Test
 	public void test()throws Exception{
-		recovery("10.1.6.126");
 		recovery("10.1.6.108");
-		recovery("10.1.6.145");
 	}
 	
 	public void recovery(String ip) throws Exception {
 		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
-		File dataFile = new File("/Users/youyong/PayOrder-10.1.7.123-"+ip);
+		File dataFile = new File("/Users/youyong/midasMerchantServerWorker-10.1.8.77-"+ip);
 		MessageBlockReader reader = new MessageBlockReader(dataFile);
-		File writeFile = new File("/Users/youyong/result");
-		OutputStream out = new FileOutputStream(writeFile);
-
-		String target =null;
-		for (int i = 0; i < 1000000; i++) {
-
-			try {
-				String message = readMessage(reader, i);
-				if(message.indexOf("mid=")>-1){
-					target = message;
-					
-					System.out.println(target);
-				}
-			} catch(EOFException eof){
-				break;
-			}
-			catch (Exception e) {
-				System.out.println(e);
-			}
-		}
+		String message = readMessage(reader, 27);
 		
-		System.out.println(target);
-		out.close();
+		String id="midasMerchantServerWorker-0a01084d-382328-27";
+		if(message.indexOf(id)>-1){
+			System.out.println(message);
+		}
 	}
 
 	private String readMessage(MessageBlockReader reader, int index) throws Exception {

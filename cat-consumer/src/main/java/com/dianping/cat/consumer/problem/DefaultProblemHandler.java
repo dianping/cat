@@ -25,39 +25,29 @@ public class DefaultProblemHandler extends ProblemHandler {
 	private Set<String> m_failureTypes;
 
 	@Override
-	public int handle(Machine machine, MessageTree tree) {
-		int count = 0;
+	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			count += processTransaction(machine, (Transaction) message, tree);
+			processTransaction(machine, (Transaction) message, tree);
 		} else if (message instanceof Event) {
-			count += processEvent(machine, (Event) message, tree);
+			processEvent(machine, (Event) message, tree);
 		} else if (message instanceof Heartbeat) {
-			count += processHeartbeat(machine, (Heartbeat) message, tree);
+			processHeartbeat(machine, (Heartbeat) message, tree);
 		}
-
-		return count;
 	}
 
-	private int processEvent(Machine machine, Event message, MessageTree tree) {
-		int count = 0;
-
+	private void processEvent(Machine machine, Event message, MessageTree tree) {
 		if (!message.getStatus().equals(Message.SUCCESS) && m_errorTypes.contains(message.getType())) {
 			String type = ProblemType.ERROR.getName();
 			String status = message.getName();
 
 			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
-
-			count++;
 		}
-
-		return count;
 	}
 
-	private int processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
-		int count = 0;
+	private void processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		String transactionStatus = transaction.getStatus();
 
 		if (!transactionStatus.equals(Transaction.SUCCESS)) {
@@ -78,33 +68,28 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
-
-			count++;
 		}
 
 		List<Message> children = transaction.getChildren();
 
 		for (Message message : children) {
 			if (message instanceof Transaction) {
-				count += processTransaction(machine, (Transaction) message, tree);
+				processTransaction(machine, (Transaction) message, tree);
 			} else if (message instanceof Event) {
-				count += processEvent(machine, (Event) message, tree);
+				processEvent(machine, (Event) message, tree);
 			} else if (message instanceof Heartbeat) {
-				count += processHeartbeat(machine, (Heartbeat) message, tree);
+				processHeartbeat(machine, (Heartbeat) message, tree);
 			}
 		}
-
-		return count;
 	}
 
-	private int processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
-		//String type = ProblemType.HEARTBEAT.getName();
+	private void processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
+		// String type = ProblemType.HEARTBEAT.getName();
 		String type = heartbeat.getType().toLowerCase();
 		String status = heartbeat.getName();
 		Entry entry = findOrCreateEntry(machine, type, status);
 
 		updateEntry(tree, entry, 0);
-		return 1;
 	}
 
 	public void setErrorType(String type) {

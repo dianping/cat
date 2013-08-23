@@ -83,6 +83,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.BugConfigManager</role>
+			<implementation>com.dianping.cat.system.config.BugConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -433,6 +442,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.bug.BugReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.service.ServiceReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.DomainManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
@@ -537,6 +567,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
@@ -1077,8 +1113,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
@@ -1095,15 +1131,21 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
+<<<<<<< HEAD
 					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
 					<user>root</user>
 					<password></password>
+=======
+					<url>jdbc:mysql://192.168.7.43:3306/cat</url>
+					<user>dpcom_cat</user>
+					<password>password</password>
+>>>>>>> 2903ee0deab79b8a168e1e5141753f0b63d56fd6
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1366,7 +1408,7 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://192.168.8.44:3306/hawk</URL>
+					<url>jdbc:mysql://192.168.8.44:3306/hawk</url>
 					<user>hawk</user>
 					<password>hawk</password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
@@ -1374,7 +1416,7 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2537,6 +2579,45 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.bug.Handler</role>
+			<implementation>com.dianping.cat.report.page.bug.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.bug.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.BugConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.bug.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.bug.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.BugConfigManager</role>
+			<implementation>com.dianping.cat.system.config.BugConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -2778,6 +2859,9 @@
 					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.BugConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 			</requirements>
@@ -2870,6 +2954,7 @@
 			</requirements>
 		</component>
 		<component>
+<<<<<<< HEAD
 			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
 			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
 		</component>
@@ -2885,12 +2970,29 @@
 				</requirement>
 				<requirement>
 					<role>int</role>
+=======
+			<role>com.dianping.cat.system.page.plugin.Handler</role>
+			<implementation>com.dianping.cat.system.page.plugin.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.plugin.JspViewer</role>
+>>>>>>> 2903ee0deab79b8a168e1e5141753f0b63d56fd6
 				</requirement>
 			</requirements>
 		</component>
 		<component>
+<<<<<<< HEAD
 			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
 			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
+=======
+			<role>com.dianping.cat.system.page.plugin.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.plugin.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+>>>>>>> 2903ee0deab79b8a168e1e5141753f0b63d56fd6
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>

@@ -255,7 +255,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			event.getChannel().close();
 		}
-
+		
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 			ChannelBuffer buf = (ChannelBuffer) event.getMessage();

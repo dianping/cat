@@ -29,7 +29,9 @@ public enum JspFile {
 	
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 	
-	EXCEPTION_THRESHOLD_CONFIG("/jsp/system/exception/exceptionThresholdConfig.jsp")
+	EXCEPTION_THRESHOLD_CONFIG("/jsp/system/exception/exceptionThresholdConfig.jsp"),
+	
+	BUG_CONFIG_UPDATE("/jsp/system/bug/bugConfig.jsp"),
 	;
 
 	private String m_path;

@@ -26,12 +26,51 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.report.task.bug.BugReportMerger;
 
 public class DailyReportServiceImpl implements DailyReportService {
 
 	@Inject
 	private DailyReportDao m_dailyReportDao;
+
+	@Override
+	public boolean insert(DailyReport report) {
+		try {
+			m_dailyReportDao.insert(report);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public BugReport queryBugReport(String domain, Date start, Date end) {
+		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		String name = "bug";
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
+			try {
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
+				      DailyReportEntity.READSET_FULL);
+				String xml = report.getContent();
+				BugReport reportModel = com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		BugReport bugReport = merger.getBugReport();
+
+		bugReport.setStartTime(start);
+		bugReport.setEndTime(end);
+		return bugReport;
+	}
 
 	@Override
 	public CrossReport queryCrossReport(String domain, Date start, Date end) {
@@ -163,6 +202,30 @@ public class DailyReportServiceImpl implements DailyReportService {
 	}
 
 	@Override
+	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		String name = "service";
+		ServiceReport reportModel = new ServiceReport();
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
+			try {
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
+				      DailyReportEntity.READSET_FULL);
+				String xml = report.getContent();
+
+				reportModel = com.dianping.cat.home.service.transform.DefaultSaxParser.parse(xml);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		ServiceReport serviceReport = reportModel;
+
+		serviceReport.setStartTime(start);
+		serviceReport.setEndTime(end);
+		return serviceReport;
+	}
+
+	@Override
 	public SqlReport querySqlReport(String domain, Date start, Date end) {
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
 
@@ -240,16 +303,5 @@ public class DailyReportServiceImpl implements DailyReportService {
 		transactionReport.setEndTime(end);
 		return transactionReport;
 	}
-
-	@Override
-   public boolean insert(DailyReport report) {
-		try {
-	      m_dailyReportDao.insert(report);
-	      return true;
-      } catch (DalException e) {
-      	Cat.logError(e);
-			return false;
-      }
-   }
 
 }

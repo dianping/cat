@@ -3,6 +3,7 @@ package com.dianping.cat.consumer;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private Set<String> m_domainsInCat = new HashSet<String>();
 
-	private Set<String> m_ipsInCat = new HashSet<String>();
+	private Map<String, Hostinfo> m_ipsInCat = new ConcurrentHashMap<String, Hostinfo>();
 
 	private Logger m_logger;
 
@@ -64,8 +65,8 @@ public class DomainManager implements Initializable, LogEnabled {
 		return m_domainsInCat.contains(domain);
 	}
 
-	public boolean contaninsIpInCat(String ip) {
-		return m_ipsInCat.contains(ip);
+	public Hostinfo queryHostInfoByIp(String ip) {
+		return m_ipsInCat.get(ip);
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class DomainManager implements Initializable, LogEnabled {
 			info.setIp(ip);
 			m_hostInfoDao.insert(info);
 			m_domainsInCat.add(domain);
-			m_ipsInCat.add(ip);
+			m_ipsInCat.put(ip, info);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -114,17 +115,16 @@ public class DomainManager implements Initializable, LogEnabled {
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
 					m_domainsInCat.add(info.getDomain());
-					m_ipsInCat.add(info.getIp());
+					m_ipsInCat.put(info.getIp(), info);
 				}
-				
+
 				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-				for(Project project:projects){
+				for (Project project : projects) {
 					m_domainsInCat.add(project.getDomain());
 				}
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
-
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
 		}
 	}
@@ -242,6 +242,24 @@ public class DomainManager implements Initializable, LogEnabled {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	public boolean update(int id, String domain, String ip) {
+		try {
+			Hostinfo info = m_hostInfoDao.createLocal();
+
+			info.setId(id);
+			info.setDomain(domain);
+			info.setIp(ip);
+			info.setLastModifiedDate(new Date());
+			m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
+			m_domainsInCat.add(domain);
+			m_ipsInCat.put(ip, info);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return false;
 	}
 
 }

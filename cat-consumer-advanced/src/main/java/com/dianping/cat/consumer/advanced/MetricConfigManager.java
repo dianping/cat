@@ -174,6 +174,8 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				config.setName(CONFIG_NAME);
 				config.setContent(getMetricConfig().toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+				
+				System.out.println(config.getContent());
 			} catch (Exception e) {
 				Cat.logError(e);
 				return false;

@@ -11,6 +11,7 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.service.ReportConstants;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	public static final long MINUTE = 60 * 1000L;
@@ -152,6 +153,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		synchronized (this) {
 			m_active = false;
 		}
+	}
+	
+	public boolean validate(String domain) {
+		return !domain.equals("PhoenixAgent") && !domain.equals(ReportConstants.FRONT_END);
 	}
 	
 }

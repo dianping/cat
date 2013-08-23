@@ -156,5 +156,6 @@ public class MessageIdFactoryTest {
 			offset++;
 			len--;
 		}
+		
 	}
 }

@@ -9,6 +9,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -51,9 +52,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					try {
 						long delta = Long.parseLong(last.getData().toString());
 
-						pair.setValue(t.getDurationInMicros() + delta);
+						pair.setValue(delta);
 					} catch (Exception e) {
-						// ignore it
+						Cat.logError(e);
 					}
 				}
 			}
@@ -109,7 +110,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		report.addIp(tree.getIpAddress());
 
 		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+			Transaction root = (Transaction) message;
+
+			processTransaction(report, tree, root);
 		}
 	}
 
@@ -134,7 +137,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.setSum(range.getSum() + d);
 	}
 
-	void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
+	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		if (shouldDiscard(t)) {
 			return;
 		}

@@ -76,7 +76,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	void flush(MessageTree tree) {
+	public void flush(MessageTree tree) {
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && !shouldThrottle(tree)) {
@@ -92,6 +92,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				m_logger.info("Cat Message is throttled! Times:" + m_throttleTimes);
 			}
 		}
+	}
+
+	public ClientConfigManager getConfigManager() {
+		return m_configManager;
 	}
 
 	Context getContext() {
@@ -271,13 +275,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_length++;
 		}
 
-		private void adjustForTruncatedMessage(Transaction root) {
+		private void adjustForTruncatedTransaction(Transaction root) {
 			DefaultEvent next = new DefaultEvent("TruncatedTransaction", "TotalDuration");
 			long actualDurationInMicros = m_totalDurationInMicros + root.getDurationInMicros();
 
 			next.addData(String.valueOf(actualDurationInMicros));
 			next.setStatus(Message.SUCCESS);
 			root.addChild(next);
+
+			m_totalDurationInMicros = 0;
 		}
 
 		/**
@@ -308,7 +314,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					m_tree.setMessage(null);
 
 					if (m_totalDurationInMicros > 0) {
-						adjustForTruncatedMessage(current);
+						adjustForTruncatedTransaction((Transaction) tree.getMessage());
 					}
 
 					manager.flush(tree);
@@ -367,7 +373,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				m_tree.setMessage(transaction);
 			}
-
 			m_stack.push(transaction);
 		}
 
@@ -408,13 +413,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				MessageTree tree = m_tree.copy();
 
 				tree.setMessage(target);
-				manager.flush(tree);
 
+				manager.flush(tree);
 				m_tree.setMessageId(childId);
 				m_tree.setParentMessageId(id);
 				m_tree.setRootMessageId(rootId != null ? rootId : id);
 				m_length = m_stack.size();
-				m_totalDurationInMicros += source.getDurationInMicros();
+				m_totalDurationInMicros = m_totalDurationInMicros + target.getDurationInMicros();
 			}
 		}
 

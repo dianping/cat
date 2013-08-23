@@ -90,15 +90,39 @@
 	            "1":"good",
 	            "2":"warning",
 	            "3":"error"
-	            },
+	        },
+	        format: {
+	            团购: {
+	                "colInside": '5'
+	            },支付: {
+	                "colInside": '3'
+	            },会员卡: {
+	                "colInside": '2'
+	            },预约预定: {
+	                "colInside": '4'
+	            },商户: {
+	                "colInside": '4'
+	            },广告: {
+	                "colInside": '4'
+	            },用户中心: {
+	                "colInside": '4'
+	            },移动: {
+	                "colInside": '4'
+	            },账号中心: {
+	                "colInside": '4'
+	            },社区: {
+	                "colInside": '4'
+	            }
+	        }, 
+	        
 			paddingInside:10,
 			col:3,
 			colInside:5,
 			//模块距上沿距离
-			paddingUp: 0,
+			paddingUp: 10,
 			//小方块间的间隔比率
-			blockPaddingRatio: 0.5,
-            leftTitlePaddingRatio: 0.5,
+			blockPaddingRatio: 0.2,
+            leftTitlePaddingRatio: 0.05,
 			showLeft: true,
 			showUp: false
 		});

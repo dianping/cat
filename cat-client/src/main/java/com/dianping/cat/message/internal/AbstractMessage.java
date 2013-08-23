@@ -99,9 +99,13 @@ public abstract class AbstractMessage implements Message {
 		return Message.SUCCESS.equals(m_status);
 	}
 
-	protected void setCompleted(boolean completed) {
+	public void setCompleted(boolean completed) {
 		m_completed = completed;
 	}
+
+	public void setName(String name) {
+   	m_name = name;
+   }
 
 	@Override
 	public void setStatus(String status) {
@@ -116,6 +120,10 @@ public abstract class AbstractMessage implements Message {
 	public void setTimestamp(long timestamp) {
 		m_timestampInMillis = timestamp;
 	}
+
+	public void setType(String type) {
+   	m_type = type;
+   }
 
 	@Override
 	public String toString() {

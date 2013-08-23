@@ -62,20 +62,17 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	}
 
 	@Override
-	public int handle(Machine machine, MessageTree tree) {
+	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
-		int count = 0;
 
-		count += processLongUrl(machine, tree);
-		count += processLongService(machine, tree);
+		 processLongUrl(machine, tree);
+		 processLongService(machine, tree);
 
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 
-			count = processTransaction(machine, transaction, tree);
+			processTransaction(machine, transaction, tree);
 		}
-
-		return count;
 	}
 
 	@Override
@@ -99,7 +96,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		}
 	}
 
-	private int processLongCache(Machine machine, Transaction transaction, MessageTree tree, int count) {
+	private void processLongCache(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = ((Transaction) transaction).getDurationInMillis();
 		long nomarizeDuration = computeLongDuration(duration, tree.getDomain(), m_defaultLongCacheDuration,
 		      m_longCacheThresholds);
@@ -110,13 +107,10 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
-			count++;
 		}
-		return count;
 	}
 
-	private int processLongService(Machine machine, MessageTree tree) {
-		int count = 0;
+	private void processLongService(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -134,15 +128,12 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 					Entry entry = findOrCreateEntry(machine, type, status);
 					updateEntry(tree, entry, (int) nomarizeDuration);
-					count++;
 				}
 			}
 		}
-
-		return count;
 	}
 
-	private int processLongCall(Machine machine, Transaction transaction, MessageTree tree, int count) {
+	private void processLongCall(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = transaction.getDurationInMillis();
 		String domain = tree.getDomain();
 
@@ -153,12 +144,10 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, (int) nomarizeDuration);
-			count++;
 		}
-		return count;
 	}
 
-	private int processLongSql(Machine machine, Transaction transaction, MessageTree tree, int count) {
+	private void processLongSql(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = transaction.getDurationInMillis();
 		String domain = tree.getDomain();
 
@@ -169,14 +158,11 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, (int) nomarizeDuration);
-			count++;
 		}
-		return count;
 	}
 
-	private int processLongUrl(Machine machine, MessageTree tree) {
+	private void processLongUrl(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
-		int count = 0;
 
 		if (message instanceof Transaction && "URL".equals(message.getType())) {
 
@@ -190,33 +176,28 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 				Entry entry = findOrCreateEntry(machine, type, status);
 				updateEntry(tree, entry, (int) nomarizeDuration);
-				count++;
 			}
 		}
-
-		return count;
 	}
 
-	private int processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
-		int count = 0;
+	private void processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		String transactionType = transaction.getType();
 
 		if (transactionType.startsWith("Cache.")) {
-			count = processLongCache(machine, transaction, tree, count);
+			processLongCache(machine, transaction, tree);
 		} else if (transactionType.equals("SQL")) {
-			count = processLongSql(machine, transaction, tree, count);
+			processLongSql(machine, transaction, tree);
 		} else if (transactionType.equals("Call") || transactionType.equals("PigeonCall")) {
-			count = processLongCall(machine, transaction, tree, count);
+			processLongCall(machine, transaction, tree);
 		}
 
 		List<Message> messageList = transaction.getChildren();
 
 		for (Message message : messageList) {
 			if (message instanceof Transaction) {
-				count += processTransaction(machine, (Transaction) message, tree);
+				 processTransaction(machine, (Transaction) message, tree);
 			}
 		}
-		return count;
 	}
 
 }

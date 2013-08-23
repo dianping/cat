@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta("transaction")
 public class Model extends AbstractReportModel<Action, Context> {
 	private DisplayNames m_displayNameReport;
 
@@ -29,6 +33,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_queryName;
 
+	@EntityMeta
 	private TransactionReport m_report;
 
 	private String m_responseTrend;

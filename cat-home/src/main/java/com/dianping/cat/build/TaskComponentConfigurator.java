@@ -7,6 +7,7 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
@@ -25,6 +26,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
+import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
@@ -39,6 +41,7 @@ import com.dianping.cat.report.task.metric.MetricPointParser;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
@@ -95,6 +98,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportService.class) //
 		      .req(HeartbeatGraphCreator.class));
 
+		all.add(C(BugReportBuilder.class).req(ReportService.class));
+
+		all.add(C(ServiceReportBuilder.class).req(ReportService.class, DomainManager.class));
+
 		all.add(C(MatrixReportBuilder.class).req(ReportService.class));
 
 		all.add(C(SqlReportBuilder.class).req(ReportService.class, SqlMerger.class));
@@ -110,7 +117,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ABTestReportBuilder.class).req(ReportService.class, AbtestReportDao.class));
 
-		all.add(C(ReportFacade.class)//
+		all.add(C(ReportFacade.class)
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class,
 		            ProblemReportBuilder.class //
 		            , HeartbeatReportBuilder.class, MatrixReportBuilder.class,

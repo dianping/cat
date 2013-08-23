@@ -38,9 +38,12 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
+import com.dianping.cat.report.task.bug.BugReportMerger;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 
@@ -49,6 +52,29 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 	@Inject
 	private BusinessReportDao m_businessReportDao;
+
+	@Override
+	public boolean insert(HourlyReport report) {
+		try {
+			m_reportDao.insert(report);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
+		HashSet<String> domains = new HashSet<String>();
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			domains.addAll(queryAllDomains(new Date(startTime)));
+		}
+		return domains;
+	}
 
 	private Set<String> queryAllDomains(Date start) {
 		Set<String> domains = new HashSet<String>();
@@ -67,15 +93,41 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
-	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
-		HashSet<String> domains = new HashSet<String>();
+	public BugReport queryBugReport(String domain, Date start, Date end) {
+		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
+		String name = "bug";
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			domains.addAll(queryAllDomains(new Date(startTime)));
+			List<HourlyReport> reports = null;
+			try {
+				reports = m_reportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
+				      HourlyReportEntity.READSET_FULL);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+			if (reports != null) {
+				for (HourlyReport report : reports) {
+					String xml = report.getContent();
+
+					try {
+						BugReport reportModel = com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(xml);
+						reportModel.accept(merger);
+					} catch (Exception e) {
+						Cat.logError(e);
+						Cat.getProducer().logEvent("ErrorXML", name, Event.SUCCESS,
+						      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+					}
+				}
+			}
 		}
-		return domains;
+		BugReport bugReport = merger.getBugReport();
+
+		bugReport.setStartTime(start);
+		bugReport.setEndTime(new Date(end.getTime() - 1));
+
+		return bugReport;
 	}
 
 	@Override
@@ -116,6 +168,44 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		Set<String> domains = queryAllDomainNames(start, end, "cross");
 		crossReport.getDomainNames().addAll(domains);
 		return crossReport;
+	}
+
+	@Override
+	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
+		DependencyReportMerger merger = new DependencyReportMerger(new DependencyReport(domain));
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		String name = "dependency";
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			List<HourlyReport> reports = null;
+			try {
+				reports = m_reportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
+				      HourlyReportEntity.READSET_FULL);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+			if (reports != null) {
+				for (HourlyReport report : reports) {
+					String xml = report.getContent();
+
+					try {
+						DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser
+						      .parse(xml);
+						reportModel.accept(merger);
+					} catch (Exception e) {
+						Cat.logError(e);
+						Cat.getProducer().logEvent("ErrorXML", name, Event.SUCCESS,
+						      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+					}
+				}
+			}
+		}
+		DependencyReport dependencyReport = merger.getDependencyReport();
+
+		dependencyReport.setStartTime(start);
+		dependencyReport.setEndTime(new Date(end.getTime() - 1));
+		return dependencyReport;
 	}
 
 	@Override
@@ -312,6 +402,43 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	@Override
+	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		String name = "service";
+		ServiceReport reportModel = null;
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			List<HourlyReport> reports = null;
+			try {
+				reports = m_reportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
+				      HourlyReportEntity.READSET_FULL);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+			if (reports != null && reports.size() > 0) {
+				HourlyReport report = reports.get(0);
+				String xml = report.getContent();
+				try {
+					reportModel = com.dianping.cat.home.service.transform.DefaultSaxParser.parse(xml);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", name, Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+				}
+			}
+		}
+		ServiceReport serviceReport = reportModel;
+
+		if (serviceReport == null) {
+			serviceReport = new ServiceReport();
+		}
+		serviceReport.setStartTime(start);
+		serviceReport.setEndTime(new Date(end.getTime() - 1));
+
+		return serviceReport;
+	}
+
+	@Override
 	public SqlReport querySqlReport(String domain, Date start, Date end) {
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
 		long startTime = start.getTime();
@@ -423,44 +550,6 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		topReport.setStartTime(start);
 		topReport.setEndTime(new Date(end.getTime() - 1));
 		return topReport;
-	}
-
-	@Override
-	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
-		DependencyReportMerger merger = new DependencyReportMerger(new DependencyReport(domain));
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		String name = "dependency";
-
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			List<HourlyReport> reports = null;
-			try {
-				reports = m_reportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
-				      HourlyReportEntity.READSET_FULL);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-			if (reports != null) {
-				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
-					try {
-						DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser
-						      .parse(xml);
-						reportModel.accept(merger);
-					} catch (Exception e) {
-						Cat.logError(e);
-						Cat.getProducer().logEvent("ErrorXML", name, Event.SUCCESS,
-						      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
-					}
-				}
-			}
-		}
-		DependencyReport dependencyReport = merger.getDependencyReport();
-
-		dependencyReport.setStartTime(start);
-		dependencyReport.setEndTime(new Date(end.getTime() - 1));
-		return dependencyReport;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportConstants;
@@ -173,20 +174,26 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
 		if (validate(domain)) {
 			if (!m_domainManager.containsDomainInCat(domain)) {
-				m_logger.info("inserting domain info " + domain);
 				m_domainManager.insertDomain(domain);
-				m_logger.info("inserted domain info " + domain);
 			}
-			if (!m_domainManager.contaninsIpInCat(ip)) {
-				m_logger.info("inserting domain info " + domain + " " + ip);
+			Hostinfo ipInfo = m_domainManager.queryHostInfoByIp(ip);
+
+			if (ipInfo == null) {
 				m_domainManager.insert(domain, ip);
-				m_logger.info("inserted domain info " + domain + " " + ip);
+			} else if (!ipInfo.getIp().equals(ip)) {
+				String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				// only work on online enviroment
+				if (localIp.startsWith("10.")) {
+					long current = System.currentTimeMillis();
+					long lastModifyTime = ipInfo.getLastModifiedDate().getTime();
+
+					if (current - lastModifyTime > ONE_HOUR) {
+						m_domainManager.update(ipInfo.getId(), domain, ip);
+						m_logger.info(String.format("change ip %s to domain %", ipInfo.getIp(), domain));
+					}
+				}
 			}
 		}
-	}
-
-	private boolean validate(String domain) {
-		return !domain.equals("PhoenixAgent") && !domain.equals(ReportConstants.FRONT_END);
 	}
 
 }

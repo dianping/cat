@@ -128,7 +128,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-
+				
 				if (mailRecord == null || mailRecord.getCreationDate().getTime() < TimeUtil.getCurrentDay().getTime()) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 

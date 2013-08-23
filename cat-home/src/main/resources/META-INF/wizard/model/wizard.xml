@@ -15,4 +15,19 @@
    <model package="com.dianping.cat.home.exception-threshold" name="exception-threshold-config">
       <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/exception-threshold-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.bug" name="bug">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/bug/bug.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.bug.config" name="bug-config">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/bug/bug-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.service" name="service-report">
+      <sample-model>src\test\resources\com\dianping\cat\report\page\service\service.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.heavy-report" name="heavy-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/task/heavy/heavy-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.utilization-report" name="utilization-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/task/utilization/utilization-report.xml</sample-model>
+   </model>
 </wizard>

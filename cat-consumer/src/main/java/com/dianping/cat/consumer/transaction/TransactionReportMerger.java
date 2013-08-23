@@ -49,8 +49,6 @@ public class TransactionReportMerger extends DefaultMerger {
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 
-
-
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());

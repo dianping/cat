@@ -14,13 +14,19 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.unidal.helper.Joiners;
+import org.unidal.helper.Joiners.IBuilder;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.abtest.ABTestManager;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageManager;
+import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class CatFilter implements Filter {
@@ -79,6 +85,7 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
+				HttpServletResponse res = ctx.getResponse();
 				boolean top = !Cat.getManager().hasContext();
 
 				ctx.setTop(top);
@@ -86,21 +93,27 @@ public class CatFilter implements Filter {
 				if (top) {
 					ctx.setMode(detectMode(req));
 					ctx.setType(CatConstants.TYPE_URL);
+
+					Cat.setup(getCookie(req, "JSESSIONID"));
+					ABTestManager.onRequestBegin(req, res);
 				} else {
 					ctx.setType(CatConstants.TYPE_URL_FORWARD);
 				}
 
-				Cat.setup(getCookie(req, "JSESSIONID"));
-
 				try {
 					ctx.handle();
 				} finally {
-					Cat.reset();
+					if (top) {
+						Cat.reset();
+						ABTestManager.onRequestEnd();
+					}
 				}
 			}
 		},
 
 		ID_SETUP {
+			private String m_servers;
+
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
@@ -132,25 +145,48 @@ public class CatFilter implements Filter {
 				tree.setParentMessageId(ctx.getParentId());
 				tree.setRootMessageId(ctx.getRootId());
 
-				try {
-					ctx.handle();
-				} finally {
-					switch (mode) {
-					case 0:
-						res.setHeader("X-CAT-ROOT-ID", ctx.getId());
-						break;
-					case 1:
-						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-						res.setHeader("X-CAT-ID", ctx.getId());
-						break;
-					case 2:
-						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-						res.setHeader("X-CAT-ID", ctx.getId());
-						break;
-					}
+				res.setHeader("X-CAT-SERVER", getCatServer());
+
+				switch (mode) {
+				case 0:
+					res.setHeader("X-CAT-ROOT-ID", ctx.getId());
+					break;
+				case 1:
+					res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+					res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+					res.setHeader("X-CAT-ID", ctx.getId());
+					break;
+				case 2:
+					res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+					res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+					res.setHeader("X-CAT-ID", ctx.getId());
+					break;
 				}
+
+				ctx.handle();
+			}
+
+			private String getCatServer() {
+				if (m_servers == null) {
+					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
+					List<Server> servers = manager.getConfigManager().getServers();
+
+					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
+						@Override
+						public String asString(Server server) {
+							String ip = server.getIp();
+							Integer httpPort = server.getHttpPort();
+
+							if ("127.0.0.1".equals(ip)) {
+								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+							}
+
+							return ip + ":" + httpPort;
+						}
+					});
+				}
+
+				return m_servers;
 			}
 		},
 
@@ -189,7 +225,7 @@ public class CatFilter implements Filter {
 				sb.append("&Referer=").append(req.getHeader("referer"));
 				sb.append("&Agent=").append(req.getHeader("user-agent"));
 
-				Cat.logEvent(type, "ClientInfo", Message.SUCCESS, sb.toString());
+				Cat.logEvent(type, type + ".Server", Message.SUCCESS, sb.toString());
 			}
 
 			protected void logRequestPayload(HttpServletRequest req, String type) {
@@ -204,7 +240,7 @@ public class CatFilter implements Filter {
 					sb.append('?').append(qs);
 				}
 
-				Cat.logEvent(type, CatConstants.NAME_PAYLOAD, Message.SUCCESS, sb.toString());
+				Cat.logEvent(type, type + ".Method", Message.SUCCESS, sb.toString());
 			}
 		},
 
@@ -237,19 +273,21 @@ public class CatFilter implements Filter {
 		},
 
 		LOG_SPAN {
-			protected String getOriginalUrl(ServletRequest request) {
-				return ((HttpServletRequest) request).getRequestURI();
-			}
-
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
-				Transaction t = Cat.newTransaction(ctx.getType(), getOriginalUrl(req));
+				Transaction t = Cat.newTransaction(ctx.getType(), req.getRequestURI());
 
 				try {
 					ctx.handle();
 
+					// page uri and status are customizable
+					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
 					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
+
+					if (catPageUri != null) {
+						((DefaultTransaction) t).setName(catPageUri.toString());
+					}
 
 					if (catStatus != null) {
 						t.setStatus(catStatus.toString());

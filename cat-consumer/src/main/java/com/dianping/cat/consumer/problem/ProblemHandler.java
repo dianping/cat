@@ -13,7 +13,7 @@ import com.dianping.cat.message.spi.MessageTree;
 public abstract class ProblemHandler {
 	public static final int MAX_LOG_SIZE = 60;
 
-	public abstract int handle(Machine machine, MessageTree tree);
+	public abstract void handle(Machine machine, MessageTree tree);
 
 	// TODO fix performance issue
 	protected Entry findOrCreateEntry(Machine machine, String type, String status) {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service-report domain="Cat">
+   <domain id="ShoppicWeb2">
+      <totalCount>100</totalCount>
+      <failureCount>2</failureCount>
+      <failurePercent>0.02</failurePercent>
+      <sum>200.0</sum>
+      <avg>2.0</avg>
+      <qps>0.0</qps>
+   </domain>
+   <domain id="ShoppicWeb3">
+      <totalCount>100</totalCount>
+      <failureCount>2</failureCount>
+      <failurePercent>0.02</failurePercent>
+      <sum>200.0</sum>
+      <avg>2.0</avg>
+      <qps>0.0</qps>
+   </domain>
+   <domain id="ShoppicWeb4">
+      <totalCount>100</totalCount>
+      <failureCount>2</failureCount>
+      <failurePercent>0.02</failurePercent>
+      <sum>200.0</sum>
+      <avg>2.0</avg>
+      <qps>0.0</qps>
+   </domain>
+</service-report>

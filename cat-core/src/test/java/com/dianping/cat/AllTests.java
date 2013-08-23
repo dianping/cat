@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.message.spi.core.HtmlMessageCodecTest;
+import com.dianping.cat.message.spi.core.WaterfallMessageCodecTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketTest;
 import com.dianping.cat.storage.report.LocalReportBucketTest;
@@ -15,14 +16,17 @@ import com.dianping.cat.task.TaskManagerTest;
 
 HtmlMessageCodecTest.class,
 
-/* .storage */
-LocalReportBucketTest.class,
+WaterfallMessageCodecTest.class,
 
 /* .storage.dump */
 LocalMessageBucketTest.class,
 
 LocalMessageBucketManagerTest.class,
 
+/* .storage.report */
+LocalReportBucketTest.class,
+
+/* .task */
 TaskManagerTest.class
 
 })

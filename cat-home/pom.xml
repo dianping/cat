@@ -13,7 +13,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>foundation-service</artifactId>
-         <version>2.0.3-SNAPSHOT</version>
+         <version>2.0.3</version>
       </dependency>
       <dependency>
       	<groupId>org.unidal.eunit</groupId>
@@ -77,7 +77,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>web-framework</artifactId>
-         <version>2.0.3-SNAPSHOT</version>
+         <version>2.0.3</version>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
@@ -124,7 +124,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>2.0.2-SNAPSHOT</version>
+         <version>2.0.3</version>
       </dependency>
       <dependency>
 	    <groupId>com.google.code.javaparser</groupId>
@@ -185,11 +185,18 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/info-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/abtest-report-manifest.xml,</manifest>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml, 
+                     	${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml, 
+						${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
+						${basedir}/src/main/resources/META-INF/dal/model/info-manifest.xml,
+						${basedir}/src/main/resources/META-INF/dal/model/exception-threshold-config-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/bug-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/bug-config-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/abtest-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>

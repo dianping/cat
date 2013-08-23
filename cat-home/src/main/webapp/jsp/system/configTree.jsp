@@ -14,6 +14,8 @@
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
 	       <li class='nav-header'><h4>异常监控配置</h4></li>
 	       <li class="text-right" id="exceptionConfigList"><a href="?op=exceptionThresholds"><strong>异常监控规则</strong></a></li>
+	       <li class='nav-header'><h4>异常规范配置</h4></li>
+	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常规范配置</strong></a></li>
          </ul>
 </div>
 <style>
