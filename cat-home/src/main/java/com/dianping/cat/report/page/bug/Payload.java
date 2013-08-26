@@ -38,7 +38,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+		m_action = Action.getByName(action, Action.BUG_REPORT);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.HOURLY_REPORT;
+			m_action = Action.BUG_REPORT;
 		}
 	}
 }

@@ -32,6 +32,7 @@ import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
@@ -110,6 +111,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
 
+		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
+
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
@@ -117,7 +120,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
 		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
-		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class));
+		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class,
+		            HeavyReportBuilder.class));
 
 		return all;
 	}

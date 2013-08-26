@@ -47,6 +47,7 @@ import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
 import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
+import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -146,7 +147,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "top", CompositeTopService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "top-historical" }, "m_services"));
-		
+
 		all.add(C(ModelService.class, "dependency-local", LocalDependencyService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class));
@@ -169,6 +170,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "message-historical", "logview-historical" }, "m_services"));
 
+		all.add(C(CachedReportTask.class).req(ReportService.class));
 		return all;
 	}
 }

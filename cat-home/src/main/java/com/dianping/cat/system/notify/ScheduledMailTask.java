@@ -23,14 +23,14 @@ import com.dianping.cat.home.dal.alarm.MailRecordEntity;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class ScheduledMailTask implements Task, LogEnabled {
 
 	@Inject
-	private DailyReportService m_dailyReportService;
+	private ReportService m_reportService;
 
 	@Inject
 	private MailRecordDao m_mailRecordDao;
@@ -93,9 +93,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 		Date end = TimeUtil.getCurrentDay();
 		Date start = new Date(end.getTime() - TimeUtil.ONE_DAY);
 
-		TransactionReport transactionReport = m_dailyReportService.queryTransactionReport(domain, start, end);
-		EventReport eventReport = m_dailyReportService.queryEventReport(domain, start, end);
-		ProblemReport problemReport = m_dailyReportService.queryProblemReport(domain, start, end);
+		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
+		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
+		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 
 		StringBuilder sb = new StringBuilder(10240);
 		sb.append(m_sdf.format(start)).append("</br>");

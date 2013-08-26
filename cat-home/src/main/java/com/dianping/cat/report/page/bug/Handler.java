@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -31,10 +32,18 @@ import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
 import com.dianping.cat.home.bug.transform.BaseVisitor;
+import com.dianping.cat.home.heavy.entity.HeavyCache;
+import com.dianping.cat.home.heavy.entity.HeavyCall;
+import com.dianping.cat.home.heavy.entity.HeavyReport;
+import com.dianping.cat.home.heavy.entity.HeavySql;
+import com.dianping.cat.home.heavy.entity.Service;
+import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
+import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.system.config.BugConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -75,24 +84,21 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		m_normalizePayload.normalize(model, payload);
-		switch (payload.getAction()) {
-		case SERVICE_REPORT:
-			ServiceReport serviceReport = queryServiceReport(payload);
-			List<com.dianping.cat.home.service.entity.Domain> dList = sort(serviceReport, payload.getSortBy());
+		Action action = payload.getAction();
 
-			model.setServiceList(dList);
-			model.setServiceReport(serviceReport);
-			break;
+		System.out.println(model.getDate());
+		switch (action) {
+		case SERVICE_REPORT:
 		case SERVICE_HISTORY_REPORT:
-			serviceReport = queryServiceReport(payload);
+			ServiceReport serviceReport = queryServiceReport(payload);
 
 			List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
 			model.setServiceList(dHisList);
 			model.setServiceReport(serviceReport);
 			break;
-		case HISTORY_REPORT:
-		case HOURLY_REPORT:
-		case HTTP_JSON:
+		case BUG_HISTORY_REPORT:
+		case BUG_REPORT:
+		case BUG_HTTP_JSON:
 			BugReport bugReport = queryBugReport(payload);
 			BugReportVisitor visitor = new BugReportVisitor();
 			visitor.visitBugReport(bugReport);
@@ -106,21 +112,61 @@ public class Handler implements PageHandler<Context> {
 			errors = sortErrorStatis(errors);
 			model.setErrorStatis(errors);
 
-			if (payload.getAction() == Action.HTTP_JSON) {
+			if (action == Action.BUG_HTTP_JSON) {
 				new ClearBugReport().visitBugReport(bugReport);
 			}
 			model.setBugReport(bugReport);
-			model.setPage(ReportPage.BUG);
+			break;
+		case HEAVY_HISTORY_REPORT:
+		case HEAVY_REPORT:
+			HeavyReport heavyReport = queryHeavyReport(payload);
+
+			model.setHeavyReport(heavyReport);
+			buildSortedHeavyInfo(model, heavyReport);
 			break;
 		}
-
+		model.setPage(ReportPage.BUG);
 		m_jspViewer.view(ctx, model);
 	}
 
-	private ServiceReport queryServiceReport(Payload payload) {
+	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
+		HeavyCall heavyCall = heavyReport.getHeavyCall();
+		if (heavyCall != null) {
+
+			List<Url> callUrls = new ArrayList<Url>(heavyCall.getUrls().values());
+			List<Service> callServices = new ArrayList<Service>(heavyCall.getServices().values());
+			Collections.sort(callUrls, new UrlComparator());
+			Collections.sort(callServices, new ServiceComparator());
+			model.setCallUrls(callUrls);
+			model.setCallServices(callServices);
+		}
+
+		HeavySql heavySql = heavyReport.getHeavySql();
+
+		if (heavySql != null) {
+			List<Url> sqlUrls = new ArrayList<Url>(heavySql.getUrls().values());
+			List<Service> sqlServices = new ArrayList<Service>(heavySql.getServices().values());
+			Collections.sort(sqlUrls, new UrlComparator());
+			Collections.sort(sqlServices, new ServiceComparator());
+			model.setSqlUrls(sqlUrls);
+			model.setSqlServices(sqlServices);
+		}
+
+		HeavyCache heavyCache = heavyReport.getHeavyCache();
+		if (heavyCache != null) {
+			List<Url> cacheUrls = new ArrayList<Url>(heavyCache.getUrls().values());
+			List<Service> cacheServices = new ArrayList<Service>(heavyCache.getServices().values());
+			Collections.sort(cacheUrls, new UrlComparator());
+			Collections.sort(cacheServices, new ServiceComparator());
+			model.setCacheUrls(cacheUrls);
+			model.setCacheServices(cacheServices);
+		}
+	}
+
+	private Pair<Date, Date> queryStartEndTime(Payload payload) {
 		Date start = null;
 		Date end = null;
-		if (payload.getAction() == Action.SERVICE_REPORT) {
+		if (!payload.getAction().getName().startsWith("history")) {
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
 				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
@@ -132,7 +178,13 @@ public class Handler implements PageHandler<Context> {
 			start = payload.getHistoryStartDate();
 			end = payload.getHistoryEndDate();
 		}
-		return m_reportService.queryServiceReport(CatString.CAT, start, end);
+		return new Pair<Date, Date>(start, end);
+	}
+
+	private ServiceReport queryServiceReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryServiceReport(CatString.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
@@ -161,23 +213,16 @@ public class Handler implements PageHandler<Context> {
 		return !bugConfig.contains(exception);
 	}
 
-	private BugReport queryBugReport(Payload payload) {
-		Date start = null;
-		Date end = null;
-		if (payload.getAction() == Action.HOURLY_REPORT) {
+	private HeavyReport queryHeavyReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-			if (payload.getPeriod().isCurrent()) {
-				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
-				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-			} else {
-				start = new Date(payload.getDate());
-				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-			}
-		} else {
-			start = payload.getHistoryStartDate();
-			end = payload.getHistoryEndDate();
-		}
-		return m_reportService.queryBugReport(CatString.CAT, start, end);
+		return m_reportService.queryHeavyReport(CatString.CAT, pair.getKey(), pair.getValue());
+	}
+
+	private BugReport queryBugReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryBugReport(CatString.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private Map<String, ErrorStatis> sortErrorStatis(Map<String, ErrorStatis> errors) {
@@ -301,48 +346,6 @@ public class Handler implements PageHandler<Context> {
 			for (String remove : removes) {
 				items.remove(remove);
 			}
-		}
-	}
-
-	public static class ErrorStatis {
-		private String m_productLine;
-
-		private String m_department;
-
-		private Map<String, ExceptionItem> m_bugs = new HashMap<String, ExceptionItem>();
-
-		private Map<String, ExceptionItem> m_exceptions = new HashMap<String, ExceptionItem>();
-
-		public Map<String, ExceptionItem> getBugs() {
-			return m_bugs;
-		}
-
-		public String getDepartment() {
-			return m_department;
-		}
-
-		public Map<String, ExceptionItem> getExceptions() {
-			return m_exceptions;
-		}
-
-		public String getProductLine() {
-			return m_productLine;
-		}
-
-		public void setBugs(Map<String, ExceptionItem> bugs) {
-			m_bugs = bugs;
-		}
-
-		public void setDepartment(String department) {
-			m_department = department;
-		}
-
-		public void setExceptions(Map<String, ExceptionItem> exceptions) {
-			m_exceptions = exceptions;
-		}
-
-		public void setProductLine(String productLine) {
-			m_productLine = productLine;
 		}
 	}
 }

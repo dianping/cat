@@ -19,6 +19,7 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
 
 public interface ReportService {
@@ -58,4 +59,6 @@ public interface ReportService {
 	public TopReport queryTopReport(String domain,Date start,Date end);
 	
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
+
+	public HeavyReport queryHeavyReport(String domain,  Date start, Date end);
 }

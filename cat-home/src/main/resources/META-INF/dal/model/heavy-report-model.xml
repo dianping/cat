@@ -2,14 +2,14 @@
 <model model-package="com.dianping.cat.home.heavy"  enable-merger="true"  enable-sax-parser="true"
 	enable-base-visitor="true"  enable-xml-parser="false"  enable-xml-builder="false">
    <entity name="heavy-report" root="true">
-    <attribute name="domain" value-type="String" />
+    <attribute name="domain" value-type="String"  key="true"/>
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="sql" />
-    <entity-ref name="call" />
-    <entity-ref name="cache" />
+    <entity-ref name="heavy-sql" />
+    <entity-ref name="heavy-call" />
+    <entity-ref name="heavy-cache" />
   </entity>
-  <entity name="sql">
+  <entity name="heavy-sql">
     <entity-ref name="url" type="map" names="urls"  method-find-or-create='true'/>
     <entity-ref name="service" type="map" names="services"  method-find-or-create='true'/>
   </entity>
@@ -27,11 +27,11 @@
     <attribute name="logview" value-type="String" />
     <attribute name="count" value-type="long" primitive="true" />
   </entity>
-  <entity name="call">
+  <entity name="heavy-call">
     <entity-ref name="url" type="map" names="urls"  method-find-or-create='true'/>
     <entity-ref name="service" type="map" names="services"  method-find-or-create='true'/>
   </entity>
-  <entity name="cache">
+  <entity name="heavy-cache">
     <entity-ref name="url" type="map" names="urls"  method-find-or-create='true'/>
     <entity-ref name="service" type="map" names="services"  method-find-or-create='true'/>
   </entity>

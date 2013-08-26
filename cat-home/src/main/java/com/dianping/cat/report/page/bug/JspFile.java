@@ -9,7 +9,11 @@ public enum JspFile {
 
 	SERVICE_REPORT("/jsp/report/service/service.jsp"),
 
-	SERVICE_HISTORY_REPORT("/jsp/report/service/serviceHistory.jsp");
+	SERVICE_HISTORY_REPORT("/jsp/report/service/serviceHistory.jsp"), 
+	
+	HEAVY_HISTORY_REPORT("/jsp/report/heavy/heavyHistory.jsp"), 
+	
+	HEAVY_REPORT("/jsp/report/heavy/heavy.jsp");
 
 	private String m_path;
 
