@@ -125,7 +125,6 @@ public class Handler implements PageHandler<Context> {
 		case SERVICE_REPORT:
 		case SERVICE_HISTORY_REPORT:
 			ServiceReport serviceReport = queryServiceReport(payload);
-
 			List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
 			model.setServiceList(dHisList);
 			model.setServiceReport(serviceReport);
@@ -162,7 +161,6 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			UtilizationReport utilizationReport = queryUtilizationReport(payload);
 			List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
-
 			model.setUtilizationReport(utilizationReport);
 			model.setUtilizationList(dUList);
 			break;
@@ -215,9 +213,8 @@ public class Handler implements PageHandler<Context> {
 
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-
 		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
-
+		System.out.println(report);
 		new UtilizationReportScore().visitUtilizationReport(report);
 		return report;
 	}

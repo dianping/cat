@@ -46,9 +46,9 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		UtilizationReport utilizationReport = new UtilizationReport();
+		UtilizationReport utilizationReport = new UtilizationReport(CatString.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "matrix");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
 		TransactionReportVisitor visitor = new TransactionReportVisitor().setReport(utilizationReport);
 
 		for (String domainName : domains) {
@@ -60,9 +60,6 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 			utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 		}
 		HourlyReport report = new HourlyReport();
-
-		System.out.println(utilizationReport);
-
 		report.setContent(utilizationReport.toString());
 		report.setCreationDate(new Date());
 		report.setDomain(domain);

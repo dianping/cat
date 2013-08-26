@@ -43,3 +43,13 @@
 </div>
 
 </a:body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var tab = '${payload.tab}';
+		}else if(tab=='tab2'){
+			$('#tab2Href').trigger('click');
+		}else if(tab=='tab1'){
+			$('#tab1Href').trigger('click');
+		}
+	});
+</script>
