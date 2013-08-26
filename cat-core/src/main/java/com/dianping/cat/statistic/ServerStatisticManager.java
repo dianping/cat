@@ -50,8 +50,9 @@ public class ServerStatisticManager {
 
 	public void addMessageSize(String domain, double size) {
 		Long time = getCurrentMinute();
-
 		m_serverState.findOrCreate(time).addMessageSize(domain, size);
+		
+		addMessageSize(size);
 	}
 	
 	public void addMessageSize(double size) {
@@ -74,8 +75,9 @@ public class ServerStatisticManager {
 
 	public void addMessageTotalLoss(String domain, long total) {
 		Long time = getCurrentMinute();
-		
 		m_serverState.findOrCreate(time).addMessageTotalLoss(domain, total);
+		
+		addMessageTotalLoss(total);
 	}
 	
 	public void addMessageTotalLoss(long total) {

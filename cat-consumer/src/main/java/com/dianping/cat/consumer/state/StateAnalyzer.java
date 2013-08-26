@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.state;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -65,12 +66,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
 			machine.setSize(messageSize + machine.getSize());
 		
-			for (String key : totals.keySet()) {
+			for (Entry<String,Long> entry : totals.entrySet()) {
+				String key = entry.getKey();
+				long value = entry.getValue();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
 				if(totals.containsKey(key)){
-					domain.setTotal(totals.get(key) + domain.getTotal());
-					detail.setTotal(totals.get(key));
+					domain.setTotal(value + domain.getTotal());
+					detail.setTotal(value);
 				}
 				if(totalLosses.containsKey(key)){
 					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
@@ -183,10 +186,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		buildStateInfo(machine);
 		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
-		for(String key:machine.getProcessDomains().keySet()){
-				machine.getProcessDomains().get(key).getIps().addAll(startReport.findOrCreateMachine(ip).getProcessDomains().get(key).getIps());
+		Map<String, ProcessDomain> processDomains = startReport.findOrCreateMachine(ip).getProcessDomains();
+		for(Map.Entry<String, ProcessDomain> entry:machine.getProcessDomains().entrySet()){
+			entry.getValue().getIps().addAll(processDomains.get(entry.getKey()).getIps());
 		}
-//		machine.getProcessDomains().putAll(startReport.findOrCreateMachine(ip).getProcessDomains());
 		return report;
 	}
 

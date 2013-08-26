@@ -369,13 +369,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		if (value != null && value % CatConstants.SUCCESS_COUNT == 0) {
 			Long lastTotalSize =  m_lastTotalSizes.get(domain);
+			Long totalSize = m_totalSizes.get(domain);
 			if(lastTotalSize == null){
 				lastTotalSize = 0L;
 			}
-			double amount = m_totalSizes.get(domain) - lastTotalSize;
-			m_lastTotalSizes.put(domain, m_totalSizes.get(domain));
+			double amount = totalSize - lastTotalSize;
+			m_lastTotalSizes.put(domain, totalSize);
 			m_serverStateManager.addMessageSize(domain, amount);
-			m_serverStateManager.addMessageSize(amount);
 		}
 	}
 

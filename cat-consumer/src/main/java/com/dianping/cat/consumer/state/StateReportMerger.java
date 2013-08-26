@@ -13,18 +13,6 @@ public class StateReportMerger extends DefaultMerger {
 		super(stateReport);
 	}
 
-//	private long getTotal(Machine machine, String key) {
-//		return machine.getTotals().get(key).getCount();
-//	}
-//
-//	private long getTotalLoss(Machine machine, String key) {
-//		return machine.getTotalLosses().get(key).getCount();
-//	}
-//
-//	private double getSize(Machine machine, String key) {
-//		return machine.getSizes().get(key).getCount();
-//	}
-
 	@Override
 	protected void mergeMachine(Machine old, Machine machine) {
 		double oldCount = 0;
@@ -39,17 +27,7 @@ public class StateReportMerger extends DefaultMerger {
 		if (totalCount > 0) {
 			old.setAvgTps((old.getTotal() + machine.getTotal()) / totalCount);
 		}
-//		for (String key : old.getTotals().keySet()) {
-//			old.findOrCreateTotal(key).setCount(getTotal(old, key) + getTotal(machine, key));
-//		}
-//
-//		for (String key : old.getTotalLosses().keySet()) {
-//			old.findOrCreateTotalLoss(key).setCount(getTotalLoss(old, key) + getTotalLoss(machine, key));
-//		}
-//
-//		for (String key : old.getTotals().keySet()) {
-//			old.findOrCreateSize(key).setCount(getSize(old, key) + getSize(machine, key));
-//		}
+
 		old.setTotal(old.getTotal() + machine.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + machine.getTotalLoss());
 		old.setSize(old.getSize() + machine.getSize());

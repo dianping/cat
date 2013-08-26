@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ServerStatistic {
-	private Map<Long, Statistic> m_statistics = new LinkedHashMap<Long, Statistic>();
+	private Map<Long, Statistic> m_statistics = new LinkedHashMap<Long, Statistic>(60);
 
 	public Statistic findOrCreate(Long time) {
 		Statistic state = m_statistics.get(time);
@@ -33,11 +33,11 @@ public class ServerStatistic {
 
 		private long m_messageDumpLoss;
 
-		private Map<String, Long> m_messageTotals = new HashMap<String, Long>();
+		private Map<String, Long> m_messageTotals = new HashMap<String, Long>(256);
 
-		private Map<String, Long> m_messageTotalLosses = new HashMap<String, Long>();
+		private Map<String, Long> m_messageTotalLosses = new HashMap<String, Long>(256);
 
-		private Map<String, Double> m_messageSizes = new HashMap<String, Double>();
+		private Map<String, Double> m_messageSizes = new HashMap<String, Double>(256);
 
 		private double m_processDelaySum;
 
