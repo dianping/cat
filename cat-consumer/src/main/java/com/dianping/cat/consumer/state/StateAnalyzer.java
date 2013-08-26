@@ -2,15 +2,18 @@ package com.dianping.cat.consumer.state;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
+import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
@@ -47,10 +50,41 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Statistic state = m_serverStateManager.findState(start);
 
 			com.dianping.cat.consumer.state.model.entity.Message temp = machine.findOrCreateMessage(start);
+			Map<String, Long> totals = state.getMessageTotals();
 			long messageTotal = state.getMessageTotal();
 			temp.setTotal(messageTotal);
-			machine.setTotal(machine.getTotal() + messageTotal);
-
+			
+			Map<String,Long> totalLosses = state.getMessageTotalLosses();
+			long messageTotalLoss = state.getMessageTotalLoss();
+			temp.setTotalLoss(messageTotalLoss);
+			
+			Map<String,Double> sizes = state.getMessageSizes();
+			double messageSize = state.getMessageSize();
+			temp.setSize(messageSize);
+			
+			machine.setTotal(messageTotal + machine.getTotal());
+			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
+			machine.setSize(messageSize + machine.getSize());
+		
+			for (Entry<String,Long> entry : totals.entrySet()) {
+				String key = entry.getKey();
+				long value = entry.getValue();
+				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
+				Detail detail = domain.findOrCreateDetail(start);
+				if(totals.containsKey(key)){
+					domain.setTotal(value + domain.getTotal());
+					detail.setTotal(value);
+				}
+				if(totalLosses.containsKey(key)){
+					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
+					detail.setTotalLoss(totalLosses.get(key));
+				}
+				if(sizes.containsKey(key)){
+					domain.setSize(sizes.get(key) + domain.getSize());
+					detail.setSize(sizes.get(key));
+				}
+			}
+			
 			if (messageTotal > maxTps) {
 				maxTps = messageTotal;
 			}
@@ -75,10 +109,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setNetworkTimeError(networkTimeError);
 			machine.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError);
 
-			long messageTotalLoss = state.getMessageTotalLoss();
-			temp.setTotalLoss(messageTotalLoss);
-			machine.setTotalLoss(machine.getTotalLoss() + messageTotalLoss);
-
 			long messageDump = state.getMessageDump();
 			temp.setDump(messageDump);
 			machine.setDump(machine.getDump() + messageDump);
@@ -87,9 +117,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setDumpLoss(messageDumpLoss);
 			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss);
 
-			double messageSize = state.getMessageSize();
-			temp.setSize(messageSize);
-			machine.setSize(machine.getSize() + messageSize);
+
 
 			int processDelayCount = state.getProcessDelayCount();
 			temp.setDelayCount(processDelayCount);
@@ -124,7 +152,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		reports.put(ReportConstants.CAT, stateReport);
 		long startTime = getStartTime();
-
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
 		} else {
@@ -159,8 +186,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		buildStateInfo(machine);
 		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
-
-		machine.getProcessDomains().putAll(startReport.findOrCreateMachine(ip).getProcessDomains());
+		Map<String, ProcessDomain> processDomains = startReport.findOrCreateMachine(ip).getProcessDomains();
+		for(Map.Entry<String, ProcessDomain> entry:machine.getProcessDomains().entrySet()){
+			entry.getValue().getIps().addAll(processDomains.get(entry.getKey()).getIps());
+		}
 		return report;
 	}
 

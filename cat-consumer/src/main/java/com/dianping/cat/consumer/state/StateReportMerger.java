@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.state;
 
+import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
@@ -29,9 +30,10 @@ public class StateReportMerger extends DefaultMerger {
 
 		old.setTotal(old.getTotal() + machine.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + machine.getTotalLoss());
+		old.setSize(old.getSize() + machine.getSize());
+		
 		old.setDump(old.getDump() + machine.getDump());
 		old.setDumpLoss(old.getDumpLoss() + machine.getDumpLoss());
-		old.setSize(old.getSize() + machine.getSize());
 		old.setDelaySum(old.getDelaySum() + machine.getDelaySum());
 		old.setDelayCount(old.getDelayCount() + machine.getDelayCount());
 
@@ -40,9 +42,6 @@ public class StateReportMerger extends DefaultMerger {
 		old.setBlockTime(old.getBlockTime() + machine.getBlockTime());
 		old.setPigeonTimeError(old.getPigeonTimeError() + machine.getPigeonTimeError());
 		old.setNetworkTimeError(old.getNetworkTimeError() + machine.getNetworkTimeError());
-
-		// old.setMaxTps(old.getMaxTps()+machine.getMaxTps());
-		// old.setAvgTps(old.getAvgTps()+machine.getAvgTps());
 
 		if (machine.getMaxTps() > old.getMaxTps()) {
 			old.setMaxTps(machine.getMaxTps());
@@ -74,9 +73,19 @@ public class StateReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeProcessDomain(ProcessDomain old, ProcessDomain processDomain) {
-		super.mergeProcessDomain(old, processDomain);
 		old.getIps().addAll(processDomain.getIps());
+		old.setSize(old.getSize()+processDomain.getSize());
+		old.setTotal(old.getTotal()+processDomain.getTotal());
+		old.setTotalLoss(old.getTotalLoss()+processDomain.getTotalLoss());
+
 	}
+	
+	@Override
+	protected void mergeDetail(Detail old, Detail detail) {
+      old.setSize(detail.getSize() + old.getSize());
+      old.setTotal(detail.getTotal() + old.getTotal());
+      old.setTotalLoss(detail.getTotalLoss() + old.getTotalLoss());
+   }
 
 	@Override
 	public void visitStateReport(StateReport stateReport) {
@@ -87,5 +96,7 @@ public class StateReportMerger extends DefaultMerger {
 		report.setStartTime(stateReport.getStartTime());
 		report.setEndTime(stateReport.getEndTime());
 	}
+	
+
 
 }

@@ -47,6 +47,7 @@ var lineChartOptions = {
             percent:0.8
         },
         y:{
+        	title:"10分钟"
         }
     },
     line:{
