@@ -1,21 +1,21 @@
 <heavy-report domain="Cat" startTime="2012-07-05 00:00:00"
 	endTime="2012-07-05 00:59:59">
-	<sql>
+	<heavy-sql>
 		<url domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></url>
 		<url domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></url>
 		<service domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></service>
 		<service domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></service>
-	</sql>
-	<call>
+	</heavy-sql>
+	<heavy-call>
 		<url domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></url>
 		<url domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></url>
 		<service domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></service>
 		<service domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></service>
-	</call>
-	<cache>
+	</heavy-call>
+	<heavy-cache>
 		<url domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></url>
 		<url domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></url>
 		<service domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></service>
 		<service domain="MobileApi" name="http://10.1.6.128:8080/" logview="http://sfsfs/" count="100"></service>
-	</cache>
+	</heavy-cache>
 </heavy-report>

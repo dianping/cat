@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -32,11 +31,9 @@ public class ProblemReportAggregationTest {
 		MockRuleManger ruleManger = new MockRuleManger();
 		ruleManger.register();
 		aggregation.setRuleManger(ruleManger);
-		long start = (new Date()).getTime();
 
 		aggregation.visitProblemReport(reportOld);
 
-		System.out.println(((new Date()).getTime() - start) * 1.0 / 1000);
 		Assert.assertEquals(reportNew.toString().replaceAll("\r", ""),
 		      aggregation.getReport().toString().replaceAll("\r", ""));
 	}
@@ -46,9 +43,7 @@ public class ProblemReportAggregationTest {
 			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, "FrontEnd");
 			
 			m_handler = new DefaultAggregationHandler();
-			long time = System.currentTimeMillis();
 			m_handler.register(rules);
-			System.out.println(System.currentTimeMillis()-time);
 		}
 
 		private AggregationRule buildRule(String pattern){

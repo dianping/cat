@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;

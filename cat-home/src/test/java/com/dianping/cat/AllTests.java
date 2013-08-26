@@ -24,12 +24,12 @@ import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
-import com.dianping.cat.report.service.ReportServiceImplTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
+import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
@@ -85,7 +85,7 @@ TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class,
 /* alarm .render */
 RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class,
 
-ReportServiceImplTest.class, StateReportMergerTest.class,
+StateReportMergerTest.class,
 
 /* Daily Graph Test */
 DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
@@ -108,6 +108,8 @@ MetricReportParseTest.class,
 ParseTest.class,
 
 /* service */
-ServiceReportMergerTest.class})
+ServiceReportMergerTest.class,
+
+HeavyReportBuilderTest.class })
 public class AllTests {
 }

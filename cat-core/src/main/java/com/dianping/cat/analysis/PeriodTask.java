@@ -43,12 +43,13 @@ public class PeriodTask implements Task, LogEnabled {
 
 		if (!result) { // trace queue overflow
 			m_queueOverflow++;
+			m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
+			m_serverStateManager.addMessageTotalLoss(1);
+
 			if (m_queueOverflow % CatConstants.ERROR_COUNT == 0) {
-				m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
 				m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
 			}
 		}
-
 		return result;
 	}
 

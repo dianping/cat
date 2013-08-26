@@ -12,7 +12,7 @@ import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.system.alarm.AlarmContentBuilder;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;
@@ -52,7 +52,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ScheduledMailTask.class).//
 		      req(ReportRender.class, MailSMS.class)//
-		      .req(DailyReportService.class, ScheduledManager.class)//
+		      .req(ReportService.class, ScheduledManager.class)//
 		      .req(MailRecordDao.class));
 
 		all.add(C(EventListenerRegistry.class, DefaultEventListenerRegistry.class));

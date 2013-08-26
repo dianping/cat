@@ -15,14 +15,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("sort")
 	private String m_sortBy = "avg";
 
-	public String getSortBy() {
-		return m_sortBy;
-	}
-
-	public void setSortBy(String sortBy) {
-		m_sortBy = sortBy;
-	}
-
 	public Payload() {
 		super(ReportPage.BUG);
 	}
@@ -37,8 +29,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+		m_action = Action.getByName(action, Action.BUG_REPORT);
 	}
 
 	@Override
@@ -46,10 +42,14 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_page = ReportPage.getByName(page, ReportPage.BUG);
 	}
 
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
+	}
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.HOURLY_REPORT;
+			m_action = Action.BUG_REPORT;
 		}
 	}
 }
