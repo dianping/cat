@@ -569,12 +569,6 @@
 					<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
 				</requirement>
 				<requirement>
@@ -1131,15 +1125,9 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-<<<<<<< HEAD
-					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
+					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
 					<user>root</user>
 					<password></password>
-=======
-					<url>jdbc:mysql://192.168.7.43:3306/cat</url>
-					<user>dpcom_cat</user>
-					<password>password</password>
->>>>>>> 2903ee0deab79b8a168e1e5141753f0b63d56fd6
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
@@ -1444,6 +1432,10 @@
 			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
+			<implementation>com.dianping.cat.system.page.abtest.GsonBuilderManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
 			<implementation>com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor</implementation>
 		</component>
@@ -1465,6 +1457,17 @@
 		<component>
 			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
 			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
@@ -1486,7 +1489,7 @@
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
+					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2915,6 +2918,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2954,7 +2960,6 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
 			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
 		</component>
@@ -2970,21 +2975,47 @@
 				</requirement>
 				<requirement>
 					<role>int</role>
-=======
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+			<implementation>com.dianping.cat.home.dal.abtest.AbtestReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
+			<implementation>com.dianping.cat.system.page.abtest.GsonBuilderManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.plugin.Handler</role>
 			<implementation>com.dianping.cat.system.page.plugin.Handler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.page.plugin.JspViewer</role>
->>>>>>> 2903ee0deab79b8a168e1e5141753f0b63d56fd6
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
-			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
-=======
 			<role>com.dianping.cat.system.page.plugin.JspViewer</role>
 			<implementation>com.dianping.cat.system.page.plugin.JspViewer</implementation>
 			<requirements>
@@ -2992,7 +3023,6 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
->>>>>>> 2903ee0deab79b8a168e1e5141753f0b63d56fd6
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>

@@ -15,7 +15,7 @@ import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.Field;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.system.page.abtest.GroupStrategyParser;
-import com.dianping.cat.system.page.abtest.GroupStrategyParser.NonPrexFieldNamingStrategy;
+import com.dianping.cat.system.page.abtest.GsonBuilderManager.NonPrexFieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

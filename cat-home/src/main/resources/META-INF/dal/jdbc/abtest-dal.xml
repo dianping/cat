@@ -77,5 +77,24 @@
 			</query>
 		</query-defs>
 	</entity>
+	<entity name="abtest-report" table="abtest_report" alias="ar">
+	<member name="creation-date" insert-expr="NOW()" />
+   	<var name="start-date" value-type="Date" />
+	<var name="end-date" value-type="Date" />
+    <query-defs>
+    	<query name="find-by-runId-duration" type="SELECT" multiple="true">
+			<param name="run-id" />
+			<param name="start-date" />
+			<param name="end-date" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='run-id'/> = ${run-id}
+				AND <FIELD name='period'/> >= ${start-date}
+				AND <FIELD name='period'/> <= ${end-date} 
+				]]></statement>
+		</query>
+    </query-defs>
+  </entity>
 </entities>
 

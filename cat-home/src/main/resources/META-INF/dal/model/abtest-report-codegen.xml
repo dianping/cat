@@ -4,11 +4,9 @@
     <attribute name="runId" value-type="int" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="goal" type="list" names="goals" xml-indent="true" />
+    <entity-ref name="chart" />
     <entity-ref name="variation" type="list" names="variations" />
-  </entity>
-  <entity name="variation">
-    <attribute name="name" value-type="String" />
-    <entity-ref name="goal" type="list" names="goals" />
   </entity>
   <entity name="goal">
     <attribute name="name" value-type="String" />
@@ -16,6 +14,16 @@
     <attribute name="count" value-type="int" />
     <attribute name="sum" value-type="double" />
     <attribute name="avg" value-type="double" />
+  </entity>
+  <entity name="chart">
+    <attribute name="goal" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <element name="labels" value-type="String" />
+    <element name="datasets" value-type="String" />
+  </entity>
+  <entity name="variation">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="goal" type="list" names="goals" />
   </entity>
 </model>
 

@@ -122,7 +122,7 @@ public class MetricDisplay extends BaseVisitor {
 	private com.dianping.cat.home.dal.abtest.Abtest findAbTest(int id) {
 		com.dianping.cat.home.dal.abtest.Abtest abtest = null;
 		if (id >= 0) {
-			abtest = m_abtestService.getABTestNameByRunId(id);
+			abtest = m_abtestService.getABTestByRunId(id);
 		}
 		if (abtest == null) {
 			abtest = new com.dianping.cat.home.dal.abtest.Abtest();

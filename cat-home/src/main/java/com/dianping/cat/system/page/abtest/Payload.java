@@ -99,6 +99,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	
 	@FieldMeta("conversionRate")
 	private int m_conversionRate;
+	
+	/* ===============Report================ */
+	@FieldMeta("selectMetricType")
+	private String m_selectMetricType;
+	
+	@FieldMeta("period")
+	private String m_period;
 
 	private boolean m_addGs;
 
@@ -186,6 +193,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
    	return m_lastUpdateTime;
    }
 
+
 	public String getName() {
 		return m_name;
 	}
@@ -203,6 +211,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_pageNum;
 	}
 
+	public String getPeriod() {
+   	return m_period;
+   }
+
 	public int getPv() {
    	return m_pv;
    }
@@ -210,6 +222,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public String getReportType() {
 		return "";
 	}
+
+	public String getSelectMetricType() {
+   	return m_selectMetricType;
+   }
 
 	public String getSrcCode() {
 		return m_srcCode;
@@ -248,11 +264,11 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			m_action = Action.getByName(action, Action.VIEW);
 		}
 	}
-	
+
 	public void setAddGs(boolean addGs) {
 		m_addGs = addGs;
 	}
-
+	
 	public void setConditions(String conditions) {
    	m_conditions = conditions;
    }
@@ -335,8 +351,16 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_pageNum = pageNum;
 	}
 
+	public void setPeriod(String period) {
+   	m_period = period;
+   }
+
 	public void setPv(int pv) {
    	m_pv = pv;
+   }
+
+	public void setSelectMetricType(String selectMetricType) {
+   	m_selectMetricType = selectMetricType;
    }
 
 	public void setSrcCode(String srcCode) {

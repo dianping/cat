@@ -86,6 +86,9 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 	
 	@Inject
 	private ReportHandler m_reportHandler;
+	
+	@Inject
+	private GsonBuilderManager m_gsonBuilderManager;
 
 	private Logger m_logger;
 
@@ -154,7 +157,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 	}
 
 	private String getJavaFragement(AbtestRun run) {
-		Gson gson = m_parser.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
 		List<Condition> conditions = gson.fromJson(run.getConditions(), new TypeToken<ArrayList<Condition>>() {
 		}.getType());
 		Run abstractRun = new Run();
@@ -285,7 +288,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			stream = new ByteArrayInputStream(payload.getSrcCode().getBytes("UTF-8"));
 			GroupstrategyDescriptor descriptor = m_parser.parse(stream);
 
-			Gson gson = m_parser.getGsonBuilder().create();
+			Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
 			ctx.setResponseJson(gson.toJson(descriptor, GroupstrategyDescriptor.class));
 		} catch (Throwable e) {
 			ctx.setResponseJson("{}");
@@ -426,7 +429,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 	 * @return
 	 */
 	public String responseJson(int code, String msg) {
-		Gson gson = m_parser.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
 		return gson.toJson(new ResponseJson(code, msg), ResponseJson.class);
 	}
 

@@ -36,7 +36,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.page.abtest.AbtestStatus;
-import com.dianping.cat.system.page.abtest.GroupStrategyParser;
+import com.dianping.cat.system.page.abtest.GsonBuilderManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -52,7 +52,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private GroupStrategyDao m_groupStrategyDao;
 
 	@Inject
-	private GroupStrategyParser m_parser;
+	private GsonBuilderManager m_gsonBuilderManager;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -67,7 +67,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private Map<Integer, GroupStrategy> m_groupStrategyMap = new ConcurrentHashMap<Integer, GroupStrategy>();
 
 	private long m_lastRefreshTime = -1;
-	
+
 	private long m_modifyTime = 0;
 
 	private Type m_listType = new TypeToken<ArrayList<Condition>>() {
@@ -96,6 +96,22 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		}
 
 		return ab;
+	}
+
+	public AbtestModel getAbtestModelByRunID(int runId) {
+		AbtestModel model = new AbtestModel();
+
+		Abtest abtest = getABTestByRunId(runId);
+		AbtestRun run = getAbtestRunById(runId);
+
+		if (abtest != null && run != null) {
+			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
+			Case _case = transform(abtest, run, groupStrategy);
+
+			model.addCase(_case);
+		}
+
+		return model;
 	}
 
 	@Override
@@ -128,22 +144,6 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 					}
 				}
 			}
-		}
-
-		return model;
-	}
-
-	public AbtestModel getAbtestModelByRunID(int runId) {
-		AbtestModel model = new AbtestModel();
-
-		Abtest abtest = getABTestByRunId(runId);
-		AbtestRun run = getAbtestRunById(runId);
-
-		if (abtest != null && run != null) {
-			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
-			Case _case = transform(abtest, run, groupStrategy);
-
-			model.addCase(_case);
 		}
 
 		return model;
@@ -221,6 +221,11 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	}
 
 	@Override
+	public long getModifiedTime() {
+		return m_modifyTime;
+	}
+
+	@Override
 	public String getName() {
 		return getClass().getSimpleName();
 	}
@@ -260,7 +265,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 				m_abtestMap = abtestMap;
 				m_abtestRunMap = abtestRunMap;
 				m_groupStrategyMap = groupStrategyMap;
-				
+
 				m_lastRefreshTime = m_modifyTime;
 			} catch (Throwable e) {
 				Cat.logError(e);
@@ -307,8 +312,13 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		m_groupStrategyMap = groupStrategyMap;
 	}
 
-	public void setParser(GroupStrategyParser parser) {
-		m_parser = parser;
+	public void setGsonBuilderManager(GsonBuilderManager gsonBuilderManager) {
+   	m_gsonBuilderManager = gsonBuilderManager;
+   }
+
+	@Override
+	public synchronized void setModified() {
+		m_modifyTime = System.currentTimeMillis();
 	}
 
 	public void setProjectDao(ProjectDao projectDao) {
@@ -317,16 +327,6 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	public void setRefreshTimeInSeconds(int refreshTimeInSeconds) {
 		m_refreshTimeInSeconds = refreshTimeInSeconds;
-	}
-
-	@Override
-	public synchronized void setModified() {
-		m_modifyTime = System.currentTimeMillis();
-	}
-	
-	@Override
-	public long getModifiedTime(){
-		return m_modifyTime;
 	}
 
 	@Override
@@ -347,7 +347,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		}
 
 		Run abRun = new Run(run.getId());
-		Gson gson = m_parser.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
 
 		for (String domain : StringUtils.split(run.getDomains(), ',')) {
 			abRun.addDomain(domain);
