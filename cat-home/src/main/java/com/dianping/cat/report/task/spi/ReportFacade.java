@@ -12,12 +12,23 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ReportType;
+import com.dianping.cat.consumer.advanced.MetricAnalyzer;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.event.EventAnalyzer;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
+import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -25,6 +36,7 @@ import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
@@ -71,6 +83,12 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private MetricBaselineReportBuilder m_metricBaselineReportBuilder;
+
+	@Inject
+	private HeavyReportBuilder m_heavyReportBuilder;
+
+	@Inject
+	private UtilizationReportBuilder m_utilizationReportBuilder;
 
 	private Logger m_logger;
 
@@ -131,18 +149,21 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_reportBuilders.put("problem", m_problemBuilder);
-		m_reportBuilders.put("event", m_eventBuilder);
-		m_reportBuilders.put("heartbeat", m_heartbeatBuilder);
-		m_reportBuilders.put("transaction", m_tansactionBuilder);
-		m_reportBuilders.put("matrix", m_matrixReportBuilder);
-		m_reportBuilders.put("cross", m_crossReportBuilder);
-		m_reportBuilders.put("sql", m_sqlReportBuilder);
-		m_reportBuilders.put("state", m_stateReportBuilder);
-		m_reportBuilders.put("dependency", m_dependendcyReportBuilder);
-		m_reportBuilders.put("metric", m_metricBaselineReportBuilder);
+		m_reportBuilders.put(ProblemAnalyzer.ID, m_problemBuilder);
+		m_reportBuilders.put(EventAnalyzer.ID, m_eventBuilder);
+		m_reportBuilders.put(HeartbeatAnalyzer.ID, m_heartbeatBuilder);
+		m_reportBuilders.put(TransactionAnalyzer.ID, m_tansactionBuilder);
+		m_reportBuilders.put(MatrixAnalyzer.ID, m_matrixReportBuilder);
+		m_reportBuilders.put(CrossAnalyzer.ID, m_crossReportBuilder);
+		m_reportBuilders.put(SqlAnalyzer.ID, m_sqlReportBuilder);
+		m_reportBuilders.put(StateAnalyzer.ID, m_stateReportBuilder);
+		m_reportBuilders.put(DependencyAnalyzer.ID, m_dependendcyReportBuilder);
+		m_reportBuilders.put(MetricAnalyzer.ID, m_metricBaselineReportBuilder);
+		
 		m_reportBuilders.put("bug", m_bugReportBuilder);
 		m_reportBuilders.put("service", m_serviceReportBuilder);
+		m_reportBuilders.put("heavy", m_heavyReportBuilder);
+		m_reportBuilders.put("utilization", m_utilizationReportBuilder);
 	}
 
 }

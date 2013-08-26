@@ -543,6 +543,18 @@
 					AND <FIELD name='name'/> = ${name} 
 					]]></statement>
 			</query>
+			<query name="delete-report-by-domain-name-period" type="DELETE">
+				<param name="period" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					DELETE 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	
@@ -555,6 +567,18 @@
 				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					]]></statement>
+			</query>
+			<query name="delete-report-by-domain-name-period" type="DELETE">
+				<param name="period" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					DELETE 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> = ${period}
 					AND <FIELD name='domain'/> = ${domain}

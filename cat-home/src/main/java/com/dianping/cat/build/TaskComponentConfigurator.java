@@ -22,6 +22,7 @@ import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
@@ -32,6 +33,7 @@ import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
@@ -47,6 +49,7 @@ import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -110,6 +113,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
 
+		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
+
+		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class));
+
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
@@ -117,7 +124,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
 		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
-		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class));
+		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class,
+		            HeavyReportBuilder.class, UtilizationReportBuilder.class));
 
 		return all;
 	}
