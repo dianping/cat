@@ -6,8 +6,8 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
