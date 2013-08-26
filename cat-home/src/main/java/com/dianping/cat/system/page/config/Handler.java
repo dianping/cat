@@ -2,6 +2,7 @@ package com.dianping.cat.system.page.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -240,6 +241,18 @@ public class Handler implements PageHandler<Context> {
 
 		case METRIC_CONFIG_ADD_OR_UPDATE:
 			metricConfigAdd(payload, model);
+			model.setProductLines(m_productLineConfigManger.queryProductLines());
+			Collection<ProductLine> productLines = model.getProductLines().values();
+			ProductLine productLine = null;
+			for(ProductLine pl : productLines){
+				if(pl.getId().equals(payload.getProductLineName())){
+					productLine = pl;
+					break;
+				}
+			}
+			if(productLine == null)
+				productLine = new ProductLine();
+			model.setProductLineToDomains(productLine.getDomains());
 			model.setProjects(queryAllProjects());
 			break;
 		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
