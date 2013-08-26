@@ -214,7 +214,6 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
-		System.out.println(report);
 		new UtilizationReportScore().visitUtilizationReport(report);
 		return report;
 	}

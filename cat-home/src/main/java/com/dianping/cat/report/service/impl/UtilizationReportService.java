@@ -91,7 +91,6 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 
 					try {
 						UtilizationReport reportModel = com.dianping.cat.home.utilization.transform.DefaultSaxParser.parse(xml);
-						System.out.println(reportModel);
 						reportModel.accept(merger);
 					} catch (Exception e) {
 						Cat.logError(e);
