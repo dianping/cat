@@ -53,11 +53,15 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 		for (String domainName : domains) {
 			TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
-
+			int size = transactionReport.getMachines().size();
+			
 			transactionReport = m_mergeManager.mergerAllIp(transactionReport, CatString.ALL);
 			visitor.visitTransactionReport(transactionReport);
+			utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 		}
 		HourlyReport report = new HourlyReport();
+
+		System.out.println(utilizationReport);
 
 		report.setContent(utilizationReport.toString());
 		report.setCreationDate(new Date());

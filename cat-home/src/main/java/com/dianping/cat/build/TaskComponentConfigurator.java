@@ -22,6 +22,7 @@ import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
@@ -114,7 +115,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
 
-		all.add(C(UtilizationReportBuilder.class).req(ReportService.class));
+		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class));
 
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));

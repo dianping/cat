@@ -216,7 +216,10 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
+		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
+
+		new UtilizationReportScore().visitUtilizationReport(report);
+		return report;
 	}
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
@@ -262,10 +265,12 @@ public class Handler implements PageHandler<Context> {
 					return (int) (d2.getSwallowCallCount() - d1.getSwallowCallCount());
 				} else if (sortBy.equals("memcacheCount")) {
 					return (int) (d2.getMemcacheCount() - d1.getMemcacheCount());
-				} else if (sortBy.equals("score")) {
-					return (int) (d2.getScore() - d1.getScore());
+				} else if (sortBy.equals("webScore")) {
+					return (int) (d2.getWebScore() - d1.getWebScore());
+				} else if (sortBy.equals("serviceScore")) {
+					return (int) (d2.getServiceScore() - d1.getServiceScore());
 				} else {
-					return (int) (d2.getScore() - d1.getScore());
+					return (int) (d2.getWebScore() - d1.getWebScore());
 				}
 			}
 		});
