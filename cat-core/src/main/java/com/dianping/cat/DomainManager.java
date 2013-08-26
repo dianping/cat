@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer;
+package com.dianping.cat;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,7 +24,6 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;

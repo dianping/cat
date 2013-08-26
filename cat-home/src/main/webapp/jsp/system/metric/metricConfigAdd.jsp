@@ -9,6 +9,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <form name="metricConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSumbit">
+	
 	<h4 class="text-center text-error" id="state">&nbsp;</h4>
 	<h4 class="text-center text-error">修改业务监控节点配置信息</h4>
 	<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
@@ -21,9 +22,9 @@
 				</c:if>
 				<c:if test="${empty  model.metricItemConfig.domain}">
 					<select style="width:200px;" name="metricItemConfig.domain" id="id">
-	                     <c:forEach var="item" items="${model.projects}">
-	                           <option value="${item.domain}">${item.domain}</option>
-	                     </c:forEach>
+						<c:forEach var="item" items="${model.productLineToDomains}">
+	                        <option value="${item.key}">${item.key}</option> 							
+						</c:forEach>
                  	 </select>
 				</c:if>
 			</td>

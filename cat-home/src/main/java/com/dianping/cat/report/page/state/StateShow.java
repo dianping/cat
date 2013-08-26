@@ -54,6 +54,10 @@ public class StateShow extends BaseVisitor {
 		Collections.sort(temp, new DomainCompartor());
 		return temp;
 	}
+	
+	public Map<String,ProcessDomain> getProcessDomainMap() {
+		return m_processDomains;
+	}
 
 	public Machine getTotal() {
 		return m_total;

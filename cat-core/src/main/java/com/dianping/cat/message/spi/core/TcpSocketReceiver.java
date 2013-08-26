@@ -277,7 +277,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 				if (flag == 0) {
 					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
-
+					
 					if (m_processCount % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
 						m_logger.info("The server processes message number " + m_processCount);
 					}

@@ -665,7 +665,7 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.DomainManager</role>
+					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2339,7 +2339,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.DomainManager</role>
+					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2358,8 +2358,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.DomainManager</role>
-			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
+			<role>com.dianping.cat.DomainManager</role>
+			<implementation>com.dianping.cat.DomainManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
@@ -2729,7 +2729,7 @@
 					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.DomainManager</role>
+					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -7,7 +7,9 @@ import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Message;
+import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
@@ -50,9 +52,37 @@ public class StateGraphs {
 		double[] result = new double[size];
 		StateShow show = new StateShow(ip);
 		show.visitStateReport(report);
+		Map<Long,Detail> datas = null;
+		String domain = "";
+		int index = key.indexOf(':');
+		if(index != -1){
+			domain = key.substring(0,index);
+			key = key.substring(index+1);
+			ProcessDomain processDomain = show.getProcessDomainMap().get(domain);
+			if(processDomain != null){
+				datas = processDomain.getDetails();
+			}
+		}
 		
 		Map<Long, Message> messages = show.getMessagesMap();
 		for (int i = 0; i < size; i++) {
+			if(index != -1){
+				if(datas == null){
+					continue;
+				}
+				Detail detail = datas.get(i * 60 * 1000 + start);
+				if(detail == null){
+					continue;
+				}
+				if (key.equalsIgnoreCase("total")) {
+					result[i] = detail.getTotal();
+				} else if (key.equalsIgnoreCase("totalLoss")) {
+					result[i] = detail.getTotalLoss();
+				} else if (key.equalsIgnoreCase("size")) {
+					result[i] = detail.getSize()/ 1024 / 1024;
+				} 
+				continue;
+			}
 			Message message = messages.get(i * 60 * 1000 + start);
 
 			if (message != null) {
@@ -92,7 +122,7 @@ public class StateGraphs {
 
 	private double[] getDataFromHourlySummary(List<StateReport> reports, long start, int size, String key, String ip) {
 		double[] result = new double[size];
-
+		
 		for (StateReport report : reports) {
 			Date startTime = report.getStartTime();
 			StateShow show = new StateShow(ip);
