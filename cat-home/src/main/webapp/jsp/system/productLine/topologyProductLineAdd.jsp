@@ -68,14 +68,14 @@
 									<c:choose>
 										<c:when test="${status.index mod 4 ne 0}">
 											<td>
-												<input type="checkbox" name=domains value="${item.domain}" />${item.domain}
+												<input type="checkbox" id="${item.domain}" name=domains value="${item.domain}"/>&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
 											</td>
 										</c:when>
 										<c:otherwise>
 											</tr>
 											<tr>
 												<td>
-													<input type="checkbox" name=domains value="${item.domain}" />${item.domain}
+													<input type="checkbox"  id="${item.domain}" name=domains value="${item.domain}"/>&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
 												</td>
 										</c:otherwise>
 									</c:choose>											
@@ -84,7 +84,7 @@
 							</table>
 						</td>
 						
-<!-- 						<td><select style="width: 500px;" name="domains" multiple=""
+						<!-- <td><select style="width: 500px;" name="domains" multiple=""
 							id="domainSelect">
 								<c:forEach var="item" items="${model.projects}">
 									<option value="${item.domain}">${item.domain}</option>
@@ -92,8 +92,7 @@
 						</select></td> -->
 					</tr>
 					<tr>
-						<td>&nbsp;</td>
-						<td><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
+						<td colspan='2' style="text-align:center;"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
@@ -104,7 +103,6 @@
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#topologyProductLines').addClass('active');
-			
 			$("#domainSelect").select2({
 				placeholder : "选择属于这个产品线的项目",
 				allowClear : true
