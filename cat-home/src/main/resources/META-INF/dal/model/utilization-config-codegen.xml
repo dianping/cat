@@ -6,7 +6,17 @@
     <attribute name="sql-weight" value-type="double" />
     <attribute name="pigeoncall-weight" value-type="double" />
     <attribute name="cache-weight" value-type="double" />
-    <attribute name="swallow-weight" value-type="int" />
+    <attribute name="swallow-weight" value-type="double" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="url-weight" value-type="double" />
+    <attribute name="service-weight" value-type="double" />
+    <attribute name="sql-weight" value-type="double" />
+    <attribute name="pigeoncall-weight" value-type="double" />
+    <attribute name="cache-weight" value-type="double" />
+    <attribute name="swallow-weight" value-type="double" />
   </entity>
 </model>
 
