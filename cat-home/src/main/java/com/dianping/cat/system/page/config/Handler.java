@@ -40,6 +40,7 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -62,6 +63,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ExceptionThresholdConfigManager m_exceptionConfigManager;
+	
+	@Inject
+	private UtilizationConfigManager m_utilizationConfigManager;
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
@@ -279,11 +283,20 @@ public class Handler implements PageHandler<Context> {
 		case BUG_CONFIG_UPDATE:
 			String xml = payload.getBug();
 			if (!StringUtils.isEmpty(xml)) {
-				model.setOpState(m_bugConfigManager.insert(payload.getBug()));
+				model.setOpState(m_bugConfigManager.insert(xml));
 			} else {
 				model.setOpState(true);
 			}
 			model.setBug(m_bugConfigManager.getBugConfig().toString());
+			break;
+		case UTILIZATION_CONFIG_UPDATE:
+			String content = payload.getContent();
+			if (!StringUtils.isEmpty(content)) {
+				model.setOpState(m_utilizationConfigManager.insert(content));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_utilizationConfigManager.getUtilizationConfig().toString());
 			break;
 		}
 		m_jspViewer.view(ctx, model);

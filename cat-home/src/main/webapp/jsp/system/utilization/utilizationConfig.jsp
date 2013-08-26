@@ -16,16 +16,16 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<form name="bugConfigUpdate" id="form" method="post"
-				action="${model.pageUri}?op=bugConfigUpdate">
+			<form name="utilizationConfigUpdate" id="form" method="post"
+				action="${model.pageUri}?op=utilizationConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">异常规范配置</h4>
+				<h4 class="text-center text-error">应用排行榜资源权重配置</h4>
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<td><textarea name="bug" style="width:auto" rows="20" cols="150">${model.bug}</textarea></td>
+						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
 					</tr>
 					<tr>
-						<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
+						<td style="text-align:center"><input class='btn btn-primary' 
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
@@ -35,7 +35,7 @@
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#bugConfigUpdate').addClass('active');
+			$('#utilizationConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

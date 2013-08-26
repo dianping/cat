@@ -55,6 +55,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	
 	private String m_bug;
 	
+	private String m_content;
+	
 	private Map<String, Domain> m_productLineToDomains;
 
 
@@ -237,6 +239,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setBug(String bug) {
    	m_bug = bug;
+   }
+	
+	public String getContent() {
+   	return m_content;
+   }
+
+	public void setContent(String content) {
+   	m_content = content;
    }
 
 	public static class Edge {

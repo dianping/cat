@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.utilization.config"  enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true"  enable-xml-parser="false"  enable-xml-builder="false">
+    <entity name="utilization-config" root="true">
+    <attribute name="url-weight" value-type="double"  primitive="true"/>
+    <attribute name="service-weight" value-type="double"  primitive="true"/>
+    <attribute name="sql-weight" value-type="double"  primitive="true"/>
+    <attribute name="pigeoncall-weight" value-type="double"  primitive="true"/>
+    <attribute name="cache-weight" value-type="double"  primitive="true"/>
+    <attribute name="swallow-weight" value-type="double"  primitive="true"/>
+  </entity>
+</model>
+

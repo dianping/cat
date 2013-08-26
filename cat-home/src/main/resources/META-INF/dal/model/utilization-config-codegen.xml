@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="utilization-config" root="true">
+    <attribute name="url-weight" value-type="double" />
+    <attribute name="service-weight" value-type="double" />
+    <attribute name="sql-weight" value-type="double" />
+    <attribute name="pigeoncall-weight" value-type="double" />
+    <attribute name="cache-weight" value-type="double" />
+    <attribute name="swallow-weight" value-type="int" />
+  </entity>
+</model>
+
