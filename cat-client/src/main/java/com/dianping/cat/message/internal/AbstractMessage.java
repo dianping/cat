@@ -99,7 +99,7 @@ public abstract class AbstractMessage implements Message {
 		return Message.SUCCESS.equals(m_status);
 	}
 
-	protected void setCompleted(boolean completed) {
+	public void setCompleted(boolean completed) {
 		m_completed = completed;
 	}
 

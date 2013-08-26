@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>0.6.2</version>
+      <version>0.6.2-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -186,7 +186,10 @@
 						${basedir}/src/main/resources/META-INF/dal/model/exception-threshold-config-manifest.xml,
                      	${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml,
                      	${basedir}/src/main/resources/META-INF/dal/model/bug-manifest.xml,
-                     	${basedir}/src/main/resources/META-INF/dal/model/bug-config-manifest.xml,</manifest>
+                     	${basedir}/src/main/resources/META-INF/dal/model/bug-config-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>

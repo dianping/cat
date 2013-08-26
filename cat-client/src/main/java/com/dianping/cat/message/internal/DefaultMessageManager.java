@@ -76,7 +76,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	void flush(MessageTree tree) {
+	public void flush(MessageTree tree) {
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && !shouldThrottle(tree)) {

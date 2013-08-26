@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -20,10 +22,12 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
@@ -98,7 +102,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			return getReportFromDB(product, date);
 		}
-
 	}
 
 	@Override
@@ -114,41 +117,52 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 
-		String test = payload.getTest();
-		Date startTime = new Date(payload.getDate() - 23 * TimeUtil.ONE_HOUR);
-		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
-		String product = payload.getProduct();
-		List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
-		List<MetricItemConfig> domainSet = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
-		MetricDisplay display = new MetricDisplay(domainSet, test, startTime);
-		display.setBaselineService(m_baselineService);
-		display.setAbtest(m_abtestService);
+		Action action = payload.getAction();
+		Collection<ProductLine> productLines = m_productLineConfigManager.queryProductLines().values();
+		long date = payload.getDate();
+		switch (action) {
+		case METRIC:
+			MetricDisplay display = buildMetricsByProduct(date, payload.getProduct(), payload.getTest(), false);
+			model.setLineCharts(display.getLineCharts());
+			model.setAbtests(display.getAbtests());
+			break;
+		case DASHBOARD:
+			List<LineChart> allCharts = new ArrayList<LineChart>();
+			for (ProductLine productLine : productLines) {
+				MetricDisplay metricDisplay = buildMetricsByProduct(date, productLine.getId(), payload.getTest(), true);
+				List<LineChart> charts = metricDisplay.getLineCharts();
+			
+				allCharts.addAll(charts);
+			}
+			model.setLineCharts(allCharts);
+			break;
+		}
+		model.setProductLines(productLines);
+		m_jspViewer.view(ctx, model);
+	}
 
-		long date = startTime.getTime();
-		MetricReport report;
+	private MetricDisplay buildMetricsByProduct(long date, String product, String abtestID, boolean isDashboard) {
+		Date startTime = new Date(date - 23 * TimeUtil.ONE_HOUR);
+		List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
+		List<MetricItemConfig> metricConfigs = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		MetricDisplay display = new MetricDisplay(metricConfigs, abtestID, startTime,isDashboard);
+
+		display.setBaselineService(m_baselineService).setAbtestService(m_abtestService);
+		long time = startTime.getTime();
 		for (int i = 0; i < 24; i++) {
-			// current hourly and last hourly report read this function
-			// last two hours ago read db (cache)
-			ModelPeriod period = payload.getPeriod();
-			report = getReport(period, product, date);
+			ModelPeriod period = ModelPeriod.getByTime(time);
+			MetricReport report = getReport(period, product, time);
 
 			if (report != null) {
 				display.visitMetricReport(i, report);
 			}
-			date = date + TimeUtil.ONE_HOUR;
+			time = time + TimeUtil.ONE_HOUR;
 		}
 		display.generateDailyLineCharts();
-		if (test.equals("-1")) {
+		if (abtestID.equals("-1")) {
 			display.generateBaselineChart();
 		}
-		report = new MetricReport();
-		report.setStartTime(startTime);
-		report.setEndTime(endTime);
-
-		model.setDisplay(display);
-		model.setReport(report);
-		model.setProductLines(m_productLineConfigManager.queryProductLines().values());
-		m_jspViewer.view(ctx, model);
+		return display;
 	}
 
 	private void normalize(Model model, Payload payload) {
@@ -159,6 +173,11 @@ public class Handler implements PageHandler<Context> {
 		if (poduct == null || poduct.length() == 0) {
 			payload.setProduct(TUAN);
 		}
+		Date startTime = new Date(payload.getDate() - 23 * TimeUtil.ONE_HOUR);
+		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
+
+		model.setStartTime(startTime);
+		model.setEndTime(endTime);
 	}
 
 }

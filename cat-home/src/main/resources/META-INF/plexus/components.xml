@@ -451,6 +451,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.service.ServiceReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.DomainManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
@@ -546,6 +558,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
@@ -2495,7 +2510,7 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.view.DomainNavManager</role>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>

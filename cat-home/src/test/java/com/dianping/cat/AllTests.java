@@ -34,6 +34,7 @@ import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
 import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
+import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
@@ -104,6 +105,9 @@ BaselineCreatorTest.class,
 MetricReportParseTest.class,
 
 /* jsError */
-ParseTest.class})
+ParseTest.class,
+
+/* service */
+ServiceReportMergerTest.class})
 public class AllTests {
 }

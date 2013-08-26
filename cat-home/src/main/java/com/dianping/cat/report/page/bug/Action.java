@@ -1,12 +1,15 @@
 package com.dianping.cat.report.page.bug;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	HISTORY_REPORT("history"), 
-	
-	HOURLY_REPORT("view"), 
-	
-	HTTP_JSON("json")
-	;
+	HISTORY_REPORT("historyBug"),
+
+	HOURLY_REPORT("view"),
+
+	HTTP_JSON("json"),
+
+	SERVICE_REPORT("service"),
+
+	SERVICE_HISTORY_REPORT("historyService");
 
 	private String m_name;
 

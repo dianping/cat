@@ -44,7 +44,7 @@
          <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp">
             <description>Top</description>
          </page>
-         <page name="metric" title="Metric" path="metric">
+         <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>
          <page name="jsError" title="JsError" path="jsError">
@@ -56,7 +56,7 @@
          <page name="externalError" title="externalError" path="externalError" template="default">
             <description>ExternalError</description>
          </page>
-         <page name="bug" title="Bug" path="bug" view="/jsp/report/bug/bug.jsp" template="default">
+         <page name="bug" title="Statistics" path="bug" view="/jsp/report/bug/bug.jsp" template="default">
             <description>Bug</description>
          </page>
       </module>

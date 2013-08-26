@@ -12,6 +12,17 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
+	@FieldMeta("sort")
+	private String m_sortBy = "avg";
+
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
+	}
+
 	public Payload() {
 		super(ReportPage.BUG);
 	}

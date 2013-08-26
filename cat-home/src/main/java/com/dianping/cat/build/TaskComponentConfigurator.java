@@ -6,6 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
@@ -38,6 +39,7 @@ import com.dianping.cat.report.task.metric.MetricPointParser;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
@@ -94,8 +96,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportService.class) //
 		      .req(HeartbeatGraphCreator.class));
 
-		all.add(C(BugReportBuilder.class)
-		      .req( ReportService.class));
+		all.add(C(BugReportBuilder.class).req(ReportService.class));
+
+		all.add(C(ServiceReportBuilder.class).req(ReportService.class, DomainManager.class));
 
 		all.add(C(MatrixReportBuilder.class).req(ReportService.class));
 
@@ -111,10 +114,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      TopologyGraphDao.class));
 
 		all.add(C(ReportFacade.class)//
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
-		      		, HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
-		      		, SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,BugReportBuilder.class,
-		            MetricBaselineReportBuilder.class));
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
+		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
+		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class));
 
 		return all;
 	}
