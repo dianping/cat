@@ -13,6 +13,7 @@ import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
@@ -37,46 +38,38 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<Service> m_cacheServices;
 
-	public ServiceReport getServiceReport() {
-		return m_serviceReport;
-	}
-
-	public void setServiceReport(ServiceReport serviceReport) {
-		m_serviceReport = serviceReport;
-	}
-
-	public List<com.dianping.cat.home.service.entity.Domain> getServiceList() {
-		return m_serviceList;
-	}
-
-	public void setServiceList(List<com.dianping.cat.home.service.entity.Domain> serviceList) {
-		this.m_serviceList = serviceList;
-	}
-
 	private Map<String, ErrorStatis> m_errorStatis;
 
-	public BugReport getBugReport() {
-		return m_bugReport;
-	}
+	private UtilizationReport m_utilizationReport;
 
-	public void setBugReport(BugReport bugReport) {
-		m_bugReport = bugReport;
-	}
-
-	public Map<String, ErrorStatis> getErrorStatis() {
-		return m_errorStatis;
-	}
-
-	public void setErrorStatis(Map<String, ErrorStatis> errorStatis) {
-		m_errorStatis = errorStatis;
-	}
+	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationList;
 
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
+	public BugReport getBugReport() {
+		return m_bugReport;
+	}
+
 	public String getBugs() {
 		return new DefaultJsonBuilder().buildJson(m_bugReport);
+	}
+
+	public List<Service> getCacheServices() {
+		return m_cacheServices;
+	}
+
+	public List<Url> getCacheUrls() {
+		return m_cacheUrls;
+	}
+
+	public List<Service> getCallServices() {
+		return m_callServices;
+	}
+
+	public List<Url> getCallUrls() {
+		return m_callUrls;
 	}
 
 	@Override
@@ -89,64 +82,93 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return CatString.CAT;
 	}
 
+	@Override
+	public Collection<String> getDomains() {
+		return new ArrayList<String>();
+	}
+
+	public Map<String, ErrorStatis> getErrorStatis() {
+		return m_errorStatis;
+	}
+
 	public HeavyReport getHeavyReport() {
 		return m_heavyReport;
 	}
 
-	public void setHeavyReport(HeavyReport heavyReport) {
-		m_heavyReport = heavyReport;
+	public List<com.dianping.cat.home.service.entity.Domain> getServiceList() {
+		return m_serviceList;
 	}
 
-	public List<Url> getCallUrls() {
-		return m_callUrls;
-	}
-
-	public void setCallUrls(List<Url> callUrls) {
-		m_callUrls = callUrls;
-	}
-
-	public List<Service> getCallServices() {
-		return m_callServices;
-	}
-
-	public void setCallServices(List<Service> callServices) {
-		m_callServices = callServices;
-	}
-
-	public List<Url> getSqlUrls() {
-		return m_sqlUrls;
-	}
-
-	public void setSqlUrls(List<Url> sqlUrls) {
-		m_sqlUrls = sqlUrls;
+	public ServiceReport getServiceReport() {
+		return m_serviceReport;
 	}
 
 	public List<Service> getSqlServices() {
 		return m_sqlServices;
 	}
 
-	public void setSqlServices(List<Service> sqlServices) {
-		m_sqlServices = sqlServices;
+	public List<Url> getSqlUrls() {
+		return m_sqlUrls;
 	}
 
-	public List<Url> getCacheUrls() {
-		return m_cacheUrls;
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationList() {
+		return m_utilizationList;
 	}
 
-	public void setCacheUrls(List<Url> cacheUrls) {
-		m_cacheUrls = cacheUrls;
+	public UtilizationReport getUtilizationReport() {
+		return m_utilizationReport;
 	}
 
-	public List<Service> getCacheServices() {
-		return m_cacheServices;
+	public void setBugReport(BugReport bugReport) {
+		m_bugReport = bugReport;
 	}
 
 	public void setCacheServices(List<Service> cacheServices) {
 		m_cacheServices = cacheServices;
 	}
 
-	@Override
-	public Collection<String> getDomains() {
-		return new ArrayList<String>();
+	public void setCacheUrls(List<Url> cacheUrls) {
+		m_cacheUrls = cacheUrls;
 	}
+
+	public void setCallServices(List<Service> callServices) {
+		m_callServices = callServices;
+	}
+
+	public void setCallUrls(List<Url> callUrls) {
+		m_callUrls = callUrls;
+	}
+
+	public void setErrorStatis(Map<String, ErrorStatis> errorStatis) {
+		m_errorStatis = errorStatis;
+	}
+
+	public void setHeavyReport(HeavyReport heavyReport) {
+		m_heavyReport = heavyReport;
+	}
+
+	public void setServiceList(List<com.dianping.cat.home.service.entity.Domain> serviceList) {
+		this.m_serviceList = serviceList;
+	}
+
+	public void setServiceReport(ServiceReport serviceReport) {
+		m_serviceReport = serviceReport;
+	}
+
+	public void setSqlServices(List<Service> sqlServices) {
+		m_sqlServices = sqlServices;
+	}
+
+	public void setSqlUrls(List<Url> sqlUrls) {
+		m_sqlUrls = sqlUrls;
+	}
+
+	public void setUtilizationList(List<com.dianping.cat.home.utilization.entity.Domain> dUList) {
+		m_utilizationList = dUList;
+	}
+
+	public void setUtilizationReport(UtilizationReport utilizationReport) {
+		m_utilizationReport = utilizationReport;
+	}
+
 }

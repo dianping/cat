@@ -10,10 +10,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	SERVICE_REPORT("service"),
 
 	SERVICE_HISTORY_REPORT("historyService"),
-	
+
 	HEAVY_REPORT("heavy"),
 
-	HEAVY_HISTORY_REPORT("historyHeavy");
+	HEAVY_HISTORY_REPORT("historyHeavy"),
+
+	UTILIZATION_REPORT("utilization"),
+
+	UTILIZATION_HISTORY_REPORT("historyUtilization");
 
 	private String m_name;
 

@@ -29,6 +29,7 @@ import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.service.ReportService;
 
 public class DefaultReportService implements ReportService {
@@ -86,6 +87,9 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private MetricReportService m_metricReportService;
+	
+	@Inject
+	private UtilizationReportService m_utilizationReportService;
 
 	@Override
 	public boolean insertDailyReport(DailyReport report) {
@@ -192,4 +196,9 @@ public class DefaultReportService implements ReportService {
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
 		return m_transactionReportService.queryReport(domain, start, end);
 	}
+
+	@Override
+   public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
+		return m_utilizationReportService.queryReport(domain, start, end);
+   }
 }

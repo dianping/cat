@@ -21,6 +21,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
 public interface ReportService {
 
@@ -61,4 +62,6 @@ public interface ReportService {
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
 	public HeavyReport queryHeavyReport(String domain,  Date start, Date end);
+	
+	public UtilizationReport queryUtilizationReport(String domain,  Date start, Date end);
 }

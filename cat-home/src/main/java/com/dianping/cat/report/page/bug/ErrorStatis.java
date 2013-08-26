@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.dianping.cat.home.bug.entity.ExceptionItem;
 
-public  class ErrorStatis {
+public class ErrorStatis {
 	private String m_productLine;
 
 	private String m_department;

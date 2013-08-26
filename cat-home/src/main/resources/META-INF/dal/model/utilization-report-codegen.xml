@@ -11,6 +11,8 @@
     <attribute name="machine-number" value-type="int" />
     <attribute name="url-count" value-type="int" />
     <attribute name="url-response-time" value-type="double" />
+    <attribute name="service-count" value-type="int" />
+    <attribute name="service-response-time" value-type="double" />
     <attribute name="sql-count" value-type="int" />
     <attribute name="pigeon-call-count" value-type="int" />
     <attribute name="swallow-call-count" value-type="int" />

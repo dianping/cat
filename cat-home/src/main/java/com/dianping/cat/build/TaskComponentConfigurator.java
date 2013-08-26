@@ -48,6 +48,7 @@ import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -113,6 +114,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
 
+		all.add(C(UtilizationReportBuilder.class).req(ReportService.class));
+
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
@@ -121,7 +124,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
 		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
 		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class,
-		            HeavyReportBuilder.class));
+		            HeavyReportBuilder.class, UtilizationReportBuilder.class));
 
 		return all;
 	}

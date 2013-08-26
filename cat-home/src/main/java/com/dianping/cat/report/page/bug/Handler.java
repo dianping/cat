@@ -39,6 +39,7 @@ import com.dianping.cat.home.heavy.entity.HeavySql;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
@@ -61,6 +62,40 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
+		HeavyCall heavyCall = heavyReport.getHeavyCall();
+		if (heavyCall != null) {
+
+			List<Url> callUrls = new ArrayList<Url>(heavyCall.getUrls().values());
+			List<Service> callServices = new ArrayList<Service>(heavyCall.getServices().values());
+			Collections.sort(callUrls, new UrlComparator());
+			Collections.sort(callServices, new ServiceComparator());
+			model.setCallUrls(callUrls);
+			model.setCallServices(callServices);
+		}
+
+		HeavySql heavySql = heavyReport.getHeavySql();
+
+		if (heavySql != null) {
+			List<Url> sqlUrls = new ArrayList<Url>(heavySql.getUrls().values());
+			List<Service> sqlServices = new ArrayList<Service>(heavySql.getServices().values());
+			Collections.sort(sqlUrls, new UrlComparator());
+			Collections.sort(sqlServices, new ServiceComparator());
+			model.setSqlUrls(sqlUrls);
+			model.setSqlServices(sqlServices);
+		}
+
+		HeavyCache heavyCache = heavyReport.getHeavyCache();
+		if (heavyCache != null) {
+			List<Url> cacheUrls = new ArrayList<Url>(heavyCache.getUrls().values());
+			List<Service> cacheServices = new ArrayList<Service>(heavyCache.getServices().values());
+			Collections.sort(cacheUrls, new UrlComparator());
+			Collections.sort(cacheServices, new ServiceComparator());
+			model.setCacheUrls(cacheUrls);
+			model.setCacheServices(cacheServices);
+		}
+	}
 
 	public Project findByDomain(String domain) {
 		try {
@@ -86,7 +121,6 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 		Action action = payload.getAction();
 
-		System.out.println(model.getDate());
 		switch (action) {
 		case SERVICE_REPORT:
 		case SERVICE_HISTORY_REPORT:
@@ -124,43 +158,41 @@ public class Handler implements PageHandler<Context> {
 			model.setHeavyReport(heavyReport);
 			buildSortedHeavyInfo(model, heavyReport);
 			break;
+		case UTILIZATION_REPORT:
+		case UTILIZATION_HISTORY_REPORT:
+			UtilizationReport utilizationReport = queryUtilizationReport(payload);
+			List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
+
+			model.setUtilizationReport(utilizationReport);
+			model.setUtilizationList(dUList);
+			break;
 		}
 		model.setPage(ReportPage.BUG);
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
-		HeavyCall heavyCall = heavyReport.getHeavyCall();
-		if (heavyCall != null) {
+	private boolean isBug(String domain, String exception) {
+		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
-			List<Url> callUrls = new ArrayList<Url>(heavyCall.getUrls().values());
-			List<Service> callServices = new ArrayList<Service>(heavyCall.getServices().values());
-			Collections.sort(callUrls, new UrlComparator());
-			Collections.sort(callServices, new ServiceComparator());
-			model.setCallUrls(callUrls);
-			model.setCallServices(callServices);
-		}
+		return !bugConfig.contains(exception);
+	}
 
-		HeavySql heavySql = heavyReport.getHeavySql();
+	private BugReport queryBugReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		if (heavySql != null) {
-			List<Url> sqlUrls = new ArrayList<Url>(heavySql.getUrls().values());
-			List<Service> sqlServices = new ArrayList<Service>(heavySql.getServices().values());
-			Collections.sort(sqlUrls, new UrlComparator());
-			Collections.sort(sqlServices, new ServiceComparator());
-			model.setSqlUrls(sqlUrls);
-			model.setSqlServices(sqlServices);
-		}
+		return m_reportService.queryBugReport(CatString.CAT, pair.getKey(), pair.getValue());
+	}
 
-		HeavyCache heavyCache = heavyReport.getHeavyCache();
-		if (heavyCache != null) {
-			List<Url> cacheUrls = new ArrayList<Url>(heavyCache.getUrls().values());
-			List<Service> cacheServices = new ArrayList<Service>(heavyCache.getServices().values());
-			Collections.sort(cacheUrls, new UrlComparator());
-			Collections.sort(cacheServices, new ServiceComparator());
-			model.setCacheUrls(cacheUrls);
-			model.setCacheServices(cacheServices);
-		}
+	private HeavyReport queryHeavyReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryHeavyReport(CatString.CAT, pair.getKey(), pair.getValue());
+	}
+
+	private ServiceReport queryServiceReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryServiceReport(CatString.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private Pair<Date, Date> queryStartEndTime(Payload payload) {
@@ -181,10 +213,10 @@ public class Handler implements PageHandler<Context> {
 		return new Pair<Date, Date>(start, end);
 	}
 
-	private ServiceReport queryServiceReport(Payload payload) {
+	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryServiceReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
@@ -207,22 +239,37 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	private boolean isBug(String domain, String exception) {
-		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
-
-		return !bugConfig.contains(exception);
-	}
-
-	private HeavyReport queryHeavyReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-
-		return m_reportService.queryHeavyReport(CatString.CAT, pair.getKey(), pair.getValue());
-	}
-
-	private BugReport queryBugReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-
-		return m_reportService.queryBugReport(CatString.CAT, pair.getKey(), pair.getValue());
+	private List<com.dianping.cat.home.utilization.entity.Domain> sort(UtilizationReport utilizationReport,
+	      final String sortBy) {
+		List<com.dianping.cat.home.utilization.entity.Domain> result = new ArrayList<com.dianping.cat.home.utilization.entity.Domain>(
+		      utilizationReport.getDomains().values());
+		Collections.sort(result, new Comparator<com.dianping.cat.home.utilization.entity.Domain>() {
+			public int compare(com.dianping.cat.home.utilization.entity.Domain d1,
+			      com.dianping.cat.home.utilization.entity.Domain d2) {
+				if (sortBy.equals("urlCount")) {
+					return (int) (d2.getUrlCount() - d1.getUrlCount());
+				} else if (sortBy.equals("urlResponse")) {
+					return (int) (100 * d2.getUrlResponseTime() - 100 * d1.getUrlResponseTime());
+				} else if (sortBy.equals("serviceCount")) {
+					return (int) (d2.getServiceCount() - d1.getServiceCount());
+				} else if (sortBy.equals("serviceResponse")) {
+					return (int) (100 * d2.getServiceResponseTime() - 100 * d1.getServiceResponseTime());
+				} else if (sortBy.equals("sqlCount")) {
+					return (int) (d2.getSqlCount() - d1.getSqlCount());
+				} else if (sortBy.equals("pigeonCallCount")) {
+					return (int) (d2.getPigeonCallCount() - d1.getPigeonCallCount());
+				} else if (sortBy.equals("swallowCallCount")) {
+					return (int) (d2.getSwallowCallCount() - d1.getSwallowCallCount());
+				} else if (sortBy.equals("memcacheCount")) {
+					return (int) (d2.getMemcacheCount() - d1.getMemcacheCount());
+				} else if (sortBy.equals("score")) {
+					return (int) (d2.getScore() - d1.getScore());
+				} else {
+					return (int) (d2.getScore() - d1.getScore());
+				}
+			}
+		});
+		return result;
 	}
 
 	private Map<String, ErrorStatis> sortErrorStatis(Map<String, ErrorStatis> errors) {

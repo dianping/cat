@@ -27,6 +27,7 @@ import com.dianping.cat.report.service.impl.SqlReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.report.service.impl.TransactionReportService;
+import com.dianping.cat.report.service.impl.UtilizationReportService;
 
 public class ReportServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -55,6 +56,8 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 
 		all.add(C(BugReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class));
+		all.add(C(UtilizationReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
+		      MonthlyReportDao.class));
 		all.add(C(ServiceReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class));
 		all.add(C(HeavyReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
@@ -66,7 +69,7 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      .req(MatrixReportService.class, SqlReportService.class, DependencyReportService.class) //
 		      .req(TopReportService.class, StateReportService.class, CrossReportService.class) //
 		      .req(HeartbeatReportService.class, MetricReportService.class, BugReportService.class) //
-		      .req(HeavyReportService.class, ServiceReportService.class));
+		      .req(HeavyReportService.class, ServiceReportService.class, UtilizationReportService.class));
 		return all;
 	}
 }

@@ -99,16 +99,6 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		      || typeInfo.getProjectName().equalsIgnoreCase("UnknownProject");
 	}
 
-	public Domain findOrCreate(String project, Map<String, Domain> sdMap) {
-		Domain d = sdMap.get(project);
-
-		if (d == null) {
-			d = new Domain();
-			sdMap.put(project, d);
-		}
-		return d;
-	}
-
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
@@ -162,9 +152,9 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		return serviceReport;
 	}
 
-	private ServiceReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		long startTime = period.getTime();
-		long endTime = endDate.getTime();
+	private ServiceReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
 		ServiceReportMerger merger = new ServiceReportMerger(new ServiceReport(domain));
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
@@ -175,7 +165,11 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 			reportModel.accept(merger);
 		}
 
-		return merger.getServiceReport();
+		ServiceReport serviceReport = merger.getServiceReport();
+
+		serviceReport.setStartTime(start);
+		serviceReport.setEndTime(end);
+		return serviceReport;
 	}
 
 }

@@ -331,6 +331,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.impl.UtilizationReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.UtilizationReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.ServiceReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.ServiceReportService</implementation>
 			<requirements>
@@ -423,6 +441,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.ServiceReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.UtilizationReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -706,6 +727,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
@@ -762,6 +792,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
