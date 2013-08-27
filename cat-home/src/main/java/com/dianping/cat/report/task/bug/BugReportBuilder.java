@@ -28,6 +28,8 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	@Inject
 	protected ReportService m_reportService;
 
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
+
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		BugReport bugReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
@@ -61,10 +63,9 @@ public class BugReportBuilder implements ReportTaskBuilder {
 			}
 		}
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 		for (Domain d : bugReport.getDomains().values()) {
 			d.setProblemUrl(String.format("http://%s/cat/r/p?domain=%s&date=%s", getDomainName(), d.getId(),
-			      sdf.format(start)));
+			      m_sdf.format(start)));
 		}
 		HourlyReport report = new HourlyReport();
 
@@ -129,9 +130,9 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		return bugReport;
 	}
 
-	private BugReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		long startTime = period.getTime();
-		long endTime = endDate.getTime();
+	private BugReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
 		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
@@ -143,6 +144,10 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		}
 		com.dianping.cat.home.bug.entity.BugReport bugReport = merger.getBugReport();
 
+		for(Domain d :bugReport.getDomains().values()){
+			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&domain=%s&date=%s", getDomainName(), d.getId(),
+			      m_sdf.format(start)));
+		}
 		return bugReport;
 	}
 

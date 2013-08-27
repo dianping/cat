@@ -20,14 +20,12 @@ public class HeavyReportBuilderTest extends ComponentTestCase {
 	public void test() throws Exception {
 		HeavyReportBuilder builder = lookup(HeavyReportBuilder.class);
 		Date date = new SimpleDateFormat("yyyyMMddHH").parse("2013082600");
-		builder.buildHourlyTask(ReportConstants.REPORT_HEAVY, CatString.CAT, new SimpleDateFormat("yyyyMMddHH").parse("2013082714"));
-		builder.buildHourlyTask(ReportConstants.REPORT_HEAVY, CatString.CAT, new SimpleDateFormat("yyyyMMddHH").parse("2013082715"));
-//		for (int i = 0; i < 24; i++) {
-//			Date current = new Date(date.getTime() + TimeUtil.ONE_HOUR * i);
-//			builder.buildHourlyTask(ReportConstants.REPORT_HEAVY, CatString.CAT, current);
-//		}
-//		
-//		builder.buildDailyTask(ReportConstants.REPORT_HEAVY,  CatString.CAT, date);
+		for (int i = 0; i < 24; i++) {
+			Date current = new Date(date.getTime() + TimeUtil.ONE_HOUR * i);
+			builder.buildHourlyTask(ReportConstants.REPORT_HEAVY, CatString.CAT, current);
+		}
+		
+		builder.buildDailyTask(ReportConstants.REPORT_HEAVY,  CatString.CAT, date);
 	}
 
 	@Test
