@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -161,8 +162,18 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			UtilizationReport utilizationReport = queryUtilizationReport(payload);
 			List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
+			List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
+			List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
+			for(com.dianping.cat.home.utilization.entity.Domain d : dUList){
+				if(d.getUrlCount() > 0)
+					dUWebList.add(d);
+				if(d.getServiceCount() > 0)
+					dUServiceList.add(d);
+			}
 			model.setUtilizationReport(utilizationReport);
 			model.setUtilizationList(dUList);
+			model.setUtilizationWebList(dUWebList);
+			model.setUtilizationServiceList(dUServiceList);
 			break;
 		}
 		model.setPage(ReportPage.BUG);

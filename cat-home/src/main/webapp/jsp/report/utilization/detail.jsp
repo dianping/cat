@@ -27,7 +27,7 @@
 								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=webScore&tab=tab1">Web Score</th>
 							</tr>
 						
-							<c:forEach var="item" items="${model.utilizationList}" varStatus="status">
+							<c:forEach var="item" items="${model.utilizationWebList}" varStatus="status">
 								<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 									<td>${item.id}</td>
 									<td style="text-align:right">${item.machineNumber}</td>
@@ -62,7 +62,7 @@
 								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=serviceScore&tab=tab2">Service Score</th>
 							</tr>
 						
-							<c:forEach var="item" items="${model.utilizationList}" varStatus="status">
+							<c:forEach var="item" items="${model.utilizationServiceList}" varStatus="status">
 								<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 									<td>${item.id}</td>
 									<td style="text-align:right">${item.machineNumber}</td>
