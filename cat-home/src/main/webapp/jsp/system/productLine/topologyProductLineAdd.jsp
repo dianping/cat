@@ -68,14 +68,14 @@
 									<c:choose>
 										<c:when test="${status.index mod 4 ne 0}">
 											<td>
-												<input type="checkbox" name=domains value="${item.domain}" />${item.domain}
+												<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />${item.domain}
 											</td>
 										</c:when>
 										<c:otherwise>
 											</tr>
 											<tr>
 												<td>
-													<input type="checkbox" name=domains value="${item.domain}" />${item.domain}
+													<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />${item.domain}
 												</td>
 										</c:otherwise>
 									</c:choose>											
@@ -113,7 +113,9 @@
 			var initDomains = [];
 			<c:forEach var="domain" items="${model.productLine.domains}">
 				initDomains.push("${domain.key}");
+				document.getElementById("${domain.key}").checked = true;
 			</c:forEach>
 			$("#domainSelect").val(initDomains).trigger("change");
+			
 		});
 	</script>
