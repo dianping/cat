@@ -18,7 +18,7 @@
     <attribute name="pigeon-call-count" value-type="long"  primitive="true"/>
     <attribute name="swallow-call-count" value-type="long"  primitive="true"/>
     <attribute name="memcache-count" value-type="long"  primitive="true"/>
-    <attribute name="web-score" value-type="long"  primitive="true"/>
-    <attribute name="service-score" value-type="long"  primitive="true"/>
+    <attribute name="web-score" value-type="double"  primitive="true"/>
+    <attribute name="service-score" value-type="double"  primitive="true"/>
   </entity>
 </model>

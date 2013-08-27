@@ -169,12 +169,14 @@ public class Handler implements PageHandler<Context> {
 			List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 			List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 			for(com.dianping.cat.home.utilization.entity.Domain d : dUList){
-				if(d.getUrlCount() > 0)
+				if(d.getUrlCount() > 0){
 					dUWebList.add(d);
+				}
 				if(d.getServiceCount() > 0)
 					dUServiceList.add(d);
 			}
-			model.setUtilizationReport(utilizationReport);
+			resetWebScore(dUWebList, findMaxWebScore(dUWebList));
+			resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));
 			model.setUtilizationList(dUList);
 			model.setUtilizationWebList(dUWebList);
 			model.setUtilizationServiceList(dUServiceList);
@@ -182,6 +184,38 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setPage(ReportPage.BUG);
 		m_jspViewer.view(ctx, model);
+	}
+	
+	private void resetWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore){
+		for(com.dianping.cat.home.utilization.entity.Domain d : l){
+			d.setWebScore(d.getWebScore() * 100.0 / maxScore);
+		}
+	}
+	
+	private void resetServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore){
+		for(com.dianping.cat.home.utilization.entity.Domain d : l){
+			d.setServiceScore(d.getServiceScore() * 100.0 / maxScore);
+		}
+	}
+
+	private double findMaxWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l){
+		double maxScore = 0;
+		for(com.dianping.cat.home.utilization.entity.Domain d : l){
+			if(d.getWebScore() > maxScore){
+				maxScore = d.getWebScore();
+			}
+		}
+		return maxScore;
+	}
+
+	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l){
+		double maxScore = 0;
+		for(com.dianping.cat.home.utilization.entity.Domain d : l){
+			if(d.getServiceScore() > maxScore){
+				maxScore = d.getServiceScore();
+			}
+		}
+		return maxScore;
 	}
 
 	private boolean isBug(String domain, String exception) {
