@@ -7,7 +7,7 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
-   <name>CAT Home</name>
+   <name>cat-home</name>
    <packaging>war</packaging>
    <dependencies>
       <dependency>
@@ -173,7 +173,7 @@
                   </configuration>
                </execution>
                <execution>
-                  <id>generate report models</id>
+                  <id>generate dal model files</id>
                   <phase>generate-sources</phase>
                   <goals>
                      <goal>dal-model</goal>
@@ -204,19 +204,6 @@
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/abtest-manifest.xml,]]></manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate dal model files</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-model</goal>
-                  </goals>
-                  <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
-${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
-${basedir}/src/main/resources/META-INF/dal/model/info-manifest.xml,
-${basedir}/src/main/resources/META-INF/dal/model/exception-threshold-config-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>
