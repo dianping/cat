@@ -1368,8 +1368,8 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://192.168.7.43:3306/cat</url>
-					<user>dpcom_cat</user>
+					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
+					<user>root</user>
 					<password>password</password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
@@ -1439,36 +1439,6 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>alarm-rule</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>alarm-rule</logical-table-name>
-				<physical-table-name>alarmRule</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>alarm-rule-subscription</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>alarm-rule-subscription</logical-table-name>
-				<physical-table-name>alarmRuleSubscription</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>alarm-template</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>alarm-template</logical-table-name>
-				<physical-table-name>alarmTemplate</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>mail-record</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1496,33 +1466,6 @@
 				<physical-table-name>scheduledReportSubscription</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
@@ -2817,13 +2760,7 @@
 					<role>com.dianping.cat.system.page.alarm.RecordManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.alarm.RuleManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.alarm.TemplateManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2841,22 +2778,10 @@
 			<implementation>com.dianping.cat.system.page.alarm.RecordManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2879,51 +2804,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.alarm.RuleManager</role>
-			<implementation>com.dianping.cat.system.page.alarm.RuleManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
 			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
 			<requirements>
@@ -2939,8 +2819,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
+			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2948,11 +2828,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.alarm.TemplateManager</role>
-			<implementation>com.dianping.cat.system.page.alarm.TemplateManager</implementation>
+			<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3148,29 +3028,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
-			<implementation>com.dianping.cat.system.alarm.AlarmContentBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.AlarmRuleCreator</role>
-			<implementation>com.dianping.cat.system.alarm.AlarmRuleCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>event</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.tool.MailSMS</role>
 			<implementation>com.dianping.cat.system.tool.MailSMSImpl</implementation>
 			<requirements>
@@ -3201,107 +3058,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.event.EventListenerRegistry</role>
-			<implementation>com.dianping.cat.system.event.DefaultEventListenerRegistry</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.event.EventDispatcher</role>
-			<implementation>com.dianping.cat.system.event.DefaultEventDispatcher</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.event.EventListenerRegistry</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.connector.Connector</role>
-			<implementation>com.dianping.cat.system.alarm.connector.impl.ThresholdConnector</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.alert.AlertManager</role>
-			<implementation>com.dianping.cat.system.alarm.alert.AlertManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.tool.MailSMS</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
-			<implementation>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener</role>
-			<implementation>com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.event.EventDispatcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener</role>
-			<implementation>com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.event.EventDispatcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener</role>
-			<implementation>com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.alert.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.alarm.RuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.alarm.AlarmTask</role>
-			<implementation>com.dianping.cat.system.alarm.AlarmTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.event.EventDispatcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.connector.Connector</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
 				</requirement>
 			</requirements>
 		</component>
