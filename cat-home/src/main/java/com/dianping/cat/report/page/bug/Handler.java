@@ -47,6 +47,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.system.config.BugConfigManager;
+import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -61,6 +62,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private BugConfigManager m_bugConfigManager;
 
+	@Inject
+	private UtilizationConfigManager m_configManager;
+	
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
@@ -225,7 +229,7 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
-		new UtilizationReportScore().visitUtilizationReport(report);
+		new UtilizationReportScore().setConfigManager(m_configManager).visitUtilizationReport(report);
 		return report;
 	}
 

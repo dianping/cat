@@ -4,7 +4,7 @@
       <li class='nav-header'><h4>Statistics</h4></li>
       <li id="bug" class="text-right " id="bug"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view"><strong>项目异常</strong></a></li>
   	  <li id="service" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service"><strong>服务可用性</strong></a></li>
-  	  <li id="utilization" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization"><strong>应用节能排行榜</strong></a></li>
+  	  <li id="utilization" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization"><strong>应用排行榜</strong></a></li>
   	  <li id="heavy" class="text-right" id="heavy"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy"><strong>重量级访问</strong></a></li>
     </ul>
 </div>
