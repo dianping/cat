@@ -91,7 +91,6 @@ public class BugReportService extends AbstractReportService<BugReport> {
 					try {
 						BugReport reportModel = com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(xml);
 						reportModel.accept(merger);
-						System.out.println(reportModel);
 					} catch (Exception e) {
 						Cat.logError(e);
 						Cat.getProducer().logEvent("ErrorXML", name, Event.SUCCESS,
