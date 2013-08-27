@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -163,7 +164,7 @@ public class EventReportBuilder implements ReportTaskBuilder {
 
 	private EventReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end)
 	      throws DalException {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, "event");
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, EventAnalyzer.ID);
 		List<EventReport> reports = new ArrayList<EventReport>();
 		long startTime = start.getTime();
 		long endTime = end.getTime();

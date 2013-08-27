@@ -8,6 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -51,7 +52,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		BugReport bugReport = new BugReport(CatString.CAT);
 		ProblemReportVisitor visitor = new ProblemReportVisitor().setReport(bugReport);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "problem");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 
 		for (String domainName : domains) {
 			if (validateDomain(domainName)) {
