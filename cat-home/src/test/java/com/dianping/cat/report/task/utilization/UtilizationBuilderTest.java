@@ -7,6 +7,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.DomainManager;
+import com.dianping.cat.helper.CatString;
 
 public class UtilizationBuilderTest extends ComponentTestCase{
 	
@@ -17,7 +18,7 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildHourlyTask("utilization", "cat", new SimpleDateFormat("yyyyMMddHH").parse("2013082508"));
+		builder.buildHourlyTask("utilization",CatString.CAT, new SimpleDateFormat("yyyyMMddHH").parse("2013082505"));
 	}
 	
 	@Test
@@ -26,7 +27,7 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildDailyTask("utilization", "cat", new SimpleDateFormat("yyyyMMdd").parse("20130825"));
+		builder.buildDailyTask("utilization", CatString.CAT, new SimpleDateFormat("yyyyMMdd").parse("20130825"));
 	}
 
 	@Test
@@ -35,7 +36,7 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildWeeklyTask("utilization", "cat", new SimpleDateFormat("yyyyMMdd").parse("20130717"));
+		builder.buildWeeklyTask("utilization", CatString.CAT, new SimpleDateFormat("yyyyMMdd").parse("20130717"));
 	}
 	
 	@Test
@@ -44,7 +45,7 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildMonthlyTask("utilization", "cat", new SimpleDateFormat("yyyyMMdd").parse("20130701"));
+		builder.buildMonthlyTask("utilization", CatString.CAT, new SimpleDateFormat("yyyyMMdd").parse("20130701"));
 	}
 
 	

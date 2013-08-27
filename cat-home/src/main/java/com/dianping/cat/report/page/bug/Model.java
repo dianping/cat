@@ -44,6 +44,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationList;
 
+	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
+
+	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
+
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
+		return m_utilizationWebList;
+	}
+
+
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationServiceList() {
+		return m_utilizationServiceList;
+	}
+
+	public void setUtilizationServiceList(
+			List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
+		m_utilizationServiceList = utilizationServiceList;
+	}
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -169,6 +187,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setUtilizationReport(UtilizationReport utilizationReport) {
 		m_utilizationReport = utilizationReport;
+	}
+
+	public void setUtilizationWebList(
+			List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
+		m_utilizationWebList = utilizationWebList;
 	}
 
 }
