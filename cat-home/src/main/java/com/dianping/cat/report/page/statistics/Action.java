@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.bug;
+package com.dianping.cat.report.page.statistics;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	BUG_HISTORY_REPORT("historyBug"),

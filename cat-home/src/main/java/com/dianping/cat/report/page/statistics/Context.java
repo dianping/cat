@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.bug;
+package com.dianping.cat.report.page.statistics;
 
 import com.dianping.cat.report.ReportContext;
 

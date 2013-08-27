@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.bug;
+package com.dianping.cat.report.page.statistics;
 
 public enum JspFile {
 	HOURLY_REPORT("/jsp/report/bug/bug.jsp"),

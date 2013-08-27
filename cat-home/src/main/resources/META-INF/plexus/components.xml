@@ -2695,11 +2695,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.bug.Handler</role>
-			<implementation>com.dianping.cat.report.page.bug.Handler</implementation>
+			<role>com.dianping.cat.report.page.statistics.Handler</role>
+			<implementation>com.dianping.cat.report.page.statistics.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.bug.JspViewer</role>
+					<role>com.dianping.cat.report.page.statistics.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
@@ -2719,8 +2719,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.bug.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.bug.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.statistics.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.statistics.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>

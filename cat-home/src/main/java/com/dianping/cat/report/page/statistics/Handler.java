@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.bug;
+package com.dianping.cat.report.page.statistics;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,9 +64,43 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private UtilizationConfigManager m_configManager;
-	
+
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	private void buildBugInfo(Model model, Payload payload) {
+		BugReport bugReport = queryBugReport(payload);
+		BugReportVisitor visitor = new BugReportVisitor();
+		visitor.visitBugReport(bugReport);
+
+		model.setBugReport(bugReport);
+		bugReport = queryBugReport(payload);
+		visitor = new BugReportVisitor();
+		visitor.visitBugReport(bugReport);
+
+		Map<String, ErrorStatis> errors = visitor.getErrors();
+		errors = sortErrorStatis(errors);
+		model.setErrorStatis(errors);
+
+		if (payload.getAction() == Action.BUG_HTTP_JSON) {
+			new ClearBugReport().visitBugReport(bugReport);
+		}
+		model.setBugReport(bugReport);
+	}
+
+	private void buildHeavyInfo(Model model, Payload payload) {
+		HeavyReport heavyReport = queryHeavyReport(payload);
+
+		model.setHeavyReport(heavyReport);
+		buildSortedHeavyInfo(model, heavyReport);
+	}
+
+	private void buildServiceInfo(Model model, Payload payload) {
+		ServiceReport serviceReport = queryServiceReport(payload);
+		List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
+		model.setServiceList(dHisList);
+		model.setServiceReport(serviceReport);
+	}
 
 	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
 		HeavyCall heavyCall = heavyReport.getHeavyCall();
@@ -102,7 +136,27 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public Project findByDomain(String domain) {
+	private void buildUtilizationInfo(Model model, Payload payload) {
+		UtilizationReport utilizationReport = queryUtilizationReport(payload);
+		List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
+		List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
+		List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
+		for (com.dianping.cat.home.utilization.entity.Domain d : dUList) {
+			if (d.getUrlCount() > 0) {
+				dUWebList.add(d);
+			}
+			if (d.getServiceCount() > 0)
+				dUServiceList.add(d);
+		}
+		resetWebScore(dUWebList, findMaxWebScore(dUWebList));
+		resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));
+		model.setUtilizationList(dUList);
+		model.setUtilizationWebList(dUWebList);
+		model.setUtilizationServiceList(dUServiceList);
+		model.setUtilizationReport(utilizationReport);
+	}
+
+	public Project findProjectByDomain(String domain) {
 		try {
 			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
 		} catch (DalException e) {
@@ -111,15 +165,35 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
+	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
+		double maxScore = 0;
+		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
+			if (d.getServiceScore() > maxScore) {
+				maxScore = d.getServiceScore();
+			}
+		}
+		return maxScore;
+	}
+
+	private double findMaxWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
+		double maxScore = 0;
+		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
+			if (d.getWebScore() > maxScore) {
+				maxScore = d.getWebScore();
+			}
+		}
+		return maxScore;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "bug")
+	@InboundActionMeta(name = "statistics")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "bug")
+	@OutboundActionMeta(name = "statistics")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -129,93 +203,24 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case SERVICE_REPORT:
 		case SERVICE_HISTORY_REPORT:
-			ServiceReport serviceReport = queryServiceReport(payload);
-			List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
-			model.setServiceList(dHisList);
-			model.setServiceReport(serviceReport);
+			buildServiceInfo(model, payload);
 			break;
 		case BUG_HISTORY_REPORT:
 		case BUG_REPORT:
 		case BUG_HTTP_JSON:
-			BugReport bugReport = queryBugReport(payload);
-			BugReportVisitor visitor = new BugReportVisitor();
-			visitor.visitBugReport(bugReport);
-
-			model.setBugReport(bugReport);
-			bugReport = queryBugReport(payload);
-			visitor = new BugReportVisitor();
-			visitor.visitBugReport(bugReport);
-
-			Map<String, ErrorStatis> errors = visitor.getErrors();
-			errors = sortErrorStatis(errors);
-			model.setErrorStatis(errors);
-
-			if (action == Action.BUG_HTTP_JSON) {
-				new ClearBugReport().visitBugReport(bugReport);
-			}
-			model.setBugReport(bugReport);
+			buildBugInfo(model, payload);
 			break;
 		case HEAVY_HISTORY_REPORT:
 		case HEAVY_REPORT:
-			HeavyReport heavyReport = queryHeavyReport(payload);
-
-			model.setHeavyReport(heavyReport);
-			buildSortedHeavyInfo(model, heavyReport);
+			buildHeavyInfo(model, payload);
 			break;
 		case UTILIZATION_REPORT:
 		case UTILIZATION_HISTORY_REPORT:
-			UtilizationReport utilizationReport = queryUtilizationReport(payload);
-			List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
-			List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
-			List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
-			for(com.dianping.cat.home.utilization.entity.Domain d : dUList){
-				if(d.getUrlCount() > 0){
-					dUWebList.add(d);
-				}
-				if(d.getServiceCount() > 0)
-					dUServiceList.add(d);
-			}
-			resetWebScore(dUWebList, findMaxWebScore(dUWebList));
-			resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));
-			model.setUtilizationList(dUList);
-			model.setUtilizationWebList(dUWebList);
-			model.setUtilizationServiceList(dUServiceList);
+			buildUtilizationInfo(model, payload);
 			break;
 		}
-		model.setPage(ReportPage.BUG);
+		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
-	}
-	
-	private void resetWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore){
-		for(com.dianping.cat.home.utilization.entity.Domain d : l){
-			d.setWebScore(d.getWebScore() * 100.0 / maxScore);
-		}
-	}
-	
-	private void resetServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore){
-		for(com.dianping.cat.home.utilization.entity.Domain d : l){
-			d.setServiceScore(d.getServiceScore() * 100.0 / maxScore);
-		}
-	}
-
-	private double findMaxWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l){
-		double maxScore = 0;
-		for(com.dianping.cat.home.utilization.entity.Domain d : l){
-			if(d.getWebScore() > maxScore){
-				maxScore = d.getWebScore();
-			}
-		}
-		return maxScore;
-	}
-
-	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l){
-		double maxScore = 0;
-		for(com.dianping.cat.home.utilization.entity.Domain d : l){
-			if(d.getServiceScore() > maxScore){
-				maxScore = d.getServiceScore();
-			}
-		}
-		return maxScore;
 	}
 
 	private boolean isBug(String domain, String exception) {
@@ -265,6 +270,18 @@ public class Handler implements PageHandler<Context> {
 		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
 		new UtilizationReportScore().setConfigManager(m_configManager).visitUtilizationReport(report);
 		return report;
+	}
+
+	private void resetServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore) {
+		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
+			d.setServiceScore(d.getServiceScore() * 100.0 / maxScore);
+		}
+	}
+
+	private void resetWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore) {
+		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
+			d.setWebScore(d.getWebScore() * 100.0 / maxScore);
+		}
 	}
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
@@ -389,7 +406,7 @@ public class Handler implements PageHandler<Context> {
 		public void visitExceptionItem(ExceptionItem exceptionItem) {
 			String exception = exceptionItem.getId();
 			int count = exceptionItem.getCount();
-			Project project = findByDomain(m_domain);
+			Project project = findProjectByDomain(m_domain);
 
 			if (project != null) {
 				String productLine = project.getProjectLine();

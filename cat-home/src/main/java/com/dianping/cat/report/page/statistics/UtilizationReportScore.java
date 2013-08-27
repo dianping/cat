@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.bug;
+package com.dianping.cat.report.page.statistics;
 
 import com.dianping.cat.home.utilization.config.entity.UtilizationConfig;
 import com.dianping.cat.home.utilization.entity.Domain;

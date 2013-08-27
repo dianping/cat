@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.bug;
+package com.dianping.cat.report.page.statistics;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -27,7 +27,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public Payload() {
-		super(ReportPage.BUG);
+		super(ReportPage.STATISTICS);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@Override
 	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.BUG);
+		m_page = ReportPage.getByName(page, ReportPage.STATISTICS);
 	}
 
 	public void setSortBy(String sortBy) {
