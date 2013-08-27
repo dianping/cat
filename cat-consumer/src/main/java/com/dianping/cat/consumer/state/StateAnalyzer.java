@@ -53,38 +53,38 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Map<String, Long> totals = state.getMessageTotals();
 			long messageTotal = state.getMessageTotal();
 			temp.setTotal(messageTotal);
-			
-			Map<String,Long> totalLosses = state.getMessageTotalLosses();
+
+			Map<String, Long> totalLosses = state.getMessageTotalLosses();
 			long messageTotalLoss = state.getMessageTotalLoss();
 			temp.setTotalLoss(messageTotalLoss);
-			
-			Map<String,Double> sizes = state.getMessageSizes();
+
+			Map<String, Double> sizes = state.getMessageSizes();
 			double messageSize = state.getMessageSize();
 			temp.setSize(messageSize);
-			
+
 			machine.setTotal(messageTotal + machine.getTotal());
 			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
 			machine.setSize(messageSize + machine.getSize());
-		
-			for (Entry<String,Long> entry : totals.entrySet()) {
+
+			for (Entry<String, Long> entry : totals.entrySet()) {
 				String key = entry.getKey();
 				long value = entry.getValue();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
-				if(totals.containsKey(key)){
+				if (totals.containsKey(key)) {
 					domain.setTotal(value + domain.getTotal());
 					detail.setTotal(value);
 				}
-				if(totalLosses.containsKey(key)){
+				if (totalLosses.containsKey(key)) {
 					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
 					detail.setTotalLoss(totalLosses.get(key));
 				}
-				if(sizes.containsKey(key)){
+				if (sizes.containsKey(key)) {
 					domain.setSize(sizes.get(key) + domain.getSize());
 					detail.setSize(sizes.get(key));
 				}
 			}
-			
+
 			if (messageTotal > maxTps) {
 				maxTps = messageTotal;
 			}
@@ -116,8 +116,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			long messageDumpLoss = state.getMessageDumpLoss();
 			temp.setDumpLoss(messageDumpLoss);
 			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss);
-
-
 
 			int processDelayCount = state.getProcessDelayCount();
 			temp.setDelayCount(processDelayCount);
@@ -185,10 +183,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(ip);
 
 		buildStateInfo(machine);
-		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
-		Map<String, ProcessDomain> processDomains = startReport.findOrCreateMachine(ip).getProcessDomains();
-		for(Map.Entry<String, ProcessDomain> entry:machine.getProcessDomains().entrySet()){
-			entry.getValue().getIps().addAll(processDomains.get(entry.getKey()).getIps());
+		StateReport stateReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
+		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(ip).getProcessDomains();
+		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
+			ProcessDomain processDomain = processDomains.get(entry.getKey());
+
+			if (processDomain != null) {
+				entry.getValue().getIps().addAll(processDomain.getIps());
+			}
 		}
 		return report;
 	}
