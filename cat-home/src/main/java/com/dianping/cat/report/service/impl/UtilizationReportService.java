@@ -56,6 +56,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				String xml = report.getContent();
+				System.out.println(xml);
 				UtilizationReport reportModel = com.dianping.cat.home.utilization.transform.DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			} catch (Exception e) {
