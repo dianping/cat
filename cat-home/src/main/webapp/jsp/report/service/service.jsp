@@ -37,6 +37,7 @@
 	</div>
 	<div class="span10">
 		<div class="report">
+			</br>
 			<table class="table table-striped table-bordered table-condensed">
 				<tr>
 					<th class="left">Server(Domain)</th>

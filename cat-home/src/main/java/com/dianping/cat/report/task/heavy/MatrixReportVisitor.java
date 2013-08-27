@@ -51,8 +51,8 @@ public class MatrixReportVisitor extends BaseVisitor {
 	private void updateUrl(Url url, String logview, long max) {
 		url.setDomain(m_currentDomain);
 		url.setName(m_currentName);
-		url.setLogview(logview);
 		if (max > url.getCount()) {
+			url.setLogview(logview);
 			url.setCount(max);
 		}
 	}
@@ -60,8 +60,8 @@ public class MatrixReportVisitor extends BaseVisitor {
 	private void updateService(Service service, String logview, long max) {
 		service.setDomain(m_currentDomain);
 		service.setName(m_currentName);
-		service.setLogview(logview);
 		if (max > service.getCount()) {
+			service.setLogview(logview);
 			service.setCount(max);
 		}
 	}
