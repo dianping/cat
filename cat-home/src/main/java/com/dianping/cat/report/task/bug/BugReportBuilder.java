@@ -82,6 +82,11 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		BugReport bugReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+		
+		for(Domain d :bugReport.getDomains().values()){
+			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=month&domain=%s&date=%s", getDomainName(), d.getId(),
+			      m_sdf.format(period)));
+		}
 		MonthlyReport report = new MonthlyReport();
 
 		report.setContent(bugReport.toString());
@@ -97,6 +102,11 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		BugReport bugReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime() + TimeUtil.ONE_WEEK));
+
+		for(Domain d :bugReport.getDomains().values()){
+			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=week&domain=%s&date=%s", getDomainName(), d.getId(),
+			      m_sdf.format(period)));
+		}
 		WeeklyReport report = new WeeklyReport();
 		String content = bugReport.toString();
 
@@ -145,7 +155,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		com.dianping.cat.home.bug.entity.BugReport bugReport = merger.getBugReport();
 
 		for(Domain d :bugReport.getDomains().values()){
-			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&domain=%s&date=%s", getDomainName(), d.getId(),
+			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=day&domain=%s&date=%s", getDomainName(), d.getId(),
 			      m_sdf.format(start)));
 		}
 		return bugReport;
