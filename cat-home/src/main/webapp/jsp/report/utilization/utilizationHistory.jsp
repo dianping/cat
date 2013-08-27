@@ -80,7 +80,7 @@
 									<td style="text-align:right">${w:format(item.pigeonCallCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.swallowCallCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.memcacheCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.webScore,'#,###,###,###,##0')}</td>
+									<td style="text-align:right">${w:format(item.webScore,'0.00')}</td>
 								</tr>
 							</c:forEach>
 						</table>
@@ -115,7 +115,7 @@
 									<td style="text-align:right">${w:format(item.pigeonCallCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.swallowCallCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.memcacheCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.serviceScore,'#,###,###,###,##0')}</td>
+									<td style="text-align:right">${w:format(item.serviceScore,'0.00')}</td>
 								</tr>
 							</c:forEach>
 						</table>
