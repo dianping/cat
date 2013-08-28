@@ -90,7 +90,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.ALARM_RECORD_LIST);
+		m_action = Action.getByName(action, Action.SCHEDULED_REPORT_LIST);
 	}
 
 	public void setAlarmRecordId(int alarmRecordId) {
@@ -137,7 +137,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.ALARM_RECORD_LIST;
+			m_action = Action.SCHEDULED_REPORT_LIST;
 		}
 	}
 }

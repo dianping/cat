@@ -36,8 +36,6 @@ import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
-import com.dianping.cat.system.alarm.template.TemplateMergerTest;
-import com.dianping.cat.system.alarm.template.ThresholdRuleTest;
 import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
@@ -80,7 +78,7 @@ TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphM
 TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class,
 
 /* alarm .render */
-RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class,
+RenderTest.class,
 
 StateReportMergerTest.class,
 

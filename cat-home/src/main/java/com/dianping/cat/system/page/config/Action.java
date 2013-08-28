@@ -56,6 +56,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	EXCEPTION_THRESHOLD_DELETE("exceptionThresholdDelete"),
 	
 	BUG_CONFIG_UPDATE("bugConfigUpdate"),
+
+	UTILIZATION_CONFIG_UPDATE("utilizationConfigUpdate"),
 	;
 
 	private String m_name;

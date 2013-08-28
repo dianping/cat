@@ -56,8 +56,8 @@
          <page name="externalError" title="externalError" path="externalError" template="default">
             <description>ExternalError</description>
          </page>
-         <page name="bug" title="Statistics" path="bug" view="/jsp/report/bug/bug.jsp" template="default">
-            <description>Bug</description>
+         <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" template="default">
+            <description>Statistics</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

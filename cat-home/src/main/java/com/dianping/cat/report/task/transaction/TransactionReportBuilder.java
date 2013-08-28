@@ -12,6 +12,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -180,7 +181,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 	private TransactionReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
 	      throws DalException {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, endDate, "transaction");
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, endDate, TransactionAnalyzer.ID);
 		List<TransactionReport> reports = new ArrayList<TransactionReport>();
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();

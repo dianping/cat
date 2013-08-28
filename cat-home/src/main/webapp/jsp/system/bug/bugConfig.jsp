@@ -22,10 +22,10 @@
 				<h4 class="text-center text-error">异常规范配置</h4>
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<td><textarea name="bug" style="width:auto" rows="30" cols="150">${model.bug}</textarea></td>
+						<td><textarea name="bug" style="width:auto" rows="20" cols="150">${model.bug}</textarea></td>
 					</tr>
 					<tr>
-						<td><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
+						<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>

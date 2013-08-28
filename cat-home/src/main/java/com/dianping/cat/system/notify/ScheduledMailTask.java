@@ -58,17 +58,6 @@ public class ScheduledMailTask implements Task, LogEnabled {
 		return "ScheduledDailyReport";
 	}
 
-	private long getSleepTime() {
-		Calendar cal = Calendar.getInstance();
-
-		cal.add(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 3);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTimeInMillis() - System.currentTimeMillis();
-	}
-
 	private void insertMailLog(int reportId, String content, String title, boolean result, List<String> emails)
 	      throws DalException {
 		MailRecord entity = m_mailRecordDao.createLocal();
@@ -128,8 +117,12 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-				
-				if (mailRecord == null || mailRecord.getCreationDate().getTime() < TimeUtil.getCurrentDay().getTime()) {
+
+				long lastSendMailTime = mailRecord.getCreationDate().getTime();
+				long currentDay = TimeUtil.getCurrentDay().getTime();
+				Calendar cal = Calendar.getInstance();
+
+				if ((mailRecord == null || lastSendMailTime < currentDay) && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 					m_logger.info("Send daily report starting! size :" + reports.size());
@@ -161,10 +154,8 @@ public class ScheduledMailTask implements Task, LogEnabled {
 			} catch (Throwable e) {
 				Cat.logError(e);
 			}
-
 			try {
-				m_logger.info("Send daily report sleep!");
-				Thread.sleep(getSleepTime());
+				Thread.sleep(TimeUtil.ONE_HOUR);
 			} catch (Exception e) {
 				active = false;
 			}

@@ -74,7 +74,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				long value = entry.getValue().get();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
-				
 				if (totals.containsKey(key)) {
 					domain.setTotal(value + domain.getTotal());
 					detail.setTotal(value);
@@ -181,7 +180,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Override
 	public StateReport getReport(String domain) {
 		StateReport report = new StateReport(domain);
-		
+
 		report = new StateReport(ReportConstants.CAT);
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
@@ -191,14 +190,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(ip);
 
 		buildStateInfo(machine);
-		
-		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
-		Map<String, ProcessDomain> processDomains = startReport.findOrCreateMachine(ip).getProcessDomains();
-		
+		StateReport stateReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
+		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(ip).getProcessDomains();
 		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
-			entry.getValue().getIps().addAll(processDomains.get(entry.getKey()).getIps());
+			ProcessDomain processDomain = processDomains.get(entry.getKey());
+
+			if (processDomain != null) {
+				entry.getValue().getIps().addAll(processDomain.getIps());
+			}
 		}
-		
 		return report;
 	}
 
