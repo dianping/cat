@@ -18,7 +18,7 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildHourlyTask("utilization",CatString.CAT, new SimpleDateFormat("yyyyMMddHH").parse("2013082505"));
+		builder.buildHourlyTask("utilization",CatString.CAT, new SimpleDateFormat("yyyyMMddHH").parse("2013082617"));
 	}
 	
 	@Test
@@ -27,7 +27,7 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 		DomainManager manager = lookup(DomainManager.class);
 		
 		manager.initialize();
-		builder.buildDailyTask("utilization", CatString.CAT, new SimpleDateFormat("yyyyMMdd").parse("20130825"));
+		builder.buildDailyTask("utilization", CatString.CAT, new SimpleDateFormat("yyyyMMdd").parse("20130826"));
 	}
 
 	@Test

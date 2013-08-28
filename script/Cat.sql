@@ -349,6 +349,18 @@ CREATE TABLE `topologyGraph` (
   KEY `period` (`period`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21912 DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
 
+CREATE TABLE `baseline` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_name` varchar(100) DEFAULT NULL,
+  `index_key` varchar(100) DEFAULT NULL,
+  `report_period` datetime DEFAULT NULL,
+  `data` blob,
+  `creation_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
+  KEY `ix_reportperiod` (`report_period`)
+) ENGINE=InnoDB AUTO_INCREMENT=5062 DEFAULT CHARSET=utf8
+
 
 
 
