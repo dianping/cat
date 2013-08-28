@@ -3,9 +3,10 @@ package com.dianping.cat.statistic;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ServerStatistic {
-	private Map<Long, Statistic> m_statistics = new LinkedHashMap<Long, Statistic>(60);
+	private Map<Long, Statistic> m_statistics = new LinkedHashMap<Long, Statistic>(100);
 
 	public Statistic findOrCreate(Long time) {
 		Statistic state = m_statistics.get(time);
@@ -33,9 +34,9 @@ public class ServerStatistic {
 
 		private long m_messageDumpLoss;
 
-		private Map<String, Long> m_messageTotals = new HashMap<String, Long>(256);
+		private Map<String, AtomicLong> m_messageTotals = new HashMap<String, AtomicLong>(256);
 
-		private Map<String, Long> m_messageTotalLosses = new HashMap<String, Long>(256);
+		private Map<String, AtomicLong> m_messageTotalLosses = new HashMap<String, AtomicLong>(256);
 
 		private Map<String, Double> m_messageSizes = new HashMap<String, Double>(256);
 
@@ -82,20 +83,20 @@ public class ServerStatistic {
 		}
 
 		public void addMessageTotal(String domain, long messageTotal) {
-			Long value = m_messageTotals.get(domain);
+			AtomicLong value = m_messageTotals.get(domain);
 			if (value != null) {
-				m_messageTotals.put(domain, value + messageTotal);
+				value.set(value.get()+messageTotal);
 			} else {
-				m_messageTotals.put(domain, messageTotal);
+				m_messageTotals.put(domain, new AtomicLong(messageTotal));
 			}
 		}
 
 		public void addMessageTotalLoss(String domain, long messageTotalLoss) {
-			Long value = m_messageTotalLosses.get(domain);
+			AtomicLong value = m_messageTotalLosses.get(domain);
 			if (value != null) {
-				m_messageTotalLosses.put(domain, value + messageTotalLoss);
+				value.set(value.get()+messageTotalLoss);
 			} else {
-				m_messageTotalLosses.put(domain, messageTotalLoss);
+				m_messageTotalLosses.put(domain,  new AtomicLong(messageTotalLoss));
 			}
 		}
 
@@ -164,11 +165,11 @@ public class ServerStatistic {
 			return m_messageSizes;
 		}
 
-		public Map<String, Long> getMessageTotals() {
+		public Map<String, AtomicLong> getMessageTotals() {
 			return m_messageTotals;
 		}
 
-		public Map<String, Long> getMessageTotalLosses() {
+		public Map<String, AtomicLong> getMessageTotalLosses() {
 			return m_messageTotalLosses;
 		}
 

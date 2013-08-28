@@ -376,6 +376,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			double amount = totalSize - lastTotalSize;
 			m_lastTotalSizes.put(domain, totalSize);
 			m_serverStateManager.addMessageSize(domain, amount);
+			m_serverStateManager.addMessageSize(amount);
 		}
 	}
 
