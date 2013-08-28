@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -50,7 +51,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "matrix";
+		String name = MatrixAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +76,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "matrix";
+		String name = MatrixAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -106,7 +107,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "matrix");
+		Set<String> domains = queryAllDomainNames(start, end, MatrixAnalyzer.ID);
 		matrixReport.getDomainNames().addAll(domains);
 		return matrixReport;
 	}
@@ -114,7 +115,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 	@Override
 	public MatrixReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "matrix",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, MatrixAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -128,7 +129,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 	@Override
 	public MatrixReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "matrix",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, MatrixAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

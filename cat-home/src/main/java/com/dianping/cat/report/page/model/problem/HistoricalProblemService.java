@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	private ReportService m_reportSerivce;
 
 	public HistoricalProblemService() {
-		super("problem");
+		super(ProblemAnalyzer.ID);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	}
 
 	private ProblemReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, ProblemAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

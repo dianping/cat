@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
-import static com.dianping.cat.service.ReportConstants.ALL;
+import static com.dianping.cat.Constants.ALL;
 
 import java.util.Date;
 import java.util.Map;
@@ -9,9 +9,9 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
@@ -52,7 +52,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
 		TransactionReport first = reports.values().iterator().next();
-		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), ReportConstants.HOUR);
+		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
 		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all);
 
 		try {

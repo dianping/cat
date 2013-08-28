@@ -17,12 +17,13 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -51,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "problem")
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
 
 	@Inject
@@ -71,7 +72,7 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
 		ProblemReport report = getHourlyReportInternal(payload, type);
-		if ("FrontEnd".equals(payload.getDomain())) {
+		if (Constants.FRONT_END.equals(payload.getDomain())) {
 			// ModelPeriod period = payload.getPeriod();
 
 			// if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
@@ -90,7 +91,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", type);
-		if (!CatString.ALL.equals(payload.getIpAddress())) {
+		if (!Constants.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
@@ -101,7 +102,7 @@ public class Handler implements PageHandler<Context> {
 			ProblemReport report = response.getModel();
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "problem");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), ProblemAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -151,7 +152,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			if (ip.equals(CatString.ALL)) {
+			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
@@ -161,7 +162,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
-			if (ip.equals(CatString.ALL)) {
+			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);
 				problemStatistics.visitProblemReport(report);
 			} else {

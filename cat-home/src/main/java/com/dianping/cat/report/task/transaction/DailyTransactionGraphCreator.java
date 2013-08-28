@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -29,7 +30,7 @@ public class DailyTransactionGraphCreator {
 
 		graph.setDomain(m_report.getDomain());
 		graph.setPeriod(m_report.getStartTime());
-		graph.setName("transaction");
+		graph.setName(TransactionAnalyzer.ID);
 		graph.setIp(ip);
 		graph.setType(3);
 		graph.setCreationDate(new Date());

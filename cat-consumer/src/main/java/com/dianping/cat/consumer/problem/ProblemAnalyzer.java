@@ -10,12 +10,12 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportManager;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled, Initializable {
@@ -51,7 +51,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 
-			if (ReportConstants.FRONT_END.equals(domain)) {
+			if (Constants.FRONT_END.equals(domain)) {
 				report = m_problemDelegate.rebuildFrontEndReport(report);
 			}
 			return report;

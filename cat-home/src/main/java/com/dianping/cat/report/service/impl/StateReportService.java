@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -49,7 +50,7 @@ public class StateReportService extends AbstractReportService<StateReport> {
 		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "state";
+		String name = StateAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -74,7 +75,7 @@ public class StateReportService extends AbstractReportService<StateReport> {
 		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "state";
+		String name = StateAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -109,7 +110,7 @@ public class StateReportService extends AbstractReportService<StateReport> {
 	@Override
 	public StateReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "state",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, StateAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -123,7 +124,7 @@ public class StateReportService extends AbstractReportService<StateReport> {
 	@Override
 	public StateReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "state",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, StateAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
@@ -24,7 +25,7 @@ public class TransactionGraphCreatorTest {
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseTransactionReportForGraph.xml"), "utf-8");
 		TransactionReport report = DefaultSaxParser.parse(xml);
 		Date date = new Date();
-		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", "transaction", report);
+		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", TransactionAnalyzer.ID, report);
 		Map<String, Range> realResult = new HashMap<String, Range>();
 		Map<String, Range> excepectedResult = buildExcepetedResult();
 		buildRealResult(graphs, realResult);

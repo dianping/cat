@@ -6,6 +6,7 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
@@ -40,7 +41,7 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 
 		try {
 			List<BusinessReport> reports = m_businessReportDao.findAllByProductLineNameDuration(start, end, group,
-			      "metric", BusinessReportEntity.READSET_FULL);
+			      MetricAnalyzer.ID, BusinessReportEntity.READSET_FULL);
 
 			for (BusinessReport report : reports) {
 				byte[] content = report.getContent();

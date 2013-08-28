@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -38,7 +39,7 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 
 		graph.setDomain(problemReport.getDomain());
 		graph.setPeriod(problemReport.getStartTime());
-		graph.setName("problem");
+		graph.setName(ProblemAnalyzer.ID);
 		graph.setIp(info.getIp());
 		graph.setType(3);
 		graph.setCreationDate(new Date());

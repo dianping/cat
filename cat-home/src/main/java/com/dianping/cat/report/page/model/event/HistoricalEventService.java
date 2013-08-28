@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	private ReportService m_reportSerivce;
 
 	public HistoricalEventService() {
-		super("event");
+		super(EventAnalyzer.ID);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "event");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

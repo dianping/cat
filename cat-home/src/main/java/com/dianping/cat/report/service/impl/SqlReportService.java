@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -50,7 +51,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "sql";
+		String name = SqlAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +76,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "sql";
+		String name = SqlAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -105,7 +106,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 		sqlReport.setStartTime(start);
 		sqlReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "sql");
+		Set<String> domains = queryAllDomainNames(start, end, SqlAnalyzer.ID);
 		sqlReport.getDomainNames().addAll(domains);
 		return sqlReport;
 	}
@@ -113,7 +114,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 	@Override
 	public SqlReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "sql",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, SqlAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -127,7 +128,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 	@Override
 	public SqlReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "sql",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, SqlAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

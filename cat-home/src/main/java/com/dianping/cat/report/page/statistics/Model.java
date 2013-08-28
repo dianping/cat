@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.Constants;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -97,7 +97,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return CatString.CAT;
+		return Constants.CAT;
 	}
 
 	@Override

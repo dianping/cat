@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
@@ -23,7 +24,7 @@ public class EventGraphCreatorTest {
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"), "utf-8");
 		EventReport report = DefaultSaxParser.parse(xml);
 		Date date = new Date();
-		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", "event", report);
+		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", EventAnalyzer.ID, report);
 		Map<String, Range> realResult = new HashMap<String, Range>();
 		Map<String, Range> excepectedResult = buildExceptedResult();
 		buildResultResult(graphs, realResult);

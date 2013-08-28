@@ -7,6 +7,7 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -36,7 +37,7 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "heartbeat";
+		String name = HeartbeatAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -67,7 +68,7 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 		heartbeatReport.setStartTime(start);
 		heartbeatReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "heartbeat");
+		Set<String> domains = queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
 		heartbeatReport.getDomainNames().addAll(domains);
 		return heartbeatReport;
 	}

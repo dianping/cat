@@ -16,6 +16,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -66,7 +67,7 @@ public class Handler implements PageHandler<Context> {
 
 		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
-		tree.setDomain("FrontEnd");
+		tree.setDomain(Constants.FRONT_END);
 		tree.setHostName(host);
 		tree.setIpAddress(host);
 		model.setStatus("SUCCESS");

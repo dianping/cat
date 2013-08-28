@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -18,11 +19,11 @@ public class LocalDependencyService extends BaseLocalModelService<DependencyRepo
 	private BucketManager m_bucketManager;
 
 	public LocalDependencyService() {
-		super("dependency");
+		super(DependencyAnalyzer.ID);
 	}
 
 	private DependencyReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "dependency");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

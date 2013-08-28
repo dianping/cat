@@ -22,6 +22,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
@@ -31,7 +32,6 @@ import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
@@ -121,7 +121,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = config.getId();
 		model.setDomainConfig(config);
 
-		if (domain.equalsIgnoreCase(CatString.ALL)) {
+		if (domain.equalsIgnoreCase(Constants.ALL)) {
 			return m_topologyConfigManager.insertDomainDefaultConfig(type, config);
 		} else {
 			return m_topologyConfigManager.insertDomainConfig(type, config);

@@ -10,6 +10,7 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 
 @RunWith(JUnit4.class)
@@ -33,7 +34,7 @@ public class TransactionReportBuilderTest extends ComponentTestCase {
 		Date reportPeriod = cal.getTime();
 		
 		System.out.println(reportPeriod);
-		m_builder.buildWeeklyTask("transaction", "Cat", reportPeriod);
+		m_builder.buildWeeklyTask(TransactionAnalyzer.ID, "Cat", reportPeriod);
 	}
 
 }

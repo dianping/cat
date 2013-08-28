@@ -14,6 +14,7 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -76,7 +77,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class) //
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
-		      .req(ModelService.class, "dependency"));
+		      .req(ModelService.class, DependencyAnalyzer.ID));
 
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 

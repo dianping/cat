@@ -12,6 +12,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
@@ -32,7 +33,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 	
-	@Inject(type = ModelService.class, value = "matrix")
+	@Inject(type = ModelService.class, value = MatrixAnalyzer.ID)
 	private ModelService<MatrixReport> m_service;
 
 	private MatrixReport getHourlyReport(Payload payload) {
@@ -47,7 +48,7 @@ public class Handler implements PageHandler<Context> {
 			
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "matrix");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), MatrixAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -60,13 +61,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "matrix")
+	@InboundActionMeta(name = MatrixAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "matrix")
+	@OutboundActionMeta(name = MatrixAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

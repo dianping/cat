@@ -18,6 +18,7 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -65,7 +66,7 @@ public class ShopWebMonthAnalyzer extends ComponentTestCase {
 			for (; start < currentDay.getTime(); start += TimeUtil.ONE_DAY) {
 				System.out.println("Process" + new Date(start));
 				try {
-					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("ShopWeb", "transaction",
+					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("ShopWeb", TransactionAnalyzer.ID,
 					      new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
