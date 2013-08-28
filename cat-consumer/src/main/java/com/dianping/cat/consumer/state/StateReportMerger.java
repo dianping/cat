@@ -96,7 +96,5 @@ public class StateReportMerger extends DefaultMerger {
 		report.setStartTime(stateReport.getStartTime());
 		report.setEndTime(stateReport.getEndTime());
 	}
-	
-
 
 }

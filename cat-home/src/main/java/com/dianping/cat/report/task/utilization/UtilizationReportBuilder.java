@@ -7,6 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -48,7 +49,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		UtilizationReport utilizationReport = new UtilizationReport(CatString.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 		TransactionReportVisitor visitor = new TransactionReportVisitor().setReport(utilizationReport);
 
 		for (String domainName : domains) {

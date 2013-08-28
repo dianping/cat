@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities>
   <entity name="baseline" table="baseline" alias="b">
-  	
-    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-name" field="report_name" value-type="String" length="100" />
     <member name="index-key" field="index_key" value-type="String" length="100" />
     <member name="report-period" field="report_period" value-type="Date" />

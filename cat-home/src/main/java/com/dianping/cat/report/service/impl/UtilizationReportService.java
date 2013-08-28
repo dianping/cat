@@ -23,6 +23,7 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.report.task.utilization.UtilizationReportMerger;
+import com.dianping.cat.service.ReportConstants;
 
 public class UtilizationReportService extends AbstractReportService<UtilizationReport> {
 
@@ -49,7 +50,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "utilization";
+		String name = ReportConstants.REPORT_UTILIZATION;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {

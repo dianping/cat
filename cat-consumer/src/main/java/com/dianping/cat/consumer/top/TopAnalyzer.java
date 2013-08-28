@@ -55,21 +55,20 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	public synchronized TopReport getReport(String domain) {
-		// TODO to be fixed
 		Set<String> domains = m_transactionAnalyzer.getDomains();
-		TopReport topReport = new TopReport("Cat");
+		TopReport topReport = new TopReport(ReportConstants.CAT);
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 		for (String domainName : domains) {
-			if (validate(domainName)) {
+			if (validate(domainName) && !domainName.equals(ReportConstants.ALL)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
 				new TransactionReportVisitor(topReport).visitTransactionReport(report);
 			}
 		}
 		for (String domainName : domains) {
-			if (validate(domainName)) {
+			if (validate(domainName) && !domainName.equals(ReportConstants.ALL)) {
 				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
 				new ProblemReportVisitor(topReport).visitProblemReport(report);

@@ -16,13 +16,7 @@ import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.view.DomainNavManager;
-import com.dianping.cat.system.alarm.AlarmRuleCreator;
-import com.dianping.cat.system.alarm.AlarmTask;
-import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
-import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
-import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
 import com.dianping.cat.system.config.ConfigReloadTask;
-import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
 
 public class CatHomeModule extends AbstractModule {
@@ -57,22 +51,9 @@ public class CatHomeModule extends AbstractModule {
 
 	private void executeAlarmModule(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-		EventListenerRegistry registry = ctx.lookup(EventListenerRegistry.class);
-		ExceptionDataListener exceptionDataListener = ctx.lookup(ExceptionDataListener.class);
-		ServiceDataListener serviceDataListener = ctx.lookup(ServiceDataListener.class);
-		ThresholdAlertListener thresholdAlertListener = ctx.lookup(ThresholdAlertListener.class);
-
-		registry.register(exceptionDataListener);
-		registry.register(serviceDataListener);
-		registry.register(thresholdAlertListener);
-
-		AlarmTask exceptionAlarmTask = ctx.lookup(AlarmTask.class);
-		AlarmRuleCreator alarmCreatorTask = ctx.lookup(AlarmRuleCreator.class);
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
-			Threads.forGroup("Cat").start(exceptionAlarmTask);
-			Threads.forGroup("Cat").start(alarmCreatorTask);
 			Threads.forGroup("Cat").start(scheduledTask);
 		}
 	}
