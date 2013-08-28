@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.state;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -13,6 +14,7 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
+import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.core.dal.Hostinfo;
@@ -43,48 +45,50 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		if (end > System.currentTimeMillis()) {
 			end = System.currentTimeMillis();
 		}
+
 		int size = 0;
 		double maxTps = 0;
-		for (; start < end; start += minute) {
-			size++;
-			Statistic state = m_serverStateManager.findState(start);
 
-			com.dianping.cat.consumer.state.model.entity.Message temp = machine.findOrCreateMessage(start);
-			Map<String, Long> totals = state.getMessageTotals();
+		for (; start < end; start += minute) {
+			Statistic state = m_serverStateManager.findState(start);
+			Message temp = machine.findOrCreateMessage(start);
+
+			Map<String, AtomicLong> totals = state.getMessageTotals();
 			long messageTotal = state.getMessageTotal();
 			temp.setTotal(messageTotal);
-			
-			Map<String,Long> totalLosses = state.getMessageTotalLosses();
+
+			Map<String, AtomicLong> totalLosses = state.getMessageTotalLosses();
 			long messageTotalLoss = state.getMessageTotalLoss();
 			temp.setTotalLoss(messageTotalLoss);
-			
-			Map<String,Double> sizes = state.getMessageSizes();
+
+			Map<String, Double> sizes = state.getMessageSizes();
 			double messageSize = state.getMessageSize();
 			temp.setSize(messageSize);
-			
+
 			machine.setTotal(messageTotal + machine.getTotal());
 			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
 			machine.setSize(messageSize + machine.getSize());
-		
-			for (Entry<String,Long> entry : totals.entrySet()) {
+
+			for (Entry<String, AtomicLong> entry : totals.entrySet()) {
 				String key = entry.getKey();
-				long value = entry.getValue();
+				long value = entry.getValue().get();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
-				if(totals.containsKey(key)){
+				
+				if (totals.containsKey(key)) {
 					domain.setTotal(value + domain.getTotal());
 					detail.setTotal(value);
 				}
-				if(totalLosses.containsKey(key)){
-					domain.setTotalLoss(totalLosses.get(key) + domain.getTotalLoss());
-					detail.setTotalLoss(totalLosses.get(key));
+				if (totalLosses.containsKey(key)) {
+					domain.setTotalLoss(totalLosses.get(key).get() + domain.getTotalLoss());
+					detail.setTotalLoss(totalLosses.get(key).get());
 				}
-				if(sizes.containsKey(key)){
+				if (sizes.containsKey(key)) {
 					domain.setSize(sizes.get(key) + domain.getSize());
 					detail.setSize(sizes.get(key));
 				}
 			}
-			
+
 			if (messageTotal > maxTps) {
 				maxTps = messageTotal;
 			}
@@ -117,8 +121,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setDumpLoss(messageDumpLoss);
 			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss);
 
-
-
 			int processDelayCount = state.getProcessDelayCount();
 			temp.setDelayCount(processDelayCount);
 			machine.setDelayCount(machine.getDelayCount() + processDelayCount);
@@ -130,11 +132,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			double sum = machine.getDelaySum();
 			long count = machine.getDelayCount();
 			double avg = 0;
+
 			if (count > 0) {
 				avg = sum / count;
 				machine.setDelayAvg(avg);
 			}
+
 			temp.setTime(new Date(start));
+			size++;
 		}
 
 		double avgTps = 0;
@@ -176,6 +181,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Override
 	public StateReport getReport(String domain) {
 		StateReport report = new StateReport(domain);
+		
 		report = new StateReport(ReportConstants.CAT);
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
@@ -185,11 +191,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(ip);
 
 		buildStateInfo(machine);
+		
 		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
 		Map<String, ProcessDomain> processDomains = startReport.findOrCreateMachine(ip).getProcessDomains();
-		for(Map.Entry<String, ProcessDomain> entry:machine.getProcessDomains().entrySet()){
+		
+		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
 			entry.getValue().getIps().addAll(processDomains.get(entry.getKey()).getIps());
 		}
+		
 		return report;
 	}
 
@@ -211,7 +220,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				m_domainManager.insert(domain, ip);
 			} else if (!ipInfo.getIp().equals(ip)) {
 				String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				// only work on online enviroment
+				// only work on online environment
 				if (localIp.startsWith("10.")) {
 					long current = System.currentTimeMillis();
 					long lastModifyTime = ipInfo.getLastModifiedDate().getTime();
