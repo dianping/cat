@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.heartbeat;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
@@ -11,7 +12,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class CompositeHeartbeatService extends BaseCompositeModelService<HeartbeatReport> {
 	public CompositeHeartbeatService() {
-		super("heartbeat");
+		super(HeartbeatAnalyzer.ID);
 	}
 
 	@Override

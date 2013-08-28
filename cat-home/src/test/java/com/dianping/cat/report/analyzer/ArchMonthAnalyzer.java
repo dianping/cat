@@ -17,6 +17,8 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -27,6 +29,7 @@ import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ReportConstants;
 
 @RunWith(JUnit4.class)
 public class ArchMonthAnalyzer extends ComponentTestCase {
@@ -48,7 +51,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
-		return m_reportService.queryAllDomainNames(start, end, "transaction");
+		return m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 	}
 
 	@Test
@@ -77,7 +80,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	private void processOneDay(Date date, Set<String> domains) {
 		for (String domain : domains) {
 			try {
-				DailyReport report = m_dailyreportDao.findByDomainNamePeriod(domain, "transaction", date,
+				DailyReport report = m_dailyreportDao.findByDomainNamePeriod(domain, TransactionAnalyzer.ID, date,
 				      DailyReportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
@@ -129,7 +132,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 							System.out.println(count + " " + avg);
 						}
 					}
-				} else if (name.equalsIgnoreCase("service") || name.equalsIgnoreCase("pigeonService")) {
+				} else if (name.equalsIgnoreCase(ReportConstants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
 					double avg = type.getAvg();
 					if (m_isDebug) {
 						if (avg > 10) {
@@ -145,7 +148,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 						}
 					}
 					m_call.add(count, error, sum);
-				} else if (name.equalsIgnoreCase("sql")) {
+				} else if (name.equalsIgnoreCase(SqlAnalyzer.ID)) {
 					m_sql.add(count, error, sum);
 				} else if (name.equalsIgnoreCase("Cache.kvdb")) {
 					m_kvdbCache.add(count, error, sum);
@@ -224,9 +227,9 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("url" + "\t").append(m_url);
-			sb.append("service" + "\t").append(m_service);
+			sb.append(ReportConstants.REPORT_SERVICE + "\t").append(m_service);
 			sb.append("call" + "\t").append(m_call);
-			sb.append("sql" + "\t").append(m_sql);
+			sb.append(SqlAnalyzer.ID + "\t").append(m_sql);
 			sb.append("memcache" + "\t").append(m_memCache);
 			sb.append("kvdb" + "\t").append(m_kvdbCache);
 			sb.append("web" + "\t").append(m_webCache);

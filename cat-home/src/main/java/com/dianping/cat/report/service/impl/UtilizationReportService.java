@@ -75,7 +75,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "utilization";
+		String name = ReportConstants.REPORT_UTILIZATION;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -90,7 +90,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 					String xml = report.getContent();
 
 					try {
-						UtilizationReport reportModel = com.dianping.cat.home.utilization.transform.DefaultSaxParser.parse(xml);
+						UtilizationReport reportModel = com.dianping.cat.home.utilization.transform.DefaultSaxParser
+						      .parse(xml);
 						reportModel.accept(merger);
 					} catch (Exception e) {
 						Cat.logError(e);
@@ -111,7 +112,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "utilization",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, ReportConstants.REPORT_UTILIZATION,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -125,7 +126,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "utilization",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, ReportConstants.REPORT_UTILIZATION,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

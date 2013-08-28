@@ -13,6 +13,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
@@ -38,7 +39,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "sql")
+	@Inject(type = ModelService.class, value = SqlAnalyzer.ID)
 	private ModelService<SqlReport> m_service;
 
 	private SqlReport getHourlyReport(Payload payload) {
@@ -52,7 +53,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "sql");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), SqlAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -66,13 +67,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "sql")
+	@InboundActionMeta(name = SqlAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "sql")
+	@OutboundActionMeta(name = SqlAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

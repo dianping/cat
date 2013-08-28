@@ -18,6 +18,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -49,7 +50,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
-		return m_reportService.queryAllDomainNames(start, end, "transaction");
+		return m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 	}
 
 	@Test
@@ -84,7 +85,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 			Date date = new Date(startTime);
 
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain, "transaction",date,
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain, TransactionAnalyzer.ID,date,
 				      DailyReportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 

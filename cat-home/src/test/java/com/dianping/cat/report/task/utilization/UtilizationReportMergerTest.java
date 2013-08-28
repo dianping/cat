@@ -6,7 +6,6 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.home.utilization.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.utilization.UtilizationReportMerger;
 
 public class UtilizationReportMergerTest {
 	@Test

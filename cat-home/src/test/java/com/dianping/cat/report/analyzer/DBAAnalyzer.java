@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -29,7 +30,7 @@ public class DBAAnalyzer extends ComponentTestCase {
 	public void test() throws Exception {
 		MonthlyReportDao dao = lookup(MonthlyReportDao.class);
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-01 00:00");
-		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", "transaction",
+		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", TransactionAnalyzer.ID,
 		      MonthlyReportEntity.READSET_FULL);
 		String content = monthreport.getContent();
 		TransactionReport report = DefaultSaxParser.parse(content);

@@ -23,6 +23,7 @@ import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.report.task.bug.BugReportMerger;
+import com.dianping.cat.service.ReportConstants;
 
 public class BugReportService extends AbstractReportService<BugReport> {
 
@@ -49,7 +50,7 @@ public class BugReportService extends AbstractReportService<BugReport> {
 		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "bug";
+		String name = ReportConstants.REPORT_BUG;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -74,7 +75,7 @@ public class BugReportService extends AbstractReportService<BugReport> {
 		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "bug";
+		String name = ReportConstants.REPORT_BUG;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -110,8 +111,8 @@ public class BugReportService extends AbstractReportService<BugReport> {
 	@Override
 	public BugReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "bug",
-			      MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
+			      ReportConstants.REPORT_BUG, MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);
@@ -124,8 +125,8 @@ public class BugReportService extends AbstractReportService<BugReport> {
 	@Override
 	public BugReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "bug",
-			      WeeklyReportEntity.READSET_FULL);
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain,
+			      ReportConstants.REPORT_BUG, WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);

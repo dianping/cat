@@ -11,6 +11,7 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -50,7 +51,7 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 				i++;
 				try {
 					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("Cat",
-					      "transaction", new Date(start), DailyReportEntity.READSET_FULL);
+					      TransactionAnalyzer.ID, new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
 					      .parse(dailyreport.getContent());

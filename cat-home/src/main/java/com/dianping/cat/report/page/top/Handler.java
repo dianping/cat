@@ -11,6 +11,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
@@ -29,7 +30,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "top")
+	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_service;
 
 	@Inject
@@ -58,12 +59,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "top")
+	@InboundActionMeta(name = TopAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 	}
 
 	@Override
-	@OutboundActionMeta(name = "top")
+	@OutboundActionMeta(name = TopAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

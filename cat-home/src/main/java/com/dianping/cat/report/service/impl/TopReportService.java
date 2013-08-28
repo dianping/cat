@@ -6,6 +6,7 @@ import java.util.List;
 import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopReportMerger;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -35,7 +36,7 @@ public class TopReportService extends AbstractReportService<TopReport> {
 		TopReportMerger merger = new TopReportMerger(new TopReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "top";
+		String name = TopAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;

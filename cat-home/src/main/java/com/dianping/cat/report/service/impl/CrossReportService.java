@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -50,7 +51,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "cross";
+		String name = CrossAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +76,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "cross";
+		String name = CrossAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -105,7 +106,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 		crossReport.setStartTime(start);
 		crossReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "cross");
+		Set<String> domains = queryAllDomainNames(start, end, CrossAnalyzer.ID);
 		crossReport.getDomainNames().addAll(domains);
 		return crossReport;
 	}
@@ -113,7 +114,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 	@Override
 	public CrossReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "cross",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, CrossAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -127,7 +128,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 	@Override
 	public CrossReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "cross",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, CrossAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

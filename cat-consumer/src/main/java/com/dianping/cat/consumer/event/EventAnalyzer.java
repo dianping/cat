@@ -16,6 +16,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportManager;
 
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
@@ -56,7 +57,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		// don't process frontEnd domain
-		if ("FrontEnd".equals(domain)) {
+		if (ReportConstants.FRONT_END.equals(domain)) {
 			return;
 		}
 		EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);

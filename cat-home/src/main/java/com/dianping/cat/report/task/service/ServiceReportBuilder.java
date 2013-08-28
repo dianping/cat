@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.DomainManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -55,7 +56,7 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		ServiceReport serviceReport = new ServiceReport(CatString.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "cross");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, CrossAnalyzer.ID);
 
 		for (String domainName : domains) {
 			CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);

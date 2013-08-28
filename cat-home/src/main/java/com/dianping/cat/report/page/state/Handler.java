@@ -12,6 +12,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
@@ -33,7 +34,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private StateGraphs m_stateGraphs;
 
-	@Inject(type = ModelService.class, value = "state")
+	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_service;
 
 	@Inject
@@ -67,13 +68,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "state")
+	@InboundActionMeta(name = StateAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "state")
+	@OutboundActionMeta(name = StateAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

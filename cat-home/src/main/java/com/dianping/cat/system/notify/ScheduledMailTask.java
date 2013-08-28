@@ -13,8 +13,11 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.alarm.MailRecord;
@@ -76,9 +79,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 	}
 
 	private String renderContent(String names, String domain) {
-		int transactionFlag = names.indexOf("transaction");
-		int eventFlag = names.indexOf("event");
-		int problemFlag = names.indexOf("problem");
+		int transactionFlag = names.indexOf(TransactionAnalyzer.ID);
+		int eventFlag = names.indexOf(EventAnalyzer.ID);
+		int problemFlag = names.indexOf(ProblemAnalyzer.ID);
 		Date end = TimeUtil.getCurrentDay();
 		Date start = new Date(end.getTime() - TimeUtil.ONE_DAY);
 

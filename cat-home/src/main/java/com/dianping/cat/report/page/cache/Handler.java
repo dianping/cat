@@ -15,10 +15,12 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -39,7 +41,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
-	@Inject(type = ModelService.class, value = "event")
+	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_eventService;
 
 	@Inject
@@ -57,7 +59,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "transaction")
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
 
 	private Set<String> m_cacheTypes = new HashSet<String>(Arrays.asList("Cache.web", "Cache.memcached", "Cache.kvdb",
@@ -251,7 +253,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "transaction");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), TransactionAnalyzer.ID);
 				Set<String> domainNames = transactionReport.getDomainNames();
 
 				domainNames.addAll(domains);

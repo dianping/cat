@@ -15,6 +15,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.DomainManager;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
@@ -43,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DomainManager m_domainManager;
 
-	@Inject(type = ModelService.class, value = "cross")
+	@Inject(type = ModelService.class, value = CrossAnalyzer.ID)
 	private ModelService<CrossReport> m_service;
 
 	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
@@ -79,7 +80,7 @@ public class Handler implements PageHandler<Context> {
 			
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "cross");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), CrossAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -118,13 +119,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "cross")
+	@InboundActionMeta(name = CrossAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "cross")
+	@OutboundActionMeta(name = CrossAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

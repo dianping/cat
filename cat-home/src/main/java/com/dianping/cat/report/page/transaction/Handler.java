@@ -16,6 +16,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -61,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "transaction")
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
 
 	private void buildTransactionNameGraph(List<TransactionNameModel> names, Model model) {
@@ -139,7 +140,7 @@ public class Handler implements PageHandler<Context> {
 				if (CatString.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
-				Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
+				Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);

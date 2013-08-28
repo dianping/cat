@@ -20,6 +20,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -45,7 +46,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
-	@Inject(type = ModelService.class, value = "dependency")
+	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_dependencyService;
 
 	@Inject
@@ -142,12 +143,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "dependency")
+	@InboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 	}
 
 	@Override
-	@OutboundActionMeta(name = "dependency")
+	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

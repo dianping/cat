@@ -10,6 +10,7 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.CatString;
@@ -19,7 +20,6 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.consumer.company.model.entity.Domain;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 

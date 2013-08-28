@@ -87,7 +87,7 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private MetricReportService m_metricReportService;
-	
+
 	@Inject
 	private UtilizationReportService m_utilizationReportService;
 
@@ -198,7 +198,7 @@ public class DefaultReportService implements ReportService {
 	}
 
 	@Override
-   public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
+	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
 		return m_utilizationReportService.queryReport(domain, start, end);
-   }
+	}
 }

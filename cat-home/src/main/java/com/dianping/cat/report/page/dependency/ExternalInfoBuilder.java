@@ -12,7 +12,9 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
@@ -30,10 +32,10 @@ import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class ExternalInfoBuilder {
 
-	@Inject(type = ModelService.class, value = "problem")
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_problemservice;
 
-	@Inject(type = ModelService.class, value = "top")
+	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_topService;
 	
 	@Inject 

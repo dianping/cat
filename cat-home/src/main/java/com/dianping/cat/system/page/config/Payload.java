@@ -12,6 +12,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -74,7 +75,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("exception")
 	private String m_exception;
 
-	@FieldMeta("bug")
+	@FieldMeta(ReportConstants.REPORT_BUG)
 	private String m_bug;
 	
 	@FieldMeta("content")

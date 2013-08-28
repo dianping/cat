@@ -14,6 +14,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
@@ -40,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "heartbeat")
+	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_service;
 
 	@Inject
@@ -104,7 +105,7 @@ public class Handler implements PageHandler<Context> {
 			HeartbeatReport report = response.getModel();
 			if (period.isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date), new Date(date
-				      + TimeUtil.ONE_HOUR), "heartbeat");
+				      + TimeUtil.ONE_HOUR), HeartbeatAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);

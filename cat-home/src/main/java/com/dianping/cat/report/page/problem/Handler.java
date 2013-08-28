@@ -19,6 +19,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -31,6 +32,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ReportConstants;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -51,7 +53,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "problem")
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
 
 	@Inject
@@ -71,7 +73,7 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
 		ProblemReport report = getHourlyReportInternal(payload, type);
-		if ("FrontEnd".equals(payload.getDomain())) {
+		if (ReportConstants.FRONT_END.equals(payload.getDomain())) {
 			// ModelPeriod period = payload.getPeriod();
 
 			// if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
@@ -101,7 +103,7 @@ public class Handler implements PageHandler<Context> {
 			ProblemReport report = response.getModel();
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "problem");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), ProblemAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
