@@ -13,13 +13,13 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.service.ReportConstants;
 
 public class UtilizationReportBuilder implements ReportTaskBuilder {
 
@@ -47,7 +47,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		UtilizationReport utilizationReport = new UtilizationReport(CatString.CAT);
+		UtilizationReport utilizationReport = new UtilizationReport(ReportConstants.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 		TransactionReportVisitor visitor = new TransactionReportVisitor().setReport(utilizationReport);
@@ -56,7 +56,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 			TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
 			int size = transactionReport.getMachines().size();
 			
-			transactionReport = m_mergeManager.mergerAllIp(transactionReport, CatString.ALL);
+			transactionReport = m_mergeManager.mergerAllIp(transactionReport, ReportConstants.ALL);
 			visitor.visitTransactionReport(transactionReport);
 			utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 		}

@@ -15,7 +15,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -24,6 +23,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ReportConstants;
 
 /**
  * @author youyong
@@ -112,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.SQL);
 		m_normalizePayload.normalize(model, payload);
 		if (StringUtils.isEmpty(payload.getDatabase())) {
-			payload.setDatabase(CatString.ALL);
+			payload.setDatabase(ReportConstants.ALL);
 		}
 		model.setDatabase(payload.getDatabase());
 	}

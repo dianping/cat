@@ -3,7 +3,7 @@ package com.dianping.cat.report.page;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.service.ReportConstants;
 
 public class NormalizePayload {
 
@@ -15,7 +15,7 @@ public class NormalizePayload {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 		if (StringUtils.isEmpty(payload.getIpAddress())) {
-			payload.setIpAddress(CatString.ALL);
+			payload.setIpAddress(ReportConstants.ALL);
 		}
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());

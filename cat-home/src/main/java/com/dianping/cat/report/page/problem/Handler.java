@@ -23,7 +23,6 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -92,7 +91,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", type);
-		if (!CatString.ALL.equals(payload.getIpAddress())) {
+		if (!ReportConstants.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
@@ -153,7 +152,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			if (ip.equals(CatString.ALL)) {
+			if (ip.equals(ReportConstants.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
@@ -163,7 +162,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
-			if (ip.equals(CatString.ALL)) {
+			if (ip.equals(ReportConstants.ALL)) {
 				problemStatistics.setAllIp(true);
 				problemStatistics.visitProblemReport(report);
 			} else {

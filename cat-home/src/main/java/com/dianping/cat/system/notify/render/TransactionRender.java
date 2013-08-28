@@ -12,8 +12,9 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.ChineseString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.service.ReportConstants;
 
 public class TransactionRender extends BaseVisitor {
 
@@ -47,9 +48,9 @@ public class TransactionRender extends BaseVisitor {
 
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		if (ip.startsWith("10.")) {
-			m_host = CatString.ONLINE;
+			m_host = ChineseString.ONLINE;
 		} else {
-			m_host = CatString.OFFLINE;
+			m_host = ChineseString.OFFLINE;
 		}
 	}
 
@@ -91,7 +92,7 @@ public class TransactionRender extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		if (m_currentIp.equals(CatString.ALL)) {
+		if (m_currentIp.equals(ReportConstants.ALL)) {
 			Type temp = new Type();
 
 			type.setTps(type.getTotalCount() * 1000d / TimeUtil.ONE_DAY / m_totalDays);

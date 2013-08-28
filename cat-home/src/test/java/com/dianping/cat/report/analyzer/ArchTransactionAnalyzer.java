@@ -26,9 +26,9 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ReportConstants;
 
 @RunWith(JUnit4.class)
 public class ArchTransactionAnalyzer extends ComponentTestCase {
@@ -89,7 +89,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 				      DailyReportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 
-				info.reset(report.findMachine(CatString.ALL));
+				info.reset(report.findMachine(ReportConstants.ALL));
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				e.printStackTrace();

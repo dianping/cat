@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.transaction;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.service.ReportConstants;
 
 public class TransactionMergeManager {
 
@@ -12,7 +12,7 @@ public class TransactionMergeManager {
 	}
 
 	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
-		if (CatString.ALL.equalsIgnoreCase(ipAddress)) {
+		if (ReportConstants.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
 			
 			all.visitTransactionReport(report);
@@ -22,7 +22,7 @@ public class TransactionMergeManager {
 	}
 
 	private TransactionReport mergerAllName(TransactionReport report, String allName) {
-		if (CatString.ALL.equalsIgnoreCase(allName)) {
+		if (ReportConstants.ALL.equalsIgnoreCase(allName)) {
 			MergeAllName all = new MergeAllName();
 			
 			all.visitTransactionReport(report);

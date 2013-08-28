@@ -17,7 +17,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -30,6 +29,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ReportConstants;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -48,11 +48,11 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<CrossReport> m_service;
 
 	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
-		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL);
+		CrossReport projectReport = getHourlyReport(domain, period, date, ReportConstants.ALL);
 		ProjectInfo projectInfo = new ProjectInfo(duration);
 
 		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL);
+		projectInfo.setClientIp(ReportConstants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 
 		return projectInfo;
@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
 
 		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL);
+		projectInfo.setClientIp(ReportConstants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 		return projectInfo;
 	}
@@ -146,7 +146,7 @@ public class Handler implements PageHandler<Context> {
 			model.setProjectInfo(projectInfo);
 			model.setReport(projectReport);
 
-			if (payload.getIpAddress().equals(CatString.ALL)) {
+			if (payload.getIpAddress().equals(ReportConstants.ALL)) {
 				List<TypeDetailInfo> details = projectInfo.getServiceProjectsInfo();
 
 				for (TypeDetailInfo info : details) {
@@ -202,7 +202,7 @@ public class Handler implements PageHandler<Context> {
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
 
-			if (payload.getIpAddress().equals(CatString.ALL)) {
+			if (payload.getIpAddress().equals(ReportConstants.ALL)) {
 				List<TypeDetailInfo> details = historyProjectInfo.getServiceProjectsInfo();
 
 				for (TypeDetailInfo info : details) {

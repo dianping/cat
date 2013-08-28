@@ -19,7 +19,6 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ReportConstants;
@@ -89,7 +88,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 		}
 
 		public void accept(TransactionReport report) {
-			Machine machine = report.findOrCreateMachine(CatString.ALL);
+			Machine machine = report.findOrCreateMachine(ReportConstants.ALL);
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
 				String name = type.getId();

@@ -13,7 +13,6 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.report.service.ReportService;
@@ -47,7 +46,7 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		HeavyReport heavyReport = new HeavyReport(CatString.CAT);
+		HeavyReport heavyReport = new HeavyReport(ReportConstants.CAT);
 		MatrixReportVisitor visitor = new MatrixReportVisitor().setReport(heavyReport);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, MatrixAnalyzer.ID);

@@ -4,9 +4,9 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
+import com.dianping.cat.service.ReportConstants;
 
 public class TransactionReportVisitor extends BaseVisitor {
 
@@ -22,7 +22,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
-		if (CatString.ALL.equals(ip)) {
+		if (ReportConstants.ALL.equals(ip)) {
 			super.visitMachine(machine);
 		}
 	}

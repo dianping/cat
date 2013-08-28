@@ -21,7 +21,6 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -37,6 +36,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ReportConstants;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -137,7 +137,7 @@ public class Handler implements PageHandler<Context> {
 				Date start = new Date(payload.getDate());
 				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
 
-				if (CatString.ALL.equals(domain)) {
+				if (ReportConstants.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
 				Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
@@ -166,7 +166,7 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = CatString.ALL;
+			name = ReportConstants.ALL;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();

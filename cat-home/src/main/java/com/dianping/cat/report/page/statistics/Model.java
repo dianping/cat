@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -15,6 +14,7 @@ import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.service.ReportConstants;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -97,7 +97,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return CatString.CAT;
+		return ReportConstants.CAT;
 	}
 
 	@Override

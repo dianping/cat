@@ -14,7 +14,6 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
@@ -59,7 +58,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		BugReport bugReport = new BugReport(CatString.CAT);
+		BugReport bugReport = new BugReport(ReportConstants.CAT);
 		ProblemReportVisitor visitor = new ProblemReportVisitor().setReport(bugReport);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);

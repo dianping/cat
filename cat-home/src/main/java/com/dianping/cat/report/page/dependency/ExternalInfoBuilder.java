@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.ChineseString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
@@ -28,6 +28,7 @@ import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class ExternalInfoBuilder {
@@ -177,7 +178,7 @@ public class ExternalInfoBuilder {
 		long end = payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute();
 
 		sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
-		sb.append("<span style='color:red'>").append(CatString.ZABBIX_ERROR).append("(")
+		sb.append("<span style='color:red'>").append(ChineseString.ZABBIX_ERROR).append("(")
 		      .append(m_sdf.format(new Date(end - TimeUtil.ONE_MINUTE * 10))).append("-").append(m_sdf.format(end))
 		      .append(")").append("</span>").append(GraphConstrant.ENTER);
 
@@ -227,7 +228,7 @@ public class ExternalInfoBuilder {
 	}
 
 	private TopReport queryTopReport(Payload payload) {
-		String domain = CatString.CAT;
+		String domain = ReportConstants.CAT;
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("date", date);

@@ -13,7 +13,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -21,6 +20,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -40,7 +40,7 @@ public class Handler implements PageHandler<Context> {
 	private ExceptionThresholdConfigManager m_configManager;
 
 	private TopReport getReport(Payload payload) {
-		String domain = CatString.CAT;
+		String domain = ReportConstants.CAT;
 		ModelRequest request = new ModelRequest(domain, payload.getDate());
 
 		if (m_service.isEligable(request)) {

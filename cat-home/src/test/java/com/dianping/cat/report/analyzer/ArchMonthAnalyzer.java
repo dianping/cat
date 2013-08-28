@@ -26,7 +26,6 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ReportConstants;
@@ -84,7 +83,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				      DailyReportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
-				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL);
+				Machine machine = transactionReport.findOrCreateMachine(ReportConstants.ALL);
 
 				Indicator indicator = indicators.get(date.getTime());
 				if (indicator == null) {

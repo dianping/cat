@@ -26,7 +26,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -46,6 +45,7 @@ import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
+import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 
@@ -227,19 +227,19 @@ public class Handler implements PageHandler<Context> {
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		
-		return m_reportService.queryBugReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryBugReport(ReportConstants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private HeavyReport queryHeavyReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryHeavyReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryHeavyReport(ReportConstants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private ServiceReport queryServiceReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryServiceReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryServiceReport(ReportConstants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private Pair<Date, Date> queryStartEndTime(Payload payload) {
@@ -264,7 +264,7 @@ public class Handler implements PageHandler<Context> {
 
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
+		UtilizationReport report = m_reportService.queryUtilizationReport(ReportConstants.CAT, pair.getKey(), pair.getValue());
 		new UtilizationReportScore().setConfigManager(m_configManager).visitUtilizationReport(report);
 		return report;
 	}
