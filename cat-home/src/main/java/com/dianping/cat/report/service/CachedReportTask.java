@@ -8,6 +8,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -31,7 +32,6 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.service.Constants;
 
 public class CachedReportTask implements Task {
 

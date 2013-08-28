@@ -2,8 +2,8 @@ package com.dianping.cat.report.page;
 
 import org.unidal.lookup.util.StringUtils;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.service.Constants;
 
 public class NormalizePayload {
 

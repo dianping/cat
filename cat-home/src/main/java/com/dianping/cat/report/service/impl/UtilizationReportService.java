@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
@@ -23,7 +24,6 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.report.task.utilization.UtilizationReportMerger;
-import com.dianping.cat.service.Constants;
 
 public class UtilizationReportService extends AbstractReportService<UtilizationReport> {
 

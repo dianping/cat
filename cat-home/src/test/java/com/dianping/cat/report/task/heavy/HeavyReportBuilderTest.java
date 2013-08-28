@@ -9,10 +9,10 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultSaxParser;
-import com.dianping.cat.service.Constants;
 
 public class HeavyReportBuilderTest extends ComponentTestCase {
 

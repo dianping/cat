@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.service.Constants;
 
 public class SqlMerger {
 

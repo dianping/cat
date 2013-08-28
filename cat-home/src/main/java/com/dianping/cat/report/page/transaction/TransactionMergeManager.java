@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.transaction;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.service.Constants;
 
 public class TransactionMergeManager {
 

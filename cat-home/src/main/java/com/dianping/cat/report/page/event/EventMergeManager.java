@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.event;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.service.Constants;
 
 public class EventMergeManager {
 

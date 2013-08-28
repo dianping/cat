@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.event;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -7,7 +8,6 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.service.Constants;
 
 public class MergeAllMachine extends BaseVisitor {
 

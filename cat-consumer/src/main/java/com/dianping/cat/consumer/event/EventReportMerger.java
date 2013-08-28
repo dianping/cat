@@ -1,12 +1,12 @@
 package com.dianping.cat.consumer.event;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.DefaultMerger;
-import com.dianping.cat.service.Constants;
 
 public class EventReportMerger extends DefaultMerger {
 	public EventReportMerger(EventReport eventReport) {

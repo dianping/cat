@@ -11,6 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.ReportType;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
@@ -37,7 +38,6 @@ import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
-import com.dianping.cat.service.Constants;
 
 public class ReportFacade implements LogEnabled, Initializable {
 

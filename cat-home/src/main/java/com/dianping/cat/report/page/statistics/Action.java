@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.statistics;
 
-import com.dianping.cat.service.Constants;
+import com.dianping.cat.Constants;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	BUG_HISTORY_REPORT("historyBug"),

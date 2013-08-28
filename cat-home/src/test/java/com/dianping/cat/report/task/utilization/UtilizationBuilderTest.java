@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.DomainManager;
-import com.dianping.cat.service.Constants;
 
 public class UtilizationBuilderTest extends ComponentTestCase{
 	

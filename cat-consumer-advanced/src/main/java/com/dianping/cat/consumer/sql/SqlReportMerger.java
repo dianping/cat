@@ -1,11 +1,11 @@
 package com.dianping.cat.consumer.sql;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.sql.model.entity.Method;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.DefaultMerger;
-import com.dianping.cat.service.Constants;
 
 public class SqlReportMerger extends DefaultMerger {
 

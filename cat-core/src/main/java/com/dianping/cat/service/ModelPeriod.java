@@ -1,5 +1,7 @@
 package com.dianping.cat.service;
 
+import com.dianping.cat.Constants;
+
 
 public enum ModelPeriod {
 	CURRENT, FUTURE, HISTORICAL, LAST;

@@ -1,11 +1,9 @@
-package com.dianping.cat.service;
+package com.dianping.cat;
 
 public class Constants {
 	public static final String ALL = "All";
 
 	public static final String CAT = "Cat";
-
-	public static final long MINUTE = 60 * 1000L;
 
 	public static final long HOUR = 60 * 60 * 1000L;
 

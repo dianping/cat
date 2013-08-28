@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
-import static com.dianping.cat.service.Constants.ALL;
+import static com.dianping.cat.Constants.ALL;
 
 import java.util.Date;
 import java.util.Map;
@@ -9,9 +9,9 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.Constants;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;

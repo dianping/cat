@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.sql;
 
 import java.util.List;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
@@ -9,7 +10,6 @@ import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.Constants;
 
 public class CompositeSqlService extends BaseCompositeModelService<SqlReport> {
 	public CompositeSqlService() {

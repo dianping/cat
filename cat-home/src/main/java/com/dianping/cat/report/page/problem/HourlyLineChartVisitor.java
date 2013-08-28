@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.plexus.util.StringUtils;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -15,7 +16,6 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.service.Constants;
 
 public class HourlyLineChartVisitor extends BaseVisitor {
 
