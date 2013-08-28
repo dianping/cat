@@ -75,9 +75,12 @@ public class ServerStatisticManager {
 		
 		time = time - time % (60 * 1000);
 		
-		if (time != m_currentMunite) {
-			m_currentMunite = time;
-			m_currentStatistic = m_serverState.findOrCreate(time);
+		synchronized(this){
+			if (time != m_currentMunite) {
+				System.out.println("hello");
+				m_currentMunite = time;
+				m_currentStatistic = m_serverState.findOrCreate(time);
+			}
 		}
 		
 		return m_currentStatistic;
