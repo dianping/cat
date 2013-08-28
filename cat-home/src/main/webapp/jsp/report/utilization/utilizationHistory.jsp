@@ -56,16 +56,14 @@
 						<table class="table table-striped table-bordered table-condensed">
 							<tr>
 								<th class="left">id</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&tab=tab1">Machine Number</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=urlCount&tab=tab1">URL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=urlResponse&tab=tab1">URL Response Time</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=serviceCount&tab=tab1">Service Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=serviceResponse&tab=tab1">Service Response Time</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=sqlCount&tab=tab1">SQL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=pigeonCallCount&tab=tab1">Pigeon Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=swallowCallCount&tab=tab1">Swallow Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=memcacheCount&tab=tab1">Memcache Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=webScore&tab=tab1">Web Score</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&tab=tab1">Machine Number</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=urlCount&tab=tab1">URL Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=urlResponse&tab=tab1">URL Response Time</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=sqlCount&tab=tab1">SQL Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=pigeonCallCount&tab=tab1">Pigeon Call Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=swallowCallCount&tab=tab1">Swallow Call Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=memcacheCount&tab=tab1">Memcache Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=webScore&tab=tab1">Web Score</th>
 							</tr>
 						
 							<c:forEach var="item" items="${model.utilizationWebList}" varStatus="status">
@@ -74,8 +72,6 @@
 									<td style="text-align:right">${item.machineNumber}</td>
 									<td style="text-align:right">${w:format(item.urlCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.urlResponseTime,'0.0')}</td>
-									<td style="text-align:right">${w:format(item.serviceCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.serviceResponseTime,'0.0')}</td>
 									<td style="text-align:right">${w:format(item.sqlCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.pigeonCallCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.swallowCallCount,'#,###,###,###,##0')}</td>
@@ -91,24 +87,20 @@
 						<table class="table table-striped table-bordered table-condensed">
 							<tr>
 								<th class="left">id</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&tab=tab2">Machine Number</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=urlCount&tab=tab2">URL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=urlResponse&tab=tab2">URL Response Time</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=serviceCount&tab=tab2">Service Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=serviceResponse&tab=tab2">Service Response Time</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=sqlCount&tab=tab2">SQL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=pigeonCallCount&tab=tab2">Pigeon Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=swallowCallCount&tab=tab2">Swallow Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=memcacheCount&tab=tab2">Memcache Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyHtilization&sort=serviceScore&tab=tab2">Service Score</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&tab=tab2">Machine Number</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=serviceCount&tab=tab2">Service Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=serviceResponse&tab=tab2">Service Response Time</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=sqlCount&tab=tab2">SQL Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=pigeonCallCount&tab=tab2">Pigeon Call Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=swallowCallCount&tab=tab2">Swallow Call Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=memcacheCount&tab=tab2">Memcache Count</th>
+								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&sort=serviceScore&tab=tab2">Service Score</th>
 							</tr>
 						
 							<c:forEach var="item" items="${model.utilizationServiceList}" varStatus="status">
 								<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 									<td>${item.id}</td>
 									<td style="text-align:right">${item.machineNumber}</td>
-									<td style="text-align:right">${w:format(item.urlCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.urlResponseTime,'0.0')}</td>
 									<td style="text-align:right">${w:format(item.serviceCount,'#,###,###,###,##0')}</td>
 									<td style="text-align:right">${w:format(item.serviceResponseTime,'0.0')}</td>
 									<td style="text-align:right">${w:format(item.sqlCount,'#,###,###,###,##0')}</td>
@@ -133,3 +125,13 @@
 	</table>
 </div>
 </a:body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var tab = '${payload.tab}';
+		if(tab=='tab2'){
+			$('#tab2Href').trigger('click');
+		}else{
+			$('#tab1Href').trigger('click');
+		}
+	});
+</script>

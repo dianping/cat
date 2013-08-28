@@ -176,6 +176,7 @@ public class Handler implements PageHandler<Context> {
 			model.setUtilizationList(dUList);
 			model.setUtilizationWebList(dUWebList);
 			model.setUtilizationServiceList(dUServiceList);
+			model.setUtilizationReport(utilizationReport);
 			break;
 		}
 		model.setPage(ReportPage.BUG);
