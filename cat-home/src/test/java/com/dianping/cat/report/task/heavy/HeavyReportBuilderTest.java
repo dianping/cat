@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.webres.helper.Files;
@@ -17,6 +18,7 @@ import com.dianping.cat.service.ReportConstants;
 public class HeavyReportBuilderTest extends ComponentTestCase {
 
 	@Test
+	@Ignore
 	public void test() throws Exception {
 		HeavyReportBuilder builder = lookup(HeavyReportBuilder.class);
 		Date date = new SimpleDateFormat("yyyyMMddHH").parse("2013082600");
