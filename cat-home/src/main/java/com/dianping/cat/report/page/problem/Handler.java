@@ -31,7 +31,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -72,7 +72,7 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
 		ProblemReport report = getHourlyReportInternal(payload, type);
-		if (ReportConstants.FRONT_END.equals(payload.getDomain())) {
+		if (Constants.FRONT_END.equals(payload.getDomain())) {
 			// ModelPeriod period = payload.getPeriod();
 
 			// if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
@@ -91,7 +91,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", type);
-		if (!ReportConstants.ALL.equals(payload.getIpAddress())) {
+		if (!Constants.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
@@ -152,7 +152,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			if (ip.equals(ReportConstants.ALL)) {
+			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
@@ -162,7 +162,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
-			if (ip.equals(ReportConstants.ALL)) {
+			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);
 				problemStatistics.visitProblemReport(report);
 			} else {

@@ -14,7 +14,7 @@ import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -97,7 +97,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return ReportConstants.CAT;
+		return Constants.CAT;
 	}
 
 	@Override

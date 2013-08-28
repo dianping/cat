@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
@@ -35,10 +35,10 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		Date startTime = report.getStartTime();
 		String domain = report.getDomain();
 
-		m_taskManager.createTask(startTime, domain, ReportConstants.REPORT_SERVICE, TaskProlicy.ALL);
-		m_taskManager.createTask(startTime, domain, ReportConstants.REPORT_BUG, TaskProlicy.ALL);
-		m_taskManager.createTask(startTime, domain, ReportConstants.REPORT_HEAVY, TaskProlicy.ALL);
-		m_taskManager.createTask(startTime, domain, ReportConstants.REPORT_UTILIZATION, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_SERVICE, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_BUG, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_HEAVY, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
 		return m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 

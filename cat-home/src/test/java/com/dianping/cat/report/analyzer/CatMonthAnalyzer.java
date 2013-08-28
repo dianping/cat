@@ -20,7 +20,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 @RunWith(JUnit4.class)
 public class CatMonthAnalyzer extends ComponentTestCase {
@@ -56,7 +56,7 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
 					      .parse(dailyreport.getContent());
 
-					Machine machine = report.findOrCreateMachine(ReportConstants.ALL);
+					Machine machine = report.findOrCreateMachine(Constants.ALL);
 					
 					TransactionType type =machine.findOrCreateType("URL");
 					

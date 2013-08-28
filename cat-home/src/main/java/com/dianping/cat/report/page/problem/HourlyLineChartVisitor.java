@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class HourlyLineChartVisitor extends BaseVisitor {
 
@@ -84,7 +84,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	@Override
 	public void visitMachine(Machine machine) {
-		if (ReportConstants.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
+		if (Constants.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
 			super.visitMachine(machine);
 		}
 	}

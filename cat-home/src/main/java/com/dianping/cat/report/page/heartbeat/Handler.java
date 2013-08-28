@@ -26,7 +26,7 @@ import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -77,7 +77,7 @@ public class Handler implements PageHandler<Context> {
 		      new Date(payload.getDate() + TimeUtil.ONE_HOUR));
 		model.setReport(report);
 
-		if (StringUtil.isEmpty(payload.getIpAddress()) || ReportConstants.ALL.equals(payload.getIpAddress())) {
+		if (StringUtil.isEmpty(payload.getIpAddress()) || Constants.ALL.equals(payload.getIpAddress())) {
 			String ipAddress = getIpAddress(report, payload);
 
 			payload.setIpAddress(ipAddress);
@@ -150,8 +150,8 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 
 		model.setPage(ReportPage.HEARTBEAT);
-		if (StringUtil.isEmpty(ipAddress) || ipAddress.equals(ReportConstants.ALL)) {
-			model.setIpAddress(ReportConstants.ALL);
+		if (StringUtil.isEmpty(ipAddress) || ipAddress.equals(Constants.ALL)) {
+			model.setIpAddress(Constants.ALL);
 		} else {
 			payload.setRealIp(payload.getIpAddress());
 			model.setIpAddress(payload.getRealIp());

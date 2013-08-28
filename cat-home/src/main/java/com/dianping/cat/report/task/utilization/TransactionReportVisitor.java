@@ -6,7 +6,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class TransactionReportVisitor extends BaseVisitor {
 
@@ -22,7 +22,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
-		if (ReportConstants.ALL.equals(ip)) {
+		if (Constants.ALL.equals(ip)) {
 			super.visitMachine(machine);
 		}
 	}

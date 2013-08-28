@@ -12,7 +12,7 @@ import org.unidal.webres.helper.Files;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class HeavyReportBuilderTest extends ComponentTestCase {
 
@@ -23,10 +23,10 @@ public class HeavyReportBuilderTest extends ComponentTestCase {
 		Date date = new SimpleDateFormat("yyyyMMddHH").parse("2013082600");
 		for (int i = 0; i < 24; i++) {
 			Date current = new Date(date.getTime() + TimeUtil.ONE_HOUR * i);
-			builder.buildHourlyTask(ReportConstants.REPORT_HEAVY, ReportConstants.CAT, current);
+			builder.buildHourlyTask(Constants.REPORT_HEAVY, Constants.CAT, current);
 		}
 		
-		builder.buildDailyTask(ReportConstants.REPORT_HEAVY,  ReportConstants.CAT, date);
+		builder.buildDailyTask(Constants.REPORT_HEAVY,  Constants.CAT, date);
 	}
 
 	@Test

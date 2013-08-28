@@ -20,7 +20,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class DBAAnalyzer extends ComponentTestCase {
 
@@ -50,7 +50,7 @@ public class DBAAnalyzer extends ComponentTestCase {
 
 			
 			for (TransactionType type : machine.getTypes().values()) {
-				if(!machine.getIp().equals(ReportConstants.ALL)){
+				if(!machine.getIp().equals(Constants.ALL)){
 					TransactionType old = temp.findOrCreateType(type.getId());
 					m_merger.mergeType(old, type);
 				}

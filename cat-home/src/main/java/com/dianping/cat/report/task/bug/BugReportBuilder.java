@@ -14,13 +14,14 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.helper.ChineseString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class BugReportBuilder implements ReportTaskBuilder {
 
@@ -39,7 +40,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=day&domain=%s&date=%s",
 			      getDomainName(), d.getId(), m_daily_formate.format(period)));
 		}
-		
+
 		DailyReport report = new DailyReport();
 
 		report.setContent(bugReport.toString());
@@ -53,12 +54,12 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	}
 
 	private boolean validateDomain(String domain) {
-		return !domain.equals(ReportConstants.FRONT_END) && !domain.equals(ReportConstants.ALL);
+		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
 	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		BugReport bugReport = new BugReport(ReportConstants.CAT);
+		BugReport bugReport = new BugReport(Constants.CAT);
 		ProblemReportVisitor visitor = new ProblemReportVisitor().setReport(bugReport);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
@@ -168,9 +169,9 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 		if ("10.1.6.128".equals(ip)) {
-			return "cat.dianpingoa.com";
+			return ChineseString.ONLINE;
 		} else if ("192.168.7.70".equals(ip)) {
-			return "cat.qa.dianpingoa.com";
+			return ChineseString.OFFLINE;
 		} else {
 			return ip + ":2281";
 		}

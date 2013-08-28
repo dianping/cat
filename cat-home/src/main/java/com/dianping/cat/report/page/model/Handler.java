@@ -57,7 +57,7 @@ import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject
@@ -239,7 +239,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.event.model.entity.Machine machine) {
-			if (m_ipAddress == null || m_ipAddress.equals(ReportConstants.ALL)) {
+			if (m_ipAddress == null || m_ipAddress.equals(Constants.ALL)) {
 				super.visitMachine(machine);
 			} else if (machine.getIp().equals(m_ipAddress)) {
 				super.visitMachine(machine);
@@ -292,7 +292,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
-			if (machine.getIp().equals(m_ip) || StringUtils.isEmpty(m_ip) || ReportConstants.ALL.equals(m_ip)) {
+			if (machine.getIp().equals(m_ip) || StringUtils.isEmpty(m_ip) || Constants.ALL.equals(m_ip)) {
 				super.visitMachine(machine);
 			}
 		}
@@ -391,7 +391,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {
 			synchronized (machine) {
-				if (m_ipAddress == null || m_ipAddress.equals(ReportConstants.ALL)) {
+				if (m_ipAddress == null || m_ipAddress.equals(Constants.ALL)) {
 					super.visitMachine(machine);
 				} else if (machine.getIp().equals(m_ipAddress)) {
 					super.visitMachine(machine);

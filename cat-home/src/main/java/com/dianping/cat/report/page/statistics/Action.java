@@ -1,23 +1,23 @@
 package com.dianping.cat.report.page.statistics;
 
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	BUG_HISTORY_REPORT("historyBug"),
 
-	BUG_REPORT(ReportConstants.REPORT_BUG),
+	BUG_REPORT(Constants.REPORT_BUG),
 
 	BUG_HTTP_JSON("json"),
 
-	SERVICE_REPORT(ReportConstants.REPORT_SERVICE),
+	SERVICE_REPORT(Constants.REPORT_SERVICE),
 
 	SERVICE_HISTORY_REPORT("historyService"),
 
-	HEAVY_REPORT(ReportConstants.REPORT_HEAVY),
+	HEAVY_REPORT(Constants.REPORT_HEAVY),
 
 	HEAVY_HISTORY_REPORT("historyHeavy"),
 
-	UTILIZATION_REPORT(ReportConstants.REPORT_UTILIZATION),
+	UTILIZATION_REPORT(Constants.REPORT_UTILIZATION),
 
 	UTILIZATION_HISTORY_REPORT("historyUtilization");
 

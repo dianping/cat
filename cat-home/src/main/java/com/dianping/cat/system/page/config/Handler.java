@@ -36,7 +36,7 @@ import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.view.DomainNavManager;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
@@ -121,7 +121,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = config.getId();
 		model.setDomainConfig(config);
 
-		if (domain.equalsIgnoreCase(ReportConstants.ALL)) {
+		if (domain.equalsIgnoreCase(Constants.ALL)) {
 			return m_topologyConfigManager.insertDomainDefaultConfig(type, config);
 		} else {
 			return m_topologyConfigManager.insertDomainConfig(type, config);

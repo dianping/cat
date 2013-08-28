@@ -37,7 +37,7 @@ import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
@@ -161,10 +161,10 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(DependencyAnalyzer.ID, m_dependendcyReportBuilder);
 		m_reportBuilders.put(MetricAnalyzer.ID, m_metricBaselineReportBuilder);
 		
-		m_reportBuilders.put(ReportConstants.REPORT_BUG, m_bugReportBuilder);
-		m_reportBuilders.put(ReportConstants.REPORT_SERVICE, m_serviceReportBuilder);
-		m_reportBuilders.put(ReportConstants.REPORT_HEAVY, m_heavyReportBuilder);
-		m_reportBuilders.put(ReportConstants.REPORT_UTILIZATION, m_utilizationReportBuilder);
+		m_reportBuilders.put(Constants.REPORT_BUG, m_bugReportBuilder);
+		m_reportBuilders.put(Constants.REPORT_SERVICE, m_serviceReportBuilder);
+		m_reportBuilders.put(Constants.REPORT_HEAVY, m_heavyReportBuilder);
+		m_reportBuilders.put(Constants.REPORT_UTILIZATION, m_utilizationReportBuilder);
 	}
 
 }

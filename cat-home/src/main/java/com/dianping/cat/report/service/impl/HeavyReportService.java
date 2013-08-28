@@ -23,7 +23,7 @@ import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class HeavyReportService extends AbstractReportService<HeavyReport> {
 
@@ -50,7 +50,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 		HeavyReportMerger merger = new HeavyReportMerger(new HeavyReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = ReportConstants.REPORT_HEAVY;
+		String name = Constants.REPORT_HEAVY;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +75,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 		HeavyReportMerger merger = new HeavyReportMerger(new HeavyReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = ReportConstants.REPORT_HEAVY;
+		String name = Constants.REPORT_HEAVY;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -112,7 +112,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 	public HeavyReport queryMonthlyReport(String domain, Date start) {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
-			      ReportConstants.REPORT_HEAVY, MonthlyReportEntity.READSET_FULL);
+			      Constants.REPORT_HEAVY, MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			return com.dianping.cat.home.heavy.transform.DefaultSaxParser.parse(content);
@@ -126,7 +126,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 	public HeavyReport queryWeeklyReport(String domain, Date start) {
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain,
-			      ReportConstants.REPORT_HEAVY, WeeklyReportEntity.READSET_FULL);
+			      Constants.REPORT_HEAVY, WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			return com.dianping.cat.home.heavy.transform.DefaultSaxParser.parse(content);

@@ -37,7 +37,7 @@ import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class Handler implements PageHandler<Context> {
 
@@ -258,7 +258,7 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-			if (ReportConstants.ALL.equalsIgnoreCase(ipAddress)) {
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				MergeAllMachine all = new MergeAllMachine();
 
 				all.visitTransactionReport(transactionReport);
@@ -270,7 +270,7 @@ public class Handler implements PageHandler<Context> {
 				eventReport = allEvent.getReport();
 			}
 
-			if (ReportConstants.ALL.equalsIgnoreCase(type)) {
+			if (Constants.ALL.equalsIgnoreCase(type)) {
 				MergeAllName all = new MergeAllName();
 
 				all.visitTransactionReport(transactionReport);

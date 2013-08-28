@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.ChineseString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class TransactionRender extends BaseVisitor {
 
@@ -92,7 +92,7 @@ public class TransactionRender extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		if (m_currentIp.equals(ReportConstants.ALL)) {
+		if (m_currentIp.equals(Constants.ALL)) {
 			Type temp = new Type();
 
 			type.setTps(type.getTotalCount() * 1000d / TimeUtil.ONE_DAY / m_totalDays);

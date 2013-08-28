@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.ChineseString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.event.DisplayTypes;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class EventRender extends BaseVisitor {
 	private Date m_date;
@@ -104,7 +104,7 @@ public class EventRender extends BaseVisitor {
 
 	@Override
 	public void visitType(EventType type) {
-		if (m_currentIp.equals(ReportConstants.ALL)) {
+		if (m_currentIp.equals(Constants.ALL)) {
 			Set<String> types = DisplayTypes.s_unusedTypes;
 			String id = type.getId();
 			if (!types.contains(id)) {

@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 import com.dianping.cat.consumer.problem.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class ProblemReportAggregationTest {
 
@@ -41,7 +41,7 @@ public class ProblemReportAggregationTest {
 
 	class MockRuleManger extends AggregationConfigManager {
 		private void register() {
-			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, ReportConstants.FRONT_END);
+			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END);
 			
 			m_handler = new DefaultAggregationHandler();
 			m_handler.register(rules);
@@ -52,7 +52,7 @@ public class ProblemReportAggregationTest {
 			
 			rule.setPattern(pattern);
 			rule.setType(3);
-			rule.setDomain(ReportConstants.FRONT_END);
+			rule.setDomain(Constants.FRONT_END);
 			return rule;
 		}
 		

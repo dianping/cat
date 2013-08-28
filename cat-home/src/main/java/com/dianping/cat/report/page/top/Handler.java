@@ -20,7 +20,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -40,7 +40,7 @@ public class Handler implements PageHandler<Context> {
 	private ExceptionThresholdConfigManager m_configManager;
 
 	private TopReport getReport(Payload payload) {
-		String domain = ReportConstants.CAT;
+		String domain = Constants.CAT;
 		ModelRequest request = new ModelRequest(domain, payload.getDate());
 
 		if (m_service.isEligable(request)) {

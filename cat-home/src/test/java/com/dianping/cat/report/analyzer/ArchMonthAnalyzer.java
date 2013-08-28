@@ -28,7 +28,7 @@ import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 @RunWith(JUnit4.class)
 public class ArchMonthAnalyzer extends ComponentTestCase {
@@ -83,7 +83,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				      DailyReportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
-				Machine machine = transactionReport.findOrCreateMachine(ReportConstants.ALL);
+				Machine machine = transactionReport.findOrCreateMachine(Constants.ALL);
 
 				Indicator indicator = indicators.get(date.getTime());
 				if (indicator == null) {
@@ -131,7 +131,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 							System.out.println(count + " " + avg);
 						}
 					}
-				} else if (name.equalsIgnoreCase(ReportConstants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
+				} else if (name.equalsIgnoreCase(Constants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
 					double avg = type.getAvg();
 					if (m_isDebug) {
 						if (avg > 10) {
@@ -226,7 +226,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("url" + "\t").append(m_url);
-			sb.append(ReportConstants.REPORT_SERVICE + "\t").append(m_service);
+			sb.append(Constants.REPORT_SERVICE + "\t").append(m_service);
 			sb.append("call" + "\t").append(m_call);
 			sb.append(SqlAnalyzer.ID + "\t").append(m_sql);
 			sb.append("memcache" + "\t").append(m_memCache);

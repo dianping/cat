@@ -9,7 +9,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
@@ -41,10 +41,10 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			reports.put(all.getDomain(), all);
 		}
 		
-		ProblemReport frontEnd = reports.get(ReportConstants.FRONT_END);
+		ProblemReport frontEnd = reports.get(Constants.FRONT_END);
 
 		if (frontEnd != null) {
-			reports.put(ReportConstants.FRONT_END, rebuildFrontEndReport(frontEnd));
+			reports.put(Constants.FRONT_END, rebuildFrontEndReport(frontEnd));
 		}
 	}
 
@@ -56,11 +56,11 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	}
 	
 	private boolean validateDomain(String domain) {
-		return !domain.equals(ReportConstants.FRONT_END);
+		return !domain.equals(Constants.FRONT_END);
 	}
 
 	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
-		ProblemReport report = new ProblemReport(ReportConstants.ALL);
+		ProblemReport report = new ProblemReport(Constants.ALL);
 		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
 
 		try {

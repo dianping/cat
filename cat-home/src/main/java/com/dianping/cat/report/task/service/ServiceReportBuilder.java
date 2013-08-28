@@ -25,7 +25,7 @@ import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class ServiceReportBuilder implements ReportTaskBuilder {
 
@@ -54,7 +54,7 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		ServiceReport serviceReport = new ServiceReport(ReportConstants.CAT);
+		ServiceReport serviceReport = new ServiceReport(Constants.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, CrossAnalyzer.ID);
 
@@ -63,7 +63,7 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 			ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
 			projectInfo.setDomainManager(m_domainManager);
-			projectInfo.setClientIp(ReportConstants.ALL);
+			projectInfo.setClientIp(Constants.ALL);
 			projectInfo.visitCrossReport(crossReport);
 			Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
 

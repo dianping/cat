@@ -31,7 +31,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class CachedReportTask implements Task {
 
@@ -104,9 +104,9 @@ public class CachedReportTask implements Task {
 		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
 		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID, stateReport.toString()));
 		BugReport bugReport = m_reportService.queryBugReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, ReportConstants.REPORT_BUG, bugReport.toString()));
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_BUG, bugReport.toString()));
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, ReportConstants.REPORT_SERVICE, serviceReport.toString()));
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_SERVICE, serviceReport.toString()));
 	}
 
 	private void reloadCurrentWeekly() {
@@ -140,9 +140,9 @@ public class CachedReportTask implements Task {
 		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
 		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, StateAnalyzer.ID, stateReport.toString()));
 		BugReport bugReport = m_reportService.queryBugReport(domain, start, end);
-		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, ReportConstants.REPORT_BUG, bugReport.toString()));
+		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, Constants.REPORT_BUG, bugReport.toString()));
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
-		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, ReportConstants.REPORT_SERVICE, serviceReport.toString()));
+		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, Constants.REPORT_SERVICE, serviceReport.toString()));
 	}
 
 	@Override

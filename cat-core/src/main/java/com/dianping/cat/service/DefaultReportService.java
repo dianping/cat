@@ -76,7 +76,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 			Cat.logError(e);
 		}
 
-		return delegate.makeReport(domain, startTime, ReportConstants.HOUR);
+		return delegate.makeReport(domain, startTime, Constants.HOUR);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,7 +85,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		long startTime = request.getStartTime();
 		String name = request.getReportName();
 		final ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		final T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
+		final T result = delegate.makeReport(domain, startTime, Constants.HOUR);
 		final Semaphore semaphore = new Semaphore(0);
 		final Transaction t = Cat.getProducer().newTransaction("ModelService", name);
 		int count = 0;
@@ -153,7 +153,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		long startTime = request.getStartTime();
 		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
+		T result = delegate.makeReport(domain, startTime, Constants.HOUR);
 
 		try {
 			List<HourlyReport> reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
@@ -197,7 +197,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return delegate.makeReport(domain, startTime, ReportConstants.DAY * 30);
+		return delegate.makeReport(domain, startTime, Constants.DAY * 30);
 	}
 
 	@Override
@@ -221,7 +221,7 @@ public class DefaultReportService<T> extends ContainerHolder implements ReportSe
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return delegate.makeReport(domain, startTime, ReportConstants.WEEK);
+		return delegate.makeReport(domain, startTime, Constants.WEEK);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.DefaultMerger;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class EventReportMerger extends DefaultMerger {
 	public EventReportMerger(EventReport eventReport) {
@@ -42,10 +42,10 @@ public class EventReportMerger extends DefaultMerger {
 	}
 
 	public Machine mergesForAllMachine(EventReport report) {
-		Machine machine = new Machine(ReportConstants.ALL);
+		Machine machine = new Machine(Constants.ALL);
 
 		for (Machine m : report.getMachines().values()) {
-			if (!m.getIp().equals(ReportConstants.ALL)) {
+			if (!m.getIp().equals(Constants.ALL)) {
 				visitMachineChildren(machine, m);
 			}
 		}

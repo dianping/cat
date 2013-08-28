@@ -7,7 +7,7 @@ import java.util.Set;
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class SqlMerger {
 
@@ -27,8 +27,8 @@ public class SqlMerger {
 		SqlReport sqlReport = buildDailyReport(reports, reportDomain, false);
 		SqlReport sqlReport2 = buildDailyReport(reports, reportDomain, true);
 
-		sqlReport.addDatabase(sqlReport2.findOrCreateDatabase(ReportConstants.ALL));
-		sqlReport.getDomainNames().add(ReportConstants.ALL);
+		sqlReport.addDatabase(sqlReport2.findOrCreateDatabase(Constants.ALL));
+		sqlReport.getDomainNames().add(Constants.ALL);
 		sqlReport.getDomainNames().addAll(domains);
 
 		Date date = sqlReport.getStartTime();

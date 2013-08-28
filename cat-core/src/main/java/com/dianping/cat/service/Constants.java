@@ -1,6 +1,6 @@
 package com.dianping.cat.service;
 
-public class ReportConstants {
+public class Constants {
 	public static final String ALL = "All";
 
 	public static final String CAT = "Cat";

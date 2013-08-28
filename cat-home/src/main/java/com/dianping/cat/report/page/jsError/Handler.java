@@ -20,7 +20,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -67,7 +67,7 @@ public class Handler implements PageHandler<Context> {
 
 		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
-		tree.setDomain(ReportConstants.FRONT_END);
+		tree.setDomain(Constants.FRONT_END);
 		tree.setHostName(host);
 		tree.setIpAddress(host);
 		model.setStatus("SUCCESS");

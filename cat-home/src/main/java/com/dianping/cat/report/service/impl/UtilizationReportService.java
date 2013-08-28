@@ -23,7 +23,7 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.report.task.utilization.UtilizationReportMerger;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class UtilizationReportService extends AbstractReportService<UtilizationReport> {
 
@@ -50,7 +50,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = ReportConstants.REPORT_UTILIZATION;
+		String name = Constants.REPORT_UTILIZATION;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +75,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = ReportConstants.REPORT_UTILIZATION;
+		String name = Constants.REPORT_UTILIZATION;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -112,7 +112,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, ReportConstants.REPORT_UTILIZATION,
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_UTILIZATION,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -126,7 +126,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, ReportConstants.REPORT_UTILIZATION,
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_UTILIZATION,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

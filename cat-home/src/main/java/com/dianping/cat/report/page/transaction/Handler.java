@@ -36,7 +36,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -137,7 +137,7 @@ public class Handler implements PageHandler<Context> {
 				Date start = new Date(payload.getDate());
 				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
 
-				if (ReportConstants.ALL.equals(domain)) {
+				if (Constants.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
 				Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
@@ -166,7 +166,7 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = ReportConstants.ALL;
+			name = Constants.ALL;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();

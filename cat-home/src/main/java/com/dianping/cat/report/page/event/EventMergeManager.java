@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.event;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class EventMergeManager {
 
@@ -12,7 +12,7 @@ public class EventMergeManager {
 	}
 
 	public EventReport mergerAllIp(EventReport report, String ipAddress) {
-		if (ReportConstants.ALL.equalsIgnoreCase(ipAddress)) {
+		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
 
 			all.visitEventReport(report);
@@ -22,7 +22,7 @@ public class EventMergeManager {
 	}
 
 	private EventReport mergerAllName(EventReport report, String allName) {
-		if (ReportConstants.ALL.equalsIgnoreCase(allName)) {
+		if (Constants.ALL.equalsIgnoreCase(allName)) {
 			MergeAllName all = new MergeAllName();
 
 			all.visitEventReport(report);

@@ -23,7 +23,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 /**
  * @author youyong
@@ -112,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.SQL);
 		m_normalizePayload.normalize(model, payload);
 		if (StringUtils.isEmpty(payload.getDatabase())) {
-			payload.setDatabase(ReportConstants.ALL);
+			payload.setDatabase(Constants.ALL);
 		}
 		model.setDatabase(payload.getDatabase());
 	}

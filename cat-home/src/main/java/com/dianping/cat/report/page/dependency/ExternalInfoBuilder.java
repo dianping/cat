@@ -28,7 +28,7 @@ import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class ExternalInfoBuilder {
@@ -228,7 +228,7 @@ public class ExternalInfoBuilder {
 	}
 
 	private TopReport queryTopReport(Payload payload) {
-		String domain = ReportConstants.CAT;
+		String domain = Constants.CAT;
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("date", date);

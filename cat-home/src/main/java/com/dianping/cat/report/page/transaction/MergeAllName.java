@@ -8,7 +8,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 public class MergeAllName extends BaseVisitor {
 
@@ -39,7 +39,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeDuration(temp, duration);
 		
 		Duration all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(ReportConstants.ALL).findOrCreateDuration(m_currentDuration);
+		      .findOrCreateName(Constants.ALL).findOrCreateDuration(m_currentDuration);
 
 		m_merger.mergeDuration(all, duration);
 
@@ -62,7 +62,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeName(temp, name);
 		
 		TransactionName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(ReportConstants.ALL);
+		      .findOrCreateName(Constants.ALL);
 		m_merger.mergeName(all, name);
 
 		m_merger.mergeName(temp, name);
@@ -78,7 +78,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeRange(temp, range);
 		
 		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(ReportConstants.ALL).findOrCreateRange(m_currentRange);
+		      .findOrCreateName(Constants.ALL).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(all, range);
 		super.visitRange(range);

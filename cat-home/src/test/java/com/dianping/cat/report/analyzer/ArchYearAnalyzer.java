@@ -21,7 +21,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 
 @RunWith(JUnit4.class)
 public class ArchYearAnalyzer extends ComponentTestCase {
@@ -88,7 +88,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 		}
 
 		public void accept(TransactionReport report) {
-			Machine machine = report.findOrCreateMachine(ReportConstants.ALL);
+			Machine machine = report.findOrCreateMachine(Constants.ALL);
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
 				String name = type.getId();
@@ -99,7 +99,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 				if (name.equalsIgnoreCase("call") || name.equalsIgnoreCase("pigeonCall")) {
 					m_call.add(count, error, sum);
 				}
-				if (name.equalsIgnoreCase(ReportConstants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
+				if (name.equalsIgnoreCase(Constants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
 					m_domains.add(report.getDomain());
 					m_ips.addAll(report.getIps());
 				}

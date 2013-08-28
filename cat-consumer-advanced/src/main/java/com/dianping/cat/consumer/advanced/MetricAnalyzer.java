@@ -30,7 +30,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.ReportConstants;
+import com.dianping.cat.service.Constants;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.task.TaskManager;
@@ -306,7 +306,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 					}
 				}
 				//for create baseline for metric
-				m_taskManager.createTask(period, ReportConstants.CAT, ID, TaskProlicy.DAILY);
+				m_taskManager.createTask(period, Constants.CAT, ID, TaskProlicy.DAILY);
 			}
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
