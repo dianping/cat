@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
-import com.dianping.cat.helper.ChineseString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
@@ -66,7 +66,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 		
 		if (m_errors.size() > 0) {
 			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
-			sb.append("<span style='color:red'>").append(ChineseString.EXCEPTION_INFO).append("（");
+			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");
 			sb.append(sdf.format(m_start)).append("-")
 			      .append(sdf.format(new Date(m_start.getTime() + TimeUtil.ONE_HOUR - 1))).append("）");
 			sb.append("</span>").append(GraphConstrant.ENTER);

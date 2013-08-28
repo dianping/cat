@@ -1,6 +1,6 @@
 package com.dianping.cat.helper;
 
-public class ChineseString {
+public class Chinese {
 
 	public static final String ONLINE = "cat.dianpingoa.com";
 

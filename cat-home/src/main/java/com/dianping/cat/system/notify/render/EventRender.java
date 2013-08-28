@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.helper.ChineseString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.event.DisplayTypes;
 
@@ -51,9 +51,9 @@ public class EventRender extends BaseVisitor {
 
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		if (ip.startsWith("10.")) {
-			m_host = ChineseString.ONLINE;
+			m_host = Chinese.ONLINE;
 		} else {
-			m_host = ChineseString.OFFLINE;
+			m_host = Chinese.OFFLINE;
 		}
 	}
 

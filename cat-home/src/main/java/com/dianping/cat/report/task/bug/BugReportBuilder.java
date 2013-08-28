@@ -15,7 +15,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.ChineseString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
@@ -169,9 +169,9 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 		if ("10.1.6.128".equals(ip)) {
-			return ChineseString.ONLINE;
+			return Chinese.ONLINE;
 		} else if ("192.168.7.70".equals(ip)) {
-			return ChineseString.OFFLINE;
+			return Chinese.OFFLINE;
 		} else {
 			return ip + ":2281";
 		}

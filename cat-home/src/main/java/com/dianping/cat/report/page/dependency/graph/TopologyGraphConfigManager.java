@@ -20,7 +20,7 @@ import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.helper.ChineseString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
@@ -35,11 +35,11 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 
-	private static final String AVG_STR = ChineseString.RESPONSE_TIME;
+	private static final String AVG_STR = Chinese.RESPONSE_TIME;
 
-	private static final String ERROR_STR = ChineseString.EXCEPTION_COUNT;
+	private static final String ERROR_STR = Chinese.EXCEPTION_COUNT;
 
-	private static final String TOTAL_STR = ChineseString.TOTAL_COUNT;
+	private static final String TOTAL_STR = Chinese.TOTAL_COUNT;
 
 	private static final String MILLISECOND = "(ms)";
 

@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.ChineseString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 
 public class TransactionRender extends BaseVisitor {
@@ -48,9 +48,9 @@ public class TransactionRender extends BaseVisitor {
 
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		if (ip.startsWith("10.")) {
-			m_host = ChineseString.ONLINE;
+			m_host = Chinese.ONLINE;
 		} else {
-			m_host = ChineseString.OFFLINE;
+			m_host = Chinese.OFFLINE;
 		}
 	}
 
