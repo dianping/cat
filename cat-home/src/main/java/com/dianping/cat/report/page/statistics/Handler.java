@@ -73,11 +73,6 @@ public class Handler implements PageHandler<Context> {
 		BugReportVisitor visitor = new BugReportVisitor();
 		visitor.visitBugReport(bugReport);
 
-		model.setBugReport(bugReport);
-		bugReport = queryBugReport(payload);
-		visitor = new BugReportVisitor();
-		visitor.visitBugReport(bugReport);
-
 		Map<String, ErrorStatis> errors = visitor.getErrors();
 		errors = sortErrorStatis(errors);
 		model.setErrorStatis(errors);
@@ -231,7 +226,7 @@ public class Handler implements PageHandler<Context> {
 
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-
+		
 		return m_reportService.queryBugReport(CatString.CAT, pair.getKey(), pair.getValue());
 	}
 
@@ -250,7 +245,9 @@ public class Handler implements PageHandler<Context> {
 	private Pair<Date, Date> queryStartEndTime(Payload payload) {
 		Date start = null;
 		Date end = null;
-		if (!payload.getAction().getName().startsWith("history")) {
+		Action action = payload.getAction();
+		String name = action.getName();
+		if ((!name.startsWith("history")) && (action != Action.BUG_HTTP_JSON)) {
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
 				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
@@ -373,12 +370,12 @@ public class Handler implements PageHandler<Context> {
 			temp.setBugs(MapUtils.sortMap(bugs, compator));
 			temp.setExceptions(MapUtils.sortMap(exceptions, compator));
 		}
-
 		return errors;
 	}
 
 	public class BugReportVisitor extends BaseVisitor {
-		private String m_domain;
+
+		private Domain m_currentDomain;
 
 		private Map<String, ErrorStatis> m_errors = new HashMap<String, ErrorStatis>();
 
@@ -398,7 +395,7 @@ public class Handler implements PageHandler<Context> {
 
 		@Override
 		public void visitDomain(Domain domain) {
-			m_domain = domain.getId();
+			m_currentDomain= domain;
 			super.visitDomain(domain);
 		}
 
@@ -406,7 +403,7 @@ public class Handler implements PageHandler<Context> {
 		public void visitExceptionItem(ExceptionItem exceptionItem) {
 			String exception = exceptionItem.getId();
 			int count = exceptionItem.getCount();
-			Project project = findProjectByDomain(m_domain);
+			Project project = findProjectByDomain(m_currentDomain.getId());
 
 			if (project != null) {
 				String productLine = project.getProjectLine();
@@ -415,10 +412,12 @@ public class Handler implements PageHandler<Context> {
 
 				statis.setDepartment(department);
 				statis.setProductLine(productLine);
-
+				m_currentDomain.setDepartment(department);
+				m_currentDomain.setProductLine(productLine);
+				
 				Map<String, ExceptionItem> items = null;
 
-				if (isBug(m_domain, exception)) {
+				if (isBug(m_currentDomain.getId(), exception)) {
 					items = statis.getBugs();
 				} else {
 					items = statis.getExceptions();
