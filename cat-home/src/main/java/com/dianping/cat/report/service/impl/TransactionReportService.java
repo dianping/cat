@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -50,7 +51,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "transaction";
+		String name = TransactionAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -76,7 +77,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "transaction";
+		String name = TransactionAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -107,7 +108,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "transaction");
+		Set<String> domains = queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 		transactionReport.getDomainNames().addAll(domains);
 		return transactionReport;
 	}
@@ -115,7 +116,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 	@Override
 	public TransactionReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -129,7 +130,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 	@Override
 	public TransactionReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

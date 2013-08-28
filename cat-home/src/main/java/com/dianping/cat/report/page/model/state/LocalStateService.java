@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -18,11 +19,11 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 	private BucketManager m_bucketManager;
 
 	public LocalStateService() {
-		super("state");
+		super(StateAnalyzer.ID);
 	}
 
 	private StateReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "state");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

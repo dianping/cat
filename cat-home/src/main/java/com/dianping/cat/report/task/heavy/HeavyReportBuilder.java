@@ -6,6 +6,7 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -13,13 +14,11 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
-import com.dianping.cat.service.ReportConstants;
 
 public class HeavyReportBuilder implements ReportTaskBuilder {
 
@@ -42,12 +41,12 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 	}
 
 	private boolean validateDomain(String domain) {
-		return !domain.equals(ReportConstants.FRONT_END) && !domain.equals(ReportConstants.ALL);
+		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
 	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		HeavyReport heavyReport = new HeavyReport(CatString.CAT);
+		HeavyReport heavyReport = new HeavyReport(Constants.CAT);
 		MatrixReportVisitor visitor = new MatrixReportVisitor().setReport(heavyReport);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, MatrixAnalyzer.ID);

@@ -1,10 +1,10 @@
 package com.dianping.cat.report.task.utilization;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
@@ -22,7 +22,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
-		if (CatString.ALL.equals(ip)) {
+		if (Constants.ALL.equals(ip)) {
 			super.visitMachine(machine);
 		}
 	}

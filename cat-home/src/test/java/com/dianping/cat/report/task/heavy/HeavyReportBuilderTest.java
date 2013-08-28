@@ -9,11 +9,10 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.webres.helper.Files;
 
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportConstants;
 
 public class HeavyReportBuilderTest extends ComponentTestCase {
 
@@ -24,10 +23,10 @@ public class HeavyReportBuilderTest extends ComponentTestCase {
 		Date date = new SimpleDateFormat("yyyyMMddHH").parse("2013082600");
 		for (int i = 0; i < 24; i++) {
 			Date current = new Date(date.getTime() + TimeUtil.ONE_HOUR * i);
-			builder.buildHourlyTask(ReportConstants.REPORT_HEAVY, CatString.CAT, current);
+			builder.buildHourlyTask(Constants.REPORT_HEAVY, Constants.CAT, current);
 		}
 		
-		builder.buildDailyTask(ReportConstants.REPORT_HEAVY,  CatString.CAT, date);
+		builder.buildDailyTask(Constants.REPORT_HEAVY,  Constants.CAT, date);
 	}
 
 	@Test

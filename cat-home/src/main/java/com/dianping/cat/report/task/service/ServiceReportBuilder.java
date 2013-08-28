@@ -9,14 +9,15 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.DomainManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
@@ -53,16 +54,16 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		ServiceReport serviceReport = new ServiceReport(CatString.CAT);
+		ServiceReport serviceReport = new ServiceReport(Constants.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "cross");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, CrossAnalyzer.ID);
 
 		for (String domainName : domains) {
 			CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
 			ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
 			projectInfo.setDomainManager(m_domainManager);
-			projectInfo.setClientIp(CatString.ALL);
+			projectInfo.setClientIp(Constants.ALL);
 			projectInfo.visitCrossReport(crossReport);
 			Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
 

@@ -21,7 +21,6 @@ import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.core.HtmlMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @RunWith(JUnit4.class)

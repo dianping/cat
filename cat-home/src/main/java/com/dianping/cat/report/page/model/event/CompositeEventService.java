@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.event;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
@@ -11,7 +12,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class CompositeEventService extends BaseCompositeModelService<EventReport> {
 	public CompositeEventService() {
-		super("event");
+		super(EventAnalyzer.ID);
 	}
 
 	@Override

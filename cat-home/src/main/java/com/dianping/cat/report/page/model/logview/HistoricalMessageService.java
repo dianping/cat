@@ -6,6 +6,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -16,7 +17,6 @@ import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 
 public class HistoricalMessageService extends BaseLocalModelService<String> {
 	@Inject(LocalMessageBucketManager.ID)

@@ -4,13 +4,14 @@ import java.io.IOException;
 
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
 
 public class RemoteHeartbeatService extends BaseRemoteModelService<HeartbeatReport> {
 	public RemoteHeartbeatService() {
-		super("heartbeat");
+		super(HeartbeatAnalyzer.ID);
 	}
 
 	@Override

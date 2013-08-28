@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
@@ -49,7 +50,7 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 		ServiceReportMerger merger = new ServiceReportMerger(new ServiceReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "service";
+		String name = Constants.REPORT_SERVICE;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -74,7 +75,7 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 		ServiceReportMerger merger = new ServiceReportMerger(new ServiceReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "service";
+		String name = Constants.REPORT_SERVICE;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -110,8 +111,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 	@Override
 	public ServiceReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "service",
-			      MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
+			      Constants.REPORT_SERVICE, MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			return com.dianping.cat.home.service.transform.DefaultSaxParser.parse(content);
@@ -124,8 +125,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 	@Override
 	public ServiceReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "service",
-			      WeeklyReportEntity.READSET_FULL);
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain,
+			      Constants.REPORT_SERVICE, WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			return com.dianping.cat.home.service.transform.DefaultSaxParser.parse(content);

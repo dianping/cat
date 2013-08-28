@@ -7,11 +7,12 @@ import java.util.Set;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
-@ModelMeta("transaction")
+@ModelMeta(TransactionAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
 	private DisplayNames m_displayNameReport;
 

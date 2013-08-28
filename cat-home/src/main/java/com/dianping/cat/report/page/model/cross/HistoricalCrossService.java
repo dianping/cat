@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	private ReportService m_reportSerivce;
 
 	public HistoricalCrossService() {
-		super("cross");
+		super(CrossAnalyzer.ID);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	}
 
 	private CrossReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "cross");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, CrossAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -36,7 +37,7 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		DependencyReportMerger merger = new DependencyReportMerger(new DependencyReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "dependency";
+		String name = DependencyAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -67,7 +68,7 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		dependencyReport.setStartTime(start);
 		dependencyReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "dependency");
+		Set<String> domains = queryAllDomainNames(start, end, DependencyAnalyzer.ID);
 		dependencyReport.getDomainNames().addAll(domains);
 		return dependencyReport;
 	}

@@ -18,6 +18,8 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -25,7 +27,6 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 
@@ -49,7 +50,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
-		return m_reportService.queryAllDomainNames(start, end, "transaction");
+		return m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 	}
 
 	@Test
@@ -84,11 +85,11 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 			Date date = new Date(startTime);
 
 			try {
-				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain, "transaction",date,
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain, TransactionAnalyzer.ID,date,
 				      DailyReportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 
-				info.reset(report.findMachine(CatString.ALL));
+				info.reset(report.findMachine(Constants.ALL));
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	private ReportService m_reportSerivce;
 
 	public HistoricalMatrixService() {
-		super("matrix");
+		super(MatrixAnalyzer.ID);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	}
 
 	private MatrixReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "matrix");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, MatrixAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

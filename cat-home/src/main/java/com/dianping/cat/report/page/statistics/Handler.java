@@ -23,10 +23,10 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -227,19 +227,19 @@ public class Handler implements PageHandler<Context> {
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		
-		return m_reportService.queryBugReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryBugReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private HeavyReport queryHeavyReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryHeavyReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryHeavyReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private ServiceReport queryServiceReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryServiceReport(CatString.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryServiceReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private Pair<Date, Date> queryStartEndTime(Payload payload) {
@@ -264,7 +264,7 @@ public class Handler implements PageHandler<Context> {
 
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		UtilizationReport report = m_reportService.queryUtilizationReport(CatString.CAT, pair.getKey(), pair.getValue());
+		UtilizationReport report = m_reportService.queryUtilizationReport(Constants.CAT, pair.getKey(), pair.getValue());
 		new UtilizationReportScore().setConfigManager(m_configManager).visitUtilizationReport(report);
 		return report;
 	}

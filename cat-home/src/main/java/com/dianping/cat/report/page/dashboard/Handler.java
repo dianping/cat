@@ -18,10 +18,13 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -48,13 +51,13 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private EventMergeManager m_eventMergerMergeManager;
 
-	@Inject(type = ModelService.class, value = "event")
+	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_eventService;
 
-	@Inject(type = ModelService.class, value = "transaction")
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
 
-	@Inject(type = ModelService.class, value = "problem")
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_problemService;
 
 	private NumberFormat m_format = new DecimalFormat("#0.00");
@@ -312,15 +315,15 @@ public class Handler implements PageHandler<Context> {
 			String ip = payload.getIp();
 
 			if (!StringUtils.isEmpty(report)) {
-				if ("transaction".equalsIgnoreCase(report)) {
+				if (TransactionAnalyzer.ID.equalsIgnoreCase(report)) {
 					TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, type);
 
 					buildTransactionReportResult(transactionReport, ip, type, name, data);
-				} else if ("event".equalsIgnoreCase(report)) {
+				} else if (EventAnalyzer.ID.equalsIgnoreCase(report)) {
 					EventReport eventReport = getEventHourlyReport(domain, ip, type);
 
 					buildEventReportResult(eventReport, ip, type, name, data);
-				} else if ("problem".equalsIgnoreCase(report)) {
+				} else if (ProblemAnalyzer.ID.equalsIgnoreCase(report)) {
 					ProblemReport problemReport = getProblemHourlyReport(domain, ip);
 
 					buildProblemReportResult(problemReport, ip, type, name, data);

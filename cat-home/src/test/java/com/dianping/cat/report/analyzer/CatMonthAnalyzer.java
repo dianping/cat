@@ -11,6 +11,8 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -18,7 +20,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.DailyReportEntity;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 
 @RunWith(JUnit4.class)
@@ -50,12 +51,12 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 				i++;
 				try {
 					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("Cat",
-					      "transaction", new Date(start), DailyReportEntity.READSET_FULL);
+					      TransactionAnalyzer.ID, new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
 					      .parse(dailyreport.getContent());
 
-					Machine machine = report.findOrCreateMachine(CatString.ALL);
+					Machine machine = report.findOrCreateMachine(Constants.ALL);
 					
 					TransactionType type =machine.findOrCreateType("URL");
 					

@@ -7,11 +7,11 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.ReportConstants;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	public static final long MINUTE = 60 * 1000L;
@@ -156,7 +156,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	}
 	
 	public boolean validate(String domain) {
-		return !domain.equals("PhoenixAgent") && !domain.equals(ReportConstants.FRONT_END);
+		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END);
 	}
 	
 }

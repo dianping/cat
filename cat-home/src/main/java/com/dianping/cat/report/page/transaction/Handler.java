@@ -16,11 +16,12 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -61,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "transaction")
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
 
 	private void buildTransactionNameGraph(List<TransactionNameModel> names, Model model) {
@@ -136,10 +137,10 @@ public class Handler implements PageHandler<Context> {
 				Date start = new Date(payload.getDate());
 				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
 
-				if (CatString.ALL.equals(domain)) {
+				if (Constants.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
-				Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
+				Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -165,7 +166,7 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = CatString.ALL;
+			name = Constants.ALL;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();

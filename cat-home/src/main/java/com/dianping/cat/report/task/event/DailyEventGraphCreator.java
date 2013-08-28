@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -29,7 +30,7 @@ public class DailyEventGraphCreator {
 
 		graph.setDomain(m_report.getDomain());
 		graph.setPeriod(m_report.getStartTime());
-		graph.setName("event");
+		graph.setName(EventAnalyzer.ID);
 		graph.setIp(ip);
 		graph.setType(3);
 		graph.setCreationDate(new Date());
