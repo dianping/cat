@@ -10,6 +10,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.DomainManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -34,6 +35,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject
 	private DatabaseParser m_parser;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
 	      "PigeonService"));
@@ -165,20 +169,21 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
-		if (shouldDiscard(t)) {
+		if (m_serverConfigManager.shouldDiscard(t)) {
 			return;
-		}
-		processTransactionType(report, t);
-		processSqlTransaction(report, t);
-		processPigeonTransaction(report, tree, t);
+		} else {
+			processTransactionType(report, t);
+			processSqlTransaction(report, t);
+			processPigeonTransaction(report, tree, t);
 
-		List<Message> children = t.getChildren();
+			List<Message> children = t.getChildren();
 
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
-			} else if (child instanceof Event) {
-				processEvent(report, tree, (Event) child);
+			for (Message child : children) {
+				if (child instanceof Transaction) {
+					processTransaction(report, tree, (Transaction) child);
+				} else if (child instanceof Event) {
+					processEvent(report, tree, (Event) child);
+				}
 			}
 		}
 	}

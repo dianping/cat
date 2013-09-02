@@ -4,11 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.tuple.Pair;
@@ -21,13 +25,18 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
+import com.dianping.cat.message.Transaction;
 
-public class ServerConfigManager implements LogEnabled {
+public class ServerConfigManager implements Initializable, LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	private ServerConfig m_config;
 
 	private Logger m_logger;
+
+	protected Set<String> m_unused_types = new HashSet<String>();
+
+	protected Set<String> m_unused_names = new HashSet<String>();
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -282,7 +291,28 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public static interface ServerConfigKey {
-		public void add(String section);
+	public boolean validateDomain(String domain) {
+		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END);
 	}
+
+	public boolean shouldDiscard(Transaction t) {
+		// pigeon default heartbeat is no use
+		String type = t.getType();
+		String name = t.getName();
+
+		if (m_unused_types.contains(type) && m_unused_names.contains(name)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_unused_types.add("Service");
+		m_unused_types.add("PigeonService");
+		m_unused_names.add("piegonService:heartTaskService:heartBeat");
+		m_unused_names.add("piegonService:heartTaskService:heartBeat()");
+		m_unused_names.add("pigeon:HeartBeatService:null");
+	}
+
 }

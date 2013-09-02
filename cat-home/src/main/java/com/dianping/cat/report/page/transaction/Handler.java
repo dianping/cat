@@ -78,8 +78,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		chart.setItems(items);
-		Gson gson = new Gson();
-		model.setPieChart(gson.toJson(chart));
+		model.setPieChart(new Gson().toJson(chart));
 	}
 
 	private void calculateTps(Payload payload, TransactionReport report) {
@@ -125,8 +124,7 @@ public class Handler implements PageHandler<Context> {
 	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getDate())
-		      .setProperty("type", payload.getType())//
+		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())//
 		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
@@ -170,7 +168,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		
+
 		report = m_mergeManager.mergerAll(report, ipAddress, name);
 		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
@@ -247,20 +245,18 @@ public class Handler implements PageHandler<Context> {
 	private void showHourlyGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
 
-		if (name == null) {
-			return;
+		if (name != null) {
+			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
+			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
+			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+			      "Average Duration (ms)", name));
+			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
+
+			model.setGraph1(graph1);
+			model.setGraph2(graph2);
+			model.setGraph3(graph3);
+			model.setGraph4(graph4);
 		}
-
-		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
-		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-		      "Average Duration (ms)", name));
-		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
-
-		model.setGraph1(graph1);
-		model.setGraph2(graph2);
-		model.setGraph3(graph3);
-		model.setGraph4(graph4);
 	}
 
 	private void showHourlyReport(Model model, Payload payload) {

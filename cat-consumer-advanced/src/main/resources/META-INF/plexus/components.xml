@@ -71,6 +71,9 @@
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>cross</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -113,6 +116,9 @@
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>matrix</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -154,6 +160,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>dependency</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.DomainManager</role>

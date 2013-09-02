@@ -46,7 +46,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Override
 	public ProblemReport getReport(String domain) {
-		if (!ALL.equals(domain)) {
+		if (!Constants.ALL.equals(domain)) {
 			ProblemReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));

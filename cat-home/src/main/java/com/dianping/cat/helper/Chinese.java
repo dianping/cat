@@ -16,12 +16,6 @@ public class Chinese {
 	
 	public static final String ZABBIX_ERROR = "Zabbix告警";
 
-	public static final String SUM = ":和";
-
-	public static final String COUNT = ":次数";
-
-	public static final String AVG = ":平均";
-
 	public static final String Suffix_SUM = "(总和)";
 
 	public static final String Suffix_COUNT = "(次数)";
