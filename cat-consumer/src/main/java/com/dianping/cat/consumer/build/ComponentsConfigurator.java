@@ -65,7 +65,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineTopComponents());
 		all.addAll(defineDumpComponents());
 		all.addAll(defineStateComponents());
-
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
 		return all;

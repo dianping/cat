@@ -92,6 +92,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 					try {
 						EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
+						
 						reportModel.accept(merger);
 					} catch (Exception e) {
 						Cat.logError(e);
