@@ -35,6 +35,7 @@
 	</table>
 	</br>
 	<div class="container-fluid">
+	  <%@ include file="metricOpNav.jsp" %>
       <div class="row-fluid">
         <div class="span2">
           <div class="well sidebar-nav">

@@ -306,6 +306,22 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return false;
 	}
 
+	public boolean isOnlineServer(String ip) {
+		if (ip != null && ip.startsWith("10.")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isOfflineServer(String ip) {
+		if (ip != null && ip.startsWith("192.")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_unused_types.add("Service");
