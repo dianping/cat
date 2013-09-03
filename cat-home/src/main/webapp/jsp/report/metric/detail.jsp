@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" %>
-
- <%@ include file="metricOpNav.jsp" %>
+<%@ include file="metricOpNav.jsp" %>
     <div class="row-fluid">
       <div class="span2">
         <div class="well sidebar-nav">

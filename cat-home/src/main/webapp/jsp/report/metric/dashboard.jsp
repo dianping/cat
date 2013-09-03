@@ -8,16 +8,16 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
 <res:bean id="res" />
+<res:useCss value='${res.css.local.body_css}' target="head-css" />
+<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <c:choose>
 	<c:when test="${payload.fullScreen}">
-		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 		<%@ include file="detail.jsp" %>
 	</c:when>
 	<c:otherwise>
@@ -34,7 +34,6 @@
 					</td>
 				</tr>
 			</table>
-			</br>
 			<%@ include file="detail.jsp" %>
 			<table  class="footer">
 				<tr>
