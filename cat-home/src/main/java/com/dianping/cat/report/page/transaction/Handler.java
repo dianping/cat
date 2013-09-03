@@ -18,7 +18,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -85,36 +84,13 @@ public class Handler implements PageHandler<Context> {
 		try {
 			if (payload != null && report != null) {
 				boolean isCurrent = payload.getPeriod().isCurrent();
-				String ip = payload.getIpAddress();
-				Machine machine = report.getMachines().get(ip);
-				if (machine == null) {
-					return;
+				double seconds;
+				if (isCurrent) {
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+				} else {
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 				}
-				for (TransactionType transType : machine.getTypes().values()) {
-					long totalCount = transType.getTotalCount();
-					double tps = 0;
-					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						tps = totalCount / seconds;
-					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						tps = totalCount / (double) time;
-					}
-					transType.setTps(tps);
-					for (TransactionName transName : transType.getNames().values()) {
-						long totalNameCount = transName.getTotalCount();
-						double nameTps = 0;
-						if (isCurrent) {
-							double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-							nameTps = totalNameCount / seconds;
-						} else {
-							double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-							nameTps = totalNameCount / (double) time;
-						}
-						transName.setTps(nameTps);
-						transName.setTotalPercent((double) totalNameCount / totalCount);
-					}
-				}
+				new TpsStatistics(seconds).visitTransactionReport(report);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
