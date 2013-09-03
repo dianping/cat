@@ -24,6 +24,10 @@ $(document).ready(function() {
 	
 	var refresh = ${payload.refresh};
 	var frequency = ${payload.frequency};
+	var fullscreen = ${payload.fullScreen};
+	if(fullscreen){
+		$('#fullScreen').addClass('btn-danger');
+	}
 	if(refresh){
 		$('#refresh${payload.frequency}').addClass('btn-danger');
 		setInterval(function(){
