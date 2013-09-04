@@ -272,13 +272,6 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model,Payload payload){
 		model.setPage(ReportPage.CROSS);
 		m_normalizePayload.normalize(model, payload);
-		
-		if (StringUtils.isEmpty(payload.getCallSort())) {
-			payload.setCallSort("avg");
-		}
-		if (StringUtils.isEmpty(payload.getServiceSort())) {
-			payload.setServiceSort("avg");
-		}
 		model.setCallSort(payload.getCallSort());
 		model.setServiceSort(payload.getServiceSort());
 		model.setQueryName(payload.getQueryName());

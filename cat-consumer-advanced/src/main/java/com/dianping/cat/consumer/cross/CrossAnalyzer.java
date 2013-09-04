@@ -6,6 +6,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
@@ -25,6 +26,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Inject(ID)
 	private ReportManager<CrossReport> m_reportManager;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private static final String UNKNOWN = "UnknownIp";
 
@@ -56,18 +60,18 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
-		if (shouldDiscard(t)) {
+		if (m_serverConfigManager.shouldDiscard(t)) {
+			return null;
+		} else {
+			String type = t.getType();
+
+			if (m_serverConfigManager.isClientCall(type)) {
+				return parsePigeonClientTransaction(t, tree);
+			} else if (m_serverConfigManager.isServerService(type)) {
+				return parsePigeonServerTransaction(t, tree);
+			}
 			return null;
 		}
-
-		String type = t.getType();
-
-		if ("PigeonCall".equals(type) || "Call".equals(type)) {
-			return parsePigeonClientTransaction(t, tree);
-		} else if ("PigeonService".equals(type) || "Service".equals(type)) {
-			return parsePigeonServerTransaction(t, tree);
-		}
-		return null;
 	}
 
 	private CrossInfo parsePigeonClientTransaction(Transaction t, MessageTree tree) {

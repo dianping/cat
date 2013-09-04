@@ -10,6 +10,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
@@ -30,6 +31,9 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
+	
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private TransactionAnalyzer m_transactionAnalyzer;
 
@@ -61,14 +65,14 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 		for (String domainName : domains) {
-			if (validate(domainName) && !domainName.equals(Constants.ALL)) {
+			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
 				new TransactionReportVisitor(topReport).visitTransactionReport(report);
 			}
 		}
 		for (String domainName : domains) {
-			if (validate(domainName) && !domainName.equals(Constants.ALL)) {
+			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
 				new ProblemReportVisitor(topReport).visitProblemReport(report);

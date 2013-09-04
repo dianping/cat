@@ -1,15 +1,10 @@
 package com.dianping.cat.analysis;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -31,20 +26,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	private long m_errors = 0;
 
 	private volatile boolean m_active = true;
-
-	protected static final String ALL = "All";
-
-	protected static Set<String> UNUSED_TYPES = new HashSet<String>();
-
-	protected static Set<String> UNUSED_NAMES = new HashSet<String>();
-
-	static {
-		UNUSED_TYPES.add("Service");
-		UNUSED_TYPES.add("PigeonService");
-		UNUSED_NAMES.add("piegonService:heartTaskService:heartBeat");
-		UNUSED_NAMES.add("piegonService:heartTaskService:heartBeat()");
-		UNUSED_NAMES.add("pigeon:HeartBeatService:null");
-	}
 
 	@Override
 	public void analyze(MessageQueue queue) {
@@ -89,9 +70,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	}
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
-		// override it
-	}
+	public abstract void doCheckpoint(boolean atEnd);
 
 	protected long getExtraTime() {
 		return m_extraTime;
@@ -132,31 +111,16 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		return currentTime > endTime;
 	}
 
-	protected void loadReports() {
+	protected  void loadReports() {
 		// to be overridden
 	}
 
 	protected abstract void process(MessageTree tree);
-	
-	protected boolean shouldDiscard(Transaction t) {
-		// pigeon default heartbeat is no use
-		String type = t.getType();
-		String name = t.getName();
-
-		if (UNUSED_TYPES.contains(type) && UNUSED_NAMES.contains(name)) {
-			return true;
-		}
-		return false;
-	}
 
 	public void shutdown() {
 		synchronized (this) {
 			m_active = false;
 		}
-	}
-	
-	public boolean validate(String domain) {
-		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END);
 	}
 	
 }

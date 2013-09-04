@@ -30,7 +30,6 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportService.class, ScheduledManager.class)//
 		      .req(MailRecordDao.class));
 
-
 		return all;
 	}
 }

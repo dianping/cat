@@ -11,6 +11,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -33,6 +34,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Inject
 	private TransactionDelegate m_delegate;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
@@ -138,30 +142,31 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		if (shouldDiscard(t)) {
+		if (m_serverConfigManager.shouldDiscard(t)) {
 			return;
-		}
+		} else {
+			String ip = tree.getIpAddress();
+			TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
+			TransactionName name = type.findOrCreateName(t.getName());
+			String messageId = tree.getMessageId();
+			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
 
-		String ip = tree.getIpAddress();
-		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
-		TransactionName name = type.findOrCreateName(t.getName());
-		String messageId = tree.getMessageId();
-		Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
+			if (pair.getKey().booleanValue()) {
+				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
+			}
 
-		if (pair.getKey().booleanValue()) {
-			processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
-		}
+			List<Message> children = t.getChildren();
 
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
+			for (Message child : children) {
+				if (child instanceof Transaction) {
+					processTransaction(report, tree, (Transaction) child);
+				}
 			}
 		}
 	}
 
-	protected void processTypeAndName(Transaction t, TransactionType type, TransactionName name, String messageId, double duration) {
+	protected void processTypeAndName(Transaction t, TransactionType type, TransactionName name, String messageId,
+	      double duration) {
 		type.incTotalCount();
 		name.incTotalCount();
 

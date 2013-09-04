@@ -65,7 +65,7 @@ public class ClientConfigManager implements LogEnabled {
 	 */
 	public int getMaxMessageLength() {
 		if (m_config == null) {
-			return 1000;
+			return 2000;
 		} else {
 			return getDomain().getMaxMessageSize();
 		}
