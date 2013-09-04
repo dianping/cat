@@ -131,7 +131,7 @@ ul.tabs {
 
 .tabs li {
 	display: inline;
-	margin: 0em 0.1em 0em 0.1em;
+	margin: 0em 0.0em 0em 0.0em;
 	padding: 0.4em 0.4em 0.4em 0.4em;
 	overflow: hidden;
 	border-top: 1px solid black;

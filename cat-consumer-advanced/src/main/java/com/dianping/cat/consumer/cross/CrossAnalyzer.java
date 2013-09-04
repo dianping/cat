@@ -65,9 +65,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		} else {
 			String type = t.getType();
 
-			if ("PigeonCall".equals(type) || "Call".equals(type)) {
+			if (m_serverConfigManager.isClientCall(type)) {
 				return parsePigeonClientTransaction(t, tree);
-			} else if ("PigeonService".equals(type) || "Service".equals(type)) {
+			} else if (m_serverConfigManager.isServerService(type)) {
 				return parsePigeonServerTransaction(t, tree);
 			}
 			return null;

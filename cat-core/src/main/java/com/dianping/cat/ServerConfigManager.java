@@ -58,6 +58,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean isSerialWrite() {
 		return false;
 	}
+	
+	public boolean isClientCall(String type){
+		return "PigeonCall".equals(type) || "Call".equals(type);
+	}
+	
+	public boolean isServerService(String type){
+		return "PigeonService".equals(type) || "Service".equals(type);
+	}
 
 	public String getConsoleDefaultDomain() {
 		if (m_config != null) {
