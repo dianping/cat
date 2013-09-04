@@ -13,25 +13,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
-			<role-hint>default-problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.DefaultProblemHandler</implementation>
-			<configuration>
-				<failureType>URL,SQL,Call,PigeonCall,Cache</failureType>
-				<errorType>Error,RuntimeException,Exception</errorType>
-			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
-			<role-hint>long-execution</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.LongExecutionProblemHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
@@ -44,6 +25,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ReportDelegate</role>
 					<role-hint>transaction</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -116,6 +100,25 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
+			<role-hint>default-problem</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.DefaultProblemHandler</implementation>
+			<configuration>
+				<failureType>URL,SQL,Call,PigeonCall,Cache</failureType>
+				<errorType>Error,RuntimeException,Exception</errorType>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
+			<role-hint>long-execution</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.LongExecutionProblemHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -253,6 +256,9 @@
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>top</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -304,6 +310,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>state</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.DomainManager</role>

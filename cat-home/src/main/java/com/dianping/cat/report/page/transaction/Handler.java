@@ -18,7 +18,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -78,44 +77,20 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		chart.setItems(items);
-		Gson gson = new Gson();
-		model.setPieChart(gson.toJson(chart));
+		model.setPieChart(new Gson().toJson(chart));
 	}
 
 	private void calculateTps(Payload payload, TransactionReport report) {
 		try {
 			if (payload != null && report != null) {
 				boolean isCurrent = payload.getPeriod().isCurrent();
-				String ip = payload.getIpAddress();
-				Machine machine = report.getMachines().get(ip);
-				if (machine == null) {
-					return;
+				double seconds;
+				if (isCurrent) {
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+				} else {
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 				}
-				for (TransactionType transType : machine.getTypes().values()) {
-					long totalCount = transType.getTotalCount();
-					double tps = 0;
-					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						tps = totalCount / seconds;
-					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						tps = totalCount / (double) time;
-					}
-					transType.setTps(tps);
-					for (TransactionName transName : transType.getNames().values()) {
-						long totalNameCount = transName.getTotalCount();
-						double nameTps = 0;
-						if (isCurrent) {
-							double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-							nameTps = totalNameCount / seconds;
-						} else {
-							double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-							nameTps = totalNameCount / (double) time;
-						}
-						transName.setTps(nameTps);
-						transName.setTotalPercent((double) totalNameCount / totalCount);
-					}
-				}
+				new TpsStatistics(seconds).visitTransactionReport(report);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -125,8 +100,7 @@ public class Handler implements PageHandler<Context> {
 	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getDate())
-		      .setProperty("type", payload.getType())//
+		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())//
 		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
@@ -170,7 +144,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		
+
 		report = m_mergeManager.mergerAll(report, ipAddress, name);
 		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
@@ -247,20 +221,18 @@ public class Handler implements PageHandler<Context> {
 	private void showHourlyGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
 
-		if (name == null) {
-			return;
+		if (name != null) {
+			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
+			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
+			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+			      "Average Duration (ms)", name));
+			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
+
+			model.setGraph1(graph1);
+			model.setGraph2(graph2);
+			model.setGraph3(graph3);
+			model.setGraph4(graph4);
 		}
-
-		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
-		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-		      "Average Duration (ms)", name));
-		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
-
-		model.setGraph1(graph1);
-		model.setGraph2(graph2);
-		model.setGraph3(graph3);
-		model.setGraph4(graph4);
 	}
 
 	private void showHourlyReport(Model model, Payload payload) {

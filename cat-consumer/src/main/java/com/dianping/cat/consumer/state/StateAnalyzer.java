@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.DomainManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
@@ -36,6 +37,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private DomainManager m_domainManager;
+	
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private void buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
@@ -210,7 +214,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
-		if (validate(domain)) {
+		if (m_serverConfigManager.validateDomain(domain)) {
 			if (!m_domainManager.containsDomainInCat(domain)) {
 				m_domainManager.insertDomain(domain);
 			}

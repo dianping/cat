@@ -22,7 +22,6 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -74,41 +73,19 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void calculateTps(Payload payload, EventReport report) {
-		if (payload != null && report != null) {
-			boolean isCurrent = payload.getPeriod().isCurrent();
-			String ip = payload.getIpAddress();
-			Machine machine = report.getMachines().get(ip);
-
-			if (machine == null) {
-				return;
-			}
-			for (EventType eventType : machine.getTypes().values()) {
-				long totalCount = eventType.getTotalCount();
-				double tps = 0;
-
+		try {
+			if (payload != null && report != null) {
+				boolean isCurrent = payload.getPeriod().isCurrent();
+				double seconds;
 				if (isCurrent) {
-					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					tps = totalCount / seconds;
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 				} else {
-					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					tps = totalCount / (double) time;
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 				}
-				eventType.setTps(tps);
-				for (EventName transName : eventType.getNames().values()) {
-					long totalNameCount = transName.getTotalCount();
-					double nameTps = 0;
-
-					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						nameTps = totalNameCount / seconds;
-					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						nameTps = totalNameCount / (double) time;
-					}
-					transName.setTps(nameTps);
-					transName.setTotalPercent(totalNameCount / (double) totalCount);
-				}
+				new TpsStatistics(seconds).visitEventReport(report);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
