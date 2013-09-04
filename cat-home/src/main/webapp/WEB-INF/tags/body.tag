@@ -14,6 +14,8 @@
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 <res:useCss value='${res.css.local.body_css}' target="head-css" />
+<res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
+<res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
 </head>
 <body>
 	<div class="navbar navbar-inverse">
@@ -24,10 +26,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">CAT</a>
           <div class="nav-collapse collapse">
-            <p id="loginInfo" class="navbar-text pull-right">
-            </p>
+          	<div id="loginInfo" class="navbar-text pull-right">
+          	</div>
             <ul class="nav">
             	<c:forEach var="page" items="${navBar.visiblePages}">
 					<c:if test="${page.standalone}">
@@ -39,7 +40,7 @@
 						<li class="active">${page.title}</li>
 					</c:if>
 				</c:forEach>
-				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+				<li>&nbsp;&nbsp;</li>
 				<c:forEach var="page" items="${navBar.systemPages}">
 					<c:if test="${page.standalone}">
 						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
@@ -51,6 +52,7 @@
 					</c:if>
 				</c:forEach>
             </ul>
+            
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -77,10 +79,10 @@
 			}
 			var name = decodeURI(temp);
 			var loginInfo=document.getElementById('loginInfo');
-			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a class="btn btn-small" href="/cat/s/login?op=logout">Logout</a>';
+			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a  href="/cat/s/login?op=logout">Logout</a>';
 		}else{
 			var loginInfo=document.getElementById('loginInfo');
-			loginInfo.innerHTML ='<a  class="btn btn-small" href="/cat/s/login"> Login</a>';
+			loginInfo.innerHTML ='<a  href="/cat/s/login"> Login</a>';
 		}
 	</script>
 	<jsp:doBody />

@@ -38,8 +38,8 @@
 		</tr>
 	</table>
 	
-	<div class="domainNavbar" style="display:none">
-		<table border="1" rules="all">
+	<div class="domainNavbar" style="display:none;">
+		<table border="1" rules="all" style="font-size:small">
 			<c:forEach var="item" items="${model.domainGroups}">
 				<tr>
 					<c:set var="detail" value="${item.value}" />

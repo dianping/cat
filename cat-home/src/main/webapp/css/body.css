@@ -58,7 +58,9 @@ a:hover {
 .current {
 	background-color: #3CB371;
 }
-
+table{
+	font-size: 14px;
+}
 tr.head {
 	background-color: #e8e8e8;
 }
@@ -304,9 +306,7 @@ a.abtest-heartbeat{
 .dashboard{
 	background: url('../img/checked.gif') no-repeat;
 }
-.navbar .nav > li > a{
-	padding:10px 9px 10px;
-}
+
 .navbar{
 	margin-bottom:5px;
 }
