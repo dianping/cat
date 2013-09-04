@@ -3,7 +3,6 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <jsp:useBean id="navBar"
 	class="com.dianping.cat.report.view.NavigationBar" scope="page" />
-
 <res:bean id="res" />
 <html>
 <head>

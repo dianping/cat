@@ -22,7 +22,7 @@
 			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.bugReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.bugReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span></td>
 			</td>
 			<td class="nav" >
-				<a href="?op=historyBug&domain=${model.domain}" class="switch"><span class="text-error">【切换至历史模式】</span></a>
+				<a href="?op=historyBug&domain=${model.domain}" class="switch"><span class="text-error">【切到历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>

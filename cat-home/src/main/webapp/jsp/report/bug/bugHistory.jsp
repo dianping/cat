@@ -20,7 +20,7 @@
 		<tr>
 			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span></td>
 			<td class="nav">
-					<a class="switch" href="?domain=${model.domain}"><span class="text-error">【切换至小时模式】</span></a>
+					<a class="switch" href="?domain=${model.domain}"><span class="text-error">【切到小时模式】</span></a>
 					<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">

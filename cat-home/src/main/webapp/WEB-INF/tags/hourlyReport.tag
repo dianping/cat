@@ -12,8 +12,8 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="position">当前项目:&nbsp;${model.department}<span class="divider">&nbsp;/&nbsp;</span>${model.projectLine} <span class="divider">&nbsp;/&nbsp;</span><span class="text-error">${model.domain}</span>&nbsp;&nbsp;
-			&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]&nbsp;&nbsp;
+			<td class="position">项目：<span class="text-error">${model.domain}</span>&nbsp;&nbsp;
+			[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]
 					<script>
 						function showDomain() {
 							var b = $('#switch').html();
@@ -29,9 +29,9 @@
 			</td> 
 			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			<td class="nav">
-				<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-error">【切换至历史模式】</span></a>
-				&nbsp;&nbsp;<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+				<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-error">【切到历史模式】</span></a>
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>

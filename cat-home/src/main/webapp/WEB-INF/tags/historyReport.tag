@@ -13,8 +13,8 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="position">当前项目:&nbsp;${model.department}<span class="divider">&nbsp;/&nbsp;</span>${model.projectLine} <span class="divider">&nbsp;/&nbsp;</span><span class="text-error">${model.domain}</span>&nbsp;&nbsp;
-			&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]&nbsp;&nbsp;
+			<td class="position">项目：<span class="text-error">${model.domain}</span>&nbsp;&nbsp;
+			[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]
 					<script>
 						function showDomain() {
 							var b = $('#switch').html();
@@ -31,20 +31,20 @@
 			<td class="title"><span class="text-success"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			</td>
 			<td class="nav">
-					<a href="?domain=${model.domain}" class="switch"><span class="text-error">【切换至小时模式】</span></a>
+					<a href="?domain=${model.domain}" class="switch"><span class="text-error">【切到小时模式】</span></a>
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
-								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
+								&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
 						</c:when>
 						<c:otherwise>
-								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]&nbsp;&nbsp;
+								&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]&nbsp;&nbsp;
-				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]&nbsp;&nbsp;
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]
 			</td>
 		</tr>
 	</table>
