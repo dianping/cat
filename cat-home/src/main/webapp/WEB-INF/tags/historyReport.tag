@@ -1,4 +1,4 @@
-<%@ tag trimDirectiveWhitespaces="true"%>
+<%@ tag trimDirectiveWhitespaces="true"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
@@ -13,10 +13,25 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
-			<td class="switch"><a href="?domain=${model.domain}">Switch To Hourly Mode</a>
+			<td class="position">当前项目:&nbsp;${model.department}<span class="divider">&nbsp;/&nbsp;</span>${model.projectLine} <span class="divider">&nbsp;/&nbsp;</span><span class="text-error">${model.domain}</span>&nbsp;&nbsp;
+			&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]&nbsp;&nbsp;
+					<script>
+						function showDomain() {
+							var b = $('#switch').html();
+							if (b == '切换') {
+								$('.domainNavbar').slideDown();
+								$('#switch').html("收起");
+							} else {
+								$('.domainNavbar').slideUp();
+								$('#switch').html("切换");
+							}
+						}
+					</script>
+			</td> 
+			<td class="title"><span class="text-success"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			</td>
 			<td class="nav">
+					<a href="?domain=${model.domain}" class="switch"><span class="text-error">【切换至小时模式】</span></a>
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
@@ -28,29 +43,12 @@
 					</c:choose>
 				</c:forEach>
 				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]&nbsp;&nbsp;
-					
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]&nbsp;&nbsp;
 			</td>
 		</tr>
 	</table>
-	<div class="position">Current Domain:&nbsp;&nbsp;${model.department} &nbsp;&nbsp;>&nbsp;&nbsp;${model.projectLine} &nbsp;&nbsp;
-	>&nbsp;&nbsp;${model.domain}&nbsp;&nbsp;
-	&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">More</a>&nbsp;&nbsp;]&nbsp;&nbsp;
-			<script>
-				function showDomain() {
-					var b = $('#switch').html();
-					if (b == 'More') {
-						$('.navbar').slideDown();
-						$('#switch').html("Less");
-					} else {
-						$('.navbar').slideUp();
-						$('#switch').html("More");
-					}
-				}
-			</script>
-	</div> 
-		<div class="navbar" style="display:none">
+		<div class="domainNavbar" style="display:none">
 			<table border="1" rules="all">
 				<c:forEach var="item" items="${model.domainGroups}">
 					<tr>
@@ -76,11 +74,5 @@
 		</div>
 
 		<jsp:doBody />
-	<table class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
 	</div>
-
 </a:body>

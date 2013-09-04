@@ -19,10 +19,10 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(model.utilizationReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.utilizationReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-			<td class="switch"><a href="?op=historyUtilization">Switch To History Mode</a>
+			<td class="title text-success"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.utilizationReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.utilizationReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			</td>
 			<td class="nav" >
+				<a href="?op=historyUtilization&domain=${model.domain}" class="switch"><span class="text-error">【切换至历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&op=utilization">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -33,14 +33,6 @@
 </div>
 
 <%@ include file="detail.jsp"%>
-
-<div class="report">
-	<table  class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
-</div>
 
 </a:body>
 <script type="text/javascript">

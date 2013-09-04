@@ -1,11 +1,11 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <div class="row-fluid" style="margin-top:2px;">
 	<div class="span8 text-center">
-		<a id="navlineChart" class="btn btn-primary" href="/cat/r/dependency?domain=${model.domain}&date=${model.date}">实时趋势图</a>
-		<a id="navdependencyGraph" class="btn btn-primary" href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">实时拓扑图</a>
-		<a id="navproductLine" class="btn btn-primary" href="/cat/r/dependency?op=productLine&domain=${model.domain}&date=${model.date}">产品线监控</a>
-		<a id="navdashboard" class="btn btn-primary" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">监控仪表盘</a>
-		<a id="navbussiness" class="btn btn-primary btn-danger" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控大盘</a>
+		<a id="navlineChart" class="btn btn-small btn-primary" href="/cat/r/dependency?domain=${model.domain}&date=${model.date}">实时趋势图</a>
+		<a id="navdependencyGraph" class="btn btn-small btn-primary" href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">实时拓扑图</a>
+		<a id="navproductLine" class="btn btn-small btn-primary" href="/cat/r/dependency?op=productLine&domain=${model.domain}&date=${model.date}">产品线监控</a>
+		<a id="navdashboard" class="btn btn-small btn-primary" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">监控仪表盘</a>
+		<a id="navbussiness" class="btn btn-small btn-primary btn-danger" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控大盘</a>
 	</div>
 	<div class="span4 text-center">
 		<div class='text-center'>

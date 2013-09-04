@@ -18,6 +18,7 @@
 </style>
 <a:body>
    <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+   <res:useCss value="${res.css.local['body.css']}" target="head-css" />
    <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
    <res:useCss value="${res.css.local['bootstrap-rowlink.css']}" target="head-css" />
    <res:useJs value="${res.js.local['bootstrap-rowlink.min.js']}" target="head-js" />

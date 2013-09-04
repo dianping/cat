@@ -20,6 +20,7 @@
 <a:body>
 	<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+    <res:useCss value="${res.css.local['body.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 
 	<div id="content" lass="row-fluid">
