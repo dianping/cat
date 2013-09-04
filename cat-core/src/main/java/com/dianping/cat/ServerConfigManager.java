@@ -34,9 +34,9 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	protected Set<String> m_unused_types = new HashSet<String>();
+	private Set<String> m_unusedTypes = new HashSet<String>();
 
-	protected Set<String> m_unused_names = new HashSet<String>();
+	private Set<String> m_unusedNames = new HashSet<String>();
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -308,7 +308,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		String type = t.getType();
 		String name = t.getName();
 
-		if (m_unused_types.contains(type) && m_unused_names.contains(name)) {
+		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
 			return true;
 		}
 		return false;
@@ -332,11 +332,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_unused_types.add("Service");
-		m_unused_types.add("PigeonService");
-		m_unused_names.add("piegonService:heartTaskService:heartBeat");
-		m_unused_names.add("piegonService:heartTaskService:heartBeat()");
-		m_unused_names.add("pigeon:HeartBeatService:null");
+		m_unusedTypes.add("Service");
+		m_unusedTypes.add("PigeonService");
+		m_unusedNames.add("piegonService:heartTaskService:heartBeat");
+		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
+		m_unusedNames.add("pigeon:HeartBeatService:null");
 	}
 
 }
