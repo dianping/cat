@@ -40,7 +40,7 @@
 						<li class="active">${page.title}</li>
 					</c:if>
 				</c:forEach>
-				<li>&nbsp;&nbsp;</li>
+				<li class="wrapspace">&nbsp;&nbsp;</li>
 				<c:forEach var="page" items="${navBar.systemPages}">
 					<c:if test="${page.standalone}">
 						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
