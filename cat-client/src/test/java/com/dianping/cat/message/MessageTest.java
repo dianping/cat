@@ -42,8 +42,7 @@ public class MessageTest extends ComponentTestCase {
 				break;
 			}
 		}
-		System.out.println(sb.toString());
-		System.out.println("++++++++++");
+		
 		Assert.assertEquals(expected, sb.toString());
 	}
 
