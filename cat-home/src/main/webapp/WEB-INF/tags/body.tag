@@ -21,11 +21,7 @@
 	<div class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+       	  <a class="brand" href="#">CAT</a>
           <div class="nav-collapse collapse">
           	<div class="nav  pull-right">
           		<c:forEach var="page" items="${navBar.systemPages}">

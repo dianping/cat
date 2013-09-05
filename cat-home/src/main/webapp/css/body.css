@@ -231,3 +231,8 @@ a.abtest-heartbeat {
 	padding-left: 0px;
 	padding-right: 0px;
 }
+
+.navbar .brand {
+	padding: 10px 00px 00px;
+	margin-left: 0px;
+}
