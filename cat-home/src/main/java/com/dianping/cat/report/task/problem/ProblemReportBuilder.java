@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -164,7 +165,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 
 	private ProblemReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end)
 	      throws DalException {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, "problem");
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 		List<ProblemReport> reports = new ArrayList<ProblemReport>();
 		long startTime = start.getTime();
 		long endTime = end.getTime();

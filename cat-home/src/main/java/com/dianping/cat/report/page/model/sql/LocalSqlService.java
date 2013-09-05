@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -18,11 +19,11 @@ public class LocalSqlService extends BaseLocalModelService<SqlReport> {
 	private BucketManager m_bucketManager;
 
 	public LocalSqlService() {
-		super("sql");
+		super(SqlAnalyzer.ID);
 	}
 
 	private SqlReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "sql");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, SqlAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

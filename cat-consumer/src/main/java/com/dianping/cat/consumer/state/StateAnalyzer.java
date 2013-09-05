@@ -9,7 +9,9 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.DomainManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
@@ -20,7 +22,6 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -36,6 +37,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private DomainManager m_domainManager;
+	
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private void buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
@@ -74,7 +78,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				long value = entry.getValue().get();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
-				
 				if (totals.containsKey(key)) {
 					domain.setTotal(value + domain.getTotal());
 					detail.setTotal(value);
@@ -152,10 +155,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		StateReport stateReport = getReport(ReportConstants.CAT);
+		StateReport stateReport = getReport(Constants.CAT);
 		Map<String, StateReport> reports = m_reportManager.getHourlyReports(getStartTime());
 
-		reports.put(ReportConstants.CAT, stateReport);
+		reports.put(Constants.CAT, stateReport);
 		long startTime = getStartTime();
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
@@ -181,8 +184,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Override
 	public StateReport getReport(String domain) {
 		StateReport report = new StateReport(domain);
-		
-		report = new StateReport(ReportConstants.CAT);
+
+		report = new StateReport(Constants.CAT);
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		report.getMachines().clear();
@@ -191,26 +194,27 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(ip);
 
 		buildStateInfo(machine);
-		
-		StateReport startReport = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
-		Map<String, ProcessDomain> processDomains = startReport.findOrCreateMachine(ip).getProcessDomains();
-		
+		StateReport stateReport = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
+		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(ip).getProcessDomains();
 		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
-			entry.getValue().getIps().addAll(processDomains.get(entry.getKey()).getIps());
+			ProcessDomain processDomain = processDomains.get(entry.getKey());
+
+			if (processDomain != null) {
+				entry.getValue().getIps().addAll(processDomain.getIps());
+			}
 		}
-		
 		return report;
 	}
 
 	@Override
 	protected void process(MessageTree tree) {
-		StateReport report = m_reportManager.getHourlyReport(getStartTime(), ReportConstants.CAT, true);
+		StateReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 		String domain = tree.getDomain();
 		String ip = tree.getIpAddress();
 		Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
-		if (validate(domain)) {
+		if (m_serverConfigManager.validateDomain(domain)) {
 			if (!m_domainManager.containsDomainInCat(domain)) {
 				m_domainManager.insertDomain(domain);
 			}

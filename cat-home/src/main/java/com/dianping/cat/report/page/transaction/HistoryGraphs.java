@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.DailyGraph;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyGraphEntity;
@@ -264,7 +265,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_DAY) {
 			try {
 				DailyGraph graph = m_dailyGraphDao.findByDomainNameIpDate(new Date(startLong), queryIp, domain,
-				      "transaction", DailyGraphEntity.READSET_FULL);
+				      TransactionAnalyzer.ID, DailyGraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
@@ -287,7 +288,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
 			try {
 				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-				      "transaction", GraphEntity.READSET_FULL);
+						TransactionAnalyzer.ID, GraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {

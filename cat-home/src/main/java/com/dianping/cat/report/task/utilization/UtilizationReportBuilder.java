@@ -6,13 +6,14 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
@@ -46,23 +47,20 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		UtilizationReport utilizationReport = new UtilizationReport();
+		UtilizationReport utilizationReport = new UtilizationReport(Constants.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "matrix");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 		TransactionReportVisitor visitor = new TransactionReportVisitor().setReport(utilizationReport);
 
 		for (String domainName : domains) {
 			TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
 			int size = transactionReport.getMachines().size();
 			
-			transactionReport = m_mergeManager.mergerAllIp(transactionReport, CatString.ALL);
+			transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
 			visitor.visitTransactionReport(transactionReport);
 			utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 		}
 		HourlyReport report = new HourlyReport();
-
-		System.out.println(utilizationReport);
-
 		report.setContent(utilizationReport.toString());
 		report.setCreationDate(new Date());
 		report.setDomain(domain);

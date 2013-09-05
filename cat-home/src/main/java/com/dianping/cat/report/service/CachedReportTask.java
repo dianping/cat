@@ -1,5 +1,6 @@
 package com.dianping.cat.report.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -101,11 +103,12 @@ public class CachedReportTask implements Task {
 
 		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
 		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID, stateReport.toString()));
+		
 		BugReport bugReport = m_reportService.queryBugReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, "bug", bugReport.toString()));
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_BUG, bugReport.toString()));
+		
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, "service", serviceReport.toString()));
-		m_end = end.getTime();
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_SERVICE, serviceReport.toString()));
 	}
 
 	private void reloadCurrentWeekly() {
@@ -138,11 +141,12 @@ public class CachedReportTask implements Task {
 
 		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
 		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, StateAnalyzer.ID, stateReport.toString()));
+		
 		BugReport bugReport = m_reportService.queryBugReport(domain, start, end);
-		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, "bug", bugReport.toString()));
+		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, Constants.REPORT_BUG, bugReport.toString()));
+		
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
-		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, "service", serviceReport.toString()));
-		m_end = end.getTime();
+		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, Constants.REPORT_SERVICE, serviceReport.toString()));
 	}
 
 	@Override
@@ -152,12 +156,15 @@ public class CachedReportTask implements Task {
 		while (active) {
 			Date date = TimeUtil.getCurrentDay();
 			long time = date.getTime();
+			Calendar cal = Calendar.getInstance();
 
-			if (time > m_end) {
+			//assume dailyreport job has been completed in two hours.
+			if (time > m_end && cal.get(Calendar.HOUR_OF_DAY) >= 3) {
 				Transaction t = Cat.newTransaction("System", "ReportReload");
 				try {
 					reloadCurrentWeekly();
 					reloadCurrentMonthly();
+					m_end = date.getTime();
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
 					Cat.logError(e);

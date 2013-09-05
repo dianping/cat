@@ -22,7 +22,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private Date m_endTime;
 
 	private Map<Integer, Abtest> m_abtests;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}

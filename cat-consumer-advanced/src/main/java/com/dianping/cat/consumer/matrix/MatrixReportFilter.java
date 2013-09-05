@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
 
 public class MatrixReportFilter extends DefaultXmlBuilder {
 
-	private int m_maxItems = 200;
+	private int m_maxSize = 200;
 
 	private static final String OTHERS = "OTHERS";
 
@@ -23,18 +23,18 @@ public class MatrixReportFilter extends DefaultXmlBuilder {
 		Collection<Matrix> matrix = matrixs.values();
 		int size = matrix.size();
 
-		if (size > m_maxItems) {
+		if (size > m_maxSize) {
 			List<Matrix> matrixList = new ArrayList<Matrix>(matrix);
 			Collections.sort(matrixList, new MeatricCompartor());
 
 			matrixs.clear();
-			for (int i = 0; i < m_maxItems; i++) {
+			for (int i = 0; i < m_maxSize; i++) {
 				Matrix temp = matrixList.get(i);
 				matrixs.put(temp.getName(), temp);
 			}
 
 			Matrix value = new Matrix(OTHERS);
-			for (int i = m_maxItems; i < size; i++) {
+			for (int i = m_maxSize; i < size; i++) {
 				Matrix item = matrixList.get(i);
 				
 				value.setType(item.getType());

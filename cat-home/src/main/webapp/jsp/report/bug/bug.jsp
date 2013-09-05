@@ -3,9 +3,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.bug.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.bug.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.report.page.bug.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.statistics.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
 <a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />

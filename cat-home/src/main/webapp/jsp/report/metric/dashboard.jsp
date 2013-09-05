@@ -7,11 +7,44 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.metric.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
-<a:body>
-
+<res:bean id="res" />
+<res:useCss value='${res.css.local.body_css}' target="head-css" />
+<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+
+<c:choose>
+	<c:when test="${payload.fullScreen}">
+		<%@ include file="detail.jsp" %>
+	</c:when>
+	<c:otherwise>
+	<a:body>
+		<div class="report">
+			<table class="header">
+				<tr>
+					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
+					<td class="nav">
+						<c:forEach var="nav" items="${model.navs}">
+							&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&test=${payload.test}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+						</c:forEach>
+						&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}">now</a> ]&nbsp;
+					</td>
+				</tr>
+			</table>
+			<%@ include file="detail.jsp" %>
+			<table  class="footer">
+				<tr>
+					<td>[ end ]</td>
+				</tr>
+			</table>
+		</div>
+		</a:body>
+	</c:otherwise>
+</c:choose>
+
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -91,25 +124,24 @@
 		</tr>
 	</table>
 </div>
-</a:body>
 <style type="text/css">
-.row-fluid .span2{
-	width:10%;
-}
-.row-fluid .span10{
-	width:87%;
-}
-.well {
-padding: 10px 10px 10px 19p;
-}
-.nav-list  li  a{
-	padding:2px 15px;
-}
-
-.nav li  +.nav-header{
-	margin-top:2px;
-}
-.nav-header{
-	padding:5px 3px;
-}
+	.row-fluid .span2{
+		width:10%;
+	}
+	.row-fluid .span10{
+		width:87%;
+	}
+	.well {
+	padding: 10px 10px 10px 19p;
+	}
+	.nav-list  li  a{
+		padding:2px 15px;
+	}
+	
+	.nav li  +.nav-header{
+		margin-top:2px;
+	}
+	.nav-header{
+		padding:5px 3px;
+	}
 </style>

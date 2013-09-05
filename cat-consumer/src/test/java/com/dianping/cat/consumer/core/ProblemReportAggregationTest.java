@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
@@ -40,7 +41,7 @@ public class ProblemReportAggregationTest {
 
 	class MockRuleManger extends AggregationConfigManager {
 		private void register() {
-			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, "FrontEnd");
+			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END);
 			
 			m_handler = new DefaultAggregationHandler();
 			m_handler.register(rules);
@@ -51,7 +52,7 @@ public class ProblemReportAggregationTest {
 			
 			rule.setPattern(pattern);
 			rule.setType(3);
-			rule.setDomain("FrontEnd");
+			rule.setDomain(Constants.FRONT_END);
 			return rule;
 		}
 		

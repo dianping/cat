@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -50,7 +51,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "problem";
+		String name = ProblemAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +76,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "problem";
+		String name = ProblemAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -106,7 +107,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		problemReport.setStartTime(start);
 		problemReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "problem");
+		Set<String> domains = queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 		problemReport.getDomainNames().addAll(domains);
 		return problemReport;
 	}
@@ -114,7 +115,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 	@Override
 	public ProblemReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "problem",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, ProblemAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -128,7 +129,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 	@Override
 	public ProblemReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "problem",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, ProblemAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 

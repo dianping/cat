@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -7,7 +8,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
-import com.dianping.cat.service.ReportConstants;
 
 public class TransactionReportMerger extends DefaultMerger {
 	public TransactionReportMerger(TransactionReport transactionReport) {
@@ -76,10 +76,10 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	public Machine mergesForAllMachine(TransactionReport report) {
-		Machine all = new Machine(ReportConstants.ALL);
+		Machine all = new Machine(Constants.ALL);
 
 		for (Machine m : report.getMachines().values()) {
-			if (!m.getIp().equals(ReportConstants.ALL)) {
+			if (!m.getIp().equals(Constants.ALL)) {
 				visitMachineChildren(all, m);
 			}
 		}

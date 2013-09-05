@@ -5,6 +5,7 @@
 		<a id="navdependencyGraph" class="btn btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">实时拓扑图</a>
 		<a id="navproductLine" class="btn btn-primary" href="?op=productLine&minute=${model.minute}&domain=${model.domain}&date=${model.date}">产品线监控</a>
 		<a id="navdashboard" class="btn btn-primary" href="?op=dashboard&minute=${model.minute}&domain=${model.domain}&date=${model.date}">监控仪表盘</a>
+		<a id="navbussiness" class="btn btn-primary" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控大盘</a>
 	</div>
 	<div class="span4 text-center">
 		<div class='text-center'>
@@ -23,6 +24,10 @@ $(document).ready(function() {
 	
 	var refresh = ${payload.refresh};
 	var frequency = ${payload.frequency};
+	var fullscreen = ${payload.fullScreen};
+	if(fullscreen){
+		$('#fullScreen').addClass('btn-danger');
+	}
 	if(refresh){
 		$('#refresh${payload.frequency}').addClass('btn-danger');
 		setInterval(function(){

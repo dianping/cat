@@ -10,16 +10,15 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.consumer.company.model.entity.Domain;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
@@ -35,7 +34,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<ExceptionLimit> m_exceptionLimits;
 
-	private String m_opState = CatString.SUCCESS;
+	private String m_opState = SUCCESS;
 
 	private TopologyGraphConfig m_config;
 
@@ -55,8 +54,13 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	
 	private String m_bug;
 	
+	private String m_content;
+	
 	private Map<String, Domain> m_productLineToDomains;
 
+	public static final String SUCCESS = "Success";
+
+	public static final String FAIL = "Fail";
 
 	public Map<String, Domain> getProductLineToDomains() {
 		return m_productLineToDomains;
@@ -177,9 +181,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setOpState(boolean result) {
 		if (result) {
-			m_opState = CatString.SUCCESS;
+			m_opState = SUCCESS;
 		} else {
-			m_opState = CatString.FAIL;
+			m_opState = FAIL;
 		}
 	}
 
@@ -237,6 +241,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setBug(String bug) {
    	m_bug = bug;
+   }
+	
+	public String getContent() {
+   	return m_content;
+   }
+
+	public void setContent(String content) {
+   	m_content = content;
    }
 
 	public static class Edge {

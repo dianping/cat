@@ -14,8 +14,9 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -40,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "heartbeat")
+	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_service;
 
 	@Inject
@@ -76,7 +77,7 @@ public class Handler implements PageHandler<Context> {
 		      new Date(payload.getDate() + TimeUtil.ONE_HOUR));
 		model.setReport(report);
 
-		if (StringUtil.isEmpty(payload.getIpAddress()) || CatString.ALL.equals(payload.getIpAddress())) {
+		if (StringUtil.isEmpty(payload.getIpAddress()) || Constants.ALL.equals(payload.getIpAddress())) {
 			String ipAddress = getIpAddress(report, payload);
 
 			payload.setIpAddress(ipAddress);
@@ -104,7 +105,7 @@ public class Handler implements PageHandler<Context> {
 			HeartbeatReport report = response.getModel();
 			if (period.isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date), new Date(date
-				      + TimeUtil.ONE_HOUR), "heartbeat");
+				      + TimeUtil.ONE_HOUR), HeartbeatAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -149,8 +150,8 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 
 		model.setPage(ReportPage.HEARTBEAT);
-		if (StringUtil.isEmpty(ipAddress) || ipAddress.equals(CatString.ALL)) {
-			model.setIpAddress(CatString.ALL);
+		if (StringUtil.isEmpty(ipAddress) || ipAddress.equals(Constants.ALL)) {
+			model.setIpAddress(Constants.ALL);
 		} else {
 			payload.setRealIp(payload.getIpAddress());
 			model.setIpAddress(payload.getRealIp());

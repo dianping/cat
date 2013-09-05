@@ -3,8 +3,8 @@ package com.dianping.cat.abtest.sample;
 import org.junit.Test;
 
 import com.dianping.cat.abtest.ABTest;
-import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.ABTestManager;
+import com.dianping.cat.abtest.ABTestName;
 
 public class SampleTest {
 	public static ABTest abtest1 = ABTestManager.getTest(MyABTestId.CASE1);

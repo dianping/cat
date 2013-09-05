@@ -1,7 +1,7 @@
 package com.dianping.cat.report.task.service;
 
-import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.entity.Domain;
+import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.transform.DefaultMerger;
 
 public class ServiceReportMerger extends DefaultMerger {

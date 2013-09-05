@@ -4,13 +4,14 @@ import java.io.IOException;
 
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
 
 public class RemoteCrossService extends BaseRemoteModelService<CrossReport> {
 	public RemoteCrossService() {
-		super("cross");
+		super(CrossAnalyzer.ID);
 	}
 
 	@Override

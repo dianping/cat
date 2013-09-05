@@ -20,12 +20,12 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
@@ -45,12 +45,12 @@ import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
-	@Inject(type = ModelService.class, value = "dependency")
+	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_dependencyService;
 
 	@Inject
 	private TopologyGraphManager m_graphManager;
-	
+
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManger;
 
@@ -62,6 +62,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	public static final String TUAN_TOU = "TuanGou";
 
 	private Segment buildAllSegmentsInfo(DependencyReport report) {
 		Segment result = new Segment();
@@ -142,12 +144,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "dependency")
+	@InboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 	}
 
 	@Override
-	@OutboundActionMeta(name = "dependency")
+	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -161,12 +163,14 @@ public class Handler implements PageHandler<Context> {
 		case TOPOLOGY:
 			TopologyGraph topologyGraph = m_graphManager.buildTopologyGraph(model.getDomain(), reportTime.getTime());
 			Map<String, List<String>> graphDependency = parseDependencies(topologyGraph);
-			Map<String, List<Event>> externalErrors = m_externalInfoBuilder.queryDependencyEvent(graphDependency, model.getDomain(), reportTime);
+			Map<String, List<Event>> externalErrors = m_externalInfoBuilder.queryDependencyEvent(graphDependency,
+			      model.getDomain(), reportTime);
 
 			DependencyReport report = queryDependencyReport(payload);
 			buildHourlyReport(report, model, payload);
 			model.setEvents(externalErrors);
-			m_externalInfoBuilder.buildZabbixErrorOnGraph(topologyGraph, m_externalInfoBuilder.buildZabbixHeader(payload, model), externalErrors);
+			m_externalInfoBuilder.buildZabbixErrorOnGraph(topologyGraph,
+			      m_externalInfoBuilder.buildZabbixHeader(payload, model), externalErrors);
 			m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
@@ -200,8 +204,8 @@ public class Handler implements PageHandler<Context> {
 		case PRODUCT_LINE:
 			String productLine = payload.getProductLine();
 			if (StringUtil.isEmpty(productLine)) {
-				payload.setProductLine(CatString.TUAN_TOU);
-				productLine = CatString.TUAN_TOU;
+				payload.setProductLine(TUAN_TOU);
+				productLine = TUAN_TOU;
 			}
 			ProductLineDashboard productLineGraph = m_graphManager
 			      .buildProductLineGraph(productLine, reportTime.getTime());

@@ -13,8 +13,11 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.alarm.MailRecord;
@@ -58,17 +61,6 @@ public class ScheduledMailTask implements Task, LogEnabled {
 		return "ScheduledDailyReport";
 	}
 
-	private long getSleepTime() {
-		Calendar cal = Calendar.getInstance();
-
-		cal.add(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 3);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTimeInMillis() - System.currentTimeMillis();
-	}
-
 	private void insertMailLog(int reportId, String content, String title, boolean result, List<String> emails)
 	      throws DalException {
 		MailRecord entity = m_mailRecordDao.createLocal();
@@ -87,9 +79,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 	}
 
 	private String renderContent(String names, String domain) {
-		int transactionFlag = names.indexOf("transaction");
-		int eventFlag = names.indexOf("event");
-		int problemFlag = names.indexOf("problem");
+		int transactionFlag = names.indexOf(TransactionAnalyzer.ID);
+		int eventFlag = names.indexOf(EventAnalyzer.ID);
+		int problemFlag = names.indexOf(ProblemAnalyzer.ID);
 		Date end = TimeUtil.getCurrentDay();
 		Date start = new Date(end.getTime() - TimeUtil.ONE_DAY);
 
@@ -128,8 +120,12 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-				
-				if (mailRecord == null || mailRecord.getCreationDate().getTime() < TimeUtil.getCurrentDay().getTime()) {
+
+				long lastSendMailTime = mailRecord.getCreationDate().getTime();
+				long currentDay = TimeUtil.getCurrentDay().getTime();
+				Calendar cal = Calendar.getInstance();
+
+				if ((mailRecord == null || lastSendMailTime < currentDay) && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 					m_logger.info("Send daily report starting! size :" + reports.size());
@@ -161,10 +157,8 @@ public class ScheduledMailTask implements Task, LogEnabled {
 			} catch (Throwable e) {
 				Cat.logError(e);
 			}
-
 			try {
-				m_logger.info("Send daily report sleep!");
-				Thread.sleep(getSleepTime());
+				Thread.sleep(TimeUtil.ONE_HOUR);
 			} catch (Exception e) {
 				active = false;
 			}

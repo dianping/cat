@@ -9,6 +9,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -37,7 +38,7 @@ public class DependencyReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildHourlyTask(String name, String reportDomain, Date reportPeriod) {
 		Date end = new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(reportPeriod, end, "dependency");
+		Set<String> domains = m_reportService.queryAllDomainNames(reportPeriod, end, DependencyAnalyzer.ID);
 		boolean result = true;
 
 		m_graphBuilder.getGraphs().clear();

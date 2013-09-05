@@ -1,11 +1,11 @@
 package com.dianping.cat.consumer.sql;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.sql.model.entity.Method;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.DefaultMerger;
-import com.dianping.cat.service.ReportConstants;
 
 public class SqlReportMerger extends DefaultMerger {
 
@@ -35,10 +35,10 @@ public class SqlReportMerger extends DefaultMerger {
 	}
 
 	public Database mergesForAllMachine(SqlReport report) {
-		Database machine = new Database(ReportConstants.ALL);
+		Database machine = new Database(Constants.ALL);
 
 		for (Database m : report.getDatabases().values()) {
-			if (!m.getId().equals(ReportConstants.ALL)) {
+			if (!m.getId().equals(Constants.ALL)) {
 				visitDatabaseChildren(machine, m);
 			}
 		}
@@ -73,7 +73,7 @@ public class SqlReportMerger extends DefaultMerger {
 		SqlReport old = getSqlReport();
 
 		if (m_allDatabase) {
-			m_all = old.findOrCreateDatabase(ReportConstants.ALL);
+			m_all = old.findOrCreateDatabase(Constants.ALL);
 		}
 		super.visitSqlReport(sqlReport);
 		old.setStartTime(sqlReport.getStartTime());
@@ -81,7 +81,7 @@ public class SqlReportMerger extends DefaultMerger {
 		old.getDatabaseNames().addAll(sqlReport.getDatabaseNames());
 		old.getDomainNames().addAll(sqlReport.getDomainNames());
 		if (m_allDatabase) {
-			old.getDatabaseNames().remove(ReportConstants.ALL);
+			old.getDatabaseNames().remove(Constants.ALL);
 		}
 	}
 }

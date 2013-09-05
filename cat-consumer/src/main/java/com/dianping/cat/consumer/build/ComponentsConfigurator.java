@@ -65,7 +65,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineTopComponents());
 		all.addAll(defineDumpComponents());
 		all.addAll(defineStateComponents());
-
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
 		return all;
@@ -113,6 +112,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = ProblemAnalyzer.ID;
 
+		all.add(C(ProblemHandler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
+		      .config(E("failureType").value("URL,SQL,Call,PigeonCall,Cache"))//
+		      .config(E("errorType").value("Error,RuntimeException,Exception")));
+
+		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
+		      .req(ServerConfigManager.class));
+
 		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
 
 		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
@@ -137,8 +143,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = StateAnalyzer.ID;
 
-		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(DomainManager.class, ServerStatisticManager.class));
+		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
+		      .req(ServerConfigManager.class, DomainManager.class, ServerStatisticManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //
@@ -153,7 +159,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = TopAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, TopAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //
@@ -167,15 +173,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = TransactionAnalyzer.ID;
 
-		all.add(C(ProblemHandler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
-		      .config(E("failureType").value("URL,SQL,Call,PigeonCall,Cache"))//
-		      .config(E("errorType").value("Error,RuntimeException,Exception")));
-
-		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
-		      .req(ServerConfigManager.class));
-
 		all.add(C(MessageAnalyzer.class, ID, TransactionAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID));
+		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //

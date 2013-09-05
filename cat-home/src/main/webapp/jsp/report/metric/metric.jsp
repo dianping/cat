@@ -39,8 +39,7 @@
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}">now</a> ]&nbsp;
 			</td>
 		</tr>
-	</table>
-	
+	</table>	
 	</br>
 	<table>
 		<tr style="text-align: left">

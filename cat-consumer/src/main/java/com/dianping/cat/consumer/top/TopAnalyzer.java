@@ -9,6 +9,8 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
@@ -22,7 +24,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportConstants;
 import com.dianping.cat.service.ReportManager;
 
 public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements LogEnabled {
@@ -30,6 +31,9 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
+	
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private TransactionAnalyzer m_transactionAnalyzer;
 
@@ -40,8 +44,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		long startTime = getStartTime();
 
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.getHourlyReport(startTime, ReportConstants.CAT, true);
-			m_reportManager.getHourlyReports(startTime).put(ReportConstants.CAT, getReport(ReportConstants.CAT));
+			m_reportManager.getHourlyReport(startTime, Constants.CAT, true);
+			m_reportManager.getHourlyReports(startTime).put(Constants.CAT, getReport(Constants.CAT));
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
 		} else {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE);
@@ -55,21 +59,20 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	public synchronized TopReport getReport(String domain) {
-		// TODO to be fixed
 		Set<String> domains = m_transactionAnalyzer.getDomains();
-		TopReport topReport = new TopReport("Cat");
+		TopReport topReport = new TopReport(Constants.CAT);
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 		for (String domainName : domains) {
-			if (validate(domainName)) {
+			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
 				new TransactionReportVisitor(topReport).visitTransactionReport(report);
 			}
 		}
 		for (String domainName : domains) {
-			if (validate(domainName)) {
+			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
 				new ProblemReportVisitor(topReport).visitProblemReport(report);

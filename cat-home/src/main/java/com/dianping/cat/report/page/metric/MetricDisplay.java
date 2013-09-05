@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
@@ -102,15 +102,15 @@ public class MetricDisplay extends BaseVisitor {
 			String configKey = config.getId();
 			if (showSum(config)) {
 				String key = configKey + ":" + SUM;
-				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_SUM));
+				m_lineCharts.put(key, createLineChart(config.getTitle() + Chinese.Suffix_SUM));
 			}
 			if (showCount(config)) {
 				String key = configKey + ":" + COUNT;
-				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_COUNT));
+				m_lineCharts.put(key, createLineChart(config.getTitle() + Chinese.Suffix_COUNT));
 			}
 			if (showAvg(config)) {
 				String key = configKey + ":" + AVG;
-				m_lineCharts.put(key, createLineChart(config.getTitle() + CatString.Suffix_AVG));
+				m_lineCharts.put(key, createLineChart(config.getTitle() + Chinese.Suffix_AVG));
 			}
 		}
 	}

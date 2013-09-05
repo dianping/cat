@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -50,7 +51,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "event";
+		String name = EventAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
 			try {
@@ -75,7 +76,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = "event";
+		String name = EventAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -91,6 +92,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 					try {
 						EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
+						
 						reportModel.accept(merger);
 					} catch (Exception e) {
 						Cat.logError(e);
@@ -105,7 +107,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, "event");
+		Set<String> domains = queryAllDomainNames(start, end, EventAnalyzer.ID);
 		eventReport.getDomainNames().addAll(domains);
 		return eventReport;
 	}
@@ -113,7 +115,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 	@Override
 	public EventReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, "event",
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
@@ -127,7 +129,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 	@Override
 	public EventReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, "event",
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
