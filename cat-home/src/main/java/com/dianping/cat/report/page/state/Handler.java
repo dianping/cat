@@ -103,6 +103,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (action == Action.HOURLY || action == Action.HISTORY) {
 			StateShow show = new StateShow(payload.getIpAddress());
+			show.setSortType(payload.getSort());
 			show.visitStateReport(report);
 			model.setState(show);
 			model.setReport(report);
@@ -124,6 +125,16 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		m_normalizePayload.normalize(model, payload);
+	}
+	
+	private void sort(StateShow show, String sort){
+		if(sort.equals("total")){
+			show
+		} else if(sort.equals("loss")){
+			
+		} else if(sort.equals("size")){
+			
+		}
 	}
 
 }

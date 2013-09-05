@@ -17,6 +17,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("test")
 	private String m_test = "-1";
+	
+	@FieldMeta("timeRange")
+	private int m_timeRange = 2;
 
 	public Payload() {
 		super(ReportPage.METRIC);
@@ -56,6 +59,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setTest(String test) {
 		m_test = test;
 	}
+	
+	public int getTimeRange() {
+		return m_timeRange;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
@@ -63,4 +70,6 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.METRIC;
 		}
 	}
+	
+	
 }

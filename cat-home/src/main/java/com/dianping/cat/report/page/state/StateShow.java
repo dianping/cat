@@ -28,6 +28,8 @@ public class StateShow extends BaseVisitor {
 
 	private String m_ip;
 
+	private String m_sortType;
+
 	public StateShow(String ip) {
 		m_ip = ip;
 	}
@@ -51,11 +53,21 @@ public class StateShow extends BaseVisitor {
 
 	public List<ProcessDomain> getProcessDomains() {
 		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
-		Collections.sort(temp, new DomainCompartor());
+		if(m_sortType == null){
+			Collections.sort(temp, new DomainCompartor());
+		} else if (m_sortType.equals("total")) {
+			Collections.sort(temp, new TotalCompartor());
+		} else if (m_sortType.equals("loss")) {
+			Collections.sort(temp, new LossCompartor());
+		} else if (m_sortType.equals("size")) {
+			Collections.sort(temp, new SizeCompartor());
+		} else {
+			Collections.sort(temp, new DomainCompartor());
+		}
 		return temp;
 	}
-	
-	public Map<String,ProcessDomain> getProcessDomainMap() {
+
+	public Map<String, ProcessDomain> getProcessDomainMap() {
 		return m_processDomains;
 	}
 
@@ -202,5 +214,33 @@ public class StateShow extends BaseVisitor {
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return o1.getName().compareTo(o2.getName());
 		}
+	}
+
+	public static class TotalCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return new Long(o2.getTotal()).compareTo(o1.getTotal());
+		}
+	}
+
+	public static class LossCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return new Long(o2.getTotalLoss()).compareTo(o1.getTotalLoss());
+		}
+	}
+
+	public static class SizeCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return new Double(o2.getSize()).compareTo(o1.getSize());
+		}
+	}
+
+	public void setSortType(String sort) {
+		m_sortType = sort;
 	}
 }
