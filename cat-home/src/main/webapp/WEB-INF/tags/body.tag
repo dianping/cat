@@ -27,7 +27,18 @@
             <span class="icon-bar"></span>
           </button>
           <div class="nav-collapse collapse">
-          	<div id="loginInfo" class="navbar-text pull-right">
+          	<div class="nav  pull-right">
+          		<c:forEach var="page" items="${navBar.systemPages}">
+					<c:if test="${page.standalone}">
+						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
+							href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
+					</c:if>
+					<c:if
+						test="${not page.standalone and model.page.name == page.name}">
+						<li class="active"><a href="#">${page.title}</a></li>
+					</c:if>
+				</c:forEach>
+					<li id="loginInfo" ></li>
           	</div>
             <ul class="nav">
             	<c:forEach var="page" items="${navBar.visiblePages}">
@@ -37,22 +48,10 @@
 					</c:if>
 					<c:if
 						test="${not page.standalone and model.page.name == page.name}">
-						<li class="active">${page.title}</li>
-					</c:if>
-				</c:forEach>
-				<li class="wrapspace">&nbsp;&nbsp;</li>
-				<c:forEach var="page" items="${navBar.systemPages}">
-					<c:if test="${page.standalone}">
-						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
-							href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
-					</c:if>
-					<c:if
-						test="${not page.standalone and model.page.name == page.name}">
-						<li class="active">${page.title}</li>
+						<li class="active"><a href="#">${page.title}</a></li>
 					</c:if>
 				</c:forEach>
             </ul>
-            
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -82,12 +81,13 @@
 			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a  href="/cat/s/login?op=logout">Logout</a>';
 		}else{
 			var loginInfo=document.getElementById('loginInfo');
-			loginInfo.innerHTML ='<a  href="/cat/s/login"> Login</a>';
+			loginInfo.innerHTML ='<a href="/cat/s/login"> Login</a>';
 		}
 	</script>
 	<jsp:doBody />
+	<br/>
 	<table class="footer">
-		<tr><td>[ @dianping CAT ] 分机【1810】</td></tr>
+		<tr><td>©2003-2013 dianping.com, All Rights Reserved.</td></tr>
 	</table>
 	<res:jsSlot id="bottom-js" />
 </body>

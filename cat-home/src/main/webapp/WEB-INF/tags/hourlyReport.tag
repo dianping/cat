@@ -29,7 +29,7 @@
 			</td> 
 			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			<td class="nav">
-				<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-error">【切到历史模式】</span></a>
+				<span class="text-error">【<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-error">切到历史模式</span></a>】</span>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>

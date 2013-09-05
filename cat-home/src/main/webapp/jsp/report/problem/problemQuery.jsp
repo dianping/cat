@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<div>	Long-url <select class="input-small" size="1" id="p_longUrl">
+<div class="text-left">	Long-url <select class="input-small" size="1" id="p_longUrl">
 				${model.defaultThreshold}
 				<option value="500">0.5 Sec</option>
 				<option value="1000">1.0 Sec</option>

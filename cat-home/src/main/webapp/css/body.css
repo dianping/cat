@@ -5,22 +5,11 @@ body {
 }
 
 .report .header {
-	background:#f5f5f5;
+	background: #f5f5f5;
 	font-weight: bold;
-	border-bottom: solid black 1px;
-	border-radius:4px;
+	border: solid #ccc 1px;
+	border-radius: 4px;
 	width: 100%;
-}
-
-.report .navbar {
-	font-weight: bold;
-	border-bottom: solid black 1px;
-	width: 100%;
-}
-
-.report .navbar .nav {
-	text-align: right;
-	font-weight: bold;
 }
 
 .report .header .nav {
@@ -29,44 +18,21 @@ body {
 	color: black;
 }
 
-.report .navbar .nav A {
-	text-decoration: none;
-	color: blue;
-}
-
-.report .navbar .nav  A:hover {
-	color: yellow;
-}
-
- .footer {
-	background:#f5f5f5;
+.footer {
+	background: #f5f5f5;
 	font-weight: bold;
-	border-top: solid black 1px;
+	border: solid #ccc 1px;
 	width: 100%;
 	text-align: center;
-	border-radius:4px;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
+	border-radius: 4px;
 }
 
 .current {
 	background-color: #3CB371;
 }
-table{
-	font-size: 14px;
-}
-tr.head {
-	background-color: #e8e8e8;
-}
 
-tr.strip {
-	background-color: #f2f2f2;
+table {
+	font-size: 14px;
 }
 
 tr.head th {
@@ -76,12 +42,10 @@ tr.head th {
 
 tr th {
 	background-color: #f2f2f2;
-	
 }
 
 tr.odd td {
 	background-color: #eee;
-	
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
@@ -89,7 +53,6 @@ tr.odd td {
 
 tr.even td {
 	background-color: white;
-	
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
@@ -97,7 +60,6 @@ tr.even td {
 
 tr.odd th {
 	background-color: #eee;
-	
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
@@ -105,50 +67,19 @@ tr.odd th {
 
 tr.even th {
 	background-color: white;
-	
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
 }
 
-.data {
-	
-	min-width:50%;	
-}
-.data tr th{
-	text-align:right;
-}
-.data .odd td {
+td.odd {
 	background-color: #eee;
-	
-	text-align:right;
+	word-break: break-all;
 }
 
-.data .even td {
+td.even {
 	background-color: white;
-	
-	text-align:right;
-}
-.data th .left{
-	text-align:left;
-}
-
-.data tr .left{
-	text-align:left;
-}
-
-.data tr .left{
-	text-align:left;
-}
-
-.problem td.odd  {
-	background-color: #eee;
-	word-break:break-all;
-}
-
-.problem td.even  {
-	background-color: white;
-	word-break:break-all;
+	word-break: break-all;
 }
 
 a.error {
@@ -166,6 +97,7 @@ a.long-url {
 a.long-url {
 	background-color: #5599CC;
 }
+
 a.long-sql {
 	background-color: #6699CC;
 }
@@ -178,31 +110,35 @@ a.long-cache {
 	background-color: #6677AA;
 }
 
-a.url{
+a.url {
 	background-color: #cc0000;
 }
-a.sql{
+
+a.sql {
 	background-color: purple;
 }
 
-a.call{
+a.call {
 	background-color: #9966ff;
 }
-a.cache{
+
+a.cache {
 	background-color: #aa3faa;
 }
-a.heartbeat{
+
+a.heartbeat {
 	background-color: #009933;
 }
 
-a.abtest-heartbeat{
+a.abtest-heartbeat {
 	background-color: #009933;
 }
+
 .detail {
-	
 	border-spacing: 1px;
 }
-.top{
+
+.top {
 	vertical-align: top;
 }
 
@@ -224,7 +160,7 @@ a.abtest-heartbeat{
 }
 
 #closeBtn {
-	width:10px;
+	width: 10px;
 	cursor: pointer;
 	background-color: #06C;
 }
@@ -246,27 +182,6 @@ a.abtest-heartbeat{
 	text-align: center;
 }
 
-.login {
-	height: 12px;
-	width: 97%;
-	text-align: right;
-	margin-right: 20px;
-	pedding-right: 20px;
-}
-
-.department {
-	text-align: center;
-	font-size: medium;
-	font-weight: bold;
-	width: 100px;
-}
-
-.domain {
-	text-align: left;
-	font-weight: bold;
-	padding-left: 4px;
-}
-
 .longText {
 	text-align: left;
 	white-space: normal;
@@ -274,12 +189,8 @@ a.abtest-heartbeat{
 	word-break: break-all;
 }
 
-.lable{
-	font-weight:bold;
-}
-
-.required{
-	color:red;
+.required {
+	color: red;
 }
 
 .graph {
@@ -294,19 +205,29 @@ a.abtest-heartbeat{
 }
 
 .pieChart {
-	text-align:left;
+	text-align: left;
 	width: 700px;
 	height: 450px;
 	margin: 4px auto;
 }
-.error{
-	color:red;
+
+.error {
+	color: red;
 }
 
-.dashboard{
+.dashboard {
 	background: url('../img/checked.gif') no-repeat;
 }
 
-.navbar{
-	margin-bottom:5px;
+.navbar {
+	margin-bottom: 5px;
+}
+
+.navbar .navbar-inner {
+	padding-left: 5px;
+}
+
+.navbar-inner .container-fluid {
+	padding-left: 0px;
+	padding-right: 0px;
 }

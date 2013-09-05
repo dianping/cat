@@ -31,7 +31,7 @@
 			<td class="title"><span class="text-success"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			</td>
 			<td class="nav">
-					<a href="?domain=${model.domain}" class="switch"><span class="text-error">【切到小时模式】</span></a>
+					<span class="text-error">【<a href="?domain=${model.domain}" class="switch"><span class="text-error">切到小时模式</span></a>】</span>
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
