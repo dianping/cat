@@ -535,6 +535,12 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1466,6 +1472,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2990,6 +2999,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

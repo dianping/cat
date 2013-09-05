@@ -1,4 +1,4 @@
-package com.dianping.cat.system.abtest.conditions;
+package com.dianping.cat.system.page.abtest.conditions;
 
 import java.util.List;
 

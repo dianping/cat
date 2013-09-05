@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.abtest.Context"
 	scope="request" />
@@ -17,6 +18,7 @@
 	margin: 0 auto;
 }
 canvas{}
+
 </style>
 
 <a:body>
@@ -50,20 +52,25 @@ canvas{}
 		
 		<form class="form-inline" id="form">
 			<c:forEach var="item" items="${model.report.goals}">
-				<a class="btn btn-small ${payload.selectMetricType eq item.name ? 'btn-primary' : ''}">${item.name}</a>
+				<a class="btn btn-small ${payload.selectMetricType eq item.name ? 'btn-primary' : ''}" name="${item.name}">${model.metricConfigItem[item.name].title}</a>
 			</c:forEach>
+			
+			<c:if test="${fn:length(model.report.goals) eq 0}">
+				<a id="query" class="btn btn-small">查询</a>
+			</c:if>
+			
 			<input id="metricType" name="selectMetricType" value="" type="hidden" ></input>
 			<input name="op" value="report" type="hidden" ></input>
 			<input name="id" value="${payload.id }" type="hidden" ></input>
 			<div class="pull-right">
 				<div id="datetimepicker1" class="input-append date">
-					<input name="startDate" value="${w:format(payload.startDate,'yyyy-MM-dd HH:mm')}" style="height: 30px;"
+					<input name="startDate" value="${w:format(payload.startDate,'yyyy-MM-dd hh:mm')}" style="height: 30px;"
 						placeholder="begin time" data-format="yyyy-MM-dd hh:mm" type="text"></input> 
 					<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i></span>
 				</div>
 				
 				<div id="datetimepicker2" class="input-append date">
-					<input name="endDate" value="${w:format(payload.endDate,'yyyy-MM-dd HH:mm')}" style="height: 30px;"
+					<input name="endDate" value="${w:format(payload.endDate,'yyyy-MM-dd hh:mm')}" style="height: 30px;"
 						placeholder="end time" data-format="yyyy-MM-dd hh:mm" type="text"></input> 
 					<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i></span>
 				</div>
@@ -77,18 +84,20 @@ canvas{}
 		</form>
 		
 		<canvas id="canvas" width="1200" height="400" style="margin-top:20px;margin-bottom:20px;"></canvas>
-		<div style="margin-bottom:40px;margin-left:40px;">
-			<span class="label label-success">&nbsp;&nbsp;&nbsp;</span>&nbsp;Control&nbsp;&nbsp;&nbsp;
-			<span class="label label-info">&nbsp;&nbsp;&nbsp;</span>&nbsp;A&nbsp;&nbsp;&nbsp;
-			<span class="label label-important">&nbsp;&nbsp;&nbsp;</span>&nbsp;B&nbsp;&nbsp;&nbsp;
+		<div id="variationDiv" style="margin-bottom:40px;margin-left:40px;">
+			<c:set var="i" value="0"></c:set>
+			<c:forEach var="item" items="${model.report.variations}">
+				<a index="${i }" data-background-color="${model.dataSets[i].pointStrokeColor}" data-selected="1"><span class="label" style="background-color:${model.dataSets[i].pointStrokeColor};">&nbsp;&nbsp;&nbsp;</span></a>&nbsp;${item.key} &nbsp;&nbsp;&nbsp;
+				<c:set var="i" value="${i+1}"></c:set>
+			</c:forEach>
 		</div>
 
-		<table class="table">
+		<table class="table table-hover">
 			<thead>
 				<tr>
 					<th>Variation</th>
 					<c:forEach var="goal" items="${model.report.goals}">
-						<th>${goal.name }</th>
+						<th>${model.metricConfigItem[goal.name].title}</th>
 					</c:forEach>
 				</tr>
 			</thead>
@@ -100,10 +109,10 @@ canvas{}
 							<c:set var="goal" value="${item.value.goals[key.name]}"></c:set>
 							
 							<c:if test="${goal.type eq 'C' }">
-								<td>${goal.count }</td>
+								<td>${w:format(goal.count,'#,###,###,###,##0.#')}</td>
 							</c:if>
 							<c:if test="${goal.type eq 'S' }">
-								<td>${goal.sum }</td>
+								<td>${w:format(goal.sum,'#,###,###,###,##0.#')}</td>
 							</c:if> 
 						</c:forEach>
 					</tr>
@@ -115,24 +124,63 @@ canvas{}
 	
 	<script type="text/javascript" >
 	$(function(){
-		var lineChartData = {
-				labels : ${model.report.chart.labels},
-				datasets : ${model.report.chart.datasets}
-
-			}
+		chart = new Chart(document.getElementById("canvas").getContext("2d"));
+		datasets = ${model.report.chart.datasets};
+		labels = ${model.report.chart.labels};
 		
-		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Line(lineChartData);
+		var lineChartData = {
+				'labels' : labels,
+				'datasets' : datasets
+			};
+		
+		chart.Line(lineChartData);
 		
 		$('#datetimepicker1').datetimepicker();
+		
 		$('#datetimepicker2').datetimepicker();
 		
 		$('.form-inline a').each(function(){
 			$(this).click(function(){
-				$('#metricType').val($(this).text());
+				$('#metricType').val($(this).attr("name"));
 				$('#form').submit();
 			});
 		});
+		
+		$('#variationDiv a').each(function(){
+			$(this).click(function(){
+				if($(this).data("selected") == 1){
+					$(this).data("selected",0);
+					$('span',$(this)).css("background-color", "#999999");
+				}else{
+					var color = $(this).data("background-color");
+					$(this).data("selected",1);
+					$('span',$(this)).css("background-color",color);
+				}
+				
+				var clonedDatasets = datasets.slice(0);
+				var count = 0;
+				$('#variationDiv a').each(function(){
+					var selected = $(this).data("selected");
+					
+					if(selected == 0){
+						var index = $(this).attr("index") - count;
+						clonedDatasets.splice(index,1);
+						count += 1;
+					}
+				});
+				
+				var data = {
+					'labels' : labels,
+					'datasets' : clonedDatasets
+				};
+				
+				chart.Line(data);
+			});
+		});
+		
+		$('#query').click(function(){
+			$('#form').submit();
+		});
 	});
-	
 	</script>
 </a:body>

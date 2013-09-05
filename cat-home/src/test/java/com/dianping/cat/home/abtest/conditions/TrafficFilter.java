@@ -3,7 +3,7 @@ package com.dianping.cat.home.abtest.conditions;
 import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
-import com.dianping.cat.abtest.conditions.ABTestCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition;
 
 public class TrafficFilter {
 	private Condition1 m_condition1 = new Condition1();

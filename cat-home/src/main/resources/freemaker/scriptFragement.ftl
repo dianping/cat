@@ -2,7 +2,7 @@ package com.dianping.cat.abtest.conditions;
 
 import java.util.Random; 
 import javax.servlet.http.HttpServletRequest; 
-import com.dianping.cat.abtest.conditions.ABTestCondition;
+import com.dianping.cat.abtest.spi.internal.conditions.ABTestCondition;
 
 public class TrafficFilter {
 
@@ -64,12 +64,9 @@ public class TrafficFilter {
 		public boolean accept(HttpServletRequest request) {
 			String actual = request.getRequestURL().toString();
 			
-			System.out.println(actual);
 			if (${urlScriptProvider.getFragement(condition)}) {
-				System.out.println("true");
 				return true;
 			} else {
-				System.out.println("false");
 				return false;
 			}
 		}
@@ -89,7 +86,6 @@ public class TrafficFilter {
 			}
 	
 			if (m_percent == 100) {
-				System.out.println("true");
 				return true;
 			}
 	

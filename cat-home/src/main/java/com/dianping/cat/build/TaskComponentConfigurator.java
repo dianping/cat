@@ -49,6 +49,7 @@ import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -115,15 +116,16 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
-		all.add(C(ABTestReportBuilder.class).req(ReportService.class, AbtestReportDao.class));
+		all.add(C(ABTestReportBuilder.class).req(ReportService.class, AbtestReportDao.class,
+		      ProductLineConfigManager.class, ABTestService.class));
 
-		all.add(C(ReportFacade.class)
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class,
-		            ProblemReportBuilder.class //
-		            , HeartbeatReportBuilder.class, MatrixReportBuilder.class,
-		            CrossReportBuilder.class //
-		            , SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
-		            MetricBaselineReportBuilder.class, ABTestReportBuilder.class));
+		all.add(C(ReportFacade.class).req(TransactionReportBuilder.class,
+		      EventReportBuilder.class,
+		      ProblemReportBuilder.class //
+		      , HeartbeatReportBuilder.class, MatrixReportBuilder.class,
+		      CrossReportBuilder.class //
+		      , SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
+		      MetricBaselineReportBuilder.class, ABTestReportBuilder.class));
 
 		return all;
 	}

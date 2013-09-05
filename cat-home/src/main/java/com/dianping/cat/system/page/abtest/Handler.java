@@ -45,10 +45,10 @@ import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.abtest.conditions.URLScriptProvider;
 import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvice;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
+import com.dianping.cat.system.page.abtest.conditions.URLScriptProvider;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -83,10 +83,10 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 
 	@Inject
 	private ListViewHandler m_listViewHandler;
-	
+
 	@Inject
 	private ReportHandler m_reportHandler;
-	
+
 	@Inject
 	private GsonBuilderManager m_gsonBuilderManager;
 
@@ -272,9 +272,6 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		case MODEL:
 			renderModel(model, payload);
 			break;
-		case SCRIPT_FRAGEMENT:
-			renderModelByRunId(payload, model);
-			break;
 		}
 
 		model.setAction(action);
@@ -413,12 +410,6 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		}
 
 		model.setAbtestModel(filteredModel);
-	}
-
-	private void renderModelByRunId(Payload payload, Model model) {
-		AbtestModel abtestModel = m_service.getAbtestModelByRunID(payload.getId());
-
-		model.setAbtestModel(abtestModel);
 	}
 
 	/**

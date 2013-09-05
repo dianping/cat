@@ -6,6 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestReportDao;
@@ -35,7 +36,8 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ListViewHandler.class).req(AbtestDao.class).req(AbtestRunDao.class).config(E("pageSize").value("10")));
 
-		all.add(C(ReportHandler.class).req(AbtestDao.class).req(AbtestRunDao.class).req(AbtestReportDao.class));
+		all.add(C(ReportHandler.class).req(AbtestDao.class).req(AbtestRunDao.class).req(AbtestReportDao.class)
+		      .req(MetricConfigManager.class));
 
 		all.add(C(ABTestService.class, ABTestServiceImpl.class).req(AbtestDao.class).req(AbtestRunDao.class)
 		      .req(GroupStrategyDao.class).req(ProjectDao.class).req(GsonBuilderManager.class)

@@ -26,7 +26,7 @@ public class ReportHandlerTest extends ComponentTestCase {
 		String goal = "order";
 		String period = "hour";
 
-		AbtestReport report = handler.buildReport(query, goal, period);
+		AbtestReport report = handler.buildReport(query, goal, period, null);
 		
 		System.out.println(report);
 

@@ -8,11 +8,13 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.spi.ABTestEntity;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.report.abtest.entity.AbtestReport;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
+import com.dianping.cat.system.page.abtest.ReportHandler.DataSets;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_domain;
@@ -25,13 +27,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<String, List<Project>> m_projectMap;
 
+	private Map<String, MetricItemConfig> m_metricConfigItem;
+
 	private List<GroupStrategy> m_groupStrategyList;
 
 	private AbtestItem m_abtest;
 
 	private AbtestModel m_abtestModel;
-	
+
 	private AbtestReport m_report;
+	
+	private List<DataSets> m_dataSets;
 
 	private String m_ipAddress;
 
@@ -46,6 +52,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public AbtestModel getAbtestModel() {
 		return m_abtestModel;
 	}
+
+	public List<DataSets> getDataSets() {
+   	return m_dataSets;
+   }
 
 	public Date getDate() {
 		return m_date;
@@ -73,16 +83,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public ListViewModel getListViewModel() {
-   	return m_listViewModel;
-   }
+		return m_listViewModel;
+	}
+
+	public Map<String, MetricItemConfig> getMetricConfigItem() {
+		return m_metricConfigItem;
+	}
 
 	public Map<String, List<Project>> getProjectMap() {
 		return m_projectMap;
 	}
 
 	public AbtestReport getReport() {
-   	return m_report;
-   }
+		return m_report;
+	}
 
 	public void setAbtest(AbtestItem abtest) {
 		m_abtest = abtest;
@@ -91,6 +105,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setAbtestModel(AbtestModel abtestModel) {
 		m_abtestModel = abtestModel;
 	}
+
+	public void setDataSets(List<DataSets> dataSets) {
+   	m_dataSets = dataSets;
+   }
 
 	public void setDate(Date date) {
 		m_date = date;
@@ -113,14 +131,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setListViewModel(ListViewModel listViewModel) {
-   	m_listViewModel = listViewModel;
-   }
+		m_listViewModel = listViewModel;
+	}
+
+	public void setMetricConfigItem(Map<String, MetricItemConfig> metricItemConfig) {
+		m_metricConfigItem = metricItemConfig;
+	}
 
 	public void setProjectMap(Map<String, List<Project>> projectMap) {
 		m_projectMap = projectMap;
 	}
 
 	public void setReport(AbtestReport report) {
-   	m_report = report;
-   }
+		m_report = report;
+	}
 }

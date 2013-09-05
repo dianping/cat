@@ -96,7 +96,7 @@ div.controls input {
                <label class="control-label">Start Time</label>
                <div class="controls">
                   <div id="datetimepicker1" class="input-append date">
-                     <input name="startDate" readonly="readonly" value="${w:format(model.abtest.startDate,'yyyy-MM-dd HH:mm')}"
+                     <input name="startDate" readonly="readonly" value="${w:format(model.abtest.run.startDate,'yyyy-MM-dd hh:mm')}"
                         placeholder="when to run ab test" data-format="yyyy-MM-dd hh:mm" type="text" check-type="required"
                         required-message="Start Time is required!"></input> <span class="add-on hide"> <i
                         data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
@@ -108,7 +108,7 @@ div.controls input {
                <label class="control-label">End Time</label>
                <div class="controls">
                   <div id="datetimepicker2" class="input-append date">
-                     <input name="endDate" readonly="readonly" value="${w:format(model.abtest.endDate,'yyyy-MM-dd HH:mm')}"
+                     <input name="endDate" readonly="readonly" value="${w:format(model.abtest.run.endDate,'yyyy-MM-dd hh:mm')}"
                         placeholder="when to stop ab test" data-format="yyyy-MM-dd hh:mm" type="text" check-type="required"
                         required-message="End Time is required!"></input> <span class="add-on hide"> <i
                         data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>

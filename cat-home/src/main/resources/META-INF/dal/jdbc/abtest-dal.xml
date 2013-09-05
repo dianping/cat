@@ -95,6 +95,17 @@
 				]]></statement>
 		</query>
     </query-defs>
+    <query-defs>
+    	<query name="find-latest-report-by-runId" type="SELECT">
+    		<param name="run-id" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='run-id'/> = ${run-id}
+				ORDER BY <FIELD name='period'/> DESC LIMIT 1
+				]]></statement>
+		</query>
+    </query-defs>
   </entity>
 </entities>
 

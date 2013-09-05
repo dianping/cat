@@ -1,4 +1,4 @@
-package com.dianping.cat.abtest.conditions;
+package com.dianping.cat.abtest.spi.internal.conditions;
 
 import javax.servlet.http.HttpServletRequest;
 

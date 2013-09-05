@@ -30,9 +30,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.MODEL.getPath();
 		case ABTEST_CACULATOR:
 			return JspFile.ABTEST_CACULATOR.getPath();
-		case SCRIPT_FRAGEMENT:
-			return JspFile.SCRIPT_FRAGEMENT.getPath();
-
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

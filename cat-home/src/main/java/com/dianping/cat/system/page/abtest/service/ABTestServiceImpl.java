@@ -313,8 +313,8 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	}
 
 	public void setGsonBuilderManager(GsonBuilderManager gsonBuilderManager) {
-   	m_gsonBuilderManager = gsonBuilderManager;
-   }
+		m_gsonBuilderManager = gsonBuilderManager;
+	}
 
 	@Override
 	public synchronized void setModified() {
@@ -378,5 +378,21 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 		abCase.addRun(abRun);
 		return abCase;
+	}
+
+	@Override
+	public List<AbtestRun> getAbtestRunByStatus(AbtestStatus status) {
+		List<AbtestRun> runs = new ArrayList<AbtestRun>();
+		Date now = new Date();
+
+		for (AbtestRun run : m_abtestRunMap.values()) {
+			AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+
+			if (_status == status) {
+				runs.add(run);
+			}
+		}
+
+		return runs;
 	}
 }

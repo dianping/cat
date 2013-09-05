@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
@@ -23,6 +24,8 @@ import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 public class RetinaImgBusinessReportTest extends ComponentTestCase {
 
 	private BusinessReportDao m_businessReportDao;
+	
+	private ProductLineConfigManager m_productLineConfigManager;
 
 	private Calendar m_calendar;
 
@@ -30,6 +33,7 @@ public class RetinaImgBusinessReportTest extends ComponentTestCase {
 	public void prepare() {
 		try {
 			m_businessReportDao = lookup(BusinessReportDao.class);
+			m_productLineConfigManager = lookup(ProductLineConfigManager.class);
 			m_calendar = Calendar.getInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -39,17 +43,28 @@ public class RetinaImgBusinessReportTest extends ComponentTestCase {
 	@Test
 	public void test() {
 		try {
-			m_calendar.set(2013, 6, 16, 0, 0);
+			m_calendar.set(2013, 8, 20, 0, 0);
 			Date begin = m_calendar.getTime();
 			System.out.println(begin);
-			m_calendar.set(2013, 6, 17, 0, 0);
+			m_calendar.set(2013, 8, 28, 0, 0);
 			Date end = m_calendar.getTime();
 			System.out.println(end);
 			
-			List<BusinessReport> reportsTuangou = m_businessReportDao.findAllByProductLineNameDuration(begin, end,
-			      "TuanGou", "metric", BusinessReportEntity.READSET_FULL);
+//			List<BusinessReport> reportsTuangou = m_businessReportDao.findAllByProductLineNameDuration(begin, end,
+//			      "TuanGou", "metric", BusinessReportEntity.READSET_FULL);
+			
+			String productLine = m_productLineConfigManager.queryProductLineByDomain("TuanGouWeb");
+			
+			BusinessReport tmp = m_businessReportDao.findByPK(10292, BusinessReportEntity.READSET_FULL);
+			
+			MetricReport metricReport = DefaultNativeParser.parse(tmp.getContent());
+			
+			System.out.println(metricReport);
+			
+			List<BusinessReport> reportsTuangou = m_businessReportDao.findAllByPeriodProductLineName(begin,
+					productLine, "metric", BusinessReportEntity.READSET_FULL);
 
-			List<BusinessReport> reportsPAY = m_businessReportDao.findAllByProductLineNameDuration(begin, end, "PAY",
+			List<BusinessReport> reportsPAY = m_businessReportDao.findAllByProductLineNameDuration(begin, end, "PayOrder",
 			      "metric", BusinessReportEntity.READSET_FULL);
 
 			Metric pair = new Metric();
@@ -94,7 +109,7 @@ public class RetinaImgBusinessReportTest extends ComponentTestCase {
 		for (BusinessReport report : reports) {
 			MetricReport metricReport = DefaultNativeParser.parse(report.getContent());
 
-			//System.out.println(metricReport);
+			System.out.println(metricReport);
 			Map<String, MetricItem> items = metricReport.getMetricItems();
 
 			for (MetricItem item : items.values()) {

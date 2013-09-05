@@ -22,6 +22,8 @@ public interface ABTestService {
 	
 	public AbtestRun getAbtestRunById(int id);
 	
+	public List<AbtestRun> getAbtestRunByStatus(AbtestStatus status);
+	
 	public List<GroupStrategy> getAllGroupStrategies();
 	
 	public Map<String, List<Project>> getAllProjects();

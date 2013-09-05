@@ -4,13 +4,23 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.ContainerLoader;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -25,12 +35,12 @@ import com.dianping.cat.report.abtest.entity.Goal;
 import com.dianping.cat.report.abtest.entity.Variation;
 import com.dianping.cat.report.abtest.transform.BaseVisitor;
 import com.dianping.cat.report.abtest.transform.DefaultSaxParser;
+import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
 import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class ReportHandler implements SubHandler {
-
+public class ReportHandler implements SubHandler, Initializable {
 	@Inject
 	private AbtestDao m_abtestDao;
 
@@ -40,165 +50,207 @@ public class ReportHandler implements SubHandler {
 	@Inject
 	private AbtestReportDao m_abtestReportDao;
 
-	private static GsonBuilderManager m_gsonBuilderManager = new GsonBuilderManager();
+	@Inject
+	private MetricConfigManager m_configManager;
 
-	private DateFormat m_dateFormat = new SimpleDateFormat("MM-dd HH:00");
+	private static GsonBuilderManager m_gsonBuilderManager = new GsonBuilderManager();
 
 	private Calendar m_calendar = Calendar.getInstance();
 
-	private AbtestReport buildDailyReport(AbtestReport query, String goal) {
+	private DateFormat m_dateFormatForHour = new SimpleDateFormat("MM-dd HH:00");
+
+	private DateFormat m_dateFormatForDay = new SimpleDateFormat("MM-dd");
+
+	private AbtestReport buildDailyReport(AbtestReport query, String goal, Model model) {
 		Date startTime = query.getStartTime();
 		Date endTime = query.getEndTime();
 		m_calendar.setTime(startTime);
 
 		long deltaTime = endTime.getTime() - startTime.getTime();
-		long day = (deltaTime + 1000L) / (24 * 60 * 60 * 1000);
-
-		day = (day > 7) ? day : 7;
+		long day = deltaTime / (24 * 60 * 60 * 1000L);
+		int step = ((int) day / 7 > 0) ? ((int) day / 7) : 1;
+		int count = 0;
 		List<AbtestReport> datas = new ArrayList<AbtestReport>();
+		List<String> labels = new ArrayList<String>();
 
-		for (int i = 0; i < day; i++) {
+		m_calendar.add(Calendar.DAY_OF_MONTH, 1);
+		endTime = m_calendar.getTime();
+
+		while (startTime.before(query.getEndTime())) {
+			if (count % step == 0) {
+				List<AbtestReport> reports = queryReport(query.getRunId(), startTime, endTime);
+
+				AbtestReport report = mergeReport(reports);
+
+				datas.add(report);
+
+				labels.add(m_dateFormatForDay.format(endTime));
+			} else {
+				labels.add("");
+			}
+
+			count++;
+			startTime = endTime;
 			m_calendar.add(Calendar.DAY_OF_MONTH, 1);
 			endTime = m_calendar.getTime();
-
-			List<AbtestReport> reports = queryReport(query.getRunId(), startTime, endTime);
-
-			AbtestReport report = mergeReport(reports);
-
-			datas.add(report);
-
-			startTime = endTime;
 		}
-
-		Chart chart = new Chart();
-		String datasets = buildDateSets(datas, goal);
-		String labels = "[]";
-		if (datas.size() > 0) {
-			AbtestReport first = datas.get(0);
-
-			labels = buildLabel("day", first.getStartTime(), datas.size());
-		}
-
-		chart.setType("day");
-		chart.setLabels(labels);
-		chart.setDatasets(datasets);
-		chart.setGoal(goal);
 
 		AbtestReport report = mergeReport(datas);
-
-		report.setChart(chart);
-		report.setRunId(query.getRunId());
-		report.setStartTime(query.getStartTime());
-		report.setEndTime(query.getEndTime());
-
-		return report;
-	}
-
-	private String buildDateSets(List<AbtestReport> reports, String goal) {
-		List<DataSets> dataSets = new ArrayList<DataSets>();
-		String datasets = "[]";
-
-		if (reports.size() > 0) {
-			Set<String> keys = reports.get(0).getVariations().keySet();
-
-			for (String key : keys) {
-				List<Number> data = new ArrayList<Number>();
-
-				for (AbtestReport report : reports) {
-					if (report.getStartTime() != null) {
-						Variation variation = report.findOrCreateVariation(key);
-
-						Goal tmp = variation.findOrCreateGoal(goal);
-
-						if (tmp.getType().equals("C")) {
-							data.add(tmp.getCount());
-						} else if (tmp.getType().equals("S")) {
-							data.add(tmp.getSum());
-						} else {
-							data.add(tmp.getAvg());
-						}
-					} else {
-						data.add(0);
-					}
-				}
-
-				DataSets dataSet = DataSetsBuilder.buildDataSets(DataSetColor.getDataSetColor(key), data);
-				dataSets.add(dataSet);
-			}
-
-			Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
-
-			datasets = gson.toJson(dataSets, new TypeToken<List<DataSets>>() {
-			}.getType());
-		}
-
-		return datasets;
-	}
-
-	private AbtestReport buildHourlyReport(AbtestReport query, String goal) {
-		List<AbtestReport> reports = queryReport(query.getRunId(), query.getStartTime(), query.getEndTime());
-
 		Chart chart = new Chart();
-		String datasets = buildDateSets(reports, goal);
-		String labels = "[]";
-		if (reports.size() > 0) {
-			AbtestReport first = reports.get(0);
 
-			labels = buildLabel("hour", first.getStartTime(), reports.size());
-		}
+		if (goal.length() == 0) {
+			for (Goal _goal : report.getGoals()) {
+				goal = _goal.getName();
 
-		chart.setType("hour");
-		chart.setLabels(labels);
-		chart.setDatasets(datasets);
-		chart.setGoal(goal);
-
-		AbtestReport report = mergeReport(reports);
-
-		report.setChart(chart);
-		report.setRunId(query.getRunId());
-		report.setStartTime(query.getStartTime());
-		report.setEndTime(query.getEndTime());
-
-		return report;
-	}
-
-	private String buildLabel(String period, Date startTime, int num) {
-		List<String> labels = new ArrayList<String>();
-		m_calendar.setTime(startTime);
-
-		if (period.equals("hour")) {
-			int hour = (num > 24) ? num : 24;
-
-			for (int i = 0; i < hour; i++) {
-				labels.add(m_dateFormat.format(startTime));
-				labels.add("");
-				m_calendar.add(Calendar.HOUR, 2);
-				i++;
-				startTime = m_calendar.getTime();
-			}
-
-		} else {
-			int day = (num > 7) ? num : 7;
-
-			for (int i = 0; i < day; i++) {
-				labels.add(m_dateFormat.format(startTime));
-				m_calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-				startTime = m_calendar.getTime();
+				if (goal.length() > 0) {
+					break;
+				}
 			}
 		}
 
+		String datasets = buildDateSets(datas, goal, report.getVariations().keySet(), model);
 		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
 
 		String label = gson.toJson(labels, new TypeToken<List<String>>() {
 		}.getType());
 
-		return label;
+		chart.setType("day");
+		chart.setLabels(label);
+		chart.setDatasets(datasets);
+		chart.setGoal(goal);
+
+		report.setChart(chart);
+		report.setRunId(query.getRunId());
+		report.setStartTime(query.getStartTime());
+		report.setEndTime(query.getEndTime());
+
+		return report;
+	}
+
+	private String buildDateSets(List<AbtestReport> reports, String goal, Set<String> set, Model model) {
+		List<DataSets> dataSets = new ArrayList<DataSets>();
+
+		for (String key : set) {
+			List<Number> data = new ArrayList<Number>();
+
+			for (AbtestReport report : reports) {
+				if (report.getStartTime() != null) {
+					Variation variation = report.findVariation(key);
+
+					if (variation != null) {
+						Goal tmp = variation.findGoal(goal);
+
+						if (tmp != null) {
+							if (tmp.getType().equals("C")) {
+								data.add(tmp.getCount());
+							} else if (tmp.getType().equals("S")) {
+								data.add(tmp.getSum());
+							} else {
+								data.add(tmp.getAvg());
+							}
+						} else {
+							data.add(0);
+						}
+					} else {
+						data.add(0);
+					}
+				} else {
+					data.add(0);
+				}
+			}
+
+			DataSets dataSet = DataSetsBuilder.buildDataSets(DataSetColor.getDataSetColor(key), data);
+			dataSets.add(dataSet);
+		}
+
+		model.setDataSets(dataSets);
+		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+
+		return gson.toJson(dataSets, new TypeToken<List<DataSets>>() {
+		}.getType());
+	}
+
+	private AbtestReport buildHourlyReport(AbtestReport query, String goal, Model model) {
+		Date startTime = query.getStartTime();
+		Date endTime = query.getEndTime();
+
+		List<AbtestReport> reports = queryReport(query.getRunId(), startTime, endTime);
+		List<AbtestReport> datas = new ArrayList<AbtestReport>();
+		List<String> labels = new ArrayList<String>();
+
+		long deltaTime = endTime.getTime() - startTime.getTime();
+		long hour = deltaTime / (60 * 60 * 1000L);
+		int step = ((int) hour / 12 > 0) ? ((int) hour / 12) : 1;
+		int size = reports.size();
+		int count = 0;
+		int i = 0;
+
+		m_calendar.setTime(startTime);
+		m_calendar.add(Calendar.HOUR, 1);
+		endTime = m_calendar.getTime();
+
+		while (startTime.before(query.getEndTime())) {
+			if (count % step == 0) {
+				labels.add(m_dateFormatForHour.format(startTime));
+			} else {
+				labels.add("");
+			}
+
+			if (i < size) {
+				AbtestReport re = reports.get(i);
+
+				if (re.getStartTime().equals(startTime)) {
+					datas.add(re);
+
+					i++;
+				} else {
+					datas.add(new AbtestReport());
+				}
+			}
+
+			count++;
+			startTime = endTime;
+			m_calendar.add(Calendar.HOUR, 1);
+			endTime = m_calendar.getTime();
+		}
+
+		AbtestReport report = mergeReport(datas);
+		Chart chart = new Chart();
+
+		if (goal.length() == 0) {
+			for (Goal _goal : report.getGoals()) {
+				goal = _goal.getName();
+
+				if (goal.length() > 0) {
+					break;
+				}
+			}
+		}
+
+		String datasets = buildDateSets(datas, goal, report.getVariations().keySet(), model);
+		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+
+		String label = gson.toJson(labels, new TypeToken<List<String>>() {
+		}.getType());
+
+		chart.setType("hour");
+		chart.setLabels(label);
+		chart.setDatasets(datasets);
+		chart.setGoal(goal);
+
+		report.setChart(chart);
+		report.setRunId(query.getRunId());
+		report.setStartTime(query.getStartTime());
+		report.setEndTime(query.getEndTime());
+
+		return report;
 	}
 
 	private AbtestReport buildQuery(int runId, Date startTime, Date endTime, String period) {
 		AbtestReport query = new AbtestReport();
 		Date now = new Date();
+		Date newStartTime = null;
+		Date newEndTime = null;
 
 		query.setRunId(runId);
 
@@ -211,8 +263,8 @@ public class ReportHandler implements SubHandler {
 				m_calendar.add(Calendar.HOUR_OF_DAY, -24);
 			}
 
-			query.setStartTime(m_calendar.getTime());
-			query.setEndTime(now);
+			newStartTime = m_calendar.getTime();
+			newEndTime = now;
 		} else if (endTime == null) {
 			m_calendar.setTime(startTime);
 
@@ -222,8 +274,8 @@ public class ReportHandler implements SubHandler {
 				m_calendar.add(Calendar.HOUR_OF_DAY, 24);
 			}
 
-			query.setStartTime(startTime);
-			query.setEndTime(m_calendar.getTime());
+			newStartTime = startTime;
+			newEndTime = m_calendar.getTime();
 		} else if (startTime == null) {
 			m_calendar.setTime(endTime);
 
@@ -233,26 +285,29 @@ public class ReportHandler implements SubHandler {
 				m_calendar.add(Calendar.HOUR_OF_DAY, -24);
 			}
 
-			query.setStartTime(m_calendar.getTime());
-			query.setEndTime(endTime);
+			newStartTime = m_calendar.getTime();
+			newEndTime = endTime;
 		} else {
-			query.setStartTime(startTime);
-			query.setEndTime(endTime);
+			newStartTime = startTime;
+			newEndTime = endTime;
 		}
+
+		query.setStartTime(resetTime(period, newStartTime));
+		query.setEndTime(resetTime(period, newEndTime));
 
 		return query;
 	}
 
-	public AbtestReport buildReport(AbtestReport query, String goal, String period) {
-		AbtestReport report = null;
-
+	public AbtestReport buildReport(AbtestReport query, String goal, String period, Model model) {
 		if (period.equals("day")) {
-			report = buildDailyReport(query, goal);
+			return buildDailyReport(query, goal, model);
 		} else {
-			report = buildHourlyReport(query, goal);
+			return buildHourlyReport(query, goal, model);
 		}
+	}
 
-		return report;
+	public Map<String, MetricItemConfig> getMetricItemConfig() {
+		return m_configManager.getMetricConfig().getMetricItemConfigs();
 	}
 
 	@Override
@@ -273,14 +328,47 @@ public class ReportHandler implements SubHandler {
 				period = "hour";
 			}
 
+			if (goal == null) {
+				goal = "";
+			}
+
 			AbtestReport query = buildQuery(runId, startTime, endTime, period);
-			AbtestReport report = buildReport(query, goal, period);
+			AbtestReport report = buildReport(query, goal, period, model);
+
+			Collections.sort(report.getGoals(), new Comparator<Goal>() {
+				@Override
+				public int compare(Goal o1, Goal o2) {
+					Map<String, MetricItemConfig> metricItemConfig = getMetricItemConfig();
+
+					MetricItemConfig item1 = metricItemConfig.get(o1.getName());
+					MetricItemConfig item2 = metricItemConfig.get(o2.getName());
+
+					if (item1.getViewOrder() > item2.getViewOrder()) {
+						return 1;
+					} else {
+						return -1;
+					}
+				}
+			});
 
 			model.setAbtest(item);
 			model.setReport(report);
+			model.setMetricConfigItem(getMetricItemConfig());
+
+			payload.setStartDate2(query.getStartTime());
+			payload.setEndDate2(query.getEndTime());
 		} catch (Exception e) {
 			Cat.logError(e);
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		try {
+			ContainerLoader.getDefaultContainer().lookup(ABTestReportBuilder.class);
+		} catch (ComponentLookupException e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -333,14 +421,39 @@ public class ReportHandler implements SubHandler {
 		return results;
 	}
 
+	private Date resetTime(String period, Date time) {
+		m_calendar.setTime(time);
+		m_calendar.set(Calendar.MINUTE, 0);
+		m_calendar.set(Calendar.SECOND, 0);
+		m_calendar.set(Calendar.MILLISECOND, 0);
+
+		if (period.equals("day")) {
+			m_calendar.set(Calendar.HOUR_OF_DAY, 0);
+		}
+
+		return m_calendar.getTime();
+	}
+
 	class AbtestReportVisitor extends BaseVisitor {
 
 		private AbtestReport m_report;
 
 		private String m_variation = "";
 
+		private Set<String> m_variationSet;
+
+		private Map<String, MetricItemConfig> m_metricItemConfig;
+
 		public AbtestReportVisitor(AbtestReport report) {
 			m_report = report;
+			m_variationSet = new HashSet<String>();
+
+			m_variationSet.add("Control");
+			m_variationSet.add("A");
+			m_variationSet.add("B");
+			m_variationSet.add("C");
+
+			m_metricItemConfig = getMetricItemConfig();
 		}
 
 		public AbtestReport getReport() {
@@ -348,22 +461,37 @@ public class ReportHandler implements SubHandler {
 		}
 
 		@Override
-		public void visitGoal(Goal goal) {
-			String name = goal.getName();
+		public void visitAbtestReport(AbtestReport abtestReport) {
+			for (Goal goal : abtestReport.getGoals()) {
+				String name = goal.getName();
+				MetricItemConfig tmp = m_metricItemConfig.get(name);
 
-			if (name != null) {
-				m_report.findOrCreateGoal(goal.getName());
-
-				if (m_variation != null && m_variation.length() > 0) {
-					Variation variation = m_report.findOrCreateVariation(m_variation);
-					Goal result = variation.findOrCreateGoal(goal.getName());
-
-					result.setType(goal.getType());
-					result.setCount(result.getCount() + goal.getCount());
-					result.setSum(result.getSum() + goal.getSum());
+				if (tmp.getViewOrder() > 0) {
+					m_report.findOrCreateGoal(name);
 				}
 			}
 
+			for (Variation variation : abtestReport.getVariations().values()) {
+				if (m_variationSet.contains(variation.getName())) {
+					visitVariation(variation);
+				}
+			}
+		}
+
+		@Override
+		public void visitGoal(Goal goal) {
+			String name = goal.getName();
+
+			if (m_variation != null && m_variation.length() > 0) {
+				Variation variation = m_report.findOrCreateVariation(m_variation);
+
+				Goal result = variation.findOrCreateGoal(name);
+
+				result.setType(goal.getType());
+				result.setCount(result.getCount() + goal.getCount());
+				result.setSum(result.getSum() + goal.getSum());
+				// avg?
+			}
 		}
 
 		@Override
@@ -387,11 +515,7 @@ public class ReportHandler implements SubHandler {
 
 		B(new DataSets("rgba(185, 74, 72, 0.2)", "rgba(185, 74, 72, 1)", "rgba(185, 74, 72, 1)", "#b94a48", null)),
 
-		C(new DataSets("rgba(248, 148, 6,0.2)", "rgba(248, 148, 6,1)", "rgba(248, 148, 6, 1)", "#f89406", null)),
-
-		D(new DataSets("rgba(153, 153, 153, 0.2)", "rgba(153, 153, 153, 1)", "rgba(153, 153, 153, 1)", "#999999", null));
-
-		private DataSets m_dataSets;
+		C(new DataSets("rgba(248, 148, 6,0.2)", "rgba(248, 148, 6,1)", "rgba(248, 148, 6, 1)", "#f89406", null));
 
 		public static DataSetColor getDataSetColor(String variation) {
 			if (variation.equalsIgnoreCase("control")) {
@@ -400,10 +524,14 @@ public class ReportHandler implements SubHandler {
 				return A;
 			} else if (variation.equalsIgnoreCase("B")) {
 				return B;
+			} else if (variation.equalsIgnoreCase("C")) {
+				return C;
 			} else {
 				return CONTROL;
 			}
 		}
+
+		private DataSets m_dataSets;
 
 		private DataSetColor(DataSets dataSets) {
 			m_dataSets = dataSets;
@@ -422,7 +550,7 @@ public class ReportHandler implements SubHandler {
 
 		private String m_pointColor;
 
-		private String pointStrokeColor;
+		private String m_pointStrokeColor;
 
 		private List<Number> m_data;
 
@@ -435,8 +563,12 @@ public class ReportHandler implements SubHandler {
 			m_fillColor = fillColor;
 			m_strokeColor = strokeColor;
 			m_pointColor = pointColor;
-			this.pointStrokeColor = pointStrokeColor;
+			m_pointStrokeColor = pointStrokeColor;
 			m_data = data;
+		}
+
+		public String getPointStrokeColor() {
+			return m_pointStrokeColor;
 		}
 
 		public void setData(List<Number> data) {
@@ -458,5 +590,4 @@ public class ReportHandler implements SubHandler {
 			return dataSets;
 		}
 	}
-
 }

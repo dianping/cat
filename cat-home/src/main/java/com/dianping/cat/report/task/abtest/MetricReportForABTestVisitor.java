@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.abtest;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,10 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 	private int m_runId;
 
 	private String m_variation;
+	
+	private Date m_startDate;
+	
+	private Date m_endDate;
 
 	public MetricReportForABTestVisitor() {
 		m_reportMap = new HashMap<Integer, AbtestReport>();
@@ -39,7 +44,8 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 			report = new AbtestReport();
 
 			report.setRunId(runId);
-
+			report.setStartTime(m_startDate);
+			report.setEndTime(m_endDate);
 			m_reportMap.put(runId, report);
 		}
 
@@ -90,6 +96,10 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 	@Override
 	public void visitGroup(Group group) {
 		m_variation = group.getName();
+		
+		if(m_variation.length() == 0){
+			m_variation = "Control";
+		}
 
 		super.visitGroup(group);
 	}
@@ -104,6 +114,9 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 
 	@Override
 	public void visitMetricReport(MetricReport metricReport) {
+		m_startDate = metricReport.getStartTime();
+		m_endDate = metricReport.getEndTime();
+		
 		super.visitMetricReport(metricReport);
 	}
 

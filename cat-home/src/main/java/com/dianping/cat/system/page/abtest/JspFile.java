@@ -14,10 +14,8 @@ public enum JspFile {
 
 	AJAX("/jsp/system/abtest/abtestAjax.jsp"),
 	
-	ABTEST_CACULATOR("/jsp/system/abtest/abtestCaculator.jsp"),
+	ABTEST_CACULATOR("/jsp/system/abtest/abtestCaculator.jsp");
 	
-	SCRIPT_FRAGEMENT("/jsp/system/abtest/scriptFragement.jsp");
-
 	private String m_path;
 
 	private JspFile(String path) {

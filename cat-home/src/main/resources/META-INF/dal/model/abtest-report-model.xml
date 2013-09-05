@@ -20,7 +20,7 @@
 	</entity>
 	<entity name="goal">
 		<attribute name="name" value-type="String" key="true" />
-		<attribute name="type" value-type="String" default-value=""/>
+		<attribute name="type" value-type="String" default-value="" />
 		<attribute name="count" value-type="int" default-value="0" />
 		<attribute name="sum" value-type="double" default-value="0.0" />
 		<attribute name="avg" value-type="double" default-value="0.0" />

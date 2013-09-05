@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.Run;
-import com.dianping.cat.system.abtest.conditions.URLScriptProvider;
+import com.dianping.cat.system.page.abtest.conditions.URLScriptProvider;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

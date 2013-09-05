@@ -38,10 +38,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("domains")
 	private String[] m_domains;
-	
+
 	@FieldMeta("conditions")
 	private String m_conditions;
-	
+
 	@FieldMeta("goals")
 	private String m_conversionGoals;
 
@@ -67,6 +67,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("lastUpdateTime")
 	private long m_lastUpdateTime;
+
 	/* ===============GroupStrategy================ */
 
 	@FieldMeta("strategyId")
@@ -92,18 +93,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("srcCode")
 	private String m_srcCode;
-	
+
 	/* ===============Caculator================ */
 	@FieldMeta("pv")
 	private int m_pv = 0;
-	
+
 	@FieldMeta("conversionRate")
 	private int m_conversionRate;
-	
+
 	/* ===============Report================ */
 	@FieldMeta("selectMetricType")
 	private String m_selectMetricType;
-	
+
 	@FieldMeta("period")
 	private String m_period;
 
@@ -125,16 +126,16 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public String getConditions() {
-   	return m_conditions;
-   }
+		return m_conditions;
+	}
 
 	public String getConversionGoals() {
-   	return m_conversionGoals;
-   }
+		return m_conversionGoals;
+	}
 
 	public int getConversionRate() {
-   	return m_conversionRate;
-   }
+		return m_conversionRate;
+	}
 
 	public String getDescription() {
 		return m_description;
@@ -190,9 +191,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public long getLastUpdateTime() {
-   	return m_lastUpdateTime;
-   }
-
+		return m_lastUpdateTime;
+	}
 
 	public String getName() {
 		return m_name;
@@ -212,20 +212,20 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public String getPeriod() {
-   	return m_period;
-   }
+		return m_period;
+	}
 
 	public int getPv() {
-   	return m_pv;
-   }
+		return m_pv;
+	}
 
 	public String getReportType() {
 		return "";
 	}
 
 	public String getSelectMetricType() {
-   	return m_selectMetricType;
-   }
+		return m_selectMetricType;
+	}
 
 	public String getSrcCode() {
 		return m_srcCode;
@@ -268,14 +268,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setAddGs(boolean addGs) {
 		m_addGs = addGs;
 	}
-	
+
 	public void setConditions(String conditions) {
-   	m_conditions = conditions;
-   }
+		m_conditions = conditions;
+	}
 
 	public void setConversionRate(int conversionRate) {
-   	m_conversionRate = conversionRate;
-   }
+		m_conversionRate = conversionRate;
+	}
 
 	public void setDescription(String description) {
 		this.m_description = description;
@@ -298,9 +298,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		}
 	}
 
+	public void setEndDate2(Date endDate) {
+		m_endDate = endDate;
+	}
+
 	public void setGoals(String goals) {
-   	m_conversionGoals = goals;
-   }
+		m_conversionGoals = goals;
+	}
 
 	public void setGroupStrategyClassName(String groupStrategyClassName) {
 		m_groupStrategyClassName = groupStrategyClassName;
@@ -331,8 +335,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setLastUpdateTime(long lastUpdateTime) {
-   	m_lastUpdateTime = lastUpdateTime;
-   }
+		m_lastUpdateTime = lastUpdateTime;
+	}
 
 	public void setName(String name) {
 		this.m_name = name;
@@ -352,16 +356,16 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setPeriod(String period) {
-   	m_period = period;
-   }
+		m_period = period;
+	}
 
 	public void setPv(int pv) {
-   	m_pv = pv;
-   }
+		m_pv = pv;
+	}
 
 	public void setSelectMetricType(String selectMetricType) {
-   	m_selectMetricType = selectMetricType;
-   }
+		m_selectMetricType = selectMetricType;
+	}
 
 	public void setSrcCode(String srcCode) {
 		m_srcCode = srcCode;
@@ -374,6 +378,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
+	}
+
+	public void setStartDate2(Date startDate) {
+		m_startDate = startDate;
 	}
 
 	public void setStatus(String status) {

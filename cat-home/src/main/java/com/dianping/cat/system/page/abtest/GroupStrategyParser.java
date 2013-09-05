@@ -17,7 +17,6 @@ import com.dianping.cat.abtest.model.entity.Field;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 
 public class GroupStrategyParser {
-
 	public GroupstrategyDescriptor parse(InputStream input) throws ParseException {
 		final CompilationUnit result = JavaParser.parse(input);
 
@@ -35,16 +34,11 @@ public class GroupStrategyParser {
 
 	class AnnotationVisitor extends VoidVisitorAdapter<Object> {
 		private GroupstrategyDescriptor m_descriptor;
+
 		private boolean m_isImportInjectClass = false;
 
 		public AnnotationVisitor(GroupstrategyDescriptor descriptor) {
 			m_descriptor = descriptor;
-		}
-
-		public void visit(ImportDeclaration n, Object arg) {
-			if (n.getName().toString().equals("org.unidal.lookup.annotation.Inject")) {
-				m_isImportInjectClass = true;
-			}
 		}
 
 		public void visit(FieldDeclaration node, Object arg) {
@@ -80,6 +74,12 @@ public class GroupStrategyParser {
 						}
 					}
 				}
+			}
+		}
+
+		public void visit(ImportDeclaration n, Object arg) {
+			if (n.getName().toString().equals("org.unidal.lookup.annotation.Inject")) {
+				m_isImportInjectClass = true;
 			}
 		}
 	}
