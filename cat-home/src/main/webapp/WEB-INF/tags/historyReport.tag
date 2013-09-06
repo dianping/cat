@@ -12,9 +12,9 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="position">项目：<span class="text-error">${model.domain}</span>&nbsp;&nbsp;
-			[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]
-			[&nbsp;&nbsp;<a href="javascript:showFrequent()" id="frequent">常用</a>&nbsp;&nbsp;]
+			<td class="position">项目：<span class="text-error">${model.domain}</span>
+			【<a href="javascript:showDomain()" id="switch">切换</a>】
+			【<a href="javascript:showFrequent()" id="frequent">常用</a>】
 			</td> 
 			<td class="title"><span class="text-success"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			</td>
