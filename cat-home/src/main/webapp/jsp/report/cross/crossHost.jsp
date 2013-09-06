@@ -12,7 +12,6 @@
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
@@ -39,7 +38,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
 		<tr>

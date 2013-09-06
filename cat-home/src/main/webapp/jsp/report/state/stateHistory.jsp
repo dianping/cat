@@ -171,7 +171,7 @@
 	</c:forEach>
 	<tr style="color:white;"><td>${lastIndex+1}</td><td>${model.state.totalSize}</td></tr>
 </table>
-<br><res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
+<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
 </a:historyReport>
 

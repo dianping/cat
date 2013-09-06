@@ -183,7 +183,6 @@
 				<td>${model.state.totalSize}</td>
 			</tr>
 </table>
-<br>
 	<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
 </a:report>
