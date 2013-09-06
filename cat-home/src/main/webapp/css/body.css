@@ -247,3 +247,10 @@ a.abtest-heartbeat {
 	padding: 10px 00px 00px;
 	margin-left: 0px;
 }
+
+.form-horizontal .control-label{
+	width:50px;
+}
+.form-horizontal .controls{
+	margin-left:70px;
+}

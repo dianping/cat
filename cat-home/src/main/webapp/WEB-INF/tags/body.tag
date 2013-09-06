@@ -52,6 +52,34 @@
         </div>
       </div>
     </div>
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" style="width:380px">
+		<form class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 id="myModalLabel" class="text-success">用户登录</h4>
+			</div>
+			<div class="control-group">
+				<label class="control-label text-success" for="account">用户名</label>
+				<div class="controls">
+					<input type="text" name="account" id="account" style="height:auto" class="input-xlarge"
+						placeholder="工号或邮箱（例如:2000或yong.you）" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label text-success" for="password">密码</label>
+				<div class="controls">
+					<input type="password" name="password" id="password" style="height:auto" class="input-xlarge"
+						placeholder="sys后台密码" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+				<input type="submit" class="btn btn-primary" name="login" value="登录" />
+			</div>
+		</form>
+	</div>
 	<script>
 		function getcookie(objname) {
 			var arrstr = document.cookie.split("; ");
@@ -111,10 +139,10 @@
 				}
 				var name = decodeURI(temp);
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a  href="/cat/s/login?op=logout">'+name +'登出</a>';
+				loginInfo.innerHTML ='<a href="/cat/s/login?op=logout">'+name +'&nbsp;登出</a>';
 			}else{
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="/cat/s/login">登陆</a>';
+				loginInfo.innerHTML ='<a href="#myModal" data-toggle="modal">登陆</a>';
 			}
 		});
 	</script>
