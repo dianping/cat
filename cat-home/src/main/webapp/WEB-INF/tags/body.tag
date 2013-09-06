@@ -84,7 +84,7 @@
 			}
 		}
 		function buildHref(domain){
-			var href = '<a href="?op=history&domain='+domain+'&date=${model.date}&reportType=${model.reportType}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
+			var href = '<a href="?op=history&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
 			return href;
 		}
 		
@@ -98,7 +98,6 @@
 				var href = buildHref(domainArray[i])
 				html+= href;
 			}
-			console.log(html);
 			$('#frequentNavbar').html(html);
 			
 			var ct = getcookie("ct");

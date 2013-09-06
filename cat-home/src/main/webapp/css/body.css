@@ -188,6 +188,11 @@ a.abtest-heartbeat {
 	width: 100px;
 }
 
+.machines{
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
 .longText {
 	text-align: left;
 	white-space: normal;

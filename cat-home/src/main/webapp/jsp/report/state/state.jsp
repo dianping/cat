@@ -16,8 +16,6 @@
 	<jsp:body>	
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-<br>
-
 <table class="machines">
 	<tr style="text-align: left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
@@ -44,8 +42,6 @@
 		</th>
 	</tr>
 </table>
-</br>
-
 <table width="80%">
 	<tr>
 		<td width="5%"></td>

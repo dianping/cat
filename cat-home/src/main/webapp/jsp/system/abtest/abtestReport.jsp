@@ -22,7 +22,9 @@
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
     <res:useCss value="${res.css.local['body.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-
+	<res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
+    <res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
+   
 	<div id="content" lass="row-fluid">
 		<div class="span12 column">
 			<h3>Report <small>${model.abtest.name} #${model.abtest.id}</small></h3>

@@ -14,9 +14,8 @@
 <a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-</br>
 <table class="machines">
-<th style="text-align:left">Machines: 
+	<th style="text-align:left">Machines: 
 		<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
@@ -32,7 +31,6 @@
 		</c:forEach>
 		</th>
 </table>
-<br>
 <table class="graph">
 <tr>
 	<th>Framework Thread Info</th>

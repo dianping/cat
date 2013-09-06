@@ -12,7 +12,6 @@
 	<jsp:body>
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>Machines:
@@ -31,7 +30,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -73,7 +71,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-		<tr><th  class='left' colspan='12'>
+		<tr><th  style="text-align:left;" colspan='13'>
 			<input type="text" id="queryname" size="40"  value="${model.queryName}">
 		    <input  class="btn btn-primary btn-small"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 		    支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
@@ -87,7 +85,7 @@
 			}
 		</script>
 			<tr>
-			<th  style="text-align: left;">
+			<th style="text-align: left;">
 			<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
 						</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total Count</a></th>

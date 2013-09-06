@@ -97,6 +97,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_reports;
 	}
 
+	public String getReportType(){
+		return "";
+	}
+
 	public int getRunningCount() {
 		return m_runningCount;
 	}
@@ -168,7 +172,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setTerminatedCount(int terminatedCount) {
 		m_terminatedCount = terminatedCount;
 	}
-
+	
 	public void setTotalPages(int totalPages) {
 		m_totalPages = totalPages;
 	}
@@ -240,6 +244,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		public void setRun(AbtestRun run) {
 			m_run = run;
 		}
-
 	}
 }

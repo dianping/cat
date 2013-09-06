@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
+<br/>
 <div class="well sidebar-nav" >
     <ul class="nav nav-list">
       <li class='nav-header'><h4>Statistics</h4></li>
