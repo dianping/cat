@@ -46,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = CAT;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-
+		
 		return m_reportService.queryStateReport(domain, start, end);
 	}
 
