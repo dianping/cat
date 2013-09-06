@@ -65,6 +65,7 @@
 							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/browser-report-manifest.xml,
                      </manifest>
                   </configuration>
                </execution>

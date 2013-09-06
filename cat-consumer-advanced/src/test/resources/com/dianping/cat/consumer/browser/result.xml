@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browser-report>
+   <domain-detail id="Cat">
+      <browser id="AppleWebKit" count="2">
+         <browser-version count="1">535.12</browser-version>
+         <browser-version count="1">534.31</browser-version>
+      </browser>
+      <browser id="Safari" count="2">
+         <browser-version count="1">535.12</browser-version>
+         <browser-version count="1">534.31</browser-version>
+      </browser>
+      <browser id="Chrome" count="1">
+         <browser-version count="1">18.0.966.0</browser-version>
+      </browser>
+      <browser id="Maxthon" count="1">
+         <browser-version count="1">3.4.2.1000</browser-version>
+      </browser>
+      <browser id="UCBrowser" count="1">
+         <browser-version count="1">9.2.4.329</browser-version>
+      </browser>
+      <os id="Windows NT" count="1"/>
+      <os id="Linux" count="1"/>
+      <os id="Android" count="1"/>
+   </domain-detail>
+</browser-report>

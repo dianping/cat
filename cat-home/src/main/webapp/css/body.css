@@ -182,6 +182,12 @@ a.abtest-heartbeat {
 	text-align: center;
 }
 
+.department {
+	text-align: left;
+	font-weight: bold;
+	width: 100px;
+}
+
 .longText {
 	text-align: left;
 	white-space: normal;

@@ -63,22 +63,61 @@
 			}
 			return "";
 		}
-		var ct = getcookie("ct");
-		if (ct != "") {
-			var length = ct.length;
-			var realName = ct.split("|");
-			var temp = realName[0];
-			
-			if(temp.charAt(0)=='"'){
-				temp =temp.substring(1,temp.length);
+		function showDomain() {
+			var b = $('#switch').html();
+			if (b == '切换') {
+				$('.domainNavbar').slideDown();
+				$('#switch').html("收起");
+			} else {
+				$('.domainNavbar').slideUp();
+				$('#switch').html("切换");
 			}
-			var name = decodeURI(temp);
-			var loginInfo=document.getElementById('loginInfo');
-			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a  href="/cat/s/login?op=logout">Logout</a>';
-		}else{
-			var loginInfo=document.getElementById('loginInfo');
-			loginInfo.innerHTML ='<a href="/cat/s/login"> Login</a>';
 		}
+		function showFrequent(){
+			var b = $('#frequent').html();
+			if (b == '常用') {
+				$('.frequentNavbar').slideDown();
+				$('#frequent').html("收起");
+			} else {
+				$('.frequentNavbar').slideUp();
+				$('#frequent').html("常用");
+			}
+		}
+		function buildHref(domain){
+			var href = '<a href="?op=history&domain='+domain+'&date=${model.date}&reportType=${model.reportType}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
+			return href;
+		}
+		
+		$(document).ready(function() {
+			var domains= getcookie('CAT_DOMAINS');
+			var domainArray =domains.split("|");
+			var html = '';
+			var length =domainArray.length;
+			
+			for(var i=0;i<length;i++){
+				var href = buildHref(domainArray[i])
+				html+= href;
+			}
+			console.log(html);
+			$('#frequentNavbar').html(html);
+			
+			var ct = getcookie("ct");
+			if (ct != "") {
+				var length = ct.length;
+				var realName = ct.split("|");
+				var temp = realName[0];
+				
+				if(temp.charAt(0)=='"'){
+					temp =temp.substring(1,temp.length);
+				}
+				var name = decodeURI(temp);
+				var loginInfo=document.getElementById('loginInfo');
+				loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a  href="/cat/s/login?op=logout">Logout</a>';
+			}else{
+				var loginInfo=document.getElementById('loginInfo');
+				loginInfo.innerHTML ='<a href="/cat/s/login"> Login</a>';
+			}
+		});
 	</script>
 	<jsp:doBody />
 	<br/>

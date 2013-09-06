@@ -9,24 +9,12 @@
 <%@ attribute name="subtitle" fragment="true"%>
 
 <a:body>
-
 <div class="report">
 	<table class="header">
 		<tr>
 			<td class="position">项目：<span class="text-error">${model.domain}</span>&nbsp;&nbsp;
 			[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">切换</a>&nbsp;&nbsp;]
-					<script>
-						function showDomain() {
-							var b = $('#switch').html();
-							if (b == '切换') {
-								$('.domainNavbar').slideDown();
-								$('#switch').html("收起");
-							} else {
-								$('.domainNavbar').slideUp();
-								$('#switch').html("切换");
-							}
-						}
-					</script>
+			[&nbsp;&nbsp;<a href="javascript:showFrequent()" id="frequent">常用</a>&nbsp;&nbsp;]
 			</td> 
 			<td class="title"><span class="text-success"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
 			</td>
@@ -49,7 +37,7 @@
 		</tr>
 	</table>
 		<div class="domainNavbar" style="display:none;font-size:small">
-			<table border="1" rules="all" style="font-size:small">
+			<table border="1" rules="all" >
 				<c:forEach var="item" items="${model.domainGroups}">
 					<tr>
 						<c:set var="detail" value="${item.value}" />
@@ -68,11 +56,22 @@
 										</c:forEach>
 									</div>
 								</td><c:if test="${index.index != 0}"></tr></c:if>
-				</c:forEach></tr>
+						</c:forEach>
+					</tr>
 				</c:forEach>
 			</table>
 		</div>
-
+		<div class="frequentNavbar" style="display:none;font-size:small">
+			<table border="1" rules="all">
+				<tr>
+					<td style="width:70px;" class="text-success">最近访问</td>
+					<td style="word-break:break-all;" >
+						<div class="domain" id="frequentNavbar">
+						</div>
+					</td>
+				<tr>
+			</table>
+		</div>
 		<jsp:doBody />
 	</div>
 </a:body>
