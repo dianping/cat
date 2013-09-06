@@ -119,8 +119,7 @@
 		});
 	</script>
 	<jsp:doBody />
-	<br/>
-	<table class="footer">
+	<table class="footer" style="margin-top:5px;">
 		<tr><td>©2003-2013 dianping.com, All Rights Reserved.</td></tr>
 	</table>
 	<res:jsSlot id="bottom-js" />
