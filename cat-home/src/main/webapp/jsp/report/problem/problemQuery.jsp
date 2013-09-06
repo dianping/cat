@@ -39,7 +39,7 @@
 				<option value="3000">3000 ms</option>
 				<option value="5000">5000 ms</option>
 		</select>
-		<input class="btn btn-primary  btn-small"  value="Refresh"
+		<input class="btn btn-primary  btn-small"  value="查询"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
 			type="submit"></div>
 			

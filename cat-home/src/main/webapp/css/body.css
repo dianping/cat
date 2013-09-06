@@ -254,3 +254,6 @@ a.abtest-heartbeat {
 .form-horizontal .controls{
 	margin-left:70px;
 }
+select{
+	margin-bottom:0px;
+}
