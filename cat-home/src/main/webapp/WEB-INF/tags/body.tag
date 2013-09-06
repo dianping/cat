@@ -111,10 +111,10 @@
 				}
 				var name = decodeURI(temp);
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a  href="/cat/s/login?op=logout">Logout</a>';
+				loginInfo.innerHTML ='<a  href="/cat/s/login?op=logout">'+name +'登出</a>';
 			}else{
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="/cat/s/login"> Login</a>';
+				loginInfo.innerHTML ='<a href="/cat/s/login">登陆</a>';
 			}
 		});
 	</script>
