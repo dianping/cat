@@ -32,8 +32,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	private Map<String, Integer> m_errorTimestampDomains = new HashMap<String, Integer>();
 
-	private static final long HOUR = 60 * 60 * 1000L;
-
 	private Logger m_logger;
 
 	@Override
@@ -62,7 +60,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 				return "DumpAnalyzer-Checkpoint";
 			}
 		});
-		
+
 		// wait the block dump complete
 		m_logger.info("Old version domains:" + m_oldVersionDomains);
 		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
@@ -95,7 +93,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 				long idTime = id.getTimestamp();
 				long duration = fixedTime - idTime;
 
-				if (duration == 0 || duration == HOUR || duration == -HOUR) {
+				if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
 					m_bucketManager.storeMessage(tree, id);
 				} else {
 					m_serverStateManager.addPigeonTimeError(1);
@@ -123,5 +121,5 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			m_oldVersionDomains.put(domain, size);
 		}
 	}
-	
+
 }

@@ -14,15 +14,15 @@ public class TestSendMessage {
 
 		for (int i = 0; i < 10; i++) {
 			Transaction t = Cat.newTransaction("Midas", "XXName");
-			try{
-				//your bussiness code
-				//for see the message on cat in problem report
+			try {
+				// your bussiness code
+				// for see the message on cat in problem report
 				t.setStatus("Fail");
-			}catch(Exception e){
+			} catch (Exception e) {
 				t.setStatus(Transaction.SUCCESS);
 				Cat.logError(e);
 				throw e;
-			}finally{
+			} finally {
 				t.complete();
 			}
 		}
@@ -130,7 +130,7 @@ public class TestSendMessage {
 	public void sendPigeonClientTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", "192.168.64."+i+":2280");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.64." + i + ":2280");
 			t.addData("key and value");
 
 			Thread.sleep(1);

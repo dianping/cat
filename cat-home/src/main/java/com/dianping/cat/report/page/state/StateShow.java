@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
 
 public class StateShow extends BaseVisitor {
 
@@ -53,6 +53,10 @@ public class StateShow extends BaseVisitor {
 		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
 		Collections.sort(temp, new DomainCompartor());
 		return temp;
+	}
+	
+	public Map<String,ProcessDomain> getProcessDomainMap() {
+		return m_processDomains;
 	}
 
 	public Machine getTotal() {
@@ -158,7 +162,7 @@ public class StateShow extends BaseVisitor {
 			m_total = new Machine();
 			m_total.setIp(ip);
 		}
-		if (m_ip.equals(CatString.ALL) || m_ip.equalsIgnoreCase(ip)) {
+		if (m_ip.equals(Constants.ALL) || m_ip.equalsIgnoreCase(ip)) {
 			m_total = mergerMachine(m_total, machine);
 			super.visitMachine(machine);
 		}
@@ -176,7 +180,7 @@ public class StateShow extends BaseVisitor {
 
 	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL)) {
+		if (m_ip.equals(m_currentIp) || m_ip.equals(Constants.ALL)) {
 			ProcessDomain temp = m_processDomains.get(processDomain.getName());
 
 			if (temp == null) {

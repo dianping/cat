@@ -61,16 +61,38 @@
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
-						<td><select style="width: 500px;" name="domains" multiple=""
+						<td>
+							<table>
+								<tr>
+								<c:forEach var="item" items="${model.projects}" varStatus="status">
+									<c:choose>
+										<c:when test="${status.index mod 4 ne 0}">
+											<td>
+												<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
+											</td>
+										</c:when>
+										<c:otherwise>
+											</tr>
+											<tr>
+												<td>
+													<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
+												</td>
+										</c:otherwise>
+									</c:choose>											
+								</c:forEach>
+								</tr>
+							</table>
+						</td>
+						
+						<!-- <td><select style="width: 500px;" name="domains" multiple=""
 							id="domainSelect">
 								<c:forEach var="item" items="${model.projects}">
 									<option value="${item.domain}">${item.domain}</option>
 								</c:forEach>
-						</select></td>
+						</select></td> -->
 					</tr>
 					<tr>
-						<td>&nbsp;</td>
-						<td><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
+						<td colspan='2' style="text-align:center;"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
@@ -81,7 +103,6 @@
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#topologyProductLines').addClass('active');
-			
 			$("#domainSelect").select2({
 				placeholder : "选择属于这个产品线的项目",
 				allowClear : true
@@ -90,7 +111,9 @@
 			var initDomains = [];
 			<c:forEach var="domain" items="${model.productLine.domains}">
 				initDomains.push("${domain.key}");
+				document.getElementById("${domain.key}").checked = true;
 			</c:forEach>
 			$("#domainSelect").val(initDomains).trigger("change");
+			
 		});
 	</script>

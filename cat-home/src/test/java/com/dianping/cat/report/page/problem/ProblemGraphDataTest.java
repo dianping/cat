@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.core.dal.Graph;
 
 @RunWith(JUnit4.class)
@@ -37,7 +38,7 @@ public class ProblemGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas = handler.buildGraphDatasFromHour(start, end, "heartbeat", "", graphs);
+		Map<String, double[]> graphDatas = handler.buildGraphDatasFromHour(start, end, HeartbeatAnalyzer.ID, "", graphs);
 		double[] errors = graphDatas.get("errors");
 		double[] expectErrors = new double[errors.length];
 		for (int i = 0; i < expectErrors.length; i++) {

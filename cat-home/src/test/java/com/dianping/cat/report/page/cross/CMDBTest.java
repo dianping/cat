@@ -5,8 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
-import com.dianping.cat.consumer.DomainManager;
-import com.dianping.cat.consumer.DomainManager.ReloadDomainTask;
+import com.dianping.cat.DomainManager;
+import com.dianping.cat.DomainManager.ReloadDomainTask;
 
 public class CMDBTest {
 

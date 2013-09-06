@@ -40,8 +40,7 @@
 		</tr>
 
 		<tr>
-			<td>&nbsp;</td>
-			<td><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
+			<td colspan='2'  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
 				name="submit" value="提交"/></td>
 		</tr>
 	</table>

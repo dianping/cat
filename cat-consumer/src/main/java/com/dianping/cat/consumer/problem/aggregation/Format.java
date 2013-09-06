@@ -13,7 +13,7 @@ public abstract class Format {
 	}
 
 	public void setPattern(String pattern) {
-		this.m_pattern = pattern;
+		m_pattern = pattern;
 	}
 
 }

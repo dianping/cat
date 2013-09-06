@@ -26,7 +26,6 @@ import com.dianping.cat.system.page.abtest.AbtestStatus;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
-
 	@Inject
 	protected ReportService m_reportService;
 

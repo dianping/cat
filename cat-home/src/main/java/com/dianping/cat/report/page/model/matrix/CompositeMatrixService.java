@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.matrix;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
@@ -11,7 +12,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class CompositeMatrixService extends BaseCompositeModelService<MatrixReport> {
 	public CompositeMatrixService() {
-		super("matrix");
+		super(MatrixAnalyzer.ID);
 	}
 
 	@Override

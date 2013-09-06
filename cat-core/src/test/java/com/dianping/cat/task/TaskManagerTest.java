@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.ReportType;
-import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 

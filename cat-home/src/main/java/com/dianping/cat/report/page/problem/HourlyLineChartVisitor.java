@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.plexus.util.StringUtils;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -13,7 +14,6 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
 
@@ -84,7 +84,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	@Override
 	public void visitMachine(Machine machine) {
-		if (CatString.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
+		if (Constants.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
 			super.visitMachine(machine);
 		}
 	}

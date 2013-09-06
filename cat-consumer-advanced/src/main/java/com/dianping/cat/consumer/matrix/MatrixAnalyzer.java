@@ -9,6 +9,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -24,6 +25,9 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	@Inject(ID)
 	private ReportManager<MatrixReport> m_reportManager;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -56,13 +60,12 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		MatrixReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
 
-			if (shouldDiscard((Transaction) message)) {
+			if (m_serverConfigManager.shouldDiscard((Transaction) message)) {
 				return;
 			}
 			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("PigeonService")) {

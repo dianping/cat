@@ -155,20 +155,35 @@
 <table width="100%">
 	<tr class='odd'>
 		<td width="15%">处理项目列表</td>
-				<td width="15%">机器总数</td>
-				<td>项目对应机器列表</td>
+		<td colspan='2' width="10%">处理消息总量</td>
+		<td colspan='2' width="10%">丢失消息总量</td>
+		<td colspan='2' width="10%">压缩前消息大小(GB)</td>
+		<td width="5%">机器总数</td>
+		<td>项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
 				varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 			<c:set var="lastIndex" value="${status.index}" />
 			<td>${item.name}</td>
-			<td>${w:size(item.ips)}</td>
+			<td style="text-align:left;">${item.total}</td>
+			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:total" data-status="${item.name}:total" class="state_graph_link">[:: show ::]</a></td>
+			<td style="text-align:left;">${item.totalLoss}</td>
+			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:totalLoss" data-status="${item.name}:totalLoss" class="state_graph_link">[:: show ::]</a></td>
+			<td style="text-align:left;">${w:format(item.size/1024/1024/1024,'0.00#')}</td>
+			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:size" data-status="${item.name}:size" class="state_graph_link">[:: show ::]</a></td>
+			<td style="text-align:center;">${w:size(item.ips)}</td>
 			<td style="white-space: normal">${item.ips}</td>
 		</tr>
+		<tr class="graphs"><td colspan="7"><div id="${item.name}:total" style="display:none"></div></td></tr>
+		<tr class="graphs"><td colspan="7"><div id="${item.name}:totalLoss" style="display:none"></div></td></tr>
+		<tr class="graphs"><td colspan="7"><div id="${item.name}:size" style="display:none"></div></td></tr>
 	</c:forEach>
 	<tr style="color: white;">
 				<td>${lastIndex+1}</td>
+				<td></td>
+				<td></td>
+				<td></td>
 				<td>${model.state.totalSize}</td>
 			</tr>
 </table>

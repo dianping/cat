@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
@@ -21,7 +22,7 @@ public class ProblemGraphCreatorTest {
 		ProblemReport report = DefaultSaxParser.parse(xml);
 		String summary = Files.forIO().readFrom(getClass().getResourceAsStream("problemGraphSummary"), "utf-8");
 		String detail = Files.forIO().readFrom(getClass().getResourceAsStream("problemGraphDetail"), "utf-8");
-		List<Graph> graphs = creator.splitReportToGraphs(new Date(), "TuanGouApi", "problem", report);
+		List<Graph> graphs = creator.splitReportToGraphs(new Date(), "TuanGouApi", ProblemAnalyzer.ID, report);
 
 		Assert.assertEquals(2, graphs.size());
 		for (Graph graph : graphs) {

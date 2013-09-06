@@ -9,6 +9,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -100,7 +101,7 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 	}
 
 	private SqlReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, "sql");
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, SqlAnalyzer.ID);
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		List<SqlReport> reports = new ArrayList<SqlReport>();

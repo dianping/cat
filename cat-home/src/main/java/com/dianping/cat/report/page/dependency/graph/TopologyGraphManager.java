@@ -24,6 +24,7 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -44,7 +45,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
-	@Inject(type = ModelService.class, value = "dependency")
+	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_service;
 
 	@Inject

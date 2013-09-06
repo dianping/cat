@@ -14,9 +14,6 @@
          <table name="baseline"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
-         <table name="alarmTemplate"/>
-         <table name="alarmRule"/>
-         <table name="alarmRuleSubscription"/>
          <table name="mailRecord"/>
          <table name="scheduledReport"/>
          <table name="scheduledReportSubscription"/>

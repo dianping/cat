@@ -9,14 +9,15 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
@@ -53,16 +54,16 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
-		ServiceReport serviceReport = new ServiceReport(CatString.CAT);
+		ServiceReport serviceReport = new ServiceReport(Constants.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, "cross");
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, CrossAnalyzer.ID);
 
 		for (String domainName : domains) {
 			CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
 			ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
 			projectInfo.setDomainManager(m_domainManager);
-			projectInfo.setClientIp(CatString.ALL);
+			projectInfo.setClientIp(Constants.ALL);
 			projectInfo.visitCrossReport(crossReport);
 			Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
 
@@ -97,16 +98,6 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 	private boolean validataService(TypeDetailInfo typeInfo) {
 		return typeInfo.getProjectName().equalsIgnoreCase(ProjectInfo.ALL_SERVER)
 		      || typeInfo.getProjectName().equalsIgnoreCase("UnknownProject");
-	}
-
-	public Domain findOrCreate(String project, Map<String, Domain> sdMap) {
-		Domain d = sdMap.get(project);
-
-		if (d == null) {
-			d = new Domain();
-			sdMap.put(project, d);
-		}
-		return d;
 	}
 
 	@Override
@@ -162,9 +153,9 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		return serviceReport;
 	}
 
-	private ServiceReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		long startTime = period.getTime();
-		long endTime = endDate.getTime();
+	private ServiceReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
 		ServiceReportMerger merger = new ServiceReportMerger(new ServiceReport(domain));
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
@@ -175,7 +166,11 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 			reportModel.accept(merger);
 		}
 
-		return merger.getServiceReport();
+		ServiceReport serviceReport = merger.getServiceReport();
+
+		serviceReport.setStartTime(start);
+		serviceReport.setEndTime(end);
+		return serviceReport;
 	}
 
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<utilization-report>
+   <domain id="Cat" machine-number="0" url-count="400796" url-response-time="0.19743699841196216" sql-count="26771" pigeon-call-count="4" swallow-call-count="0" memcache-count="0" score="427571"/>
+   <domain id="PiccenterService" machine-number="0" url-count="0" url-response-time="0.0" sql-count="11" pigeon-call-count="0" swallow-call-count="956" memcache-count="23" score="990"/>
+   <domain id="MavenPlugin" machine-number="0" url-count="0" url-response-time="0.0" sql-count="0" pigeon-call-count="0" swallow-call-count="0" memcache-count="0" score="0"/>
+</utilization-report>
