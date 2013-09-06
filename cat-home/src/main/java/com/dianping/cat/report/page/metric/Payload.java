@@ -23,6 +23,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("test")
 	private String m_test = "-1";
+	
+	@FieldMeta("timeRange")
+	private int m_timeRange = 2;
 
    
    @FieldMeta("fullScreen")
@@ -66,6 +69,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_test = test;
 	}
 	
+	public int getTimeRange() {
+		return m_timeRange;
+	}
+	
 	public int getFrequency() {
    	return m_frequency;
    }
@@ -96,4 +103,6 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.METRIC;
 		}
 	}
+	
+	
 }

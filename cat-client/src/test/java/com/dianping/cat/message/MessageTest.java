@@ -42,7 +42,7 @@ public class MessageTest extends ComponentTestCase {
 				break;
 			}
 		}
-
+		
 		Assert.assertEquals(expected, sb.toString());
 	}
 
