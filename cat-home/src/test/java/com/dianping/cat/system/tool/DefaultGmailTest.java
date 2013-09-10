@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-public class DefaultGmail extends ComponentTestCase {
+public class DefaultGmailTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
