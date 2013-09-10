@@ -338,5 +338,17 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
 		m_unusedNames.add("pigeon:HeartBeatService:null");
 	}
+	
+	public String getEmailAccount(){
+		return "book.robot.dianping@gmail.com";
+	}
+	
+	public String getEmailPassword(){
+		return "xudgtsnoxivwclna";
+	}
+	
+	public String getHttpSmsApi(){
+		return "";
+	}
 
 }
