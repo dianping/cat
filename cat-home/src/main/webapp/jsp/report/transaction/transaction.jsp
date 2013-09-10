@@ -51,7 +51,7 @@
 			<th class="right">Sample Link</th><th class="right">Min(ms)</th><th class="right">Max(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=95line">99.9Line</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=99line">99.9Line</a>(ms)</th>
 			<th class="right">Std(ms)</th><th class="right">QPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -88,7 +88,7 @@
 			<th  class="right">Sample Link</th><th class="right">Min(ms)</th><th class="right">Max(ms)</th>
 			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
