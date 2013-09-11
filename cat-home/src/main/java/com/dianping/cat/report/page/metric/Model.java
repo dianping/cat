@@ -16,9 +16,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<LineChart> m_lineCharts;
 
 	private Collection<ProductLine> m_productLines;
-	
+
 	private Date m_startTime;
-	
+
 	private Date m_endTime;
 
 	private Map<Integer, Abtest> m_abtests;
@@ -43,43 +43,43 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public Collection<ProductLine> getProductLines() {
-   	return m_productLines;
-   }
+		return m_productLines;
+	}
 
 	public void setProductLines(Collection<ProductLine> productLines) {
-   	m_productLines = productLines;
-   }
+		m_productLines = productLines;
+	}
 
 	public List<LineChart> getLineCharts() {
-   	return m_lineCharts;
-   }
+		return m_lineCharts;
+	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {
-   	m_lineCharts = lineCharts;
-   }
+		m_lineCharts = lineCharts;
+	}
 
 	public Date getStartTime() {
-   	return m_startTime;
-   }
+		return m_startTime;
+	}
 
 	public void setStartTime(Date startTime) {
-   	m_startTime = startTime;
-   }
+		m_startTime = startTime;
+	}
 
 	public Date getEndTime() {
-   	return m_endTime;
-   }
+		return m_endTime;
+	}
 
 	public void setEndTime(Date endTime) {
-   	m_endTime = endTime;
-   }
+		m_endTime = endTime;
+	}
 
 	public void setAbtests(Map<Integer, Abtest> abtests) {
 		m_abtests = abtests;
-   }
+	}
 
 	public Map<Integer, Abtest> getAbtests() {
-   	return m_abtests;
-   }
-	
+		return m_abtests;
+	}
+
 }

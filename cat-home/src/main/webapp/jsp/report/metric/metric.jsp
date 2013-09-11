@@ -39,7 +39,34 @@
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}">now</a> ]&nbsp;
 			</td>
 		</tr>
+	</table>	
+	</br>
+	<table>
+		<tr style="text-align: left">
+			<th>Time range: &nbsp;[&nbsp; 
+			<c:choose>
+				<c:when test="${payload.timeRange eq 2}">
+					<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=2"
+								class="current">Two hours</a>
+				</c:when>
+				<c:otherwise>
+					<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=2">Two hours</a>
+				</c:otherwise>
+			</c:choose> &nbsp;]&nbsp; 
+   	  		&nbsp;[&nbsp;
+   	  		<c:choose>
+					<c:when test="${payload.timeRange eq 24}">
+						<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=24"
+									class="current">One day</a>
+					</c:when>
+					<c:otherwise>
+						<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=24">One day</a>
+					</c:otherwise>
+				</c:choose> &nbsp;]
+			</th>
+		</tr>
 	</table>
+	<br/>
 	<div class="container-fluid">
       <div class="row-fluid">
         <div class="span2">
@@ -62,7 +89,9 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span10">
-        	<h3 class='text-red'>说明：图中纵轴数据为10分钟数据之和</h3>
+        	<c:if test="${payload.timeRange eq 24 }">
+        		<h3 class='text-red'>说明：图中纵轴数据为10分钟数据之和</h3>
+        	</c:if>
         	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
        			<div style="float:left;">
        				<h5 class="text-center text-error">${item.title}</h5>

@@ -12,9 +12,12 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("op")
 	private Action m_action;
-	
+
 	@FieldMeta("key")
 	private String m_key;
+
+	@FieldMeta("sort")
+	private String m_sort;
 
 	public Payload() {
 		super(ReportPage.STATE);
@@ -37,7 +40,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY);
 	}
-	
+
 	public void setKey(String key) {
 		m_key = key;
 	}
@@ -45,6 +48,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STATE);
+	}
+
+	public String getSort() {
+		return m_sort;
+	}
+
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	@Override

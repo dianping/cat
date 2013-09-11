@@ -46,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = CAT;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-
+		
 		return m_reportService.queryStateReport(domain, start, end);
 	}
 
@@ -104,6 +104,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (action == Action.HOURLY || action == Action.HISTORY) {
 			StateShow show = new StateShow(payload.getIpAddress());
+			show.setSortType(payload.getSort());
 			show.visitStateReport(report);
 			model.setState(show);
 			model.setReport(report);
@@ -126,5 +127,6 @@ public class Handler implements PageHandler<Context> {
 		}
 		m_normalizePayload.normalize(model, payload);
 	}
+	
 
 }
