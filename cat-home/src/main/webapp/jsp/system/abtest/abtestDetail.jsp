@@ -25,6 +25,7 @@ div.controls input {
 <a:body>
    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
    <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+   <res:useCss value="${res.css.local['body.css']}" target="head-css" />
    <res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
    <res:useCss value="${res.css.local['select2.css']}" target="head-css" />
    <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
@@ -32,6 +33,9 @@ div.controls input {
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
+  <res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
+   <res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
+   
    <div id="content" class="row-fluid">
       <div class="span12 column">
          <h3>

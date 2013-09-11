@@ -99,11 +99,6 @@
        			</div>
 			</c:forEach>
         </div>
-	<table  class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
 </div>
 </a:body>
 <style type="text/css">

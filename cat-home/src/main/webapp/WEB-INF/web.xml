@@ -6,6 +6,10 @@
         <filter-name>cat-filter</filter-name>
         <filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>domain-filter</filter-name>
+        <filter-class>com.dianping.cat.servlet.DomainFilter</filter-class>
+    </filter>
 	<servlet>
 		<servlet-name>cat-servlet</servlet-name>
 		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
@@ -26,6 +30,11 @@
 	</servlet>
     <filter-mapping>
         <filter-name>cat-filter</filter-name>
+        <url-pattern>/r/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>domain-filter</filter-name>
         <url-pattern>/r/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>

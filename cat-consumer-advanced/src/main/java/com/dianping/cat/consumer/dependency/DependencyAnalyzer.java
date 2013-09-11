@@ -169,7 +169,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.shouldDiscard(t)) {
+		if (m_serverConfigManager.discardTransaction(t)) {
 			return;
 		} else {
 			processTransactionType(report, t);

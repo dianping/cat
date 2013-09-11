@@ -18,11 +18,10 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
-			<td class="switch"><a href="?op=heavy&domain=${model.domain}">Switch To Hourly Mode</a>
-			</td>
+			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav">
-					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
+				<a class="switch" href="?domain=${model.domain}&op=heavy"><span class="text-error">【切到小时模式】</span></a>
+				<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
 								&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
@@ -48,10 +47,5 @@
 		</div>
 	</div>
 </div>
-	<table  class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
 </div>
 </a:body>

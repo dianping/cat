@@ -138,6 +138,9 @@ public class DisplayNames {
 			if (m_sorted.equals("95line")) {
 				return (int) (m2.getDetail().getLine95Value() * 100 - m1.getDetail().getLine95Value() * 100);
 			}
+			if (m_sorted.equals("99line")) {
+				return (int) (m2.getDetail().getLine99Value() * 100 - m1.getDetail().getLine99Value() * 100);
+			}
 			return 0;
 		}
 	}
