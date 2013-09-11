@@ -13,11 +13,9 @@
 	<jsp:body>	
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-<br>
-
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=history&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}"
 						class="current">All</a>
@@ -41,8 +39,6 @@
 		</th>
 	</tr>
 </table>
-</br>
-
 <table width="80%">
 	<tr>
 		<td width="5%"></td>
@@ -174,7 +170,7 @@
 	</c:forEach>
 	<tr style="color:white;"><td>${lastIndex+1}</td><td>${model.state.totalSize}</td></tr>
 </table>
-<br><res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
+<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
 </a:historyReport>
 

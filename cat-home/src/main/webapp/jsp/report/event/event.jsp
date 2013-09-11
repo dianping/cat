@@ -18,11 +18,9 @@
 	<jsp:body>
 <res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}"
 								class="current">All</a>
@@ -46,7 +44,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">

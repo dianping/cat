@@ -12,10 +12,9 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&project=${payload.projectName}${model.customDate}"
 								class="current">All</a>
@@ -39,7 +38,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
 		<tr>

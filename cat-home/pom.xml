@@ -24,36 +24,6 @@
          <artifactId>cat-consumer-advanced</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.dianping.dpsf</groupId>
-         <artifactId>dpsf-net</artifactId>
-         <version>1.7.3</version>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.hawk</groupId>
-         <artifactId>hawk-client</artifactId>
-         <version>0.6.7</version>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.lion</groupId>
-         <artifactId>lion-client</artifactId>
-         <version>0.2.2</version>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping</groupId>
-         <artifactId>mail-api</artifactId>
-         <version>1.0.0</version>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping</groupId>
-         <artifactId>sms-api</artifactId>
-         <version>1.0.2</version>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.lion</groupId>
-         <artifactId>lion-${env}</artifactId>
-         <version>1.0.0</version>
-      </dependency>
-      <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring</artifactId>
          <version>2.5.6</version>
@@ -125,6 +95,16 @@
          <artifactId>dal-jdbc</artifactId>
          <version>2.0.3</version>
       </dependency>
+      <dependency>
+		 <groupId>org.apache.commons</groupId>
+		 <artifactId>commons-email</artifactId>
+		 <version>1.1</version>
+	  </dependency>
+	  <dependency>
+		 <groupId>javax.mail</groupId>
+		 <artifactId>mail</artifactId>
+		 <version>1.4.4</version>
+	  </dependency>
    </dependencies>
    <build>
       <finalName>cat</finalName>

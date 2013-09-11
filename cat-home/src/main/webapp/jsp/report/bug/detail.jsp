@@ -1,8 +1,5 @@
 	<%@ page session="false" language="java" pageEncoding="UTF-8" %>
-	 <div class="text-right">
-		 <a class="btn  btn-small btn-danger" target='_blank' href="/cat/s/config?op=bugConfigUpdate">异常规范配置</a>
-	 </div>
-	<h3 class='text-error'>项目Bug异常数据</h3>
+	<h4 class='text-error'>项目Bug异常数据 <a class="btn  btn-small btn-danger" target='_blank' href="/cat/s/config?op=bugConfigUpdate">异常规范配置</a></h4>
 	<table class="table table-striped table-bordered table-condensed">
 	<tr>
 			<th width="10%">部门</th>
@@ -30,8 +27,7 @@
 		</c:forEach>
 	</c:forEach>
 	</table>
-	
-	<h3 class='text-info'>项目其他异常数据(比如框架类异常，超时等)</h3>
+	<h4 class='text-info'>项目其他异常数据(比如框架类异常，超时等)</h4>
 	<table class="table table-striped table-bordered table-condensed">
 	<tr>
 			<th width="10%">部门</th>

@@ -62,14 +62,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public static final String FAIL = "Fail";
 
-	public Map<String, Domain> getProductLineToDomains() {
-		return m_productLineToDomains;
-	}
-
-	public void setProductLineToDomains(Map<String, Domain> productLineToDomains) {
-		m_productLineToDomains = productLineToDomains;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -98,9 +90,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_aggregationRules;
 	}
 
+	public String getBug() {
+   	return m_bug;
+   }
+
 	public TopologyGraphConfig getConfig() {
 		return m_config;
 	}
+
+	public String getContent() {
+   	return m_content;
+   }
 
 	public String getDate() {
 		return "";
@@ -131,8 +131,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_edgeConfigs;
 	}
 
+	public ExceptionLimit getExceptionLimit() {
+		return m_exceptionLimit;
+	}
+
+	public List<ExceptionLimit> getExceptionLimits() {
+		return m_exceptionLimits;
+	}
+
 	public String getIpAddress() {
 		return "";
+	}
+
+	public MetricItemConfig getMetricItemConfig() {
+		return m_metricItemConfig;
 	}
 
 	public String getOpState() {
@@ -147,12 +159,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_productLines;
 	}
 
+	public Map<String, Domain> getProductLineToDomains() {
+		return m_productLineToDomains;
+	}
+
+	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {
+		return m_productMetricConfigs;
+	}
+
 	public Project getProject() {
 		return m_project;
 	}
 
 	public List<Project> getProjects() {
 		return m_projects;
+	}
+
+	public String getReportType(){
+		return "";
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -163,9 +187,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_aggregationRules = aggregationRules;
 	}
 
+	public void setBug(String bug) {
+   	m_bug = bug;
+   }
+
 	public void setConfig(TopologyGraphConfig config) {
 		m_config = config;
 	}
+
+	public void setContent(String content) {
+   	m_content = content;
+   }
 
 	public void setDomainConfig(DomainConfig domainConfig) {
 		m_domainConfig = domainConfig;
@@ -175,8 +207,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_edgeConfig = edgeConfig;
 	}
 
+	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
+		m_exceptionLimit = exceptionLimit;
+	}
+
+	public void setExceptionLimits(List<ExceptionLimit> exceptionLimits) {
+		m_exceptionLimits = exceptionLimits;
+	}
+
 	public void setGraphConfig(TopologyGraphConfig config) {
 		m_config = config;
+	}
+
+	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
+		m_metricItemConfig = metricItemConfig;
 	}
 
 	public void setOpState(boolean result) {
@@ -195,6 +239,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_productLines = productLines;
 	}
 
+	public void setProductLineToDomains(Map<String, Domain> productLineToDomains) {
+		m_productLineToDomains = productLineToDomains;
+	}
+	
+	public void setProductMetricConfigs(Map<ProductLine, List<MetricItemConfig>> productMetricConfigs) {
+		m_productMetricConfigs = productMetricConfigs;
+	}
+
 	public void setProject(Project project) {
 		m_project = project;
 	}
@@ -202,55 +254,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
 	}
-
-	public MetricItemConfig getMetricItemConfig() {
-		return m_metricItemConfig;
-	}
-
-	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
-		m_metricItemConfig = metricItemConfig;
-	}
-
-	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {
-		return m_productMetricConfigs;
-	}
-
-	public void setProductMetricConfigs(Map<ProductLine, List<MetricItemConfig>> productMetricConfigs) {
-		m_productMetricConfigs = productMetricConfigs;
-	}
-
-	public ExceptionLimit getExceptionLimit() {
-		return m_exceptionLimit;
-	}
-
-	public List<ExceptionLimit> getExceptionLimits() {
-		return m_exceptionLimits;
-	}
-
-	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
-		m_exceptionLimit = exceptionLimit;
-	}
-
-	public void setExceptionLimits(List<ExceptionLimit> exceptionLimits) {
-		m_exceptionLimits = exceptionLimits;
-	}
-
-	public String getBug() {
-   	return m_bug;
-   }
-
-	public void setBug(String bug) {
-   	m_bug = bug;
-   }
-	
-	public String getContent() {
-   	return m_content;
-   }
-
-	public void setContent(String content) {
-   	m_content = content;
-   }
-
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;
 
@@ -269,5 +272,4 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			return m_nodeConfig;
 		}
 	}
-
 }
