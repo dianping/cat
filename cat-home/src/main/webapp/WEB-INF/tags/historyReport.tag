@@ -9,6 +9,12 @@
 <%@ attribute name="subtitle" fragment="true"%>
 
 <a:body>
+<script>
+	function buildHref(domain){
+		var href = '<a href="?op=history&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
+		return href;
+	}
+</script>
 <div class="report">
 	<table class="header">
 		<tr>

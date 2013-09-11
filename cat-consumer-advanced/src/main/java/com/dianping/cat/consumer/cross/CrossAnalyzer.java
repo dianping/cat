@@ -60,7 +60,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
-		if (m_serverConfigManager.shouldDiscard(t)) {
+		if (m_serverConfigManager.discardTransaction(t)) {
 			return null;
 		} else {
 			String type = t.getType();

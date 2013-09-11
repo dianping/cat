@@ -58,7 +58,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
-				<h4 id="myModalLabel" class="text-success">用户登录</h4>
+				<h4 id="myModalLabel" class="text-success text-center">用户登录</h4>
 			</div>
 			<div class="control-group">
 				<label class="control-label text-success" for="account">用户名</label>
@@ -111,11 +111,6 @@
 				$('#frequent').html("常用");
 			}
 		}
-		function buildHref(domain){
-			var href = '<a href="?op=history&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
-			return href;
-		}
-		
 		$(document).ready(function() {
 			var domains= getcookie('CAT_DOMAINS');
 			var domainArray =domains.split("|");
