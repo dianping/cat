@@ -15,7 +15,7 @@
 
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}"
 						class="current">All</a>

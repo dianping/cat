@@ -14,6 +14,18 @@
 		var href = '<a href="?op=history&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
 		return href;
 	}
+	$(document).ready(function() {
+		var domains= getcookie('CAT_DOMAINS');
+		var domainArray =domains.split("|");
+		var html = '';
+		var length =domainArray.length;
+		
+		for(var i=0;i<length;i++){
+			var href = buildHref(domainArray[i])
+			html+= href;
+		}
+		$('#frequentNavbar').html(html);
+	});
 </script>
 <div class="report">
 	<table class="header">

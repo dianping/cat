@@ -112,17 +112,6 @@
 			}
 		}
 		$(document).ready(function() {
-			var domains= getcookie('CAT_DOMAINS');
-			var domainArray =domains.split("|");
-			var html = '';
-			var length =domainArray.length;
-			
-			for(var i=0;i<length;i++){
-				var href = buildHref(domainArray[i])
-				html+= href;
-			}
-			$('#frequentNavbar').html(html);
-			
 			var ct = getcookie("ct");
 			if (ct != "") {
 				var length = ct.length;

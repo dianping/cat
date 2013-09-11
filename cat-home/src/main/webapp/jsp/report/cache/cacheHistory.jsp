@@ -16,7 +16,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 <jsp:body>
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: &nbsp; <c:forEach var="ip" items="${model.ips}">
+		<th>机器: &nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
