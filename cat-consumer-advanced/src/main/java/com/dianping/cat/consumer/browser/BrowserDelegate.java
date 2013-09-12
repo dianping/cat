@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.browser.BrowserAnalyzer;
 import com.dianping.cat.consumer.browser.BrowserReportMerger;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;

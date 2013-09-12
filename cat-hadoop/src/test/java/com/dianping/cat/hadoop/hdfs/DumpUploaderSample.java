@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.dump;
+package com.dianping.cat.hadoop.hdfs;
 
 import java.io.File;
 

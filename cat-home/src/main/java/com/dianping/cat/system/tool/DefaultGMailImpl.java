@@ -36,7 +36,6 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 		email.setSSL(true);
 		email.setFrom(m_name);
 		email.setCharset("utf-8");
-
 		return email;
 	}
 
@@ -61,6 +60,7 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 				HtmlEmail email = createHtmlEmail();
 
 				email.setSubject(title);
+				email.setFrom("CAT");
 
 				if (content != null) {
 					email.setHtmlMsg(content);
