@@ -81,7 +81,6 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				// switch the entities
 				m_entities = visitor.getEntities();
 				m_activeRuns = visitor.getActiveRuns();
-
 				m_abtestModel = abtest.toString();
 				break;
 			} catch (Throwable e) {
