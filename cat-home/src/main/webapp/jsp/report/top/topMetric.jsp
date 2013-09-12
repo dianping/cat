@@ -27,7 +27,7 @@
       <c:forEach var="item" items="${model.topMetric.error.result}"  varStatus="itemStatus">
 	      <table  class="smallTable" style="float:left" border=1>  
 	           <tr><th colspan="2" class="text-error" class="text-error">${item.key}</th></tr>
-	           <tr><th width="80%">系统</th>      <th>个</th></tr>
+	           <tr><th>系统</th>      <th>个</th></tr>
 	           <c:forEach var="detail" items="${item.value}" varStatus="status">
 	              <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 	                 <c:choose>
@@ -53,7 +53,7 @@
       <c:forEach var="item" items="${model.topMetric.url.result}" varStatus="itemStatus">
       <table  class="smallTable"  style="float:left" border=1>  
             <tr><th colspan="2" class="text-error">${item.key}</th></tr>
-            <tr><th width="80%">系统</th>      <th>ms</th></tr>
+            <tr><th>系统</th>      <th>ms</th></tr>
             <c:forEach var="detail" items="${item.value}" varStatus="status">
                <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}"> 
                   <td><a href="/cat/r/t?domain=${detail.domain}&date=${date}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
@@ -66,7 +66,7 @@
       <c:forEach var="item" items="${model.topMetric.service.result}" varStatus="itemStatus">
       <table class="smallTable"  style="float:left" border=1>  
             <tr><th colspan="2" class="text-error">${item.key}</th></tr>
-            <tr><th width="80%">系统</th>      <th>ms</th></tr>
+            <tr><th>系统</th>      <th>ms</th></tr>
             <c:forEach var="detail" items="${item.value}" varStatus="status">
                <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
                   <td><a href="/cat/r/t?domain=${detail.domain}&date=${date}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
@@ -79,7 +79,7 @@
       <c:forEach var="item" items="${model.topMetric.sql.result}" varStatus="itemStatus">
       <table class="smallTable"  style="float:left" border=1>  
             <tr><th colspan="2" class="text-error">${item.key}</th></tr>
-            <tr><th width="80%">系统</th>      <th>ms</th></tr>
+            <tr><th>系统</th>      <th>ms</th></tr>
             <c:forEach var="detail" items="${item.value}" varStatus="status">
                <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
                   <td><a href="/cat/r/t?domain=${detail.domain}&date=${date}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
@@ -92,7 +92,7 @@
       <c:forEach var="item" items="${model.topMetric.call.result}" varStatus="itemStatus">
       <table class="smallTable"  style="float:left" border=1>  
             <tr><th colspan="2" class="text-error">${item.key}</th></tr>
-            <tr><th width="80%">系统</th>      <th>ms</th></tr>
+            <tr><th>系统</th>      <th>ms</th></tr>
             <c:forEach var="detail" items="${item.value}" varStatus="status">
                <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
                   <td><a href="/cat/r/t?domain=${detail.domain}&date=${date}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
@@ -105,7 +105,7 @@
       <c:forEach var="item" items="${model.topMetric.cache.result}" varStatus="itemStatus">
       <table class="smallTable"  style="float:left" border=1>  
             <tr><th colspan="2" class="text-error">${item.key}</th></tr>
-            <tr><th width="80%">系统</th>      <th>ms</th></tr>
+            <tr><th>系统</th>      <th>ms</th></tr>
             <c:forEach var="detail" items="${item.value}" varStatus="status">
                <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
                   <td><a href="/cat/r/t?domain=${detail.domain}&date=${date}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
