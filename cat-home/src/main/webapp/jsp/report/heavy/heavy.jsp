@@ -19,10 +19,9 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(model.heavyReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.heavyReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-			<td class="switch"><a href="?op=historyHeavy">Switch To History Mode</a>
-			</td>
+			<td class="title text-success"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.heavyReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.heavyReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav" >
+				<a href="?op=historyHeavy&domain=${model.domain}" class="switch"><span class="text-error">【切到历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?op=heavy&date=${model.date}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -40,12 +39,5 @@
 			<%@ include file="detail.jsp"%>
 		</div>
 	</div>
-</div>
-<div class="report">
-	<table  class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
 </div>
 </a:body>

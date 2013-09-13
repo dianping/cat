@@ -65,7 +65,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
 
-			if (m_serverConfigManager.shouldDiscard((Transaction) message)) {
+			if (m_serverConfigManager.discardTransaction((Transaction) message)) {
 				return;
 			}
 			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("PigeonService")) {

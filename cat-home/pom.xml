@@ -12,15 +12,15 @@
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>org.unidal.framework</groupId>
-			<artifactId>foundation-service</artifactId>
-			<version>2.0.3</version>
-		</dependency>
-		<dependency>
 			<groupId>org.unidal.eunit</groupId>
 			<artifactId>EunitTestFwk</artifactId>
 			<version>1.2.1</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>foundation-service</artifactId>
+			<version>2.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
@@ -31,34 +31,8 @@
 			<artifactId>cat-consumer-advanced</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.dianping.dpsf</groupId>
-			<artifactId>dpsf-net</artifactId>
-			<version>1.7.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping.hawk</groupId>
-			<artifactId>hawk-client</artifactId>
-			<version>0.6.7</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping.lion</groupId>
-			<artifactId>lion-client</artifactId>
-			<version>0.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping</groupId>
-			<artifactId>mail-api</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping</groupId>
-			<artifactId>sms-api</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping.lion</groupId>
-			<artifactId>lion-${env}</artifactId>
-			<version>1.0.0</version>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-hadoop</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -97,6 +71,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jsp-2.1</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
@@ -126,6 +105,16 @@
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>dal-jdbc</artifactId>
 			<version>2.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.javaparser</groupId>
@@ -196,7 +185,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/abtest-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-config-manifest.xml,</manifest>
 						</configuration>
 					</execution>
@@ -207,8 +195,7 @@
 							<goal>dal-jdbc</goal>
 						</goals>
 						<configuration>
-							<manifest><![CDATA[
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+							<manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]>  <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
 					 ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,

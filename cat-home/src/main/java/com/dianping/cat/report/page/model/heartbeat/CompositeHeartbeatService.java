@@ -22,22 +22,17 @@ public class CompositeHeartbeatService extends BaseCompositeModelService<Heartbe
 
 	@Override
 	protected HeartbeatReport merge(ModelRequest request, List<ModelResponse<HeartbeatReport>> responses) {
-		HeartbeatReportMerger merger = null;
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(request.getDomain()));
 
 		for (ModelResponse<HeartbeatReport> response : responses) {
 			if (response != null) {
 				HeartbeatReport model = response.getModel();
 
 				if (model != null) {
-					if (merger == null) {
-						merger = new HeartbeatReportMerger(model);
-					} else {
-						model.accept(merger);
-					}
+					model.accept(merger);
 				}
 			}
 		}
-
-		return merger == null ? null : merger.getHeartbeatReport();
+		return merger.getHeartbeatReport();
 	}
 }

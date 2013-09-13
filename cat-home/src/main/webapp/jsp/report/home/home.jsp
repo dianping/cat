@@ -15,14 +15,14 @@
 
 <div class="row-fluid">
 	<div class="span5">
-		<a id="navdashboard" class="btn btn-danger" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">应用监控仪表盘</a>
-		<a id="navbussiness" class="btn btn-danger" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控仪表盘</a>
+		<a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">应用监控仪表盘</a>
+		<a id="navbussiness" class="btn  btn-small btn-danger" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控仪表盘</a>
 	</div>
 	<div  class="span7 text-right">
-		<a class="btn btn-primary" href="http://cat.qa.dianpingoa.com/cat/r">CAT测试环境链接</a>
-		<a class="btn btn-primary" href="http://10.1.8.64:8080/cat/r">CAT预发环境链接</a>
-		<a class="btn btn-primary" href="http://cat.dianpingoa.com/cat/r">CAT生产环境链接</a>
-		<a class="btn btn-primary" href="http://10.1.8.152:8080/cat/r">BA后台环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://cat.qa.dianpingoa.com/cat/r">CAT测试环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://10.1.8.64:8080/cat/r">CAT预发环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://cat.dianpingoa.com/cat/r">CAT生产环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://10.1.8.152:8080/cat/r">BA后台环境链接</a>
 </div>
 	
 </div>

@@ -162,7 +162,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		} else {
 			temp = m_date + (TimeUtil.ONE_HOUR * 24);
 		}
-		cal.setTimeInMillis(temp);
+		cal.setTimeInMillis(temp-1);
 		return cal.getTime();
 	}
 

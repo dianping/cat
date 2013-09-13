@@ -3,9 +3,11 @@ package com.dianping.cat.hadoop.hdfs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -28,18 +30,21 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
-public class DumpUploader implements Initializable, Task, LogEnabled {
+public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
 	@Inject
 	private FileSystemManager m_fileSystemManager;
 
-	private String m_baseDir;
+	private String m_dumpBaseDir;
+
+	private String m_reportBaseDir;
 
 	private Logger m_logger;
 
@@ -59,7 +64,8 @@ public class DumpUploader implements Initializable, Task, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
+		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir("dump");
+		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("logview");
 	}
 
 	private boolean isActive() {
@@ -85,7 +91,8 @@ public class DumpUploader implements Initializable, Task, LogEnabled {
 					Calendar cal = Calendar.getInstance();
 
 					if (cal.get(Calendar.MINUTE) >= 10) {
-						upload();
+						uploadLogviewFile();
+						deleteOldReports();
 					}
 				}
 			} catch (Exception e) {
@@ -110,8 +117,69 @@ public class DumpUploader implements Initializable, Task, LogEnabled {
 		}
 	}
 
-	private void upload() {
-		File baseDir = new File(m_baseDir, "outbox");
+	public void deleteOldReports() {
+		File reportDir = new File(m_reportBaseDir);
+		final List<String> toRemovePaths = new ArrayList<String>();
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		final String today = sdf.format(date);
+		final String yesterday = sdf.format(new Date(date.getTime() - 24 * 60 * 60 * 1000L));
+
+		Scanners.forDir().scan(reportDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				File file = new File(base, path);
+				if (file.isFile() && shouldDeleteReport(path)) {
+					toRemovePaths.add(path);
+				}
+				return Direction.DOWN;
+			}
+
+			private boolean shouldDeleteReport(String path) {
+				if (path.indexOf(today) > -1 || path.indexOf(yesterday) > -1) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		});
+		for (String path : toRemovePaths) {
+			File file = new File(m_reportBaseDir, path);
+
+			file.delete();
+			Cat.logEvent("System", "DeleteReport", Event.SUCCESS, file.getAbsolutePath());
+		}
+		removeEmptyDir(reportDir);
+	}
+
+	private void removeEmptyDir(File baseFile) {
+		// the path has two depth
+		for (int i = 0; i < 2; i++) {
+			final List<String> directionPaths = new ArrayList<String>();
+
+			Scanners.forDir().scan(baseFile, new FileMatcher() {
+				@Override
+				public Direction matches(File base, String path) {
+					if (new File(base, path).isDirectory()) {
+						directionPaths.add(path);
+					}
+
+					return Direction.DOWN;
+				}
+			});
+			for (String path : directionPaths) {
+				try {
+					File file = new File(baseFile, path);
+
+					file.delete();
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
+
+	private void uploadLogviewFile() {
+		File baseDir = new File(m_dumpBaseDir, "outbox");
 		final List<String> paths = new ArrayList<String>();
 
 		Scanners.forDir().scan(baseDir, new FileMatcher() {
@@ -198,29 +266,6 @@ public class DumpUploader implements Initializable, Task, LogEnabled {
 
 			root.complete();
 		}
-
-		// the path has two depth
-		for (int i = 0; i < 2; i++) {
-			final List<String> directionPaths = new ArrayList<String>();
-
-			Scanners.forDir().scan(baseDir, new FileMatcher() {
-				@Override
-				public Direction matches(File base, String path) {
-					if (new File(base, path).isDirectory()) {
-						directionPaths.add(path);
-					}
-
-					return Direction.DOWN;
-				}
-			});
-			for (String path : directionPaths) {
-				try {
-					File file = new File(baseDir, path);
-
-					file.delete();
-				} catch (Exception e) {
-				}
-			}
-		}
+		removeEmptyDir(baseDir);
 	}
 }

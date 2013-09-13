@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<div>	Long-url <select class="input-small" size="1" id="p_longUrl">
+<div class="text-left">	Long-url <select class="input-small" size="1" id="p_longUrl">
 				${model.defaultThreshold}
 				<option value="500">0.5 Sec</option>
 				<option value="1000">1.0 Sec</option>
@@ -39,7 +39,7 @@
 				<option value="3000">3000 ms</option>
 				<option value="5000">5000 ms</option>
 		</select>
-		<input class="btn btn-primary  btn-small"  value="Refresh"
+		<input class="btn btn-primary  btn-small"  value="查询"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
 			type="submit"></div>
 			

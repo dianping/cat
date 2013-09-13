@@ -3191,7 +3191,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.system.tool.MailSMS</role>
-			<implementation>com.dianping.cat.system.tool.MailSMSImpl</implementation>
+			<implementation>com.dianping.cat.system.tool.DefaultGMailImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>

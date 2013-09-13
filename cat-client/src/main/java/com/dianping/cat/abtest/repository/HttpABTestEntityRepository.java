@@ -29,10 +29,7 @@ import com.dianping.cat.abtest.model.transform.DefaultSaxParser;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
 public class HttpABTestEntityRepository extends ContainerHolder implements ABTestEntityRepository, Initializable, Task {
@@ -61,10 +58,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	private long m_lastUpdateTime = -1;
 
-	@Override
-	public Set<String> getActiveRuns() {
-		return m_activeRuns;
-	}
+	private String m_abtestModel;
 
 	@Override
 	public Map<String, ABTestEntity> getCurrentEntities() {
@@ -88,7 +82,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	}
 
 	private void refresh() {
-		String clientIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		m_abtestModel = null;
 
 		for (Server server : m_configManager.getServers()) {
 			String ip = server.getIp();
@@ -106,13 +100,10 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 					abtest.accept(visitor);
 
-					Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", clientIp);
-
-					h.addData(abtest.toString());
-					h.setStatus(Message.SUCCESS);
-					h.complete();
-
-					t.setStatus(Message.SUCCESS);
+					// switch the entities
+					m_entities = visitor.getEntities();
+					m_activeRuns = visitor.getActiveRuns();
+					m_abtestModel = abtest.toString();
 					break;
 				}
 			} catch (Throwable e) {
@@ -150,8 +141,20 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	class ABTestVisitor extends BaseVisitor {
 		private String m_domain;
 
+		private Map<String, ABTestEntity> m_entities;
+
+		private Set<String> m_activeRuns;
+
 		public ABTestVisitor(String domain) {
 			m_domain = domain;
+		}
+
+		public Map<String, ABTestEntity> getEntities() {
+			return m_entities;
+		}
+
+		public Set<String> getActiveRuns() {
+			return m_activeRuns;
 		}
 
 		private void prepareEntity(Case _case, Run run) {
@@ -213,5 +216,14 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				m_lastUpdateTime = maxUpdateTime;
 			}
 		}
+	}
+
+	public String getAbtestModel() {
+		return m_abtestModel;
+	}
+
+	@Override
+	public Set<String> getActiveRuns() {
+		return m_activeRuns;
 	}
 }

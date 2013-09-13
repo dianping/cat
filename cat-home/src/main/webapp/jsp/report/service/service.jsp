@@ -19,10 +19,10 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(model.serviceReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.serviceReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-			<td class="switch"><a href="?op=historyService">Switch To History Mode</a>
+			<td class="title text-success"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.serviceReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.serviceReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			</td>
 			<td class="nav" >
+				<a href="?op=historyService&domain=${model.domain}" class="switch"><span class="text-error">【切到历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="?date=${model.date}&step=${nav.hours}&${navUrlPrefix}&op=service">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -59,12 +59,5 @@
 			</table>
 		</div>
 	</div>
-</div>
-<div class="report">
-	<table  class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
 </div>
 </a:body>

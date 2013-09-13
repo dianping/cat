@@ -8,7 +8,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.sql.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.sql.Model"scope="request" />
 <c:set var="report" value="${model.report}" />
-
 <a:report
 	title="Sql Report"
 	navUrlPrefix="database=${model.database}&domain=${model.domain}"
@@ -16,7 +15,6 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-</br>
 <table>
 	<tr style="text-align: left">
 		<th>Databases: &nbsp;[&nbsp; <c:choose>
@@ -43,7 +41,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 			<tr>
 			    <th></th>

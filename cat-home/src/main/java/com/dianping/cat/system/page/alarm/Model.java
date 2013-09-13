@@ -63,6 +63,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_opState;
 	}
 
+	public String getReportType(){
+		return "";
+	}
+
 	public List<ScheduledReport> getSchduledReports() {
 		return m_schduledReports;
 	}
@@ -106,7 +110,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setTemplateIndex(int templateIndex) {
 		m_templateIndex = templateIndex;
 	}
-
+	
 	public void setUserReportSubStates(List<UserReportSubState> userReportSubStates) {
 		m_userReportSubStates = userReportSubStates;
 	}

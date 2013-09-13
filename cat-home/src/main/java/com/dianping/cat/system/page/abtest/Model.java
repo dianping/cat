@@ -36,7 +36,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private AbtestModel m_abtestModel;
 
 	private AbtestReport m_report;
-	
+
 	private List<DataSets> m_dataSets;
 
 	private String m_ipAddress;
@@ -54,8 +54,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public List<DataSets> getDataSets() {
-   	return m_dataSets;
-   }
+		return m_dataSets;
+	}
 
 	public Date getDate() {
 		return m_date;
@@ -98,6 +98,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_report;
 	}
 
+	public String getReportType() {
+		return "";
+	}
+
 	public void setAbtest(AbtestItem abtest) {
 		m_abtest = abtest;
 	}
@@ -107,8 +111,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setDataSets(List<DataSets> dataSets) {
-   	m_dataSets = dataSets;
-   }
+		m_dataSets = dataSets;
+	}
 
 	public void setDate(Date date) {
 		m_date = date;

@@ -1,159 +1,38 @@
 body {
 	font-family: arial, helvetica, sans-serif;
-	font-size: small;
 	background: white;
 	color: black;
-	margin: 4px;
-	padding: 0;
 }
 
-html {
-	margin: 0
-}
 .report .header {
-	background: orange;
-	color: white;
+	background: #f5f5f5;
 	font-weight: bold;
-	border-bottom: solid black 1px;
+	border: solid #ccc 1px;
+	border-radius: 4px;
 	width: 100%;
-	margin-top: -11px;
-}
-
-.report .header .title {
-	font-weight: bold;
-	color: black;
-	width:33%;
-}
-
-.report .navbar {
-	background: lightblue;
-	font-weight: bold;
-	border-bottom: solid black 1px;
-	width: 100%;
-}
-
-.report .navbar .domain {
-	text-align: left;
-	font-size: small;
-	font-weight: bold;
-	padding-left:4px;
-}
-
-.report .navbar .domain A {
-	text-decoration: none;
-	color: blue;
-}
-
-.report .navbar .domain .current {
-	color: black;
-}
-
-.report .navbar .domain  A:hover {
-	color: yellow;
-}
-
-.report .navbar .nav {
-	text-align: right;
-	font-size: small;
-	font-weight: bold;
 }
 
 .report .header .nav {
 	text-align: right;
-	font-size: small;
 	font-weight: bold;
 	color: black;
-	width:34%;
 }
 
-.report .header .switch {
-	text-align: center;
-	font-size: small;
+.footer {
+	background: #f5f5f5;
 	font-weight: bold;
-	width:33%;
-}
-
-.report .navbar .nav A {
-	text-decoration: none;
-	color: blue;
-}
-
-.report .navbar .nav  A:hover {
-	color: yellow;
-}
-
-.report .footer {
-	background: orange;
-	color: white;
-	font-weight: bold;
-	border-top: solid black 1px;
-	border-bottom: solid black 1px;
+	border: solid #ccc 1px;
 	width: 100%;
 	text-align: center;
-}
-
-.report .position{
-	padding:4px;
-	padding-left:10px;
-	font-weight: bold;
-	font-size: 14px;
-	background: lightBlue;
-}
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
+	border-radius: 4px;
 }
 
 .current {
-	background-color: orange;
-	color: white;
-}
-
-.subtitle {
-	font-size: small;
-}
-
-.timestamp {
-	font-size: small;
-}
-
-ul.tabs {
-	border-bottom: 1px solid black;
-	list-style-type: none;
-	position: relative;
-	padding: 0em;
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
-}
-
-.tabs li {
-	display: inline;
-	margin: 0em 0.0em 0em 0.0em;
-	padding: 0.4em 0.4em 0.4em 0.4em;
-	overflow: hidden;
-	border-top: 1px solid black;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-}
-
-.tabs li.selected {
-	background: #ccddff;
-	border-bottom: 1px solid white;
+	background-color: #3CB371;
 }
 
 table {
-	font-size: small;
-}
-
-tr.head {
-	background-color: #e8e8e8;
-}
-
-tr.strip {
-	background-color: #f2f2f2;
+	font-size: 14px;
 }
 
 tr.head th {
@@ -163,12 +42,10 @@ tr.head th {
 
 tr th {
 	background-color: #f2f2f2;
-	font-size: small;
 }
 
 tr.odd td {
 	background-color: #eee;
-	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
@@ -176,7 +53,6 @@ tr.odd td {
 
 tr.even td {
 	background-color: white;
-	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
@@ -184,7 +60,6 @@ tr.even td {
 
 tr.odd th {
 	background-color: #eee;
-	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
@@ -192,50 +67,19 @@ tr.odd th {
 
 tr.even th {
 	background-color: white;
-	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
 	text-align: left;
 }
 
-.data {
-	font-size: small;
-	min-width:50%;	
-}
-.data tr th{
-	text-align:right;
-}
-.data .odd td {
+td.odd {
 	background-color: #eee;
-	font-size: small;
-	text-align:right;
+	word-break: break-all;
 }
 
-.data .even td {
+td.even {
 	background-color: white;
-	font-size: small;
-	text-align:right;
-}
-.data th .left{
-	text-align:left;
-}
-
-.data tr .left{
-	text-align:left;
-}
-
-.data tr .left{
-	text-align:left;
-}
-
-.problem td.odd  {
-	background-color: #eee;
-	word-break:break-all;
-}
-
-.problem td.even  {
-	background-color: white;
-	word-break:break-all;
+	word-break: break-all;
 }
 
 a.error {
@@ -253,6 +97,7 @@ a.long-url {
 a.long-url {
 	background-color: #5599CC;
 }
+
 a.long-sql {
 	background-color: #6699CC;
 }
@@ -265,35 +110,35 @@ a.long-cache {
 	background-color: #6677AA;
 }
 
-a.url{
+a.url {
 	background-color: #cc0000;
 }
-a.sql{
+
+a.sql {
 	background-color: purple;
 }
 
-a.call{
+a.call {
 	background-color: #9966ff;
 }
-a.cache{
+
+a.cache {
 	background-color: #aa3faa;
 }
-a.heartbeat{
+
+a.heartbeat {
 	background-color: #009933;
 }
 
-a.abtest-heartbeat{
+a.abtest-heartbeat {
 	background-color: #009933;
 }
+
 .detail {
-	font-size: small;
 	border-spacing: 1px;
 }
-.current {
-	background-color: orange;
-	color: white;
-}
-.top{
+
+.top {
 	vertical-align: top;
 }
 
@@ -315,7 +160,7 @@ a.abtest-heartbeat{
 }
 
 #closeBtn {
-	width:10px;
+	width: 10px;
 	cursor: pointer;
 	background-color: #06C;
 }
@@ -337,25 +182,15 @@ a.abtest-heartbeat{
 	text-align: center;
 }
 
-.login {
-	height: 12px;
-	width: 97%;
-	text-align: right;
-	margin-right: 20px;
-	pedding-right: 20px;
-}
-
 .department {
-	text-align: center;
-	font-size: medium;
-	font-weight: bold;
+	text-align: left;
+	font-size:15px;
 	width: 100px;
 }
 
-.domain {
-	text-align: left;
-	font-weight: bold;
-	padding-left: 4px;
+.machines{
+	margin-top:5px;
+	margin-bottom:5px;
 }
 
 .longText {
@@ -365,12 +200,8 @@ a.abtest-heartbeat{
 	word-break: break-all;
 }
 
-.lable{
-	font-weight:bold;
-}
-
-.required{
-	color:red;
+.required {
+	color: red;
 }
 
 .graph {
@@ -385,15 +216,51 @@ a.abtest-heartbeat{
 }
 
 .pieChart {
-	text-align:left;
+	text-align: left;
 	width: 700px;
 	height: 450px;
 	margin: 4px auto;
 }
-.error{
-	color:red;
+
+.error {
+	color: red;
 }
 
-.dashboard{
+.dashboard {
 	background: url('../img/checked.gif') no-repeat;
+}
+
+.navbar {
+	margin-bottom: 5px;
+}
+
+.navbar .navbar-inner {
+	padding-left: 5px;
+}
+
+.navbar-inner .container-fluid {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.navbar .brand {
+	padding: 10px 00px 00px;
+	margin-left: 0px;
+}
+
+/* delete for abtest
+
+.form-horizontal .control-label{
+	width:50px;
+}
+.form-horizontal .controls{
+	margin-left:70px;
+}
+ */
+ 
+select{
+	margin-bottom:0px;
+}
+ul, ol{
+	margin:0 0 10px 25px;
 }

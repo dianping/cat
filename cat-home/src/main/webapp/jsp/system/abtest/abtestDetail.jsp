@@ -25,7 +25,7 @@ div.controls input {
 .inline-space{
 	margin-bottom: 5px;
 }
-	
+
 </style>
 <a:body>
    <res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
@@ -36,7 +36,6 @@ div.controls input {
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-slider.js']}" target="head-js" />
-   
    <div id="content" class="row-fluid">
       <div class="span12 column">
          <h3>

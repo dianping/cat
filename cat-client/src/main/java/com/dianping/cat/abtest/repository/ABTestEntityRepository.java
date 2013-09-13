@@ -13,4 +13,6 @@ public interface ABTestEntityRepository {
 	public Set<String> getActiveRuns(); 
 	
 	public Invocable getInvocable(int runID);
+	
+	public String getAbtestModel();
 }
