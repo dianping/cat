@@ -9,7 +9,7 @@ import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.hadoop.hdfs.DumpUploader;
+import com.dianping.cat.hadoop.hdfs.UploaderAndCleaner;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.service.CachedReportTask;
@@ -29,7 +29,7 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(MessageConsumer.class);
 		if (!serverConfigManager.isLocalMode()) {
 			ConfigReloadTask configReloadTask = ctx.lookup(ConfigReloadTask.class);
-			DumpUploader uploader = ctx.lookup(DumpUploader.class);
+			UploaderAndCleaner uploader = ctx.lookup(UploaderAndCleaner.class);
 
 			Threads.forGroup("Cat").start(configReloadTask);
 			Threads.forGroup("Cat").start(uploader);
@@ -67,11 +67,10 @@ public class CatHomeModule extends AbstractModule {
 	protected void setup(ModuleContext ctx) throws Exception {
 		File serverConfigFile = ctx.getAttribute("cat-server-config-file");
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
+		TcpSocketReceiver messageReceiver = ctx.lookup(TcpSocketReceiver.class);
 
 		serverConfigManager.initialize(serverConfigFile);
-
-		TcpSocketReceiver server = ctx.lookup(TcpSocketReceiver.class);
-		server.init();
+		messageReceiver.init();
 	}
 
 }

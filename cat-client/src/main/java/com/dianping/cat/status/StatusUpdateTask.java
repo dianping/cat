@@ -10,8 +10,10 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -26,6 +28,9 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	@Inject
 	private ClientConfigManager m_manager;
+
+	@Inject
+	private ABTestEntityRepository m_repository;
 
 	private boolean m_active = true;
 
@@ -130,6 +135,11 @@ public class StatusUpdateTask implements Task, Initializable {
 					h.complete();
 				}
 				t.setStatus(Message.SUCCESS);
+				String abtestModel = m_repository.getAbtestModel();
+
+				if (abtestModel != null) {
+					Cat.logEvent("System", "Abtest", Event.SUCCESS, abtestModel);
+				}
 				t.complete();
 			}
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;

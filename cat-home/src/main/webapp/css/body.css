@@ -257,3 +257,6 @@ a.abtest-heartbeat {
 select{
 	margin-bottom:0px;
 }
+ul, ol{
+	margin:0 0 10px 25px;
+}

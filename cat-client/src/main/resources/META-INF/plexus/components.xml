@@ -92,6 +92,9 @@
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
