@@ -1,11 +1,8 @@
 package com.dianping.cat.consumer.browser;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
@@ -25,8 +22,6 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
 	@Inject(ID)
 	private ReportManager<BrowserReport> m_reportManager;
 	
-	Map<String, String[]> values = new HashMap<String, String[]>();
-
 	public BrowserReport update(BrowserReport report, String[] agentToken) {
 		for (String s : agentToken) {
 			for (String browser : BrowsersAndOses.BROWSERS) {
@@ -68,23 +63,7 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
 	}
 
 	public String[] splitAgent(String message) {
-		String agent = parseValue("Agent", message);
-		String[] agentTokens1 = split(agent, "(");
-		String[] agentTokens2 = null;
-		for (String s : agentTokens1) {
-			String[] temp = split(s, ")");
-			agentTokens2 = (String[]) ArrayUtils.addAll(agentTokens2, temp);
-		}
-		String[] agentTokens3 = null;
-		for (String s : agentTokens2) {
-			String[] temp = split(s, ";");
-			agentTokens3 = (String[]) ArrayUtils.addAll(agentTokens3, temp);
-		}
-		int i;
-		for (i = 0; i < agentTokens3.length; i++) {
-			agentTokens3[i] = agentTokens3[i].trim();
-		}
-		return agentTokens3;
+		return null;
 	}
 
 	private String[] split(String message, String divisionChar) {
@@ -183,13 +162,6 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
 	}
 
 	private void updateBrowserReport(BrowserReport report, String data) {
-		data = parseValue("Agent", data);
-		String[] datas;
-		if(values.containsKey(data))
-			datas = values.get(data);
-		else
-			datas = splitAgent(data);
-		update(report, datas);
 	}
 
 	public class BrowserAndVersion {

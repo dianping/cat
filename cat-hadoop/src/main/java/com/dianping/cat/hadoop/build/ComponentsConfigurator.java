@@ -7,7 +7,7 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.DumpUploader;
+import com.dianping.cat.hadoop.hdfs.UploaderAndCleaner;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucket;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
@@ -25,7 +25,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(FileSystemManager.class) //
 		      .req(ServerConfigManager.class));
 
-		all.add(C(DumpUploader.class) //
+		all.add(C(UploaderAndCleaner.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));
 
 		all.add(C(MessageBucket.class, HdfsMessageBucket.ID, HdfsMessageBucket.class) //

@@ -9,4 +9,6 @@ public interface ABTestEntityRepository {
 	public Map<String, ABTestEntity> getCurrentEntities();
 	
 	public Set<String> getActiveRuns(); 
+	
+	public String getAbtestModel();
 }

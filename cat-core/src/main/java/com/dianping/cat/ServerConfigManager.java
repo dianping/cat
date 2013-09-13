@@ -182,7 +182,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 				return longConfig.getDomains();
 			}
 		}
-
+		
 		return Collections.emptyMap();
 	}
 
