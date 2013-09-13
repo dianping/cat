@@ -812,16 +812,22 @@
 					<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
+					<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
+					<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1385,11 +1391,7 @@
 					<driver>com.mysql.jdbc.Driver</driver>
 					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
 					<user>root</user>
-<<<<<<< HEAD
 					<password></password>
-=======
-					<password>password</password>
->>>>>>> f30d0603266a79adcbdbd5f353b64e89e3ec6a9f
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
