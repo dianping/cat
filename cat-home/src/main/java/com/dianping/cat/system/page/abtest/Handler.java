@@ -34,7 +34,6 @@ import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.abtest.ScriptFragementTest;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -272,6 +271,12 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		case MODEL:
 			renderModel(model, payload);
 			break;
+		case ABTEST_CACULATOR:
+		case AJAX_ADDGROUPSTRATEGY:
+		case AJAX_CREATE:
+		case AJAX_DETAIL:
+		case AJAX_PARSEGROUPSTRATEGY:
+			break;
 		}
 
 		model.setAction(action);
@@ -346,7 +351,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		m_configuration = new Configuration();
 		m_configuration.setDefaultEncoding("UTF-8");
 		try {
-			m_configuration.setClassForTemplateLoading(ScriptFragementTest.class, "/freemaker");
+			m_configuration.setClassForTemplateLoading(Handler.class, "/freemaker");
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

@@ -118,38 +118,47 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 	}
 
 	public void deleteOldReports() {
-		File reportDir = new File(m_reportBaseDir);
-		final List<String> toRemovePaths = new ArrayList<String>();
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		final String today = sdf.format(date);
-		final String yesterday = sdf.format(new Date(date.getTime() - 24 * 60 * 60 * 1000L));
+		Transaction t = Cat.newTransaction("System", "DeleteReport");
+		try {
+			File reportDir = new File(m_reportBaseDir);
+			final List<String> toRemovePaths = new ArrayList<String>();
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			final String today = sdf.format(date);
+			final String yesterday = sdf.format(new Date(date.getTime() - 24 * 60 * 60 * 1000L));
 
-		Scanners.forDir().scan(reportDir, new FileMatcher() {
-			@Override
-			public Direction matches(File base, String path) {
-				File file = new File(base, path);
-				if (file.isFile() && shouldDeleteReport(path)) {
-					toRemovePaths.add(path);
+			Scanners.forDir().scan(reportDir, new FileMatcher() {
+				@Override
+				public Direction matches(File base, String path) {
+					File file = new File(base, path);
+					if (file.isFile() && shouldDeleteReport(path)) {
+						toRemovePaths.add(path);
+					}
+					return Direction.DOWN;
 				}
-				return Direction.DOWN;
-			}
 
-			private boolean shouldDeleteReport(String path) {
-				if (path.indexOf(today) > -1 || path.indexOf(yesterday) > -1) {
-					return false;
-				} else {
-					return true;
+				private boolean shouldDeleteReport(String path) {
+					if (path.indexOf(today) > -1 || path.indexOf(yesterday) > -1) {
+						return false;
+					} else {
+						return true;
+					}
 				}
-			}
-		});
-		for (String path : toRemovePaths) {
-			File file = new File(m_reportBaseDir, path);
+			});
+			for (String path : toRemovePaths) {
+				File file = new File(m_reportBaseDir, path);
 
-			file.delete();
-			Cat.logEvent("System", "DeleteReport", Event.SUCCESS, file.getAbsolutePath());
+				file.delete();
+				Cat.logEvent("System", "DeleteReport", Event.SUCCESS, file.getAbsolutePath());
+			}
+			removeEmptyDir(reportDir);
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
-		removeEmptyDir(reportDir);
 	}
 
 	private void removeEmptyDir(File baseFile) {
