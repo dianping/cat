@@ -4,12 +4,13 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
@@ -21,13 +22,13 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	private ReportService m_reportSerivce;
 
 	public HistoricalStateService() {
-		super("state");
+		super(StateAnalyzer.ID);
 	}
 
 	@Override
 	protected StateReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		StateReport report;
 
 		if (isLocalMode()) {
@@ -44,7 +45,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	}
 
 	private StateReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "state");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

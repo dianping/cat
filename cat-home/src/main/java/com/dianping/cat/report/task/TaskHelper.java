@@ -83,36 +83,12 @@ public class TaskHelper {
 		return buf.toString();
 	}
 
-	public static Date nextTaskTime() {
-		Calendar cal = Calendar.getInstance();
-		final int startFindMin = 10;
-		cal.set(Calendar.MINUTE, startFindMin);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		if (cal.get(Calendar.MINUTE) >= startFindMin) {
-			cal.add(Calendar.HOUR, 1);// timeout, waiting for next hour
-		}
-		return cal.getTime();
-	}
-
-	public static Date startDateOfNextTask(Date currentDate) {
-		long day = 24 * 60 * 60 * 1000L;
-		long nineMissecond = 9 * 60 * 1000L;
-		Date dayStart = TaskHelper.todayZero(currentDate);
-
-		if (currentDate.getTime() - dayStart.getTime() > nineMissecond) {
-			return new Date(dayStart.getTime() + day + nineMissecond);
-		} else {
-			return new Date(dayStart.getTime() + nineMissecond);
-		}
-	}
-
-	public static Date todayZero(Date reportPeriod) {
-		if (reportPeriod == null) {
-			reportPeriod = new Date();
+	public static Date todayZero(Date period) {
+		if (period == null) {
+			period = new Date();
 		}
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
+		cal.setTime(period);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -120,12 +96,12 @@ public class TaskHelper {
 		return cal.getTime();
 	}
 
-	public static Date tomorrowZero(Date reportPeriod) {
-		if (reportPeriod == null) {
-			reportPeriod = new Date();
+	public static Date tomorrowZero(Date period) {
+		if (period == null) {
+			period = new Date();
 		}
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
+		cal.setTime(period);
 		cal.add(Calendar.DAY_OF_YEAR, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -134,14 +110,35 @@ public class TaskHelper {
 		return cal.getTime();
 	}
 
-	public static Date yesterdayZero(Date reportPeriod) {
+	public static Date yesterdayZero(Date period) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
+		cal.setTime(period);
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+	
+	public static Date thisHour(Date  period) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(period);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+	
+	public static Date nextMonthStart(Date period){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(period);
+		cal.add(Calendar.MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
 		return cal.getTime();
 	}
 }

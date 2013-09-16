@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="utilization-report-codegen.xml" />
+  <file path="utilization-report-model.xml" />
+</manifest>
+

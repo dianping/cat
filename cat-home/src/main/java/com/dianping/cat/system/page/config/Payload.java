@@ -5,12 +5,14 @@ import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -36,6 +38,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("metricItemConfig")
 	private MetricItemConfig m_metricItemConfig = new MetricItemConfig();
+
+	@ObjectMeta("exceptionLimit")
+	private ExceptionLimit m_exceptionLimit = new ExceptionLimit();
 
 	@FieldMeta("projectId")
 	private int m_projectId;
@@ -66,6 +71,15 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("pattern")
 	private String m_pattern;
+
+	@FieldMeta("exception")
+	private String m_exception;
+
+	@FieldMeta(Constants.REPORT_BUG)
+	private String m_bug;
+	
+	@FieldMeta("content")
+	private String m_content;
 
 	@Override
 	public Action getAction() {
@@ -227,11 +241,46 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public String getMetricKey() {
-   	return m_metricKey;
-   }
+		if (m_metricKey != null) {
+			m_metricKey = m_metricKey.trim();
+		}
+		return m_metricKey;
+	}
 
 	public void setMetricKey(String metricKey) {
-   	m_metricKey = metricKey;
+		m_metricKey = metricKey;
+	}
+
+	public String getException() {
+		return m_exception;
+	}
+
+	public void setException(String exception) {
+		m_exception = exception;
+	}
+
+	public ExceptionLimit getExceptionLimit() {
+		return m_exceptionLimit;
+	}
+
+	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
+		m_exceptionLimit = exceptionLimit;
+	}
+
+	public String getBug() {
+   	return m_bug;
    }
-	
+
+	public void setBug(String bug) {
+   	m_bug = bug;
+   }
+
+	public String getContent() {
+   	return m_content;
+   }
+
+	public void setContent(String content) {
+   	m_content = content;
+   }
+
 }

@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.transaction;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,19 +7,24 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.ReportManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	public static final String ID = "transaction";
@@ -28,14 +32,47 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
 
-	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
+	@Inject
+	private TransactionDelegate m_delegate;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
+
+	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
+		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
+		List<Message> children = t.getChildren();
+		int size = children.size();
+
+		if (tree.getMessage() == t && size > 0) { // root transaction with children
+			Message last = children.get(size - 1);
+
+			if (last instanceof Event) {
+				String type = last.getType();
+				String name = last.getName();
+
+				if (type.equals("RemoteCall") && name.equals("Next")) {
+					pair.setKey(false);
+				} else if (type.equals("TruncatedTransaction") && name.equals("TotalDuration")) {
+					try {
+						long delta = Long.parseLong(last.getData().toString());
+
+						pair.setValue(delta);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+			}
+		}
+
+		return pair;
+	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
-		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+		} else {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
 	}
 
@@ -44,36 +81,42 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_logger = logger;
 	}
 
-	// TODO remove it
 	public Set<String> getDomains() {
-		return m_reports.keySet();
+		return m_reportManager.getDomains(getStartTime());
 	}
 
 	@Override
 	public TransactionReport getReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		if (!Constants.ALL.equals(domain)) {
+			TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+			report.accept(new TransactionStatisticsComputer());
+			return report;
+		} else {
+			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());
+
+			return m_delegate.createAggregatedReport(reports);
+		}
 	}
 
 	@Override
 	protected void loadReports() {
-		m_reports = m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		TransactionReport report = m_reports.get(domain);
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 		Message message = tree.getMessage();
-
-		if (report == null) {
-			report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-			m_reports.put(domain, report);
-		}
 
 		report.addIp(tree.getIpAddress());
 
 		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+			Transaction root = (Transaction) message;
+
+			processTransaction(report, tree, root);
 		}
 	}
 
@@ -98,29 +141,42 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.setSum(range.getSum() + d);
 	}
 
-	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		if (shouldDiscard(t)) {
-			return 0;
+	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
+		if (m_serverConfigManager.discardTransaction(t)) {
+			return;
+		} else {
+			String ip = tree.getIpAddress();
+			TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
+			TransactionName name = type.findOrCreateName(t.getName());
+			String messageId = tree.getMessageId();
+			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
+
+			if (pair.getKey().booleanValue()) {
+				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
+			}
+
+			List<Message> children = t.getChildren();
+
+			for (Message child : children) {
+				if (child instanceof Transaction) {
+					processTransaction(report, tree, (Transaction) child);
+				}
+			}
 		}
+	}
 
-		String ip = tree.getIpAddress();
-		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
-		TransactionName name = type.findOrCreateName(t.getName());
-		String messageId = tree.getMessageId();
-		int count = 0;
-
+	protected void processTypeAndName(Transaction t, TransactionType type, TransactionName name, String messageId,
+	      double duration) {
 		type.incTotalCount();
 		name.incTotalCount();
 
 		if (t.isSuccess()) {
 			if (type.getSuccessMessageUrl() == null) {
 				type.setSuccessMessageUrl(messageId);
-				count++;
 			}
 
 			if (name.getSuccessMessageUrl() == null) {
 				name.setSuccessMessageUrl(messageId);
-				count++;
 			}
 		} else {
 			type.incFailCount();
@@ -128,17 +184,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			if (type.getFailMessageUrl() == null) {
 				type.setFailMessageUrl(messageId);
-				count++;
 			}
 
 			if (name.getFailMessageUrl() == null) {
 				name.setFailMessageUrl(messageId);
-				count++;
 			}
 		}
 
 		// update statistics
-		double duration = t.getDurationInMicros() / 1000d;
 		Integer allDuration = new Integer((int) duration);
 
 		name.setMax(Math.max(name.getMax(), duration));
@@ -153,22 +206,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		type.setSum2(type.getSum2() + duration * duration);
 		type.findOrCreateAllDuration(allDuration).incCount();
 
-		double d = t.getDurationInMicros() / 1000d;
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
 
-		processNameGraph(t, name, min, d);
-		processTypeRange(t, type, min, d);
-
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				count += processTransaction(report, tree, (Transaction) child);
-			}
-		}
-
-		return count;
+		processNameGraph(t, name, min, duration);
+		processTypeRange(t, type, min, duration);
 	}
 
 	private void processTypeRange(Transaction t, TransactionType type, int min, double d) {
@@ -177,6 +219,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (!t.isSuccess()) {
 			range.incFails();
 		}
+
 		range.incCount();
 		range.setSum(range.getSum() + d);
 	}

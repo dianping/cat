@@ -8,7 +8,7 @@ import java.util.Map;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager {
 	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
@@ -58,10 +58,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		String path;
 		Date date = new Date(timestamp);
 
-//		if (type == MessageTree.class) {
-//			path = m_pathBuilder.getMessagePath(name, date);
-//		} else {
-//		}
 		path = m_pathBuilder.getReportPath(name, date);
 
 		Entry entry = new Entry(type, path, namespace);
@@ -86,7 +82,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		return getBucket(String.class, timestamp, name, "report");
 	}
 
-	static class Entry {
+	public static class Entry {
 		private String m_namespace;
 
 		private String m_path;

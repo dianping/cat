@@ -4,12 +4,13 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.model.ModelPeriod;
-import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
@@ -18,11 +19,11 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 	private BucketManager m_bucketManager;
 
 	public LocalHeartbeatService() {
-		super("heartbeat");
+		super(HeartbeatAnalyzer.ID);
 	}
 
 	private HeartbeatReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "heartbeat");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

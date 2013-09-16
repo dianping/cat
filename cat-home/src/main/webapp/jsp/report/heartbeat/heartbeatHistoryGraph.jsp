@@ -15,7 +15,7 @@
 <br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines:
+		<th>机器:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${payload.realIp eq ip}">
@@ -43,33 +43,33 @@
 	<td><div id="PigeonStartedThread" class="graph"></div></td>
 </tr>
 <tr>
-	<th colspan="3" style="text-align:left"><a  data-status="thread" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=thread">JVM Thread Info</a></th>
+	<th colspan="3" style="text-align:left"><a  data-status="thread" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=thread">JVM Thread Info</a></th>
 </tr>
 <tr>
 	<td colspan="3"><iframe id="thread" style="display:none;" width="100%" height="260px"></iframe></td>
 </tr>
 
 <tr>
-	<th colspan="3" style="text-align:left"><a  data-status="system" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=system">System Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(New Gc,Old Gc,System Load)</th>
+	<th colspan="3" style="text-align:left"><a  data-status="system" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=system">System Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(New Gc,Old Gc,System Load)</th>
 </tr>
 <tr>
 	<td colspan="3"><iframe id="system" style="display:none;" width="100%" height="260px"></iframe></td>
 </tr>
 <tr>
-	<th colspan="3" style="text-align:left"><a  data-status="memory" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=memory">Memory Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(Memory Free,Heap Usage,None Heap Usage)</th>
+	<th colspan="3" style="text-align:left"><a  data-status="memory" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=memory">Memory Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(Memory Free,Heap Usage,None Heap Usage)</th>
 </tr>
 <tr>
 	<td colspan="3"><iframe id="memory" style="display:none;" width="100%" height="260px"></iframe></td>
 </tr>
 <tr>
-	<th colspan="3" style="text-align:left"><a  data-status="disk" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=disk">Disk Info</a></th>
+	<th colspan="3" style="text-align:left"><a  data-status="disk" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=disk">Disk Info</a></th>
 </tr>
 <tr>
 	<td colspan="3"><iframe id="disk" style="display:none;" width="100%" height="260px"></iframe></td>
 </tr>
 
 <tr>
-	<th colspan="3" style="text-align:left"><a  data-status="cat" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=cat">Cat Info</a></th>
+	<th colspan="3" style="text-align:left"><a  data-status="cat" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=cat">Cat Info</a></th>
 </tr>
 <tr>
 	<td colspan="3"><iframe id="cat" style="display:none;" width="100%" height="260px"></iframe></td>
@@ -89,3 +89,4 @@
 	</script>
 </jsp:body>
 </a:historyReport>
+	<script type="text/javascript" src="/cat/js/heartbeatHistory.js"></script>

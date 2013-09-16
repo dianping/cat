@@ -20,10 +20,11 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -34,17 +35,17 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.model.ModelPeriod;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
-	@Inject(type = ModelService.class, value = "dependency")
+	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_service;
 
 	@Inject
@@ -77,15 +78,19 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
-				String groupName = entry.getKey();
-				Map<String, Domain> domains = entry.getValue().getDomains();
-				for (Domain domain : domains.values()) {
-					String nodeName = domain.getId();
-					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+				String realName = entry.getValue().getTitle();
+				boolean isDashboard = entry.getValue().getDashboard();
 
-					m_allDomains.add(nodeName);
-					if (node != null) {
-						dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+				if (isDashboard) {
+					Map<String, Domain> domains = entry.getValue().getDomains();
+					for (Domain domain : domains.values()) {
+						String nodeName = domain.getId();
+						TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+
+						m_allDomains.add(nodeName);
+						if (node != null) {
+							dashboardGraph.addNode(realName, m_graphBuilder.cloneNode(node));
+						}
 					}
 				}
 			}
@@ -179,7 +184,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode() && m_manager.isJobMachine()) {
-			Threads.forGroup("Cat").start(new Reload());
+			Threads.forGroup("Cat").start(new DependencyReload());
 		}
 	}
 
@@ -223,7 +228,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return graph;
 	}
 
-	private class Reload implements Task {
+	private class DependencyReload implements Task {
 
 		private void buildGraph(List<DependencyReport> reports) {
 			Transaction t = Cat.newTransaction(DEPENDENCY, "BuildGraph");
@@ -256,7 +261,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			try {
 				for (String temp : domains) {
 					try {
-						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date",
+						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT.getStartTime()).setProperty("date",
 						      String.valueOf(currentHour));
 						if (m_service.isEligable(request)) {
 							ModelResponse<DependencyReport> response = m_service.invoke(request);

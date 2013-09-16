@@ -14,10 +14,9 @@
 navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 <jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 <jsp:body>
-</br>
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: &nbsp; <c:forEach var="ip" items="${model.ips}">
+		<th>机器: &nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -33,7 +32,6 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 		</th>
 	</tr>
 </table>
-<br>
 <table class="data">
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -50,7 +48,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 					<td style="text-align:left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
-					<td>${w:format(item.hited,'0.00%')}</td>
+					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -85,7 +83,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
-					<td>${w:format(item.hited,'0.00%')}</td>
+					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>

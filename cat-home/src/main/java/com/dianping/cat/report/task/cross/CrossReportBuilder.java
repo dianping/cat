@@ -1,63 +1,89 @@
 package com.dianping.cat.report.task.cross;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
-import com.dianping.cat.report.page.model.cross.CrossReportMerger;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.AbstractReportBuilder;
-import com.dianping.cat.report.task.spi.ReportBuilder;
+import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class CrossReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class CrossReportBuilder implements ReportTaskBuilder {
 
 	@Inject
-	private CrossMerger m_crossMerger;
+	protected ReportService m_reportService;
 
 	@Override
-	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
-			m_dailyReportDao.insert(report);
-			return true;
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
+	public boolean buildDailyTask(String name, String domain, Date period) {
+		CrossReport crossReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
+		DailyReport report = new DailyReport();
+
+		report.setContent(crossReport.toString());
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertDailyReport(report);
 	}
 
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
+	public boolean buildHourlyTask(String name, String domain, Date period) {
 		throw new RuntimeException("Cross report don't support HourReport!");
 	}
 
-	private CrossReport buildMergedDailyReport(String domain, Date start, Date end) {
+	@Override
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		CrossReport crossReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+		MonthlyReport report = new MonthlyReport();
+
+		report.setContent(crossReport.toString());
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertMonthlyReport(report);
+	}
+
+	@Override
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		CrossReport crossReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
+		WeeklyReport report = new WeeklyReport();
+		String content = crossReport.toString();
+
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertWeeklyReport(report);
+	}
+
+	private CrossReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "cross", DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
-				
-				CrossReport reportModel = DefaultSaxParser.parse(xml);
+				CrossReport reportModel = m_reportService.queryCrossReport(domain, new Date(startTime), new Date(startTime
+				      + TimeUtil.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -69,76 +95,24 @@ public class CrossReportBuilder extends AbstractReportBuilder implements ReportB
 		return crossReport;
 	}
 
-	@Override
-	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
-		cal.add(Calendar.MONTH, 1);
+	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
+		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, CrossAnalyzer.ID);
+		long startTime = period.getTime();
+		long endTime = endDate.getTime();
+		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
 
-		Date start = reportPeriod;
-		Date end = cal.getTime();
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			Date date = new Date(startTime);
+			CrossReport reportModel = m_reportService.queryCrossReport(domain, date, new Date(date.getTime()
+			      + TimeUtil.ONE_HOUR));
 
-		CrossReport crossReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
-
-		report.setContent(crossReport.toString());
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_monthreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
+			reportModel.accept(merger);
 		}
-		return true;
-	}
+		CrossReport crossReport = merger.getCrossReport();
+		crossReport.getDomainNames().addAll(domainSet);
+		crossReport.setStartTime(period);
+		crossReport.setEndTime(endDate);
 
-	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		CrossReport crossReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
-		String content = crossReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
-	}
-
-	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		String content = m_crossMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
-
-		Dailyreport report = m_dailyReportDao.createLocal();
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-		return report;
+		return crossReport;
 	}
 }

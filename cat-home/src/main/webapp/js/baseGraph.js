@@ -47,6 +47,7 @@ var lineChartOptions = {
             percent:0.8
         },
         y:{
+        	title:"10分钟"
         }
     },
     line:{
@@ -62,7 +63,7 @@ var lineChartOptions = {
     legend:{
     },
     tooltip:function(obj){
-    	return obj.label+" "+obj.y;
+    	return obj.x+" "+obj.y.toFixed(0);
     }
     
  }

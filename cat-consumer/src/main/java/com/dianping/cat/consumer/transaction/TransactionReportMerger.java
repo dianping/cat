@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -7,7 +8,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
-import com.dianping.cat.report.ReportConstants;
 
 public class TransactionReportMerger extends DefaultMerger {
 	public TransactionReportMerger(TransactionReport transactionReport) {
@@ -27,6 +27,13 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void mergeName(TransactionName old, TransactionName other) {
 		long totalCountSum = old.getTotalCount() + other.getTotalCount();
+		if (totalCountSum > 0) {
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+			double line99Values = old.getLine99Value() * old.getTotalCount() + other.getLine99Value() * other.getTotalCount();
+			
+			old.setLine95Value(line95Values / totalCountSum);
+			old.setLine99Value(line99Values / totalCountSum);
+		}
 
 		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -41,12 +48,6 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
-
-		if (totalCountSum > 0) {
-			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
-
-			old.setLine95Value(line95Values / totalCountSum);
-		}
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
@@ -75,10 +76,10 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	public Machine mergesForAllMachine(TransactionReport report) {
-		Machine all = new Machine(ReportConstants.ALL);
+		Machine all = new Machine(Constants.ALL);
 
 		for (Machine m : report.getMachines().values()) {
-			if (!m.getIp().equals(ReportConstants.ALL)) {
+			if (!m.getIp().equals(Constants.ALL)) {
 				visitMachineChildren(all, m);
 			}
 		}
@@ -89,6 +90,13 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void mergeType(TransactionType old, TransactionType other) {
 		long totalCountSum = old.getTotalCount() + other.getTotalCount();
+		if (totalCountSum > 0) {
+			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
+			double line99Values = old.getLine99Value() * old.getTotalCount() + other.getLine99Value() * other.getTotalCount();
+
+			old.setLine95Value(line95Values / totalCountSum);
+			old.setLine99Value(line99Values / totalCountSum);
+		}
 
 		old.setTotalCount(totalCountSum);
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -104,11 +112,6 @@ public class TransactionReportMerger extends DefaultMerger {
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
 
-		if (totalCountSum > 0) {
-			double line95Values = old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount();
-
-			old.setLine95Value(line95Values / totalCountSum);
-		}
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());

@@ -9,7 +9,17 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	MODEL("model"),
 	
-	REPORT("report");
+	REPORT("report"),
+	
+	AJAX_CREATE("ajax_create"),
+	
+	AJAX_DETAIL("ajax_detail"),
+	
+	AJAX_ADDGROUPSTRATEGY("ajax_addGs"),
+	
+	AJAX_PARSEGROUPSTRATEGY("ajax_parseGs"),
+	
+	ABTEST_CACULATOR("caculator");
 
 	private String m_name;
 

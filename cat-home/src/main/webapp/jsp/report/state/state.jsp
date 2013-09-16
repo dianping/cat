@@ -16,11 +16,9 @@
 	<jsp:body>	
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-<br>
-
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}"
 								class="current">All</a>
@@ -44,8 +42,6 @@
 		</th>
 	</tr>
 </table>
-</br>
-
 <table width="80%">
 	<tr>
 		<td width="5%"></td>
@@ -154,25 +150,39 @@
 </br>
 <table width="100%">
 	<tr class='odd'>
-		<td width="15%">处理项目列表</td>
-				<td width="15%">机器总数</td>
-				<td>项目对应机器列表</td>
+		<td width="15%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
+		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
+		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss">Analyzer丢失消息总量</a></td>
+		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size">压缩前消息大小(GB)</a></td>
+		<td width="5%">机器总数</td>
+		<td>项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
 				varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 			<c:set var="lastIndex" value="${status.index}" />
 			<td>${item.name}</td>
-			<td>${w:size(item.ips)}</td>
-			<td style="white-space: normal">${item.ips}</td>
+			<td style="text-align:right;">${w:format(item.total,'#,###,###,###,##0.#')}</td>
+			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:total" data-status="${item.name}:total" class="state_graph_link">[:: show ::]</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align:right;">${w:format(item.totalLoss,'#,###,###,###,##0.#')}</td>
+			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:totalLoss" data-status="${item.name}:totalLoss" class="state_graph_link">[:: show ::]</a></td>
+			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'0.00#')}</td>
+			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:size" data-status="${item.name}:size" class="state_graph_link">[:: show ::]</a></td>
+			<td style="text-align:center;">${w:size(item.ips)}</td>
+			<td style="white-space:normal">${item.ips}</td>
 		</tr>
+		<tr class="graphs"><td colspan="7"><div id="${item.name}:total" style="display:none"></div></td></tr>
+		<tr class="graphs"><td colspan="7"><div id="${item.name}:totalLoss" style="display:none"></div></td></tr>
+		<tr class="graphs"><td colspan="7"><div id="${item.name}:size" style="display:none"></div></td></tr>
 	</c:forEach>
 	<tr style="color: white;">
 				<td>${lastIndex+1}</td>
+				<td></td>
+				<td></td>
+				<td></td>
 				<td>${model.state.totalSize}</td>
 			</tr>
 </table>
-<br>
 	<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
 </a:report>

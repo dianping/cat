@@ -1,18 +1,26 @@
 package com.dianping.cat.consumer.transaction;
 
-import static com.dianping.cat.report.ReportConstants.ALL;
+import static com.dianping.cat.Constants.ALL;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.ReportConstants;
-import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class TransactionDelegate implements ReportDelegate<TransactionReport> {
+
+	@Inject
+	private TaskManager m_taskManager;
+	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -26,9 +34,11 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 			domainNames.addAll(reports.keySet());
 		}
 
-		TransactionReport all = createAggregatedTypeReport(reports);
+		if (reports.size() > 0) {
+			TransactionReport all = createAggregatedReport(reports);
 
-		reports.put(all.getDomain(), all);
+			reports.put(all.getDomain(), all);
+		}
 	}
 
 	@Override
@@ -40,9 +50,9 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		return xml;
 	}
 
-	private TransactionReport createAggregatedTypeReport(Map<String, TransactionReport> reports) {
+	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
 		TransactionReport first = reports.values().iterator().next();
-		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), ReportConstants.HOUR);
+		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
 		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all);
 
 		try {
@@ -57,8 +67,12 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
 		return all;
+	}
+
+	@Override
+	public boolean createHourlyTask(TransactionReport report) {
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID, TaskProlicy.ALL);
 	}
 
 	@Override

@@ -16,11 +16,10 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.report.task.spi.GraphCreator;
+import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.spi.GraphLine;
 
-public class TransactionGraphCreator implements GraphCreator<TransactionReport> {
+public class TransactionGraphCreator {
 
 	private double[] arrayAdd(double[] src, double added[]) {
 		int size = added.length;
@@ -95,7 +94,6 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 		return value;
 	}
 
-	@Override
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName,
 	      TransactionReport report) {
 		Set<String> ips = report.getIps();

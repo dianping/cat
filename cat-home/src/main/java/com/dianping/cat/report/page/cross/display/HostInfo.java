@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
@@ -110,7 +110,7 @@ public class HostInfo extends BaseVisitor {
 		if (ip.indexOf(':') > 0) {
 			ip = ip.substring(0, ip.indexOf(':'));
 		}
-		String domain = m_domainManager.getDomainByIp(ip);
+		String domain = m_domainManager.queryDomainByIp(ip);
 		if (projectName.equalsIgnoreCase(domain)) {
 			return true;
 		} else {

@@ -28,16 +28,16 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.status.ServerStateManager;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
@@ -53,7 +53,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private ServerStateManager m_serverStateManager;
+	private ServerStatisticManager m_serverStateManager;
 
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
@@ -64,9 +64,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private long m_total;
 
+	private Map<String, Long> m_totals = new HashMap<String,Long>();
+
 	private long m_totalSize;
 
-	private long m_lastTotalSize;
+	private Map<String, Long> m_totalSizes = new HashMap<String,Long>();
+
+	private Map<String, Long> m_lastTotalSizes = new HashMap<String,Long>();
 
 	private Logger m_logger;
 
@@ -109,7 +113,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	@Override
 	public void close() throws IOException {
 		synchronized (m_buckets) {
 			for (LocalMessageBucket bucket : m_buckets.values()) {
@@ -333,7 +336,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		// the message tree of one ip in the same hour should be put in one gzip thread
-		String key = id.getDomain() + id.getIpAddress() + id.getTimestamp();
+		String domain = id.getDomain();
+		String key = domain + id.getIpAddress() + id.getTimestamp();
 		int abs = key.hashCode();
 
 		if (abs < 0) {
@@ -353,20 +357,31 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
-
 		m_total++;
+		Long value = m_totals.get(domain);
+		if (value == null) {
+			m_totals.put(domain, 1L);
+		} else {
+			m_totals.put(domain, value + 1);
+		}
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			logState(tree);
+		}
+		if (value != null && value % CatConstants.SUCCESS_COUNT == 0) {
+			Long lastTotalSize =  m_lastTotalSizes.get(domain);
+			Long totalSize = m_totalSizes.get(domain);
+			if(lastTotalSize == null){
+				lastTotalSize = 0L;
+			}
+			double amount = totalSize - lastTotalSize;
+			m_lastTotalSizes.put(domain, totalSize);
+			m_serverStateManager.addMessageSize(domain, amount);
+			m_serverStateManager.addMessageSize(amount);
 		}
 	}
 
 	private void logState(final MessageTree tree) {
-		double amount = m_totalSize - m_lastTotalSize;
-		m_lastTotalSize = m_totalSize;
-
 		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-		m_serverStateManager.addMessageSize(amount);
-
 		Message message = tree.getMessage();
 		if (message instanceof Transaction) {
 			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
@@ -375,8 +390,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
-			} else {
-				m_logger.error("Error when compute the delay duration, " + delay);
 			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
@@ -406,7 +419,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void run() {
 			try {
-				while (true) { 
+				while (true) {
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
@@ -454,7 +467,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error("Error when offer the block to the dump!");
 					}
 				}
+				String domain = id.getDomain();
 				m_totalSize += buf.readableBytes();
+				Long lastTotalSize = m_totalSizes.get(domain);
+				if (lastTotalSize == null) {
+					m_totalSizes.put(domain, (long) buf.readableBytes());
+				} else {
+					m_totalSizes.put(domain, lastTotalSize + buf.readableBytes());
+				}
 
 				if (t != null) {
 					t.setStatus(Message.SUCCESS);
@@ -581,8 +601,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				try {
 					long current = System.currentTimeMillis() / 1000 / 60;
 					int min = (int) (current % (60));
-					
-					// make system is 0-10 min is not busy
+
+					// make system 0-10 min is not busy
 					if (min > 10) {
 						moveOldMessages();
 					}

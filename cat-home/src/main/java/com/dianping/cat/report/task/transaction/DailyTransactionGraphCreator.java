@@ -4,32 +4,33 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.home.dal.report.Dailygraph;
+import com.dianping.cat.core.dal.DailyGraph;
 
 public class DailyTransactionGraphCreator {
 
-	private List<Dailygraph> m_graphs = new ArrayList<Dailygraph>();
+	private List<DailyGraph> m_graphs = new ArrayList<DailyGraph>();
 
 	private TransactionReport m_report;
 
-	public List<Dailygraph> buildDailygraph(TransactionReport report) {
+	public List<DailyGraph> buildDailygraph(TransactionReport report) {
 		m_report = report;
 		new TransactionReportVisitor().visitTransactionReport(report);
 
 		return m_graphs;
 	}
 
-	private Dailygraph buildDailyGraph(String ip) {
-		Dailygraph graph = new Dailygraph();
+	private DailyGraph buildDailyGraph(String ip) {
+		DailyGraph graph = new DailyGraph();
 
 		graph.setDomain(m_report.getDomain());
 		graph.setPeriod(m_report.getStartTime());
-		graph.setName("transaction");
+		graph.setName(TransactionAnalyzer.ID);
 		graph.setIp(ip);
 		graph.setType(3);
 		graph.setCreationDate(new Date());
@@ -42,7 +43,7 @@ public class DailyTransactionGraphCreator {
 
 		private String m_currentType;
 
-		private Dailygraph m_currentDailygraph;
+		private DailyGraph m_currentDailygraph;
 
 		private StringBuilder m_summaryContent;
 

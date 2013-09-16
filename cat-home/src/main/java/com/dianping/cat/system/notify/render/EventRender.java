@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -15,7 +16,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.event.DisplayTypes;
 
@@ -50,9 +51,9 @@ public class EventRender extends BaseVisitor {
 
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		if (ip.startsWith("10.")) {
-			m_host = CatString.ONLINE;
+			m_host = Chinese.ONLINE;
 		} else {
-			m_host = CatString.OFFLINE;
+			m_host = Chinese.OFFLINE;
 		}
 	}
 
@@ -103,7 +104,7 @@ public class EventRender extends BaseVisitor {
 
 	@Override
 	public void visitType(EventType type) {
-		if (m_currentIp.equals(CatString.ALL)) {
+		if (m_currentIp.equals(Constants.ALL)) {
 			Set<String> types = DisplayTypes.s_unusedTypes;
 			String id = type.getId();
 			if (!types.contains(id)) {

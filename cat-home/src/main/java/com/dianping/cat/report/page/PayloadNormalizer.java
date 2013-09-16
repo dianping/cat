@@ -3,8 +3,8 @@ package com.dianping.cat.report.page;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 
 public class PayloadNormalizer {
 
@@ -17,7 +17,7 @@ public class PayloadNormalizer {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 		if (StringUtils.isEmpty(payload.getIpAddress())) {
-			payload.setIpAddress(CatString.ALL);
+			payload.setIpAddress(Constants.ALL);
 		}
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());

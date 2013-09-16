@@ -12,13 +12,19 @@
  }
 </style>
 <a:body>
-<div >
-	<h4>
-	<a class="btn btn-primary btn-small" href="http://cat.qa.dianpingoa.com/cat/r">CAT测试环境链接</a>
-	<a class="btn btn-primary btn-small" href="http://10.1.8.64:8080/cat/r">CAT预发环境链接</a>
-	<a class="btn btn-primary btn-small" href="http://cat.dianpingoa.com/cat/r">CAT生产环境链接</a></h4>
-	<a class="btn btn-primary btn-small" href="http://10.1.8.152:8080/cat/r">BA后台环境链接</a></h4>
-	</h4>
+
+<div class="row-fluid">
+	<div class="span5">
+		<a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">应用监控仪表盘</a>
+		<a id="navbussiness" class="btn  btn-small btn-danger" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控仪表盘</a>
+	</div>
+	<div  class="span7 text-right">
+		<a class="btn btn-small btn-primary" href="http://cat.qa.dianpingoa.com/cat/r">CAT测试环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://10.1.8.64:8080/cat/r">CAT预发环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://cat.dianpingoa.com/cat/r">CAT生产环境链接</a>
+		<a class="btn btn-small btn-primary" href="http://10.1.8.152:8080/cat/r">BA后台环境链接</a>
+</div>
+	
 </div>
 <div class="row-fluid">
 	<div class="span12">
@@ -29,6 +35,7 @@
    			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>开发者文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>用户文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>常见问题</strong></a></li>
+   			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>插件扩展</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1"><%@ include file="releasenotes.jsp"%></div>
@@ -36,6 +43,7 @@
 	    		<div class="tab-pane" id="tab3"><%@ include file="developDocument.jsp"%></div>
 	    		<div class="tab-pane" id="tab4"><%@ include file="userDocument.jsp"%></div>
 	    		<div class="tab-pane" id="tab5"><%@ include file="problem.jsp"%></div>
+	    		<div class="tab-pane" id="tab6"><%@ include file="plugin.jsp"%></div>
 			</div>
 	</div>
 </div>

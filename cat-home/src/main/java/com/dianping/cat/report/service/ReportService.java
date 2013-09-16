@@ -14,30 +14,54 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.heavy.entity.HeavyReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
 public interface ReportService {
 
+	public boolean insertDailyReport(DailyReport report);
+
+	public boolean insertHourlyReport(HourlyReport report);
+
+	public boolean insertMonthlyReport(MonthlyReport report);
+
+	public boolean insertWeeklyReport(WeeklyReport report);
+
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName);
+
+	public BugReport queryBugReport(String domain, Date start, Date end);
 
 	public CrossReport queryCrossReport(String domain, Date start, Date end);
 
+	public DependencyReport queryDependencyReport(String domain,Date start,Date end);
+	
 	public EventReport queryEventReport(String domain, Date start, Date end);
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
-
+	
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
 
 	public MetricReport queryMetricReport(String domain, Date start, Date end);
-
+	
 	public ProblemReport queryProblemReport(String domain, Date start, Date end);
-
+	
+	public ServiceReport queryServiceReport(String domain, Date start, Date end);
+	
 	public SqlReport querySqlReport(String domain, Date start, Date end);
 	
 	public StateReport queryStateReport(String domain,Date start,Date end);
-
+	
 	public TopReport queryTopReport(String domain,Date start,Date end);
 	
-	public DependencyReport queryDependencyReport(String domain,Date start,Date end);
-
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
+
+	public HeavyReport queryHeavyReport(String domain,  Date start, Date end);
+	
+	public UtilizationReport queryUtilizationReport(String domain,  Date start, Date end);
 }

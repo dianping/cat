@@ -51,7 +51,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
-			
+		//Metric
 		case METRIC_CONFIG_ADD_OR_UPDATE:
 			return JspFile.METRIC_CONFIG_ADD_OR_UPDATE.getPath();
 		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
@@ -60,6 +60,20 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.METRIC_CONFIG_LIST.getPath();
 		case METRIC_CONFIG_DELETE:
 			return JspFile.METRIC_CONFIG_LIST.getPath();
+		//Excepton Config
+		case EXCEPTION_THRESHOLDS:
+			return JspFile.EXCEPTION_THRESHOLD.getPath();
+		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
+			return JspFile.EXCEPTION_THRESHOLD.getPath();
+		case EXCEPTION_THRESHOLD_DELETE:
+			return JspFile.EXCEPTION_THRESHOLD.getPath();
+		case EXCEPTION_THRESHOLD_UPDATE:
+			return JspFile.EXCEPTION_THRESHOLD_CONFIG.getPath();
+		//Bug
+		case BUG_CONFIG_UPDATE:
+			return JspFile.BUG_CONFIG_UPDATE.getPath();
+		case UTILIZATION_CONFIG_UPDATE:
+			return JspFile.UTILIZATION_CONFIG_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

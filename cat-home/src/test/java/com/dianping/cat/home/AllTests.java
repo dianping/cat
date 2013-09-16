@@ -16,8 +16,6 @@ import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
-import com.dianping.cat.report.page.model.event.EventModelServiceTest;
-import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
 import com.dianping.cat.report.page.sql.SqlReportMergerTest;
@@ -25,7 +23,6 @@ import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
-import com.dianping.cat.report.service.ReportServiceImplTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
@@ -39,8 +36,6 @@ import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
-import com.dianping.cat.system.alarm.template.TemplateMergerTest;
-import com.dianping.cat.system.alarm.template.ThresholdRuleTest;
 import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
@@ -48,12 +43,6 @@ import com.dianping.cat.system.notify.RenderTest;
 /*
  * TestHttp.class
  */
-
-/* .report.page.model.event */
-EventModelServiceTest.class,
-
-/* .report.page.model.transaction */
-TransactionModelServiceTest.class,
 
 /* .report.graph */
 ValueTranslaterTest.class,
@@ -89,9 +78,9 @@ TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphM
 TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class,
 
 /* alarm .render */
-RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class,
+RenderTest.class,
 
-ReportServiceImplTest.class, StateReportMergerTest.class,
+StateReportMergerTest.class,
 
 /* Daily Graph Test */
 DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,

@@ -12,10 +12,9 @@
 	<jsp:body>
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines:  <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
+		<th>机器:  <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
 						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${model.reportType}${model.customDate}"
@@ -30,7 +29,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -51,7 +49,7 @@
 					&nbsp;&nbsp;&nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent/100,'0.00%')}</td>
+					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -78,10 +76,10 @@
 					&nbsp;&nbsp;&nbsp;${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent/100,'0.00%')}</td>
+					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
-					<td>${w:format(e.totalPercent,'0.00%')}</td>
+					<td>${w:format(e.totalPercent,'0.0000%')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="5"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>

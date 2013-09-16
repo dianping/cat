@@ -18,11 +18,9 @@
 	<jsp:body>
 <res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}"
 								class="current">All</a>
@@ -46,7 +44,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -68,7 +65,7 @@
 								href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent/100,'0.00%')}</td>
+					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td><a
 								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
@@ -106,11 +103,11 @@
 					</c:when></c:choose>&nbsp;&nbsp;&nbsp;${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent/100,'0.00%')}</td>
+					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td><a
 								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
-					<td>${w:format(e.totalPercent,'0.00%')}</td>
+					<td>${w:format(e.totalPercent,'0.0000%')}</td>
 				</tr>
 				<tr class="graphs">
 							<td colspan="5"><div id="${status.index}"

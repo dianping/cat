@@ -11,15 +11,16 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.MonthreportDao;
-import com.dianping.cat.home.dal.report.MonthreportEntity;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
 
 public class DBAAnalyzer extends ComponentTestCase {
 
@@ -27,10 +28,10 @@ public class DBAAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		MonthreportDao dao = lookup(MonthreportDao.class);
-		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-05-01 00:00");
-		Monthreport monthreport = dao.findReportByDomainNamePeriod(date, "All", "Transaction",
-		      MonthreportEntity.READSET_FULL);
+		MonthlyReportDao dao = lookup(MonthlyReportDao.class);
+		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-01 00:00");
+		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", TransactionAnalyzer.ID,
+		      MonthlyReportEntity.READSET_FULL);
 		String content = monthreport.getContent();
 		TransactionReport report = DefaultSaxParser.parse(content);
 
@@ -49,7 +50,7 @@ public class DBAAnalyzer extends ComponentTestCase {
 
 			
 			for (TransactionType type : machine.getTypes().values()) {
-				if(!machine.getIp().equals(CatString.ALL)){
+				if(!machine.getIp().equals(Constants.ALL)){
 					TransactionType old = temp.findOrCreateType(type.getId());
 					m_merger.mergeType(old, type);
 				}

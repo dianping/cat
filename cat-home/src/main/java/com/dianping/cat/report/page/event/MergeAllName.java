@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.event;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.event.EventReportMerger;
 
 public class MergeAllName extends BaseVisitor {
 
@@ -56,7 +56,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeName(temp, name);
 		
 		EventName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(CatString.ALL);
+		      .findOrCreateName(Constants.ALL);
 		m_merger.mergeName(all, name);
 
 		m_merger.mergeName(temp, name);
@@ -72,7 +72,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeRange(temp, range);
 		
 		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(CatString.ALL).findOrCreateRange(m_currentRange);
+		      .findOrCreateName(Constants.ALL).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(all, range);
 		super.visitRange(range);

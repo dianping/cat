@@ -1,3 +1,40 @@
+function exceptionValidate(){
+	$("#form").validate({
+		rules : {
+			"exceptionLimit.domain" : {
+				required : true
+			},
+			"exceptionLimit.id" : {
+				required : true
+			},
+			"exceptionLimit.warning" : {
+				required : true,
+				digits:true
+			},
+			"exceptionLimit.errorThreshold" : {
+				required : true,
+				digits:true
+			}
+		},
+		messages : {
+			"exceptionLimit.domain" : {
+				required : "输入域名"
+			},
+			"exceptionLimit.id" : {
+				required : "输入异常名称"
+			},
+			"exceptionLimit.warning" : {
+				required : "输入阈值",
+				digits : "输入合法整数"
+			},
+			"exceptionLimit.error" : {
+				required : "输入阈值",
+				digits : "输入合法整数"
+			}
+		}
+	});
+}
+
 function edgeValidate(){
 	$("#form").validate({
 		rules : {

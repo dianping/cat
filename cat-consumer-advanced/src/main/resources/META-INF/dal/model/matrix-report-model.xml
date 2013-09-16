@@ -13,12 +13,14 @@
     <attribute name="name" value-type="String" key="true"/>
     <attribute name="count" value-type="int"  primitive="true"/>
     <attribute name="totalTime" value-type="long"  primitive="true"/>
+	<attribute name="url" value-type="String" />
     <entity-ref name="ratio" type="map" names="ratios" method-find-or-create="true"/>
   </entity>
   <entity name="ratio">
     <attribute name="type" value-type="String" key="true"/>
     <attribute name="min" value-type="int"  primitive="true"/>
     <attribute name="max" value-type="int"  primitive="true"/>
+	<attribute name="url" value-type="String" />
     <attribute name="totalCount" value-type="int"  primitive="true"/>
     <attribute name="totalTime" value-type="long"  primitive="true"/>
   </entity>

@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,51 +14,43 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
+import com.dianping.cat.report.service.ReportService;
 
 @RunWith(JUnit4.class)
 public class ArchTransactionAnalyzer extends ComponentTestCase {
 
 	@Inject
-	private DailyreportDao m_dailyreportDao;
+	private DailyReportDao m_dailyReportDao;
 
 	private Map<String, DomainInfo> m_infos = new LinkedHashMap<String, DomainInfo>();
+
+	@Inject
+	private ReportService m_reportService;
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		m_dailyreportDao = lookup(DailyreportDao.class);
+		m_dailyReportDao = lookup(DailyReportDao.class);
+		m_reportService = lookup(ReportService.class);
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
-		Set<String> domains = new HashSet<String>();
-
-		try {
-			List<Dailyreport> reports = m_dailyreportDao.findAllDomainsByNameDuration(start, end, "transaction",
-			      DailyreportEntity.READSET_DOMAIN_NAME);
-
-			for (Dailyreport report : reports) {
-				domains.add(report.getDomain());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
+		return m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 	}
 
 	@Test
@@ -94,11 +85,11 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 			Date date = new Date(startTime);
 
 			try {
-				Dailyreport dailyreport = m_dailyreportDao.findByNameDomainPeriod(date, domain, "transaction",
-				      DailyreportEntity.READSET_FULL);
+				DailyReport dailyreport = m_dailyReportDao.findByDomainNamePeriod( domain, TransactionAnalyzer.ID,date,
+				      DailyReportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 
-				info.reset(report.findMachine(CatString.ALL));
+				info.reset(report.findMachine(Constants.ALL));
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				e.printStackTrace();

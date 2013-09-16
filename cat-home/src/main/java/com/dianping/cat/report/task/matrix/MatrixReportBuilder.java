@@ -1,146 +1,124 @@
 package com.dianping.cat.report.task.matrix;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.core.dal.Report;
-import com.dianping.cat.consumer.core.dal.ReportEntity;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.matrix.MatrixReportFilter;
+import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
-import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.home.dal.report.Monthreport;
-import com.dianping.cat.home.dal.report.Weeklyreport;
-import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.AbstractReportBuilder;
-import com.dianping.cat.report.task.spi.ReportBuilder;
+import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class MatrixReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class MatrixReportBuilder implements ReportTaskBuilder {
 
 	@Inject
-	private MatrixMerger m_matrixMerger;
+	protected ReportService m_reportService;
 
 	@Override
-	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
-			m_dailyReportDao.insert(report);
-			return true;
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
+	public boolean buildDailyTask(String name, String domain, Date period) {
+		MatrixReport matrixReport = queryHourlyReportByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
+		DailyReport report = new DailyReport();
+
+		report.setContent(matrixReport.toString());
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertDailyReport(report);
 	}
 
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		throw new RuntimeException("Matrix report don't support HourReport!");
+	public boolean buildHourlyTask(String name, String domain, Date period) {
+		throw new RuntimeException("Matrix report don't support hourly report!");
 	}
 
-	private MatrixReport buildMergedDailyReport(String domain, Date start, Date end) {
+	@Override
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+		MonthlyReport report = new MonthlyReport();
+
+		report.setContent(matrixReport.toString());
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertMonthlyReport(report);
+	}
+
+	@Override
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
+		      + TimeUtil.ONE_WEEK));
+		WeeklyReport report = new WeeklyReport();
+		String content = matrixReport.toString();
+
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return m_reportService.insertWeeklyReport(report);
+	}
+
+	private MatrixReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "matrix", DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
-				
-				MatrixReport reportModel = DefaultSaxParser.parse(xml);
+				MatrixReport reportModel = m_reportService.queryMatrixReport(domain, new Date(startTime), new Date(
+				      startTime + TimeUtil.ONE_DAY));
+
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
+		new MatrixReportFilter().visitMatrixReport(matrixReport);
+		
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);
 		return matrixReport;
 	}
 
-	@Override
-	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
-		cal.add(Calendar.MONTH, 1);
+	private MatrixReport queryHourlyReportByDuration(String name, String domain, Date start, Date end) {
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, MatrixAnalyzer.ID);
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 
-		Date start = reportPeriod;
-		Date end = cal.getTime();
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			Date date = new Date(startTime);
+			MatrixReport reportModel = m_reportService.queryMatrixReport(domain, date, new Date(date.getTime()
+			      + TimeUtil.ONE_HOUR));
 
-		MatrixReport matrixReport = buildMergedDailyReport(reportDomain, start, end);
-		Monthreport report = m_monthreportDao.createLocal();
-
-		report.setContent(matrixReport.toString());
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_monthreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
+			reportModel.accept(merger);
 		}
-		return true;
-	}
-
-	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		MatrixReport matrixReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
-		String content = matrixReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
-	}
-
-	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
+		MatrixReport matrixReport = merger.getMatrixReport();
+		new MatrixReportFilter().visitMatrixReport(matrixReport);
 		
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		String content = m_matrixMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
-
-		Dailyreport report = m_dailyReportDao.createLocal();
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-		return report;
+		matrixReport.getDomainNames().addAll(domainSet);
+		matrixReport.setStartTime(start);
+		matrixReport.setEndTime(end);
+		return matrixReport;
 	}
 
 }

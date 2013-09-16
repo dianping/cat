@@ -16,9 +16,10 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
@@ -64,9 +65,9 @@ public class Handler implements PageHandler<Context> {
 		Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 		      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 
-		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
-		tree.setDomain("FrontEnd");
+		tree.setDomain(Constants.FRONT_END);
 		tree.setHostName(host);
 		tree.setIpAddress(host);
 		model.setStatus("SUCCESS");
@@ -76,7 +77,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private String parseHost() {
-		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 		Message message = tree.getMessage();
 
 		if (message.getType().equals("URL") && message instanceof Transaction) {
@@ -84,8 +85,8 @@ public class Handler implements PageHandler<Context> {
 			List<Message> messages = t.getChildren();
 
 			for (Message temp : messages) {
-				String type = temp.getType();
-				if (type.equals("URL.Server") || type.equals("ClientInfo")) {
+				String name = temp.getName();
+				if (name.equals("URL.Server") || name.equals("ClientInfo")) {
 					m_data = temp.getData().toString();
 					m_referer = parseValue("Referer", m_data);
 

@@ -16,17 +16,14 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.transaction.TransactionStatisticsComputer;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
@@ -37,6 +34,8 @@ import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -62,10 +61,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "transaction")
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
-
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	private void buildTransactionNameGraph(List<TransactionNameModel> names, Model model) {
 		PieChart chart = new PieChart();
@@ -80,44 +77,20 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		chart.setItems(items);
-		Gson gson = new Gson();
-		model.setPieChart(gson.toJson(chart));
+		model.setPieChart(new Gson().toJson(chart));
 	}
 
 	private void calculateTps(Payload payload, TransactionReport report) {
 		try {
 			if (payload != null && report != null) {
 				boolean isCurrent = payload.getPeriod().isCurrent();
-				String ip = payload.getIpAddress();
-				Machine machine = report.getMachines().get(ip);
-				if (machine == null) {
-					return;
+				double seconds;
+				if (isCurrent) {
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+				} else {
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 				}
-				for (TransactionType transType : machine.getTypes().values()) {
-					long totalCount = transType.getTotalCount();
-					double tps = 0;
-					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						tps = totalCount / seconds;
-					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						tps = totalCount / (double) time;
-					}
-					transType.setTps(tps);
-					for (TransactionName transName : transType.getNames().values()) {
-						long totalNameCount = transName.getTotalCount();
-						double nameTps = 0;
-						if (isCurrent) {
-							double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-							nameTps = totalNameCount / seconds;
-						} else {
-							double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-							nameTps = totalNameCount / (double) time;
-						}
-						transName.setTps(nameTps);
-						transName.setTotalPercent((double) totalNameCount / totalCount);
-					}
-				}
+				new TpsStatistics(seconds).visitTransactionReport(report);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -126,11 +99,8 @@ public class Handler implements PageHandler<Context> {
 
 	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType())//
+		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())//
 		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
@@ -141,10 +111,10 @@ public class Handler implements PageHandler<Context> {
 				Date start = new Date(payload.getDate());
 				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
 
-				if (CatString.ALL.equals(domain)) {
+				if (Constants.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
-				Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
+				Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -163,16 +133,14 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
 		String ipAddress = payload.getIpAddress();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType()) //
 		      .setProperty("name", payload.getName())//
 		      .setProperty("ip", ipAddress);
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = CatString.ALL;
+			name = Constants.ALL;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
@@ -181,9 +149,6 @@ public class Handler implements PageHandler<Context> {
 		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
 			TransactionName n = t.findName(name);
-			if (n != null) {
-				n.accept(m_computer);
-			}
 			return n;
 		} else {
 			return null;
@@ -256,20 +221,18 @@ public class Handler implements PageHandler<Context> {
 	private void showHourlyGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
 
-		if (name == null) {
-			return;
+		if (name != null) {
+			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
+			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
+			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+			      "Average Duration (ms)", name));
+			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
+
+			model.setGraph1(graph1);
+			model.setGraph2(graph2);
+			model.setGraph3(graph3);
+			model.setGraph4(graph4);
 		}
-
-		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
-		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-		      "Average Duration (ms)", name));
-		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
-
-		model.setGraph1(graph1);
-		model.setGraph2(graph2);
-		model.setGraph3(graph3);
-		model.setGraph4(graph4);
 	}
 
 	private void showHourlyReport(Model model, Payload payload) {
@@ -277,7 +240,6 @@ public class Handler implements PageHandler<Context> {
 			TransactionReport report = getHourlyReport(payload);
 
 			if (report != null) {
-				report.accept(m_computer);
 				model.setReport(report);
 
 				String type = payload.getType();

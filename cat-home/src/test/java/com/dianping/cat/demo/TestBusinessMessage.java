@@ -5,6 +5,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestBusinessMessage {
@@ -20,14 +21,14 @@ public class TestBusinessMessage {
 				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
 				t.addData("channel=channel" + i % 5);
 
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 				tree.setDomain(TuanGou);
 				t.complete();
 			}
 
 			for (int i = 0; i < 900; i++) {
 				Transaction t = Cat.newTransaction("URL", "/detail");
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
 				tree.setDomain(TuanGou);
 				t.addData("channel=channel" + i % 5);
@@ -36,7 +37,7 @@ public class TestBusinessMessage {
 
 			for (int i = 0; i < 500; i++) {
 				Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
 				tree.setDomain(PayOrder);
 				Cat.logMetric("order", "quantity", 1, "channel", "channel" + i % 5);
@@ -45,7 +46,7 @@ public class TestBusinessMessage {
 				t.addData("channel=channel" + i % 5);
 				t.complete();
 			}
-			
+
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "t");
 				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
@@ -63,11 +64,10 @@ public class TestBusinessMessage {
 				t.complete();
 			}
 
-
 			Thread.sleep(1000);
 		}
 	}
-	
+
 	@Test
 	public void test2() throws Exception {
 		while (true) {
@@ -96,6 +96,21 @@ public class TestBusinessMessage {
 			Thread.sleep(1000);
 			break;
 		}
+	}
+
+	@Test
+	public void test3() throws InterruptedException {
+		for (int i = 0; i < 500; i++) {
+			Transaction t = Cat.newTransaction("test", "test");
+
+			Cat.logMetricForCount("MemberCardSuccess");
+			Cat.logMetricForCount("MemberCardFail", 2);
+
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+			((DefaultMessageTree) tree).setDomain("MobileMembercardMainApiWeb");
+			t.complete();
+		}
+		Thread.sleep(100000);
 	}
 
 }

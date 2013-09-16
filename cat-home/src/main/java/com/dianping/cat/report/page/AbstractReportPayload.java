@@ -11,7 +11,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelPeriod;
+import com.dianping.cat.service.ModelPeriod;
 
 public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
 
@@ -41,7 +41,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("today")
 	private boolean m_today;
 
-	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	private SimpleDateFormat m_hourlyFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -142,7 +142,11 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public Date getHistoryEndDate() {
 		if (m_customEnd != null) {
 			try {
-				return m_dayFormat.parse(m_customEnd);
+				if (m_customEnd.length() == 8) {
+					return m_dayFormat.parse(m_customEnd);
+				} else if (m_customEnd.length() == 10) {
+					return m_hourlyFormat.parse(m_customEnd);
+				}
 			} catch (ParseException e) {
 			}
 		}
@@ -158,14 +162,18 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		} else {
 			temp = m_date + (TimeUtil.ONE_HOUR * 24);
 		}
-		cal.setTimeInMillis(temp);
+		cal.setTimeInMillis(temp-1);
 		return cal.getTime();
 	}
 
 	public Date getHistoryStartDate() {
 		if (m_customStart != null) {
 			try {
-				return m_dayFormat.parse(m_customStart);
+				if (m_customStart.length() == 8) {
+					return m_dayFormat.parse(m_customStart);
+				} else if (m_customStart.length() == 10) {
+					return m_hourlyFormat.parse(m_customStart);
+				}
 			} catch (ParseException e) {
 			}
 		}
@@ -216,7 +224,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			try {
 				Date temp = null;
 				if (date != null && date.length() == 10) {
-					temp = m_dateFormat.parse(date);
+					temp = m_hourlyFormat.parse(date);
 				} else {
 					temp = m_dayFormat.parse(date);
 				}

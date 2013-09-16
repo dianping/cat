@@ -60,7 +60,7 @@
   </dd>
   <dt><h5 class="text-success">3.在资源文件中新建client.xml文件</h5></dt>
   <dd><p class="detailContent">在resources资源文件META-INF下，新建cat文件夹，注意是<span class="text-error">src/main/resources/META-INF/cat/client.xml</span>文件，
-  而不是<span class="text-error">webapps下的那个META-INF</span>,domain id表示项目名称</p>
+  而不是<span class="text-error">webapps下的那个META-INF</span>,domain id表示项目名称<span class="text-error">此处不能为中文，仅支持英文（不能有特殊符号）</span></p>
   <xmp class="well">
      <config mode="client">
          <domain id="TuanGouApi"/>
@@ -68,7 +68,12 @@
   </xmp>
   </dd>
   <dt><h5 class="text-success">4./data/appdatas/cat/目录下，新建一个client.xml文件(线上环境是OP配置)</h5></dt>
-  <dd><p class="detailContent">如果系统是windows环境，则在eclipse运行的盘，比如D盘，新建/data/appdatas/cat/目录，新建client.xml文件</p>
+  <dd>
+  <p class="detailContent">如果系统是windows环境，则在eclipse运行的盘，比如D盘，新建/data/appdatas/cat/目录，新建client.xml文件</p>
+	
+  <p>项目文件中srouce中的client.xml,此文件代表了这个项目我是谁,比如项目的名字Cat。</p>
+  <p>/data/appdatas/cat/client.xml,此文件有OP控制,这里的Domain名字用来做开关，如果一台机器上部署了多个应用，可以指定把一个应用的监控关闭。</p>
+  
   <xmp class="well">
       <config mode="client">
           <servers>
@@ -76,6 +81,8 @@
          </servers>
       </config>
   </xmp>
+  <p class="text-error">alpha、beta这个配置需要自己在此目录添加</p>
+  <p class="text-error">预发以及生产环境这个配置需要通知到对应OP团队，让他们统一添加，自己上线时候做下检查即可</p>
   <p>a、192.168.7.70:2280端口是指向测试环境的cat地址</p>
   <p>b、<span class="text-error">配置可以加入CAT的开关，用于关闭CAT消息发送,将enabled改为false，如下表示将MobileApi这个项目关闭</span></p>
   <xmp>

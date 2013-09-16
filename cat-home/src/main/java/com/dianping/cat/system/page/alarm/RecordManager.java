@@ -7,9 +7,6 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.dal.alarm.AlarmRuleSubscription;
-import com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao;
-import com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionEntity;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.home.dal.alarm.MailRecordEntity;
@@ -18,9 +15,6 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionEntity;
 
 public class RecordManager {
-
-	@Inject
-	private AlarmRuleSubscriptionDao m_alarmRuleSubscriptionDao;
 
 	@Inject
 	private MailRecordDao m_mailRecordDao;
@@ -32,33 +26,11 @@ public class RecordManager {
 		int id = payload.getAlarmRecordId();
 
 		try {
-			MailRecord record = m_mailRecordDao.findByPK(id, MailRecordEntity.READSET_FULL);
+			MailRecord record = m_mailRecordDao.findByPK(id, MailRecordEntity.READSET_ALL_EXCLUDE_CONTENT);
 			model.setMailRecord(record);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-	}
-
-	public void queryUserAlarmRecords(Model model, int userId) {
-		try {
-			List<AlarmRuleSubscription> alarmRuleSubscriptions = m_alarmRuleSubscriptionDao.findByUserId(userId,
-			      AlarmRuleSubscriptionEntity.READSET_FULL);
-
-			int size = alarmRuleSubscriptions.size();
-			int alarmRuleIds[] = new int[size];
-
-			for (int i = 0; i < size; i++) {
-				AlarmRuleSubscription alarmRuleSubscription = alarmRuleSubscriptions.get(i);
-				alarmRuleIds[i] = alarmRuleSubscription.getAlarmRuleId();
-			}
-
-			List<MailRecord> mails = m_mailRecordDao.findAlarmRecordByRuleId(alarmRuleIds, MailRecordEntity.READSET_FULL);
-			model.setMailRecords(mails);
-		} catch (DalNotFoundException e) {
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		model.setTemplateIndex(2);
 	}
 
 	public void queryUserReportRecords(Model model, int userId) {

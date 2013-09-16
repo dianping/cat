@@ -21,8 +21,8 @@ import org.unidal.helper.Splitters;
 import org.unidal.helper.Splitters.StringSplitter;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.storage.Bucket;
 
 public class LocalReportBucket implements Bucket<String>, LogEnabled {

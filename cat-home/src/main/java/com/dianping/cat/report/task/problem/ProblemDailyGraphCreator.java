@@ -6,12 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
-import com.dianping.cat.home.dal.report.Dailygraph;
+import com.dianping.cat.core.dal.DailyGraph;
 
 public class ProblemDailyGraphCreator extends BaseVisitor {
 
@@ -25,20 +26,20 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 
 	private Map<String, MachineInfo> m_machines = new HashMap<String, MachineInfo>();
 
-	private List<Dailygraph> m_dailyGraphs = new ArrayList<Dailygraph>();
+	private List<DailyGraph> m_dailyGraphs = new ArrayList<DailyGraph>();
 
-	public List<Dailygraph> buildDailyGraph() {
+	public List<DailyGraph> buildDailyGraph() {
 		return m_dailyGraphs;
 	}
 
-	private Dailygraph buildDailyGraph(ProblemReport problemReport, MachineInfo info) {
-		Dailygraph graph = new Dailygraph();
+	private DailyGraph buildDailyGraph(ProblemReport problemReport, MachineInfo info) {
+		DailyGraph graph = new DailyGraph();
 		StringBuilder summary = new StringBuilder();
 		StringBuilder detail = new StringBuilder();
 
 		graph.setDomain(problemReport.getDomain());
 		graph.setPeriod(problemReport.getStartTime());
-		graph.setName("problem");
+		graph.setName(ProblemAnalyzer.ID);
 		graph.setIp(info.getIp());
 		graph.setType(3);
 		graph.setCreationDate(new Date());
@@ -111,7 +112,7 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 		m_dailyGraphs.add(buildDailyGraph(problemReport, m_allMachine));
 
 		for (MachineInfo info : m_machines.values()) {
-			Dailygraph graph = buildDailyGraph(problemReport, info);
+			DailyGraph graph = buildDailyGraph(problemReport, info);
 
 			m_dailyGraphs.add(graph);
 		}

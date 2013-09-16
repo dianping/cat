@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.abtest.model" enable-sax-parser="true" enable-base-visitor="true" enable-json-builder="true">
+  <entity name="case">
+    <attribute name="id" value-type="int" key="true" primitive="true"/>
+    <element name="domain" value-type="String" type="set" names="domains" />
+  </entity>
+  <entity name="run">
+    <attribute name="id" value-type="int" key="true" primitive="true"/>
+    <element name="domain" value-type="String" type="set" names="domains" />
+  </entity>
+  <entity name="field">
+    <attribute name="name" value-type="String" />
+    <attribute name="type" value-type="String" default-value="String"  />
+    <attribute name="input-type" value-type="String" default-value="input" />
+    <element name="text" value-type="String" text="true" alias="value"/>
+  </entity>
+  <entity name="condition">
+    <attribute name="seq" value-type="int" key="true" primitive="true"/>
+     <attribute name="comparator" value-type="int" default-value="1" />
+     <attribute name="operator" value-type="String" default-value="and" />
+  </entity>
+</model>
+

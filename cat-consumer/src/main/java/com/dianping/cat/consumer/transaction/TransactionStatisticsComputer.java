@@ -12,6 +12,34 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
 public class TransactionStatisticsComputer extends BaseVisitor {
+	private double computeLineValue(Map<Integer, AllDuration> durations, double percent) {
+		int totalCount = 0;
+		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o2 - o1;
+			}
+		});
+
+		sorted.putAll(durations);
+
+		for (AllDuration duration : durations.values()) {
+			totalCount += duration.getCount();
+		}
+
+		int remaining = (int) (totalCount * (100 - percent) / 100);
+
+		for (Entry<Integer, AllDuration> entry : sorted.entrySet()) {
+			remaining -= entry.getValue().getCount();
+
+			if (remaining <= 0) {
+				return entry.getKey();
+			}
+		}
+
+		return 0.0;
+	}
+
 	double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
@@ -39,6 +67,11 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			name.setFailPercent(failPercent);
 			name.setAvg(avg);
 			name.setStd(std);
+			
+			double line95 = computeLineValue(name.getAllDurations(), 95);
+			double line999 = computeLineValue(name.getAllDurations(), 99.9);
+			name.setLine95Value(line95);
+			name.setLine99Value(line999);
 		}
 	}
 
@@ -65,37 +98,10 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			type.setAvg(avg);
 			type.setStd(std);
 
-			double typeValue = compute95LineValue(type.getAllDurations());
-
-			type.setLine95Value(typeValue);
+			double line95 = computeLineValue(type.getAllDurations(), 95);
+			double line999 = computeLineValue(type.getAllDurations(), 99.9);
+			type.setLine95Value(line95);
+			type.setLine99Value(line999);
 		}
-	}
-
-	private double compute95LineValue(Map<Integer, AllDuration> durations) {
-		int totalCount = 0;
-		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o2 - o1;
-			}
-		});
-
-		sorted.putAll(durations);
-
-		for (AllDuration duration : durations.values()) {
-			totalCount += duration.getCount();
-		}
-
-		int remaining = totalCount * 5 / 100;
-
-		for (Entry<Integer, AllDuration> entry : sorted.entrySet()) {
-			remaining -= entry.getValue().getCount();
-
-			if (remaining <= 0) {
-				return entry.getKey();
-			}
-		}
-
-		return 0.0;
 	}
 }

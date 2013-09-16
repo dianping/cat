@@ -12,10 +12,9 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&project=${payload.projectName}${model.customDate}"
 								class="current">All</a>
@@ -39,7 +38,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
 		<tr>
@@ -57,7 +55,7 @@
 		         	<td class="left"><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${callInfo.ip }&project=${payload.projectName}${model.customDate}">${callInfo.ip}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
 		         	<td>${w:format(callInfo.failureCount,'#,###,###,###,##0')}</td>
-		        	<td>${w:format(callInfo.failurePercent,'0.00%')}</td>
+		        	<td>${w:format(callInfo.failurePercent,'0.0000%')}</td>
 		             <td>${w:format(callInfo.avg,'0.00')}</td>
 		             <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
@@ -81,7 +79,7 @@
 		            <td class="left"><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${serviceInfo.ip}&project=${payload.projectName}${model.customDate}">${serviceInfo.ip}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
-		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>
+		            <td>${w:format(serviceInfo.failurePercent,'0.0000%')}</td>
 		             <td>${w:format(serviceInfo.avg,'0.00')}</td>
 		             <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>

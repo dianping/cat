@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}" />
 
 <a:report title="Problem Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}"
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}${payload.queryString}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -18,88 +18,53 @@
 	<jsp:body>
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-</br>
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}&threshold=${model.threshold}"
+					<a href="?domain=${model.domain}&date=${model.date}${payload.queryString}"
 						class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?domain=${model.domain}&date=${model.date}&threshold=${model.threshold}">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}${payload.queryString}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}"
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}${payload.queryString}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}">${ip}</a>
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}${payload.queryString}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
-		</th><th>long-url <input id="thresholdInput" style="display: none"
-			value="${model.threshold}"> <select class="input-small" size="1" id="p_longUrl">
-				${model.defaultThreshold}
-				<option value="500">0.5 Sec</option>
-				<option value="1000">1.0 Sec</option>
-				<option value="1500">1.5 Sec</option>
-				<option value="2000">2.0 Sec</option>
-				<option value="3000">3.0 Sec</option>
-				<option value="5000">5.0 Sec</option>
-		</select> long-sql
-		<select size="1" id="p_longSql" class="input-small">
-				${model.defaultSqlThreshold}
-				<option value="100">100 ms</option>
-				<option value="500">500 ms</option>
-				<option value="1000">1000 ms</option>
-				<option value="2000">3000 ms</option>
-		</select> long-service
-		<select size="1" id="p_longService" class="input-small">
-				${model.defaultSqlThreshold}
-				<option value="100">50 ms</option>
-				<option value="200">100 ms</option>
-				<option value="200">500 ms</option>
-				<option value="1000">1000 ms</option>
-				<option value="2000">3000 ms</option>
-				<option value="5000">5000 ms</option>
-		</select>
+		</th></tr>
+		<tr><th>
+		<%@ include file="problemQuery.jsp" %>
 		<script>
-			var threshold='${model.threshold}';
-			$("#p_longUrl").val(threshold) ;
-			
-			var sqlThreshold='${model.sqlThreshold}';
-			$("#p_longSql").val(sqlThreshold) ;
-
-			var serviceThreshold='${model.serviceThreshold}';
-			$("#p_longService").val(serviceThreshold) ;
-			
 			function longTimeChange(date,domain,ip){
-				var longtime=$("#p_longUrl").val();
+				var longUrlTime=$("#p_longUrl").val();
 				var longSqlTime=$("#p_longSql").val();
 				var longServiceTime=$("#p_longService").val();
-				window.location.href="?op=view&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+"&serviceThreshold="+longServiceTime;
+				var longCacheTime=$("#p_longCache").val();
+				var longCallTime=$("#p_longCall").val();
+				window.location.href="?op=view&domain="+domain+"&ip="+ip+"&date="+date+"&urlThreshold="+longUrlTime+"&sqlThreshold="+longSqlTime+"&serviceThreshold="+longServiceTime
+						+"&cacheThreshold="+longCacheTime+"&callThreshold="+longCallTime;
 			}
 		</script>
-		
-		<input class='btn btn-primary btn-small' value="Refresh"
-			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
-			type="submit">
 		</th>
 	</tr>
 </table>
-<br>
-<table class='problem'>
+<table class="problem"  style="width:100%">
 	<tr>
-		<th>Type</th>
-		<th>Total</th>
-		<th>Status</th>
-		<th>Count</th>
-		<th>SampleLinks</th>
+		<th width="15%">Type</th>
+		<th width="5%">Total</th>
+		<th width="45%">Status</th>
+		<th width="5%">Count</th>
+		<th width="30%">SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
@@ -111,7 +76,7 @@
 				&nbsp;&nbsp;${statistics.value.type}
 			</td>
 			<td rowspan="${w:size(statistics.value.status)*2}"
-				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${statistics.value.count}</td>
+				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${w:format(statistics.value.count,'#,###,###,###,##0')}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">
@@ -121,7 +86,7 @@
 					<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.count}</td>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${w:format(status.value.count,'#,###,###,###,##0')}</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
@@ -142,12 +107,7 @@
 <a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=group" onclick="return requestGroupInfo(this)">Threads Details</a>
 
 <div id="machineThreadGroupInfo"></div>
-<br>
 </c:if>
-
-<table class="legend">
-</table>
-
 <res:useJs value="${res.js.local.problem_js}" target="buttom-js" />
 <res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
 </jsp:body>

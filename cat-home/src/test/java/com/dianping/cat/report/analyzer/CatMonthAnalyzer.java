@@ -11,21 +11,22 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 
 @RunWith(JUnit4.class)
 public class CatMonthAnalyzer extends ComponentTestCase {
 
 	@Inject
-	private DailyreportDao m_dailyreportDao;
+	private DailyReportDao m_dailyreportDao;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -35,7 +36,7 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		m_dailyreportDao = lookup(DailyreportDao.class);
+		m_dailyreportDao = lookup(DailyReportDao.class);
 	}
 
 	@Test
@@ -49,13 +50,13 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 			for (; start < currentDay.getTime(); start += TimeUtil.ONE_DAY) {
 				i++;
 				try {
-					Dailyreport dailyreport = m_dailyreportDao.findByNameDomainPeriod(new Date(start), "Cat",
-					      "transaction", DailyreportEntity.READSET_FULL);
+					DailyReport dailyreport = m_dailyreportDao.findByDomainNamePeriod("Cat",
+					      TransactionAnalyzer.ID, new Date(start), DailyReportEntity.READSET_FULL);
 
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
 					      .parse(dailyreport.getContent());
 
-					Machine machine = report.findOrCreateMachine(CatString.ALL);
+					Machine machine = report.findOrCreateMachine(Constants.ALL);
 					
 					TransactionType type =machine.findOrCreateType("URL");
 					

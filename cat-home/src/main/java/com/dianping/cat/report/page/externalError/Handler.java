@@ -15,7 +15,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.ReportPage;
 
@@ -56,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 		if (type == EventCollectManager.DB_ERROR) {
 			event.setDomain(payload.getDatabase());
 		} else {
-			String domain = m_domainManager.getDomainByIp(ip);
+			String domain = m_domainManager.queryDomainByIp(ip);
 
 			event.setDomain(domain);
 		}

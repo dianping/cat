@@ -4,12 +4,13 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
@@ -21,13 +22,13 @@ public class HistoricalDependencyService extends BaseHistoricalModelService<Depe
 	private ReportService m_reportSerivce;
 
 	public HistoricalDependencyService() {
-		super("dependency");
+		super(DependencyAnalyzer.ID);
 	}
 
 	@Override
 	protected DependencyReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
-		long date = Long.parseLong(request.getProperty("date"));
+		long date = request.getStartTime();
 		DependencyReport report;
 
 		if (isLocalMode()) {
@@ -44,7 +45,7 @@ public class HistoricalDependencyService extends BaseHistoricalModelService<Depe
 	}
 
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "dependency");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

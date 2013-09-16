@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -11,10 +10,11 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.consumer.core.aggregation.AggregationConfigManager;
-import com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler;
-import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
+import com.dianping.cat.consumer.problem.ProblemReportAggregation;
+import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
+import com.dianping.cat.consumer.problem.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 
@@ -32,23 +32,19 @@ public class ProblemReportAggregationTest {
 		MockRuleManger ruleManger = new MockRuleManger();
 		ruleManger.register();
 		aggregation.setRuleManger(ruleManger);
-		long start = (new Date()).getTime();
 
 		aggregation.visitProblemReport(reportOld);
 
-		System.out.println(((new Date()).getTime() - start) * 1.0 / 1000);
 		Assert.assertEquals(reportNew.toString().replaceAll("\r", ""),
 		      aggregation.getReport().toString().replaceAll("\r", ""));
 	}
 
 	class MockRuleManger extends AggregationConfigManager {
 		private void register() {
-			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, "FrontEnd");
+			List<AggregationRule> rules = getAggregationRule(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END);
 			
 			m_handler = new DefaultAggregationHandler();
-			long time = System.currentTimeMillis();
 			m_handler.register(rules);
-			System.out.println(System.currentTimeMillis()-time);
 		}
 
 		private AggregationRule buildRule(String pattern){
@@ -56,7 +52,7 @@ public class ProblemReportAggregationTest {
 			
 			rule.setPattern(pattern);
 			rule.setType(3);
-			rule.setDomain("FrontEnd");
+			rule.setDomain(Constants.FRONT_END);
 			return rule;
 		}
 		

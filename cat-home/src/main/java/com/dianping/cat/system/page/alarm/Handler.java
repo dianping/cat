@@ -26,17 +26,16 @@ public class Handler implements PageHandler<Context> {
 	private RecordManager m_recordManager;
 
 	@Inject
-	private RuleManager m_ruleManager;
-
-	@Inject
 	private ScheduledManager m_scheduledManager;
-
-	@Inject
-	private TemplateManager m_templateManager;
 
 	private int getLoginUserId(Context ctx) {
 		DpAdminLogin member = ctx.getSigninMember();
-		return member.getLoginId();
+
+		if (member != null) {
+			return member.getLoginId();
+		} else {
+			return -1;
+		}
 	}
 
 	@Override
@@ -56,70 +55,6 @@ public class Handler implements PageHandler<Context> {
 		boolean result = false;
 
 		switch (action) {
-		case ALARM_RECORD_LIST:
-			m_recordManager.queryUserAlarmRecords(model, userId);
-			break;
-		case ALARM_RULE_ADD:
-			m_ruleManager.ruleAdd(payload, model);
-			break;
-		case ALARM_RULE_ADD_SUBMIT:
-			m_ruleManager.ruleAddSubmit(payload, model);
-			break;
-		case ALARM_RULE_UPDATE:
-			m_ruleManager.ruleUpdate(payload, model);
-			break;
-		case ALARM_RULE_UPDATE_SUBMIT:
-			m_ruleManager.ruleUpdateSubmit(payload, model);
-			break;
-		case EXCEPTION_ALARM_RULE_DELETE:
-			m_ruleManager.ruleDelete(payload);
-			m_ruleManager.queryExceptionRuleList(model, userId);
-			break;
-		case EXCEPTION_ALARM_RULE_SUB:
-			result = m_ruleManager.ruleSub(payload, userId);
-			if (result) {
-				model.setOpState(SUCCESS);
-			} else {
-				model.setOpState(FAIL);
-			}
-			break;
-		case EXCEPTION_ALARM_RULE_LIST:
-			m_ruleManager.queryExceptionRuleList(model, userId);
-			break;
-		case ALARM_TEMPLATE_LIST:
-			m_templateManager.queryTemplateByName(payload, model);
-			break;
-		case ALARM_TEMPLATE_ADD:
-			break;
-		case ALARM_TEMPLATE_ADD_SUBMIT:
-			m_templateManager.templateAddSubmit(payload, model);
-			break;
-		case ALARM_TEMPLATE_DELETE:
-			break;
-		case ALARM_TEMPLATE_UPDATE:
-			m_templateManager.templateUpdate(payload, model);
-			break;
-		case ALARM_TEMPLATE_UPDATE_SUBMIT:
-			m_templateManager.templateUpdateSubmit(payload, model);
-			break;
-		case SERVICE_ALARM_RULE_DELETE:
-			m_ruleManager.ruleDelete(payload);
-			m_ruleManager.queryServiceRuleList(model, userId);
-			break;
-		case SERVICE_ALARM_RULE_LIST:
-			m_ruleManager.queryServiceRuleList(model, userId);
-			break;
-		case SERVICE_ALARM_RULE_SUB:
-			result = m_ruleManager.ruleSub(payload, userId);
-			if (result) {
-				model.setOpState(SUCCESS);
-			} else {
-				model.setOpState(FAIL);
-			}
-			break;
-		case ALARM_RECORD_DETAIL:
-			m_recordManager.queryAlarmRecordDetail(payload, model);
-			break;
 		case SCHEDULED_REPORT_ADD:
 			m_scheduledManager.scheduledReportAdd(payload, model);
 			break;
@@ -149,6 +84,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case REPORT_RECORD_LIST:
 			m_recordManager.queryUserReportRecords(model, userId);
+			break;
+		case ALARM_RECORD_DETAIL:
+			m_recordManager.queryAlarmRecordDetail(payload, model);
 			break;
 		}
 

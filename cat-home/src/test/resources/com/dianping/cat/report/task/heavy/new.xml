@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<heavy-report domain="Cat" startTime="2013-08-26 09:00:00" endTime="2013-08-26 10:00:00">
+   <heavy-sql>
+      <url domain="MobileApi" name="url1" count="49" key="MobileApi:url1"/>
+      <url domain="MobileApi" name="url3" count="49" key="MobileApi:url3"/>
+      <service domain="MobileApi" name="url1" count="49" key="MobileApi:url1"/>
+      <service domain="MobileApi" name="url3" count="49" key="MobileApi:url3"/>
+   </heavy-sql>
+   <heavy-call>
+      <url domain="MobileApi" name="url1" count="49" key="MobileApi:url1"/>
+      <url domain="MobileApi" name="url3" count="49" key="MobileApi:url3"/>
+      <service domain="MobileApi" name="url1" count="49" key="MobileApi:url1"/>
+      <service domain="MobileApi" name="url3" count="49" key="MobileApi:url3"/>
+   </heavy-call>
+   <heavy-cache>
+      <url domain="MobileApi" name="url1" count="49" key="MobileApi:url1"/>
+      <url domain="MobileApi" name="url3" count="49" key="MobileApi:url3"/>
+      <service domain="MobileApi" name="url1" count="49" key="MobileApi:url1"/>
+      <service domain="MobileApi" name="url3" count="49" key="MobileApi:url3"/>
+   </heavy-cache>
+</heavy-report>

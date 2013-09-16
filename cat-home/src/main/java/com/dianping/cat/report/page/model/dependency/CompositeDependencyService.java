@@ -2,15 +2,17 @@ package com.dianping.cat.report.page.model.dependency;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeDependencyService extends BaseCompositeModelService<DependencyReport> {
 	public CompositeDependencyService() {
-		super("dependency");
+		super(DependencyAnalyzer.ID);
 	}
 
 	@Override

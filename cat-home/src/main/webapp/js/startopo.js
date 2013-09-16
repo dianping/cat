@@ -10,12 +10,16 @@
 	PI = Math.PI;
 
 	var StarTopo = function(container, data , options){
+	    
 		var DEFAULT_OPTION = {
 			typeMap:{
 				
 			},
 			colorMap:{
 				
+			},
+            format:{
+
 			},
             col:3,
             colInside:4,
@@ -55,6 +59,7 @@
 			this._initCenter();
 			this._initPoints();
 			this._initSides();
+			
 		}else{
 			//平铺
 			this._initList();
@@ -64,7 +69,7 @@
 	StarTopo.prototype = {
 		constructor:StarTopo,
 		_initStage:function(){
-			//生成rapheal 实例
+			//生成raphael 实例
 			this.stage = new Raphael(this.container);
 			this.stageWidth = this.stage.width;
 			this.stageHeight = this.stage.height;
@@ -308,6 +313,11 @@
             var actualHeight = this._tip.clientHeight;
             if(actualHeight + y > (window.innerHeight+ window.pageYOffset)){
                 this._tip.style.top = y - actualHeight+'px';
+            }
+            //判定是否超过页面右边界
+            var actualWidth = this._tip.clientWidth;
+            if(actualWidth + x > (window.innerWidth+ window.pageXOffset)){
+               this._tip.style.left = x - actualWidth+'px';
             }
 		},
 		hide:function(){
@@ -564,9 +574,15 @@
 			},
             titleMap:{
             },
+            format:{
+
+			},
             col:3,
             colInside:4,
             paddingInside:10,
+            leftTitlePaddingRatio: 0.1,
+            blockPaddingRatio: 0.4,
+            //paddingLeft:50,
 			sideWeight:function(weight){
 				//weight ==> px
 				return weight + 2;
@@ -581,6 +597,7 @@
 
         this._initGrid();
         this._initNodes();
+        //默认不显示关系边
         this._initSides();
 
         this._frontNodes();
@@ -595,56 +612,122 @@
                 self = this;
 
             var colWidth = self.container.clientWidth / option.col;
-            var nodeWidth =( colWidth - option.paddingInside * (option.colInside+1)) / option.colInside;
-
+            var nodeWidth =( colWidth - option.paddingInside * (option.colInside)-30) / option.colInside;
             this._colWidth = colWidth;
             this._nodeWidth = nodeWidth;
-            for(var i=0;i<option.col-1;i++){
-                this.stage.path().attr({
-                    path:['M',colWidth*(i+1),40,'v',self.container.clientHeight],
-                    stroke:1
-                });
-            }
+            self.stage.path().attr({
+                path:['M',0,40,'h',self.container.clientWidth],
+                stroke:1
+            });
         },
         _initNodes:function(){
             var data = this.data;
+            //由对象组成的二维数组，其中lines表示所有模块？后面的line表示一个模块，productLines 是json中的属性
             var lines = data.productLines;
             var nodeWidth = this._nodeWidth;
+            var nodeHight = nodeWidth/2;
             var colWidth = this._colWidth;
             var titleHeight = 30;
             var self = this;
             var option = this.options;
+            var leftTitlePadding = option.leftTitlePaddingRatio*nodeWidth;
+            var const_leftY=40;
+            var const_upY=40;
             if(!lines){
                 return;
             }
             var gridIndex = 0;
-            var maxY = 40;
-            var startX=0,startY=40;
+            var maxY;
+
+            //初始化时的作图点 根据不同的标题位置改变页面
+            if(option.showLeft==true){
+            maxY = const_leftY;
+            }else if(option.showUp==true){
+            maxY= const_upY;
+            }
+            //初始化，值不影响页面
+            var startX=0,startY=0;
             self.points = {};
             var nodeSet = this.nodeSet = this.stage.set();
+            //line是关键词
             for(var line in lines){
                 if(lines.hasOwnProperty(line)){
-                    startX = colWidth * (gridIndex % option.col);
-                    if(gridIndex%option.col===0){
-                        startY = maxY;
+                    var colInside=option.colInside;
+                    var blockPaddingRatio=option.blockPaddingRatio;
+                    var paddingInside=option.paddingInside;
+                    var nodeWidth = this._nodeWidth;
+                    var format=option.format;
+                    var maxLength = 1;
+
+                    
+                //右移30px，option.paddingInside + nodeWidth/2=40，10=40-30
+                    startX = 10+colWidth * (gridIndex % option.col);
+                    if(gridIndex%option.col==0){
+                        if(option.showLeft==true){
+                           startY = maxY+nodeWidth/4+option.paddingUp;
+                        }else if(option.showUp==true){
+                           startY = maxY+nodeWidth/2+option.paddingUp;
+                        }
                     }
-                    var title = self.stage.text(startX+colWidth/2,startY+titleHeight/2,line).attr({
+                    
+                    lines[line].forEach(function(nodeData,i){
+                        console.log('nodeData is '+nodeData.id.length);
+                        maxLength = Math.max(nodeData.id.length,maxLength);
+                    })
+                    console.log('maxLength is '+maxLength);
+                    //console.log('nodeWidth is '+nodeWidth);
+                    //平均一个字母占6.6px
+                    while(maxLength*6.6>nodeWidth){
+                        colInside=colInside-1;
+                        nodeWidth=( colWidth - option.paddingInside * colInside-30) /colInside;
+                    }
+                    for(var category in format){
+                       if(format.hasOwnProperty(category)){
+                           if(category==line){
+                                colInside=format[category].colInside;
+                                nodeWidth=( colWidth - option.paddingInside * colInside-30) /colInside;
+                           }
+                        }
+                    
+                    } 
+                    //上标题，默认不显示
+                    if(option.showUp==true){
+                    var title = self.stage.text(startX+colWidth/2,startY-nodeHight*0.75,line).attr({
                         'font-size':15
                     });
-
+                    }
+                    
+                    //左列标题（不针对首大列，因为第大列模块的底坐标要等到大行的底确定后才确定）默认显示
+                    if(option.showLeft==true){
+                   if(gridIndex!=0){
+                     var length = line.length;
+                     for(index=0;index<length;index++){
+                     var title = self.stage.text(startX,(startY+leftTitlePadding+index*18),line.charAt(index)).attr({
+                    'font-size':15
+                     });
+                     
+                     }
+                    }
+                    }
+                    //这一段代码执行一次，就画出来一个模块中的所有小方块
                     lines[line].forEach(function(nodeData,i){
-                        var node = Node(option.typeMap[nodeData.type]).create(self.stage,nodeData.id);
+                        var node = Node(option.typeMap[nodeData.type]).create(self.stage,nodeData.id);    
                         self.points[nodeData.id] = node;
-                        node.size(nodeWidth,nodeWidth);
-                        var x = (option.paddingInside+ nodeWidth) * (i%option.colInside) + option.paddingInside + nodeWidth/2; 
-                        var y = (option.paddingInside+ nodeWidth) * Math.floor(i/option.colInside) + option.paddingInside + nodeWidth/2;
-                        maxY = Math.max(startY+y+option.paddingInside+nodeWidth/2+titleHeight,maxY);
-                        node.position(startX+x, startY+titleHeight+y);
+						//改动的地方，高度变成二分之一 nodeWidth/2
+                        node.size(nodeWidth,nodeHight);
+                        //x,y 的第一部分动态变化，后两部分(option.paddingInside + nodeWidth/2)是确定的,,option.paddingInside + nodeWidth/2改成30即paddingLeft
+                        var x = (paddingInside+ nodeWidth) * (i%colInside) +paddingInside + nodeWidth/2; 
+                        //方框间距nodeWidth/2，option.paddingInside + nodeWidth/8是与原点的距离
+                        var y = (nodeHight+nodeHight*blockPaddingRatio) * Math.floor(i/colInside);
+                        //maxY是新行的开始坐标，，，option.paddingInside+nodeWidth/4=20
+                        
+                        maxY = Math.max(startY+y+nodeHight/2,maxY);
+                        node.position(startX+x, startY+y);
                         node.text(nodeData.id);
                         node.color(option.colorMap[nodeData.status])
                         node.node.attr('stroke-width',2);
                         node.node.mouseover(function(e){
-                            Tip.show(nodeData.des,e.pageX+15,e.pageY+15);
+                        Tip.show(nodeData.des,e.pageX+15,e.pageY+15);
                         }).mouseout(function(){
                             Tip.hide();
                         });
@@ -655,20 +738,50 @@
                         nodeSet.push(node.node);
                         node.node.data('nodeData',nodeData);
 
-
                     });
-                    if(gridIndex%option.col===option.col-1){
+                    
+
+                        //左列标题(只针对于第一个) 默认显示
+                    if(option.showLeft==true){    
+                     if(gridIndex===0){
+                     var length = line.length;
+                     
+                     for(index=0;index<length;index++){
+                     var title = self.stage.text(startX,(startY+leftTitlePadding+index*18),line.charAt(index)).attr({
+                    'font-size':15
+                     });
+                     }
+                     }
+                   
+                   }
+
+                    if(gridIndex%option.col==option.col-1){
                         self.stage.path().attr({
                             path:['M',0,maxY,'h',self.container.clientWidth],
                             stroke:1
                         });
                     }
+                   
+                
                     gridIndex++;
+                        
                 }
+                     
             }
+ 
             //设置container高度
-            this.container.style.height = maxY +"px" 
-            this.stage.setSize(this.container.clientWidth,maxY);  
+            this.container.style.height = maxY+30+"px";
+            this.stage.setSize(this.container.clientWidth,maxY+30); 
+            self.stage.path().attr({
+                path:['M',0,this.container.clientHeight-10,'h',self.container.clientWidth],
+                stroke:1
+            });
+            for(var i=0;i<option.col-1;i++){
+                this.stage.path().attr({
+                    path:['M',colWidth*(i+1),40,'v',self.container.clientHeight-50],
+                    stroke:1
+                });
+            }
 
         },
         _initSides:function(){
@@ -730,7 +843,8 @@
 				});
                 edgeSet.push(edge);
                 edge.data('edgeData',s);
-
+                //默认不显示
+                edge.hide();
 
             });
             
@@ -758,10 +872,10 @@
 
             //all
             var hideRect = stage.rect(startX,startY,rectWidth,rectWidth).attr({
-                "fill" : 'green',
+                "fill" : 'gray',
                 "stroke-width":0,
                 "cursor":"pointer"
-            }).data('fill','green').data('hide',true).data('active',true);
+            }).data('fill','green').data('hide',true).data('active',false);//默认为不显示
             rectSet.push(hideRect);
             var text = stage.text(startX,startY,'依赖关系');
             var bbox = text.getBBox();
@@ -789,7 +903,6 @@
                 }
             }
             set.translate((this.container.clientWidth-startX)/2,0);
-
             self.edgeSet.data("active",true);
             self.nodeSet.data("active",true);
 
@@ -860,15 +973,8 @@
                             edge.data("active",false).hide();
                         }
                     });
-                    
-
                 }
-
-
             });
-
-
-
         }
     }
 

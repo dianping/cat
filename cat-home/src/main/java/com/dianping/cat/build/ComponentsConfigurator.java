@@ -3,7 +3,7 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.initialization.DefaultModuleManager;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleManager;
@@ -11,17 +11,14 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
-import com.dianping.cat.consumer.core.config.ConfigDao;
-import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessageConsumerRegistry;
-import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -36,7 +33,10 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
+import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -46,9 +46,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-		      .req(MessageConsumer.class, new String[] { RealtimeConsumer.ID }, "m_consumers"));
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
@@ -62,11 +59,17 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
+		all.add(C(DomainNavManager.class).req(ProjectDao.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
+		
+		all.add(C(ExceptionThresholdConfigManager.class).req(ConfigDao.class));
+		
+		all.add(C(BugConfigManager.class).req(ConfigDao.class));
+		
+		all.add(C(UtilizationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -74,10 +77,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class) //
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
-		      .req(ModelService.class, "dependency"));
+		      .req(ModelService.class, DependencyAnalyzer.ID));
 
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
-		
+
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -87,11 +90,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class) //
+		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
-		
+
 		// for abtest module
 		all.addAll(new ABTestComponentConfigurator().defineComponents());
 
@@ -100,7 +103,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
-		
+
 		return all;
 	}
 }

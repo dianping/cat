@@ -23,6 +23,7 @@
 		<attribute name="max" value-type="double" primitive="true" default-value="-1"/>
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
@@ -41,6 +42,7 @@
 		<attribute name="max" value-type="double" primitive="true" default-value="-1"/>
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
@@ -49,25 +51,25 @@
 		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true"  render="false"/>
 	</entity>
 	<entity name="range">
-		<attribute name="value" value-type="int"  key="true" />
+		<attribute name="value" value-type="int" primitive="true" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 	<entity name="range2">
-		<attribute name="value" value-type="int"  key="true" />
+		<attribute name="value" value-type="int" primitive="true" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 	<entity name="duration">
-		<attribute name="value" value-type="int"  key="true" />
+		<attribute name="value" value-type="int" primitive="true" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 	<entity name="all-duration">
-		<attribute name="value" value-type="int" key="true" />
+		<attribute name="value" value-type="int" primitive="true" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 </model>

@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,21 +13,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
+import com.dianping.cat.report.service.ReportService;
 
 @RunWith(JUnit4.class)
 public class ArchMonthAnalyzer extends ComponentTestCase {
@@ -37,35 +36,27 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	private Map<Long, Indicator> indicators = new LinkedHashMap<Long, Indicator>();
 
 	@Inject
-	private DailyreportDao m_dailyreportDao;
+	private DailyReportDao m_dailyreportDao;
+
+	@Inject
+	private ReportService m_reportService;
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		m_dailyreportDao = lookup(DailyreportDao.class);
+		m_dailyreportDao = lookup(DailyReportDao.class);
+		m_reportService = lookup(ReportService.class);
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
-		Set<String> domains = new HashSet<String>();
-
-		try {
-			List<Dailyreport> reports = m_dailyreportDao.findAllDomainsByNameDuration(start, end, "transaction",
-			      DailyreportEntity.READSET_DOMAIN_NAME);
-
-			for (Dailyreport report : reports) {
-				domains.add(report.getDomain());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
+		return m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 	}
 
 	@Test
 	public void builderData() throws IOException {
 		Date start = TimeUtil.getLastMonth();
-		start.setTime(start.getTime()+TimeUtil.ONE_DAY*16);
+		start.setTime(start.getTime() + TimeUtil.ONE_DAY * 16);
 		Date end = TimeUtil.getCurrentDay();
 
 		Set<String> domains = queryAllDomain(start, end);
@@ -88,11 +79,11 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	private void processOneDay(Date date, Set<String> domains) {
 		for (String domain : domains) {
 			try {
-				Dailyreport report = m_dailyreportDao.findByNameDomainPeriod(date, domain, "transaction",
-				      DailyreportEntity.READSET_FULL);
+				DailyReport report = m_dailyreportDao.findByDomainNamePeriod(domain, TransactionAnalyzer.ID, date,
+				      DailyReportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
-				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL);
+				Machine machine = transactionReport.findOrCreateMachine(Constants.ALL);
 
 				Indicator indicator = indicators.get(date.getTime());
 				if (indicator == null) {
@@ -140,7 +131,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 							System.out.println(count + " " + avg);
 						}
 					}
-				} else if (name.equalsIgnoreCase("service") || name.equalsIgnoreCase("pigeonService")) {
+				} else if (name.equalsIgnoreCase(Constants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
 					double avg = type.getAvg();
 					if (m_isDebug) {
 						if (avg > 10) {
@@ -156,7 +147,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 						}
 					}
 					m_call.add(count, error, sum);
-				} else if (name.equalsIgnoreCase("sql")) {
+				} else if (name.equalsIgnoreCase(SqlAnalyzer.ID)) {
 					m_sql.add(count, error, sum);
 				} else if (name.equalsIgnoreCase("Cache.kvdb")) {
 					m_kvdbCache.add(count, error, sum);
@@ -235,9 +226,9 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("url" + "\t").append(m_url);
-			sb.append("service" + "\t").append(m_service);
+			sb.append(Constants.REPORT_SERVICE + "\t").append(m_service);
 			sb.append("call" + "\t").append(m_call);
-			sb.append("sql" + "\t").append(m_sql);
+			sb.append(SqlAnalyzer.ID + "\t").append(m_sql);
 			sb.append("memcache" + "\t").append(m_memCache);
 			sb.append("kvdb" + "\t").append(m_kvdbCache);
 			sb.append("web" + "\t").append(m_webCache);

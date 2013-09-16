@@ -11,13 +11,13 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.core.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.Abtest;
 import com.dianping.cat.consumer.metric.model.entity.Group;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
@@ -33,6 +33,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
+import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implements LogEnabled {
 	public static final String ID = "metric";
@@ -52,6 +54,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Inject
 	private ABTestCodec m_codec;
 
+	@Inject
+	private TaskManager m_taskManager;
+
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
 
@@ -64,7 +69,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
-
 
 	public MetricReport getReport(String product) {
 		MetricReport report = m_reports.get(product);
@@ -166,7 +170,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
-			MetricItem metricItem = report.findOrCreateMetricItem(name);
+			String key = m_configManager.buildMetricKey(domain, "Metric", name);
+			MetricItem metricItem = report.findOrCreateMetricItem(key);
 			Map<String, String> abtests = parseABTests(type);
 
 			metricItem.addDomain(domain).setType(status);
@@ -236,8 +241,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			type = "PigeonService";
 		}
 		if ("URL".equals(type) || "PigeonService".equals(type)) {
-			String name = transaction.getName();
 			String domain = tree.getDomain();
+			String name = transaction.getName();
 			String key = m_configManager.buildMetricKey(domain, type, name);
 			MetricItemConfig config = m_configManager.queryMetricItemConfig(key);
 
@@ -245,7 +250,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				long current = transaction.getTimestamp() / 1000 / 60;
 				int min = (int) (current % (60));
 				double sum = transaction.getDurationInMicros();
-				MetricItem metricItem = report.findOrCreateMetricItem(name);
+				MetricItem metricItem = report.findOrCreateMetricItem(key);
 				Map<String, String> abtests = parseABtests(transaction);
 
 				metricItem.addDomain(domain).setType("C");
@@ -257,7 +262,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
 
 		t.setStatus(Message.SUCCESS);
 		try {
@@ -300,6 +305,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 						Cat.getProducer().logError(e);
 					}
 				}
+				//for create baseline for metric
+				m_taskManager.createTask(period, Constants.CAT, ID, TaskProlicy.DAILY);
 			}
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);

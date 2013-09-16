@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -20,29 +21,31 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.consumer.core.ProblemAnalyzer;
-import com.dianping.cat.consumer.core.TopAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.analysis.PeriodStrategy;
+import com.dianping.cat.analysis.PeriodTask;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
-import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.status.ServerStateManager;
+import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
-	public static final String ID = "realtime";
-	
 	private static final long MINUTE = 60 * 1000L;
 
-	private static int QUEUE_SIZE = 100000;
+	private static int QUEUE_SIZE = 300000;
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 
 	@Inject
-	private ServerStateManager m_serverStateManager;
+	private ServerStatisticManager m_serverStateManager;
 
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
@@ -102,7 +105,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
 			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
-				analyzer.doCheckpoint(false);
+				try{
+					analyzer.doCheckpoint(false);
+				}catch(Exception e){
+					Cat.logError(e);
+				}
 			}
 
 			try {
@@ -167,7 +174,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			m_endTime = endTime;
 			m_tasks = new ArrayList<PeriodTask>(names.size());
 
-			Map<String, MessageAnalyzer> analyzers = new HashMap<String, MessageAnalyzer>();
+			Map<String, MessageAnalyzer> analyzers = new LinkedHashMap<String, MessageAnalyzer>();
 
 			for (String name : names) {
 				MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
@@ -191,9 +198,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		public void distribute(MessageTree tree) {
+			m_serverStateManager.addMessageTotal(tree.getDomain(), 1);
 			for (PeriodTask task : m_tasks) {
 				task.enqueue(tree);
 			}
+			
 		}
 
 		public void finish() {
@@ -270,7 +279,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	class PeriodManager implements Task {
 		private PeriodStrategy m_strategy;
 
-		private List<Period> m_periods = new ArrayList<RealtimeConsumer.Period>();
+		private List<Period> m_periods = new ArrayList<Period>();
 
 		private boolean m_active;
 
