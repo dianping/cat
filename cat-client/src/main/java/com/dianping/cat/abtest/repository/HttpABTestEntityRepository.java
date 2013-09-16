@@ -2,7 +2,6 @@ package com.dianping.cat.abtest.repository;
 
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,9 +43,9 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	private Set<String> m_activeRuns = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
-	private Map<Integer, ABTestGroupStrategy> m_strategies = new HashMap<Integer, ABTestGroupStrategy>();
+	private Map<Integer, ABTestGroupStrategy> m_strategies = new ConcurrentHashMap<Integer, ABTestGroupStrategy>();
 
-	private HashMap<Integer, Invocable> m_invokeMap = new HashMap<Integer, Invocable>();
+	private Map<Integer, Invocable> m_invokeMap = new ConcurrentHashMap<Integer, Invocable>();
 
 	private FieldInjectUtil m_fieldInjector = new FieldInjectUtil();
 

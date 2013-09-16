@@ -32,12 +32,7 @@ canvas{}
 			</h3>
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="?op=report&id=${payload.id }">
-						<%-- <img style="vertical-align: text-bottom;" height="15" width="15" src="${res.img.local['star_black_small.png']}">
-						Summary
-					</a>
-				</li>
-				<li>
-					<a href="#detail"> --%> <img style="vertical-align: text-bottom;"
+					 <img style="vertical-align: text-bottom;"
 						height="15" width="15"
 						src="${res.img.local['details_black_small.png']}"> Detail
 						Report
@@ -50,13 +45,13 @@ canvas{}
 			</ul>
 		</div>
 		
-		<form class="form-inline" id="form">
+		<form class="form-inline" id="form" method="post" action="abtest?op=report">
 			<c:forEach var="item" items="${model.report.goals}">
 				<a class="btn btn-small ${payload.selectMetricType eq item.name ? 'btn-primary' : ''}" name="${item.name}">${model.metricConfigItem[item.name].title}</a>
 			</c:forEach>
 			
 			<c:if test="${fn:length(model.report.goals) eq 0}">
-				<a id="query" class="btn btn-small">查询</a>
+				<input type="submit" class="btn btn-small" value="查询">
 			</c:if>
 			
 			<input id="metricType" name="selectMetricType" value="" type="hidden" ></input>
@@ -176,10 +171,6 @@ canvas{}
 				
 				chart.Line(data);
 			});
-		});
-		
-		$('#query').click(function(){
-			$('#form').submit();
 		});
 	});
 	</script>
