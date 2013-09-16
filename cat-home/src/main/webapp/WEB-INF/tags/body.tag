@@ -52,9 +52,9 @@
         </div>
       </div>
     </div>
-	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
+	<div id="loginModal" class="modal hide fade" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" style="width:380px">
-		<form class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
+		<form class="form-horizontal" name="login" method="post" action="/cat/s/login">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
@@ -126,7 +126,7 @@
 				loginInfo.innerHTML ='<a href="/cat/s/login?op=logout">'+name +'&nbsp;登出</a>';
 			}else{
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="#myModal" data-toggle="modal">登陆</a>';
+				loginInfo.innerHTML ='<a href="#loginModal" data-toggle="modal">登陆</a>';
 			}
 		});
 	</script>

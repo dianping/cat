@@ -254,3 +254,10 @@ select{
 ul, ol{
 	margin:0 0 10px 25px;
 }
+
+#loginModal .form-horizontal .control-label{
+	width:50px;
+}
+#loginModal .form-horizontal .controls{
+	margin-left:70px;
+}
