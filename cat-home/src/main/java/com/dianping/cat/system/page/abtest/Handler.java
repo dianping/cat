@@ -272,6 +272,12 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		case MODEL:
 			renderModel(model, payload);
 			break;
+		case ABTEST_CACULATOR:
+		case AJAX_ADDGROUPSTRATEGY:
+		case AJAX_CREATE:
+		case AJAX_DETAIL:
+		case AJAX_PARSEGROUPSTRATEGY:
+			break;
 		}
 
 		model.setAction(action);

@@ -169,7 +169,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(Constants.REPORT_SERVICE, m_serviceReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_HEAVY, m_heavyReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_UTILIZATION, m_utilizationReportBuilder);
-		m_reportBuilders.put(Constants.ABTEST, m_abtestReportBuilder);
+		m_reportBuilders.put(Constants.REPORT_ABTEST, m_abtestReportBuilder);
 	}
 
 }
