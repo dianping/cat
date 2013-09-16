@@ -26,7 +26,10 @@
     			<member name="start-date" field="start_date" value-type="Date" />
     			<member name="end-date" field="end_date" value-type="Date" />
     			<member name="domains" field="domains" value-type="String" length="100" nullable="false" />
-    			<member name="strategy-configuration" field="strategy_configuration" value-type="String" length="1024" />
+    			<member name="conditions" field="conditions" value-type="String" length="65535" />
+    			<member name="java-fragement" field="java_fragement" value-type="String" length="65535" />
+    			<member name="conversion-goals" field="conversion_goals" value-type="String" length="65535" />
+    			<member name="strategy-configuration" field="strategy_configuration" value-type="String" length="65535" />
       			<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />
       		</updateset>
   		</updatesets>
@@ -58,7 +61,51 @@
                     WHERE <FIELD name='status'/> = ${status}
                 ]]></statement>
 			</query>
+			<query name="find-by-name" type="SELECT" multiple="true">
+				<param name="name" />
+				<statement><![CDATA[
+                    SELECT <FIELDS/> 
+                    FROM <TABLE/>
+                    WHERE <FIELD name='name'/> = ${name}
+                ]]></statement>
+			</query>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/>
+				]]></statement>
+			</query>
 		</query-defs>
 	</entity>
+	<entity name="abtest-report" table="abtest_report" alias="ar">
+	<member name="creation-date" insert-expr="NOW()" />
+   	<var name="start-date" value-type="Date" />
+	<var name="end-date" value-type="Date" />
+    <query-defs>
+    	<query name="find-by-runId-duration" type="SELECT" multiple="true">
+			<param name="run-id" />
+			<param name="start-date" />
+			<param name="end-date" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='run-id'/> = ${run-id}
+				AND <FIELD name='period'/> >= ${start-date}
+				AND <FIELD name='period'/> <= ${end-date} 
+				]]></statement>
+		</query>
+    </query-defs>
+    <query-defs>
+    	<query name="find-latest-report-by-runId" type="SELECT">
+    		<param name="run-id" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='run-id'/> = ${run-id}
+				ORDER BY <FIELD name='period'/> DESC LIMIT 1
+				]]></statement>
+		</query>
+    </query-defs>
+  </entity>
 </entities>
 

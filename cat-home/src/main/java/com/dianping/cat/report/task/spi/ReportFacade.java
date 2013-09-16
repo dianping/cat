@@ -24,6 +24,7 @@ import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -84,6 +85,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private MetricBaselineReportBuilder m_metricBaselineReportBuilder;
+	
+	@Inject
+	private ABTestReportBuilder m_abtestReportBuilder;
 
 	@Inject
 	private HeavyReportBuilder m_heavyReportBuilder;
@@ -165,6 +169,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(Constants.REPORT_SERVICE, m_serviceReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_HEAVY, m_heavyReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_UTILIZATION, m_utilizationReportBuilder);
+		m_reportBuilders.put(Constants.ABTEST, m_abtestReportBuilder);
 	}
 
 }

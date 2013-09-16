@@ -6,12 +6,15 @@ import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.spi.ABTestEntity;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.dal.abtest.Abtest;
-import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
+import com.dianping.cat.report.abtest.entity.AbtestReport;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
+import com.dianping.cat.system.page.abtest.ReportHandler.DataSets;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_domain;
@@ -20,27 +23,21 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private ABTestEntity m_entity;
 
-	private List<ABTestReport> m_reports;
-
-	private int m_totalPages;
-
-	private int m_createdCount;
-
-	private int m_readyCount;
-
-	private int m_runningCount;
-
-	private int m_terminatedCount;
-
-	private int m_suspendedCount;
+	private ListViewModel m_listViewModel;
 
 	private Map<String, List<Project>> m_projectMap;
 
+	private Map<String, MetricItemConfig> m_metricConfigItem;
+
 	private List<GroupStrategy> m_groupStrategyList;
 
-	private AbtestDaoModel m_abtest;
+	private AbtestItem m_abtest;
 
-	private String m_abtestModel;
+	private AbtestModel m_abtestModel;
+
+	private AbtestReport m_report;
+
+	private List<DataSets> m_dataSets;
 
 	private String m_ipAddress;
 
@@ -48,16 +45,16 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		super(ctx);
 	}
 
-	public AbtestDaoModel getAbtest() {
+	public AbtestItem getAbtest() {
 		return m_abtest;
 	}
 
-	public String getAbtestModel() {
+	public AbtestModel getAbtestModel() {
 		return m_abtestModel;
 	}
 
-	public int getCreatedCount() {
-		return m_createdCount;
+	public List<DataSets> getDataSets() {
+		return m_dataSets;
 	}
 
 	public Date getDate() {
@@ -85,48 +82,36 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_ipAddress;
 	}
 
+	public ListViewModel getListViewModel() {
+		return m_listViewModel;
+	}
+
+	public Map<String, MetricItemConfig> getMetricConfigItem() {
+		return m_metricConfigItem;
+	}
+
 	public Map<String, List<Project>> getProjectMap() {
 		return m_projectMap;
 	}
 
-	public int getReadyCount() {
-		return m_readyCount;
+	public AbtestReport getReport() {
+		return m_report;
 	}
 
-	public List<ABTestReport> getReports() {
-		return m_reports;
-	}
-
-	public String getReportType(){
+	public String getReportType() {
 		return "";
 	}
 
-	public int getRunningCount() {
-		return m_runningCount;
-	}
-
-	public int getSuspendedCount() {
-		return m_suspendedCount;
-	}
-
-	public int getTerminatedCount() {
-		return m_terminatedCount;
-	}
-
-	public int getTotalPages() {
-		return m_totalPages;
-	}
-
-	public void setAbtest(AbtestDaoModel abtest) {
+	public void setAbtest(AbtestItem abtest) {
 		m_abtest = abtest;
 	}
 
-	public void setAbtestModel(String abtestModel) {
+	public void setAbtestModel(AbtestModel abtestModel) {
 		m_abtestModel = abtestModel;
 	}
 
-	public void setCreatedCount(int createdCount) {
-		m_createdCount = createdCount;
+	public void setDataSets(List<DataSets> dataSets) {
+		m_dataSets = dataSets;
 	}
 
 	public void setDate(Date date) {
@@ -149,100 +134,19 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_ipAddress = ipAddress;
 	}
 
+	public void setListViewModel(ListViewModel listViewModel) {
+		m_listViewModel = listViewModel;
+	}
+
+	public void setMetricConfigItem(Map<String, MetricItemConfig> metricItemConfig) {
+		m_metricConfigItem = metricItemConfig;
+	}
+
 	public void setProjectMap(Map<String, List<Project>> projectMap) {
 		m_projectMap = projectMap;
 	}
 
-	public void setReadyCount(int readyCount) {
-		m_readyCount = readyCount;
-	}
-
-	public void setReports(List<ABTestReport> reports) {
-		m_reports = reports;
-	}
-
-	public void setRunningCount(int runningCount) {
-		m_runningCount = runningCount;
-	}
-
-	public void setSuspendedCount(int suspendedCount) {
-		m_suspendedCount = suspendedCount;
-	}
-
-	public void setTerminatedCount(int terminatedCount) {
-		m_terminatedCount = terminatedCount;
-	}
-	
-	public void setTotalPages(int totalPages) {
-		m_totalPages = totalPages;
-	}
-
-	public static class AbtestDaoModel {
-
-		private Abtest m_abtest;
-
-		private AbtestRun m_run;
-
-		public AbtestDaoModel(Abtest abtest, AbtestRun abtestRun) {
-			super();
-			m_abtest = abtest;
-			m_run = abtestRun;
-		}
-
-		public Abtest getAbtest() {
-			return m_abtest;
-		}
-
-		public int getCaseId() {
-			return m_run.getCaseId();
-		}
-
-		public String getDescription() {
-			return m_abtest.getDescription();
-		}
-
-		public String getDomains() {
-			return m_run.getDomains();
-		}
-
-		public Date getEndDate() {
-			return m_run.getEndDate();
-		}
-
-		public int getGroupStrategy() {
-			return m_abtest.getGroupStrategy();
-		}
-
-		public int getId() {
-			return m_run.getId();
-		}
-
-		public String getName() {
-			return m_abtest.getName();
-		}
-
-		public String getOwner() {
-			return m_abtest.getOwner();
-		}
-
-		public AbtestRun getRun() {
-			return m_run;
-		}
-
-		public Date getStartDate() {
-			return m_run.getStartDate();
-		}
-
-		public String getStrategyConfiguration() {
-			return m_run.getStrategyConfiguration();
-		}
-
-		public void setAbtest(Abtest abtest) {
-			m_abtest = abtest;
-		}
-
-		public void setRun(AbtestRun run) {
-			m_run = run;
-		}
+	public void setReport(AbtestReport report) {
+		m_report = report;
 	}
 }

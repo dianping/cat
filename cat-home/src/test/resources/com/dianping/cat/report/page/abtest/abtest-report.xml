@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abtest-report runId="1" startTime="2013-06-24 10:00:00" endTime="2013-06-24 10:59:59">
+	<goals>
+		<goal name="detail"></goal>
+		<goal name="submitOrder"></goal>
+	</goals>
+	<chart goal="detail" type="hour">
+		<labels><![CDATA[This is value]]></labels>
+		<datasets><![CDATA[This is value]]></datasets>
+	</chart>
+	<variation name="control">
+		<goal name="detail" type="C" count="1" sum="100.0" avg="100.0" />
+		<goal name="submitOrder" type="C" count="1" sum="100.0" avg="100.0" />
+	</variation>
+	<variation name="A">
+		<goal name="detail" type="C" count="1" sum="100.0" avg="100.0" />
+		<goal name="submitOrder" type="C" count="1" sum="100.0" avg="100.0" />
+	</variation>
+</abtest-report>
