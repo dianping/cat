@@ -12,13 +12,18 @@ public class DefaultABTestCodec implements ABTestCodec {
 
 		@Override
 		protected boolean removeEldestEntry(Entry<String, Map<String, String>> arg0) {
-			return true;
+			return size() >= 1000;
 		}
 	};
 
 	public Map<String, Map<String, String>> decode(String value, Set<String> keys) {
 		int len = value.length();
 		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>();
+
+		if (len == 0) {
+			return map;
+		}
+
 		StringBuilder key = new StringBuilder();
 		StringBuilder name = new StringBuilder();
 		StringBuilder val = new StringBuilder();
@@ -120,25 +125,41 @@ public class DefaultABTestCodec implements ABTestCodec {
 				sb.append('&');
 			}
 
-			boolean first2 = true;
+			String part = encode(runId, cookielets);
 
+			sb.append(part);
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public String encode(String runId, Map<String, String> map) {
+		StringBuilder sb;
+
+		if (map != null && map.size() > 0) {
+			sb = new StringBuilder(32);
 			sb.append(runId).append('=');
+		} else {
+			return "";
+		}
 
-			for (Map.Entry<String, String> e : cookielets.entrySet()) {
-				if (first2) {
-					first2 = false;
-				} else {
-					sb.append('|');
-				}
+		boolean first = true;
 
-				String key = e.getKey();
-				String value = e.getValue();
-				
-				if(value == null){
-					sb.append(key).append(':');
-				}else{
-					sb.append(key).append(':').append(value);
-				}
+		for (Map.Entry<String, String> e : map.entrySet()) {
+			if (first) {
+				first = false;
+			} else {
+				sb.append('|');
+			}
+
+			String key = e.getKey();
+			String value = e.getValue();
+
+			if (value == null) {
+				sb.append(key).append(':');
+			} else {
+				sb.append(key).append(':').append(value);
 			}
 		}
 
@@ -156,7 +177,7 @@ public class DefaultABTestCodec implements ABTestCodec {
 			for (Entry<String, Map<String, String>> entry : maps.entrySet()) {
 				String key = entry.getKey();
 				Map<String, String> entryValue = entry.getValue();
-				
+
 				if (entryValue != null) {
 					String val = entryValue.get("ab");
 

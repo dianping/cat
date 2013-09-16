@@ -45,7 +45,7 @@ public class ABTestEntityManagerTest extends ComponentTestCase {
 		}
 
 		if (expectedGroupStrategy != null) {
-			Assert.assertEquals(expectedGroupStrategyConfiguration, entity.getGroupStrategyConfiguration());
+			Assert.assertEquals(expectedGroupStrategyConfiguration, entity.getGroupStrategyDescriptor());
 		}
 
 		Assert.assertEquals(expectedEntityName, entity.getName());

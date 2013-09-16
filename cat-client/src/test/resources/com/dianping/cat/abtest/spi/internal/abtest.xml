@@ -7,11 +7,33 @@
 		<domain>TuanGouWeb</domain>
 		<domain>TuanGouRemote</domain>
 		<runs>
-			<run id="1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" disabled="false">
+			<run id="1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" created-date="2013-04-10 17:00:00" last-modified-date="2013-04-10 17:00:00" disabled="false">
 				<creator>hao.zhu@dianping.com</creator>
 				<domain>TuanGouWeb</domain>
 				<domain>TuanGouRemote</domain>
-				<group-strategy-configuration><![CDATA[This is the configuration]]></group-strategy-configuration>
+				<conditions-fragement><![CDATA[This is value]]></conditions-fragement>
+				<conversion-rules>
+					<conversion-rule name="Goal-1"><![CDATA[This is value]]></conversion-rule>
+					<conversion-rule name="Goal-2"><![CDATA[This is value]]></conversion-rule>
+					<conversion-rule name="Goal-3"><![CDATA[This is value]]></conversion-rule>
+				</conversion-rules>
+				<conditions>
+					<condition name="url" seq="1" operator="and" comparator="1"><![CDATA[This is value]]></condition>
+					<condition name="url" seq="1" operator="and" comparator="1"><![CDATA[This is value]]></condition>
+				</conditions>
+				<groupstrategy-descriptor name="roundrobin" className="GroupStrategyParser" fullyQualifiedName="com.dianping.cat.system.page.abtest.GroupStrategyParser">
+					<fields>
+					   <field name="package" type="String" input-type="input" modifier-name="m_package">
+					   		<![CDATA[This is value]]>
+					   </field>
+					   <field name="class" type="String" input-type="textarea" modifier-name="m_class">
+					  		 <![CDATA[This is value]]>
+					   </field>
+					   <field name="inject" type="String" input-type="input" modifier-name="m_inject">
+					  		 <![CDATA[This is value]]>
+					   </field>
+					</fields>
+				</groupstrategy-descriptor>
 			</run>
 			<run />
 		</runs>
