@@ -54,7 +54,7 @@
     </div>
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" style="width:380px">
-		<form class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
+		<form class="form-horizontal" name="login" method="post" action="/cat/s/login">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
