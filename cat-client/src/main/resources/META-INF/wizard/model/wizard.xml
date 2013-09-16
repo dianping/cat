@@ -2,5 +2,5 @@
 <wizard package="com.dianping.cat">
    <model package="com.dianping.cat.abtest.model" name="abtest">
       <sample-model>src/test/resources/com/dianping/cat/abtest/spi/internal/abtest.xml</sample-model>
-	</model>
+   </model>
 </wizard>

@@ -12,6 +12,14 @@
 <res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
 <res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
 
+<style>
+.form-horizontal .control-label{
+	width:50px;
+}
+.form-horizontal .controls{
+	margin-left:70px;
+}
+</style>
 		<form class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
 			<h4 id="myModalLabel" class="text-success">用户登录</h4>
 			<div class="control-group">

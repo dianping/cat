@@ -51,6 +51,7 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="ix_date_domain" members="date ASC, domain ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
