@@ -296,7 +296,16 @@ CREATE TABLE `abtest` (
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `abtest_report` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `run_id` int(11) DEFAULT NULL,
+  `period` datetime DEFAULT NULL,
+  `content` text,
+  `creation_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `abtest_run` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -306,23 +315,26 @@ CREATE TABLE `abtest_run` (
   `end_date` datetime DEFAULT NULL COMMENT '结束时间',
   `disabled` tinyint(4) NOT NULL COMMENT '是否有效',
   `domains` varchar(100) NOT NULL COMMENT '属于的domain，用逗号分割',
+  `conditions` text,
+  `java_fragement` text,
+  `conversion_goals` text,
   `strategy_configuration` text COMMENT '策略配置',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   `modified_date` datetime NOT NULL COMMENT '上次修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `group_strategy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL COMMENT 'GroupStrategy的名字',
-  `alias` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
-  `classname` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
-  `configuration` text COMMENT '配置的schema',
+  `class_name` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
+  `fully_qualified_name` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
+  `descriptor` text COMMENT '配置的schema',
   `status` tinyint(4) NOT NULL COMMENT '是否开/关，1是开，0是关',
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
