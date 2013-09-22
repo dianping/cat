@@ -104,15 +104,16 @@ public class DefaultABTestContext implements ABTestContext {
 
 		if (inv != null && m_entity.isEligible(new Date())) {
 			boolean isAccept = false;
-			Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
+			Transaction t = Cat.newTransaction("ABTest-GroupStrategy", m_entity.getGroupStrategyName());
 
 			try {
 				isAccept = (Boolean) inv.invokeFunction("isEligible", request);
 
 				if (isAccept) {
 					m_groupStrategy.apply(this);
-					t.setStatus(Message.SUCCESS);
 				}
+				
+				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {
 				t.setStatus(e);
 				Cat.logError(e);

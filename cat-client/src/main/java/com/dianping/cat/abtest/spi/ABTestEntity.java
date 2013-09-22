@@ -19,15 +19,15 @@ public class ABTestEntity {
 
 	private Run m_run;
 
-	private ABTestGroupStrategy m_groupStrategy;
-	
-	private Invocable m_invocable;
-	
-	private MessageManager m_messageManager;
-	
-	private ABTestCodec m_cookieCodec;
-
 	private String m_groupStrategyName;
+
+	private ABTestGroupStrategy m_groupStrategy;
+
+	private Invocable m_invocable;
+
+	private MessageManager m_messageManager;
+
+	private ABTestCodec m_cookieCodec;
 
 	public ABTestEntity() {
 		m_run = new Run();
@@ -38,38 +38,6 @@ public class ABTestEntity {
 		m_name = _case.getName();
 		m_groupStrategyName = _case.getGroupStrategy();
 		m_run = run;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ABTestEntity other = (ABTestEntity) obj;
-		if (m_groupStrategy == null) {
-			if (other.m_groupStrategy != null)
-				return false;
-		} else if (!m_groupStrategy.equals(other.m_groupStrategy))
-			return false;
-		if (m_groupStrategyName == null) {
-			if (other.m_groupStrategyName != null)
-				return false;
-		} else if (!m_groupStrategyName.equals(other.m_groupStrategyName))
-			return false;
-		if (m_name == null) {
-			if (other.m_name != null)
-				return false;
-		} else if (!m_name.equals(other.m_name))
-			return false;
-		if (m_run == null) {
-			if (other.m_run != null)
-				return false;
-		} else if (!m_run.equals(other.m_run))
-			return false;
-		return true;
 	}
 
 	public List<Condition> getConditions() {
@@ -85,8 +53,8 @@ public class ABTestEntity {
 	}
 
 	public ABTestCodec getCookieCodec() {
-   	return m_cookieCodec;
-   }
+		return m_cookieCodec;
+	}
 
 	public Date getEndDate() {
 		return m_run.getEndDate();
@@ -105,12 +73,12 @@ public class ABTestEntity {
 	}
 
 	public Invocable getInvocable() {
-   	return m_invocable;
-   }
+		return m_invocable;
+	}
 
 	public MessageManager getMessageManager() {
-   	return m_messageManager;
-   }
+		return m_messageManager;
+	}
 
 	public String getName() {
 		return m_name;
@@ -124,17 +92,6 @@ public class ABTestEntity {
 		return m_run.getStartDate();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((m_groupStrategy == null) ? 0 : m_groupStrategy.hashCode());
-		result = prime * result + ((m_groupStrategyName == null) ? 0 : m_groupStrategyName.hashCode());
-		result = prime * result + ((m_name == null) ? 0 : m_name.hashCode());
-		result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
-		return result;
-	}
-	
 	public boolean isDisabled() {
 		return m_run.isDisabled();
 	}
@@ -162,8 +119,8 @@ public class ABTestEntity {
 	}
 
 	public void setCookieCodec(ABTestCodec cookieCodec) {
-   	m_cookieCodec = cookieCodec;
-   }
+		m_cookieCodec = cookieCodec;
+	}
 
 	public void setDisabled(boolean disabled) {
 		m_run.setDisabled(disabled);
@@ -174,12 +131,12 @@ public class ABTestEntity {
 	}
 
 	public void setInvocable(Invocable invocable) {
-   	m_invocable = invocable;
-   }
-	
+		m_invocable = invocable;
+	}
+
 	public void setMessageManager(MessageManager messageManager) {
-   	m_messageManager = messageManager;
-   }
+		m_messageManager = messageManager;
+	}
 
 	public void setName(String name) {
 		m_name = name;
