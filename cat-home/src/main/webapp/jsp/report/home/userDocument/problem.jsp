@@ -1,7 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h4 class="text-success">Problem功能介绍</h4>
 <h5> Problem记录整个项目在运行过程中出现的问题，包括一些错误、访问较长的行为。Problem的类型如下：</h5>
-<table class="table table-striped table-bordered table-condensed">
+<table class="table table-striped table-bordered table-condensed table-hover">
 	<tr><td>error</td><td>Log4j记录的错误异常</td></tr>
 	<tr><td>call</td><td>表示在远程调用中transaction中出错</td></tr>
 	<tr><td>sql</td><td>表示在数据库的调用中transaction中出错</td></tr>

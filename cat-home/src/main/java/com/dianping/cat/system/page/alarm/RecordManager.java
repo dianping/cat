@@ -26,7 +26,7 @@ public class RecordManager {
 		int id = payload.getAlarmRecordId();
 
 		try {
-			MailRecord record = m_mailRecordDao.findByPK(id, MailRecordEntity.READSET_ALL_EXCLUDE_CONTENT);
+			MailRecord record = m_mailRecordDao.findByPK(id, MailRecordEntity.READSET_FULL);
 			model.setMailRecord(record);
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -44,7 +44,7 @@ public class RecordManager {
 				ScheduledReportSubscription scheduledReportSubscription = scheduledReportSubscriptions.get(i);
 				ruleIds[i] = scheduledReportSubscription.getScheduledReportId();
 			}
-			List<MailRecord> mails = m_mailRecordDao.findReportRecordByRuleId(ruleIds, MailRecordEntity.READSET_FULL);
+			List<MailRecord> mails = m_mailRecordDao.findReportRecordByRuleId(ruleIds, MailRecordEntity.READSET_ALL_EXCLUDE_CONTENT);
 			model.setMailRecords(mails);
 		} catch (DalNotFoundException e) {
 		} catch (DalException e) {

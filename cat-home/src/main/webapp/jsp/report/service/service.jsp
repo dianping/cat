@@ -38,7 +38,7 @@
 	<div class="span10">
 		<div class="report">
 			</br>
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed table-hover">
 				<tr>
 					<th class="left">Server(Domain)</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=total">Total</th>

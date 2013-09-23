@@ -53,7 +53,7 @@
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab1">
 					<div class="report">
-						<table class="table table-striped table-bordered table-condensed">
+						<table class="table table-striped table-bordered table-condensed table-hover">
 							<tr>
 								<th class="left">id</th>
 								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&tab=tab1">Machine Number</th>
@@ -84,7 +84,7 @@
 				</div>
 				<div class="tab-pane" id="tab2">
 					<div class="report">
-						<table class="table table-striped table-bordered table-condensed">
+						<table class="table table-striped table-bordered table-condensed table-hover">
 							<tr>
 								<th class="left">id</th>
 								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyUtilization&tab=tab2">Machine Number</th>

@@ -92,7 +92,7 @@
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${item.key}">
 					    <h4 class="text-center text-error">拓扑图依赖关系配置信息:${item.key}</h4>
-				     	<table class="table table-striped table-bordered table-condensed">
+				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th><h5 class='text-center'>类型</h5></th>
 				     			<th><h5 class='text-center'>调用者</h5></th>

@@ -20,7 +20,7 @@
 				action="${model.pageUri}?op=utilizationConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
 				<h4 class="text-center text-error">应用排行榜资源权重配置</h4>
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
 					</tr>

@@ -6,13 +6,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 
+@ModelMeta(MetricAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
 
+	@EntityMeta
 	private List<LineChart> m_lineCharts;
 
 	private Collection<ProductLine> m_productLines;
