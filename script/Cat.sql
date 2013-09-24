@@ -296,7 +296,7 @@ CREATE TABLE `abtest` (
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `abtest_report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
