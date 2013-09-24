@@ -284,7 +284,7 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 
 						DefaultTransaction t = new DefaultTransaction(name, url, m_messageManager);
 
-						t.addChild(newEvent(name + ".Status2", status, null));
+						t.addChild(newEvent(name + ".Status", status, null));
 
 						if (childId != null && childId.length() > 0) {
 							t.addChild(newEvent("RemoteCall", upstreamUrl, childId));
