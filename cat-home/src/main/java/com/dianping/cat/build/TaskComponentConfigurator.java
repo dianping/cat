@@ -6,12 +6,14 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.home.dal.abtest.AbtestReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -21,8 +23,10 @@ import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -31,6 +35,7 @@ import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
@@ -38,6 +43,7 @@ import com.dianping.cat.report.task.metric.MetricPointParser;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
@@ -45,6 +51,8 @@ import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
+import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -94,8 +102,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportService.class) //
 		      .req(HeartbeatGraphCreator.class));
 
-		all.add(C(BugReportBuilder.class)
-		      .req( ReportService.class));
+		all.add(C(BugReportBuilder.class).req(ReportService.class));
+
+		all.add(C(ServiceReportBuilder.class).req(ReportService.class, DomainManager.class));
 
 		all.add(C(MatrixReportBuilder.class).req(ReportService.class));
 
@@ -107,14 +116,22 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
 
+		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
+
+		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class));
+
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
+		all.add(C(ABTestReportBuilder.class).req(ReportService.class, AbtestReportDao.class,
+		      ProductLineConfigManager.class, ABTestService.class));
+
 		all.add(C(ReportFacade.class)//
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class //
-		      		, HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class //
-		      		, SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,BugReportBuilder.class,
-		            MetricBaselineReportBuilder.class));
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
+		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
+		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class,
+		            HeavyReportBuilder.class, UtilizationReportBuilder.class, ABTestReportBuilder.class));
 
 		return all;
 	}

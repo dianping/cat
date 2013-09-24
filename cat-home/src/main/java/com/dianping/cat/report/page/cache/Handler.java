@@ -15,20 +15,19 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
-import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.event.EventMergeManager;
+import com.dianping.cat.report.page.event.TpsStatistics;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.MergeAllMachine;
 import com.dianping.cat.report.page.transaction.MergeAllName;
@@ -39,7 +38,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
-	@Inject(type = ModelService.class, value = "event")
+	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_eventService;
 
 	@Inject
@@ -57,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "transaction")
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
 
 	private Set<String> m_cacheTypes = new HashSet<String>(Arrays.asList("Cache.web", "Cache.memcached", "Cache.kvdb",
@@ -74,75 +73,38 @@ public class Handler implements PageHandler<Context> {
 
 	private void calculateEventTps(Payload payload, EventReport report) {
 		if (payload != null && report != null) {
-			boolean isCurrent = payload.getPeriod().isCurrent();
-			String ip = payload.getIpAddress();
-			com.dianping.cat.consumer.event.model.entity.Machine machine = report.getMachines().get(ip);
-			
-			if (machine == null) {
-				return;
-			}
-			for (EventType eventType : machine.getTypes().values()) {
-				long totalCount = eventType.getTotalCount();
-				double tps = 0;
-				if (isCurrent) {
-					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					tps = totalCount / seconds;
-				} else {
-					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					tps = totalCount / (double) time;
-				}
-				eventType.setTps(tps);
-				for (EventName transName : eventType.getNames().values()) {
-					long totalNameCount = transName.getTotalCount();
-					double nameTps = 0;
-				
+			try {
+				if (payload != null && report != null) {
+					boolean isCurrent = payload.getPeriod().isCurrent();
+					double seconds;
 					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						nameTps = totalNameCount / seconds;
+						seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						nameTps = totalNameCount / (double) time;
+						seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 					}
-					transName.setTps(nameTps);
+					new TpsStatistics(seconds).visitEventReport(report);
 				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
 
 	private void calculateTransactionTps(Payload payload, TransactionReport report) {
 		if (payload != null && report != null) {
-			boolean isCurrent = payload.getPeriod().isCurrent();
-			String ip = payload.getIpAddress();
-			Machine machine = report.getMachines().get(ip);
-			
-			if (machine == null) {
-				return;
-			}
-			for (TransactionType transType : machine.getTypes().values()) {
-				long totalCount = transType.getTotalCount();
-				double tps = 0;
-			
-				if (isCurrent) {
-					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					tps = totalCount / seconds;
-				} else {
-					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					tps = totalCount / (double) time;
-				}
-				
-				transType.setTps(tps);
-				for (TransactionName transName : transType.getNames().values()) {
-					long totalNameCount = transName.getTotalCount();
-					double nameTps = 0;
+			try {
+				if (payload != null && report != null) {
+					boolean isCurrent = payload.getPeriod().isCurrent();
+					double seconds;
 					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						nameTps = totalNameCount / seconds;
+						seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						nameTps = totalNameCount / (double) time;
+						seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 					}
-					transName.setTps(nameTps);
+					new com.dianping.cat.report.page.transaction.TpsStatistics(seconds).visitTransactionReport(report);
 				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
@@ -251,12 +213,12 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "transaction");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), TransactionAnalyzer.ID);
 				Set<String> domainNames = transactionReport.getDomainNames();
 
 				domainNames.addAll(domains);
 			}
-			if (CatString.ALL.equalsIgnoreCase(ipAddress)) {
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				MergeAllMachine all = new MergeAllMachine();
 
 				all.visitTransactionReport(transactionReport);
@@ -268,7 +230,7 @@ public class Handler implements PageHandler<Context> {
 				eventReport = allEvent.getReport();
 			}
 
-			if (CatString.ALL.equalsIgnoreCase(type)) {
+			if (Constants.ALL.equalsIgnoreCase(type)) {
 				MergeAllName all = new MergeAllName();
 
 				all.visitTransactionReport(transactionReport);

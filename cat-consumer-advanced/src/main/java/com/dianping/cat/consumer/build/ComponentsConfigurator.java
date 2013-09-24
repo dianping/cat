@@ -8,10 +8,11 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.DomainManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
-import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
@@ -70,7 +71,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = MatrixAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //
@@ -85,7 +86,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = DependencyAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(DomainManager.class, DatabaseParser.class));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class, DomainManager.class, DatabaseParser.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //
@@ -100,7 +101,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = CrossAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, CrossAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class) //

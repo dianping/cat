@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	private ReportService m_reportSerivce;
 
 	public HistoricalHeartbeatService() {
-		super("heartbeat");
+		super(HeartbeatAnalyzer.ID);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "heartbeat");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

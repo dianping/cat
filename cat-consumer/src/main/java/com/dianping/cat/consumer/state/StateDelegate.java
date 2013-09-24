@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -31,8 +32,15 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Override
 	public boolean createHourlyTask(StateReport report) {
-		m_taskManager.createTask(report.getStartTime(), report.getDomain(), "bug", TaskProlicy.ALL);
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		Date startTime = report.getStartTime();
+		String domain = report.getDomain();
+
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_ABTEST, TaskProlicy.HOULY);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_SERVICE, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_BUG, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_HEAVY, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
+		return m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
 	@Override

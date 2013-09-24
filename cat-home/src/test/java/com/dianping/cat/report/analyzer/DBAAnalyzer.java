@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -19,7 +21,6 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.helper.CatString;
 
 public class DBAAnalyzer extends ComponentTestCase {
 
@@ -29,7 +30,7 @@ public class DBAAnalyzer extends ComponentTestCase {
 	public void test() throws Exception {
 		MonthlyReportDao dao = lookup(MonthlyReportDao.class);
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-01 00:00");
-		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", "transaction",
+		MonthlyReport monthreport = dao.findReportByDomainNamePeriod(date, "All", TransactionAnalyzer.ID,
 		      MonthlyReportEntity.READSET_FULL);
 		String content = monthreport.getContent();
 		TransactionReport report = DefaultSaxParser.parse(content);
@@ -49,7 +50,7 @@ public class DBAAnalyzer extends ComponentTestCase {
 
 			
 			for (TransactionType type : machine.getTypes().values()) {
-				if(!machine.getIp().equals(CatString.ALL)){
+				if(!machine.getIp().equals(Constants.ALL)){
 					TransactionType old = temp.findOrCreateType(type.getId());
 					m_merger.mergeType(old, type);
 				}

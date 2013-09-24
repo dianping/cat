@@ -15,7 +15,7 @@
 <br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines:
+		<th>机器:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${payload.realIp eq ip}">

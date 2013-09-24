@@ -15,10 +15,11 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 
@@ -39,7 +40,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> getDomains(Date start) {
-		return m_reportService.queryAllDomainNames(start, new Date(start.getTime() + TimeUtil.ONE_DAY), "transaction");
+		return m_reportService.queryAllDomainNames(start, new Date(start.getTime() + TimeUtil.ONE_DAY), TransactionAnalyzer.ID);
 	}
 
 	@Test
@@ -87,7 +88,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 		}
 
 		public void accept(TransactionReport report) {
-			Machine machine = report.findOrCreateMachine(CatString.ALL);
+			Machine machine = report.findOrCreateMachine(Constants.ALL);
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
 				String name = type.getId();
@@ -98,7 +99,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 				if (name.equalsIgnoreCase("call") || name.equalsIgnoreCase("pigeonCall")) {
 					m_call.add(count, error, sum);
 				}
-				if (name.equalsIgnoreCase("service") || name.equalsIgnoreCase("pigeonService")) {
+				if (name.equalsIgnoreCase(Constants.REPORT_SERVICE) || name.equalsIgnoreCase("pigeonService")) {
 					m_domains.add(report.getDomain());
 					m_ips.addAll(report.getIps());
 				}

@@ -4,16 +4,11 @@ import java.util.List;
 
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.home.dal.alarm.AlarmRule;
-import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.system.SystemPage;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
-	private AlarmRule m_alarmRule;
-
-	private AlarmTemplate m_alarmTemplate;
 
 	private List<String> m_domains;
 
@@ -31,18 +26,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<UserReportSubState> m_userReportSubStates;
 
-	private List<UserAlarmSubState> m_userSubStates;
-
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public AlarmRule getAlarmRule() {
-		return m_alarmRule;
-	}
-
-	public AlarmTemplate getAlarmTemplate() {
-		return m_alarmTemplate;
 	}
 
 	public String getDate() {
@@ -51,7 +36,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	
 	@Override
 	public Action getDefaultAction() {
-		return Action.ALARM_TEMPLATE_LIST;
+		return Action.SCHEDULED_REPORT_LIST;
 	}
 
 	public String getDomain() {
@@ -78,6 +63,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_opState;
 	}
 
+	public String getReportType(){
+		return "";
+	}
+
 	public List<ScheduledReport> getSchduledReports() {
 		return m_schduledReports;
 	}
@@ -92,18 +81,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<UserReportSubState> getUserReportSubStates() {
 		return m_userReportSubStates;
-	}
-
-	public List<UserAlarmSubState> getUserSubStates() {
-		return m_userSubStates;
-	}
-
-	public void setAlarmRule(AlarmRule alarmRule) {
-		m_alarmRule = alarmRule;
-	}
-
-	public void setAlarmTemplate(AlarmTemplate alarmTemplate) {
-		m_alarmTemplate = alarmTemplate;
 	}
 
 	public void setDomains(List<String> domains) {
@@ -133,13 +110,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setTemplateIndex(int templateIndex) {
 		m_templateIndex = templateIndex;
 	}
-
+	
 	public void setUserReportSubStates(List<UserReportSubState> userReportSubStates) {
 		m_userReportSubStates = userReportSubStates;
-	}
-
-	public void setUserSubStates(List<UserAlarmSubState> userSubState) {
-		m_userSubStates = userSubState;
 	}
 
 }

@@ -1,4 +1,4 @@
-<%@ tag trimDirectiveWhitespaces="true" %>
+<%@ tag trimDirectiveWhitespaces="true"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
@@ -43,12 +43,6 @@
 		</table>
 
 		<jsp:doBody />
-
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
 	</div>
 
 </a:body>

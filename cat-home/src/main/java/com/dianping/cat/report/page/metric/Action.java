@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.metric;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	METRIC("view"),
+	
+	DASHBOARD("dashboard");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {

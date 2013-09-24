@@ -6,79 +6,83 @@ public class ServerStatisticManager {
 
 	public ServerStatistic m_serverState = new ServerStatistic();
 
-	public void addBlockTotal(long total) {
-		Long time = getCurrentMinute();
+	private Statistic m_currentStatistic = null;
 
-		m_serverState.findOrCreate(time).addBlockTotal(total);
+	private long m_currentMunite = -1;
+
+	public void addBlockTotal(long total) {
+		getCurrentStatistic().addBlockTotal(total);
 	}
 
 	public void addBlockLoss(long total) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addBlockLoss(total);
+		getCurrentStatistic().addBlockLoss(total);
 	}
 
 	public void addBlockTime(long total) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addBlockTime(total);
+		getCurrentStatistic().addBlockTime(total);
 	}
 
 	public void addPigeonTimeError(long total) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addPigeonTimeError(total);
+		getCurrentStatistic().addPigeonTimeError(total);
 	}
 
 	public void addMessageDump(long total) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addMessageDump(total);
+		getCurrentStatistic().addMessageDump(total);
 	}
 
 	public void addNetworkTimeError(long total) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addNetworkTimeError(total);
+		getCurrentStatistic().addNetworkTimeError(total);
 	}
 
 	public void addMessageDumpLoss(long total) {
-		Long time = getCurrentMinute();
+		getCurrentStatistic().addMessageDumpLoss(total);
+	}
 
-		m_serverState.findOrCreate(time).addMessageDumpLoss(total);
+	public void addMessageSize(String domain, double size) {
+		getCurrentStatistic().addMessageSize(domain, size);
 	}
 
 	public void addMessageSize(double size) {
-		Long time = getCurrentMinute();
+		getCurrentStatistic().addMessageSize(size);
+	}
 
-		m_serverState.findOrCreate(time).addMessageSize(size);
+	public void addMessageTotal(String domain, long total) {
+		getCurrentStatistic().addMessageTotal(domain, total);
 	}
 
 	public void addMessageTotal(long total) {
-		Long time = getCurrentMinute();
+		getCurrentStatistic().addMessageTotal(total);
+	}
 
-		m_serverState.findOrCreate(time).addMessageTotal(total);
+	public void addMessageTotalLoss(String domain, long total) {
+		getCurrentStatistic().addMessageTotalLoss(domain, total);
 	}
 
 	public void addMessageTotalLoss(long total) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addMessageTotalLoss(total);
+		getCurrentStatistic().addMessageTotalLoss(total);
 	}
 
 	public void addProcessDelay(double delay) {
-		Long time = getCurrentMinute();
-
-		m_serverState.findOrCreate(time).addProcessDelay(delay);
+		getCurrentStatistic().addProcessDelay(delay);
 	}
 
 	public Statistic findState(long time) {
 		return m_serverState.findOrCreate(time);
 	}
 
-	public Long getCurrentMinute() {
+	private Statistic getCurrentStatistic() {
 		long time = System.currentTimeMillis();
-		return time - time % (60 * 1000);
+		
+		time = time - time % (60 * 1000);
+		
+		synchronized(this){
+			if (time != m_currentMunite) {
+				m_currentMunite = time;
+				m_currentStatistic = m_serverState.findOrCreate(time);
+			}
+		}
+		
+		return m_currentStatistic;
 	}
 
 	public void removeState(long time) {

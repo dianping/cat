@@ -35,6 +35,7 @@ public class MatrixReportMerger extends DefaultMerger {
 		}
 		if (ratio.getMax() > old.getMax()) {
 			old.setMax(ratio.getMax());
+			old.setUrl(ratio.getUrl());
 		}
 	}
 

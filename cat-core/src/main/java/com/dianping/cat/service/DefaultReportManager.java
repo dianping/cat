@@ -1,6 +1,6 @@
 package com.dianping.cat.service;
 
-import static com.dianping.cat.service.ReportConstants.HOUR;
+import static com.dianping.cat.Constants.HOUR;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +17,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportDao;
@@ -48,7 +49,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Override
 	public void cleanup() {
 		long currentStartTime = ModelPeriod.CURRENT.getStartTime();
-		long threshold = currentStartTime - 2 * ReportConstants.HOUR;
+		long threshold = currentStartTime - 2 * Constants.HOUR;
 		List<Long> startTimes = new ArrayList<Long>(m_map.keySet());
 
 		for (long startTime : startTimes) {
@@ -124,7 +125,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		long currentStartTime = ModelPeriod.CURRENT.getStartTime();
 
 		loadHourlyReports(currentStartTime, StoragePolicy.FILE);
-		loadHourlyReports(currentStartTime - ReportConstants.HOUR, StoragePolicy.FILE);
+		loadHourlyReports(currentStartTime - Constants.HOUR, StoragePolicy.FILE);
 	}
 
 	@Override

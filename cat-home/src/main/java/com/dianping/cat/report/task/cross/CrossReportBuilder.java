@@ -7,6 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -95,7 +96,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 	}
 
 	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, "cross");
+		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, CrossAnalyzer.ID);
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));

@@ -17,11 +17,11 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private EventMergeManager m_mergeManager;
 
-	@Inject(type = ModelService.class, value = "event")
+	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_service;
 
 	@Inject
@@ -73,41 +73,19 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void calculateTps(Payload payload, EventReport report) {
-		if (payload != null && report != null) {
-			boolean isCurrent = payload.getPeriod().isCurrent();
-			String ip = payload.getIpAddress();
-			Machine machine = report.getMachines().get(ip);
-
-			if (machine == null) {
-				return;
-			}
-			for (EventType eventType : machine.getTypes().values()) {
-				long totalCount = eventType.getTotalCount();
-				double tps = 0;
-
+		try {
+			if (payload != null && report != null) {
+				boolean isCurrent = payload.getPeriod().isCurrent();
+				double seconds;
 				if (isCurrent) {
-					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					tps = totalCount / seconds;
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 				} else {
-					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					tps = totalCount / (double) time;
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 				}
-				eventType.setTps(tps);
-				for (EventName transName : eventType.getNames().values()) {
-					long totalNameCount = transName.getTotalCount();
-					double nameTps = 0;
-
-					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						nameTps = totalNameCount / seconds;
-					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						nameTps = totalNameCount / (double) time;
-					}
-					transName.setTps(nameTps);
-					transName.setTotalPercent(totalNameCount / (double) totalCount);
-				}
+				new TpsStatistics(seconds).visitEventReport(report);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -124,7 +102,7 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = CatString.ALL;
+			name = Constants.ALL;
 		}
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
@@ -151,7 +129,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "event");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), EventAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);

@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>0.6.2-SNAPSHOT</version>
+      <version>0.6.2</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-consumer-advanced</artifactId>
@@ -12,10 +12,6 @@
       <dependency>
          <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-hadoop</artifactId>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
@@ -60,12 +56,12 @@
                   <configuration>
                      <manifest>
 							${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
-                     		${basedir}/src/main/resources/META-INF/dal/model/database-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/browser-report-manifest.xml,
                      </manifest>
                   </configuration>
                </execution>

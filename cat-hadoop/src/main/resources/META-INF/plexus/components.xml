@@ -10,8 +10,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.hdfs.DumpUploader</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.DumpUploader</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.UploaderAndCleaner</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.UploaderAndCleaner</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>

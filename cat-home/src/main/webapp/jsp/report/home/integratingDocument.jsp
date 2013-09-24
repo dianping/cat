@@ -60,7 +60,7 @@
   </dd>
   <dt><h5 class="text-success">3.在资源文件中新建client.xml文件</h5></dt>
   <dd><p class="detailContent">在resources资源文件META-INF下，新建cat文件夹，注意是<span class="text-error">src/main/resources/META-INF/cat/client.xml</span>文件，
-  而不是<span class="text-error">webapps下的那个META-INF</span>,domain id表示项目名称</p>
+  而不是<span class="text-error">webapps下的那个META-INF</span>,domain id表示项目名称<span class="text-error">此处不能为中文，仅支持英文（不能有特殊符号）</span></p>
   <xmp class="well">
      <config mode="client">
          <domain id="TuanGouApi"/>

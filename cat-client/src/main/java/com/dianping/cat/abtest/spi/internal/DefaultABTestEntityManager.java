@@ -13,12 +13,18 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestEntityManager extends ContainerHolder implements ABTestEntityManager, Initializable {
 	@Inject
 	private ABTestEntityRepository m_repository;
+
+	@Inject
+	private MessageManager m_messageManager;
+
+	@Inject
+	private ABTestCodec m_cookieCodec;
 
 	@Override
 	public ABTestEntity getEntity(ABTestName name) {
@@ -42,27 +48,24 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 		List<ABTestEntity> entitiesList = new ArrayList<ABTestEntity>();
 
 		for (ABTestEntity entity : m_repository.getCurrentEntities().values()) {
+			entity.setMessageManager(m_messageManager);
+			entity.setCookieCodec(m_cookieCodec);
+
 			entitiesList.add(entity);
 		}
 
 		return entitiesList;
 	}
-	
-	public Set<String> getActiveRun(){
+
+	public Set<String> getActiveRun() {
 		return m_repository.getActiveRuns();
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
 		for (ABTestEntity entity : m_repository.getCurrentEntities().values()) {
-			try {
-				ABTestGroupStrategy groupStrategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategyName());
-
-				entity.setGroupStrategy(groupStrategy);
-			} catch (Exception e) {
-				Cat.logError(e);
-				entity.setDisabled(true);
-			}
+			entity.setMessageManager(m_messageManager);
+			entity.setCookieCodec(m_cookieCodec);
 		}
 	}
 }

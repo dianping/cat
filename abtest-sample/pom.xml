@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.6.2-SNAPSHOT</version>
+		<version>0.6.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-core</artifactId>
+			<artifactId>cat-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

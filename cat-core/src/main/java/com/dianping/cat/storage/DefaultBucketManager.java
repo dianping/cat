@@ -58,10 +58,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		String path;
 		Date date = new Date(timestamp);
 
-//		if (type == MessageTree.class) {
-//			path = m_pathBuilder.getMessagePath(name, date);
-//		} else {
-//		}
 		path = m_pathBuilder.getReportPath(name, date);
 
 		Entry entry = new Entry(type, path, namespace);
@@ -86,7 +82,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		return getBucket(String.class, timestamp, name, "report");
 	}
 
-	static class Entry {
+	public static class Entry {
 		private String m_namespace;
 
 		private String m_path;

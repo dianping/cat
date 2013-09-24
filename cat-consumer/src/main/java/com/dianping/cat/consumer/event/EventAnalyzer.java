@@ -6,6 +6,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -56,7 +57,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		// don't process frontEnd domain
-		if ("FrontEnd".equals(domain)) {
+		if (Constants.FRONT_END.equals(domain)) {
 			return;
 		}
 		EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);

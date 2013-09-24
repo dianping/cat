@@ -15,7 +15,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.hsqldb.lib.StringUtil;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
@@ -130,8 +129,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
 		for (ProductLine line : getCompany().getProductLines().values()) {
-			if (!StringUtil.isEmpty(line.getId())) {
-				productLines.put(line.getId(), line);
+			String id = line.getId();
+			if (id != null && id.length() > 0) {
+				productLines.put(id, line);
 			}
 		}
 		return sortMap(productLines, new Comparator<Map.Entry<String, ProductLine>>() {

@@ -9,71 +9,66 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.abtest.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-<style>
-#content {
-	width: 1300px;
-	margin: 0 auto;
-}
-</style>
+
 <a:body>
-   <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-   <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-   <res:useCss value="${res.css.local['bootstrap-rowlink.css']}" target="head-css" />
-   <res:useJs value="${res.js.local['bootstrap-rowlink.min.js']}" target="head-js" />
-   <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
-
-   <style>
-.statusSpan {
-	float: right;
-	margin-right: 0.5em;
-	padding-right: 5px;
-	padding-left: 5px;
-}
-
-.liHover>li {
-	line-height: 1.3em;
-}
-
-input.search-query {
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-}
-
-#search-submit {
-	position: absolute;
-	top: 6px;
-	right: 10px;
-	display: inline-block;
-	width: 14px;
-	height: 14px;
-	*margin-right: .3em;
-	line-height: 14px;
-	text-indent: -9999px;
-	vertical-align: text-top;
-	cursor: pointer;
-	background-color: transparent;
-	background-image: url("${model.webapp}/img/glyphicons-halflings.png");
-	background-position: -48px 0;
-	background-repeat: no-repeat;
-	border: 0 none;
-	opacity: 0.75;
-}
-
-tr.middle>td {
-	vertical-align: middle;
-	padding-bottom: 0;
-}
-
-tr.center>td {
-	text-align: center;
-}
-
-tr.centerth>th {
-	text-align: center;
-}
-</style>
+	<res:useCss value="${res.css.local['bootstrap-rowlink.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['bootstrap-rowlink.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
+	<style>
+		#content {
+			width: 1300px;
+			margin: 0 auto;
+		}
+		.statusSpan {
+			float: right;
+			margin-right: 0.5em;
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		
+		.liHover>li {
+			line-height: 1.3em;
+		}
+		
+		input.search-query {
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+		}
+		
+		#search-submit {
+			position: absolute;
+			top: 6px;
+			right: 10px;
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			*margin-right: .3em;
+			line-height: 14px;
+			text-indent: -9999px;
+			vertical-align: text-top;
+			cursor: pointer;
+			background-color: transparent;
+			background-image: url("${model.webapp}/img/glyphicons-halflings.png");
+			background-position: -48px 0;
+			background-repeat: no-repeat;
+			border: 0 none;
+			opacity: 0.75;
+		}
+		
+		tr.middle>td {
+			vertical-align: middle;
+			padding-bottom: 0;
+		}
+		
+		tr.center>td {
+			text-align: center;
+		}
+		
+		tr.centerth>th {
+			text-align: center;
+		}
+	</style>
    <br>
    <div id="content" class="row-fluid clearfix">
       <div class="span2 column">
@@ -86,24 +81,28 @@ tr.centerth>th {
                <li class="nav-header">ABTest Status</li>
                <li class="divider" />
                <li ${payload.status eq 'created' ? ' class="selected"' : ''}><a href="?status=created"> <img height="12"
-                     width="12" src="${res.img.local['CREATED_black_small.png']}"> created <span class="badge statusSpan">${model.createdCount}</span>
+                     width="12" src="${res.img.local['CREATED_black_small.png']}"> created <span class="badge statusSpan">${model.listViewModel.createdCount}</span>
                </a></li>
                <li ${payload.status eq 'ready' ? ' class="selected"' : ''}><a href="?status=ready"> <img height="12"
-                     width="12" src="${res.img.local['READY_black_small.png']}"> ready to start <span class="badge statusSpan">${model.readyCount}</span>
+                     width="12" src="${res.img.local['READY_black_small.png']}"> ready to start <span class="badge statusSpan">${model.listViewModel.readyCount}</span>
                </a></li>
                <li ${payload.status eq 'running' ? ' class="selected"' : ''}><a href="?status=running"> <img height="12"
-                     width="12" src="${res.img.local['RUNNING_black_small.png']}"> running <span class="badge statusSpan">${model.runningCount}</span>
+                     width="12" src="${res.img.local['RUNNING_black_small.png']}"> running <span class="badge statusSpan">${model.listViewModel.runningCount}</span>
                </a></li>
                <li ${payload.status eq 'terminated' ? ' class="selected"' : ''}><a href="?status=terminated"> <img
                      height="12" width="12" src="${res.img.local['STOPPED_black_small.png']}"> terminated <span
-                     class="badge statusSpan">${model.terminatedCount}</span>
+                     class="badge statusSpan">${model.listViewModel.terminatedCount}</span>
                </a></li>
                <li ${payload.status eq 'suspended' ? ' class="selected"' : ''}><a href="?status=suspended"> <img
                      height="12" width="12" src="${res.img.local['PAUSED_black_small.png']}"> suspended <span
-                     class="badge statusSpan">${model.suspendedCount}</span>
+                     class="badge statusSpan">${model.listViewModel.suspendedCount}</span>
                </a></li>
             </ul>
          </div>
+     	 <ul class="nav nav-list">
+			<li class="nav-header">Tools</li>
+			<li class=""><a href="?op=caculator">A/B Test Calculator</a></li>
+		</ul>
       </div>
       <div class="span10 column">
          <c:if test="${not empty ctx.errors}">
@@ -151,12 +150,12 @@ tr.centerth>th {
                </tr>
             </thead>
             <tbody>
-               <c:forEach var="item" items="${model.reports}">
+               <c:forEach var="item" items="${model.listViewModel.items}">
                   <tr class="middle center rowlink">
                      <td class="nolink" style="padding-bottom: 8px"><input type="checkbox" /></td>
                      <td style="display: none;">${item.run.id}</td>
                      <td style="font-size: 15px; font-weight: bold;">${item.run.id}</td>
-                     <td><a href="abtest?op=detail&id=${item.run.id}">${item.entity.name}</a></td>
+                     <td><a href="abtest?op=report&id=${item.run.id}">${item.abtest.name}</a></td>
                      <c:choose>
                         <c:when test="${fn:length(item.run.domains) > 20}">
                           <td title="${item.run.domains }">${fn:substring(item.run.domains,0,20)}...</td>
@@ -217,16 +216,16 @@ tr.centerth>th {
                   <fmt:parseNumber var="beginPage" integerOnly="true" value="${beginPage - 1}" />
                </c:if>
                <c:forEach var="pageNum" step="1"
-                  begin="${(beginPage * 5 + 1)<= model.totalPages ? (beginPage * 5 + 1) : model.totalPages }"
-                  end="${(beginPage + 1) * 5 <= model.totalPages ? (beginPage + 1) * 5 : model.totalPages}">
+                  begin="${(beginPage * 5 + 1)<= model.listViewModel.totalPages ? (beginPage * 5 + 1) : model.listViewModel.totalPages }"
+                  end="${(beginPage + 1) * 5 <= model.listViewModel.totalPages ? (beginPage + 1) * 5 : model.listViewModel.totalPages}">
                   <li ${payload.pageNum == pageNum ? ' class="disabled"' : ''}><a
                      href="?status=${payload.status}&pageNum=${pageNum}">${pageNum}</a></li>
                </c:forEach>
-               <li id="next" ${payload.pageNum >= model.totalPages ? ' class="disabled"' : ''}><a
-                  href="?status=${payload.status}&pageNum=${payload.pageNum < model.totalPages ? (payload.pageNum + 1) : model.totalPages}">Next
+               <li id="next" ${payload.pageNum >= model.listViewModel.totalPages ? ' class="disabled"' : ''}><a
+                  href="?status=${payload.status}&pageNum=${payload.pageNum < model.listViewModel.totalPages ? (payload.pageNum + 1) : model.listViewModel.totalPages}">Next
                      &rarr;</a></li>
-               <li ${payload.pageNum >= model.totalPages ? ' class="disabled"' : ''}><a
-                  href="?status=${payload.status}&pageNum=${model.totalPages}">Last</a></li>
+               <li ${payload.pageNum >= model.listViewModel.totalPages ? ' class="disabled"' : ''}><a
+                  href="?status=${payload.status}&pageNum=${model.listViewModel.totalPages}">Last</a></li>
             </ul>
          </div>
       </div>

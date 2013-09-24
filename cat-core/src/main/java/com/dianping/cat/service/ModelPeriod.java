@@ -1,5 +1,7 @@
 package com.dianping.cat.service;
 
+import com.dianping.cat.Constants;
+
 
 public enum ModelPeriod {
 	CURRENT, FUTURE, HISTORICAL, LAST;
@@ -17,13 +19,13 @@ public enum ModelPeriod {
 	public static ModelPeriod getByTime(long timestamp) {
 		long current = System.currentTimeMillis();
 
-		current -= current % ReportConstants.HOUR;
+		current -= current % Constants.HOUR;
 
-		if (timestamp >= current + ReportConstants.HOUR) {
+		if (timestamp >= current + Constants.HOUR) {
 			return ModelPeriod.FUTURE;
 		} else if (timestamp >= current) {
 			return ModelPeriod.CURRENT;
-		} else if (timestamp >= current - ReportConstants.HOUR) {
+		} else if (timestamp >= current - Constants.HOUR) {
 			return ModelPeriod.LAST;
 		} else {
 			return ModelPeriod.HISTORICAL;
@@ -33,13 +35,13 @@ public enum ModelPeriod {
 	public long getStartTime() {
 		long current = System.currentTimeMillis();
 
-		current -= current % ReportConstants.HOUR;
+		current -= current % Constants.HOUR;
 
 		switch (this) {
 		case CURRENT :
 			return current;
 		case LAST:
-			return current - ReportConstants.HOUR;
+			return current - Constants.HOUR;
 		default:
 			break;
 		}

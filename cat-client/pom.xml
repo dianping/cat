@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.6.2-SNAPSHOT</version>
+		<version>0.6.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-client</artifactId>
@@ -16,6 +16,11 @@
 			<artifactId>foundation-service</artifactId>
 			<version>2.0.3</version>
 		</dependency>
+		<dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>java-fragment</artifactId>
+         <version>0.1.0</version>
+      </dependency>
 		<dependency>
 			<groupId>org.jboss.netty</groupId>
 			<artifactId>netty</artifactId>
@@ -55,8 +60,7 @@
 							<manifest>
 							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/abtest-manifest.xml,
-							</manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/abtest-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -67,6 +71,16 @@
                   </goals>
                   <configuration>
                      <className>com.dianping.cat.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/abtest-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

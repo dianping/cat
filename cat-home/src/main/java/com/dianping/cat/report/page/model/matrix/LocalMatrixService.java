@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -18,11 +19,11 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 	private BucketManager m_bucketManager;
 
 	public LocalMatrixService() {
-		super("matrix");
+		super(MatrixAnalyzer.ID);
 	}
 
 	private MatrixReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "matrix");
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, MatrixAnalyzer.ID);
 		String xml = bucket.findById(domain);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);

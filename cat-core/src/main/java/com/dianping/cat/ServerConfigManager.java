@@ -4,11 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.tuple.Pair;
@@ -21,13 +25,18 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
+import com.dianping.cat.message.Transaction;
 
-public class ServerConfigManager implements LogEnabled {
+public class ServerConfigManager implements Initializable, LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	private ServerConfig m_config;
 
 	private Logger m_logger;
+
+	private Set<String> m_unusedTypes = new HashSet<String>();
+
+	private Set<String> m_unusedNames = new HashSet<String>();
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -42,33 +51,12 @@ public class ServerConfigManager implements LogEnabled {
 		return 2280;
 	}
 
-	public boolean isHdfsOn() {
-		return !m_config.getStorage().isHdfsDisabled();
-	}
-
-	public boolean isSerialWrite() {
-		return false;
-	}
-
 	public String getConsoleDefaultDomain() {
 		if (m_config != null) {
 			return m_config.getConsole().getDefaultDomain();
 		} else {
 			return "Cat";
 		}
-	}
-
-	public String getConsoleRemoteServers() {
-		if (m_config != null) {
-			ConsoleConfig console = m_config.getConsole();
-			String remoteServers = console.getRemoteServers();
-
-			if (remoteServers != null && remoteServers.length() > 0) {
-				return remoteServers;
-			}
-		}
-
-		return "";
 	}
 
 	public List<Pair<String, Integer>> getConsoleEndpoints() {
@@ -90,6 +78,27 @@ public class ServerConfigManager implements LogEnabled {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	public String getConsoleRemoteServers() {
+		if (m_config != null) {
+			ConsoleConfig console = m_config.getConsole();
+			String remoteServers = console.getRemoteServers();
+
+			if (remoteServers != null && remoteServers.length() > 0) {
+				return remoteServers;
+			}
+		}
+
+		return "";
+	}
+
+	public String getEmailAccount() {
+		return "book.robot.dianping@gmail.com";
+	}
+
+	public String getEmailPassword() {
+		return "xudgtsnoxivwclna";
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -161,6 +170,10 @@ public class ServerConfigManager implements LogEnabled {
 		return null;
 	}
 
+	public String getHttpSmsApi() {
+		return "";
+	}
+
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -169,7 +182,7 @@ public class ServerConfigManager implements LogEnabled {
 				return longConfig.getDomains();
 			}
 		}
-
+		
 		return Collections.emptyMap();
 	}
 
@@ -211,6 +224,15 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		m_unusedTypes.add("Service");
+		m_unusedTypes.add("PigeonService");
+		m_unusedNames.add("piegonService:heartTaskService:heartBeat");
+		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
+		m_unusedNames.add("pigeon:HeartBeatService:null");
+	}
+
 	public void initialize(File configFile) throws Exception {
 		if (configFile != null && configFile.canRead()) {
 			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));
@@ -239,8 +261,24 @@ public class ServerConfigManager implements LogEnabled {
 
 	}
 
+	public boolean isClientCall(String type) {
+		return "PigeonCall".equals(type) || "Call".equals(type);
+	}
+
+	public boolean isHdfsOn() {
+		return !m_config.getStorage().isHdfsDisabled();
+	}
+
 	public boolean isInitialized() {
 		return m_config != null;
+	}
+
+	public boolean isJobMachine() {
+		if (m_config != null) {
+			return m_config.isJobMachine();
+		} else {
+			return true;
+		}
 	}
 
 	public boolean isLocalMode() {
@@ -251,12 +289,39 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public boolean isJobMachine() {
-		if (m_config != null) {
-			return m_config.isJobMachine();
+	public boolean isOfflineServer(String ip) {
+		if (ip != null && ip.startsWith("192.")) {
+			return true;
 		} else {
+			return false;
+		}
+	}
+
+	public boolean isOnlineServer(String ip) {
+		if (ip != null && ip.startsWith("10.")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isSerialWrite() {
+		return false;
+	}
+
+	public boolean isServerService(String type) {
+		return "PigeonService".equals(type) || "Service".equals(type);
+	}
+
+	public boolean discardTransaction(Transaction t) {
+		// pigeon default heartbeat is no use
+		String type = t.getType();
+		String name = t.getName();
+
+		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
 			return true;
 		}
+		return false;
 	}
 
 	private long toLong(String str, long defaultValue) {
@@ -282,7 +347,8 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public static interface ServerConfigKey {
-		public void add(String section);
+	public boolean validateDomain(String domain) {
+		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END);
 	}
+
 }

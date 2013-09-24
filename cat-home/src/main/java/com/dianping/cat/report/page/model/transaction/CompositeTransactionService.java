@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.transaction;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
@@ -11,7 +12,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class CompositeTransactionService extends BaseCompositeModelService<TransactionReport> {
 	public CompositeTransactionService() {
-		super("transaction");
+		super(TransactionAnalyzer.ID);
 	}
 
 	@Override

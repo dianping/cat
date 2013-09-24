@@ -10,9 +10,9 @@ public enum AbtestStatus {
 	CREATED, READY, RUNNING, TERMINATED, SUSPENDED;
 
 	private static final int s_deltaTime = -1; // -1 hour
-	
+
 	private static final Calendar calendar = Calendar.getInstance();
-	
+
 	public static AbtestStatus getByName(String name, AbtestStatus defaultStatus) {
 		for (AbtestStatus status : AbtestStatus.values()) {
 			if (status.name().equalsIgnoreCase(name)) {
@@ -67,9 +67,8 @@ public enum AbtestStatus {
 		}
 	}
 
-	
 	public String getStatus() {
-   	return name().toLowerCase();
-   }
+		return name().toLowerCase();
+	}
 
 }

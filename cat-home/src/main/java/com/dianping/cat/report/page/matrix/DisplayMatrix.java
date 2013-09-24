@@ -71,6 +71,12 @@ public class DisplayMatrix {
 		private int m_callMin;
 
 		private int m_callTime;
+		
+		private String m_callUrl;
+		
+		private String m_sqlUrl;
+		
+		private String m_cacheUrl;
 
 		private double m_callTimePercent;
 
@@ -171,6 +177,18 @@ public class DisplayMatrix {
 		public String getUrl() {
 			return m_url;
 		}
+		
+		public String getCallUrl() {
+      	return m_callUrl;
+      }
+
+		public String getSqlUrl() {
+      	return m_sqlUrl;
+      }
+
+		public String getCacheUrl() {
+      	return m_cacheUrl;
+      }
 
 		public void setBaseInfo(Matrix matrix) {
 			m_type = matrix.getType();
@@ -183,7 +201,6 @@ public class DisplayMatrix {
 		}
 
 		public void setCacheInfo(Matrix matrix) {
-
 			Ratio ratio = matrix.getRatios().get("Cache");
 			if (ratio == null) {
 				return;
@@ -191,6 +208,7 @@ public class DisplayMatrix {
 
 			m_cacheMin = ratio.getMin();
 			m_cacheMax = ratio.getMax();
+			m_cacheUrl = ratio.getUrl();
 			if (matrix.getCount() > 0) {
 				m_cacheAvg = (double) ratio.getTotalCount() / (double) matrix.getCount();
 			}
@@ -210,6 +228,7 @@ public class DisplayMatrix {
 
 			m_callMin = ratio.getMin();
 			m_callMax = ratio.getMax();
+			m_callUrl = ratio.getUrl();
 			if (matrix.getCount() > 0) {
 				m_callAvg = (double) ratio.getTotalCount() / (double) matrix.getCount();
 			}
@@ -229,6 +248,7 @@ public class DisplayMatrix {
 
 			m_sqlMin = ratio.getMin();
 			m_sqlMax = ratio.getMax();
+			m_sqlUrl = ratio.getUrl();
 			if (matrix.getCount() > 0) {
 				m_sqlAvg = (double) ratio.getTotalCount() / (double) matrix.getCount();
 			}
@@ -241,7 +261,7 @@ public class DisplayMatrix {
 		}
 	}
 
-	static class MatrixItemCompartor implements Comparator<MatrixItem> {
+	public static class MatrixItemCompartor implements Comparator<MatrixItem> {
 		private String m_sort;
 
 		public MatrixItemCompartor(String sort) {

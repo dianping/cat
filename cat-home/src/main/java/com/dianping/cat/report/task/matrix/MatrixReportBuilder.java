@@ -7,6 +7,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.matrix.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -90,6 +92,7 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 			}
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
+		new MatrixReportFilter().visitMatrixReport(matrixReport);
 		
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);
@@ -97,7 +100,7 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 	}
 
 	private MatrixReport queryHourlyReportByDuration(String name, String domain, Date start, Date end) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, "matrix");
+		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, MatrixAnalyzer.ID);
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
@@ -110,7 +113,8 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 			reportModel.accept(merger);
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
-
+		new MatrixReportFilter().visitMatrixReport(matrixReport);
+		
 		matrixReport.getDomainNames().addAll(domainSet);
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);

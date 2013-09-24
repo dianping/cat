@@ -14,9 +14,10 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.Constants;
+import com.dianping.cat.DomainManager;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -43,15 +44,15 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DomainManager m_domainManager;
 
-	@Inject(type = ModelService.class, value = "cross")
+	@Inject(type = ModelService.class, value = CrossAnalyzer.ID)
 	private ModelService<CrossReport> m_service;
 
 	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
-		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL);
+		CrossReport projectReport = getHourlyReport(domain, period, date, Constants.ALL);
 		ProjectInfo projectInfo = new ProjectInfo(duration);
 
 		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL);
+		projectInfo.setClientIp(Constants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 
 		return projectInfo;
@@ -62,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
 
 		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL);
+		projectInfo.setClientIp(Constants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 		return projectInfo;
 	}
@@ -79,7 +80,7 @@ public class Handler implements PageHandler<Context> {
 			
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "cross");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), CrossAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -118,13 +119,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "cross")
+	@InboundActionMeta(name = CrossAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "cross")
+	@OutboundActionMeta(name = CrossAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -145,7 +146,7 @@ public class Handler implements PageHandler<Context> {
 			model.setProjectInfo(projectInfo);
 			model.setReport(projectReport);
 
-			if (payload.getIpAddress().equals(CatString.ALL)) {
+			if (payload.getIpAddress().equals(Constants.ALL)) {
 				List<TypeDetailInfo> details = projectInfo.getServiceProjectsInfo();
 
 				for (TypeDetailInfo info : details) {
@@ -201,7 +202,7 @@ public class Handler implements PageHandler<Context> {
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
 
-			if (payload.getIpAddress().equals(CatString.ALL)) {
+			if (payload.getIpAddress().equals(Constants.ALL)) {
 				List<TypeDetailInfo> details = historyProjectInfo.getServiceProjectsInfo();
 
 				for (TypeDetailInfo info : details) {
@@ -271,13 +272,6 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model,Payload payload){
 		model.setPage(ReportPage.CROSS);
 		m_normalizePayload.normalize(model, payload);
-		
-		if (StringUtils.isEmpty(payload.getCallSort())) {
-			payload.setCallSort("avg");
-		}
-		if (StringUtils.isEmpty(payload.getServiceSort())) {
-			payload.setServiceSort("avg");
-		}
 		model.setCallSort(payload.getCallSort());
 		model.setServiceSort(payload.getServiceSort());
 		model.setQueryName(payload.getQueryName());
