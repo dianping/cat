@@ -41,7 +41,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private static final long MINUTE = 60 * 1000L;
 
 	private static int QUEUE_SIZE = 300000;
-
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 
@@ -68,10 +67,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			// ignore it
 		}
 
-		if (tree.getMessage() == null) {
-			return;
-		}
-
 		long timestamp = tree.getMessage().getTimestamp();
 		Period period = m_periodManager.findPeriod(timestamp);
 
@@ -96,8 +91,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
 				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.error("The timestamp of message is out of range, IGNORED! "
-				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
-				      + tree.getIpAddress());
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " " + tree.getIpAddress());
 			}
 		}
 	}
@@ -111,9 +105,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
 			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
-				try {
+				try{
 					analyzer.doCheckpoint(false);
-				} catch (Exception e) {
+				}catch(Exception e){
 					Cat.logError(e);
 				}
 			}
@@ -273,8 +267,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
-			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(), df.format(new Date(m_startTime)),
+			      df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
