@@ -4,8 +4,7 @@ import com.dianping.cat.abtest.model.entity.Field;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
-public class FieldInjectUtil {
-
+public class FieldInjecter {
 	public void inject(ABTestGroupStrategy targetGroupStrategy, GroupstrategyDescriptor descriptor) throws Exception {
 		for (Field field : descriptor.getFields()) {
 			java.lang.reflect.Field modifiersField = targetGroupStrategy.getClass().getDeclaredField(

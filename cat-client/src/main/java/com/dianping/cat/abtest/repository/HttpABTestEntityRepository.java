@@ -1,7 +1,8 @@
 package com.dianping.cat.abtest.repository;
 
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,6 +30,7 @@ import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
 public class HttpABTestEntityRepository extends ContainerHolder implements ABTestEntityRepository, Initializable, Task {
@@ -39,15 +41,15 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	@Inject
 	private int m_refreshTimeInSeconds = 60; // seconds
 
-	private Map<String, ABTestEntity> m_entities = new ConcurrentHashMap<String, ABTestEntity>();
+	private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
 
-	private Set<String> m_activeRuns = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	private Set<String> m_activeRuns = new HashSet<String>();
 
 	private Map<Integer, ABTestGroupStrategy> m_strategies = new ConcurrentHashMap<Integer, ABTestGroupStrategy>();
 
 	private Map<Integer, Invocable> m_invokeMap = new ConcurrentHashMap<Integer, Invocable>();
 
-	private FieldInjectUtil m_fieldInjector = new FieldInjectUtil();
+	private FieldInjecter m_fieldInjector = new FieldInjecter();
 
 	private ScriptEngineManager m_mgr;
 
@@ -105,6 +107,8 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 					m_abtestModel = abtest.toString();
 					break;
 				}
+
+				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {
 				t.setStatus(e);
 				Cat.logError(e);
@@ -140,9 +144,9 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	class ABTestVisitor extends BaseVisitor {
 		private String m_domain;
 
-		private Map<String, ABTestEntity> m_entities;
+		private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
 
-		private Set<String> m_activeRuns;
+		private Set<String> m_activeRuns = new HashSet<String>();
 
 		public ABTestVisitor(String domain) {
 			m_domain = domain;
@@ -217,7 +221,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 		}
 	}
 
-	public String getAbtestModel() {
+	public synchronized String getAbtestModel() {
 		return m_abtestModel;
 	}
 
