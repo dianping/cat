@@ -1,4 +1,0 @@
-ngx_addon_name=ngx_proc_send_module
-PROCS_MODULES="$PROCS_MODULES ngx_proc_send_module"
-NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_proc_send_module.c"
-CORE_LIBS="$CORE_LIBS -lcurl -lpthread"

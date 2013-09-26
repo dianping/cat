@@ -1,3 +1,5 @@
+ngx_addon_name=ngx_proc_send_module
+PROCS_MODULES="$PROCS_MODULES ngx_proc_send_module"
 ngx_addon_name=ngx_cat_filter_module
 HTTP_AUX_FILTER_MODULES="$HTTP_AUX_FILTER_MODULES ngx_cat_filter_module"
 NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_cat_module.c"
