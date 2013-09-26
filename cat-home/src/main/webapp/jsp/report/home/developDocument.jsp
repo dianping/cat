@@ -63,5 +63,5 @@
   <dt><h5 class="text-success">5.Heartbeat<span class="text-error"><strong>  这个是系统CAT客户端使用，应用程序不使用此API.</strong></span></h5></dt>
   <dd>Heartbeta表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。</dd>
   <dt><h5 class="text-success">6.一份埋点的样例</strong></span></h5></dt>
-	<img width='60%' src="${model.webapp}/images/develop05.png"/>
+	<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/develop05.png"/>
 </dl>

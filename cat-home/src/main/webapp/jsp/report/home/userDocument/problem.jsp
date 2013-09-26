@@ -14,13 +14,13 @@
 </table>
 <h4 class="text-success">Problem实时报表</h4>
 <h5>All的错误界面</h5>
-<img src="${model.webapp}/images/problem01.jpg"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/problem01.jpg"/>
 <h5>错误一个小时内的实时趋势图</h5>
-<img src="${model.webapp}/images/problem03.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/problem03.png"/>
 <h5>点击机器IP，进入某一台机器出现的具体问题，这个包括了All中出现的所有错误统计之外，还增加了以分钟和线程为单位的错误分布图，具体如下：</h5>
-<img src="${model.webapp}/images/problem02.jpg"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/problem02.jpg"/>
 <h4 class="text-success">Problem历史报表</h4>
 <h5>1）在选择了特定的域、报表类型、时间和IP之后，点击[:: show ::] 查看某一Type下的Problem出现次数的分布图。(当前这一天、上一天、上周这一天)</h5>
-<img src="${model.webapp}/images/problem04.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/problem04.png"/>
 <h5>2）进一步，可以查看该Type下，某个Status的Problem出现次数的分布图。(当前这一天、上一天、上周这一天)</h5>
-<img src="${model.webapp}/images/problem05.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/problem05.png"/>

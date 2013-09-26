@@ -10,7 +10,7 @@
 	<tr><td>状态：绿色</td><td class='text-error'>OK</td></tr>
 	<tr><td>浮层</td><td>点击节点可以直接查询这一分钟内这个节点的详细状态</td></tr>
 </table>
-<img src="${model.webapp}/images/dependency01.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/dependency01.png"/>
 <h4 class="text-success">应用监控大盘</h4>
 <h5>把所有核心项目用监控大盘方式展示，能全局看到项目目前问题。</h4>
-<img src="${model.webapp}/images/dependency02.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/dependency02.png"/>

@@ -33,4 +33,4 @@
 	<tr><td>Cat每分钟丢掉的消息数</td></tr>
 	<tr><td>Cat每分钟产生消息大小</td></tr>
 </table>
-<img src="${model.webapp}/images/heatbeat01.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/heatbeat01.png"/>
