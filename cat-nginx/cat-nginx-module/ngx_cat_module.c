@@ -21,6 +21,7 @@
 
 #define BUFSIZE 1000 
 #define SENDOUTBUFSIZE 800
+#define URL_MAX_LEN 200
 #define DEFAULT_MMAP_DAT_SIZE 1024*1024*1024
 #define DEFAULT_MMAP_DAT "/data/appdatas/cat/mmap.dat"
 #define DEFAULT_MMAP_IDX "/data/appdatas/cat/mmap.idx"
@@ -217,28 +218,183 @@ static ngx_int_t ngx_cat_header_filter(ngx_http_request_t *r){
 }
 
 void cpystr(char* buf, int* p, char* str, int len){
-	ngx_memcpy(buf + *p, str, len);
+	if(*p == SENDOUTBUFSIZE){
+		return;
+	}
+	if(len > URL_MAX_LEN){
+		ngx_memcpy(buf + *p, str, URL_MAX_LEN);
+	}
+	else{
+		ngx_memcpy(buf + *p, str, len);
+	}
 	*p = *p + len;
 }
 
 void cpyint(char* buf, int* p, int num){
+	if(*p == SENDOUTBUFSIZE){
+		return;
+	}
 	sprintf(buf + *p, "%d", num);
 	*p = strlen(buf);
 }
 
 void cpyuint(char* buf, int* p, unsigned int num){
+	if(*p == SENDOUTBUFSIZE){
+		return;
+	}
 	sprintf(buf + *p, "%u", num);
 	*p = strlen(buf);
 }
 
 void cpylong(char* buf, int* p, long num){
+	if(*p == SENDOUTBUFSIZE){
+		return;
+	}
 	sprintf(buf + *p, "%ld", num);
 	*p = strlen(buf);
 }
 
 void cpyulong(char* buf, int* p, unsigned long num){
+	if(*p == SENDOUTBUFSIZE){
+		return;
+	}
 	sprintf(buf + *p, "%lu", num);
 	*p = strlen(buf);
+}
+
+void getmessage(ngx_http_request_t *r, char* buf){
+	int p = 0;
+	cpystr(buf, &p, "\t\t\n", strlen("\t\t\n"));
+
+	cpystr(buf, &p, MODULE_NAME, strlen(MODULE_NAME));
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyuint(buf, &p, (unsigned int)r->headers_out.status);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, "http://", strlen("http://"));
+	cpystr(buf, &p, (char*)r->headers_in.host->value.data, r->headers_in.host->value.len);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyint(buf, &p, (int)r->request_length);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyint(buf, &p, (int)r->header_size);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyuint(buf, &p, send_times);
+	cpystr(buf, &p, TAB, strlen(TAB));
+	send_times = 0;
+
+	cpylong(buf, &p, (r->start_sec * 1000 + r->start_msec));
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	unsigned long time = ngx_current_msec;
+	cpyulong(buf, &p, time);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, NEWLINE, strlen(NEWLINE));
+
+	write(pipefd[1], buf, SENDOUTBUFSIZE);
+}
+
+void getupstreammessage(ngx_http_request_t *r, char* buf){
+	size_t i;
+	int j = 0;
+	int p = 0;
+
+	for(i = 0; i < r->headers_out.headers.part.nelts; i++){
+		if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, CAT_ROOT_ID, strlen(CAT_ROOT_ID))){
+			cpystr(buf, &p, (char*)((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len);
+			cpystr(buf, &p, TAB, strlen(TAB));
+			j ++;
+		}
+		else if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, CAT_PARENT_ID, strlen(CAT_PARENT_ID))){
+			cpystr(buf, &p, (char*)((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len);
+			cpystr(buf, &p, TAB, strlen(TAB));
+			j ++;
+		}
+		else if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, CAT_ID, strlen(CAT_ID))){
+			cpystr(buf, &p, (char*)((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len);
+			cpystr(buf, &p, TAB, strlen(TAB));
+			j ++;
+		}
+		else if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, VARNISH_AGE, strlen(VARNISH_AGE))){
+			if(ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, "0", ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len)){
+				p = 0;
+				memset(buf, 0, SENDOUTBUFSIZE);
+				cpystr(buf, &p, "\t\t\n", strlen("\t\t\n"));
+				break;
+			}
+		}
+	}
+	while ( j < 3 ){
+		cpystr(buf, &p, TAB, strlen(TAB));
+		j ++;
+	}
+	if( strncmp((buf + p - 1), TAB, strlen(TAB)) == 0 ){
+		memset(buf + p - 1,'\n', 1);
+	}
+
+	cpystr(buf, &p, MODULE_NAME, strlen(MODULE_NAME));
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyuint(buf, &p, (unsigned int)r->headers_out.status);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, "http://", strlen("http://"));
+	cpystr(buf, &p, (char*)r->headers_in.host->value.data, r->headers_in.host->value.len);
+	cpystr(buf, &p, (char*)r->uri.data, r->uri.len);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyint(buf, &p, (int)r->request_length);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, "http://", strlen("http://"));
+	cpystr(buf, &p, (char*)r->upstream->peer.name->data, r->upstream->peer.name->len);
+	cpystr(buf, &p, (char*)r->upstream->uri.data, r->upstream->uri.len);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyint(buf, &p, (int)r->header_size);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyuint(buf, &p, (unsigned int)r->upstream->state->response_length);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyuint(buf, &p, send_times - 1);
+	cpystr(buf, &p, TAB, strlen(TAB));
+	send_times = 0;
+
+	cpylong(buf, &p, (r->start_sec * 1000 + r->start_msec));
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyulong(buf, &p, start_upstream_sec * 1000 + start_upstream_msec);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpyulong(buf, &p, response_start_msec);
+	cpystr(buf, &p, TAB, strlen(TAB));
+	response_start_msec = 0;
+
+	cpyulong(buf, &p, start_upstream_sec * 1000 + start_upstream_msec + r->upstream->state->response_sec * 1000 + r->upstream->state->response_msec);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	unsigned long time = ngx_current_msec;
+	cpyulong(buf, &p, time);
+	cpystr(buf, &p, TAB, strlen(TAB));
+
+	cpystr(buf, &p, NEWLINE, strlen(NEWLINE));
+	start_upstream_sec = 0;
+	start_upstream_msec = 0;
+
+	write(pipefd[1], buf, SENDOUTBUFSIZE);
 }
 
 	static ngx_int_t
@@ -251,139 +407,13 @@ ngx_cat_body_filter(ngx_http_request_t *r, ngx_chain_t *chain)
 		send_times ++;
 		char buf[SENDOUTBUFSIZE];
 		memset(buf, 0, SENDOUTBUFSIZE);
-		int p = 0;
 
 		if(r->upstream == NULL){
-			cpystr(buf, &p, "\t\t\n", strlen("\t\t\n"));
-
-			cpystr(buf, &p, MODULE_NAME, strlen(MODULE_NAME));
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpyuint(buf, &p, (unsigned int)r->headers_out.status);
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpystr(buf, &p, "http://", strlen("http://"));
-			cpystr(buf, &p, (char*)r->headers_in.host->value.data, r->headers_in.host->value.len);
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpyint(buf, &p, (int)r->request_length);
-			cpystr(buf, &p, TAB, strlen(TAB));
-			
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpyint(buf, &p, (int)r->header_size);
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpyuint(buf, &p, send_times);
-			cpystr(buf, &p, TAB, strlen(TAB));
-			send_times = 0;
-
-			cpylong(buf, &p, (r->start_sec * 1000 + r->start_msec));
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			unsigned long time = ngx_current_msec;
-			cpyulong(buf, &p, time);
-			cpystr(buf, &p, TAB, strlen(TAB));
-
-			cpystr(buf, &p, NEWLINE, strlen(NEWLINE));
-
-			write(pipefd[1], buf, SENDOUTBUFSIZE);
+			getmessage(r, buf);
 		}
 		else{
 			if(r->upstream->state->response_length || r->upstream->state->status == NGX_HTTP_BAD_GATEWAY || r->upstream->state->status == NGX_HTTP_SERVICE_UNAVAILABLE || r->upstream->state->status == NGX_HTTP_GATEWAY_TIME_OUT){
-				size_t i;
-				int j = 0;
-				for(i = 0; i < r->headers_out.headers.part.nelts; i++){
-					if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, CAT_ROOT_ID, strlen(CAT_ROOT_ID))){
-						cpystr(buf, &p, (char*)((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len);
-						cpystr(buf, &p, TAB, strlen(TAB));
-						j ++;
-					}
-					else if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, CAT_PARENT_ID, strlen(CAT_PARENT_ID))){
-						cpystr(buf, &p, (char*)((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len);
-						cpystr(buf, &p, TAB, strlen(TAB));
-						j ++;
-					}
-					else if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, CAT_ID, strlen(CAT_ID))){
-						cpystr(buf, &p, (char*)((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len);
-						cpystr(buf, &p, TAB, strlen(TAB));
-						j ++;
-					}
-					else if(!ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].key.data, VARNISH_AGE, strlen(VARNISH_AGE))){
-						if(ngx_strncmp(((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.data, "0", ((ngx_table_elt_t*)r->headers_out.headers.part.elts)[i].value.len)){
-							p = 0;
-							memset(buf, 0, SENDOUTBUFSIZE);
-							cpystr(buf, &p, "\t\t\n", strlen("\t\t\n"));
-							break;
-						}
-					}
-				}
-				while ( j < 3 ){
-					cpystr(buf, &p, TAB, strlen(TAB));
-					j ++;
-				}
-				if( strncmp((buf + p - 1), TAB, strlen(TAB)) == 0 ){
-					memset(buf + p - 1,'\n', 1);
-				}
-
-				cpystr(buf, &p, MODULE_NAME, strlen(MODULE_NAME));
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyuint(buf, &p, (unsigned int)r->headers_out.status);
-				cpystr(buf, &p, TAB, strlen(TAB));
-				
-				cpystr(buf, &p, "http://", strlen("http://"));
-				cpystr(buf, &p, (char*)r->headers_in.host->value.data, r->headers_in.host->value.len);
-				cpystr(buf, &p, (char*)r->uri.data, r->uri.len);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyint(buf, &p, (int)r->request_length);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpystr(buf, &p, "http://", strlen("http://"));
-				cpystr(buf, &p, (char*)r->upstream->peer.name->data, r->upstream->peer.name->len);
-				cpystr(buf, &p, (char*)r->upstream->uri.data, r->upstream->uri.len);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyint(buf, &p, (int)r->header_size);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyuint(buf, &p, (unsigned int)r->upstream->state->response_length);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyuint(buf, &p, send_times - 1);
-				cpystr(buf, &p, TAB, strlen(TAB));
-				send_times = 0;
-
-				cpylong(buf, &p, (r->start_sec * 1000 + r->start_msec));
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyulong(buf, &p, start_upstream_sec * 1000 + start_upstream_msec);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpyulong(buf, &p, response_start_msec);
-				cpystr(buf, &p, TAB, strlen(TAB));
-				response_start_msec = 0;
-
-				cpyulong(buf, &p, start_upstream_sec * 1000 + start_upstream_msec + r->upstream->state->response_sec * 1000 + r->upstream->state->response_msec);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				unsigned long time = ngx_current_msec;
-				cpyulong(buf, &p, time);
-				cpystr(buf, &p, TAB, strlen(TAB));
-
-				cpystr(buf, &p, NEWLINE, strlen(NEWLINE));
-				start_upstream_sec = 0;
-				start_upstream_msec = 0;
-				
-				int n;
-				n = write(pipefd[1], buf, SENDOUTBUFSIZE);
+				getupstreammessage(r, buf);
 			}
 			else{
 				if(!start_upstream_sec){
