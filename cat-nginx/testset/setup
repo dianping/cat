@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#give the home directory of tenigne
+
+if [ "$1" == "-h" ]; then
+	echo "./setup [home directory of tengine]"
+else
+	cp proxy_cat.t $1"/tests/nginx-tests/nginx-tests"
+fi
+
