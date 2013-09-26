@@ -1,10 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h3 class="text-error">开发者文档</h3>
 <dl>
-  <dt><h5 class="text-success">1.CAT实施部署结构</h5></dt>
-  <dd><img src="${model.webapp}/images/cat-overall.jpg"/></dd>
-  
-  <dt><h5 class="text-success">2.CAT消息协议</h5></dt>
+  <dt><h5 class="text-success">1.CAT消息协议</h5></dt>
   <dd>CAT客户端可以向服务端发送Transaction, Event, Heartbeat三种消息. 消息的传输格式如下:
   	  <xmp class="well">Class Timestamp Type Name Status  Duration  Data</xmp>
   	  <p>下例是某个实际传输的heartbeat消息:</p>
@@ -57,6 +54,7 @@
            t.complete();
      }
 	  </xmp>
+	  
   </dd>
   <dt><h5 class="text-success">3.Event</h5></dt>
   <dd>Event用来记录次数，表名单位时间内消息发生次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小</dd>
@@ -64,4 +62,6 @@
   <dd>用于业务监控埋点的API（正在开发中）</dd>
   <dt><h5 class="text-success">5.Heartbeat<span class="text-error"><strong>  这个是系统CAT客户端使用，应用程序不使用此API.</strong></span></h5></dt>
   <dd>Heartbeta表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。</dd>
+  <dt><h5 class="text-success">6.一份埋点的样例</strong></span></h5></dt>
+	<img width='60%' src="${model.webapp}/images/develop05.png"/>
 </dl>
