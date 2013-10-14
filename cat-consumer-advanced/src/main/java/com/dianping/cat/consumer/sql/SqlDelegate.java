@@ -7,6 +7,8 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.sql.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -38,7 +40,8 @@ public class SqlDelegate implements ReportDelegate<SqlReport> {
 
 	@Override
 	public boolean createHourlyTask(SqlReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), SqlAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), SqlAnalyzer.ID,
+		      TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
 	@Override
@@ -69,5 +72,15 @@ public class SqlDelegate implements ReportDelegate<SqlReport> {
 		SqlReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+
+	@Override
+	public byte[] buildBinary(SqlReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public SqlReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

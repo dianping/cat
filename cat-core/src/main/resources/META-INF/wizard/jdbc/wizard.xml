@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wizard package="com.dianping.cat.consumer">
-   <jdbc package="com.dainping.cat.consumer.dal" name="cat">
+<wizard package="com.dianping.cat.core">
+   <jdbc package="com.dianping.cat.core" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
-         <url>jdbc:mysql://192.168.7.43:3306/cat</url>
-         <user>dpcom_cat</user>
+         <url>jdbc:mysql://127.0.0.1:3306/cat</url>
+         <user>root</user>
          <password>password</password>
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
-      <group name="report" package="com.dainping.cat.consumer.dal.report">
+      <group name="report" package="com.dianping.cat.core.dal">
          <table name="hostinfo"/>
          <table name="task"/>
          <table name="project"/>
@@ -18,8 +18,9 @@
          <table name="monthreport"/>
          <table name="graph"/>
          <table name="dailygraph"/>
+         <table name="report_content"/>
       </group>
-      <group name="config" package="com.dainping.cat.consumer.dal.config">
+      <group name="config" package="com.dianping.cat.core.config">
          <table name="config"/>
       </group>
    </jdbc>

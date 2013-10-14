@@ -12,6 +12,7 @@
          <table name="event"/>
          <table name="topologyGraph"/>
          <table name="baseline"/>
+         <table name="sqlreport"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="mailRecord"/>

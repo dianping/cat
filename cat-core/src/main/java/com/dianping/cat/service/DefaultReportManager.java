@@ -20,6 +20,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContent;
+import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -39,6 +41,9 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Inject
 	private HourlyReportDao m_reportDao;
+
+	@Inject
+	private HourlyReportContentDao m_reportContentDao;
 
 	private String m_name;
 
@@ -212,9 +217,25 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 							r.setPeriod(period);
 							r.setIp(ip);
 							r.setType(1);
-							r.setContent(xml);
+
+							if (!"transaction".equals(m_name)) {
+								r.setContent(xml);
+							} else {
+								r.setContent("");
+							}
 
 							m_reportDao.insert(r);
+
+							if ("transaction".equals(m_name)) {
+								int id = r.getId();
+								byte[] binaryContent = m_reportDelegate.buildBinary(report);
+								HourlyReportContent content = m_reportContentDao.createLocal();
+
+								content.setReportId(id);
+								content.setContent(binaryContent);
+
+								m_reportContentDao.insert(content);
+							}
 							m_reportDelegate.createHourlyTask(report);
 						} catch (Throwable e) {
 							t.setStatus(e);

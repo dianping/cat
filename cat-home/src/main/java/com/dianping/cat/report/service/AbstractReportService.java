@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
@@ -19,6 +20,9 @@ public abstract class AbstractReportService<T> {
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
+	
+	@Inject
+	protected HourlyReportContentDao m_hourlyReportContentDao;
 
 	public static final int s_hourly = 1;
 

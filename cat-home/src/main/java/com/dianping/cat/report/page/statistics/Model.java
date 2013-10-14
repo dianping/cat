@@ -52,7 +52,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_utilizationWebList;
 	}
 
-
 	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationServiceList() {
 		return m_utilizationServiceList;
 	}
