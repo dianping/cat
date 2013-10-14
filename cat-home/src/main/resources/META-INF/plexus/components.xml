@@ -164,6 +164,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -173,16 +182,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -194,6 +194,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -203,16 +212,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -224,6 +224,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -233,16 +242,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -254,6 +254,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -263,16 +272,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -284,6 +284,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -293,16 +302,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -314,6 +314,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -323,16 +332,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -344,6 +344,15 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
@@ -353,7 +362,16 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.BugReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.BugReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportDao</role>
@@ -363,6 +381,108 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.UtilizationReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.UtilizationReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.ServiceReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.ServiceReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.HeavyReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.HeavyReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -415,126 +535,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.impl.BugReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.BugReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.impl.UtilizationReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.UtilizationReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.impl.ServiceReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.ServiceReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.impl.HeavyReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.HeavyReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.service.ReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.DefaultReportService</implementation>
 			<requirements>
@@ -560,7 +560,7 @@
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContent</role>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
