@@ -16,6 +16,7 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
+import com.dianping.cat.home.utilization.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
@@ -35,14 +36,16 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		      TaskHelper.tomorrowZero(period));
 
 		DailyReport report = new DailyReport();
-		report.setContent(utilizationReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(utilizationReport);
+
+		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
 	@Override
@@ -55,20 +58,22 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		for (String domainName : domains) {
 			TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
 			int size = transactionReport.getMachines().size();
-			
+
 			transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
 			visitor.visitTransactionReport(transactionReport);
 			utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 		}
 		HourlyReport report = new HourlyReport();
-		report.setContent(utilizationReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(start);
 		report.setType(1);
-		return m_reportService.insertHourlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(utilizationReport);
+
+		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -77,14 +82,16 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		      TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(utilizationReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+
+		byte[] binaryContent = DefaultNativeBuilder.build(utilizationReport);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -92,16 +99,17 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = utilizationReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(utilizationReport);
+
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private UtilizationReport queryDailyReportsByDuration(String domain, Date start, Date end) {

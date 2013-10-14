@@ -108,6 +108,27 @@ CREATE TABLE `report_content` (
   PRIMARY KEY (`report_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
 
+CREATE TABLE `daily_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
+CREATE TABLE `weekly_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
+CREATE TABLE `monthly_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型 报表数据格式, 1/Binary, 2/xml , 3/json',

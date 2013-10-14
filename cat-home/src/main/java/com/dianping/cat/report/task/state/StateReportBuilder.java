@@ -8,6 +8,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
@@ -26,14 +27,15 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		StateReport stateReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent(stateReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
+		return m_reportService.insertDailyReport(report,binaryContent);
 	}
 
 	@Override
@@ -46,14 +48,15 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		StateReport stateReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(stateReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
-		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		report.setType(1);		
+		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
+		return m_reportService.insertMonthlyReport(report,binaryContent);
 	}
 
 	@Override
@@ -63,16 +66,16 @@ public class StateReportBuilder implements ReportTaskBuilder {
 
 		StateReport stateReport = queryDailyReportsByDuration(domain, start, end);
 		WeeklyReport report = new WeeklyReport();
-		String content = stateReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
+		return m_reportService.insertWeeklyReport(report,binaryContent);
 	}
 
 	private StateReport queryDailyReportsByDuration(String domain, Date start, Date end) {

@@ -10,11 +10,17 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.DailyReportContentDao;
+import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
+import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 
 public abstract class AbstractReportService<T> {
 
@@ -23,6 +29,24 @@ public abstract class AbstractReportService<T> {
 	
 	@Inject
 	protected HourlyReportContentDao m_hourlyReportContentDao;
+	
+	@Inject
+	protected DailyReportDao m_dailyReportDao;
+
+	@Inject
+	protected DailyReportContentDao m_dailyReportContentDao;
+
+	@Inject
+	protected WeeklyReportDao m_weeklyReportDao;
+
+	@Inject
+	protected WeeklyReportContentDao m_weeklyReportContentDao;
+
+	@Inject
+	protected MonthlyReportDao m_monthlyReportDao;
+
+	@Inject
+	protected MonthlyReportContentDao m_monthlyReportContentDao;
 
 	public static final int s_hourly = 1;
 

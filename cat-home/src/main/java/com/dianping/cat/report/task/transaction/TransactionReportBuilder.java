@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReport;
@@ -55,17 +56,17 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 			buildDailyTransactionGraph(transactionReport);
 
-			String content = transactionReport.toString();
 			DailyReport report = new DailyReport();
 
-			report.setContent(content);
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
+			report.setContent("");
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			report.setName(name);
 			report.setPeriod(period);
 			report.setType(1);
-			return m_reportService.insertDailyReport(report);
+			byte[] binaryContent = DefaultNativeBuilder.build(transactionReport);
+			return m_reportService.insertDailyReport(report, binaryContent);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);
@@ -122,15 +123,15 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		      TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(transactionReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(transactionReport);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -138,9 +139,8 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = transactionReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -148,7 +148,8 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		report.setPeriod(period);
 		report.setType(1);
 
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(transactionReport);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	@Override
@@ -172,7 +173,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 			}
 		}
 		TransactionReport transactionReport = merger.getTransactionReport();
-		
+
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
 		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);

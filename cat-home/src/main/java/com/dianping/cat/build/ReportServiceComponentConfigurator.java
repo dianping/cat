@@ -12,6 +12,9 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.home.dal.report.DailyReportContentDao;
+import com.dianping.cat.home.dal.report.MonthlyReportContent;
+import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.impl.BugReportService;
 import com.dianping.cat.report.service.impl.CrossReportService;
@@ -36,18 +39,25 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(TransactionReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(EventReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(ProblemReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(MatrixReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(CrossReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
-		all.add(C(SqlReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class, DailyReportDao.class,
-		      WeeklyReportDao.class, MonthlyReportDao.class));
+		all.add(C(SqlReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
+		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(StateReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 
 		all.add(C(TopReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class));
@@ -55,17 +65,24 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		all.add(C(HeartbeatReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class));
 		all.add(C(MetricReportService.class).req(HourlyReportDao.class, BusinessReportDao.class));
 
-		all.add(C(BugReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class, DailyReportDao.class,
-		      WeeklyReportDao.class, MonthlyReportDao.class));
+		all.add(C(BugReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
+		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(UtilizationReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(ServiceReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 		all.add(C(HeavyReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContent.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 
 		all.add(C(ReportService.class, DefaultReportService.class)
-		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class) //
+		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class)
+		      //
+		      .req(HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
+		            MonthlyReportContent.class) //
 		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class) //
 		      .req(MatrixReportService.class, SqlReportService.class, DependencyReportService.class) //
 		      .req(TopReportService.class, StateReportService.class, CrossReportService.class) //

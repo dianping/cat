@@ -12,6 +12,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
@@ -33,14 +34,15 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 		SqlReport sqlReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent(sqlReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(sqlReport);
+		return m_reportService.insertDailyReport(report,binaryContent);
 	}
 
 	@Override
@@ -53,30 +55,31 @@ public class SqlReportBuilder implements ReportTaskBuilder {
 		SqlReport sqlReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(sqlReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(sqlReport);
+		return m_reportService.insertMonthlyReport(report,binaryContent);
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		SqlReport sqlReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime() + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = sqlReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(sqlReport);
+		return m_reportService.insertWeeklyReport(report,binaryContent);
 	}
 
 	private SqlReport queryDailyReportsByDuration(String domain, Date start, Date end) {
