@@ -209,7 +209,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 					for (T report : reports.values()) {
 						try {
 							String domain = m_reportDelegate.getDomain(report);
-							String xml = m_reportDelegate.buildXml(report);
 							HourlyReport r = m_reportDao.createLocal();
 
 							r.setName(m_name);
@@ -217,12 +216,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 							r.setPeriod(period);
 							r.setIp(ip);
 							r.setType(1);
-
-							if (!"transaction".equals(m_name)) {
-								r.setContent(xml);
-							} else {
-								r.setContent("");
-							}
+							r.setContent("");
 
 							m_reportDao.insert(r);
 
