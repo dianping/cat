@@ -19,6 +19,7 @@ import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
+import com.dianping.cat.home.bug.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
@@ -50,7 +51,8 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
+		return m_reportService.insertDailyReport(report,binaryContent);
 	}
 
 	private boolean validateDomain(String domain) {
@@ -77,14 +79,15 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		}
 		HourlyReport report = new HourlyReport();
 
-		report.setContent(bugReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(start);
 		report.setType(1);
-		return m_reportService.insertHourlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
+		return m_reportService.insertHourlyReport(report,binaryContent);
 	}
 
 	@Override
@@ -97,14 +100,15 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		}
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(bugReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
+		return m_reportService.insertMonthlyReport(report,binaryContent);
 	}
 
 	@Override
@@ -116,16 +120,16 @@ public class BugReportBuilder implements ReportTaskBuilder {
 			      getDomainName(), d.getId(), m_daily_formate.format(period)));
 		}
 		WeeklyReport report = new WeeklyReport();
-		String content = bugReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
+		return m_reportService.insertWeeklyReport(report,binaryContent);
 	}
 
 	private BugReport queryDailyReportsByDuration(String domain, Date start, Date end) {

@@ -9,6 +9,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.browser.BrowserReportMerger;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.browser.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.browser.model.transform.DefaultNativeParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
@@ -70,5 +72,15 @@ public class BrowserDelegate implements ReportDelegate<BrowserReport> {
 		BrowserReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+	
+	@Override
+	public byte[] buildBinary(BrowserReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public BrowserReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

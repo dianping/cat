@@ -13,6 +13,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReport;
@@ -59,7 +60,8 @@ public class EventReportBuilder implements ReportTaskBuilder {
 			report.setName(name);
 			report.setPeriod(period);
 			report.setType(1);
-			return m_reportService.insertDailyReport(report);
+			byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
+			return m_reportService.insertDailyReport(report,binaryContent);
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
@@ -114,14 +116,15 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		EventReport eventReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(eventReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
+		return m_reportService.insertMonthlyReport(report,binaryContent);
 	}
 
 	@Override
@@ -129,16 +132,16 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		EventReport eventReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = eventReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
+		return m_reportService.insertWeeklyReport(report,binaryContent);
 	}
 
 	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {

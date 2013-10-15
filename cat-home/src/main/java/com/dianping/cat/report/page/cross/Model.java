@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.cross.display.HostInfo;
@@ -12,22 +16,28 @@ import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(CrossAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_callSort;
 
 	private String m_queryName;
 
+	@EntityMeta
 	private HostInfo m_hostInfo;
 
+	@EntityMeta
 	private MethodInfo m_methodInfo;
 
+	@EntityMeta
 	private ProjectInfo m_projectInfo;
 
+	@EntityMeta
 	private CrossReport m_report;
 
 	private String m_serviceSort;
-	
+
+	@EntityMeta
 	private MethodQueryInfo m_info;
 
 	public Model(Context ctx) {

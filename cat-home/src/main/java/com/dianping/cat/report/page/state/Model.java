@@ -4,13 +4,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(StateAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
+
+	@EntityMeta
 	public StateReport m_report;
 
+	@EntityMeta
 	public StateShow m_state;
 
 	public String m_graph;

@@ -6,7 +6,7 @@
 	action="${model.pageUri}?op=exceptionThresholdUpdateSubmit">
 	<h4 class="text-center text-error" id="state">&nbsp;</h4>
 	<h4 class="text-center text-error">修改异常报警配置信息</h4>
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-bordered table-condensed table-hover">
 		<tr>
 			<td width="40%" style="text-align: right" class="text-success">域名</td>
 			<td> <input id="domain" name="exceptionLimit.domain"

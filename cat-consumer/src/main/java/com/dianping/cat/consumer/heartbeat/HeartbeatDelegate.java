@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -70,4 +72,14 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 		return report;
 	}
+	
+	@Override
+   public byte[] buildBinary(HeartbeatReport report) {
+		return DefaultNativeBuilder.build(report);
+   }
+
+	@Override
+   public HeartbeatReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+   }
 }

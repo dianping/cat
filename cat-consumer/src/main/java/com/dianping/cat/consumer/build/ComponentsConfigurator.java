@@ -35,6 +35,7 @@ import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.service.DefaultReportManager;
@@ -86,7 +87,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportManager.class, ID));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, EventDelegate.class).req(TaskManager.class));
 
@@ -101,7 +102,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportManager.class, ID));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class));
 
@@ -131,7 +132,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		            new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, ProblemDelegate.class) //
 		      .req(ProblemReportAggregation.class, TaskManager.class));
@@ -147,7 +148,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class, DomainManager.class, ServerStatisticManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, StateDelegate.class).req(TaskManager.class));
 
@@ -162,7 +163,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, TopDelegate.class));
 
@@ -177,7 +178,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class) //
+		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class));
 

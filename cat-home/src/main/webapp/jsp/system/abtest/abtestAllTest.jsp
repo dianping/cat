@@ -80,13 +80,13 @@
             <ul class="nav nav-list well liHover">
                <li class="nav-header">ABTest Status</li>
                <li class="divider" />
-               <li ${payload.status eq 'created' ? ' class="selected"' : ''}><a href="?status=created"> <img height="12"
+               <li ${payload.status eq 'created' ? ' class="selected"' : ''}><a href="?status=created"> <img  class="img-polaroid"  height="12"
                      width="12" src="${res.img.local['CREATED_black_small.png']}"> created <span class="badge statusSpan">${model.listViewModel.createdCount}</span>
                </a></li>
-               <li ${payload.status eq 'ready' ? ' class="selected"' : ''}><a href="?status=ready"> <img height="12"
+               <li ${payload.status eq 'ready' ? ' class="selected"' : ''}><a href="?status=ready"> <img  class="img-polaroid"  height="12"
                      width="12" src="${res.img.local['READY_black_small.png']}"> ready to start <span class="badge statusSpan">${model.listViewModel.readyCount}</span>
                </a></li>
-               <li ${payload.status eq 'running' ? ' class="selected"' : ''}><a href="?status=running"> <img height="12"
+               <li ${payload.status eq 'running' ? ' class="selected"' : ''}><a href="?status=running"> <img  class="img-polaroid"  height="12"
                      width="12" src="${res.img.local['RUNNING_black_small.png']}"> running <span class="badge statusSpan">${model.listViewModel.runningCount}</span>
                </a></li>
                <li ${payload.status eq 'terminated' ? ' class="selected"' : ''}><a href="?status=terminated"> <img
@@ -169,31 +169,31 @@
                      <td><c:choose>
                            <c:when test="${item.status.status eq 'created'}">
                               <div>
-                                 <img src="${res.img.local['CREATED_colored_big.png']}" />
+                                 <img  class="img-polaroid"  src="${res.img.local['CREATED_colored_big.png']}" />
                               </div>
                               <small>Created</small>
                            </c:when>
                            <c:when test="${item.status.status eq 'running'}">
                               <div>
-                                 <img src="${res.img.local['RUNNING_colored_big.png']}" />
+                                 <img  class="img-polaroid"  src="${res.img.local['RUNNING_colored_big.png']}" />
                               </div>
                               <small>Running</small>
                            </c:when>
                            <c:when test="${item.status.status eq 'terminated'}">
                               <div>
-                                 <img src="${res.img.local['STOPPED_colored_big.png']}">
+                                 <img  class="img-polaroid"  src="${res.img.local['STOPPED_colored_big.png']}">
                               </div>
                               <small>Terminated</small>
                            </c:when>
                            <c:when test="${item.status.status eq 'ready'}">
                               <div>
-                                 <img src="${res.img.local['READY_colored_big.png']}">
+                                 <img  class="img-polaroid"  src="${res.img.local['READY_colored_big.png']}">
                               </div>
                               <small>Ready to start</small>
                            </c:when>
                            <c:when test="${item.status.status eq 'suspended'}">
                               <div>
-                                 <img src="${res.img.local['PAUSED_colored_big.png']}">
+                                 <img  class="img-polaroid"  src="${res.img.local['PAUSED_colored_big.png']}">
                               </div>
                               <small>Suspended</small>
                            </c:when>

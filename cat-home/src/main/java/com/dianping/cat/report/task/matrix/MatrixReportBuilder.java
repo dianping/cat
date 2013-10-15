@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
@@ -29,14 +30,15 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		MatrixReport matrixReport = queryHourlyReportByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent(matrixReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(matrixReport);
+		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
 	@Override
@@ -49,14 +51,15 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(matrixReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(matrixReport);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -64,16 +67,16 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = matrixReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(matrixReport);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private MatrixReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -93,7 +96,7 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
 		new MatrixReportFilter().visitMatrixReport(matrixReport);
-		
+
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);
 		return matrixReport;
@@ -114,7 +117,7 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
 		new MatrixReportFilter().visitMatrixReport(matrixReport);
-		
+
 		matrixReport.getDomainNames().addAll(domainSet);
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);

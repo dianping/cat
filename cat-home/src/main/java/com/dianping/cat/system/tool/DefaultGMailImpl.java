@@ -60,7 +60,7 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 				HtmlEmail email = createHtmlEmail();
 
 				email.setSubject(title);
-				email.setFrom("CAT");
+				email.setFrom("CAT@dianping.com");
 
 				if (content != null) {
 					email.setHtmlMsg(content);

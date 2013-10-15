@@ -86,17 +86,14 @@ CREATE TABLE `location` (
   UNIQUE KEY `transaction_date_lat_lng` (`transaction_date`,`lat`,`lng`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于热点图地理位置表';
 
-
 CREATE TABLE `report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型, 1/xml, 9/binary 默认1',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台机器',
-  `domain` varchar(50) NOT NULL,
-  `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
-  `headers` text NOT NULL,  
+  `domain` varchar(50) NOT NULL  COMMENT '报表项目',
+  `period` timestamp NOT NULL COMMENT '报表时间段',
   `content` longtext NULL,
-  `binary_content` longblob NULL,
   `creation_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
@@ -104,6 +101,33 @@ CREATE TABLE `report` (
   KEY `IX_Period` (`period`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
 
+CREATE TABLE `report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
+CREATE TABLE `daily_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
+CREATE TABLE `weekly_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
+CREATE TABLE `monthly_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
 
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -25,13 +25,13 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
 public interface ReportService {
 
-	public boolean insertDailyReport(DailyReport report);
+	public boolean insertDailyReport(DailyReport report, byte[] content);
 
-	public boolean insertHourlyReport(HourlyReport report);
+	public boolean insertHourlyReport(HourlyReport report, byte[] content);
 
-	public boolean insertMonthlyReport(MonthlyReport report);
+	public boolean insertMonthlyReport(MonthlyReport report, byte[] content);
 
-	public boolean insertWeeklyReport(WeeklyReport report);
+	public boolean insertWeeklyReport(WeeklyReport report, byte[] content);
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName);
 
@@ -39,29 +39,29 @@ public interface ReportService {
 
 	public CrossReport queryCrossReport(String domain, Date start, Date end);
 
-	public DependencyReport queryDependencyReport(String domain,Date start,Date end);
-	
+	public DependencyReport queryDependencyReport(String domain, Date start, Date end);
+
 	public EventReport queryEventReport(String domain, Date start, Date end);
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
-	
+
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
 
 	public MetricReport queryMetricReport(String domain, Date start, Date end);
-	
+
 	public ProblemReport queryProblemReport(String domain, Date start, Date end);
-	
+
 	public ServiceReport queryServiceReport(String domain, Date start, Date end);
-	
+
 	public SqlReport querySqlReport(String domain, Date start, Date end);
-	
-	public StateReport queryStateReport(String domain,Date start,Date end);
-	
-	public TopReport queryTopReport(String domain,Date start,Date end);
-	
+
+	public StateReport queryStateReport(String domain, Date start, Date end);
+
+	public TopReport queryTopReport(String domain, Date start, Date end);
+
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
-	public HeavyReport queryHeavyReport(String domain,  Date start, Date end);
-	
-	public UtilizationReport queryUtilizationReport(String domain,  Date start, Date end);
+	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
+
+	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end);
 }
