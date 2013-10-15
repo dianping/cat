@@ -226,7 +226,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 							content.setReportId(id);
 							content.setContent(binaryContent);
-
 							m_reportContentDao.insert(content);
 							m_reportDelegate.createHourlyTask(report);
 						} catch (Throwable e) {
