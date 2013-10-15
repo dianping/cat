@@ -149,7 +149,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		return count;
 	}
-
+	
 	protected int encodeRemoteCallLine(MessageTree tree, Event event, ChannelBuffer buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
@@ -359,13 +359,13 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return children;
 	}
 
-	public boolean isMockMode() {
-		return m_mockMode;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		m_bufferHelper = new BufferHelper(m_writer);
+	}
+
+	public boolean isMockMode() {
+		return m_mockMode;
 	}
 
 	protected Transaction mockTransaction() { // for test/debug purpose
@@ -408,6 +408,10 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
+
+	public void setMockMode(boolean mockMode) {
+   	m_mockMode = mockMode;
+   }
 
 	protected static class BufferHelper {
 		private static byte[] TABLE1 = "<table class=\"logview\">".getBytes();
@@ -757,16 +761,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		public int calcX(long timeInMillis) {
-			int w = (int) (timeInMillis * getUnit() / m_unitStep);
-
-			if (w == 0 && timeInMillis > 0) {
-				w = 1;
-			}
-
-			return w + m_offsetX;
-		}
-
 		public int calcWidth(long timeInMicros) {
 			int w = (int) (timeInMicros * getUnit() / m_unitStep / 1000);
 
@@ -775,6 +769,16 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 
 			return w;
+		}
+
+		public int calcX(long timeInMillis) {
+			int w = (int) (timeInMillis * getUnit() / m_unitStep);
+
+			if (w == 0 && timeInMillis > 0) {
+				w = 1;
+			}
+
+			return w + m_offsetX;
 		}
 
 		public int getHeight() {
