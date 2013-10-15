@@ -21,7 +21,7 @@
 
 #define BUFSIZE 1000 
 #define SENDOUTBUFSIZE 800
-#define URL_MAX_LEN 200
+#define URL_MAX_LEN 100
 #define DEFAULT_MMAP_DAT_SIZE 1024*1024*1024
 #define DEFAULT_MMAP_DAT "/data/appdatas/cat/mmap.dat"
 #define DEFAULT_MMAP_IDX "/data/appdatas/cat/mmap.idx"
@@ -218,48 +218,38 @@ static ngx_int_t ngx_cat_header_filter(ngx_http_request_t *r){
 }
 
 void cpystr(char* buf, int* p, char* str, int len){
-	if(*p == SENDOUTBUFSIZE){
-		return;
-	}
-	if(len > URL_MAX_LEN){
-		ngx_memcpy(buf + *p, str, URL_MAX_LEN);
-	}
-	else{
+	if(*p + len <  SENDOUTBUFSIZE){
 		ngx_memcpy(buf + *p, str, len);
+		*p = *p + len;
 	}
-	*p = *p + len;
 }
 
 void cpyint(char* buf, int* p, int num){
-	if(*p == SENDOUTBUFSIZE){
-		return;
+	if(*p + 20 < SENDOUTBUFSIZE){
+		sprintf(buf + *p, "%d", num);
+		*p = strlen(buf);
 	}
-	sprintf(buf + *p, "%d", num);
-	*p = strlen(buf);
 }
 
 void cpyuint(char* buf, int* p, unsigned int num){
-	if(*p == SENDOUTBUFSIZE){
-		return;
+	if(*p + 20 < SENDOUTBUFSIZE){
+		sprintf(buf + *p, "%u", num);
+		*p = strlen(buf);
 	}
-	sprintf(buf + *p, "%u", num);
-	*p = strlen(buf);
 }
 
 void cpylong(char* buf, int* p, long num){
-	if(*p == SENDOUTBUFSIZE){
-		return;
+	if(*p + 20 < SENDOUTBUFSIZE){
+		sprintf(buf + *p, "%ld", num);
+		*p = strlen(buf);
 	}
-	sprintf(buf + *p, "%ld", num);
-	*p = strlen(buf);
 }
 
 void cpyulong(char* buf, int* p, unsigned long num){
-	if(*p == SENDOUTBUFSIZE){
-		return;
+	if(*p + 20 < SENDOUTBUFSIZE){
+		sprintf(buf + *p, "%lu", num);
+		*p = strlen(buf);
 	}
-	sprintf(buf + *p, "%lu", num);
-	*p = strlen(buf);
 }
 
 void getmessage(ngx_http_request_t *r, char* buf){
@@ -274,6 +264,7 @@ void getmessage(ngx_http_request_t *r, char* buf){
 
 	cpystr(buf, &p, "http://", strlen("http://"));
 	cpystr(buf, &p, (char*)r->headers_in.host->value.data, r->headers_in.host->value.len);
+	cpystr(buf, &p, (char*)r->uri.data, ((r->uri.len > URL_MAX_LEN) ? URL_MAX_LEN : r->uri.len));
 	cpystr(buf, &p, TAB, strlen(TAB));
 
 	cpyint(buf, &p, (int)r->request_length);
@@ -352,7 +343,7 @@ void getupstreammessage(ngx_http_request_t *r, char* buf){
 
 	cpystr(buf, &p, "http://", strlen("http://"));
 	cpystr(buf, &p, (char*)r->headers_in.host->value.data, r->headers_in.host->value.len);
-	cpystr(buf, &p, (char*)r->uri.data, r->uri.len);
+	cpystr(buf, &p, (char*)r->uri.data, ((r->uri.len > URL_MAX_LEN) ? URL_MAX_LEN : r->uri.len));
 	cpystr(buf, &p, TAB, strlen(TAB));
 
 	cpyint(buf, &p, (int)r->request_length);
@@ -360,7 +351,7 @@ void getupstreammessage(ngx_http_request_t *r, char* buf){
 
 	cpystr(buf, &p, "http://", strlen("http://"));
 	cpystr(buf, &p, (char*)r->upstream->peer.name->data, r->upstream->peer.name->len);
-	cpystr(buf, &p, (char*)r->upstream->uri.data, r->upstream->uri.len);
+	cpystr(buf, &p, (char*)r->upstream->uri.data, ((r->upstream->uri.len > URL_MAX_LEN) ? URL_MAX_LEN : r->upstream->uri.len));
 	cpystr(buf, &p, TAB, strlen(TAB));
 
 	cpyint(buf, &p, (int)r->header_size);
