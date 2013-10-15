@@ -263,4 +263,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			m_remoteRole = remoteRole;
 		}
 	}
+
+	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
+   	m_serverConfigManager = serverConfigManager;
+   }
+	
 }
