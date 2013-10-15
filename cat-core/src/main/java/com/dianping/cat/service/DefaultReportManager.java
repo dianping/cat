@@ -220,16 +220,14 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 							m_reportDao.insert(r);
 
-							if ("transaction".equals(m_name)) {
-								int id = r.getId();
-								byte[] binaryContent = m_reportDelegate.buildBinary(report);
-								HourlyReportContent content = m_reportContentDao.createLocal();
+							int id = r.getId();
+							byte[] binaryContent = m_reportDelegate.buildBinary(report);
+							HourlyReportContent content = m_reportContentDao.createLocal();
 
-								content.setReportId(id);
-								content.setContent(binaryContent);
+							content.setReportId(id);
+							content.setContent(binaryContent);
 
-								m_reportContentDao.insert(content);
-							}
+							m_reportContentDao.insert(content);
 							m_reportDelegate.createHourlyTask(report);
 						} catch (Throwable e) {
 							t.setStatus(e);
