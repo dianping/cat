@@ -26,7 +26,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("timeRange")
 	private int m_timeRange = 2;
-
    
    @FieldMeta("fullScreen")
    private boolean m_fullScreen = false;
