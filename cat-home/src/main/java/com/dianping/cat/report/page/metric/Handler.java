@@ -136,7 +136,7 @@ public class Handler implements PageHandler<Context> {
 			List<LineChart> allCharts = new ArrayList<LineChart>();
 			for (ProductLine productLine : productLines) {
 
-				metricDisplay = buildMetricsByProduct(date, productLine.getId(), payload.getTest(), false);
+				metricDisplay = buildMetricsByProduct(date, productLine.getId(), payload.getTest(), true);
 
 				List<LineChart> charts = metricDisplay.getLineCharts();
 

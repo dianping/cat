@@ -7,6 +7,10 @@ public interface ReportDelegate<T> {
 
 	public void beforeSave(Map<String, T> reports);
 
+	public byte[] buildBinary(T report);
+	
+	public T parseBinary(byte[] bytes);
+	
 	public String buildXml(T report);
 
 	public String getDomain(T report);

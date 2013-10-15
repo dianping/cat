@@ -10,7 +10,7 @@
 	</ul>
 	<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<th>项目名【1】</th>
 						<th>URL名称</th>
@@ -28,7 +28,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="tab2">
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
 							<th>项目名【2】</th>
 							<th>Service名称</th>
@@ -46,7 +46,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="tab3">
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
 							<th>项目名【3】</th>
 							<th>URL名称</th>
@@ -64,7 +64,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="tab4">
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
 							<th>项目名【4】</th>
 							<th>URL名称</th>
@@ -82,7 +82,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="tab5">
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
 							<th>项目名【5】</th>
 							<th>URL名称</th>
@@ -100,7 +100,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="tab6">
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
 							<th>项目名【6】</th>
 							<th>URL名称</th>

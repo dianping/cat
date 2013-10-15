@@ -21,12 +21,22 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContent;
+import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.home.bug.entity.BugReport;
+import com.dianping.cat.home.dal.report.DailyReportContent;
+import com.dianping.cat.home.dal.report.DailyReportContentDao;
+import com.dianping.cat.home.dal.report.MonthlyReportContent;
+import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
+import com.dianping.cat.home.dal.report.WeeklyReportContent;
+import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
@@ -45,6 +55,18 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private MonthlyReportDao m_monthlyReportDao;
+
+	@Inject
+	private HourlyReportContentDao m_hourlyReportContentDao;
+
+	@Inject
+	private DailyReportContentDao m_dailyReportContentDao;
+
+	@Inject
+	private WeeklyReportContentDao m_weeklyReportContentDao;
+
+	@Inject
+	private MonthlyReportContentDao m_monthlyReportContentDao;
 
 	@Inject
 	private TransactionReportService m_transactionReportService;
@@ -92,9 +114,16 @@ public class DefaultReportService implements ReportService {
 	private UtilizationReportService m_utilizationReportService;
 
 	@Override
-	public boolean insertDailyReport(DailyReport report) {
+	public boolean insertDailyReport(DailyReport report, byte[] content) {
 		try {
 			m_dailyReportDao.insert(report);
+
+			int id = report.getId();
+			DailyReportContent proto = m_dailyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_dailyReportContentDao.insert(proto);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -103,9 +132,16 @@ public class DefaultReportService implements ReportService {
 	}
 
 	@Override
-	public boolean insertHourlyReport(HourlyReport report) {
+	public boolean insertHourlyReport(HourlyReport report, byte[] content) {
 		try {
 			m_hourlyReportDao.insert(report);
+
+			int id = report.getId();
+			HourlyReportContent proto = m_hourlyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_hourlyReportContentDao.insert(proto);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -114,10 +150,30 @@ public class DefaultReportService implements ReportService {
 	}
 
 	@Override
-	public boolean insertMonthlyReport(MonthlyReport report) {
+	public boolean insertMonthlyReport(MonthlyReport report, byte[] content) {
 		try {
+			MonthlyReport monthReport = m_monthlyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
+			      report.getDomain(), report.getName(), MonthlyReportEntity.READSET_FULL);
+			MonthlyReportContent reportContent = m_monthlyReportContentDao.createLocal();
+
+			reportContent.setKeyReportId(monthReport.getId());
+			reportContent.setReportId(monthReport.getId());
+			m_monthlyReportContentDao.deleteByPK(reportContent);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		try {
+
 			m_monthlyReportDao.deleteReportByDomainNamePeriod(report);
 			m_monthlyReportDao.insert(report);
+
+			int id = report.getId();
+			MonthlyReportContent proto = m_monthlyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_monthlyReportContentDao.insert(proto);
+
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -126,10 +182,28 @@ public class DefaultReportService implements ReportService {
 	}
 
 	@Override
-	public boolean insertWeeklyReport(WeeklyReport report) {
+	public boolean insertWeeklyReport(WeeklyReport report, byte[] content) {
+		try {
+			WeeklyReport monthReport = m_weeklyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
+			      report.getDomain(), report.getName(), WeeklyReportEntity.READSET_FULL);
+			WeeklyReportContent reportContent = m_weeklyReportContentDao.createLocal();
+
+			reportContent.setKeyReportId(monthReport.getId());
+			reportContent.setReportId(monthReport.getId());
+			m_weeklyReportContentDao.deleteByPK(reportContent);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 		try {
 			m_weeklyReportDao.deleteReportByDomainNamePeriod(report);
 			m_weeklyReportDao.insert(report);
+
+			int id = report.getId();
+			WeeklyReportContent proto = m_weeklyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_weeklyReportContentDao.insert(proto);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);

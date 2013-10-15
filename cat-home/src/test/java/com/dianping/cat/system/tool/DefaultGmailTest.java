@@ -18,7 +18,8 @@ public class DefaultGmailTest extends ComponentTestCase {
 		emails.add("yong.you@dianping.com");
 		emails.add("youyong205@126.com");
 
-		boolean result = mailsms.sendEmail("ts", "ts", emails);
+		boolean result = mailsms.sendEmail("title", "content", emails);
+		
 		Assert.assertEquals(true, result);
 	}
 

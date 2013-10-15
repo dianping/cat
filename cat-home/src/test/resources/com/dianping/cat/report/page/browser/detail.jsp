@@ -4,7 +4,7 @@
 	</br>
 	<div>
 		<div class="span6">
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed table-hover">
 				<tr>
 					<th style="text-align:left">Browser</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=browser&sort=browserCount">Count</th>
@@ -24,7 +24,7 @@
 	</div>	
 	<div>
 		<div class="span6">
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-bordered table-condensed table-hover">
 				<tr>
 					<th style="text-align:left">OS</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=browser&sort=osCount">Count</th>

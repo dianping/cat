@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.cache;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +22,8 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -59,8 +60,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
 
-	private Set<String> m_cacheTypes = new HashSet<String>(Arrays.asList("Cache.web", "Cache.memcached", "Cache.kvdb",
-	      "Cache.memcached-tuangou"));
+	private Set<String> m_cacheTypes;
 
 	private CacheReport buildCacheReport(TransactionReport transactionReport, EventReport eventReport, String type,
 	      String sortBy, String queryName, String ip) {
@@ -166,6 +166,12 @@ public class Handler implements PageHandler<Context> {
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("ip", ipAddress);
 
+		ModelResponse<TransactionReport> all = m_transactionService.invoke(request);
+		TransactionReport report = all.getModel();
+		ReportVisitor visitor = new ReportVisitor();
+		visitor.visitTransactionReport(report);
+
+		m_cacheTypes = visitor.getCacheTypes();
 		if (StringUtils.isEmpty(type)) {
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
@@ -270,4 +276,23 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.CACHE);
 		model.setQueryName(payload.getQueryName());
 	}
+
+	public static class ReportVisitor extends BaseVisitor {
+
+		private Set<String> m_cacheTypes = new HashSet<String>();
+
+		@Override
+		public void visitType(TransactionType type) {
+			String typeName = type.getId();
+
+			if (typeName.startsWith("Cache.")) {
+				m_cacheTypes.add(typeName);
+			}
+		}
+
+		public Set<String> getCacheTypes() {
+			return m_cacheTypes;
+		}
+	}
+
 }

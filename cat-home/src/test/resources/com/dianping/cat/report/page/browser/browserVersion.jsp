@@ -40,7 +40,7 @@
 	<div class="span10">
 		<div class="report">
 			<div class="span6">
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<th style="text-align:left">Browser Version</th>
 						<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=browserVersion&favor=${payload.favor}&sort=browserVersionCount">Count</th>

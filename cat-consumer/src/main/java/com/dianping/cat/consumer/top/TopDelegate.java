@@ -3,6 +3,8 @@ package com.dianping.cat.consumer.top;
 import java.util.Date;
 import java.util.Map;
 
+import com.dianping.cat.consumer.top.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.top.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -55,5 +57,15 @@ public class TopDelegate implements ReportDelegate<TopReport> {
 		TopReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+
+	@Override
+	public byte[] buildBinary(TopReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public TopReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

@@ -89,7 +89,7 @@
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
 					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>表示放入总的业务监控大盘</h4>
-				     	<table class="table table-striped table-bordered table-condensed">
+				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th><h5 class='text-center'>项目</h5></th>
 				     			<th><h5 class='text-center'>类型</h5></th>

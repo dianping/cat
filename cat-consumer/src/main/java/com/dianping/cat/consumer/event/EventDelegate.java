@@ -7,6 +7,8 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -70,4 +72,14 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 		return report;
 	}
+
+	@Override
+   public byte[] buildBinary(EventReport report) {
+		return DefaultNativeBuilder.build(report);
+   }
+
+	@Override
+   public EventReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+   }
 }

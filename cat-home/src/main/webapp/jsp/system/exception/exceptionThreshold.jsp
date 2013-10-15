@@ -66,7 +66,7 @@
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
 			<div>
-			<table class="table table-striped table-bordered table-condensed" id="contents" width="100%">
+			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
 					<th width="25%">域名</th>

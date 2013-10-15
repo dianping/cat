@@ -32,7 +32,7 @@ canvas{}
 			</h3>
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="?op=report&id=${payload.id }">
-					 <img style="vertical-align: text-bottom;"
+					 <img  class="img-polaroid"  style="vertical-align: text-bottom;"
 						height="15" width="15"
 						src="${res.img.local['details_black_small.png']}"> Detail
 						Report

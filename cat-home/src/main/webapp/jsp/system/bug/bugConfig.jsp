@@ -20,7 +20,7 @@
 				action="${model.pageUri}?op=bugConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
 				<h4 class="text-center text-error">异常规范配置</h4>
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="bug" style="width:auto" rows="20" cols="150">${model.bug}</textarea></td>
 					</tr>

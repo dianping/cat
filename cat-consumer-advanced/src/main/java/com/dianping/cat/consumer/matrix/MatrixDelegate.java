@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -71,5 +73,15 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 		MatrixReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+
+	@Override
+	public byte[] buildBinary(MatrixReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public MatrixReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

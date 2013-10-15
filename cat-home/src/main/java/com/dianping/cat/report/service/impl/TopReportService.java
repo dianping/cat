@@ -9,10 +9,12 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopReportMerger;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.consumer.top.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContent;
+import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class TopReportService extends AbstractReportService<TopReport> {
@@ -29,6 +31,16 @@ public class TopReportService extends AbstractReportService<TopReport> {
 	@Override
 	public TopReport queryDailyReport(String domain, Date start, Date end) {
 		throw new RuntimeException("Top report don't support daily report");
+	}
+
+	private TopReport queryFromHourlyBinary(int id, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new TopReport(domain);
+		}
 	}
 
 	@Override
@@ -51,12 +63,16 @@ public class TopReportService extends AbstractReportService<TopReport> {
 					String xml = report.getContent();
 
 					try {
-						TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(xml);
-						reportModel.accept(merger);
+						if (xml != null && xml.length() > 0) {
+							TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser
+							      .parse(xml);
+							reportModel.accept(merger);
+						} else {
+							TopReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+							reportModel.accept(merger);
+						}
 					} catch (Exception e) {
 						Cat.logError(e);
-						Cat.getProducer().logEvent("ErrorXML", name, Message.SUCCESS,
-						      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 					}
 				}
 			}
@@ -65,7 +81,6 @@ public class TopReportService extends AbstractReportService<TopReport> {
 
 		topReport.setStartTime(start);
 		topReport.setEndTime(new Date(end.getTime() - 1));
-
 		return topReport;
 	}
 

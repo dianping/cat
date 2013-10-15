@@ -3,13 +3,20 @@ package com.dianping.cat.report.page.top;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 
+@ModelMeta(TopAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
 	
+	@EntityMeta
 	private TopReport m_topReport;
-	
+
+	@EntityMeta
 	private TopMetric m_topMetric;
 	
 	private boolean m_refresh = false;

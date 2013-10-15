@@ -13,7 +13,7 @@
    		<c:forEach  var="entry" items="${model.events}"  varStatus="status" >
    		<c:set var="items" value="${entry.value}"/>
 		    <div class="tab-pane" id="zabbixTab${status.index}">	
-				<table	class="table table-striped table-bordered table-condensed">
+				<table	class="table table-striped table-bordered table-condensed table-hover">
 		  		<thead>
 		  			<tr><th>时间</th>
 		  				<th>标题</th>

@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(ProblemAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
+	
+	@EntityMeta
 	private ProblemStatistics m_allStatistics;
 
 	private int m_currentMinute; // for navigation
@@ -17,10 +24,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_defaultThreshold;
 
+	@EntityMeta
 	private DetailStatistics m_detailStatistics;
 
 	private String m_errorsTrend;
 
+	@EntityMeta
 	private GroupLevelInfo m_groupLevelInfo;
 
 	private String m_groupName;
@@ -29,14 +38,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_lastMinute; // last minute of current hour
 
-	private String m_mobileResponse;
-
-	private ProblemStatistics m_problemStatistics;
-
+	@EntityMeta
 	private ProblemReport m_report;
 
 	private String m_threadId;
 
+	@EntityMeta
 	private ThreadLevelInfo m_threadLevelInfo;
 
 	public Model(Context ctx) {
@@ -133,14 +140,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_currentMinute + 1;
 	}
 
-	public String getMobileResponse() {
-		return m_mobileResponse;
-	}
-
-	public ProblemStatistics getProblemStatistics() {
-		return m_problemStatistics;
-	}
-
 	public ProblemReport getReport() {
 		return m_report;
 	}
@@ -191,14 +190,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setLastMinute(int lastMinute) {
 		m_lastMinute = lastMinute;
-	}
-
-	public void setMobileResponse(String mobileResponse) {
-		m_mobileResponse = mobileResponse;
-	}
-
-	public void setProblemStatistics(ProblemStatistics problemStatistics) {
-		m_problemStatistics = problemStatistics;
 	}
 
 	public void setReport(ProblemReport report) {
