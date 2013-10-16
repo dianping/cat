@@ -43,9 +43,6 @@ import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-/*
- * TestHttp.class
- */
 
 /* .report.graph */
 ValueTranslaterTest.class,
