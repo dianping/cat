@@ -14,7 +14,7 @@
 <style type="text/css">
 .graph{
 width: 430px;
-height: 200px;
+height: 350px;
 margin: 4px auto;
 }
 </style>
