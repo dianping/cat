@@ -6,6 +6,8 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -71,5 +73,15 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		StateReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+	
+	@Override
+	public byte[] buildBinary(StateReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public StateReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

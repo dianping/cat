@@ -10,6 +10,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
+import com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
@@ -28,14 +29,15 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		CrossReport crossReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent(crossReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
+		return m_reportService.insertDailyReport(report,binaryContent);
 	}
 
 	@Override
@@ -48,14 +50,15 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		CrossReport crossReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(crossReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
+		return m_reportService.insertMonthlyReport(report,binaryContent);
 	}
 
 	@Override
@@ -63,16 +66,16 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		CrossReport crossReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = crossReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
+		return m_reportService.insertWeeklyReport(report,binaryContent);
 	}
 
 	private CrossReport queryDailyReportsByDuration(String domain, Date start, Date end) {

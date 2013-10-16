@@ -14,8 +14,10 @@ import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta(TransactionAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
+	@EntityMeta
 	private DisplayNames m_displayNameReport;
 
+	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
 
 	private String m_errorTrend;

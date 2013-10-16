@@ -11,6 +11,7 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
@@ -20,8 +21,9 @@ import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.view.StringSortHelper;
 
-@ModelMeta("dependecy")
+@ModelMeta(DependencyAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
+	
 	@EntityMeta
 	private DependencyReport m_report;
 
@@ -56,7 +58,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private TopMetric m_topMetric;
 
 	private TopReport m_topReport;
-
 
 	public List<ProductLine> getProductLines() {
    	return m_productLines;

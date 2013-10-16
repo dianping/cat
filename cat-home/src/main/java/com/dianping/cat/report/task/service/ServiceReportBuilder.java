@@ -21,6 +21,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.service.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.service.ReportService;
@@ -40,16 +41,18 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		ServiceReport serviceReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
-
 		DailyReport report = new DailyReport();
-		report.setContent(serviceReport.toString());
+
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertDailyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(serviceReport);
+
+		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
 	@Override
@@ -75,14 +78,15 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		}
 		HourlyReport report = new HourlyReport();
 
-		report.setContent(serviceReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(start);
 		report.setType(1);
-		return m_reportService.insertHourlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(serviceReport);
+		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
 	public void merge(Domain domain, TypeDetailInfo info) {
@@ -105,14 +109,15 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(serviceReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(serviceReport);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -120,16 +125,16 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = serviceReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(serviceReport);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private ServiceReport queryDailyReportsByDuration(String domain, Date start, Date end) {

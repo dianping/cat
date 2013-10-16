@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(MatrixAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
+	@EntityMeta
 	private DisplayMatrix m_matrix;
 
+	@EntityMeta
 	private MatrixReport m_report;
 
 	public Model(Context ctx) {

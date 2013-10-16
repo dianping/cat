@@ -18,8 +18,8 @@
     <entity-ref name="browser-version" type="list" names="browser-versions" />
   </entity>
   <entity name="browser-version">
+  	<attribute name="id" value-type="String" />
     <attribute name="count" value-type="int" />
-    <element name="text" value-type="double" text="true" />
   </entity>
   <entity name="os">
     <attribute name="id" value-type="String" />

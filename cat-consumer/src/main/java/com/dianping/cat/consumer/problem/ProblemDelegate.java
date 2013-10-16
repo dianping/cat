@@ -8,6 +8,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.problem.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -40,7 +42,7 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 			reports.put(all.getDomain(), all);
 		}
-		
+
 		ProblemReport frontEnd = reports.get(Constants.FRONT_END);
 
 		if (frontEnd != null) {
@@ -54,7 +56,7 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 		return m_problemReportAggregation.getReport();
 	}
-	
+
 	private boolean validateDomain(String domain) {
 		return !domain.equals(Constants.FRONT_END);
 	}
@@ -115,5 +117,15 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		ProblemReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+
+	@Override
+	public byte[] buildBinary(ProblemReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public ProblemReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

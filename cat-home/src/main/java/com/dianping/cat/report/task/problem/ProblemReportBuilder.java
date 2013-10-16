@@ -13,6 +13,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReport;
@@ -48,17 +49,18 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 			      TaskHelper.tomorrowZero(period));
 			buildProblemDailyGraph(problemReport);
 
-			String content = problemReport.toString();
 			DailyReport report = new DailyReport();
 
-			report.setContent(content);
+			report.setContent("");
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			report.setName(name);
 			report.setPeriod(period);
 			report.setType(1);
-			return m_reportService.insertDailyReport(report);
+			byte[] binaryContent = DefaultNativeBuilder.build(problemReport);
+
+			return m_reportService.insertDailyReport(report, binaryContent);
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -100,14 +102,15 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent(problemReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertMonthlyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(problemReport);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	private void buildProblemDailyGraph(ProblemReport report) {
@@ -130,16 +133,16 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
-		String content = problemReport.toString();
 
-		report.setContent(content);
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		return m_reportService.insertWeeklyReport(report);
+		byte[] binaryContent = DefaultNativeBuilder.build(problemReport);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private ProblemReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -157,7 +160,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 			}
 		}
 		ProblemReport problemReport = merger.getProblemReport();
-	
+
 		problemReport.setStartTime(start);
 		problemReport.setEndTime(end);
 		return problemReport;

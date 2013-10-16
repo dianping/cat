@@ -63,8 +63,6 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String TUAN = "TuanGou";
 
-	private int m_timeRange;
-
 	private final Map<String, MetricReport> m_metricReportMap = new LinkedHashMap<String, MetricReport>() {
 
 		private static final long serialVersionUID = 1L;
@@ -118,16 +116,14 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		m_timeRange = payload.getTimeRange();
 
 		normalize(model, payload);
 		MetricDisplay metricDisplay = null;
 
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryProductLines().values();
-		long date = payload.getDate();
 		switch (action) {
 		case METRIC:
-			metricDisplay = buildMetricsByProduct(date, payload.getProduct(), payload.getTest(), false);
+			metricDisplay = buildProductLineMetrics(payload.getProduct(), payload, false);
 
 			model.setLineCharts(metricDisplay.getLineCharts());
 			model.setAbtests(metricDisplay.getAbtests());
@@ -135,8 +131,7 @@ public class Handler implements PageHandler<Context> {
 		case DASHBOARD:
 			List<LineChart> allCharts = new ArrayList<LineChart>();
 			for (ProductLine productLine : productLines) {
-
-				metricDisplay = buildMetricsByProduct(date, productLine.getId(), payload.getTest(), false);
+				metricDisplay = buildProductLineMetrics(productLine.getId(), payload, true);
 
 				List<LineChart> charts = metricDisplay.getLineCharts();
 
@@ -149,12 +144,17 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private MetricDisplay buildMetricsByProduct(long date, String product, String abtestID, boolean isDashboard) {
-		Date startTime = new Date(date - (m_timeRange - 1) * TimeUtil.ONE_HOUR);
+	private MetricDisplay buildProductLineMetrics(String product, Payload payload, boolean isDashboard) {
+		long date = payload.getDate();
+		String abtestID = payload.getTest();
+		int timeRange = payload.getTimeRange();
+		Date startTime = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
 		List<MetricItemConfig> metricConfigs = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
-		MetricDisplay display = new MetricDisplay(abtestID, startTime, isDashboard, m_timeRange);
+		MetricDisplay display = new MetricDisplay(abtestID, startTime, isDashboard, timeRange);
+
 		display.initializeLineCharts(metricConfigs);
+
 		MetricDisplayMerger displayMerger = new MetricDisplayMerger(abtestID, isDashboard);
 		long time = startTime.getTime();
 
@@ -162,15 +162,16 @@ public class Handler implements PageHandler<Context> {
 		display.setBaselineService(m_baselineService);
 		display.setDisplayMerger(displayMerger);
 
-		for (int i = 0; i < m_timeRange; i++) {
+		for (int index = 0; index < timeRange; index++) {
 			ModelPeriod period = ModelPeriod.getByTime(time);
 			MetricReport report = getReport(period, product, time);
 
 			if (report != null) {
-				displayMerger.visitMetricReport(i, report);
+				displayMerger.visitMetricReport(index, report);
 			}
 			time = time + TimeUtil.ONE_HOUR;
 		}
+		
 		display.generateLineCharts();
 		if (abtestID.equals("-1")) {
 			display.generateBaselineChart();
@@ -186,7 +187,8 @@ public class Handler implements PageHandler<Context> {
 		if (poduct == null || poduct.length() == 0) {
 			payload.setProduct(TUAN);
 		}
-		Date startTime = new Date(payload.getDate() - (m_timeRange - 1) * TimeUtil.ONE_HOUR);
+		int timeRange = payload.getTimeRange();
+		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
 
 		model.setStartTime(startTime);

@@ -3,14 +3,21 @@ package com.dianping.cat.report.page.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(SqlAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
 
+	@EntityMeta
 	private SqlReport m_report;
 
+	@EntityMeta
 	private DisplaySqlReport m_displaySqlReport;
 
 	private String m_database;

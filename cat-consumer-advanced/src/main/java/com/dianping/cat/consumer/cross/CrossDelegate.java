@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.cross.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
@@ -69,5 +71,15 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 		CrossReport report = DefaultSaxParser.parse(xml);
 
 		return report;
+	}
+
+	@Override
+	public byte[] buildBinary(CrossReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public CrossReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 }

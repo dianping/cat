@@ -10,10 +10,12 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
+import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContent;
+import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class DependencyReportService extends AbstractReportService<DependencyReport> {
@@ -30,6 +32,16 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 	@Override
 	public DependencyReport queryDailyReport(String domain, Date start, Date end) {
 		throw new RuntimeException("Dependency report don't support daily report");
+	}
+
+	private DependencyReport queryFromHourlyBinary(int id, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new DependencyReport(domain);
+		}
 	}
 
 	@Override
@@ -52,13 +64,16 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 					String xml = report.getContent();
 
 					try {
-						DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser
-						      .parse(xml);
-						reportModel.accept(merger);
+						if (xml != null && xml.length() > 0) {
+							DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser
+							      .parse(xml);
+							reportModel.accept(merger);
+						} else {
+							DependencyReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+							reportModel.accept(merger);
+						}
 					} catch (Exception e) {
 						Cat.logError(e);
-						Cat.getProducer().logEvent("ErrorXML", name, Message.SUCCESS,
-						      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
 					}
 				}
 			}

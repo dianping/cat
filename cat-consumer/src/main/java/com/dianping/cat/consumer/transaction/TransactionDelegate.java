@@ -11,6 +11,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -20,7 +22,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
-	
+
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -39,6 +41,11 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 			reports.put(all.getDomain(), all);
 		}
+	}
+
+	@Override
+	public byte[] buildBinary(TransactionReport report) {
+		return DefaultNativeBuilder.build(report);
 	}
 
 	@Override
@@ -72,7 +79,8 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public boolean createHourlyTask(TransactionReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID, TaskProlicy.ALL);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
+		      TaskProlicy.ALL);
 	}
 
 	@Override
@@ -96,6 +104,11 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 		other.accept(merger);
 		return old;
+	}
+
+	@Override
+	public TransactionReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 
 	@Override

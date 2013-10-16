@@ -2,13 +2,13 @@
 <browser-report>
    <domain-detail id="Cat">
       <browser id="AppleWebKit" count="1">
-         <browser-version count="1">534.31</browser-version>
+         <browser-version id="534.31" count="1"/>
       </browser>
       <browser id="Safari" count="1">
-         <browser-version count="1">534.31</browser-version>
+         <browser-version id="534.31" count="1"/>
       </browser>
       <browser id="UCBrowser" count="1">
-         <browser-version count="1">9.2.4.329</browser-version>
+         <browser-version id="534.31" count="1"/>
       </browser>
       <os id="Linux" count="1"/>
       <os id="Android" count="1"/> 

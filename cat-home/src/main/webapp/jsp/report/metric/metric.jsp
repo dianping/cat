@@ -40,33 +40,22 @@
 			</td>
 		</tr>
 	</table>	
-	</br>
 	<table>
 		<tr style="text-align: left">
-			<th>Time range: &nbsp;[&nbsp; 
-			<c:choose>
-				<c:when test="${payload.timeRange eq 2}">
-					<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=2"
-								class="current">Two hours</a>
-				</c:when>
-				<c:otherwise>
-					<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=2">Two hours</a>
-				</c:otherwise>
-			</c:choose> &nbsp;]&nbsp; 
-   	  		&nbsp;[&nbsp;
-   	  		<c:choose>
-					<c:when test="${payload.timeRange eq 24}">
-						<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=24"
-									class="current">One day</a>
-					</c:when>
-					<c:otherwise>
-						<a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=24">One day</a>
-					</c:otherwise>
-				</c:choose> &nbsp;]
+			<th>&nbsp;&nbsp;时间段选择: 
+				<c:forEach var="range" items="${model.allRange}">
+					<c:choose>
+						<c:when test="${payload.timeRange eq range.duration}">
+							&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+						</c:when>
+						<c:otherwise>
+							&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=${range.duration}">${range.title}</a> ]
+						</c:otherwise>
+						</c:choose>
+				</c:forEach>
 			</th>
 		</tr>
 	</table>
-	<br/>
 	<div class="container-fluid">
       <div class="row-fluid">
         <div class="span2">

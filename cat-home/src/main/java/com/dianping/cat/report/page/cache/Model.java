@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta("cache")
 public class Model extends AbstractReportModel<Action, Context> {
 	private String m_queryName;
 
+	@EntityMeta
 	private CacheReport m_report;
 
 	public Model(Context ctx) {

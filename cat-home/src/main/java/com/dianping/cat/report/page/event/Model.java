@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(EventAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
+	@EntityMeta
 	private DisplayNames m_displayNameReport;
 
+	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
 
 	private String m_failureTrend;
@@ -27,6 +34,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_mobileResponse;
 
+	@EntityMeta
 	private EventReport m_report;
 
 	private String m_type;
