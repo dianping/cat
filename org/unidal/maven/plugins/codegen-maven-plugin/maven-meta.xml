@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+   <groupId>org.unidal.maven.plugins</groupId>
+   <artifactId>codegen-maven-plugin</artifactId>
+   <versioning>
+      <latest>2.0.5</latest>
+      <release>2.0.5</release>
+      <lastUpdated>20131016132435</lastUpdated>
+      <versions>
+         <version>2.0.5</version>
+      </versions>
+   </versioning>
+</metadata>

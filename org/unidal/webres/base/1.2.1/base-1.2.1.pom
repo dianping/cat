@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.unidal.webres</groupId>
+	<artifactId>base</artifactId>
+	<version>1.2.1</version>
+	<name>Base POM</name>
+	<packaging>pom</packaging>
+	<modules>
+		<module>EunitTestFwk</module>
+		<module>WebResApi</module>
+		<module>WebResBase</module>
+		<module>WebResRuntime</module>
+		<module>WebResTag</module>
+		<module>WebResTagLibrary</module>
+		<module>WebResServer</module>
+	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<!-- webres dependency below -->
+			<dependency>
+				<groupId>org.unidal.eunit</groupId>
+				<artifactId>EunitTestFwk</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.webres</groupId>
+				<artifactId>WebResApi</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.webres</groupId>
+				<artifactId>WebResBase</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.webres</groupId>
+				<artifactId>WebResRuntime</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.webres</groupId>
+				<artifactId>WebResTag</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.webres</groupId>
+				<artifactId>WebResTagLibrary</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.webres</groupId>
+				<artifactId>WebResServer</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+
+			<!-- for AOP -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>1.6.11</version>
+			</dependency>
+
+			<!-- j2ee spec dependency below -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>2.1</version>
+			</dependency>
+
+			<!-- j2ee impl dependency below -->
+			<dependency>
+				<groupId>org.apache.jasper</groupId>
+				<artifactId>com.springsource.org.apache.jasper</artifactId>
+				<version>7.0.12</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.el</groupId>
+				<artifactId>com.springsource.org.apache.el</artifactId>
+				<version>7.0.12</version>
+			</dependency>
+
+			<!-- other dependency below -->
+			<dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty</artifactId>
+				<version>6.1.9</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-util</artifactId>
+				<version>6.1.9</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jsp-2.1</artifactId>
+				<version>6.1.9</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>6.0.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<includes>
+							<include>**/AllTests.java</include>
+						</includes>
+						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 
+							-Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit47</artifactId>
+							<version>2.9</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.8</version>
+					<configuration>
+						<downloadSources>true</downloadSources>
+                                                <ajdtVersion>none</ajdtVersion>
+						<additionalConfig>
+							<file>
+								<name>.settings/org.eclipse.jdt.core.prefs</name>
+								<content><![CDATA[
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.source=1.6
+org.eclipse.jdt.core.compiler.compliance=1.6
+                        ]]></content>
+							</file>
+						</additionalConfig>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<distributionManagement>
+      <repository>
+         <id>dianping.repo</id>
+         <url>http://mvn.dianpingoa.com/dianping-releases</url>
+      </repository>
+	</distributionManagement>
+	<properties>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+	</properties>
+</project>

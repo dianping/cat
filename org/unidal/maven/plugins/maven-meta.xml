@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+   <plugins>
+      <plugin>
+         <name>Code Generation Maven Plugin</name>
+         <prefix>codegen</prefix>
+         <artifactId>codegen-maven-plugin</artifactId>
+      </plugin>
+   </plugins>
+</metadata>
