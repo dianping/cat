@@ -50,6 +50,12 @@ public class TcpSocketReceiver implements LogEnabled {
 	@Inject
 	private String m_host;
 
+	@Inject
+	private MessageCodec m_codec;
+
+	@Inject
+	private MessageHandler m_handler;
+
 	private Logger m_logger;
 
 	@Inject
@@ -121,11 +127,6 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public class DecodeMessageTask implements Task {
-		@Inject
-		private MessageCodec m_codec;
-
-		@Inject
-		private MessageHandler m_handler;
 
 		private int m_index;
 
@@ -133,15 +134,6 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		private BlockingQueue<ChannelBuffer> m_queue;
 
-		public DecodeMessageTask(int index) {
-			this(index, new LinkedBlockingQueue<ChannelBuffer>());
-		}
-
-		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue) {
-			m_index = index;
-			m_queue = queue;
-		}
-		
 		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue, MessageCodec codec, MessageHandler handler) {
 			m_index = index;
 			m_queue = queue;
@@ -179,17 +171,17 @@ public class TcpSocketReceiver implements LogEnabled {
 		}
 
 		public void handleMessage() throws InterruptedException {
-	      ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
+			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
-	      if (buf != null) {
-	      	m_count++;
-	      	if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
-	      		decodeMessage(buf, true);
-	      	} else {
-	      		decodeMessage(buf, false);
-	      	}
-	      }
-      }
+			if (buf != null) {
+				m_count++;
+				if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
+					decodeMessage(buf, true);
+				} else {
+					decodeMessage(buf, false);
+				}
+			}
+		}
 
 		private void decodeMessage(ChannelBuffer buf, boolean monitor) {
 			Transaction t = null;
@@ -301,7 +293,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	public void startEncoderThreads(int threadSize) {
 		for (int i = 0; i < threadSize; i++) {
-			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, m_queue);
+			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, m_queue, m_codec, m_handler);
 
 			Threads.forGroup("Cat").start(messageDecoder);
 		}

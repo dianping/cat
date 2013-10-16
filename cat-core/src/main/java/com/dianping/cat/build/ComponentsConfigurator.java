@@ -43,14 +43,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		
+
 		all.add(C(DomainManager.class)//
 		      .req(ServerConfigManager.class, ProjectDao.class, HostinfoDao.class));
 
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
-		
+
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(ClientConfigManager.class));
 
@@ -61,12 +61,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class, RemoteModelService.class) //
 		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 
-		all.add(C(TcpSocketReceiver.class) //
-		      .req(ServerConfigManager.class)//
-		      .req(ServerStatisticManager.class));
-		
-		all.add(C(DecodeMessageTask.class).req(MessageCodec.class,PlainTextMessageCodec.ID)
-				.req(MessageHandler.class));
+		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
+
+		all.add(C(DecodeMessageTask.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 

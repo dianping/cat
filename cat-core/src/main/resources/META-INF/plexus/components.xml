@@ -83,12 +83,6 @@
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</role>
-			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
-			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
@@ -97,6 +91,10 @@
 					<role>com.dianping.cat.message.spi.core.MessageHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</role>
+			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
