@@ -6,7 +6,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.transaction.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.transaction.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
-<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/highcharts.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <script type="text/javascript" src="/cat/js/transaction.js"></script>
 <style type="text/css">
@@ -19,11 +19,10 @@
 <table>
 	<tr>
 		<td>
-			<h5 style="text-align:center" class='text-center text-info'>响应时间</h5>
 			<div id="responseTrend" class="graph"></div></td>
-		<td><h5 style="text-align:center"  class='text-center text-info'>访问量</h5>
+		<td>
 			<div id="hitTrend" class="graph"></div></td>
-		<td><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
+		<td>
 			<div id="errorTrend" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">
