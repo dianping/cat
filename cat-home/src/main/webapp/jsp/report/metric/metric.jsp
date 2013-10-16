@@ -8,8 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
 <a:body>
-
-<res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
@@ -79,11 +77,11 @@
         </div><!--/span-->
         <div class="span10">
         	<c:if test="${payload.timeRange eq 24 }">
-        		<h3 class='text-red'>说明：图中纵轴数据为10分钟数据之和</h3>
+        		<h4 class='text-red'>说明：图中纵轴数据为10分钟数据之和</h4>
         	</c:if>
         	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
        			<div style="float:left;">
-       				<div  id="${item.title}" class="metricGraph"></div>
+       				<div id="${item.title}" class="metricGraph"></div>
        			</div>
 			</c:forEach>
         </div>

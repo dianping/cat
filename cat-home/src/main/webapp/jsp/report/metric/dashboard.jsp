@@ -7,17 +7,16 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.metric.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
-<res:bean id="res" />
-<res:useCss value='${res.css.local.body_css}' target="head-css" />
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-<res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
-<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <c:choose>
 	<c:when test="${payload.fullScreen}">
+		<res:bean id="res" />
+		<res:useCss value='${res.css.local.body_css}' target="head-css" />
+		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
+		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<table>
 			<tr style="text-align: left">
 				<th>&nbsp;&nbsp;时间段选择: 
@@ -38,6 +37,8 @@
 	</c:when>
 	<c:otherwise>
 	<a:body>
+		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
+		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<div class="report">
 			<table class="header">
 				<tr>
@@ -77,7 +78,6 @@
 	</c:otherwise>
 </c:choose>
 
-
 <script type="text/javascript">
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
@@ -99,7 +99,6 @@
 	.nav-list  li  a{
 		padding:2px 15px;
 	}
-	
 	.nav li  +.nav-header{
 		margin-top:2px;
 	}
