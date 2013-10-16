@@ -1,19 +1,38 @@
 package com.dianping.cat.message.spi.core;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 import junit.framework.Assert;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.junit.Before;
 import org.junit.Test;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodec.Ruler;
 
 public class WaterfallMessageCodecTest extends ComponentTestCase {
-	@Test
-	public void testNotMockMode() throws Exception {
-		WaterfallMessageCodec codec = (WaterfallMessageCodec) lookup(MessageCodec.class, WaterfallMessageCodec.ID);
+	private WaterfallMessageCodec m_codec;
 
-		Assert.assertEquals("WaterfallMessageCodec is in mock mode.", false, codec.isMockMode());
+	private ChannelBuffer m_buf;
+
+	private MessageTree m_tree;
+
+	private MockMessageTreeBuilder m_messageTreeBuilder;
+
+	@Before
+	public void setupTest() throws Exception {
+		setupMockWaterfallMessageCodec();
+
+		m_buf = ChannelBuffers.dynamicBuffer();
+		m_messageTreeBuilder = new MockMessageTreeBuilder();
+		m_tree = m_messageTreeBuilder.build();
 	}
 
 	@Test
@@ -37,5 +56,47 @@ public class WaterfallMessageCodecTest extends ComponentTestCase {
 		Ruler ruler = new Ruler(maxValue);
 
 		Assert.assertEquals(String.format("[%s, %s, %s]", maxValue, expectedUnitNum, expectedUnitStep), ruler.toString());
+	}
+
+	@Test
+	public void testEncode() throws Exception {
+		m_codec.encode(m_tree, m_buf);
+		m_buf.readInt(); // ignore int
+
+		String expectedHtml = loadExpectedHtmlFromFile();
+		String actual = extractActualFromBuffer(m_buf);
+
+		Assert.assertEquals(expectedHtml, actual);
+	}
+
+	@Test
+	public void testEncodeLength() throws Exception {
+		m_codec.encode(m_tree, m_buf);
+		int size = m_buf.readInt(); 
+
+		Assert.assertEquals(size, getLengthFromBuffer(m_buf));
+	}
+
+	private String extractActualFromBuffer(ChannelBuffer buf) {
+		return removeExcapeCharacters(buf.toString(Charset.forName("utf-8")));
+	}
+
+	private int getLengthFromBuffer(ChannelBuffer buf) {
+		return buf.toString(Charset.forName("utf-8")).getBytes().length;
+	}
+
+	private void setupMockWaterfallMessageCodec() throws Exception {
+		m_codec = (WaterfallMessageCodec) lookup(MessageCodec.class, WaterfallMessageCodec.ID);
+	}
+
+	private String loadExpectedHtmlFromFile() throws IOException {
+		InputStream in = WaterfallMessageCodecTest.class.getResourceAsStream("WaterfallMessageCodec.html");
+		String expectedHtml = Files.forIO().readFrom(in, "utf-8");
+
+		return removeExcapeCharacters(expectedHtml);
+	}
+
+	private String removeExcapeCharacters(String html) {
+		return html.replaceAll("\\s*", "");
 	}
 }

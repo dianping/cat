@@ -127,7 +127,7 @@
 				<div class="control-group">
 					<label class="control-label">Test Page URL</label>
 					<div class="controls">
-						<input type="url" name="1" placeholder="http://www.example.com" check-type="required" required-message="URL is required!"  class="input-xlarge">
+						<input type="url" name="1" placeholder="http://www.example.com" class="input-xlarge">
 					</div>
 				</div>
 				<div class="control-group">
