@@ -113,21 +113,21 @@ CREATE TABLE `daily_report_content` (
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `creation_date` timestamp NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='天报表二进制内容';
 
 CREATE TABLE `weekly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `creation_date` timestamp NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='周报表二进制内容';
 
 CREATE TABLE `monthly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `creation_date` timestamp NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='月报表二进制内容';
 
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -320,7 +320,7 @@ CREATE TABLE `abtest` (
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='AB测试内容';
 
 CREATE TABLE `abtest_report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -329,7 +329,7 @@ CREATE TABLE `abtest_report` (
   `content` text,
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='AB测试报表';
 
 CREATE TABLE `abtest_run` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -346,7 +346,7 @@ CREATE TABLE `abtest_run` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   `modified_date` datetime NOT NULL COMMENT '上次修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='AB测试运行实例';
 
 CREATE TABLE `group_strategy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -358,7 +358,7 @@ CREATE TABLE `group_strategy` (
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于记录分组策略';
 
 CREATE TABLE `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
