@@ -10,7 +10,7 @@
 <a:body>
 
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <script type="text/javascript">
@@ -83,7 +83,6 @@
         	</c:if>
         	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
        			<div style="float:left;">
-       				<h5 class="text-center text-error">${item.title}</h5>
        				<div  id="${item.title}" class="metricGraph"></div>
        			</div>
 			</c:forEach>
