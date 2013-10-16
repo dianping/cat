@@ -142,7 +142,7 @@ public class DefaultABTestContext implements ABTestContext {
 							defaultMessageManager.setMetricType(appendMetricType);
 						}
 					}
-
+					
 					break;
 				}
 			}
