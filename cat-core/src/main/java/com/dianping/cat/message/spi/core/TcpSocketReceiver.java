@@ -45,13 +45,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
-	@Inject
-	private MessageCodec m_codec;
-
 	private ChannelFactory m_factory;
-
-	@Inject
-	private MessageHandler m_handler;
 
 	@Inject
 	private String m_host;
@@ -122,22 +116,37 @@ public class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	public void setCodec(MessageCodec codec) {
-		m_codec = codec;
-	}
-
 	public void setQueueSize(int queueSize) {
 		m_queueSize = queueSize;
 	}
 
 	public class DecodeMessageTask implements Task {
+		@Inject
+		private MessageCodec m_codec;
+
+		@Inject
+		private MessageHandler m_handler;
 
 		private int m_index;
 
 		private int m_count;
 
+		private BlockingQueue<ChannelBuffer> m_queue;
+
 		public DecodeMessageTask(int index) {
+			this(index, new LinkedBlockingQueue<ChannelBuffer>());
+		}
+
+		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue) {
 			m_index = index;
+			m_queue = queue;
+		}
+		
+		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue, MessageCodec codec, MessageHandler handler) {
+			m_index = index;
+			m_queue = queue;
+			m_codec = codec;
+			m_handler = handler;
 		}
 
 		@Override
@@ -151,16 +160,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			while (active) {
 				try {
-					ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
-
-					if (buf != null) {
-						m_count++;
-						if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
-							decodeMessage(buf, true);
-						} else {
-							decodeMessage(buf, false);
-						}
-					}
+					handleMessage();
 				} catch (Exception e) {
 					active = false;
 				}
@@ -177,6 +177,19 @@ public class TcpSocketReceiver implements LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		}
+
+		public void handleMessage() throws InterruptedException {
+	      ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
+
+	      if (buf != null) {
+	      	m_count++;
+	      	if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
+	      		decodeMessage(buf, true);
+	      	} else {
+	      		decodeMessage(buf, false);
+	      	}
+	      }
+      }
 
 		private void decodeMessage(ChannelBuffer buf, boolean monitor) {
 			Transaction t = null;
@@ -255,7 +268,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			event.getChannel().close();
 		}
-		
+
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
@@ -277,7 +290,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 				if (flag == 0) {
 					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
-					
+
 					if (m_processCount % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
 						m_logger.info("The server processes message number " + m_processCount);
 					}
@@ -288,7 +301,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	public void startEncoderThreads(int threadSize) {
 		for (int i = 0; i < threadSize; i++) {
-			DecodeMessageTask messageDecoder = new DecodeMessageTask(i);
+			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, m_queue);
 
 			Threads.forGroup("Cat").start(messageDecoder);
 		}

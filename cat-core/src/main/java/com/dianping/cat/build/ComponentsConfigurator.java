@@ -27,6 +27,7 @@ import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.message.spi.core.TcpSocketReceiver.DecodeMessageTask;
 import com.dianping.cat.service.DefaultReportService;
 import com.dianping.cat.service.RemoteModelService;
 import com.dianping.cat.service.ReportService;
@@ -49,7 +50,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
-
+		
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(ClientConfigManager.class));
 
@@ -61,9 +62,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 
 		all.add(C(TcpSocketReceiver.class) //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID)//
-		      .req(ServerConfigManager.class, MessageHandler.class)//
+		      .req(ServerConfigManager.class)//
 		      .req(ServerStatisticManager.class));
+		
+		all.add(C(DecodeMessageTask.class).req(MessageCodec.class,PlainTextMessageCodec.ID)
+				.req(MessageHandler.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 
