@@ -41,6 +41,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private static final long MINUTE = 60 * 1000L;
 
 	private static int QUEUE_SIZE = 300000;
+
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 
@@ -91,7 +92,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
 				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.error("The timestamp of message is out of range, IGNORED! "
-				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " " + tree.getIpAddress());
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
+				      + tree.getIpAddress());
 			}
 		}
 	}
@@ -105,9 +107,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
 			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
-				try{
+				try {
 					analyzer.doCheckpoint(false);
-				}catch(Exception e){
+				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
@@ -202,7 +204,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			for (PeriodTask task : m_tasks) {
 				task.enqueue(tree);
 			}
-			
+
 		}
 
 		public void finish() {
@@ -267,8 +269,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(), df.format(new Date(m_startTime)),
-			      df.format(new Date(m_endTime - 1))));
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
+			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
@@ -341,11 +343,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 						if (value == 0) {
 							// do nothing here
 						} else if (value > 0) {
-							// prepare next period in ahead of 3 minutes
-							startPeriod(value);
+							// prepare next period in ahead of 3 minutes,make it asynchronous
+							Threads.forGroup("Cat").start(new StartTaskThread(value));
 						} else {
-							// last period is over
-							endPeriod(-value);
+							// last period is over,make it asynchronous
+							Threads.forGroup("Cat").start(new EndTaskThread(-value));
 						}
 					} catch (Throwable e) {
 						Cat.logError(e);
@@ -373,6 +375,53 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			m_periods.add(period);
 			period.start();
+		}
+
+		private class StartTaskThread implements Task {
+
+			private long m_startTime;
+
+			public StartTaskThread(long startTime) {
+				m_startTime = startTime;
+			}
+
+			@Override
+			public void run() {
+				startPeriod(m_startTime);
+			}
+
+			@Override
+			public String getName() {
+				return "Start-Consumer-Task";
+			}
+
+			@Override
+			public void shutdown() {
+			}
+		}
+
+		private class EndTaskThread implements Task {
+
+			private long m_startTime;
+
+			public EndTaskThread(long startTime) {
+				m_startTime = startTime;
+			}
+
+			@Override
+			public void run() {
+				endPeriod(m_startTime);
+			}
+
+			@Override
+			public String getName() {
+				return "End-Consumer-Task";
+			}
+
+			@Override
+			public void shutdown() {
+			}
+
 		}
 	}
 }
