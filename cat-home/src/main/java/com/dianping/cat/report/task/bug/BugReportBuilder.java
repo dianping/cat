@@ -135,7 +135,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	private BugReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
+		HistoryBugReportMerger merger = new HistoryBugReportMerger(new BugReport(domain));
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
