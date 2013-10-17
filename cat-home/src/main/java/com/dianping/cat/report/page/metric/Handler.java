@@ -171,7 +171,6 @@ public class Handler implements PageHandler<Context> {
 			}
 			time = time + TimeUtil.ONE_HOUR;
 		}
-
 		display.generateLineCharts();
 		if (abtestID.equals("-1")) {
 			display.generateBaselineChart();
