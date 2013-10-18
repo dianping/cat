@@ -42,7 +42,6 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 			if (config.getShowCount()) {
 				String countKey = key + ":" + COUNT;
 				putKey(datas, values, countKey);
-
 			}
 			if (config.getShowSum()) {
 				String sumKey = key + ":" + SUM;
@@ -126,7 +125,6 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		public void visitMetricReport(MetricReport metricReport) {
 			super.visitMetricReport(metricReport);
 		}
-		
 	}
 
 }

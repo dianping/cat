@@ -43,23 +43,22 @@ public class GraphCreator {
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
 
-	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date start, Date end, String abtestID) {
-		long startLong = start.getTime();
-		long endLong = end.getTime();
-		int totalSize = (int) ((endLong - startLong) / TimeUtil.ONE_MINUTE);
+	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate,
+	      String abtestID) {
+		long start = startDate.getTime();
+		long end = endDate.getTime();
+		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
 		Map<String, double[]> allCurrentValues = new HashMap<String, double[]>();
 		Map<String, double[]> allOneDayValues = new HashMap<String, double[]>();
 		Map<String, double[]> allSevenDayValues = new HashMap<String, double[]>();
 		int index = 0;
 
-		for (; startLong < endLong; startLong += TimeUtil.ONE_HOUR) {
+		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine);
 			List<MetricItemConfig> metricConfigs = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
-
-			MetricReport metricReport = m_metricReportService.query(productLine, new Date(startLong));
-			MetricReport oneDayReport = m_metricReportService.query(productLine, new Date(startLong - TimeUtil.ONE_DAY));
-			MetricReport sevenDayReport = m_metricReportService.query(productLine, new Date(startLong - TimeUtil.ONE_DAY
-			      * 7));
+			MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
+			MetricReport oneDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
+			MetricReport sevenDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY * 7));
 			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs,
 			      abtestID);
 			Map<String, double[]> oneDayValues = m_pruductDataFetcher
@@ -78,24 +77,23 @@ public class GraphCreator {
 		allSevenDayValues = m_dataExtractor.extract(allSevenDayValues);
 
 		int step = m_dataExtractor.getStep();
-
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
+
 		for (Entry<String, double[]> entry : allCurrentValues.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
 			lineChart.setTitle(findTitle(key));
-			lineChart.setStart(start);
+			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
-			double[] baselines = queryBaseline(key, start, end);
+			double[] baselines = queryBaseline(key, startDate, endDate);
 
 			lineChart.add(Chinese.CURRENT_VALUE, allCurrentValues.get(key));
 			lineChart.add(Chinese.BASELINE_VALUE, m_dataExtractor.extract(baselines));
 			lineChart.add(Chinese.ONEDAY_VALUE, allOneDayValues.get(key));
 			lineChart.add(Chinese.ONEWEEK_VALUE, allSevenDayValues.get(key));
-
 			charts.put(key, lineChart);
 		}
 		return charts;
@@ -158,8 +156,8 @@ public class GraphCreator {
 				all.put(key, result);
 			}
 			if (value != null) {
-
 				int length = value.length;
+
 				for (int i = 0; i < length; i++) {
 					result[index * 60 + i] = value[i];
 				}
