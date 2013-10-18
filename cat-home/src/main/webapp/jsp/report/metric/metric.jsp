@@ -54,7 +54,6 @@
 			</th>
 		</tr>
 	</table>
-	<div class="container-fluid">
       <div class="row-fluid">
         <div class="span2">
           <div class="well sidebar-nav">
@@ -81,7 +80,6 @@
        				<div id="${item.title}" class="metricGraph"></div>
        			</div>
 			</c:forEach>
-        </div>
 </div>
 </a:body>
 <style type="text/css">

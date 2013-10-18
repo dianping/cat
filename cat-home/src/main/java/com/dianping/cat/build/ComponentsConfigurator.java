@@ -19,6 +19,7 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -29,6 +30,13 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
+import com.dianping.cat.report.page.metric.chart.CachedMetricReportService;
+import com.dianping.cat.report.page.metric.chart.DataExtractor;
+import com.dianping.cat.report.page.metric.chart.GraphCreator;
+import com.dianping.cat.report.page.metric.chart.MetricDataFetcher;
+import com.dianping.cat.report.page.metric.chart.impl.CachedMetricReportServiceImpl;
+import com.dianping.cat.report.page.metric.chart.impl.DataExtractorImpl;
+import com.dianping.cat.report.page.metric.chart.impl.MetricDataFetcherImpl;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
@@ -64,11 +72,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
-		
+
 		all.add(C(ExceptionThresholdConfigManager.class).req(ConfigDao.class));
-		
+
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
-		
+
 		all.add(C(UtilizationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
@@ -81,6 +89,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
+		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class).req(ModelService.class, "metric")
+		      .req(ReportService.class));
+
+		all.add(C(DataExtractor.class, DataExtractorImpl.class));
+
+		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
+
+		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
+		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class));
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
