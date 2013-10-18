@@ -8,14 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.metric.MetricType;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class MetricDisplay extends BaseVisitor {
 
@@ -23,21 +30,25 @@ public class MetricDisplay extends BaseVisitor {
 
 	private Map<Integer, com.dianping.cat.home.dal.abtest.Abtest> m_abtests = new HashMap<Integer, com.dianping.cat.home.dal.abtest.Abtest>();
 
-	private Date m_start;
-
 	private BaselineService m_baselineService;
+
+	private DataExtractor m_dataExtractor;
+
+	private Date m_start;
 
 	private boolean m_isDashboard;
 
-	private MetricDisplayMerger m_displayMerger;
-
 	private int m_timeRange;
 
-	private int m_pointNumber;
-
-	private int m_realPointNumber;
-
 	private int m_interval = 1;
+
+	private String m_abtest;
+
+	private String m_product;
+
+	private static final int MIN_POINT_NUMBER = 60;
+
+	private static final int MAX_POINT_NUMBER = 180;
 
 	private static final String SUM = MetricType.SUM.name();
 
@@ -45,19 +56,21 @@ public class MetricDisplay extends BaseVisitor {
 
 	private static final String AVG = MetricType.AVG.name();
 
-	private static final int HOUR = 24;
-
-	private static final int MINUTE = 60;
-
 	private static final String METRIC_STRING = "metric";
 
-	public MetricDisplayMerger getDisplayMerger() {
-		return m_displayMerger;
-	}
+	private ReportService m_reportService;
 
-	public void setDisplayMerger(MetricDisplayMerger displayMerger) {
-		m_displayMerger = displayMerger;
-	}
+	private ModelService<MetricReport> m_service;
+
+	private final Map<String, MetricReport> m_metricReportMap = new LinkedHashMap<String, MetricReport>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<String, MetricReport> eldest) {
+			return size() > 1000;
+		}
+	};
 
 	private boolean showAvg(MetricItemConfig config) {
 		if (m_isDashboard) {
@@ -83,18 +96,61 @@ public class MetricDisplay extends BaseVisitor {
 		}
 	}
 
-	public MetricDisplay(String abtest, Date start, boolean isDashboard, int timeRange) {
-		int minute = (int) (System.currentTimeMillis() % TimeUtil.ONE_HOUR / TimeUtil.ONE_MINUTE);
+	private MetricReport getReportFromDB(String product, long date) {
+		String key = product + date;
+		MetricReport result = m_metricReportMap.get(key);
+		if (result == null) {
+			Date start = new Date(date);
+			Date end = new Date(date + TimeUtil.ONE_HOUR);
+			try {
+				result = m_reportService.queryMetricReport(product, start, end);
+				m_metricReportMap.put(key, result);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return result;
+	}
+
+	private MetricReport getReport(ModelPeriod period, String product, long date) {
+		if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
+			ModelRequest request = new ModelRequest(product, date);
+			if (m_service.isEligable(request)) {
+				ModelResponse<MetricReport> response = m_service.invoke(request);
+				MetricReport report = response.getModel();
+				return report;
+			} else {
+				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
+			}
+		} else {
+			return getReportFromDB(product, date);
+		}
+	}
+
+	public MetricDisplay(String product, String abtest, Date start, boolean isDashboard, int timeRange) {
+		m_product = product;
 		m_isDashboard = isDashboard;
 		m_start = start;
 		m_timeRange = timeRange;
-		if (m_timeRange == 24) {
-			m_interval = 6;
-		} else {
-			m_interval = 1;
+		m_abtest = abtest;
+		m_interval = intervalCalculate(m_timeRange);
+		m_dataExtractor = new DataExtractor(m_timeRange, m_interval);
+	}
+
+	private int intervalCalculate(int timeRange) {
+		int[] values = { 1, 2, 3, 6, 10, 20, 30, 60 };
+		for (int value : values) {
+			int pm = timeRange * 60 / value;
+			if (pm >= MIN_POINT_NUMBER && pm < MAX_POINT_NUMBER) {
+				return value;
+			}
 		}
-		m_pointNumber = m_timeRange * MINUTE / m_interval;
-		m_realPointNumber = (m_timeRange * MINUTE - 60 + minute) / m_interval;
+		int pm = timeRange * 60 / 60;
+		if (pm > MAX_POINT_NUMBER) {
+			return 60;
+		} else {
+			return 1;
+		}
 	}
 
 	public void initializeLineCharts(List<MetricItemConfig> configs) {
@@ -117,87 +173,99 @@ public class MetricDisplay extends BaseVisitor {
 
 	private LineChart createLineChart(String title) {
 		LineChart lineChart = new LineChart();
+		int pointNumber = m_timeRange * 60 / m_interval;
+
 		lineChart.setTitle(title);
 		lineChart.setStart(m_start);
-		lineChart.setSize(m_pointNumber);
+		lineChart.setSize(pointNumber);
 		lineChart.setStep(TimeUtil.ONE_MINUTE * m_interval);
 		return lineChart;
 	}
 
-	public void generateBaselineChart() {
+	public void generateAllCharts() {
+		long startTime = m_start.getTime();
+		for (MetricDate metricDate : MetricDate.values()) {
+			MetricReportMerger merger = new MetricReportMerger(m_abtest, metricDate.getTitle());
+			long time = startTime + metricDate.getIndex() * TimeUtil.ONE_DAY;
+			for (int index = 0; index < m_timeRange; index++) {
+				ModelPeriod period = ModelPeriod.getByTime(time);
+				MetricReport report = getReport(period, m_product, time);
+
+				if (report != null) {
+					merger.visitMetricReport(index, report);
+				}
+				time = time + TimeUtil.ONE_HOUR;
+			}
+			generateLineCharts(merger);
+			if (metricDate.equals(MetricDate.CURRENT) && m_abtest.equals("-1")) {
+				generateBaselineChart(merger);
+			}
+		}
+
+	}
+
+	public void generateBaselineChart(MetricReportMerger merger) {
+		long time = m_start.getTime();
+
+		for (int index = 0; index < m_timeRange; index++) {
+			ModelPeriod period = ModelPeriod.getByTime(time);
+			MetricReport report = getReport(period, m_product, time);
+
+			if (report != null) {
+				merger.visitMetricReport(index, report);
+			}
+			time = time + TimeUtil.ONE_HOUR;
+		}
+
 		for (String key : m_lineCharts.keySet()) {
 			LineChart lineChart = m_lineCharts.get(key);
+
 			Date yesterday = TaskHelper.todayZero(m_start);
-			boolean isAvg = key.toUpperCase().endsWith(AVG);
-			int index = (int) ((m_start.getTime() + 8 * TimeUtil.ONE_HOUR) % TimeUtil.ONE_DAY / TimeUtil.ONE_MINUTE);
+			int offset = (int) ((m_start.getTime() + 8 * TimeUtil.ONE_HOUR) % TimeUtil.ONE_DAY / TimeUtil.ONE_MINUTE);
 			double[] yesterdayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, key, yesterday);
 			Date today = TaskHelper.tomorrowZero(m_start);
 			double[] todayBaseline = m_baselineService.queryDailyBaseline(METRIC_STRING, key, today);
-			double[] value = new double[m_realPointNumber];
-			double[] day = yesterdayBaseline;
-			for (int i = 0; i < m_realPointNumber; i++) {
-				int j = (index + i * m_interval) % (HOUR * MINUTE);
-				if (j == 0 && index != 0) {
-					day = todayBaseline;
-				}
-				if (day == null) {
-					continue;
-				}
-				if (isAvg) {
-					value[i] = avgOfArray(day, i * m_interval);
-				} else {
-					value[i] = sumOfArray(day, i * m_interval);
-				}
+			List<double[]> datas = new ArrayList<double[]>();
+			if (yesterdayBaseline != null) {
+				datas.add(yesterdayBaseline);
+			} else if (todayBaseline != null) {
+				datas.add(todayBaseline);
 			}
+
+			double[] value = m_dataExtractor.extract(datas, offset);
 			lineChart.addSubTitle("Baseline");
 			lineChart.addValue(value);
 		}
 	}
 
-	public void generateLineCharts() {
-		Map<String, Map<String, double[][]>> metricDatas = m_displayMerger.getMetricStatistic();
+	public void generateLineCharts(MetricReportMerger merger) {
+		Map<String, Map<String, double[][]>> metricDatas = merger.getMetricStatistic();
 
 		for (Entry<String, Map<String, double[][]>> entry : metricDatas.entrySet()) {
 			String key = entry.getKey();
 			Map<String, double[][]> value = entry.getValue();
 			LineChart lineChart = m_lineCharts.get(key);
-			List<double[]> resultValues = new ArrayList<double[]>();
-			List<String> subTitles = new ArrayList<String>();
-			boolean isAvg = key.toUpperCase().endsWith(AVG);
 
 			if (lineChart == null) {
 				lineChart = createLineChart(key);
 				m_lineCharts.put(key, lineChart);
 			}
 
-			lineChart.setSubTitles(subTitles);
-			lineChart.setValues(resultValues);
-
 			for (Entry<String, double[][]> metricItem : value.entrySet()) {
 
 				String subTitle = metricItem.getKey();
 				double[][] metricItemData = metricItem.getValue();
-				double[] resultValue = new double[m_realPointNumber];
-
-				subTitles.add(subTitle);
-				resultValues.add(resultValue);
-
-				for (int hour = 0; hour < metricItemData.length; hour++) {
-					for (int i = 0; i < MINUTE / m_interval; i++) {
-						int index = hour * MINUTE / m_interval + i;
-						if (metricItemData[hour] == null) {
-							continue;
-						}
-						if (index >= m_realPointNumber) {
-							break;
-						}
-						if (isAvg) {
-							resultValue[index] = avgOfArray(metricItemData[hour], i * m_interval);
-						} else {
-							resultValue[index] = sumOfArray(metricItemData[hour], i * m_interval);
-						}
+				List<double[]> datas = new ArrayList<double[]>();
+				for (double[] data : metricItemData) {
+					if (data == null) {
+						data = new double[60];
 					}
+					datas.add(data);
 				}
+
+				double[] resultValue = m_dataExtractor.extract(datas, 0);
+				lineChart.addSubTitle(subTitle);
+				lineChart.addValue(resultValue);
 			}
 
 		}
@@ -216,24 +284,14 @@ public class MetricDisplay extends BaseVisitor {
 		return this;
 	}
 
-	private double avgOfArray(double[] values, int j) {
-		double result = 0;
-		for (int i = j; i < j + m_interval; i++) {
-			if (values[i] >= 0) {
-				result += values[i];
-			}
-		}
-		return result / m_interval;
+	public MetricDisplay setReportService(ReportService m_reportService) {
+		this.m_reportService = m_reportService;
+		return this;
 	}
 
-	private double sumOfArray(double[] values, int j) {
-		double result = 0;
-		for (int i = j; i < j + m_interval; i++) {
-			if (values[i] >= 0) {
-				result += values[i];
-			}
-		}
-		return result;
+	public MetricDisplay setService(ModelService<MetricReport> m_service) {
+		this.m_service = m_service;
+		return this;
 	}
 
 }
