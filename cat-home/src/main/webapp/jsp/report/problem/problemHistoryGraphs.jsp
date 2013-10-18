@@ -6,12 +6,12 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.problem.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.problem.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
-<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/highcharts.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <style type="text/css">
 .graph {
 	width: 550px;
-	height: 250px;
+	height: 350px;
 	margin: 4px auto;
 }
 </style>

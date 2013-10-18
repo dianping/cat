@@ -10,7 +10,7 @@
 <a:historyReport title="HeartBeat History Report">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <br>
 <table class="machines">
@@ -46,33 +46,33 @@
 	<th colspan="3" style="text-align:left"><a  data-status="thread" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=thread">JVM Thread Info</a></th>
 </tr>
 <tr>
-	<td colspan="3"><iframe id="thread" style="display:none;" width="100%" height="260px"></iframe></td>
+	<td colspan="3"><iframe id="thread" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
 
 <tr>
 	<th colspan="3" style="text-align:left"><a  data-status="system" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=system">System Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(New Gc,Old Gc,System Load)</th>
 </tr>
 <tr>
-	<td colspan="3"><iframe id="system" style="display:none;" width="100%" height="260px"></iframe></td>
+	<td colspan="3"><iframe id="system" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
 <tr>
 	<th colspan="3" style="text-align:left"><a  data-status="memory" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=memory">Memory Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(Memory Free,Heap Usage,None Heap Usage)</th>
 </tr>
 <tr>
-	<td colspan="3"><iframe id="memory" style="display:none;" width="100%" height="260px"></iframe></td>
+	<td colspan="3"><iframe id="memory" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
 <tr>
 	<th colspan="3" style="text-align:left"><a  data-status="disk" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=disk">Disk Info</a></th>
 </tr>
 <tr>
-	<td colspan="3"><iframe id="disk" style="display:none;" width="100%" height="260px"></iframe></td>
+	<td colspan="3"><iframe id="disk" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
 
 <tr>
 	<th colspan="3" style="text-align:left"><a  data-status="cat" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=cat">Cat Info</a></th>
 </tr>
 <tr>
-	<td colspan="3"><iframe id="cat" style="display:none;" width="100%" height="260px"></iframe></td>
+	<td colspan="3"><iframe id="cat" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
 </table>
 	<res:useJs value="${res.js.local['heartbeatHistory_js']}" target="head-buttom"/>

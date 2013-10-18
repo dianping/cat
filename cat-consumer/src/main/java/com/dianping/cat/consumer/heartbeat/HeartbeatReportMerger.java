@@ -53,6 +53,5 @@ public class HeartbeatReportMerger extends DefaultMerger {
 	   old.setThreadCount(period.getThreadCount());
 	   old.setTotalStartedCount(period.getTotalStartedCount());
    }
-	
 
 }

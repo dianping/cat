@@ -206,13 +206,13 @@ a.abtest-heartbeat {
 
 .graph {
 	width: 450px;
-	height: 200px;
+	height: 300px;
 	margin: 4px auto;
 }
 
 .metricGraph {
 	width: 530px;
-	height: 250px;
+	height: 400px;
 }
 
 .pieChart {

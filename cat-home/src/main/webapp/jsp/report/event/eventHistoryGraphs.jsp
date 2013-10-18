@@ -5,21 +5,21 @@
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.event.Context"	scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.event.Payload"	scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.event.Model" scope="request" />
-<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/highcharts.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <style type="text/css">
 .graph {
 	width: 550px;
-	height: 250px;
+	height: 350px;
 	margin: 4px auto;
 }
 </style>
 <table>
 	<tr>
-		<td><h5 style="text-align:center" class='text-center text-info'>访问量</h5>
+		<td>
 		<div id="hitTrend" class="graph"></div></td>
-		<td><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
+		<td>
 		<div id="failureTrend" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">
