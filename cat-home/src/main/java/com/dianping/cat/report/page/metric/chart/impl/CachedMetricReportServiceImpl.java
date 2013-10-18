@@ -35,6 +35,22 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 		}
 	};
 
+	private MetricReport getReportFromDB(String product, long date) {
+		String key = product + date;
+		MetricReport result = m_metricReportMap.get(key);
+		if (result == null) {
+			Date start = new Date(date);
+			Date end = new Date(date + TimeUtil.ONE_HOUR);
+			try {
+				result = m_reportService.queryMetricReport(product, start, end);
+				m_metricReportMap.put(key, result);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public MetricReport query(String product, Date start) {
 		long time = start.getTime();
@@ -52,22 +68,6 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 		} else {
 			return getReportFromDB(product, time);
 		}
-	}
-
-	private MetricReport getReportFromDB(String product, long date) {
-		String key = product + date;
-		MetricReport result = m_metricReportMap.get(key);
-		if (result == null) {
-			Date start = new Date(date);
-			Date end = new Date(date + TimeUtil.ONE_HOUR);
-			try {
-				result = m_reportService.queryMetricReport(product, start, end);
-				m_metricReportMap.put(key, result);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		return result;
 	}
 
 }

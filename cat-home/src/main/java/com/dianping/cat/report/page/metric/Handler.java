@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
@@ -51,8 +49,6 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 
 		normalize(model, payload);
-
-		Collection<ProductLine> productLines = m_productLineConfigManager.queryProductLines().values();
 		long date = payload.getDate();
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
@@ -60,16 +56,18 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.build(payload.getProduct(), start, end, payload.getTest());
+			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end,
+			      payload.getTest());
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		case DASHBOARD:
-			Map<String, LineChart> allCharts = m_graphCreator.build(true, start, end, payload.getTest());
+			Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end, payload.getTest());
+			
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
 		}
-		model.setProductLines(productLines);
+		model.setProductLines(m_productLineConfigManager.queryProductLines().values());
 		m_jspViewer.view(ctx, model);
 	}
 
