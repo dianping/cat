@@ -144,7 +144,6 @@ CREATE TABLE `businessReport` (
   KEY `IX_Period` (`period`)
 ) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
-
 CREATE TABLE `sqlreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(50) NOT NULL,
@@ -167,7 +166,6 @@ CREATE TABLE `sqlreport` (
   `failure_over_time` varchar(512) NOT NULL COMMENT '在一个小时内的错误分布',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存放Hadoop处理的SQL报表信息';
-
 
 CREATE TABLE `sqltable` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
