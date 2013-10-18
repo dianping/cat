@@ -92,25 +92,18 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private MetricDisplay buildProductLineMetrics(String product,
-			Payload payload, boolean isDashboard) {
+	private MetricDisplay buildProductLineMetrics(String product, Payload payload, boolean isDashboard) {
 		long date = payload.getDate();
 		String abtestID = payload.getTest();
 		int timeRange = payload.getTimeRange();
 		Date startTime = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
-		List<String> domains = m_productLineConfigManager
-				.queryProductLineDomains(product);
-		List<MetricItemConfig> metricConfigs = m_configManager
-				.queryMetricItemConfigs(new HashSet<String>(domains));
-		MetricDisplay display = new MetricDisplay(product, abtestID, startTime,
-				isDashboard, timeRange);
+		List<String> domains = m_productLineConfigManager.queryProductLineDomains(product);
+		List<MetricItemConfig> metricConfigs = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		MetricDisplay display = new MetricDisplay(product, abtestID, startTime, isDashboard, timeRange);
 
 		display.initializeLineCharts(metricConfigs);
-
 		display.setBaselineService(m_baselineService).setReportService(m_reportService).setService(m_service);
-
 		display.generateAllCharts();
-		
 		return display;
 	}
 

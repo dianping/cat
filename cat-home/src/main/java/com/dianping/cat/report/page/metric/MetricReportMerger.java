@@ -15,7 +15,7 @@ public class MetricReportMerger extends BaseVisitor {
 	private Map<String, Map<String, double[][]>> m_metricStatistic = new LinkedHashMap<String, Map<String, double[][]>>();
 
 	private String m_abtest;
-	
+
 	private String m_subtitle;
 
 	private String m_metricKey;
@@ -30,13 +30,12 @@ public class MetricReportMerger extends BaseVisitor {
 
 	private static final String AVG = MetricType.AVG.name();
 
-	public MetricReportMerger(String abtest,String subtitle) {
+	public MetricReportMerger(String abtest, String subtitle) {
 		m_abtest = abtest;
 		m_subtitle = subtitle;
 	}
 
-	private Map<String, double[][]> findOrCreateStatistic(String type,
-			String metricKey, String computeType) {
+	private Map<String, double[][]> findOrCreateStatistic(String type, String metricKey, String computeType) {
 		String key = metricKey + ":" + computeType;
 		Map<String, double[][]> statisticItem = m_metricStatistic.get(key);
 
@@ -95,24 +94,21 @@ public class MetricReportMerger extends BaseVisitor {
 			count[index] = point.getCount();
 		}
 
-		Map<String, double[][]> sumLines = findOrCreateStatistic(
-				m_currentComputeType, m_metricKey, SUM);
+		Map<String, double[][]> sumLines = findOrCreateStatistic(m_currentComputeType, m_metricKey, SUM);
 
 		if (sumLines != null) {
 			double[][] sumLine = findOrCreateLine(sumLines, id);
 			sumLine[m_index] = sum;
 		}
 
-		Map<String, double[][]> countLines = findOrCreateStatistic(
-				m_currentComputeType, m_metricKey, COUNT);
+		Map<String, double[][]> countLines = findOrCreateStatistic(m_currentComputeType, m_metricKey, COUNT);
 
 		if (countLines != null) {
 			double[][] countLine = findOrCreateLine(countLines, id);
 			countLine[m_index] = count;
 		}
 
-		Map<String, double[][]> avgLines = findOrCreateStatistic(
-				m_currentComputeType, m_metricKey, AVG);
+		Map<String, double[][]> avgLines = findOrCreateStatistic(m_currentComputeType, m_metricKey, AVG);
 
 		if (avgLines != null) {
 			double[][] avgLine = findOrCreateLine(avgLines, id);

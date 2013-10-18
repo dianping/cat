@@ -20,7 +20,7 @@ public class DataExtractor {
 		int pointNumber = (m_timeRange * MINUTE) / m_interval;
 		double[] result = new double[pointNumber];
 
-		if(datas == null){
+		if (datas == null) {
 			return result;
 		}
 		int size = datas.size();
@@ -35,7 +35,7 @@ public class DataExtractor {
 				j++;
 				if (j >= size) {
 					return result;
-				} 
+				}
 				hourData = datas.get(j);
 				if (hourData == null) {
 					length = 0;
@@ -61,15 +61,15 @@ public class DataExtractor {
 		return result / interval;
 	}
 
-//	private double sumOfArray(double[] values, int index, int interval) {
-//
-//		double result = 0;
-//
-//		for (int i = index; i < index + interval; i++) {
-//			if (values[i] >= 0) {
-//				result += values[i];
-//			}
-//		}
-//		return result;
-//	}
+	// private double sumOfArray(double[] values, int index, int interval) {
+	//
+	// double result = 0;
+	//
+	// for (int i = index; i < index + interval; i++) {
+	// if (values[i] >= 0) {
+	// result += values[i];
+	// }
+	// }
+	// return result;
+	// }
 }

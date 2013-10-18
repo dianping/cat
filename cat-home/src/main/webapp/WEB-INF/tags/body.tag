@@ -21,7 +21,7 @@
 	<div class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container-fluid">
-       	  <a class="brand" href="#">CAT</a>
+       	  <a class="brand" href="/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CAT</a>
           <div class="nav-collapse collapse">
           	<div class="nav  pull-right">
           		<c:forEach var="page" items="${navBar.systemPages}">

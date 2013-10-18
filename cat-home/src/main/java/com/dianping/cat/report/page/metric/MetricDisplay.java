@@ -228,10 +228,10 @@ public class MetricDisplay extends BaseVisitor {
 			List<double[]> datas = new ArrayList<double[]>();
 			if (yesterdayBaseline != null) {
 				datas.add(yesterdayBaseline);
-			} else if(todayBaseline != null){
+			} else if (todayBaseline != null) {
 				datas.add(todayBaseline);
 			}
-			
+
 			double[] value = m_dataExtractor.extract(datas, offset);
 			lineChart.addSubTitle("Baseline");
 			lineChart.addValue(value);
@@ -257,7 +257,7 @@ public class MetricDisplay extends BaseVisitor {
 				double[][] metricItemData = metricItem.getValue();
 				List<double[]> datas = new ArrayList<double[]>();
 				for (double[] data : metricItemData) {
-					if(data == null){
+					if (data == null) {
 						data = new double[60];
 					}
 					datas.add(data);

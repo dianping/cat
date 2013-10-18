@@ -75,6 +75,7 @@ function graphLineChart(container,data){
 	        useUTC: false
 	    }
 	});	
+	var _data =  parseLineData(data);
 	$(container).highcharts({
          chart: {
              type: 'spline'
@@ -123,7 +124,7 @@ function graphLineChart(container,data){
                          Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +': '+ this.y;
              }
          },
-         series: parseLineData(data)
+         series: _data
      });
 }
 

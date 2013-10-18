@@ -8,8 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
 <a:body>
-
-<res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
@@ -80,7 +78,7 @@
         <div class="span10">
         	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
        			<div style="float:left;">
-       				<div  id="${item.title}" class="metricGraph"></div>
+       				<div id="${item.title}" class="metricGraph"></div>
        			</div>
 			</c:forEach>
         </div>

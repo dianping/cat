@@ -9,8 +9,8 @@ public enum Range {
 
 	NINE("9小时", 9), 
 	
-	THELVE("12小时", 12), 
-	
+	THELVE("12小时", 12),
+
 	ONE_DAY("24小时", 24), ;
 
 	private Range(String title, int duration) {

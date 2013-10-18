@@ -73,10 +73,11 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildHistoryGraph(Model model, Payload payload) {
-		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), new Date(payload.getDate()),
-		      new Date(payload.getDate() + TimeUtil.ONE_HOUR));
-		model.setReport(report);
+		Date start = new Date(payload.getDate() + 23 * TimeUtil.ONE_HOUR);
+		Date end = new Date(payload.getDate() + 24 * TimeUtil.ONE_HOUR);
+		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
 
+		model.setReport(report);
 		if (StringUtil.isEmpty(payload.getIpAddress()) || Constants.ALL.equals(payload.getIpAddress())) {
 			String ipAddress = getIpAddress(report, payload);
 
@@ -104,8 +105,8 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
 			if (period.isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date), new Date(date
-				      + TimeUtil.ONE_HOUR), HeartbeatAnalyzer.ID);
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date),
+				      new Date(date + TimeUtil.ONE_HOUR), HeartbeatAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
