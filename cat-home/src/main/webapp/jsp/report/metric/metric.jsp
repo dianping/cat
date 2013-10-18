@@ -78,9 +78,6 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span10">
-        	<c:if test="${payload.timeRange eq 24 }">
-        		<h3 class='text-red'>说明：图中纵轴数据为10分钟数据之和</h3>
-        	</c:if>
         	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
        			<div style="float:left;">
        				<div  id="${item.title}" class="metricGraph"></div>
