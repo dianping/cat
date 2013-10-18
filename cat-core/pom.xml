@@ -65,7 +65,9 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,</manifest>
+                     <manifest>
+                        ${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
+                     </manifest>
                   </configuration>
                </execution>
                <execution>
@@ -75,9 +77,12 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml, <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,]]></manifest>
+                     <manifest>
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+						${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml, 
+						${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+						${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
+					 </manifest>
                   </configuration>
                </execution>
                <execution>
