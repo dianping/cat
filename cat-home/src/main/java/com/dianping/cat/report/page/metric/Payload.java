@@ -39,13 +39,45 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public int getFrequency() {
+		return m_frequency;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
 	}
 
+	public String getProduct() {
+		return m_product;
+	}
+
+	public String getTest() {
+		return m_test;
+	}
+
+	public int getTimeRange() {
+		return m_timeRange;
+	}
+
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.METRIC);
+	}
+
+	public void setFrequency(int frequency) {
+		m_frequency = frequency;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
 	}
 
 	@Override
@@ -53,48 +85,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
 	}
 
-	public String getProduct() {
-		return m_product;
-	}
-
 	public void setProduct(String product) {
 		m_product = product;
-	}
-
-	public String getTest() {
-		return m_test;
-	}
-
-	public void setTest(String test) {
-		m_test = test;
-	}
-
-	public int getTimeRange() {
-		return m_timeRange;
-	}
-
-	public int getFrequency() {
-		return m_frequency;
-	}
-
-	public void setFrequency(int frequency) {
-		m_frequency = frequency;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
 	}
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
 	}
 
-	public boolean isFullScreen() {
-		return m_fullScreen;
-	}
-
-	public void setFullScreen(boolean fullScreen) {
-		m_fullScreen = fullScreen;
+	public void setTest(String test) {
+		m_test = test;
 	}
 
 	@Override

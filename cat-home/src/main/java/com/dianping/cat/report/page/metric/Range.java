@@ -13,22 +13,14 @@ public enum Range {
 
 	ONE_DAY("24小时", 24), ;
 
+	private String m_title;
+
+	private int m_duration;
+
 	private Range(String title, int duration) {
 		m_title = title;
 		m_duration = duration;
 	}
-
-	public String getTitle() {
-		return m_title;
-	}
-
-	public int getDuration() {
-		return m_duration;
-	}
-
-	private String m_title;
-
-	private int m_duration;
 
 	public static Range getByTitle(String title, Range defaultRange) {
 		for (Range range : Range.values()) {
@@ -37,5 +29,13 @@ public enum Range {
 			}
 		}
 		return defaultRange;
+	}
+
+	public int getDuration() {
+		return m_duration;
+	}
+
+	public String getTitle() {
+		return m_title;
 	}
 }
