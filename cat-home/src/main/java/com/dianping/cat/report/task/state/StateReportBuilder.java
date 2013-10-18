@@ -6,7 +6,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
@@ -35,7 +34,7 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
-		return m_reportService.insertDailyReport(report,binaryContent);
+		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
 	@Override
@@ -54,9 +53,9 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
-		report.setType(1);		
+		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
-		return m_reportService.insertMonthlyReport(report,binaryContent);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -75,13 +74,13 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
-		return m_reportService.insertWeeklyReport(report,binaryContent);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private StateReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
+		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport(domain));
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
@@ -94,7 +93,7 @@ public class StateReportBuilder implements ReportTaskBuilder {
 			}
 		}
 		StateReport stateReport = merger.getStateReport();
-		
+
 		stateReport.setStartTime(start);
 		stateReport.setEndTime(end);
 		return stateReport;
@@ -103,7 +102,7 @@ public class StateReportBuilder implements ReportTaskBuilder {
 	private StateReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
-		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
+		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport(domain));
 
 		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
 			Date date = new Date(startTime);
@@ -113,7 +112,7 @@ public class StateReportBuilder implements ReportTaskBuilder {
 			reportModel.accept(merger);
 		}
 		StateReport stateReport = merger.getStateReport();
-	
+
 		stateReport.setStartTime(period);
 		stateReport.setEndTime(endDate);
 		return stateReport;

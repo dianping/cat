@@ -12,7 +12,7 @@
 <style type="text/css">
 .graph {
 	width: 450px;
-	height: 250px;
+	height: 350px;
 	margin: 4px auto;
 }
 </style>
