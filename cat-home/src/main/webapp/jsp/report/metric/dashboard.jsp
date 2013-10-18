@@ -7,7 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.metric.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
-
 <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />

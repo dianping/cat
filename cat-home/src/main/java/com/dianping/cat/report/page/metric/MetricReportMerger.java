@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.metric;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,21 +10,17 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.report.task.metric.MetricType;
-import com.dianping.cat.system.page.abtest.service.ABTestService;
 
-public class MetricDisplayMerger extends BaseVisitor {
-
+public class MetricReportMerger extends BaseVisitor {
 	private Map<String, Map<String, double[][]>> m_metricStatistic = new LinkedHashMap<String, Map<String, double[][]>>();
 
-	private Map<Integer, com.dianping.cat.home.dal.abtest.Abtest> m_abtests = new HashMap<Integer, com.dianping.cat.home.dal.abtest.Abtest>();
-
 	private String m_abtest;
+
+	private String m_subtitle;
 
 	private String m_metricKey;
 
 	private String m_currentComputeType;
-
-	private ABTestService m_abtestService;
 
 	private int m_index;
 
@@ -35,18 +30,16 @@ public class MetricDisplayMerger extends BaseVisitor {
 
 	private static final String AVG = MetricType.AVG.name();
 
-	private boolean m_isDashboard;
-	
-	public MetricDisplayMerger(String abtest, boolean isDashboard) {
+	public MetricReportMerger(String abtest, String subtitle) {
 		m_abtest = abtest;
-		m_isDashboard = isDashboard;
+		m_subtitle = subtitle;
 	}
 
 	private Map<String, double[][]> findOrCreateStatistic(String type, String metricKey, String computeType) {
 		String key = metricKey + ":" + computeType;
 		Map<String, double[][]> statisticItem = m_metricStatistic.get(key);
 
-		if (statisticItem == null && !m_isDashboard) {
+		if (statisticItem == null) {
 			if (computeType.equals(COUNT)) {
 				if (type.equals("C") || type.equals("S,C")) {
 					statisticItem = createMetricStatistic(key);
@@ -66,11 +59,6 @@ public class MetricDisplayMerger extends BaseVisitor {
 		}
 		return statisticItem;
 	}
-	
-	public MetricDisplayMerger setAbtestService(ABTestService service) {
-		m_abtestService = service;
-		return this;
-	}
 
 	private Map<String, double[][]> createMetricStatistic(String key) {
 		Map<String, double[][]> value = new LinkedHashMap<String, double[][]>();
@@ -78,27 +66,9 @@ public class MetricDisplayMerger extends BaseVisitor {
 		return value;
 	}
 
-	private com.dianping.cat.home.dal.abtest.Abtest findAbTest(int id) {
-		com.dianping.cat.home.dal.abtest.Abtest abtest = null;
-		if (id >= 0) {
-			abtest = m_abtestService.getABTestByRunId(id);
-		}
-		if (abtest == null) {
-			abtest = new com.dianping.cat.home.dal.abtest.Abtest();
-
-			abtest.setId(id);
-			abtest.setName(String.valueOf(id));
-		}
-		return abtest;
-	}
-
 	@Override
 	public void visitAbtest(Abtest abtest) {
 		String abtestId = abtest.getRunId();
-		int id = Integer.parseInt(abtestId);
-		com.dianping.cat.home.dal.abtest.Abtest temp = findAbTest(id);
-
-		m_abtests.put(id, temp);
 		if (m_abtest.equals(abtestId)) {
 			super.visitAbtest(abtest);
 		}
@@ -109,7 +79,7 @@ public class MetricDisplayMerger extends BaseVisitor {
 		String id = group.getName();
 
 		if ("".equals(id)) {
-			id = "Current";
+			id = m_subtitle;
 		}
 
 		double[] sum = new double[60];
