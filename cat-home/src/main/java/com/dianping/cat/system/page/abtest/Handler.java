@@ -47,6 +47,7 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvice;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
+import com.dianping.cat.system.page.abtest.conditions.ScriptProvider;
 import com.dianping.cat.system.page.abtest.conditions.URLScriptProvider;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 import com.google.gson.Gson;
@@ -170,7 +171,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("scriptFragement.ftl");
+			Template t = m_configuration.getTemplate(ScriptProvider.m_fileName);
 
 			t.process(root, sw);
 		} catch (Exception e) {

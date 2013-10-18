@@ -58,9 +58,6 @@ function getConditions(){
 		
 		if(name && $(this).val()){
 			var op = "and";
-			if(name == "1"){
-				op = "or";
-			}
 			var condition = getCondition("url",op,name,$(this).val(),i);
 			conditions.push(condition);
 		}
