@@ -157,6 +157,51 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+			<implementation>com.dianping.cat.report.page.metric.chart.impl.CachedMetricReportServiceImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+			<implementation>com.dianping.cat.report.page.metric.chart.impl.DataExtractorImpl</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+			<implementation>com.dianping.cat.report.page.metric.chart.impl.MetricDataFetcherImpl</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+			<implementation>com.dianping.cat.report.page.metric.chart.GraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.TransactionReportService</implementation>
 			<requirements>
@@ -2817,6 +2862,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2843,6 +2891,30 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+			<implementation>com.dianping.cat.report.page.metric.chart.GraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

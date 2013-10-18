@@ -7,9 +7,9 @@ public enum MetricDate {
 
 	LAST_WEEK(-7, "上周相同时段");
 
-	int m_index;
+	private int m_index;
 
-	String m_title;
+	private String m_title;
 
 	private MetricDate(int index, String title) {
 		m_index = index;

@@ -11,9 +11,8 @@ public class DataExtractor {
 	private static final int MINUTE = 60;
 
 	public DataExtractor(int timeRange, int interval) {
-		super();
-		this.m_timeRange = timeRange;
-		this.m_interval = interval;
+		m_timeRange = timeRange;
+		m_interval = interval;
 	}
 
 	public double[] extract(List<double[]> datas, int offset) {
@@ -50,7 +49,6 @@ public class DataExtractor {
 	}
 
 	private double avgOfArray(double[] values, int index, int interval) {
-
 		double result = 0;
 
 		for (int i = index; i < index + interval; i++) {
@@ -61,15 +59,4 @@ public class DataExtractor {
 		return result / interval;
 	}
 
-	// private double sumOfArray(double[] values, int index, int interval) {
-	//
-	// double result = 0;
-	//
-	// for (int i = index; i < index + interval; i++) {
-	// if (values[i] >= 0) {
-	// result += values[i];
-	// }
-	// }
-	// return result;
-	// }
 }

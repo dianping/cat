@@ -205,17 +205,8 @@ public class MetricDisplay extends BaseVisitor {
 	}
 
 	public void generateBaselineChart(MetricReportMerger merger) {
-		long time = m_start.getTime();
 
-		for (int index = 0; index < m_timeRange; index++) {
-			ModelPeriod period = ModelPeriod.getByTime(time);
-			MetricReport report = getReport(period, m_product, time);
-
-			if (report != null) {
-				merger.visitMetricReport(index, report);
-			}
-			time = time + TimeUtil.ONE_HOUR;
-		}
+		
 
 		for (String key : m_lineCharts.keySet()) {
 			LineChart lineChart = m_lineCharts.get(key);
@@ -267,7 +258,6 @@ public class MetricDisplay extends BaseVisitor {
 				lineChart.addSubTitle(subTitle);
 				lineChart.addValue(resultValue);
 			}
-
 		}
 	}
 

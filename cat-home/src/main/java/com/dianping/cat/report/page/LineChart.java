@@ -29,6 +29,12 @@ public class LineChart {
 	public LineChart() {
 	}
 	
+	public LineChart add(String title,double[] value){
+		this.subTitles.add(title);
+		this.values.add(value);
+		return this;
+	}
+	
 	public LineChart addSubTitle(String title) {
 		this.subTitles.add(title);
 		return this;
