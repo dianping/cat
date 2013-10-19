@@ -2,4 +2,4 @@ language: java
 install:
   mvn install -Dmaven.test.skip -B -fae
 script:
-  true
+  mvn test -B -fae
