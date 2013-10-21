@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -449,6 +450,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 			if (format == null) {
 				format = new SimpleDateFormat(DATE_PATTERN);
+				format.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 			}
 
 			try {
@@ -465,6 +467,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 			if (format == null) {
 				format = new SimpleDateFormat(DATE_PATTERN);
+				format.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 			}
 
 			try {
