@@ -391,7 +391,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		AbtestModel filteredModel = new AbtestModel();
 
 		if (lastUpdateTime < m_service.getModifiedTime()) {
-			AbtestModel abtestModel = m_service.getAbtestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
+			AbtestModel abtestModel = m_service.getABTestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
 
 			for (Case _case : abtestModel.getCases()) {
 				Case newCase = new Case();

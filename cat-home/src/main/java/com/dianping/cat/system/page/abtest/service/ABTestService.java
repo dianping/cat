@@ -14,13 +14,13 @@ public interface ABTestService {
 
 	public Abtest getABTestByRunId(int id);
 
-	public AbtestModel getAbtestModelByStatus(AbtestStatus... status);
+	public AbtestModel getABTestModelByStatus(AbtestStatus... status);
 
-	public AbtestModel getAbtestModelByRunID(int runId);
+	public AbtestModel getABTestModelByRunID(int runId);
 
 	public GroupStrategy getGroupStrategyById(int id);
 	
-	public AbtestRun getAbtestRunById(int id);
+	public AbtestRun getAbTestRunById(int id);
 	
 	public List<AbtestRun> getAbtestRunByStatus(AbtestStatus status);
 	

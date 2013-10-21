@@ -20,6 +20,7 @@ import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
 import com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
 import com.dianping.cat.system.page.abtest.service.ABTestServiceImpl;
+import com.dianping.cat.system.page.abtest.util.CaseBuilder;
 
 public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 
@@ -40,8 +41,10 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricConfigManager.class));
 
 		all.add(C(ABTestService.class, ABTestServiceImpl.class).req(AbtestDao.class).req(AbtestRunDao.class)
-		      .req(GroupStrategyDao.class).req(ProjectDao.class).req(GsonBuilderManager.class)
+		      .req(GroupStrategyDao.class).req(ProjectDao.class).req(CaseBuilder.class)
 		      .config(E("refreshTimeInSeconds").value("60")));
+		
+		all.add(C(CaseBuilder.class).req(GsonBuilderManager.class));
 
 		return all;
 	}

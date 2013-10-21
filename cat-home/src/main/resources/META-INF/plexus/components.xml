@@ -1973,6 +1973,15 @@
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.CaseBuilder</implementation>
+			<requirements>
+				<requirement>
 					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
 				</requirement>
 			</requirements>
@@ -2843,24 +2852,10 @@
 					<role>com.dianping.cat.report.page.metric.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>metric</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
@@ -2873,15 +2868,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
-			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2915,6 +2901,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
