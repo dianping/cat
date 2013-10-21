@@ -44,7 +44,7 @@ public class GraphCreator {
 	private ProductLineConfigManager m_productLineConfigManager;
 
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate,
-	      String abtestID) {
+	      String abtestId) {
 		long start = startDate.getTime();
 		long end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
@@ -60,11 +60,11 @@ public class GraphCreator {
 			MetricReport oneDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
 			MetricReport sevenDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY * 7));
 			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs,
-			      abtestID);
+			      abtestId);
 			Map<String, double[]> oneDayValues = m_pruductDataFetcher
-			      .buildGraphData(oneDayReport, metricConfigs, abtestID);
+			      .buildGraphData(oneDayReport, metricConfigs, abtestId);
 			Map<String, double[]> sevenDayValues = m_pruductDataFetcher.buildGraphData(sevenDayReport, metricConfigs,
-			      abtestID);
+			      abtestId);
 
 			mergeMap(allCurrentValues, currentValues, totalSize, index);
 			mergeMap(allOneDayValues, oneDayValues, totalSize, index);
