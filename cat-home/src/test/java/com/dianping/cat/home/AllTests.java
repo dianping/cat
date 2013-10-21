@@ -6,6 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.home.abtest.conditions.TrafficFilterCodeGenerationTest;
 import com.dianping.cat.home.abtest.conditions.TrafficFilterTest;
+import com.dianping.cat.home.abtest.groupstrategy.GroupStrategyParserTest;
+import com.dianping.cat.home.abtest.groupstrategy.GsonBuilderManagerTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
@@ -99,6 +101,8 @@ CMDBTest.class,
 /* abtest */
 TrafficFilterCodeGenerationTest.class,
 TrafficFilterTest.class,
+GroupStrategyParserTest.class,
+GsonBuilderManagerTest.class,
 
 /* jsError */
 ParseTest.class})
