@@ -22,22 +22,22 @@ public class PieChart {
 		return new Gson().toJson(this);
 	}
 
-	public void addItems(List<Item> items) {
-		Collections.sort(items, new ItemCompartor());
-		int size = items.size();
+	public void addItems(List<Item> temps) {
+		Collections.sort(temps, new ItemCompartor());
+		int size = temps.size();
 		int maxSize = 10;
 
 		if (size <= maxSize) {
-			this.items = items;
+			this.items = temps;
 		} else {
 			for (int i = 0; i < maxSize; i++) {
-				this.items.add(items.get(i));
+				this.items.add(temps.get(i));
 			}
 			Item item = new Item();
 			item.setTitle("Other");
 			double sum = 0;
 			for (int i = maxSize; i < size; i++) {
-				Item temp = items.get(i);
+				Item temp = temps.get(i);
 				sum += temp.getNumber();
 			}
 			item.setNumber(sum);
