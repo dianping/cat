@@ -29,12 +29,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<Integer, Abtest> m_abtests;
 
-	public Range[] getAllRange() {
-		return Range.values();
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public Map<Integer, Abtest> getAbtests() {
+		return m_abtests;
+	}
+
+	public Range[] getAllRange() {
+		return Range.values();
 	}
 
 	@Override
@@ -52,44 +56,40 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new HashSet<String>();
 	}
 
-	public Collection<ProductLine> getProductLines() {
-		return m_productLines;
-	}
-
-	public void setProductLines(Collection<ProductLine> productLines) {
-		m_productLines = productLines;
+	public Date getEndTime() {
+		return m_endTime;
 	}
 
 	public List<LineChart> getLineCharts() {
 		return m_lineCharts;
 	}
 
-	public void setLineCharts(List<LineChart> lineCharts) {
-		m_lineCharts = lineCharts;
+	public Collection<ProductLine> getProductLines() {
+		return m_productLines;
 	}
 
 	public Date getStartTime() {
 		return m_startTime;
 	}
 
-	public void setStartTime(Date startTime) {
-		m_startTime = startTime;
-	}
-
-	public Date getEndTime() {
-		return m_endTime;
+	public void setAbtests(Map<Integer, Abtest> abtests) {
+		m_abtests = abtests;
 	}
 
 	public void setEndTime(Date endTime) {
 		m_endTime = endTime;
 	}
 
-	public void setAbtests(Map<Integer, Abtest> abtests) {
-		m_abtests = abtests;
+	public void setLineCharts(List<LineChart> lineCharts) {
+		m_lineCharts = lineCharts;
 	}
 
-	public Map<Integer, Abtest> getAbtests() {
-		return m_abtests;
+	public void setProductLines(Collection<ProductLine> productLines) {
+		m_productLines = productLines;
+	}
+
+	public void setStartTime(Date startTime) {
+		m_startTime = startTime;
 	}
 
 }

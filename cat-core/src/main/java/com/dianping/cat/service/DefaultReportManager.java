@@ -47,7 +47,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	private String m_name;
 
-	private Map<Long, Map<String, T>> m_map = new ConcurrentHashMap<Long, Map<String, T>>();
+	private Map<Long, Map<String, T>> m_reports = new ConcurrentHashMap<Long, Map<String, T>>();
 
 	private Logger m_logger;
 
@@ -55,11 +55,11 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	public void cleanup() {
 		long currentStartTime = ModelPeriod.CURRENT.getStartTime();
 		long threshold = currentStartTime - 2 * Constants.HOUR;
-		List<Long> startTimes = new ArrayList<Long>(m_map.keySet());
+		List<Long> startTimes = new ArrayList<Long>(m_reports.keySet());
 
 		for (long startTime : startTimes) {
 			if (startTime <= threshold) {
-				m_map.remove(startTime); // too old to stay in memory
+				m_reports.remove(startTime); // too old to stay in memory
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Override
 	public Set<String> getDomains(long startTime) {
-		Map<String, T> reports = m_map.get(startTime);
+		Map<String, T> reports = m_reports.get(startTime);
 
 		if (reports == null) {
 			return new HashSet<String>();
@@ -86,15 +86,15 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			cleanup();
 		}
 
-		Map<String, T> reports = m_map.get(startTime);
+		Map<String, T> reports = m_reports.get(startTime);
 
 		if (reports == null && createIfNotExist) {
-			synchronized (m_map) {
-				reports = m_map.get(startTime);
+			synchronized (m_reports) {
+				reports = m_reports.get(startTime);
 
 				if (reports == null) {
 					reports = new HashMap<String, T>();
-					m_map.put(startTime, reports);
+					m_reports.put(startTime, reports);
 				}
 			}
 		}
@@ -117,7 +117,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Override
 	public Map<String, T> getHourlyReports(long startTime) {
-		Map<String, T> reports = m_map.get(startTime);
+		Map<String, T> reports = m_reports.get(startTime);
 
 		if (reports == null) {
 			return Collections.emptyMap();
@@ -136,12 +136,12 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Override
 	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy) {
 		Transaction t = Cat.newTransaction("Restore", m_name);
-		Map<String, T> reports = m_map.get(startTime);
+		Map<String, T> reports = m_reports.get(startTime);
 		Bucket<String> bucket = null;
 
 		if (reports == null) {
 			reports = new HashMap<String, T>();
-			m_map.put(startTime, reports);
+			m_reports.put(startTime, reports);
 		}
 
 		try {
@@ -177,7 +177,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Override
 	public void storeHourlyReports(long startTime, StoragePolicy policy) {
 		Transaction t = Cat.newTransaction("Checkpoint", m_name);
-		Map<String, T> reports = m_map.get(startTime);
+		Map<String, T> reports = m_reports.get(startTime);
 		Bucket<String> bucket = null;
 
 		try {
@@ -189,16 +189,20 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				if (policy.forFile()) {
 					bucket = m_bucketManager.getReportBucket(startTime, m_name);
 
-					for (T report : reports.values()) {
-						try {
-							String domain = m_reportDelegate.getDomain(report);
-							String xml = m_reportDelegate.buildXml(report);
+					try {
+						for (T report : reports.values()) {
+							try {
+								String domain = m_reportDelegate.getDomain(report);
+								String xml = m_reportDelegate.buildXml(report);
 
-							bucket.storeById(domain, xml);
-						} catch (Exception e) {
-							t.setStatus(e);
-							Cat.logError(e);
+								bucket.storeById(domain, xml);
+							} catch (Exception e) {
+								t.setStatus(e);
+								Cat.logError(e);
+							}
 						}
+					} finally {
+						bucket.close();
 					}
 				}
 

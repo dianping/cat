@@ -18,6 +18,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.util.internal.ConcurrentHashMap;
 import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
@@ -47,7 +48,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private File m_baseDir;
 
-	private Map<String, LocalMessageBucket> m_buckets = new HashMap<String, LocalMessageBucket>();
+	private Map<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -64,13 +65,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private long m_total;
 
-	private Map<String, Long> m_totals = new HashMap<String,Long>();
+	private Map<String, Long> m_totals = new HashMap<String, Long>();
 
 	private long m_totalSize;
 
-	private Map<String, Long> m_totalSizes = new HashMap<String,Long>();
+	private Map<String, Long> m_totalSizes = new HashMap<String, Long>();
 
-	private Map<String, Long> m_lastTotalSizes = new HashMap<String,Long>();
+	private Map<String, Long> m_lastTotalSizes = new HashMap<String, Long>();
 
 	private Logger m_logger;
 
@@ -78,7 +79,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
 
-	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new HashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
 	private long[] m_processMessages;
 
@@ -245,13 +246,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (paths.size() > 0) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			Transaction t = Cat.newTransaction("System", "Move" + "-" + ip);
+
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {
 				File file = new File(m_baseDir, path);
 				String loginfo = "path:" + m_baseDir + "/" + path + ",file size: " + file.length();
-
 				LocalMessageBucket bucket = m_buckets.get(path);
+
 				if (bucket != null) {
 					try {
 						bucket.close();
@@ -263,9 +265,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
 					}
-					synchronized (m_buckets) {
-						m_buckets.remove(path);
-					}
+					m_buckets.remove(path);
 				} else {
 					try {
 						moveFile(path);
@@ -368,9 +368,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			logState(tree);
 		}
 		if (value != null && value % CatConstants.SUCCESS_COUNT == 0) {
-			Long lastTotalSize =  m_lastTotalSizes.get(domain);
+			Long lastTotalSize = m_lastTotalSizes.get(domain);
 			Long totalSize = m_totalSizes.get(domain);
-			if(lastTotalSize == null){
+			if (lastTotalSize == null) {
 				lastTotalSize = 0L;
 			}
 			double amount = totalSize - lastTotalSize;

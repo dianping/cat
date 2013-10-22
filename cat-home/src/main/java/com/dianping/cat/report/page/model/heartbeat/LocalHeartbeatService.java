@@ -6,27 +6,18 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 
 public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport> {
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportService m_reportService;
 
 	public LocalHeartbeatService() {
 		super(HeartbeatAnalyzer.ID);
-	}
-
-	private HeartbeatReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 
 	@Override
@@ -34,17 +25,12 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 		HeartbeatReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long current = System.currentTimeMillis();
-			long date = current - current % (TimeUtil.ONE_HOUR) - TimeUtil.ONE_HOUR;
-			report = getLocalReport(date, domain);
+			long startTime = request.getStartTime();
+			Date start = new Date(startTime);
+			Date end = new Date(startTime + TimeUtil.ONE_HOUR);
 
-			if (report == null) {
-				report = new HeartbeatReport(domain);
-				report.setStartTime(new Date(date));
-				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
-			}
+			report = m_reportService.queryHeartbeatReport(domain, start, end);
 		}
-
 		return report;
 	}
 }

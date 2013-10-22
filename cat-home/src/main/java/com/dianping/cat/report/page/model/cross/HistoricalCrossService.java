@@ -19,7 +19,7 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalCrossService() {
 		super(CrossAnalyzer.ID);
@@ -41,13 +41,18 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	}
 
 	private CrossReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryCrossReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryCrossReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private CrossReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, CrossAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, CrossAnalyzer.ID);
+			String xml = bucket.findById(domain);
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

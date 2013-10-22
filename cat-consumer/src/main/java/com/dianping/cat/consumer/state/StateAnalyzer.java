@@ -45,18 +45,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		long minute = 1000 * 60;
 		long start = m_startTime;
 		long end = m_startTime + minute * 60;
+		int size = 0;
+		double maxTps = 0;
 
 		if (end > System.currentTimeMillis()) {
 			end = System.currentTimeMillis();
 		}
-
-		int size = 0;
-		double maxTps = 0;
-
 		for (; start < end; start += minute) {
 			Statistic state = m_serverStateManager.findState(start);
 			Message temp = machine.findOrCreateMessage(start);
-
 			Map<String, AtomicLong> totals = state.getMessageTotals();
 			long messageTotal = state.getMessageTotal();
 			temp.setTotal(messageTotal);
@@ -78,6 +75,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				long value = entry.getValue().get();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
+				
 				if (totals.containsKey(key)) {
 					domain.setTotal(value + domain.getTotal());
 					detail.setTotal(value);
