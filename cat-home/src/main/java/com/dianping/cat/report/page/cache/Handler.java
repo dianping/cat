@@ -65,6 +65,7 @@ public class Handler implements PageHandler<Context> {
 	private CacheReport buildCacheReport(TransactionReport transactionReport, EventReport eventReport, String type,
 	      String sortBy, String queryName, String ip) {
 		TransactionReportVistor vistor = new TransactionReportVistor();
+
 		vistor.setType(type).setQueryName(queryName).setSortBy(sortBy).setCurrentIp(ip);
 		vistor.setEventReport(eventReport);
 		vistor.visitTransactionReport(transactionReport);
@@ -72,40 +73,38 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void calculateEventTps(Payload payload, EventReport report) {
-		if (payload != null && report != null) {
-			try {
-				if (payload != null && report != null) {
-					boolean isCurrent = payload.getPeriod().isCurrent();
-					double seconds;
-					if (isCurrent) {
-						seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					} else {
-						seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					}
-					new TpsStatistics(seconds).visitEventReport(report);
+		try {
+			if (report != null) {
+				boolean isCurrent = payload.getPeriod().isCurrent();
+				double seconds = 0;
+
+				if (isCurrent) {
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
+				} else {
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / 1000.0;
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
+				new TpsStatistics(seconds).visitEventReport(report);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
 	private void calculateTransactionTps(Payload payload, TransactionReport report) {
-		if (payload != null && report != null) {
-			try {
-				if (payload != null && report != null) {
-					boolean isCurrent = payload.getPeriod().isCurrent();
-					double seconds;
-					if (isCurrent) {
-						seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					} else {
-						seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					}
-					new com.dianping.cat.report.page.transaction.TpsStatistics(seconds).visitTransactionReport(report);
+		try {
+			if (report != null) {
+				boolean isCurrent = payload.getPeriod().isCurrent();
+				double seconds = 0;
+
+				if (isCurrent) {
+					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
+				} else {
+					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / 1000.0;
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
+				new com.dianping.cat.report.page.transaction.TpsStatistics(seconds).visitTransactionReport(report);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -122,6 +121,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
+		
 		return m_reportService.queryTransactionReport(domain, start, end);
 	}
 
