@@ -346,6 +346,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 							startPeriod(value);
 						} else {
 							endPeriod(-value);
+							// last period is over,make it asynchronous
+							Threads.forGroup("Cat").start(new EndTaskThread(-value));
 						}
 					} catch (Throwable e) {
 						Cat.logError(e);
@@ -373,6 +375,29 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			m_periods.add(period);
 			period.start();
+		}
+
+		private class EndTaskThread implements Task {
+
+			private long m_startTime;
+
+			public EndTaskThread(long startTime) {
+				m_startTime = startTime;
+			}
+
+			@Override
+			public void run() {
+				endPeriod(m_startTime);
+			}
+
+			@Override
+			public String getName() {
+				return "End-Consumer-Task";
+			}
+
+			@Override
+			public void shutdown() {
+			}
 		}
 	}
 }
