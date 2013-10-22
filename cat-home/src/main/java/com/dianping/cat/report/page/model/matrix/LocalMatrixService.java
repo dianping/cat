@@ -32,7 +32,6 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 
 			report = m_reportService.queryMatrixReport(domain, start, end);
 		}
-
 		return report;
 	}
 }

@@ -30,7 +30,6 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 			Date end = new Date(startTime + TimeUtil.ONE_HOUR);
 
 			report = m_reportService.queryStateReport(domain, start, end);
-		
 		}
 		return report;
 	}

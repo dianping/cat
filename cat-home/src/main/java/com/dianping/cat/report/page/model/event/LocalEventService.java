@@ -32,7 +32,6 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 
 			report = m_reportService.queryEventReport(domain, start, end);
 		}
-
 		return report;
 	}
 }

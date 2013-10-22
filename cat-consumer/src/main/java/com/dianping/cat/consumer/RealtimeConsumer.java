@@ -343,11 +343,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 						if (value == 0) {
 							// do nothing here
 						} else if (value > 0) {
-							// prepare next period in ahead of 3 minutes,make it asynchronous
-							Threads.forGroup("Cat").start(new StartTaskThread(value));
+							startPeriod(value);
 						} else {
-							// last period is over,make it asynchronous
-							Threads.forGroup("Cat").start(new EndTaskThread(-value));
+							endPeriod(value);
 						}
 					} catch (Throwable e) {
 						Cat.logError(e);
@@ -375,53 +373,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			m_periods.add(period);
 			period.start();
-		}
-
-		private class StartTaskThread implements Task {
-
-			private long m_startTime;
-
-			public StartTaskThread(long startTime) {
-				m_startTime = startTime;
-			}
-
-			@Override
-			public void run() {
-				startPeriod(m_startTime);
-			}
-
-			@Override
-			public String getName() {
-				return "Start-Consumer-Task";
-			}
-
-			@Override
-			public void shutdown() {
-			}
-		}
-
-		private class EndTaskThread implements Task {
-
-			private long m_startTime;
-
-			public EndTaskThread(long startTime) {
-				m_startTime = startTime;
-			}
-
-			@Override
-			public void run() {
-				endPeriod(m_startTime);
-			}
-
-			@Override
-			public String getName() {
-				return "End-Consumer-Task";
-			}
-
-			@Override
-			public void shutdown() {
-			}
-
 		}
 	}
 }
