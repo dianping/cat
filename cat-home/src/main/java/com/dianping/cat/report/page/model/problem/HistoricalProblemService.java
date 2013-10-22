@@ -19,7 +19,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalProblemService() {
 		super(ProblemAnalyzer.ID);
@@ -41,13 +41,19 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	}
 
 	private ProblemReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryProblemReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryProblemReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private ProblemReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, ProblemAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, ProblemAnalyzer.ID);
+			String xml = bucket.findById(domain);
+
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

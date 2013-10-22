@@ -19,7 +19,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalMatrixService() {
 		super(MatrixAnalyzer.ID);
@@ -41,13 +41,18 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	}
 
 	private MatrixReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryMatrixReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryMatrixReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private MatrixReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, MatrixAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, MatrixAnalyzer.ID);
+			String xml = bucket.findById(domain);
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

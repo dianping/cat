@@ -65,12 +65,12 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 				if (content != null) {
 					email.setHtmlMsg(content);
 				}
-				if (emails != null) {
+				if (emails != null && emails.size() > 0) {
 					for (String to : emails) {
 						email.addTo(to);
 					}
+					email.send();
 				}
-				email.send();
 				return true;
 			} catch (EmailException e) {
 				Cat.logError(e);

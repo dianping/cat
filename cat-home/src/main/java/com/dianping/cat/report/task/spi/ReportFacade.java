@@ -42,14 +42,6 @@ import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
-	public static final int TYPE_HOUR = ReportType.HOUR;
-
-	public static final int TYPE_DAILY = ReportType.DAILY;
-
-	public static final int TYPE_WEEK = ReportType.WEEK;
-
-	public static final int TYPE_MONTH = ReportType.MONTH;
-
 	@Inject
 	private EventReportBuilder m_eventBuilder;
 
@@ -85,7 +77,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private MetricBaselineReportBuilder m_metricBaselineReportBuilder;
-	
+
 	@Inject
 	private ABTestReportBuilder m_abtestReportBuilder;
 
@@ -120,13 +112,13 @@ public class ReportFacade implements LogEnabled, Initializable {
 			} else {
 				boolean result = false;
 
-				if (type == TYPE_HOUR) {
+				if (type == ReportType.HOUR) {
 					result = reportBuilder.buildHourlyTask(reportName, reportDomain, reportPeriod);
-				} else if (type == TYPE_DAILY) {
+				} else if (type == ReportType.DAILY) {
 					result = reportBuilder.buildDailyTask(reportName, reportDomain, reportPeriod);
-				} else if (type == TYPE_WEEK) {
+				} else if (type == ReportType.WEEK) {
 					result = reportBuilder.buildWeeklyTask(reportName, reportDomain, reportPeriod);
-				} else if (type == TYPE_MONTH) {
+				} else if (type == ReportType.MONTH) {
 					result = reportBuilder.buildMonthlyTask(reportName, reportDomain, reportPeriod);
 				}
 				if (result) {
@@ -164,7 +156,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(StateAnalyzer.ID, m_stateReportBuilder);
 		m_reportBuilders.put(DependencyAnalyzer.ID, m_dependendcyReportBuilder);
 		m_reportBuilders.put(MetricAnalyzer.ID, m_metricBaselineReportBuilder);
-		
+
 		m_reportBuilders.put(Constants.REPORT_BUG, m_bugReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_SERVICE, m_serviceReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_HEAVY, m_heavyReportBuilder);

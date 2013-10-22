@@ -19,7 +19,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalEventService() {
 		super(EventAnalyzer.ID);
@@ -41,13 +41,19 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	}
 
 	private EventReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryEventReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryEventReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
+			String xml = bucket.findById(domain);
+
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

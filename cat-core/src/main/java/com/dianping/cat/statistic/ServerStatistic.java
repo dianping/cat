@@ -1,12 +1,11 @@
 package com.dianping.cat.statistic;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ServerStatistic {
-	private Map<Long, Statistic> m_statistics = new LinkedHashMap<Long, Statistic>(100);
+	private Map<Long, Statistic> m_statistics = new ConcurrentHashMap<Long, Statistic>(100);
 
 	public Statistic findOrCreate(Long time) {
 		Statistic state = m_statistics.get(time);
@@ -34,11 +33,11 @@ public class ServerStatistic {
 
 		private long m_messageDumpLoss;
 
-		private Map<String, AtomicLong> m_messageTotals = new HashMap<String, AtomicLong>(256);
+		private Map<String, AtomicLong> m_messageTotals = new ConcurrentHashMap<String, AtomicLong>(256);
 
-		private Map<String, AtomicLong> m_messageTotalLosses = new HashMap<String, AtomicLong>(256);
+		private Map<String, AtomicLong> m_messageTotalLosses = new ConcurrentHashMap<String, AtomicLong>(256);
 
-		private Map<String, Double> m_messageSizes = new HashMap<String, Double>(256);
+		private Map<String, Double> m_messageSizes = new ConcurrentHashMap<String, Double>(256);
 
 		private double m_processDelaySum;
 
@@ -85,7 +84,7 @@ public class ServerStatistic {
 		public void addMessageTotal(String domain, long messageTotal) {
 			AtomicLong value = m_messageTotals.get(domain);
 			if (value != null) {
-				value.set(value.get()+messageTotal);
+				value.set(value.get() + messageTotal);
 			} else {
 				m_messageTotals.put(domain, new AtomicLong(messageTotal));
 			}
@@ -94,9 +93,9 @@ public class ServerStatistic {
 		public void addMessageTotalLoss(String domain, long messageTotalLoss) {
 			AtomicLong value = m_messageTotalLosses.get(domain);
 			if (value != null) {
-				value.set(value.get()+messageTotalLoss);
+				value.set(value.get() + messageTotalLoss);
 			} else {
-				m_messageTotalLosses.put(domain,  new AtomicLong(messageTotalLoss));
+				m_messageTotalLosses.put(domain, new AtomicLong(messageTotalLoss));
 			}
 		}
 
@@ -220,7 +219,6 @@ public class ServerStatistic {
 		public double getMessageSize() {
 			return m_messageSize;
 		}
-
 	}
 
 }

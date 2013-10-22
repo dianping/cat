@@ -5,12 +5,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 public class PieChart {
 
 	private List<Item> items = new ArrayList<Item>();
 
 	public List<Item> getItems() {
 		return items;
+	}
+
+	public String getJsonString() {
+		return new Gson().toJson(this);
 	}
 
 	public void setItems(List<Item> temps) {
@@ -42,35 +48,35 @@ public class PieChart {
 		}
 	}
 
-	public static class ItemCompartor implements Comparator<Item> {
-
-		@Override
-		public int compare(Item o1, Item o2) {
-			return (int) (o2.getNumber() - o1.getNumber());
-		}
-	}
-
 	public static class Item {
 		private String title;
 
 		private double number;
 
+		public double getNumber() {
+			return number;
+		}
+
 		public String getTitle() {
 			return title;
+		}
+
+		public Item setNumber(double number) {
+			this.number = number;
+			return this;
 		}
 
 		public Item setTitle(String title) {
 			this.title = title;
 			return this;
 		}
+	}
 
-		public double getNumber() {
-			return number;
-		}
+	public static class ItemCompartor implements Comparator<Item> {
 
-		public Item setNumber(double number) {
-			this.number = number;
-			return this;
+		@Override
+		public int compare(Item o1, Item o2) {
+			return (int) (o2.getNumber() - o1.getNumber());
 		}
 	}
 }
