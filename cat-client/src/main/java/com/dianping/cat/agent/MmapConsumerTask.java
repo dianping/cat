@@ -68,7 +68,7 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 				MessageTree tree = m_reader.next();
 
 				if (tree == null) {
-					break;
+					continue;
 				}
 
 				m_messageManager.flush(tree);
@@ -149,8 +149,8 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 
 		@Override
 		public String toString() {
-			return String.format("%s[size=%s, writerIndex=%s, readerIndex=%s, file=%s]", getClass().getSimpleName(), getQueueSize(),
-			      getWriterIndex(), getReaderIndex(), m_file);
+			return String.format("%s[size=%s, writerIndex=%s, readerIndex=%s, file=%s]", getClass().getSimpleName(),
+			      getQueueSize(), getWriterIndex(), getReaderIndex(), m_file);
 		}
 	}
 
@@ -251,11 +251,17 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 						String parentId = list.get(index++);
 						String rootId = list.get(index++);
 
-						childId = id;
 						tree = m_messageManager.getThreadLocalMessageTree().copy();
-						tree.setMessageId(parentId);
-						tree.setParentMessageId(rootId);
-						tree.setRootMessageId(rootId);
+
+						if (id == null || id.length() == 0) {
+							tree.setMessageId(Cat.createMessageId());
+						} else {
+							childId = id;
+							tree.setMessageId(parentId);
+							tree.setParentMessageId(rootId);
+							tree.setRootMessageId(rootId);
+						}
+
 						tree.setDomain(getDomainByMessageId(id, tree.getDomain()));
 						step++;
 					}
@@ -279,9 +285,15 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 						DefaultTransaction t = new DefaultTransaction(name, url, m_messageManager);
 
 						t.addChild(newEvent(name + ".Status", status, null));
-						t.addChild(newEvent("RemoteCall", upstreamUrl, childId));
 
-						t.addData("_m", (t1 - t0) + "," + (t2 - t1) + "," + (t3 - t2) + "," + (t4 - t3));
+						if (childId != null && childId.length() > 0) {
+							t.addChild(newEvent("RemoteCall", upstreamUrl, childId));
+						}
+
+						if (t1 >= t0) {
+							t.addData("_m", (t1 - t0) + "," + (t2 - t1) + "," + (t3 - t2) + "," + (t4 - t3));
+						}
+
 						t.addData("in", requestHeaderLen);
 						t.addData("out", responseHeaderLen + "," + responseBodyLen);
 						t.addData("blocks", responseBodyBlocks);
