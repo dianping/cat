@@ -29,6 +29,8 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * @author youyong
@@ -141,7 +143,11 @@ public class Handler implements PageHandler<Context> {
 				items.add(new Item().setTitle(table.getId()).setNumber(table.getTotalCount()));
 			}
 		}
-		chart.setItems(items);
+		chart.addItems(items);
+		System.err.println("========");
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		System.out.println(gsonBuilder.create().toJson(chart));
+		System.err.println("!!!!!!!!");
 		return chart.getJsonString();
 	}
 }

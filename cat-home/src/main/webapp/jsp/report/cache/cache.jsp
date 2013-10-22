@@ -12,6 +12,8 @@
 <a:report title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 <jsp:body>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align:left">
 		<th>机器: &nbsp;[&nbsp; <c:choose>
@@ -38,9 +40,9 @@
 		</th>
 	</tr>
 </table>
-<table class="data">
     <c:choose>
 		<c:when test="${empty payload.type}">
+		<table class="data">
 		<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
@@ -59,8 +61,12 @@
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 			</c:forEach>
+			</table>
 		</c:when>
 		<c:otherwise>
+		<div class="row-fluid">
+		<div class="span7">
+		<table class="data">
 			<tr><th class="left" colspan='6'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input id="queryname" style="WIDTH: 60px"  onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
@@ -68,6 +74,7 @@
 			<script>
 			function filterByName(date,domain,ip){
 				var queryname=$("#queryname").val();
+				var type = '${payload.type}';
 				window.location.href="?domain="+domain+"&type="+type+"&date="+date+"&queryname="+queryname+"&ip="+ip;
 			}
 		</script>
@@ -91,6 +98,16 @@
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 			</c:forEach>
+			</table>
+			</div>
+				<div class="span5">
+					<div id="cacheGraph"></div>
+					<script type="text/javascript">
+						var data = ${model.pieChart};
+						graphPieChart(document.getElementById('cacheGraph'), data);
+					</script>
+				</div>
+			</div>
 		</c:otherwise>
 	</c:choose>
 </table>

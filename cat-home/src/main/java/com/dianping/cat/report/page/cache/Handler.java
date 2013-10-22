@@ -1,12 +1,15 @@
 package com.dianping.cat.report.page.cache;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
@@ -27,6 +30,9 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
+import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
 import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.event.TpsStatistics;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -121,7 +127,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		
+
 		return m_reportService.queryTransactionReport(domain, start, end);
 	}
 
@@ -267,8 +273,27 @@ public class Handler implements PageHandler<Context> {
 			model.setReport(cacheHistoryReport);
 			break;
 		}
+		if (!StringUtil.isEmpty(type)) {
+			model.setPieChart(buildPieChart(model.getReport()));
+		}
 
 		m_jspViewer.view(ctx, model);
+	}
+
+	private String buildPieChart(CacheReport report) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+		List<CacheNameItem> nameItems = report.getNameItems();
+
+		for (CacheNameItem cacheItem : nameItems) {
+			String name = cacheItem.getName().getId();
+
+			if (name.endsWith(":get") || name.endsWith(":mGet")) {
+				items.add(new Item().setTitle(name).setNumber(cacheItem.getName().getTotalCount()));
+			}
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
 	}
 
 	private void normalize(Model model, Payload payload) {

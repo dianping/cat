@@ -17,6 +17,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@EntityMeta
 	private CacheReport m_report;
 
+	private String m_pieChart;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -67,6 +69,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setReport(CacheReport report) {
 		m_report = report;
+	}
+
+	public String getPieChart() {
+		return m_pieChart;
+	}
+
+	public void setPieChart(String pieChart) {
+		m_pieChart = pieChart;
 	}
 
 }
