@@ -38,7 +38,7 @@ public class GraphCreator {
 	private CachedMetricReportService m_metricReportService;
 
 	@Inject
-	private MetricConfigManager m_configManager;
+	private MetricConfigManager m_metricConfigManager;
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
@@ -55,7 +55,8 @@ public class GraphCreator {
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine);
-			List<MetricItemConfig> metricConfigs = m_configManager.queryMetricItemConfigs(new HashSet<String>(domains));
+			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
+			      domains));
 			MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
 			MetricReport oneDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
 			MetricReport sevenDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY * 7));
@@ -105,10 +106,12 @@ public class GraphCreator {
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 
 		for (ProductLine productLine : productLines) {
-			allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
+			if (showInDashboard(productLine.getId())) {
+				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
+			}
 		}
 
-		Collection<MetricItemConfig> configs = m_configManager.getMetricConfig().getMetricItemConfigs().values();
+		Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values();
 
 		for (MetricItemConfig config : configs) {
 			String key = config.getId();
@@ -132,7 +135,7 @@ public class GraphCreator {
 		int index = key.lastIndexOf(":");
 		String id = key.substring(0, index);
 		String type = key.substring(index + 1);
-		MetricItemConfig config = m_configManager.queryMetricItemConfig(id);
+		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
 
 		String des = "";
 		if (MetricType.AVG.name().equals(type)) {
@@ -189,6 +192,18 @@ public class GraphCreator {
 			index++;
 		}
 		return result;
+	}
+
+	private boolean showInDashboard(String productline) {
+		List<String> domains = m_productLineConfigManager.queryProductLineDomains(productline);
+		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+
+		for (MetricItemConfig config : configs) {
+			if (config.isShowAvgDashboard() || config.isShowCountDashboard() || config.isShowSumDashboard()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
