@@ -33,15 +33,15 @@ public class PieChart {
 			for (int i = 0; i < maxSize; i++) {
 				this.items.add(temps.get(i));
 			}
-			Item item = new Item();
-			item.setTitle("Other");
+			Item item = new Item().setTitle("Other");
+
 			double sum = 0;
 			for (int i = maxSize; i < size; i++) {
 				Item temp = temps.get(i);
+
 				sum += temp.getNumber();
 			}
-			item.setNumber(sum);
-			this.items.add(item);
+			this.items.add(item.setNumber(sum));
 		}
 	}
 
