@@ -18,8 +18,7 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(BucketManager.class, DefaultBucketManager.class) //
-		      .req(MessagePathBuilder.class));
+		all.add(C(BucketManager.class, DefaultBucketManager.class));
 
 		all.add(C(Bucket.class, String.class.getName() + "-report", LocalReportBucket.class) //
 		      .is(PER_LOOKUP) //

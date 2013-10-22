@@ -19,7 +19,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalHeartbeatService() {
 		super(HeartbeatAnalyzer.ID);
@@ -41,13 +41,18 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	}
 
 	private HeartbeatReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryHeartbeatReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryHeartbeatReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
+			String xml = bucket.findById(domain);
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

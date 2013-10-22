@@ -6,27 +6,19 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
-import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 
 public class LocalDependencyService extends BaseLocalModelService<DependencyReport> {
+
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportService m_reportService;
 
 	public LocalDependencyService() {
 		super(DependencyAnalyzer.ID);
-	}
-
-	private DependencyReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID);
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 
 	@Override
@@ -34,19 +26,11 @@ public class LocalDependencyService extends BaseLocalModelService<DependencyRepo
 		DependencyReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long current = System.currentTimeMillis();
-			long hour = 60 * 60 * 1000;
-			long date = current - current % (hour) - hour;
-			report = getLocalReport(date, domain);
+			long startTime = request.getStartTime();
+			Date start = new Date(startTime);
+			Date end = new Date(startTime + TimeUtil.ONE_HOUR);
 
-			if (report == null) {
-				Date start = new Date(date);
-				Date end = new Date(date + TimeUtil.ONE_HOUR);
-				
-				report = new DependencyReport(domain);
-				report.setStartTime(start);
-				report.setEndTime(end);
-			}
+			report = m_reportService.queryDependencyReport(domain, start, end);
 		}
 		return report;
 	}

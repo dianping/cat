@@ -19,7 +19,7 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalTopService() {
 		super(TopAnalyzer.ID);
@@ -41,13 +41,18 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	}
 
 	private TopReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryTopReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryTopReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private TopReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, TopAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, TopAnalyzer.ID);
+			String xml = bucket.findById(domain);
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

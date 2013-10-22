@@ -189,16 +189,20 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				if (policy.forFile()) {
 					bucket = m_bucketManager.getReportBucket(startTime, m_name);
 
-					for (T report : reports.values()) {
-						try {
-							String domain = m_reportDelegate.getDomain(report);
-							String xml = m_reportDelegate.buildXml(report);
+					try {
+						for (T report : reports.values()) {
+							try {
+								String domain = m_reportDelegate.getDomain(report);
+								String xml = m_reportDelegate.buildXml(report);
 
-							bucket.storeById(domain, xml);
-						} catch (Exception e) {
-							t.setStatus(e);
-							Cat.logError(e);
+								bucket.storeById(domain, xml);
+							} catch (Exception e) {
+								t.setStatus(e);
+								Cat.logError(e);
+							}
 						}
+					} finally {
+						bucket.close();
 					}
 				}
 

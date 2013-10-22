@@ -6,27 +6,19 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
-import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 
 public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
+
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportService m_reportService;
 
 	public LocalMatrixService() {
 		super(MatrixAnalyzer.ID);
-	}
-
-	private MatrixReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, MatrixAnalyzer.ID);
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 
 	@Override
@@ -34,15 +26,11 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 		MatrixReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long current = System.currentTimeMillis();
-			long date = current - current % (TimeUtil.ONE_HOUR) - TimeUtil.ONE_HOUR;
-			report = getLocalReport(date, domain);
+			long startTime = request.getStartTime();
+			Date start = new Date(startTime);
+			Date end = new Date(startTime + TimeUtil.ONE_HOUR);
 
-			if (report == null) {
-				report = new MatrixReport(domain);
-				report.setStartTime(new Date(date));
-				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
-			}
+			report = m_reportService.queryMatrixReport(domain, start, end);
 		}
 
 		return report;

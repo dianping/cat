@@ -6,27 +6,18 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 
 public class LocalStateService extends BaseLocalModelService<StateReport> {
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportService m_reportService;
 
 	public LocalStateService() {
 		super(StateAnalyzer.ID);
-	}
-
-	private StateReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID);
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 
 	@Override
@@ -34,18 +25,13 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 		StateReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long current = System.currentTimeMillis();
-			long hour = 60 * 60 * 1000;
-			long date = current - current % (hour) - hour;
-			report = getLocalReport(date, domain);
+			long startTime = request.getStartTime();
+			Date start = new Date(startTime);
+			Date end = new Date(startTime + TimeUtil.ONE_HOUR);
 
-			if (report == null) {
-				report = new StateReport(domain);
-				report.setStartTime(new Date(date));
-				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
-			}
+			report = m_reportService.queryStateReport(domain, start, end);
+		
 		}
-
 		return report;
 	}
 }
