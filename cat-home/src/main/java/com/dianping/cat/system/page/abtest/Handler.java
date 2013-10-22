@@ -50,6 +50,7 @@ import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
 import com.dianping.cat.system.page.abtest.conditions.ScriptProvider;
 import com.dianping.cat.system.page.abtest.conditions.URLScriptProvider;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.abtest;
+package com.dianping.cat.system.page.abtest.util;
 
 import java.util.Calendar;
 import java.util.Date;

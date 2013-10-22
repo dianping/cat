@@ -8,7 +8,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
-import com.dianping.cat.system.page.abtest.AbtestStatus;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 
 public interface ABTestService {
 

@@ -13,6 +13,7 @@ import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.home.dal.abtest.AbtestRunDao;
 import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
 import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 
 public class ListViewHandler implements SubHandler {
 	@Inject

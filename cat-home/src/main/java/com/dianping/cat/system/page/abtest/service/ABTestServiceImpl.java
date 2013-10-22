@@ -29,7 +29,7 @@ import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
-import com.dianping.cat.system.page.abtest.AbtestStatus;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 import com.dianping.cat.system.page.abtest.util.CaseBuilder;
 
 public class ABTestServiceImpl implements ABTestService, Initializable, Task {
