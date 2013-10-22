@@ -11,8 +11,7 @@ public class PieChart {
 
 	private List<Item> items = new ArrayList<Item>();
 
-	public PieChart() {
-	}
+	private transient int MAX_SIZE = 10;
 
 	public List<Item> getItems() {
 		return items;
@@ -25,18 +24,17 @@ public class PieChart {
 	public void addItems(List<Item> temps) {
 		Collections.sort(temps, new ItemCompartor());
 		int size = temps.size();
-		int maxSize = 10;
 
-		if (size <= maxSize) {
+		if (size <= MAX_SIZE) {
 			this.items = temps;
 		} else {
-			for (int i = 0; i < maxSize; i++) {
+			for (int i = 0; i < MAX_SIZE; i++) {
 				this.items.add(temps.get(i));
 			}
 			Item item = new Item().setTitle("Other");
 
 			double sum = 0;
-			for (int i = maxSize; i < size; i++) {
+			for (int i = MAX_SIZE; i < size; i++) {
 				Item temp = temps.get(i);
 
 				sum += temp.getNumber();
