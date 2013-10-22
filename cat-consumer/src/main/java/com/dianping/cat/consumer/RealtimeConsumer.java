@@ -345,7 +345,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 						} else if (value > 0) {
 							startPeriod(value);
 						} else {
-							endPeriod(value);
+							endPeriod(-value);
 						}
 					} catch (Throwable e) {
 						Cat.logError(e);
