@@ -22,13 +22,13 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 	private List<String> m_analyzerNames;
 
-	private Map<Long, Map<String, MessageAnalyzer>> m_map = new HashMap<Long, Map<String, MessageAnalyzer>>();
+	private Map<Long, Map<String, MessageAnalyzer>> m_analyzers = new HashMap<Long, Map<String, MessageAnalyzer>>();
 
 	@Override
 	public MessageAnalyzer getAnalyzer(String name, long startTime) {
 		// remove last two hour analyzer
 		try {
-			Map<String, MessageAnalyzer> temp = m_map.remove(startTime - m_duration * 3);
+			Map<String, MessageAnalyzer> temp = m_analyzers.remove(startTime - m_duration * 3);
 
 			if (temp != null) {
 				for (MessageAnalyzer anlyzer : temp.values()) {
@@ -39,15 +39,15 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 			Cat.logError(e);
 		}
 
-		Map<String, MessageAnalyzer> map = m_map.get(startTime);
+		Map<String, MessageAnalyzer> map = m_analyzers.get(startTime);
 
 		if (map == null) {
-			synchronized (m_map) {
-				map = m_map.get(startTime);
+			synchronized (m_analyzers) {
+				map = m_analyzers.get(startTime);
 
 				if (map == null) {
 					map = new HashMap<String, MessageAnalyzer>();
-					m_map.put(startTime, map);
+					m_analyzers.put(startTime, map);
 				}
 			}
 		}

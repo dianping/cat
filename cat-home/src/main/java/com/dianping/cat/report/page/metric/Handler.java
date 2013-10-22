@@ -13,6 +13,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
@@ -33,7 +34,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private GraphCreator m_graphCreator;
 
-	private static final String DEFULT_PRODUCT = "TuanGou";
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -63,7 +65,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DASHBOARD:
 			Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end, payload.getTest());
-			
+
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
 		}
@@ -77,7 +79,7 @@ public class Handler implements PageHandler<Context> {
 
 		String poduct = payload.getProduct();
 		if (poduct == null || poduct.length() == 0) {
-			payload.setProduct(DEFULT_PRODUCT);
+			payload.setProduct(m_serverConfigManager.getDefaultProduct());
 		}
 		int timeRange = payload.getTimeRange();
 		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
