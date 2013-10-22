@@ -1,8 +1,11 @@
 package com.dianping.cat.message.spi.internal;
 
+import java.text.Format;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import junit.framework.Assert;
 
@@ -31,6 +34,13 @@ public class DefaultMessagePathBuilderTest {
 	@Test
 	public void testParseMessageIdFromPath() throws Exception {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd'/'HH}/{1}");
+
+		for (Format child : format.getFormats()) {
+			if (child instanceof SimpleDateFormat) {
+				((SimpleDateFormat) child).setTimeZone(TimeZone.getTimeZone("GMT+8"));
+			}
+		}
+
 		String path = "20120807/14/Cat-Cat-192.168.64.153";
 		Object[] objects = format.parse(path);
 		Date timestamp = (Date) objects[0];

@@ -51,7 +51,6 @@ public class GroupStrategyParser {
 
 						int pos = annotation.indexOf("@Inject");
 
-						System.out.println(expr.getData());
 						if (pos >= 0) {
 							int begin = annotation.indexOf('"');
 							int end = annotation.lastIndexOf('"');

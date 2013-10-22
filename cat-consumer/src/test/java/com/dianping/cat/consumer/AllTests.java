@@ -13,7 +13,6 @@ import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
-import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 @RunWith(Suite.class)
@@ -30,8 +29,6 @@ GsonTest.class,
 NumberFormatTest.class,
 
 TransactionAnalyzerTest.class,
-
-TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
 

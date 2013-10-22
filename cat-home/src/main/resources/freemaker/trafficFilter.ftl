@@ -20,9 +20,10 @@ public class TrafficFilter {
 		if(
 		<#list run.conditions as condition>
 			<#if isFirst1 = 0>
-				<#if condition.seq = 4>
+				<#if condition.seq = 5>
 					<#if isFirst2 = 0>
 						)
+						<#assign isFirst2 = 2>
 					</#if>
 				</#if>
 				<#if operator = 0>
@@ -31,7 +32,7 @@ public class TrafficFilter {
 				<#if operator = 1>
 					||
 				</#if>
-				<#if condition.seq = 3>
+				<#if condition.seq = 4>
 					<#if isFirst2 = 1>
 						(
 						<#assign isFirst2 = 0>
@@ -64,7 +65,7 @@ public class TrafficFilter {
 		public boolean accept(HttpServletRequest request) {
 			String actual = request.getRequestURL().toString();
 			
-			if (${urlScriptProvider.getFragement(condition)}) {
+			if (${urlScriptProvider.getScript(condition)}) {
 				return true;
 			} else {
 				return false;

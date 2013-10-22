@@ -47,8 +47,10 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvice;
 import com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor;
+import com.dianping.cat.system.page.abtest.conditions.ScriptProvider;
 import com.dianping.cat.system.page.abtest.conditions.URLScriptProvider;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -170,7 +172,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("scriptFragement.ftl");
+			Template t = m_configuration.getTemplate(ScriptProvider.m_fileName);
 
 			t.process(root, sw);
 		} catch (Exception e) {
@@ -390,7 +392,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		AbtestModel filteredModel = new AbtestModel();
 
 		if (lastUpdateTime < m_service.getModifiedTime()) {
-			AbtestModel abtestModel = m_service.getAbtestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
+			AbtestModel abtestModel = m_service.getABTestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
 
 			for (Case _case : abtestModel.getCases()) {
 				Case newCase = new Case();

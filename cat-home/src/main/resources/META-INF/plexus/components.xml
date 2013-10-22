@@ -1973,6 +1973,15 @@
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.CaseBuilder</implementation>
+			<requirements>
+				<requirement>
 					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
 				</requirement>
 			</requirements>

@@ -1,7 +1,13 @@
 package com.dianping.cat.system.page.abtest.conditions;
 
-import java.util.List;
+import java.util.Map;
+
+import com.dianping.cat.abtest.model.entity.Condition;
 
 public interface ScriptProvider {
-	public List<String> actions();
+	public static final String m_fileName = "trafficFilter.ftl";
+
+	public Map<Integer, Object> options();
+
+	public String getScript(Condition condition);
 }

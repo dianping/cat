@@ -12,6 +12,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;

@@ -1,6 +1,5 @@
 package com.dianping.cat.system.page.abtest.service;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.LockSupport;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.util.internal.ConcurrentHashMap;
@@ -19,10 +17,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
 import com.dianping.cat.abtest.model.entity.Case;
-import com.dianping.cat.abtest.model.entity.Condition;
-import com.dianping.cat.abtest.model.entity.ConversionRule;
-import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
-import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -35,10 +29,8 @@ import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
-import com.dianping.cat.system.page.abtest.AbtestStatus;
-import com.dianping.cat.system.page.abtest.GsonBuilderManager;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
+import com.dianping.cat.system.page.abtest.util.CaseBuilder;
 
 public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
@@ -52,7 +44,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private GroupStrategyDao m_groupStrategyDao;
 
 	@Inject
-	private GsonBuilderManager m_gsonBuilderManager;
+	private CaseBuilder m_caseBuilder;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -70,15 +62,9 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	private long m_modifyTime = 0;
 
-	private Type m_listType = new TypeToken<ArrayList<Condition>>() {
-	}.getType();
-
-	private Type m_ruleType = new TypeToken<ArrayList<ConversionRule>>() {
-	}.getType();
-
 	@Override
-	public Abtest getABTestByRunId(int id) {
-		AbtestRun run = getAbtestRunById(id);
+	public Abtest getABTestByRunId(int runId) {
+		AbtestRun run = getAbTestRunById(runId);
 		Abtest ab = null;
 
 		if (run != null) {
@@ -98,50 +84,53 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		return ab;
 	}
 
-	public AbtestModel getAbtestModelByRunID(int runId) {
+	public AbtestModel getABTestModelByRunID(int runId) {
 		AbtestModel model = new AbtestModel();
 
-		Abtest abtest = getABTestByRunId(runId);
-		AbtestRun run = getAbtestRunById(runId);
+		try {
+			Abtest abtest = getABTestByRunId(runId);
+			AbtestRun run = getAbTestRunById(runId);
 
-		if (abtest != null && run != null) {
 			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
-			Case _case = transform(abtest, run, groupStrategy);
+
+			Case _case = m_caseBuilder.build(abtest, run, groupStrategy);
 
 			model.addCase(_case);
+		} catch (Throwable e) {
+			Cat.logError(e);
 		}
 
 		return model;
 	}
 
 	@Override
-	public AbtestModel getAbtestModelByStatus(AbtestStatus... status) {
+	public AbtestModel getABTestModelByStatus(AbtestStatus... status) {
 		AbtestModel model = new AbtestModel();
 
 		if (!m_abtestRunMap.isEmpty()) {
 			Date now = new Date();
 
 			for (AbtestRun run : m_abtestRunMap.values()) {
-				Abtest entity = getABTestByRunId(run.getId());
+				try {
+					Abtest abtest = getABTestByRunId(run.getId());
 
-				if (entity != null) {
-					GroupStrategy groupStrategy = getGroupStrategyById(entity.getGroupStrategy());
+					GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
-					if (groupStrategy != null) {
-						if (status.length == 0) {
-							Case _case = transform(entity, run, groupStrategy);
-							model.addCase(_case);
-						} else {
-							AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+					Case _case = m_caseBuilder.build(abtest, run, groupStrategy);
 
-							for (AbtestStatus st : status) {
-								if (st == _status) {
-									Case _case = transform(entity, run, groupStrategy);
-									model.addCase(_case);
-								}
+					if (status.length == 0) {
+						model.addCase(_case);
+					} else {
+						AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+
+						for (AbtestStatus st : status) {
+							if (st == _status) {
+								model.addCase(_case);
 							}
 						}
 					}
+				} catch (Throwable e) {
+					Cat.logError(e);
 				}
 			}
 		}
@@ -150,7 +139,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	}
 
 	@Override
-	public AbtestRun getAbtestRunById(int id) {
+	public AbtestRun getAbTestRunById(int id) {
 		AbtestRun abtetRun = m_abtestRunMap.get(id);
 
 		if (abtetRun == null) {
@@ -164,6 +153,22 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		}
 
 		return abtetRun;
+	}
+
+	@Override
+	public List<AbtestRun> getAbtestRunByStatus(AbtestStatus status) {
+		List<AbtestRun> runs = new ArrayList<AbtestRun>();
+		Date now = new Date();
+
+		for (AbtestRun run : m_abtestRunMap.values()) {
+			AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+
+			if (_status == status) {
+				runs.add(run);
+			}
+		}
+
+		return runs;
 	}
 
 	@Override
@@ -288,41 +293,9 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		}
 	}
 
-	public void setAbtestDao(AbtestDao abtestDao) {
-		m_abtestDao = abtestDao;
-	}
-
-	public void setAbtestMap(Map<Integer, Abtest> abtestMap) {
-		m_abtestMap = abtestMap;
-	}
-
-	public void setAbtestRunDao(AbtestRunDao abtestRunDao) {
-		m_abtestRunDao = abtestRunDao;
-	}
-
-	public void setAbtestRunMap(Map<Integer, AbtestRun> abtestRunMap) {
-		m_abtestRunMap = abtestRunMap;
-	}
-
-	public void setGroupStrategyDao(GroupStrategyDao groupStrategyDao) {
-		m_groupStrategyDao = groupStrategyDao;
-	}
-
-	public void setGroupStrategyMap(Map<Integer, GroupStrategy> groupStrategyMap) {
-		m_groupStrategyMap = groupStrategyMap;
-	}
-
-	public void setGsonBuilderManager(GsonBuilderManager gsonBuilderManager) {
-		m_gsonBuilderManager = gsonBuilderManager;
-	}
-
 	@Override
 	public synchronized void setModified() {
 		m_modifyTime = System.currentTimeMillis();
-	}
-
-	public void setProjectDao(ProjectDao projectDao) {
-		m_projectDao = projectDao;
 	}
 
 	public void setRefreshTimeInSeconds(int refreshTimeInSeconds) {
@@ -331,68 +304,5 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	@Override
 	public void shutdown() {
-	}
-
-	private Case transform(Abtest abtest, AbtestRun run, GroupStrategy groupStrategy) {
-		Case abCase = new Case(abtest.getId());
-
-		abCase.setCreatedDate(abtest.getCreationDate());
-		abCase.setDescription(abtest.getDescription());
-		abCase.setGroupStrategy(groupStrategy.getName());
-		abCase.setName(abtest.getName());
-		abCase.setOwner(abtest.getOwner());
-		abCase.setLastModifiedDate(abtest.getModifiedDate());
-		for (String domain : StringUtils.split(abtest.getDomains(), ',')) {
-			abCase.addDomain(domain);
-		}
-
-		Run abRun = new Run(run.getId());
-		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
-
-		for (String domain : StringUtils.split(run.getDomains(), ',')) {
-			abRun.addDomain(domain);
-		}
-		abRun.setCreator(run.getCreator());
-		abRun.setConditionsFragement(run.getJavaFragement());
-		abRun.setDisabled(false);
-		abRun.setEndDate(run.getEndDate());
-		abRun.setStartDate(run.getStartDate());
-		abRun.setCreatedDate(run.getCreationDate());
-		abRun.setLastModifiedDate(run.getModifiedDate());
-
-		if (StringUtils.isNotBlank(run.getStrategyConfiguration())) {
-			abRun.setGroupstrategyDescriptor(gson.fromJson(run.getStrategyConfiguration(), GroupstrategyDescriptor.class));
-		}
-
-		if (StringUtils.isNotBlank(run.getConditions())) {
-			List<Condition> conditions = gson.fromJson(run.getConditions(), m_listType);
-
-			abRun.getConditions().addAll(conditions);
-		}
-
-		if (StringUtils.isNotBlank(run.getConversionGoals())) {
-			List<ConversionRule> conversions = gson.fromJson(run.getConversionGoals(), m_ruleType);
-
-			abRun.getConversionRules().addAll(conversions);
-		}
-
-		abCase.addRun(abRun);
-		return abCase;
-	}
-
-	@Override
-	public List<AbtestRun> getAbtestRunByStatus(AbtestStatus status) {
-		List<AbtestRun> runs = new ArrayList<AbtestRun>();
-		Date now = new Date();
-
-		for (AbtestRun run : m_abtestRunMap.values()) {
-			AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
-
-			if (_status == status) {
-				runs.add(run);
-			}
-		}
-
-		return runs;
 	}
 }
