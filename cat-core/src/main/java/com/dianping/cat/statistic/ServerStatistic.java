@@ -1,9 +1,8 @@
 package com.dianping.cat.statistic;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.jboss.netty.util.internal.ConcurrentHashMap;
 
 public class ServerStatistic {
 	private Map<Long, Statistic> m_statistics = new ConcurrentHashMap<Long, Statistic>(100);
