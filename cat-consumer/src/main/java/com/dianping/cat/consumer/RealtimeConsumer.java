@@ -345,7 +345,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 						} else if (value > 0) {
 							startPeriod(value);
 						} else {
-							endPeriod(-value);
 							// last period is over,make it asynchronous
 							Threads.forGroup("Cat").start(new EndTaskThread(-value));
 						}
