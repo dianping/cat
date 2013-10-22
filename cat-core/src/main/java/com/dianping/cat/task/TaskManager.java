@@ -126,7 +126,6 @@ public class TaskManager {
 			public boolean shouldCreateMonthTask() {
 				return true;
 			}
-
 		},
 
 		HOULY {
@@ -150,7 +149,6 @@ public class TaskManager {
 			public boolean shouldCreateMonthTask() {
 				return false;
 			}
-
 		},
 
 		ALL_EXCLUED_HOURLY {

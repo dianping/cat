@@ -22,6 +22,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_database;
 
+	private String m_pieChart;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -80,5 +82,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(SqlReport sqlReport) {
 		m_report = sqlReport;
 	}
+
+	public String getPieChart() {
+   	return m_pieChart;
+   }
+
+	public void setPieChart(String pieChart) {
+   	m_pieChart = pieChart;
+   }
 
 }
