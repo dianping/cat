@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.transaction;
+package com.dianping.cat.consumer.event;
 
 import junit.framework.Assert;
 
@@ -8,30 +8,27 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class TransactionAnalyzerTest extends ComponentTestCase {
+public class EventAnalyzerTest extends ComponentTestCase {
+
 	private long m_timestamp;
 
-	private TransactionAnalyzer m_analyzer;
+	private EventAnalyzer m_analyzer;
 
 	private String m_domain = "group";
 
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-
 		m_timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
 
-		try {
-			m_analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		m_analyzer = (EventAnalyzer) lookup(MessageAnalyzer.class, EventAnalyzer.ID);
 	}
 
 	@Test
@@ -42,12 +39,9 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			m_analyzer.process(tree);
 		}
 
-		TransactionReport report = m_analyzer.getReport(m_domain);
+		EventReport report = m_analyzer.getReport(m_domain);
 
-		report.accept(new TransactionStatisticsComputer());
-
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_analyzer.xml"),
-		      "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("event_analyzer.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
@@ -68,6 +62,9 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			t2.setStatus(Message.SUCCESS);
 		}
 
+		Message event1 = new DefaultEvent("test2", "fail");
+
+		t2.addChild(event1);
 		t2.complete();
 		t2.setDurationInMillis(i);
 
@@ -79,6 +76,10 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			t.setStatus(Message.SUCCESS);
 		}
 
+		Message event = new DefaultEvent("test1", "success");
+		event.setStatus(Message.SUCCESS);
+		t.addChild(event);
+
 		t.complete();
 		t.setDurationInMillis(i * 2);
 		t.setTimestamp(m_timestamp + 1000);
@@ -87,4 +88,5 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 
 		return tree;
 	}
+
 }

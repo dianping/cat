@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportDelegate;
@@ -11,18 +13,12 @@ import com.dianping.cat.service.ReportManager;
 
 public class MockReportManager<T> implements ReportManager<T> {
 
+	@Inject
 	private ReportDelegate<T> m_delegate;
 
 	private T m_report;
-	
+
 	private Set<String> m_set;
-	
-	public MockReportManager(ReportDelegate<T> delegate,String domain) {
-		m_delegate = delegate;
-		m_set = new HashSet<String>();
-		
-		m_set.add(domain);
-	}
 
 	@Override
 	public void cleanup() {
@@ -34,15 +30,21 @@ public class MockReportManager<T> implements ReportManager<T> {
 
 	@Override
 	public Set<String> getDomains(long startTime) {
+		if (m_set == null) {
+			m_set = new HashSet<String>();
+
+			m_set.add("group");
+		}
+
 		return m_set;
 	}
 
 	@Override
 	public T getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
-		if(m_report == null){
+		if (m_report == null) {
 			m_report = m_delegate.makeReport(domain, startTime, Constants.HOUR);
 		}
-		
+
 		return m_report;
 	}
 

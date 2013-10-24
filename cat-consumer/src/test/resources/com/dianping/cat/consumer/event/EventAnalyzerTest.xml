@@ -2,20 +2,20 @@
 	<components>
 		<component>
 			<role>com.dianping.cat.service.ReportManager</role>
-			<role-hint>transaction</role-hint>
+			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.consumer.MockReportManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ReportDelegate</role>
-					<role-hint>transaction</role-hint>
+					<role-hint>event</role-hint>
 					<field-name>m_delegate</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.service.ReportDelegate</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.transaction.Configurator$ExtendedTransactionDelegate</implementation>
+			<role-hint>event</role-hint>
+			<implementation>com.dianping.cat.consumer.event.Configurator$ExtendedEventDelegate</implementation>
 		</component>
 	</components>
 </plexus>

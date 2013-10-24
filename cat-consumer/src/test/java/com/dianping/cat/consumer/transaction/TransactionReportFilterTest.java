@@ -16,7 +16,7 @@ public class TransactionReportFilterTest {
 
 	@Test
 	public void whether_url_has_max_names() throws Exception {
-		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
+		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_filter.xml"), "utf-8");
 		TransactionReport report = DefaultSaxParser.parse(source);
 
 		TransactionType type = report.findMachine("10.1.77.193").findType("URL");
