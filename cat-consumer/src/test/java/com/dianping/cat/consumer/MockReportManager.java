@@ -44,7 +44,6 @@ public class MockReportManager<T> implements ReportManager<T> {
 		if (m_report == null) {
 			m_report = m_delegate.makeReport(domain, startTime, Constants.HOUR);
 		}
-
 		return m_report;
 	}
 

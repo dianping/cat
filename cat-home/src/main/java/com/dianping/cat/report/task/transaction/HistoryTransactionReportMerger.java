@@ -17,7 +17,6 @@ public class HistoryTransactionReportMerger extends TransactionReportMerger {
 
 		other.getDurations().clear();
 		other.getRanges().clear();
-
 		super.mergeName(old, other);
 	}
 

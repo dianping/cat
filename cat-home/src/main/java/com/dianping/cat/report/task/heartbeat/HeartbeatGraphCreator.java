@@ -48,7 +48,6 @@ public class HeartbeatGraphCreator  {
 				continue;
 			}
 			List<Period> periods = machine.getPeriods();
-
 			Map<String, GraphLine> detailCache = new TreeMap<String, GraphLine>();
 
 			for (Period period : periods) {

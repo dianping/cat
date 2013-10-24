@@ -51,12 +51,13 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		return values;
 	}
 
-	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String sumKey) {
-	   double[] value = datas.get(sumKey);
+	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
+	   double[] value = datas.get(key);
+	   
 	   if(value ==null){
 	   	value = new double[60];
 	   }
-	   values.put(sumKey, value);
+	   values.put(key, value);
    }
 
 	public class MetricDataBuilder extends BaseVisitor {

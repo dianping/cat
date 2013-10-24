@@ -1,5 +1,8 @@
 package com.dianping.cat.consumer.event;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -7,6 +10,7 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.message.Message;
@@ -31,6 +35,10 @@ public class EventAnalyzerTest extends ComponentTestCase {
 		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
 
 		m_analyzer = (EventAnalyzer) lookup(MessageAnalyzer.class, EventAnalyzer.ID);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		Date date = sdf.parse("20120101 00:00");
+
+		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
 	@Test

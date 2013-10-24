@@ -1,21 +1,20 @@
 package com.dianping.cat.report.page.model.event;
 
-import java.util.Date;
-
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
-import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.storage.Bucket;
+import com.dianping.cat.storage.BucketManager;
 
 public class LocalEventService extends BaseLocalModelService<EventReport> {
 
 	@Inject
-	private ReportService m_reportService;
+	private BucketManager m_bucketManager;
 	
 	public LocalEventService() {
 		super(EventAnalyzer.ID);
@@ -26,12 +25,20 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		EventReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long startTime = request.getStartTime();
-			Date start = new Date(startTime);
-			Date end = new Date(startTime + TimeUtil.ONE_HOUR);
-
-			report = m_reportService.queryEventReport(domain, start, end);
+			report = getReportFromLocalDisk(request.getStartTime(), domain);
 		}
 		return report;
+	}
+	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = null;
+
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
+			String xml = bucket.findById(domain);
+
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }
