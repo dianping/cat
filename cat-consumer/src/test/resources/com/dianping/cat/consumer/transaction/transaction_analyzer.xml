@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<transaction-report domain="group" startTime="1970-01-01 08:00:00" endTime="1970-01-01 08:59:59">
+<transaction-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
    <domain>group</domain>
    <ip>192.168.1.1</ip>
    <machine ip="192.168.1.1">

@@ -1,5 +1,8 @@
 package com.dianping.cat.consumer.transaction;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -7,6 +10,7 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.message.Message;
@@ -29,6 +33,10 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 
 		try {
 			m_analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+			Date date = sdf.parse("20120101 00:00");
+			
+			m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,8 +54,7 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 
 		report.accept(new TransactionStatisticsComputer());
 
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_analyzer.xml"),
-		      "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_analyzer.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
