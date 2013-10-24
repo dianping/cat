@@ -76,7 +76,7 @@ public class Handler implements PageHandler<Context> {
 			items.add(item);
 		}
 
-		chart.setItems(items);
+		chart.addItems(items);
 		model.setPieChart(new Gson().toJson(chart));
 	}
 

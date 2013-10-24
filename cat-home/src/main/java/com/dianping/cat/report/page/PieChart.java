@@ -11,6 +11,9 @@ public class PieChart {
 
 	private List<Item> items = new ArrayList<Item>();
 
+	public PieChart() {
+	}
+
 	public List<Item> getItems() {
 		return items;
 	}
@@ -19,32 +22,26 @@ public class PieChart {
 		return new Gson().toJson(this);
 	}
 
-	public void setItems(List<Item> temps) {
+	public void addItems(List<Item> temps) {
 		Collections.sort(temps, new ItemCompartor());
 		int size = temps.size();
+		int maxSize = 10;
 
-		if (size <= 10) {
+		if (size <= maxSize) {
 			this.items = temps;
 		} else {
-			this.items = temps.subList(0, 10);
-
+			for (int i = 0; i < maxSize; i++) {
+				this.items.add(temps.get(i));
+			}
 			Item item = new Item();
 			item.setTitle("Other");
 			double sum = 0;
-			for (int i = 10; i < size; i++) {
+			for (int i = maxSize; i < size; i++) {
 				Item temp = temps.get(i);
 				sum += temp.getNumber();
 			}
 			item.setNumber(sum);
-			items.add(item);
-		}
-
-		for (Item item : items) {
-			String title = item.getTitle();
-			if (title.length() > 28) {
-				title = title.substring(0, 11) + "..." + title.substring(title.length() - 11);
-				item.setTitle(title);
-			}
+			this.items.add(item);
 		}
 	}
 
