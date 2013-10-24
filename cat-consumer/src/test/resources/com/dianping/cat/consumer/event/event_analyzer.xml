@@ -7,14 +7,14 @@
          <failMessageUrl>1</failMessageUrl>
          <name id="fail" totalCount="1000" failCount="1000" failPercent="100.00">
             <failMessageUrl>1</failMessageUrl>
-            <range value="55" count="1000" fails="1000"/>
+            <range value="5" count="1000" fails="1000"/>
          </name>
       </type>
       <type id="test1" totalCount="1000" failCount="0" failPercent="0.00">
          <successMessageUrl>1</successMessageUrl>
          <name id="success" totalCount="1000" failCount="0" failPercent="0.00">
             <successMessageUrl>1</successMessageUrl>
-            <range value="55" count="1000" fails="0"/>
+            <range value="5" count="1000" fails="0"/>
          </name>
       </type>
    </machine>

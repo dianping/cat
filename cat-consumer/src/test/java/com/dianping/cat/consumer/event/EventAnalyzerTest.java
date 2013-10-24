@@ -26,7 +26,9 @@ public class EventAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		m_timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
+		long currentTimeMillis = System.currentTimeMillis();
+
+		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
 
 		m_analyzer = (EventAnalyzer) lookup(MessageAnalyzer.class, EventAnalyzer.ID);
 	}
@@ -62,7 +64,8 @@ public class EventAnalyzerTest extends ComponentTestCase {
 			t2.setStatus(Message.SUCCESS);
 		}
 
-		Message event1 = new DefaultEvent("test2", "fail");
+		DefaultEvent event1 = new DefaultEvent("test2", "fail");
+		event1.setTimestamp(m_timestamp + 5 * 60 * 1000);
 
 		t2.addChild(event1);
 		t2.complete();
@@ -76,7 +79,8 @@ public class EventAnalyzerTest extends ComponentTestCase {
 			t.setStatus(Message.SUCCESS);
 		}
 
-		Message event = new DefaultEvent("test1", "success");
+		DefaultEvent event = new DefaultEvent("test1", "success");
+		event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 		event.setStatus(Message.SUCCESS);
 		t.addChild(event);
 
