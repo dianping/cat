@@ -25,7 +25,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Inject(ID)
 	private ReportManager<EventReport> m_reportManager;
-	
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
@@ -133,4 +133,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
+	public void setReportManager(ReportManager<EventReport> reportManager) {
+		m_reportManager = reportManager;
+	}
 }
