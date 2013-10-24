@@ -7,15 +7,13 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.MockReportManager;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
 
 public class EventAnalyzerTest extends ComponentTestCase {
 
@@ -26,32 +24,28 @@ public class EventAnalyzerTest extends ComponentTestCase {
 	private String m_domain = "group";
 
 	@Before
-	public void init() {
+	public void setUp() throws Exception {
+		super.setUp();
 		m_timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
 
-		ReportDelegate<EventReport> deleaate = new EventDelegate();
-		ReportManager<EventReport> reportManager = new MockReportManager<EventReport>(deleaate, m_domain);
-
-		m_analyzer = new EventAnalyzer();
-		m_analyzer.setReportManager(reportManager);
+		m_analyzer = (EventAnalyzer) lookup(MessageAnalyzer.class, EventAnalyzer.ID);
 	}
 
 	@Test
-	public void testProcessTransaction() throws Exception {
-
+	public void testProcess() throws Exception {
 		for (int i = 1; i <= 1000; i++) {
-			MessageTree tree = newMessageTree(i);
+			MessageTree tree = generateMessageTree(i);
 
 			m_analyzer.process(tree);
 		}
 
 		EventReport report = m_analyzer.getReport(m_domain);
-		
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventAnalyzerTest.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
+
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("event_analyzer.xml"), "utf-8");
+		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
-	protected MessageTree newMessageTree(int i) {
+	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
 
 		tree.setMessageId("" + i);

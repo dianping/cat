@@ -7,15 +7,12 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.MockReportManager;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
 
 public class TransactionAnalyzerTest extends ComponentTestCase {
 	private long m_timestamp;
@@ -25,25 +22,22 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 	private String m_domain = "group";
 
 	@Before
-	public void init() {
+	public void setUp() throws Exception {
+		super.setUp();
+
 		m_timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
 
-		ReportDelegate<TransactionReport> transactionDelegate = new TransactionDelegate();
-		ServerConfigManager serverConfigManager = new ServerConfigManager();
-		ReportManager<TransactionReport> reportManager = new MockReportManager<TransactionReport>(transactionDelegate,
-		      m_domain);
-
-		m_analyzer = new TransactionAnalyzer();
-		m_analyzer.setDelegate((TransactionDelegate) transactionDelegate);
-		m_analyzer.setReportManager(reportManager);
-		m_analyzer.setServerConfigManager(serverConfigManager);
+		try {
+			m_analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
-	public void testProcessTransaction() throws Exception {
-
+	public void testProcess() throws Exception {
 		for (int i = 1; i <= 1000; i++) {
-			MessageTree tree = newMessageTree(i);
+			MessageTree tree = generateMessageTree(i);
 
 			m_analyzer.process(tree);
 		}
@@ -52,11 +46,12 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 
 		report.accept(new TransactionStatisticsComputer());
 
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionAnalyzerTest.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_analyzer.xml"),
+		      "utf-8");
+		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
-	protected MessageTree newMessageTree(int i) {
+	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
 
 		tree.setMessageId("" + i);
