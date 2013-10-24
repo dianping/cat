@@ -43,7 +43,8 @@ public class DefaultBaselineService implements BaselineService {
 
 		if (baseline == null) {
 			try {
-				baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+				baseline = m_baselineDao
+				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				m_baselineMap.put(baselineKey, baseline);
 			} catch (DalNotFoundException e) {
 				Cat.logEvent("BaselineNotFound", baselineKey);
@@ -67,14 +68,13 @@ public class DefaultBaselineService implements BaselineService {
 		double[] result = new double[60];
 		Date today = TaskHelper.todayZero(reportPeriod);
 		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
-
 		double[] dayResult = queryDailyBaseline(reportName, key, today);
-		if (dayResult == null)
-			return null;
-		for (int i = 0; i < 60; i++) {
-			result[i] = dayResult[hour * 60 + i];
-		}
 
+		if (dayResult != null) {
+			for (int i = 0; i < 60; i++) {
+				result[i] = dayResult[hour * 60 + i];
+			}
+		}
 		return result;
 	}
 
