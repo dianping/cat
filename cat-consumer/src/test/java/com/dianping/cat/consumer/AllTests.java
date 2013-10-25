@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.core.ProblemReportAggregationTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
@@ -39,6 +40,9 @@ TransactionReportFilterTest.class,
 
 /* event */
 EventAnalyzerTest.class,
+
+/* heartbeat */
+HeartbeatAnalyzerTest.class,
 
 CompositeFormatTest.class,
 
