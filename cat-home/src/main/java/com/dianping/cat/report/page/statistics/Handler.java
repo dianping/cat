@@ -21,9 +21,12 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
+import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -50,6 +53,95 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
+	public class BugReportVisitor extends BaseVisitor {
+
+		private Domain m_currentDomain;
+
+		private Map<String, ErrorStatis> m_errors = new HashMap<String, ErrorStatis>();
+
+		public ErrorStatis findOrCreateErrorStatis(String productLine) {
+			ErrorStatis statis = m_errors.get(productLine);
+
+			if (statis == null) {
+				statis = new ErrorStatis();
+				m_errors.put(productLine, statis);
+			}
+			return statis;
+		}
+
+		public Map<String, ErrorStatis> getErrors() {
+			return m_errors;
+		}
+
+		@Override
+		public void visitDomain(Domain domain) {
+			m_currentDomain= domain;
+			super.visitDomain(domain);
+		}
+
+		@Override
+		public void visitExceptionItem(ExceptionItem exceptionItem) {
+			String exception = exceptionItem.getId();
+			int count = exceptionItem.getCount();
+			Project project = findProjectByDomain(m_currentDomain.getId());
+
+			if (project != null) {
+				String productLine = project.getProjectLine();
+				String department = project.getDepartment();
+				ErrorStatis statis = findOrCreateErrorStatis(productLine);
+
+				statis.setDepartment(department);
+				statis.setProductLine(productLine);
+				m_currentDomain.setDepartment(department);
+				m_currentDomain.setProductLine(productLine);
+				
+				Map<String, ExceptionItem> items = null;
+
+				if (isBug(m_currentDomain.getId(), exception)) {
+					items = statis.getBugs();
+				} else {
+					items = statis.getExceptions();
+				}
+
+				ExceptionItem item = items.get(exception);
+
+				if (item == null) {
+					item = new ExceptionItem(exception);
+					item.setCount(count);
+					item.getMessages().addAll(exceptionItem.getMessages());
+					items.put(exception, item);
+				} else {
+					List<String> messages = item.getMessages();
+					item.setCount(item.getCount() + count);
+					messages.addAll(exceptionItem.getMessages());
+
+					if (messages.size() > 10) {
+						messages = messages.subList(0, 10);
+					}
+				}
+			}
+		}
+	}
+
+	public class ClearBugReport extends BaseVisitor {
+
+		@Override
+		public void visitDomain(Domain domain) {
+			String domainName = domain.getId();
+			Set<String> removes = new HashSet<String>();
+			Map<String, ExceptionItem> items = domain.getExceptionItems();
+
+			for (ExceptionItem item : items.values()) {
+				if (!isBug(domainName, item.getId())) {
+					removes.add(item.getId());
+				}
+			}
+			for (String remove : removes) {
+				items.remove(remove);
+			}
+		}
+	}
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -68,8 +160,20 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
+	private void buildBrowserInfo(Model model, Payload payload) {
+      try {
+	      String xml = Files.forIO().readFrom(getClass().getResourceAsStream("browser.xml"), "utf-8");
+	      BrowserReport report = DefaultSaxParser.parse(xml);
+	      model.setBrowserReport(report);
+      } catch (Exception e) {
+	      // TODO Auto-generated catch block
+	      e.printStackTrace();
+      }
+	}
+
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
+		System.out.println(bugReport.getStartTime());
 		BugReportVisitor visitor = new BugReportVisitor();
 		visitor.visitBugReport(bugReport);
 
@@ -151,15 +255,6 @@ public class Handler implements PageHandler<Context> {
 		model.setUtilizationReport(utilizationReport);
 	}
 
-	public Project findProjectByDomain(String domain) {
-		try {
-			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return null;
-	}
-
 	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
 		double maxScore = 0;
 		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
@@ -178,6 +273,15 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return maxScore;
+	}
+
+	public Project findProjectByDomain(String domain) {
+		try {
+			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return null;
 	}
 
 	@Override
@@ -212,6 +316,10 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_REPORT:
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
+			break;
+		case BROWSER_REPORT:
+		case BROWSER_HISTORY_REPORT:
+			buildBrowserInfo(model,payload);
 			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
@@ -371,94 +479,5 @@ public class Handler implements PageHandler<Context> {
 			temp.setExceptions(MapUtils.sortMap(exceptions, compator));
 		}
 		return errors;
-	}
-
-	public class BugReportVisitor extends BaseVisitor {
-
-		private Domain m_currentDomain;
-
-		private Map<String, ErrorStatis> m_errors = new HashMap<String, ErrorStatis>();
-
-		public ErrorStatis findOrCreateErrorStatis(String productLine) {
-			ErrorStatis statis = m_errors.get(productLine);
-
-			if (statis == null) {
-				statis = new ErrorStatis();
-				m_errors.put(productLine, statis);
-			}
-			return statis;
-		}
-
-		public Map<String, ErrorStatis> getErrors() {
-			return m_errors;
-		}
-
-		@Override
-		public void visitDomain(Domain domain) {
-			m_currentDomain= domain;
-			super.visitDomain(domain);
-		}
-
-		@Override
-		public void visitExceptionItem(ExceptionItem exceptionItem) {
-			String exception = exceptionItem.getId();
-			int count = exceptionItem.getCount();
-			Project project = findProjectByDomain(m_currentDomain.getId());
-
-			if (project != null) {
-				String productLine = project.getProjectLine();
-				String department = project.getDepartment();
-				ErrorStatis statis = findOrCreateErrorStatis(productLine);
-
-				statis.setDepartment(department);
-				statis.setProductLine(productLine);
-				m_currentDomain.setDepartment(department);
-				m_currentDomain.setProductLine(productLine);
-				
-				Map<String, ExceptionItem> items = null;
-
-				if (isBug(m_currentDomain.getId(), exception)) {
-					items = statis.getBugs();
-				} else {
-					items = statis.getExceptions();
-				}
-
-				ExceptionItem item = items.get(exception);
-
-				if (item == null) {
-					item = new ExceptionItem(exception);
-					item.setCount(count);
-					item.getMessages().addAll(exceptionItem.getMessages());
-					items.put(exception, item);
-				} else {
-					List<String> messages = item.getMessages();
-					item.setCount(item.getCount() + count);
-					messages.addAll(exceptionItem.getMessages());
-
-					if (messages.size() > 10) {
-						messages = messages.subList(0, 10);
-					}
-				}
-			}
-		}
-	}
-
-	public class ClearBugReport extends BaseVisitor {
-
-		@Override
-		public void visitDomain(Domain domain) {
-			String domainName = domain.getId();
-			Set<String> removes = new HashSet<String>();
-			Map<String, ExceptionItem> items = domain.getExceptionItems();
-
-			for (ExceptionItem item : items.values()) {
-				if (!isBug(domainName, item.getId())) {
-					removes.add(item.getId());
-				}
-			}
-			for (String remove : removes) {
-				items.remove(remove);
-			}
-		}
 	}
 }

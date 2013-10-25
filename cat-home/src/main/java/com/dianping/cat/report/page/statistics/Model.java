@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -23,6 +24,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private ServiceReport m_serviceReport;
 
 	private HeavyReport m_heavyReport;
+
+	private BrowserReport m_browserReport;
 
 	private List<Domain> m_serviceList;
 
@@ -48,21 +51,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
 
-	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
-		return m_utilizationWebList;
-	}
-
-	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationServiceList() {
-		return m_utilizationServiceList;
-	}
-
-	public void setUtilizationServiceList(
-			List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
-		m_utilizationServiceList = utilizationServiceList;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public BrowserReport getBrowserReport() {
+		return m_browserReport;
 	}
 
 	public BugReport getBugReport() {
@@ -136,6 +130,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_utilizationReport;
 	}
 
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationServiceList() {
+		return m_utilizationServiceList;
+	}
+
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
+		return m_utilizationWebList;
+	}
+
+	public void setBrowserReport(BrowserReport browserReport) {
+		m_browserReport = browserReport;
+	}
+
 	public void setBugReport(BugReport bugReport) {
 		m_bugReport = bugReport;
 	}
@@ -188,8 +194,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_utilizationReport = utilizationReport;
 	}
 
-	public void setUtilizationWebList(
-			List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
+	public void setUtilizationServiceList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
+		m_utilizationServiceList = utilizationServiceList;
+	}
+
+	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
 		m_utilizationWebList = utilizationWebList;
 	}
 

@@ -19,7 +19,11 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	UTILIZATION_REPORT(Constants.REPORT_UTILIZATION),
 
-	UTILIZATION_HISTORY_REPORT("historyUtilization");
+	UTILIZATION_HISTORY_REPORT("historyUtilization"), 
+	
+	BROWSER_REPORT(Constants.REPORT_BROWSER), 
+	
+	BROWSER_HISTORY_REPORT("historyBrowser") ;
 
 	private String m_name;
 
