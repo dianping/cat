@@ -40,6 +40,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
+	
+	@Inject
+	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 	private void buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
@@ -188,12 +191,11 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		report.getMachines().clear();
 
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		Machine machine = report.findOrCreateMachine(ip);
+		Machine machine = report.findOrCreateMachine(m_ip);
 
 		buildStateInfo(machine);
 		StateReport stateReport = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
-		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(ip).getProcessDomains();
+		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(m_ip).getProcessDomains();
 		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
 			ProcessDomain processDomain = processDomains.get(entry.getKey());
 
