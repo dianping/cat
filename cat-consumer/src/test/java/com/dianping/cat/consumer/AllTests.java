@@ -13,6 +13,8 @@ import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
+import com.dianping.cat.consumer.problem.ProblemReportTest;
+import com.dianping.cat.consumer.state.StateAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
@@ -44,12 +46,21 @@ EventAnalyzerTest.class,
 /* heartbeat */
 HeartbeatAnalyzerTest.class,
 
+/* state */
+StateAnalyzerTest.class,
+
+/* top */
+
+/* problem */
+ProblemReportAggregationTest.class,
+
+ProblemHandlerTest.class,
+
+ProblemReportTest.class,
+
 CompositeFormatTest.class,
 
-DefaultFormatTest.class,
-
-ProblemReportAggregationTest.class
-
+DefaultFormatTest.class
 })
 public class AllTests {
 
