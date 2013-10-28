@@ -218,7 +218,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 				m_groupStrategyMap.put(id, groupStrategy);
 			} catch (Throwable e) {
-				Cat.logError(e);
+				groupStrategy = new GroupStrategy();
 			}
 		}
 
