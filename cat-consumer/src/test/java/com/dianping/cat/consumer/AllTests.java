@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
+import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
@@ -63,6 +64,8 @@ ProblemReportAggregationTest.class,
 ProblemHandlerTest.class,
 
 ProblemReportTest.class,
+
+ProblemAnalyzerTest.class,
 
 CompositeFormatTest.class,
 
