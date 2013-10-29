@@ -28,23 +28,8 @@ public class CatAppender extends AppenderSkeleton {
 		}
 	}
 
-	private void logTrace(LoggingEvent event) {
-		String type = "Trace";
-		String name = event.getLevel().toString();
-		String data = event.getMessage().toString();
-		ThrowableInformation info = event.getThrowableInformation();
-
-		if (info != null) {
-			Throwable exception = info.getThrowable();
-
-			if (exception != null) {
-				StringWriter writer = new StringWriter(2048);
-
-				exception.printStackTrace(new PrintWriter(writer));
-				data = data + '\n' + writer.toString();
-			}
-		}
-		Cat.logTrace(type, name, Trace.SUCCESS, data);
+	@Override
+	public void close() {
 	}
 
 	private void logError(LoggingEvent event) {
@@ -67,8 +52,23 @@ public class CatAppender extends AppenderSkeleton {
 		}
 	}
 
-	@Override
-	public void close() {
+	private void logTrace(LoggingEvent event) {
+		String type = "Trace";
+		String name = event.getLevel().toString();
+		String data = event.getMessage().toString();
+		ThrowableInformation info = event.getThrowableInformation();
+
+		if (info != null) {
+			Throwable exception = info.getThrowable();
+
+			if (exception != null) {
+				StringWriter writer = new StringWriter(2048);
+
+				exception.printStackTrace(new PrintWriter(writer));
+				data = data + '\n' + writer.toString();
+			}
+		}
+		Cat.logTrace(type, name, Trace.SUCCESS, data);
 	}
 
 	@Override

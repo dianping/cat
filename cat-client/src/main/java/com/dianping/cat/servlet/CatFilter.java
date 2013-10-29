@@ -82,14 +82,6 @@ public class CatFilter implements Filter {
 				return null;
 			}
 
-			protected void setTraceMode(HttpServletRequest req) {
-				String mode = req.getParameter("X-CAT-TRACE-MODE");
-
-				if (mode.equals("true")) {
-					Cat.getManager().setTraceMode(true);
-				}
-			}
-
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
@@ -119,10 +111,41 @@ public class CatFilter implements Filter {
 					}
 				}
 			}
+
+			protected void setTraceMode(HttpServletRequest req) {
+				String mode = req.getParameter("X-CAT-TRACE-MODE");
+
+				if (mode.equals("true")) {
+					Cat.getManager().setTraceMode(true);
+				}
+			}
 		},
 
 		ID_SETUP {
 			private String m_servers;
+
+			private String getCatServer() {
+				if (m_servers == null) {
+					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
+					List<Server> servers = manager.getConfigManager().getServers();
+
+					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
+						@Override
+						public String asString(Server server) {
+							String ip = server.getIp();
+							Integer httpPort = server.getHttpPort();
+
+							if ("127.0.0.1".equals(ip)) {
+								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+							}
+
+							return ip + ":" + httpPort;
+						}
+					});
+				}
+
+				return m_servers;
+			}
 
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
@@ -174,29 +197,6 @@ public class CatFilter implements Filter {
 				}
 
 				ctx.handle();
-			}
-
-			private String getCatServer() {
-				if (m_servers == null) {
-					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-					List<Server> servers = manager.getConfigManager().getServers();
-
-					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
-						@Override
-						public String asString(Server server) {
-							String ip = server.getIp();
-							Integer httpPort = server.getHttpPort();
-
-							if ("127.0.0.1".equals(ip)) {
-								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-							}
-
-							return ip + ":" + httpPort;
-						}
-					});
-				}
-
-				return m_servers;
 			}
 		},
 

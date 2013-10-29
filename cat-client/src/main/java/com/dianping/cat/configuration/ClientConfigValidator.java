@@ -15,6 +15,12 @@ public class ClientConfigValidator extends DefaultValidator {
 		return NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
+	private void log(String severity, String message) {
+		MessageFormat format = new MessageFormat("[{0,date,MM-dd HH:mm:ss.sss}] [{1}] [{2}] {3}");
+
+		System.out.println(format.format(new Object[] { new Date(), severity, "Cat", message }));
+	}
+
 	@Override
 	public void visitConfig(ClientConfig config) {
 		if (!"client".equals(config.getMode())) {
@@ -47,12 +53,6 @@ public class ClientConfigValidator extends DefaultValidator {
 			m_config.setEnabled(false);
 			log("WARN", "CAT client was disabled in domain(" + domain.getId() + ") explicitly!");
 		}
-	}
-
-	private void log(String severity, String message) {
-		MessageFormat format = new MessageFormat("[{0,date,MM-dd HH:mm:ss.sss}] [{1}] [{2}] {3}");
-
-		System.out.println(format.format(new Object[] { new Date(), severity, "Cat", message }));
 	}
 
 	@Override
