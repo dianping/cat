@@ -92,7 +92,6 @@ public class FileSystemManager implements Initializable {
 			System.setProperty("java.security.krb5.kdc", getValue(properties, "java.security.krb5.kdc", "192.168.7.80"));
 
 			UserGroupInformation.setConfiguration(config);
-
 		}
 
 		return config;

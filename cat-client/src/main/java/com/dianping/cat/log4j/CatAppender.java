@@ -15,11 +15,11 @@ public class CatAppender extends AppenderSkeleton {
 	@Override
 	protected void append(LoggingEvent event) {
 		if (event.getLevel().isGreaterOrEqual(Level.ERROR)) {
-			ThrowableInformation throwableInformation = event.getThrowableInformation();
+			ThrowableInformation info = event.getThrowableInformation();
 
-			if (throwableInformation != null) {
+			if (info != null) {
 				MessageProducer cat = Cat.getProducer();
-				Throwable exception = throwableInformation.getThrowable();
+				Throwable exception = info.getThrowable();
 				MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 				if (tree == null) {
