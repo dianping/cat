@@ -26,7 +26,6 @@ import com.dianping.cat.report.page.sql.SqlReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
-import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
@@ -51,10 +50,10 @@ import com.dianping.cat.system.notify.RenderTest;
 ValueTranslaterTest.class,
 
 /* .report.page.model */
-EventReportFilterTest.class, TransactionReportFilterTest.class,
+EventReportFilterTest.class, TransactionReportFilterTest.class,ProblemReportMergerTest.class,
 
 /* . report.page.transcation */
-PayloadTest.class, TransactionReportMergerTest.class,
+PayloadTest.class, 
 
 /* . report.page.cross */
 CrossReportMergerTest.class,
@@ -63,8 +62,6 @@ CrossReportMergerTest.class,
 EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 
 ProblemGraphDataTest.class, TransactionGraphDataTest.class,
-
-ProblemReportMergerTest.class,
 
 /* sql test */
 SqlReportMergerTest.class,

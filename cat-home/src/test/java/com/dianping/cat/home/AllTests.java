@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.home.abtest.conditions.TrafficFilterCodeGenerationTest;
 import com.dianping.cat.home.abtest.conditions.TrafficFilterTest;
 import com.dianping.cat.home.abtest.groupstrategy.GroupStrategyParserTest;
@@ -26,7 +27,6 @@ import com.dianping.cat.report.page.sql.SqlReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
-import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;

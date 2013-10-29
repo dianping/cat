@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.consumer.transaction;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,11 +11,11 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 public class TransactionReportMergerTest {
 	@Test
 	public void testTransactionReportMerge() throws Exception {
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportOld.xml"), "utf-8");
-		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportNew.xml"), "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_old.xml"), "utf-8");
+		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_new.xml"), "utf-8");
 		TransactionReport reportOld = DefaultSaxParser.parse(oldXml);
 		TransactionReport reportNew = DefaultSaxParser.parse(newXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportMergeResult.xml"),
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_mergeResult.xml"),
 		      "utf-8");
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportOld.getDomain()));
 

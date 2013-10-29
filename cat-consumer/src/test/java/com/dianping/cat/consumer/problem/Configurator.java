@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.heartbeat;
+package com.dianping.cat.consumer.problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.MockReportManager;
-import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.service.ReportManager;
 
@@ -20,38 +20,41 @@ public class Configurator extends AbstractResourceConfigurator {
 	}
 
 	protected Class<?> getTestClass() {
-		return HeartbeatAnalyzerTest.class;
+		return ProblemAnalyzerTest.class;
 	}
 
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		final String ID = HeartbeatAnalyzer.ID;
+		final String ID = ProblemAnalyzer.ID;
 
-		all.add(C(ReportManager.class, ID, MockHeartbeatReportManager.class)//
+		all.add(C(ReportManager.class, ID, MockProblemReportManager.class)//
 		      .req(ReportDelegate.class, ID));
-		all.add(C(ReportDelegate.class, ID, ExtendedHeartbeatDelegate.class));
+		all.add(C(ReportDelegate.class, ID, ExtendedProblemDelegate.class));
 
 		return all;
 	}
 
-	public static class ExtendedHeartbeatDelegate extends HeartbeatDelegate {
+	public static class ExtendedProblemDelegate extends ProblemDelegate {
 	}
-	
-	public static class MockHeartbeatReportManager extends MockReportManager<HeartbeatReport> {
-		private HeartbeatReport m_report;
+
+	public static class MockProblemReportManager extends MockReportManager<ProblemReport> {
+		private ProblemReport m_report;
 
 		@Inject
-		private ReportDelegate<HeartbeatReport> m_delegate;
+		private ReportDelegate<ProblemReport> m_delegate;
 
 		@Override
-		public HeartbeatReport getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
+		public ProblemReport getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
 			if (m_report == null) {
-				m_report = (HeartbeatReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
+				m_report = (ProblemReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
 			}
 
 			return m_report;
 		}
+
+		public void setReport(ProblemReport report) {
+      	m_report = report;
+      }
 	}
-	
 }
