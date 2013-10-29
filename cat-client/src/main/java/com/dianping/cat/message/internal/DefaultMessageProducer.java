@@ -67,6 +67,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public void logTrace(String type, String name) {
+		logTrace(type, name, Message.SUCCESS, null);
+	}
+
+	@Override
 	public void logEvent(String type, String name, String status, String nameValuePairs) {
 		Event event = newEvent(type, name);
 

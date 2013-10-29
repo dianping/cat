@@ -146,9 +146,17 @@ public class Cat {
 	public static void logEvent(String type, String name) {
 		Cat.getProducer().logEvent(type, name);
 	}
+	
+	public static void logTrace(String type, String name) {
+		Cat.getProducer().logTrace(type, name);
+	}
 
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
 		Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+	}
+	
+	public static void logTrace(String type, String name, String status, String nameValuePairs) {
+		Cat.getProducer().logTrace(type, name, status, nameValuePairs);
 	}
 
 	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
