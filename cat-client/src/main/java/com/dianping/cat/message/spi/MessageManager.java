@@ -57,15 +57,15 @@ public interface MessageManager {
 	public boolean isTraceMode();
 	
 	/**
+	 * Do cleanup for current thread environment in order to release resources in thread local objects.
+	 */
+	public void reset();
+
+	/**
 	 * Set CAT trace mode.
 	 * 
 	 */
 	public void setTraceMode(boolean traceMode);
-
-	/**
-	 * Do cleanup for current thread environment in order to release resources in thread local objects.
-	 */
-	public void reset();
 
 	/**
 	 * Do setup for current thread environment in order to prepare thread local objects.

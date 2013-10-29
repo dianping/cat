@@ -166,6 +166,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_domain != null && m_domain.isEnabled() && m_context.get() != null && m_configManager.isCatEnabled();
 	}
 
+	@Override
+	public boolean isTraceMode() {
+		return m_isTraceMode;
+	}
+
 	String nextMessageId() {
 		return m_factory.getNextId();
 	}
@@ -184,6 +189,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	public void setMetricType(String metricType) {
 		m_inheritableContext.set(metricType);
+	}
+
+	@Override
+	public void setTraceMode(boolean traceMode) {
+		m_isTraceMode = traceMode;
 	}
 
 	@Override
@@ -452,16 +462,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				((DefaultTransaction) transaction).setCompleted(true);
 			}
 		}
-	}
-
-	@Override
-	public boolean isTraceMode() {
-		return m_isTraceMode;
-	}
-
-	@Override
-	public void setTraceMode(boolean traceMode) {
-		m_isTraceMode = traceMode;
 	}
 
 }

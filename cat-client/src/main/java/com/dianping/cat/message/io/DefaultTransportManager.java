@@ -23,6 +23,11 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 	private Logger m_logger;
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public MessageSender getSender() {
 		return m_sender;
 	}
@@ -71,10 +76,5 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	public void setSender(MessageSender sender) {
 		m_sender = sender;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

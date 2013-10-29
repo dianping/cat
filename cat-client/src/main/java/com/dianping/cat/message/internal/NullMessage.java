@@ -22,6 +22,11 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	HEARTBEAT;
 
 	@Override
+	public Transaction addChild(Message message) {
+		return this;
+	}
+
+	@Override
 	public void addData(String keyValuePairs) {
 	}
 
@@ -34,8 +39,23 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	}
 
 	@Override
+	public List<Message> getChildren() {
+		return Collections.emptyList();
+	}
+
+	@Override
 	public Object getData() {
 		return null;
+	}
+
+	@Override
+	public long getDurationInMicros() {
+		return 0;
+	}
+
+	@Override
+	public long getDurationInMillis() {
+		return 0;
 	}
 
 	@Override
@@ -59,7 +79,17 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	}
 
 	@Override
+	public boolean hasChildren() {
+		return false;
+	}
+
+	@Override
 	public boolean isCompleted() {
+		return true;
+	}
+
+	@Override
+	public boolean isStandalone() {
 		return true;
 	}
 
@@ -74,35 +104,5 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 
 	@Override
 	public void setStatus(Throwable e) {
-	}
-
-	@Override
-	public Transaction addChild(Message message) {
-		return this;
-	}
-
-	@Override
-	public List<Message> getChildren() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public boolean hasChildren() {
-		return false;
-	}
-
-	@Override
-	public long getDurationInMillis() {
-		return 0;
-	}
-
-	@Override
-	public long getDurationInMicros() {
-		return 0;
-	}
-
-	@Override
-	public boolean isStandalone() {
-		return true;
 	}
 }
