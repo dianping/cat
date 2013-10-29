@@ -51,6 +51,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private boolean m_firstMessage = true;
 
+	private boolean m_isTraceMode = false;
+
 	@Override
 	public void add(Message message) {
 		Context ctx = getContext();
@@ -451,4 +453,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 	}
+
+	@Override
+	public boolean isTraceMode() {
+		return m_isTraceMode;
+	}
+
+	@Override
+	public void setTraceMode(boolean traceMode) {
+		m_isTraceMode = traceMode;
+	}
+
 }

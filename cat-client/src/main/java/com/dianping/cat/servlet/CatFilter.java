@@ -82,6 +82,14 @@ public class CatFilter implements Filter {
 				return null;
 			}
 
+			protected void setTraceMode(HttpServletRequest req) {
+				String source = req.getParameter("X-CAT-TRACE-MODE");
+
+				if (source.equals("true")) {
+					Cat.getManager().setTraceMode(true);
+				}
+			}
+
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
@@ -96,6 +104,8 @@ public class CatFilter implements Filter {
 
 					Cat.setup(getCookie(req, "JSESSIONID"));
 					ABTestManager.onRequestBegin(req, res);
+
+					setTraceMode(req);
 				} else {
 					ctx.setType(CatConstants.TYPE_URL_FORWARD);
 				}
@@ -256,11 +266,11 @@ public class CatFilter implements Filter {
 
 					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
 					String metricType = manager.getMetricType();
-					
+
 					if (metricType != null && metricType.length() > 0) {
 						Cat.logEvent(ctx.getType(), "ABTest", Message.SUCCESS, metricType);
 					}
-					
+
 					try {
 						ctx.handle();
 					} finally {
