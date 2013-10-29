@@ -21,6 +21,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 
@@ -255,6 +256,10 @@ public class Cat {
 
 	public static Event newEvent(String type, String name) {
 		return Cat.getProducer().newEvent(type, name);
+	}
+
+	public static Trace newTrace(String type, String name) {
+		return Cat.getProducer().newTrace(type, name);
 	}
 
 	public static Heartbeat newHeartbeat(String type, String name) {
