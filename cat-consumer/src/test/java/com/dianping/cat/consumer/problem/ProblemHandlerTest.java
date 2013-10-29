@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.problem;
 
 import java.util.HashMap;
 import java.util.Map;
