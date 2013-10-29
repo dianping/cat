@@ -3,12 +3,11 @@
 		<component>
 			<role>com.dianping.cat.service.ReportManager</role>
 			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.MockReportManager</implementation>
+			<implementation>com.dianping.cat.consumer.transaction.Configurator$MockTransactionReportManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ReportDelegate</role>
 					<role-hint>transaction</role-hint>
-					<field-name>m_delegate</field-name>
 				</requirement>
 			</requirements>
 		</component>
