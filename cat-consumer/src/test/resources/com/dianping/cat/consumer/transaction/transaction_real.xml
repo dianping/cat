@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="Cat" startTime="2013-10-25 16:00:00" endTime="2013-10-25 16:59:59">
+   <domain>Cat</domain>
+   <ip>10.1.4.11</ip>
+   <machine ip="10.1.4.11">
+      <type id="URL" totalCount="28078" failCount="0" failPercent="0.00" min="0.0" max="2157.374" avg="94.5" sum="2654851.2" sum2="597211962.7" std="111.0" tps="0.00" line95Value="284.00" line99Value="981.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28078" failCount="0" failPercent="0.00" min="0.0" max="2157.315" avg="94.5" sum="2653181.2" sum2="596870652.3" std="111.0" tps="0.00" line95Value="284.00" line99Value="981.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11790" failCount="0" failPercent="0.00" min="0.0" max="334.795" avg="4.0" sum="46710.3" sum2="1257153.5" std="9.5" tps="0.00" line95Value="17.00" line99Value="120.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27925" failCount="0" failPercent="0.00" min="0.0" max="14.656" avg="1.3" sum="36057.8" sum2="128060.2" std="1.7" tps="0.00" line95Value="5.00" line99Value="11.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32838" failCount="0" failPercent="0.00" min="1.025" max="440.311" avg="16.7" sum="548800.0" sum2="18412277.6" std="16.8" tps="0.00" line95Value="43.00" line99Value="165.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16142" failCount="1" failPercent="0.01" min="0.382" max="2157.3" avg="161.4" sum="2605963.1" sum2="595507732.7" std="104.1" tps="0.00" line95Value="330.00" line99Value="1136.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01040b-384080-22122</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60063" failCount="2" failPercent="0.00" min="3.36" max="1999.665" avg="71.6" sum="4297768.4" sum2="715143579.7" std="82.4" tps="0.00" line95Value="204.00" line99Value="884.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01040b-384080-22122</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2348" failCount="0" failPercent="0.00" min="0.02" max="42.155" avg="1.2" sum="2787.4" sum2="7560.4" std="1.3" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-20</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="5.38" max="22.319" avg="9.3" sum="549.0" sum2="5684.4" std="3.1" tps="0.00" line95Value="20.00" line99Value="22.00">
+         <successMessageUrl>PiccenterDisplay-0a01040b-384080-336</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.4.91">
+      <type id="URL" totalCount="28081" failCount="0" failPercent="0.00" min="0.042" max="1993.27" avg="61.0" sum="1713659.0" sum2="270978794.0" std="77.0" tps="0.00" line95Value="174.00" line99Value="776.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28081" failCount="0" failPercent="0.00" min="0.013" max="1993.223" avg="61.0" sum="1712117.7" sum2="270775432.0" std="77.0" tps="0.00" line95Value="174.00" line99Value="776.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16142" failCount="0" failPercent="0.00" min="0.27" max="1993.208" avg="103.5" sum="1670002.2" sum2="269452127.4" std="77.4" tps="0.00" line95Value="209.00" line99Value="931.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27912" failCount="0" failPercent="0.00" min="0.233" max="14.549" avg="0.9" sum="23976.7" sum2="58764.9" std="1.2" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32839" failCount="2" failPercent="0.01" min="0.988" max="1252.148" avg="16.2" sum="531412.5" sum2="18993593.4" std="17.8" tps="0.00" line95Value="42.00" line99Value="174.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01045b-384080-4178</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60084" failCount="0" failPercent="0.00" min="3.306" max="1925.054" avg="39.9" sum="2399736.4" sum2="286233670.5" std="56.3" tps="0.00" line95Value="114.00" line99Value="690.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2325" failCount="0" failPercent="0.00" min="0.419" max="8.163" avg="0.9" sum="2014.8" sum2="3128.2" std="0.8" tps="0.00" line95Value="3.00" line99Value="7.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-2</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11776" failCount="0" failPercent="0.00" min="0.247" max="241.536" avg="3.5" sum="41626.9" sum2="1262128.2" std="9.7" tps="0.00" line95Value="17.00" line99Value="117.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-3</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="9.186" max="32.129" avg="13.1" sum="770.3" sum2="11203.4" std="4.4" tps="0.00" line95Value="27.00" line99Value="32.00">
+         <successMessageUrl>PiccenterDisplay-0a01045b-384080-93</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.112">
+      <type id="URL" totalCount="20790" failCount="0" failPercent="0.00" min="0.042" max="11246.335" avg="101.3" sum="2106076.9" sum2="843048314.5" std="174.0" tps="0.00" line95Value="244.00" line99Value="1732.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20790" failCount="0" failPercent="0.00" min="0.015" max="11246.298" avg="101.2" sum="2104733.9" sum2="842667538.8" std="174.0" tps="0.00" line95Value="244.00" line99Value="1732.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4767" failCount="0" failPercent="0.00" min="0.247" max="256.147" avg="6.7" sum="31913.4" sum2="1204613.9" std="14.4" tps="0.00" line95Value="25.00" line99Value="225.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="20608" failCount="0" failPercent="0.00" min="0.232" max="72.859" avg="0.5" sum="10939.7" sum2="21322.3" std="0.9" tps="0.00" line95Value="0.00" line99Value="12.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15850" failCount="2" failPercent="0.01" min="0.239" max="11246.288" avg="130.8" sum="2072444.1" sum2="841393603.2" std="189.7" tps="0.00" line95Value="268.00" line99Value="1934.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010870-384080-8306</failMessageUrl>
+      </type>
+      <type id="Call" totalCount="32336" failCount="0" failPercent="0.00" min="0.879" max="795.761" avg="15.7" sum="506556.6" sum2="17369956.6" std="17.1" tps="0.00" line95Value="42.00" line99Value="176.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-1</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="58805" failCount="4" failPercent="0.01" min="3.172" max="11229.182" avg="56.1" sum="3301727.1" sum2="1318514958.0" std="138.8" tps="0.00" line95Value="159.00" line99Value="1311.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010870-384080-8306</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2274" failCount="0" failPercent="0.00" min="0.324" max="10.198" avg="0.6" sum="1403.8" sum2="1094.8" std="0.3" tps="0.00" line95Value="0.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-33</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="7.886" max="17.805" avg="9.8" sum="576.6" sum2="5761.5" std="1.5" tps="0.00" line95Value="13.00" line99Value="17.00">
+         <successMessageUrl>PiccenterDisplay-0a010870-384080-180</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.4.101">
+      <type id="URL" totalCount="28042" failCount="0" failPercent="0.00" min="0.031" max="2342.486" avg="60.2" sum="1687041.3" sum2="263496303.9" std="76.0" tps="0.00" line95Value="173.00" line99Value="791.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28042" failCount="0" failPercent="0.00" min="0.01" max="2342.449" avg="60.1" sum="1685729.9" sum2="263325018.8" std="76.0" tps="0.00" line95Value="173.00" line99Value="791.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11718" failCount="0" failPercent="0.00" min="0.218" max="288.552" avg="3.4" sum="40149.2" sum2="1124509.4" std="9.2" tps="0.00" line95Value="17.00" line99Value="126.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27825" failCount="0" failPercent="0.00" min="0.21" max="15.419" avg="0.9" sum="23975.5" sum2="58189.3" std="1.2" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-0</successMessageUrl>
+      </type>
+      <type id="System" totalCount="60" failCount="0" failPercent="0.00" min="5.15" max="20.79" avg="6.8" sum="407.9" sum2="3037.4" std="2.1" tps="0.00" line95Value="9.00" line99Value="20.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-5</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16117" failCount="0" failPercent="0.00" min="0.274" max="2342.439" avg="102.1" sum="1645165.5" sum2="262146522.5" std="76.5" tps="0.00" line95Value="206.00" line99Value="855.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-3</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32660" failCount="0" failPercent="0.00" min="1.077" max="504.852" avg="16.0" sum="522211.3" sum2="16551290.5" std="15.8" tps="0.00" line95Value="42.00" line99Value="154.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-3</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59900" failCount="0" failPercent="0.00" min="3.057" max="2304.023" avg="39.4" sum="2359952.8" sum2="279681736.6" std="55.8" tps="0.00" line95Value="114.00" line99Value="678.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-3</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2323" failCount="0" failPercent="0.00" min="0.438" max="15.736" avg="0.9" sum="2078.7" sum2="3515.6" std="0.8" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a010465-384080-1</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.163">
+      <type id="URL" totalCount="27999" failCount="0" failPercent="0.00" min="0.057" max="4481.45" avg="79.9" sum="2235984.8" sum2="929151004.0" std="163.7" tps="0.00" line95Value="230.00" line99Value="2757.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27999" failCount="0" failPercent="0.00" min="0.026" max="4481.388" avg="79.7" sum="2231866.2" sum2="923327426.4" std="163.2" tps="0.00" line95Value="230.00" line99Value="2757.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11689" failCount="0" failPercent="0.00" min="0.226" max="842.222" avg="3.9" sum="45025.5" sum2="2616884.2" std="14.5" tps="0.00" line95Value="17.00" line99Value="161.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27821" failCount="0" failPercent="0.00" min="0.215" max="768.84" avg="1.3" sum="35776.1" sum2="2937132.6" std="10.2" tps="0.00" line95Value="3.00" line99Value="100.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32694" failCount="1" failPercent="0.00" min="1.056" max="728.654" avg="16.9" sum="552187.4" sum2="24501646.0" std="21.5" tps="0.00" line95Value="43.00" line99Value="278.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0107a3-384080-24583</failMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16140" failCount="0" failPercent="0.00" min="0.253" max="4481.375" avg="135.5" sum="2186304.2" sum2="920177627.1" std="196.6" tps="0.00" line95Value="277.00" line99Value="3177.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-2</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60036" failCount="0" failPercent="0.00" min="3.225" max="4194.831" avg="57.3" sum="3441378.7" sum2="1184822558.9" std="128.3" tps="0.00" line95Value="162.00" line99Value="2096.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-2</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2339" failCount="0" failPercent="0.00" min="0.384" max="163.569" avg="1.1" sum="2666.1" sum2="67553.4" std="5.3" tps="0.00" line95Value="3.00" line99Value="134.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-12</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="8.753" max="434.347" avg="19.1" sum="1128.5" sum2="198687.7" std="54.8" tps="0.00" line95Value="34.00" line99Value="434.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a3-384080-179</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.151">
+      <type id="URL" totalCount="28080" failCount="0" failPercent="0.00" min="0.029" max="1906.26" avg="69.1" sum="1941585.1" sum2="367088855.1" std="91.1" tps="0.00" line95Value="214.00" line99Value="999.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28080" failCount="0" failPercent="0.00" min="0.011" max="1906.221" avg="69.1" sum="1940401.5" sum2="366909324.5" std="91.1" tps="0.00" line95Value="214.00" line99Value="999.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11757" failCount="0" failPercent="0.00" min="0.228" max="301.548" avg="3.6" sum="42038.3" sum2="1294621.0" std="9.9" tps="0.00" line95Value="17.00" line99Value="128.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27777" failCount="0" failPercent="0.00" min="0.206" max="16.166" avg="1.0" sum="26807.3" sum2="73254.7" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16031" failCount="2" failPercent="0.01" min="0.209" max="1906.208" avg="118.4" sum="1897998.0" sum2="365559268.0" std="93.7" tps="0.00" line95Value="260.00" line99Value="1088.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-2</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010797-384080-8125</failMessageUrl>
+      </type>
+      <type id="Call" totalCount="32594" failCount="0" failPercent="0.00" min="0.943" max="428.335" avg="16.2" sum="527504.8" sum2="17916312.8" std="17.0" tps="0.00" line95Value="42.00" line99Value="198.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-2</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59477" failCount="6" failPercent="0.01" min="2.91" max="1860.785" avg="48.2" sum="2864424.5" sum2="418468066.3" std="68.7" tps="0.00" line95Value="143.00" line99Value="916.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-2</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010797-384080-8125</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2266" failCount="0" failPercent="0.00" min="0.4" max="7.269" avg="0.9" sum="2110.4" sum2="3502.1" std="0.8" tps="0.00" line95Value="3.00" line99Value="6.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-5</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.463" max="19.258" avg="6.4" sum="377.4" sum2="2788.0" std="2.5" tps="0.00" line95Value="15.00" line99Value="19.00">
+         <successMessageUrl>PiccenterDisplay-0a010797-384080-301</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.126">
+      <type id="URL" totalCount="20830" failCount="0" failPercent="0.00" min="0.043" max="2291.765" avg="95.5" sum="1989426.1" sum2="393560753.9" std="98.9" tps="0.00" line95Value="242.00" line99Value="1080.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20830" failCount="0" failPercent="0.00" min="0.022" max="2291.694" avg="95.5" sum="1988310.3" sum2="393342602.6" std="98.9" tps="0.00" line95Value="242.00" line99Value="1080.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16044" failCount="7" failPercent="0.04" min="0.155" max="2291.676" avg="121.8" sum="1954008.4" sum2="392143592.2" std="98.0" tps="0.00" line95Value="267.00" line99Value="1126.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01087e-384080-4467</failMessageUrl>
+      </type>
+      <type id="cache" totalCount="20671" failCount="0" failPercent="0.00" min="0.223" max="18.83" avg="1.0" sum="20099.9" sum2="56295.5" std="1.3" tps="0.00" line95Value="3.00" line99Value="11.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32520" failCount="0" failPercent="0.00" min="0.994" max="417.666" avg="16.2" sum="525197.7" sum2="17046602.9" std="16.2" tps="0.00" line95Value="42.00" line99Value="171.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59805" failCount="14" failPercent="0.02" min="2.888" max="2259.623" avg="49.8" sum="2980785.2" sum2="461239917.5" std="72.3" tps="0.00" line95Value="150.00" line99Value="912.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01087e-384080-4467</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2353" failCount="0" failPercent="0.00" min="0.427" max="11.33" avg="0.9" sum="2190.9" sum2="3612.6" std="0.8" tps="0.00" line95Value="3.00" line99Value="6.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-6</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4636" failCount="0" failPercent="0.00" min="0.265" max="242.403" avg="7.3" sum="33926.3" sum2="1132185.0" std="13.8" tps="0.00" line95Value="27.00" line99Value="182.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-8</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.09" max="10.387" avg="5.3" sum="311.8" sum2="1705.2" std="1.0" tps="0.00" line95Value="7.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a01087e-384080-287</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.182">
+      <type id="URL" totalCount="27988" failCount="0" failPercent="0.00" min="0.0090" max="2436.107" avg="67.8" sum="1898543.5" sum2="349520933.9" std="88.8" tps="0.00" line95Value="211.00" line99Value="877.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-1</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27988" failCount="0" failPercent="0.00" min="0.0070" max="2436.007" avg="67.8" sum="1897308.2" sum2="349333898.7" std="88.8" tps="0.00" line95Value="211.00" line99Value="877.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-1</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11811" failCount="0" failPercent="0.00" min="0.197" max="433.372" avg="3.5" sum="40928.3" sum2="1317009.3" std="10.0" tps="0.00" line95Value="17.00" line99Value="128.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-1</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27838" failCount="0" failPercent="0.00" min="0.175" max="100.664" avg="1.0" sum="26460.6" sum2="80213.0" std="1.4" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-1</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16033" failCount="0" failPercent="0.00" min="0.164" max="2436.001" avg="115.8" sum="1855978.1" sum2="347956838.7" std="91.1" tps="0.00" line95Value="250.00" line99Value="1064.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32576" failCount="0" failPercent="0.00" min="0.869" max="480.622" avg="16.1" sum="525914.7" sum2="18715084.8" std="17.7" tps="0.00" line95Value="41.00" line99Value="221.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59301" failCount="0" failPercent="0.00" min="2.829" max="2379.513" avg="46.8" sum="2775434.7" sum2="392250334.0" std="66.5" tps="0.00" line95Value="138.00" line99Value="762.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-0</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2252" failCount="0" failPercent="0.00" min="0.342" max="11.301" avg="0.9" sum="1977.0" sum2="3314.2" std="0.8" tps="0.00" line95Value="3.00" line99Value="8.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-3</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="6.53" max="22.064" avg="8.7" sum="510.7" sum2="4746.5" std="2.3" tps="0.00" line95Value="16.00" line99Value="22.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b6-384080-412</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.2.116">
+      <type id="URL" totalCount="27831" failCount="0" failPercent="0.00" min="0.048" max="2050.841" avg="69.2" sum="1926471.6" sum2="365133553.7" std="91.3" tps="0.00" line95Value="210.00" line99Value="1050.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27831" failCount="0" failPercent="0.00" min="0.013" max="2050.812" avg="69.2" sum="1925232.3" sum2="364952213.4" std="91.3" tps="0.00" line95Value="210.00" line99Value="1050.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11718" failCount="0" failPercent="0.00" min="0.198" max="341.052" avg="3.3" sum="38693.6" sum2="1134509.8" std="9.3" tps="0.00" line95Value="15.00" line99Value="121.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27667" failCount="0" failPercent="0.00" min="0.191" max="25.896" avg="0.9" sum="25265.2" sum2="72550.3" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15955" failCount="0" failPercent="0.00" min="0.238" max="2050.802" avg="118.2" sum="1886161.5" sum2="363761480.6" std="93.9" tps="0.00" line95Value="253.00" line99Value="1236.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-1</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32373" failCount="0" failPercent="0.00" min="0.927" max="1125.489" avg="16.0" sum="517832.1" sum2="17707461.2" std="17.1" tps="0.00" line95Value="42.00" line99Value="156.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-1</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59264" failCount="1" failPercent="0.00" min="2.949" max="2019.022" avg="48.1" sum="2853440.5" sum2="417804034.1" std="68.8" tps="0.00" line95Value="143.00" line99Value="886.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010274-384080-15549</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2240" failCount="0" failPercent="0.00" min="0.371" max="9.718" avg="0.9" sum="2030.7" sum2="3456.0" std="0.8" tps="0.00" line95Value="3.00" line99Value="7.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-8</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.315" max="17.772" avg="5.5" sum="326.8" sum2="1995.1" std="1.8" tps="0.00" line95Value="7.00" line99Value="17.00">
+         <successMessageUrl>PiccenterDisplay-0a010274-384080-408</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.41">
+      <type id="URL" totalCount="20950" failCount="0" failPercent="0.00" min="0.028" max="2147.511" avg="90.4" sum="1894190.7" sum2="349689473.2" std="92.3" tps="0.00" line95Value="230.00" line99Value="1047.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20950" failCount="0" failPercent="0.00" min="0.0060" max="2147.48" avg="90.4" sum="1893158.8" sum2="349472665.3" std="92.3" tps="0.00" line95Value="230.00" line99Value="1047.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16004" failCount="2" failPercent="0.01" min="0.231" max="2147.469" avg="116.1" sum="1857259.1" sum2="347950183.9" std="91.0" tps="0.00" line95Value="249.00" line99Value="1107.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010829-384080-11830</failMessageUrl>
+      </type>
+      <type id="cache" totalCount="20769" failCount="0" failPercent="0.00" min="0.219" max="15.691" avg="0.9" sum="19510.0" sum2="51010.6" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32630" failCount="2" failPercent="0.01" min="0.933" max="1710.92" avg="16.4" sum="533674.8" sum2="21786971.9" std="20.0" tps="0.00" line95Value="42.00" line99Value="224.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010829-384080-1372</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59362" failCount="6" failPercent="0.01" min="2.897" max="2113.312" avg="46.6" sum="2766993.1" sum2="386835558.8" std="65.9" tps="0.00" line95Value="137.00" line99Value="804.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010829-384080-11830</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="4771" failCount="0" failPercent="0.00" min="0.268" max="520.072" avg="7.5" sum="35587.3" sum2="1470738.7" std="15.9" tps="0.00" line95Value="27.00" line99Value="225.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-5</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2232" failCount="0" failPercent="0.00" min="0.333" max="5.457" avg="0.9" sum="2013.7" sum2="3165.2" std="0.8" tps="0.00" line95Value="3.00" line99Value="5.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-12</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.393" max="11.482" avg="5.7" sum="337.0" sum2="2035.4" std="1.4" tps="0.00" line95Value="9.00" line99Value="11.00">
+         <successMessageUrl>PiccenterDisplay-0a010829-384080-51</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.146">
+      <type id="URL" totalCount="28295" failCount="0" failPercent="0.00" min="0.039" max="1796.184" avg="69.0" sum="1952445.0" sum2="349331099.2" std="87.1" tps="0.00" line95Value="211.00" line99Value="847.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28295" failCount="0" failPercent="0.00" min="0.018" max="1796.133" avg="69.0" sum="1951268.4" sum2="349156011.6" std="87.1" tps="0.00" line95Value="211.00" line99Value="847.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11738" failCount="0" failPercent="0.00" min="0.212" max="233.536" avg="3.5" sum="40934.6" sum2="1110619.6" std="9.1" tps="0.00" line95Value="16.00" line99Value="118.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="28087" failCount="0" failPercent="0.00" min="0.204" max="16.275" avg="0.9" sum="25992.2" sum2="71872.0" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16355" failCount="1" failPercent="0.01" min="0.253" max="1796.118" avg="116.8" sum="1909934.0" sum2="347985194.1" std="87.4" tps="0.00" line95Value="251.00" line99Value="1081.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010792-384080-18818</failMessageUrl>
+      </type>
+      <type id="Call" totalCount="33188" failCount="0" failPercent="0.00" min="0.949" max="398.131" avg="15.9" sum="529235.8" sum2="16695772.6" std="15.8" tps="0.00" line95Value="42.00" line99Value="159.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-1</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60939" failCount="2" failPercent="0.00" min="2.962" max="1699.481" avg="47.3" sum="2882563.2" sum2="389317956.8" std="64.4" tps="0.00" line95Value="140.00" line99Value="766.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010792-384080-18818</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2436" failCount="0" failPercent="0.00" min="0.391" max="9.177" avg="0.9" sum="2244.3" sum2="3713.1" std="0.8" tps="0.00" line95Value="3.00" line99Value="5.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-42</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.477" max="17.664" avg="5.8" sum="343.2" sum2="2179.0" std="1.8" tps="0.00" line95Value="8.00" line99Value="17.00">
+         <successMessageUrl>PiccenterDisplay-0a010792-384080-385</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.171">
+      <type id="URL" totalCount="27906" failCount="0" failPercent="0.00" min="0.039" max="1818.733" avg="72.5" sum="2023168.7" sum2="394716710.4" std="94.3" tps="0.00" line95Value="226.00" line99Value="949.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27906" failCount="0" failPercent="0.00" min="0.012" max="1818.691" avg="72.5" sum="2021949.7" sum2="394524699.4" std="94.3" tps="0.00" line95Value="226.00" line99Value="949.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11790" failCount="0" failPercent="0.00" min="0.225" max="336.173" avg="3.7" sum="43717.4" sum2="1500851.8" std="10.7" tps="0.00" line95Value="17.00" line99Value="141.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27757" failCount="0" failPercent="0.00" min="0.193" max="100.504" avg="1.0" sum="27476.7" sum2="88004.6" std="1.5" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32494" failCount="0" failPercent="0.00" min="0.893" max="509.087" avg="16.5" sum="535044.7" sum2="20113581.8" std="18.7" tps="0.00" line95Value="43.00" line99Value="229.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15981" failCount="0" failPercent="0.00" min="0.198" max="1818.679" avg="123.8" sum="1977845.2" sum2="392961638.9" std="96.3" tps="0.00" line95Value="270.00" line99Value="1113.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-1</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59279" failCount="0" failPercent="0.00" min="3.025" max="1742.212" avg="51.0" sum="3024728.1" sum2="450773911.3" std="70.7" tps="0.00" line95Value="158.00" line99Value="820.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-1</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2247" failCount="0" failPercent="0.00" min="0.324" max="12.262" avg="0.9" sum="2058.6" sum2="3819.7" std="0.9" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-16</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.59" max="41.407" avg="6.5" sum="381.3" sum2="3970.7" std="5.1" tps="0.00" line95Value="18.00" line99Value="41.00">
+         <successMessageUrl>PiccenterDisplay-0a0107ab-384080-114</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.176">
+      <type id="URL" totalCount="30321" failCount="0" failPercent="0.00" min="0.024" max="2596.781" avg="64.9" sum="1966194.8" sum2="388482818.9" std="92.8" tps="0.00" line95Value="212.00" line99Value="959.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-1</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="30321" failCount="0" failPercent="0.00" min="0.0090" max="2596.708" avg="64.8" sum="1965002.6" sum2="388310797.9" std="92.8" tps="0.00" line95Value="212.00" line99Value="959.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-1</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11825" failCount="0" failPercent="0.00" min="0.233" max="361.045" avg="3.6" sum="42674.8" sum2="1557918.1" std="10.9" tps="0.00" line95Value="16.00" line99Value="144.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-1</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27894" failCount="0" failPercent="0.00" min="0.209" max="100.641" avg="0.9" sum="26010.7" sum2="90718.2" std="1.5" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-1</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32755" failCount="1" failPercent="0.00" min="0.896" max="2507.981" avg="16.4" sum="538692.6" sum2="25597763.1" std="22.6" tps="0.00" line95Value="43.00" line99Value="220.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-1</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0107b0-384080-15336</failMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16072" failCount="5" failPercent="0.03" min="0.262" max="2596.694" avg="119.6" sum="1921894.2" sum2="386694302.7" std="98.8" tps="0.00" line95Value="260.00" line99Value="1131.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0107b0-384080-18417</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59733" failCount="15" failPercent="0.03" min="2.869" max="2420.634" avg="48.4" sum="2892197.3" sum2="438172192.8" std="70.6" tps="0.00" line95Value="144.00" line99Value="872.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0107b0-384080-18417</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2342" failCount="0" failPercent="0.00" min="0.395" max="6.161" avg="0.9" sum="2068.0" sum2="3317.8" std="0.8" tps="0.00" line95Value="3.00" line99Value="5.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-5</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.466" max="13.689" avg="5.7" sum="334.1" sum2="2063.1" std="1.7" tps="0.00" line95Value="13.00" line99Value="13.00">
+         <successMessageUrl>PiccenterDisplay-0a0107b0-384080-347</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.31">
+      <type id="URL" totalCount="28085" failCount="0" failPercent="0.00" min="0.052" max="2667.488" avg="69.6" sum="1954094.1" sum2="394880863.3" std="96.0" tps="0.00" line95Value="211.00" line99Value="1060.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28085" failCount="0" failPercent="0.00" min="0.015" max="2667.442" avg="69.5" sum="1952931.8" sum2="394701492.3" std="96.0" tps="0.00" line95Value="211.00" line99Value="1060.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16125" failCount="2" failPercent="0.01" min="0.202" max="2667.427" avg="118.6" sum="1912060.6" sum2="393342251.2" std="101.6" tps="0.00" line95Value="254.00" line99Value="1286.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01071f-384080-18425</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2270" failCount="0" failPercent="0.00" min="0.377" max="6.562" avg="0.8" sum="1926.7" sum2="2944.4" std="0.8" tps="0.00" line95Value="3.00" line99Value="6.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27868" failCount="0" failPercent="0.00" min="0.216" max="26.226" avg="0.9" sum="25273.5" sum2="73823.0" std="1.4" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32768" failCount="0" failPercent="0.00" min="0.927" max="569.157" avg="16.0" sum="524087.2" sum2="17731521.9" std="16.9" tps="0.00" line95Value="42.00" line99Value="163.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59695" failCount="4" failPercent="0.01" min="3.026" max="2532.511" avg="48.6" sum="2901543.4" sum2="469947935.9" std="74.2" tps="0.00" line95Value="142.00" line99Value="941.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01071f-384080-18425</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="11748" failCount="0" failPercent="0.00" min="0.236" max="409.797" avg="3.4" sum="40494.4" sum2="1300682.7" std="9.9" tps="0.00" line95Value="17.00" line99Value="119.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-4</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="6.988" max="27.499" avg="9.8" sum="577.9" sum2="6741.2" std="4.3" tps="0.00" line95Value="24.00" line99Value="27.00">
+         <successMessageUrl>PiccenterDisplay-0a01071f-384080-127</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.37">
+      <type id="URL" totalCount="20869" failCount="0" failPercent="0.00" min="0.036" max="2806.349" avg="92.3" sum="1926329.5" sum2="376462706.8" std="97.6" tps="0.00" line95Value="233.00" line99Value="1088.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20869" failCount="0" failPercent="0.00" min="0.012" max="2806.294" avg="92.3" sum="1925321.6" sum2="376272697.8" std="97.6" tps="0.00" line95Value="233.00" line99Value="1088.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15949" failCount="0" failPercent="0.00" min="0.874" max="2806.278" avg="118.5" sum="1889178.2" sum2="375077054.2" std="97.4" tps="0.00" line95Value="256.00" line99Value="1153.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="20710" failCount="0" failPercent="0.00" min="0.229" max="16.545" avg="0.9" sum="18816.9" sum2="50006.2" std="1.3" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32448" failCount="0" failPercent="0.00" min="1.011" max="2701.684" avg="16.3" sum="530289.9" sum2="26484797.0" std="23.4" tps="0.00" line95Value="42.00" line99Value="222.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59380" failCount="0" failPercent="0.00" min="2.965" max="2367.419" avg="47.8" sum="2840381.3" sum2="418461006.6" std="69.0" tps="0.00" line95Value="142.00" line99Value="832.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4763" failCount="0" failPercent="0.00" min="0.274" max="216.012" avg="7.5" sum="35797.5" sum2="1136373.8" std="13.5" tps="0.00" line95Value="27.00" line99Value="166.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-2</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2357" failCount="0" failPercent="0.00" min="0.4" max="8.117" avg="0.9" sum="2094.7" sum2="3453.7" std="0.8" tps="0.00" line95Value="3.00" line99Value="7.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-5</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.361" max="22.108" avg="6.1" sum="358.6" sum2="2489.3" std="2.3" tps="0.00" line95Value="9.00" line99Value="22.00">
+         <successMessageUrl>PiccenterDisplay-0a010825-384080-204</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.2.161">
+      <type id="URL" totalCount="27879" failCount="0" failPercent="0.00" min="0.025" max="1860.324" avg="68.6" sum="1912838.7" sum2="340987615.5" std="86.7" tps="0.00" line95Value="211.00" line99Value="869.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27879" failCount="0" failPercent="0.00" min="0.0060" max="1860.294" avg="68.6" sum="1911562.3" sum2="340796153.6" std="86.7" tps="0.00" line95Value="211.00" line99Value="869.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15938" failCount="2" failPercent="0.01" min="0.263" max="1860.282" avg="117.4" sum="1870870.7" sum2="339780404.6" std="86.8" tps="0.00" line95Value="252.00" line99Value="993.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0102a1-384080-17640</failMessageUrl>
+      </type>
+      <type id="cache" totalCount="27710" failCount="0" failPercent="0.00" min="0.188" max="26.73" avg="0.9" sum="25152.4" sum2="69075.1" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32463" failCount="0" failPercent="0.00" min="1.156" max="537.648" avg="16.1" sum="522740.7" sum2="17754816.0" std="17.0" tps="0.00" line95Value="42.00" line99Value="204.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59251" failCount="6" failPercent="0.01" min="2.87" max="1838.604" avg="47.5" sum="2815655.2" sum2="374665592.5" std="63.7" tps="0.00" line95Value="140.00" line99Value="776.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0102a1-384080-17640</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="11779" failCount="0" failPercent="0.00" min="0.214" max="176.85" avg="3.4" sum="40308.3" sum2="956197.3" std="8.3" tps="0.00" line95Value="17.00" line99Value="114.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-3</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2322" failCount="0" failPercent="0.00" min="0.39" max="8.247" avg="0.9" sum="2019.6" sum2="3230.7" std="0.8" tps="0.00" line95Value="3.00" line99Value="7.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-5</successMessageUrl>
+      </type>
+      <type id="System" totalCount="60" failCount="0" failPercent="0.00" min="4.439" max="21.354" avg="6.4" sum="386.9" sum2="3024.1" std="3.0" tps="0.00" line95Value="12.00" line99Value="21.00">
+         <successMessageUrl>PiccenterDisplay-0a0102a1-384080-23</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.46">
+      <type id="URL" totalCount="20977" failCount="0" failPercent="0.00" min="0.05" max="2625.067" avg="94.1" sum="1973232.1" sum2="380330469.6" std="96.3" tps="0.00" line95Value="237.00" line99Value="1035.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20977" failCount="0" failPercent="0.00" min="0.021" max="2625.011" avg="94.0" sum="1972111.3" sum2="380116707.1" std="96.3" tps="0.00" line95Value="237.00" line99Value="1035.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4663" failCount="0" failPercent="0.00" min="0.297" max="243.702" avg="7.5" sum="34925.1" sum2="1168493.5" std="13.9" tps="0.00" line95Value="28.00" line99Value="182.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="20781" failCount="0" failPercent="0.00" min="0.225" max="16.831" avg="1.0" sum="19794.1" sum2="54578.7" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32714" failCount="0" failPercent="0.00" min="0.945" max="436.551" avg="16.2" sum="530933.3" sum2="18538132.4" std="17.4" tps="0.00" line95Value="42.00" line99Value="214.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16127" failCount="3" failPercent="0.02" min="0.257" max="2624.994" avg="120.1" sum="1936762.8" sum2="378867598.9" std="95.2" tps="0.00" line95Value="258.00" line99Value="1104.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-2</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01082e-384080-377</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59993" failCount="5" failPercent="0.01" min="3.058" max="2473.116" avg="49.0" sum="2937615.7" sum2="433504768.6" std="69.5" tps="0.00" line95Value="143.00" line99Value="864.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-2</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01082e-384080-946</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2393" failCount="0" failPercent="0.00" min="0.384" max="9.498" avg="0.9" sum="2137.7" sum2="3462.9" std="0.8" tps="0.00" line95Value="3.00" line99Value="6.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-4</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="6.31" max="20.032" avg="8.2" sum="484.0" sum2="4238.5" std="2.1" tps="0.00" line95Value="15.00" line99Value="20.00">
+         <successMessageUrl>PiccenterDisplay-0a01082e-384080-51</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.217">
+      <type id="URL" totalCount="20892" failCount="0" failPercent="0.00" min="0.055" max="1755.837" avg="117.5" sum="2454326.9" sum2="508390971.5" std="102.6" tps="0.00" line95Value="289.00" line99Value="1032.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-2</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20892" failCount="0" failPercent="0.00" min="0.017" max="1755.794" avg="117.4" sum="2453187.6" sum2="508117088.3" std="102.6" tps="0.00" line95Value="289.00" line99Value="1032.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-2</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4581" failCount="0" failPercent="0.00" min="0.334" max="232.218" avg="7.6" sum="34807.5" sum2="1134682.6" std="13.8" tps="0.00" line95Value="27.00" line99Value="221.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-2</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="20745" failCount="0" failPercent="0.00" min="0.24" max="14.959" avg="1.2" sum="24658.3" sum2="82379.8" std="1.6" tps="0.00" line95Value="4.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-2</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16166" failCount="3" failPercent="0.02" min="0.327" max="1755.783" avg="149.6" sum="2417993.6" sum2="506899547.6" std="94.8" tps="0.00" line95Value="306.00" line99Value="1119.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0108d9-384080-13301</failMessageUrl>
+      </type>
+      <type id="Call" totalCount="32760" failCount="0" failPercent="0.00" min="1.066" max="1693.826" avg="16.5" sum="541691.7" sum2="21554295.5" std="19.6" tps="0.00" line95Value="42.00" line99Value="205.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59995" failCount="9" failPercent="0.02" min="2.923" max="1504.905" avg="65.1" sum="3904015.0" sum2="586917528.2" std="74.5" tps="0.00" line95Value="187.00" line99Value="819.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0108d9-384080-13301</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2302" failCount="0" failPercent="0.00" min="0.472" max="14.079" avg="1.1" sum="2463.1" sum2="4988.4" std="1.0" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-7</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="5.619" max="19.501" avg="9.2" sum="543.2" sum2="5247.0" std="2.0" tps="0.00" line95Value="14.00" line99Value="19.00">
+         <successMessageUrl>PiccenterDisplay-0a0108d9-384080-229</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.2.128">
+      <type id="URL" totalCount="27874" failCount="0" failPercent="0.00" min="0.042" max="2429.27" avg="69.5" sum="1938124.9" sum2="358804019.1" std="89.7" tps="0.00" line95Value="215.00" line99Value="861.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27874" failCount="0" failPercent="0.00" min="0.021" max="2429.22" avg="69.5" sum="1936929.7" sum2="358628093.9" std="89.7" tps="0.00" line95Value="215.00" line99Value="861.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11793" failCount="0" failPercent="0.00" min="0.215" max="256.971" avg="3.6" sum="42475.7" sum2="1275562.8" std="9.8" tps="0.00" line95Value="18.00" line99Value="121.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27722" failCount="0" failPercent="0.00" min="0.197" max="21.968" avg="0.9" sum="25765.1" sum2="69528.8" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32460" failCount="0" failPercent="0.00" min="0.977" max="1217.507" avg="16.4" sum="530871.3" sum2="19920907.9" std="18.6" tps="0.00" line95Value="42.00" line99Value="207.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15937" failCount="0" failPercent="0.00" min="0.245" max="2429.205" avg="118.9" sum="1894098.9" sum2="357298014.9" std="91.1" tps="0.00" line95Value="254.00" line99Value="1041.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-2</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59301" failCount="0" failPercent="0.00" min="2.909" max="2369.978" avg="48.1" sum="2853767.8" sum2="397801517.0" std="66.3" tps="0.00" line95Value="143.00" line99Value="768.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-2</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2349" failCount="0" failPercent="0.00" min="0.382" max="7.545" avg="0.9" sum="2121.9" sum2="3253.0" std="0.8" tps="0.00" line95Value="3.00" line99Value="5.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-3</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.135" max="33.338" avg="5.9" sum="346.4" sum2="2931.7" std="3.9" tps="0.00" line95Value="14.00" line99Value="33.00">
+         <successMessageUrl>PiccenterDisplay-0a010280-384080-341</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.167">
+      <type id="URL" totalCount="27697" failCount="0" failPercent="0.00" min="0.044" max="2053.359" avg="67.5" sum="1870670.0" sum2="342611091.8" std="88.4" tps="0.00" line95Value="208.00" line99Value="874.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27697" failCount="0" failPercent="0.00" min="0.02" max="2053.318" avg="67.5" sum="1869557.0" sum2="342446090.0" std="88.4" tps="0.00" line95Value="208.00" line99Value="874.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15774" failCount="0" failPercent="0.00" min="0.222" max="2053.305" avg="115.9" sum="1827709.7" sum2="341213908.3" std="90.6" tps="0.00" line95Value="247.00" line99Value="1168.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27547" failCount="0" failPercent="0.00" min="0.23" max="100.625" avg="0.9" sum="25122.9" sum2="77268.2" std="1.4" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32042" failCount="0" failPercent="0.00" min="1.105" max="453.48" avg="16.2" sum="519676.7" sum2="18283480.5" std="17.5" tps="0.00" line95Value="42.00" line99Value="211.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="58436" failCount="0" failPercent="0.00" min="2.813" max="2020.904" avg="46.8" sum="2734816.9" sum2="386009448.7" std="66.4" tps="0.00" line95Value="137.00" line99Value="781.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11784" failCount="0" failPercent="0.00" min="0.239" max="254.246" avg="3.5" sum="41496.8" sum2="1179059.5" std="9.4" tps="0.00" line95Value="17.00" line99Value="122.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-6</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2221" failCount="0" failPercent="0.00" min="0.356" max="7.615" avg="0.9" sum="1910.8" sum2="2929.2" std="0.8" tps="0.00" line95Value="3.00" line99Value="5.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-23</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="5.652" max="19.474" avg="7.5" sum="444.9" sum2="3675.6" std="2.3" tps="0.00" line95Value="16.00" line99Value="19.00">
+         <successMessageUrl>PiccenterDisplay-0a0107a7-384080-95</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.2.191">
+      <type id="URL" totalCount="20954" failCount="0" failPercent="0.00" min="0.03" max="2280.904" avg="91.3" sum="1912402.1" sum2="348996064.1" std="91.2" tps="0.00" line95Value="230.00" line99Value="920.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20954" failCount="0" failPercent="0.00" min="0.01" max="2280.861" avg="91.2" sum="1911349.4" sum2="348799819.6" std="91.2" tps="0.00" line95Value="229.00" line99Value="919.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16026" failCount="0" failPercent="0.00" min="0.211" max="2280.847" avg="117.0" sum="1875715.7" sum2="347343238.9" std="89.3" tps="0.00" line95Value="248.00" line99Value="982.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="20787" failCount="0" failPercent="0.00" min="0.205" max="25.806" avg="0.9" sum="19395.0" sum2="53261.6" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32652" failCount="1" failPercent="0.00" min="0.895" max="476.745" avg="16.0" sum="524007.2" sum2="17106030.3" std="16.3" tps="0.00" line95Value="42.00" line99Value="161.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a0102bf-384080-11215</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59522" failCount="0" failPercent="0.00" min="2.895" max="2224.342" avg="47.4" sum="2824122.4" sum2="392681498.7" std="65.9" tps="0.00" line95Value="139.00" line99Value="777.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-0</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2309" failCount="0" failPercent="0.00" min="0.406" max="13.323" avg="0.9" sum="2067.3" sum2="3482.1" std="0.8" tps="0.00" line95Value="3.00" line99Value="8.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-1</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4768" failCount="0" failPercent="0.00" min="0.268" max="477.325" avg="7.4" sum="35291.9" sum2="1398121.0" std="15.4" tps="0.00" line95Value="27.00" line99Value="175.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-4</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.056" max="20.172" avg="5.7" sum="337.7" sum2="2225.8" std="2.2" tps="0.00" line95Value="9.00" line99Value="20.00">
+         <successMessageUrl>PiccenterDisplay-0a0102bf-384080-317</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.4.8">
+      <type id="URL" totalCount="28214" failCount="0" failPercent="0.00" min="0.0" max="1923.221" avg="94.0" sum="2652319.4" sum2="594821430.1" std="110.7" tps="0.00" line95Value="287.00" line99Value="966.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28214" failCount="0" failPercent="0.00" min="0.0" max="1923.187" avg="94.0" sum="2650771.8" sum2="594503398.2" std="110.7" tps="0.00" line95Value="287.00" line99Value="966.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-0</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11856" failCount="0" failPercent="0.00" min="0.247" max="140.543" avg="3.9" sum="46427.4" sum2="1019376.8" std="8.4" tps="0.00" line95Value="18.00" line99Value="102.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="28046" failCount="0" failPercent="0.00" min="0.236" max="16.724" avg="1.2" sum="34974.1" sum2="121949.0" std="1.7" tps="0.00" line95Value="4.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32962" failCount="0" failPercent="0.00" min="1.13" max="510.116" avg="16.7" sum="550441.0" sum2="19203894.1" std="17.4" tps="0.00" line95Value="43.00" line99Value="193.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16198" failCount="0" failPercent="0.00" min="0.337" max="1923.173" avg="160.8" sum="2603878.0" sum2="593387617.6" std="103.9" tps="0.00" line95Value="330.00" line99Value="1090.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-2</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60327" failCount="0" failPercent="0.00" min="3.138" max="1872.278" avg="71.2" sum="4297956.3" sum2="711189340.1" std="81.9" tps="0.00" line95Value="204.00" line99Value="877.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-2</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2387" failCount="0" failPercent="0.00" min="0.423" max="23.172" avg="1.1" sum="2635.2" sum2="6130.6" std="1.2" tps="0.00" line95Value="3.00" line99Value="14.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-4</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="8.292" max="41.593" avg="14.0" sum="825.2" sum2="13299.0" std="5.5" tps="0.00" line95Value="27.00" line99Value="41.00">
+         <successMessageUrl>PiccenterDisplay-0a010408-384080-336</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.122">
+      <type id="URL" totalCount="20962" failCount="0" failPercent="0.00" min="0.028" max="2468.879" avg="90.4" sum="1894841.3" sum2="337501318.6" std="89.0" tps="0.00" line95Value="227.00" line99Value="880.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20962" failCount="0" failPercent="0.00" min="0.0070" max="2468.853" avg="90.4" sum="1893950.5" sum2="337336286.8" std="89.0" tps="0.00" line95Value="227.00" line99Value="880.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16131" failCount="1" failPercent="0.01" min="0.223" max="2468.845" avg="115.3" sum="1859149.1" sum2="336198147.6" std="86.9" tps="0.00" line95Value="247.00" line99Value="984.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01087a-384080-941</failMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2274" failCount="0" failPercent="0.00" min="0.422" max="6.284" avg="0.9" sum="2124.6" sum2="3251.2" std="0.7" tps="0.00" line95Value="3.00" line99Value="4.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="20817" failCount="0" failPercent="0.00" min="0.232" max="39.705" avg="0.9" sum="19732.8" sum2="54871.2" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32827" failCount="0" failPercent="0.00" min="1.027" max="381.948" avg="16.1" sum="527883.7" sum2="16568815.8" std="15.7" tps="0.00" line95Value="42.00" line99Value="155.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59785" failCount="3" failPercent="0.01" min="2.959" max="2434.502" avg="46.4" sum="2776407.8" sum2="373818612.1" std="64.0" tps="0.00" line95Value="136.00" line99Value="729.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01087a-384080-941</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="4694" failCount="0" failPercent="0.00" min="0.297" max="198.457" avg="7.3" sum="34496.4" sum2="1088264.5" std="13.3" tps="0.00" line95Value="27.00" line99Value="149.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-4</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.184" max="15.029" avg="6.4" sum="377.0" sum2="2550.7" std="1.6" tps="0.00" line95Value="11.00" line99Value="15.00">
+         <successMessageUrl>PiccenterDisplay-0a01087a-384080-306</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.223">
+      <type id="URL" totalCount="21165" failCount="0" failPercent="0.00" min="0.046" max="2279.669" avg="93.8" sum="1985138.7" sum2="379415013.1" std="95.5" tps="0.00" line95Value="236.00" line99Value="1037.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="21165" failCount="0" failPercent="0.00" min="0.01" max="2279.614" avg="93.7" sum="1984136.6" sum2="379223397.0" std="95.5" tps="0.00" line95Value="236.00" line99Value="1037.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16324" failCount="0" failPercent="0.00" min="0.857" max="2279.6" avg="119.3" sum="1947292.0" sum2="377862790.4" std="94.4" tps="0.00" line95Value="254.00" line99Value="1116.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="21019" failCount="0" failPercent="0.00" min="0.239" max="17.312" avg="1.0" sum="21444.0" sum2="57551.6" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="33148" failCount="0" failPercent="0.00" min="1.065" max="398.978" avg="16.5" sum="545774.6" sum2="17701217.0" std="16.2" tps="0.00" line95Value="43.00" line99Value="153.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60688" failCount="0" failPercent="0.00" min="2.957" max="2191.091" avg="48.3" sum="2928206.6" sum2="431235032.6" std="69.1" tps="0.00" line95Value="141.00" line99Value="816.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-0</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2345" failCount="0" failPercent="0.00" min="0.422" max="12.24" avg="1.0" sum="2316.6" sum2="3928.8" std="0.8" tps="0.00" line95Value="3.00" line99Value="7.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-8</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="4702" failCount="0" failPercent="0.00" min="0.284" max="286.216" avg="7.8" sum="36529.4" sum2="1307126.5" std="14.8" tps="0.00" line95Value="29.00" line99Value="168.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-10</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.521" max="12.1" avg="5.9" sum="347.5" sum2="2156.6" std="1.4" tps="0.00" line95Value="9.00" line99Value="12.00">
+         <successMessageUrl>PiccenterDisplay-0a0108df-384080-173</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.107">
+      <type id="URL" totalCount="20793" failCount="0" failPercent="0.00" min="0.043" max="1597.412" avg="90.7" sum="1886194.8" sum2="336255694.7" std="89.1" tps="0.00" line95Value="229.00" line99Value="970.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20793" failCount="0" failPercent="0.00" min="0.013" max="1597.35" avg="90.7" sum="1885221.3" sum2="336076122.1" std="89.1" tps="0.00" line95Value="229.00" line99Value="970.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="15889" failCount="3" failPercent="0.02" min="0.777" max="1597.335" avg="116.4" sum="1850237.4" sum2="334700101.8" std="86.6" tps="0.00" line95Value="250.00" line99Value="1081.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01086b-384080-4973</failMessageUrl>
+      </type>
+      <type id="cache" totalCount="20626" failCount="0" failPercent="0.00" min="0.218" max="13.96" avg="0.9" sum="19356.0" sum2="49406.8" std="1.2" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32329" failCount="0" failPercent="0.00" min="1.003" max="458.82" avg="16.1" sum="521352.6" sum2="17637539.2" std="16.9" tps="0.00" line95Value="42.00" line99Value="192.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="58932" failCount="6" failPercent="0.01" min="2.932" max="1557.22" avg="47.1" sum="2775802.4" sum2="371770595.7" std="64.0" tps="0.00" line95Value="139.00" line99Value="771.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01086b-384080-4973</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="4741" failCount="0" failPercent="0.00" min="0.299" max="459.332" avg="7.3" sum="34672.2" sum2="1322657.5" std="15.0" tps="0.00" line95Value="27.00" line99Value="211.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-1</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2265" failCount="0" failPercent="0.00" min="0.366" max="9.476" avg="0.9" sum="2051.2" sum2="3264.3" std="0.8" tps="0.00" line95Value="3.00" line99Value="5.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-2</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.961" max="23.485" avg="6.8" sum="402.4" sum2="3121.7" std="2.5" tps="0.00" line95Value="12.00" line99Value="23.00">
+         <successMessageUrl>PiccenterDisplay-0a01086b-384080-325</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.142">
+      <type id="URL" totalCount="27999" failCount="0" failPercent="0.00" min="0.026" max="1527.811" avg="68.5" sum="1917709.0" sum2="332835874.5" std="84.8" tps="0.00" line95Value="211.00" line99Value="774.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="27999" failCount="0" failPercent="0.00" min="0.0070" max="1527.732" avg="68.5" sum="1916469.6" sum2="332650098.5" std="84.8" tps="0.00" line95Value="211.00" line99Value="773.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16139" failCount="0" failPercent="0.00" min="0.856" max="1527.717" avg="116.2" sum="1874845.4" sum2="331391952.2" std="83.9" tps="0.00" line95Value="251.00" line99Value="913.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-0</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27835" failCount="0" failPercent="0.00" min="0.219" max="17.948" avg="0.9" sum="25122.2" sum2="69121.5" std="1.3" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32753" failCount="0" failPercent="0.00" min="1.015" max="311.72" avg="16.0" sum="523037.3" sum2="16559052.0" std="15.8" tps="0.00" line95Value="42.00" line99Value="177.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60069" failCount="1" failPercent="0.00" min="2.912" max="1486.375" avg="47.1" sum="2827013.0" sum2="362727734.3" std="61.8" tps="0.00" line95Value="140.00" line99Value="681.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a01078e-384080-18237</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="11698" failCount="0" failPercent="0.00" min="0.243" max="229.194" avg="3.5" sum="41226.3" sum2="1197205.4" std="9.5" tps="0.00" line95Value="17.00" line99Value="128.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-4</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2356" failCount="0" failPercent="0.00" min="0.376" max="7.206" avg="0.9" sum="2103.8" sum2="3419.2" std="0.8" tps="0.00" line95Value="3.00" line99Value="6.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-2</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="5.549" max="102.858" avg="10.2" sum="601.6" sum2="15987.9" std="12.9" tps="0.00" line95Value="26.00" line99Value="102.00">
+         <successMessageUrl>PiccenterDisplay-0a01078e-384080-359</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.8.116">
+      <type id="URL" totalCount="20874" failCount="0" failPercent="0.00" min="0.053" max="3226.312" avg="95.0" sum="1982056.9" sum2="396317350.2" std="99.9" tps="0.00" line95Value="239.00" line99Value="1111.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="20874" failCount="0" failPercent="0.00" min="0.015" max="3226.281" avg="94.9" sum="1980709.2" sum2="396060772.7" std="99.8" tps="0.00" line95Value="239.00" line99Value="1111.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16038" failCount="3" failPercent="0.02" min="0.749" max="3226.273" avg="121.3" sum="1945949.6" sum2="394639614.0" std="99.4" tps="0.00" line95Value="258.00" line99Value="1207.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010874-384080-4933</failMessageUrl>
+      </type>
+      <type id="cache" totalCount="20730" failCount="0" failPercent="0.00" min="0.214" max="15.442" avg="0.9" sum="19601.4" sum2="55723.5" std="1.3" tps="0.00" line95Value="3.00" line99Value="9.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="32585" failCount="1" failPercent="0.00" min="0.988" max="1024.924" avg="16.2" sum="527173.5" sum2="19388525.7" std="18.3" tps="0.00" line95Value="42.00" line99Value="201.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010874-384080-11097</failMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="59420" failCount="6" failPercent="0.01" min="3.077" max="3183.615" avg="49.9" sum="2964485.1" sum2="463715830.7" std="72.9" tps="0.00" line95Value="146.00" line99Value="899.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-0</successMessageUrl>
+         <failMessageUrl>PiccenterDisplay-0a010874-384080-4933</failMessageUrl>
+      </type>
+      <type id="Service" totalCount="4695" failCount="0" failPercent="0.00" min="0.261" max="455.122" avg="7.3" sum="34406.5" sum2="1358428.8" std="15.4" tps="0.00" line95Value="28.00" line99Value="222.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-2</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2252" failCount="0" failPercent="0.00" min="0.347" max="21.902" avg="0.9" sum="2009.1" sum2="3776.4" std="0.9" tps="0.00" line95Value="3.00" line99Value="7.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-6</successMessageUrl>
+      </type>
+      <type id="System" totalCount="60" failCount="0" failPercent="0.00" min="6.035" max="44.069" avg="8.9" sum="535.2" sum2="6403.8" std="5.2" tps="0.00" line95Value="15.00" line99Value="44.00">
+         <successMessageUrl>PiccenterDisplay-0a010874-384080-18</successMessageUrl>
+      </type>
+   </machine>
+   <machine ip="10.1.7.126">
+      <type id="URL" totalCount="28149" failCount="0" failPercent="0.00" min="0.047" max="2253.837" avg="74.0" sum="2082427.6" sum2="412891508.6" std="95.9" tps="0.00" line95Value="227.00" line99Value="911.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-1</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="28149" failCount="0" failPercent="0.00" min="0.022" max="2253.786" avg="73.9" sum="2081217.8" sum2="412695704.5" std="95.9" tps="0.00" line95Value="226.00" line99Value="910.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-1</successMessageUrl>
+      </type>
+      <type id="Service" totalCount="11715" failCount="0" failPercent="0.00" min="0.216" max="207.186" avg="3.6" sum="42227.6" sum2="1185380.3" std="9.4" tps="0.00" line95Value="17.00" line99Value="135.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-1</successMessageUrl>
+      </type>
+      <type id="cache" totalCount="27995" failCount="0" failPercent="0.00" min="0.208" max="17.546" avg="1.0" sum="28388.9" sum2="83919.7" std="1.4" tps="0.00" line95Value="3.00" line99Value="10.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-1</successMessageUrl>
+      </type>
+      <type id="PigeonService" totalCount="16289" failCount="0" failPercent="0.00" min="0.222" max="2253.77" avg="125.2" sum="2038612.0" sum2="411449340.5" std="98.0" tps="0.00" line95Value="271.00" line99Value="1107.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-0</successMessageUrl>
+      </type>
+      <type id="Call" totalCount="33125" failCount="0" failPercent="0.00" min="0.982" max="610.418" avg="16.3" sum="539959.1" sum2="17982576.8" std="16.6" tps="0.00" line95Value="42.00" line99Value="150.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-0</successMessageUrl>
+      </type>
+      <type id="PigeonCall" totalCount="60693" failCount="0" failPercent="0.00" min="2.882" max="2208.452" avg="51.6" sum="3133722.9" sum2="477982499.7" std="72.2" tps="0.00" line95Value="158.00" line99Value="811.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-0</successMessageUrl>
+      </type>
+      <type id="SQL" totalCount="2426" failCount="0" failPercent="0.00" min="0.373" max="16.513" avg="1.0" sum="2350.4" sum2="4800.5" std="1.0" tps="0.00" line95Value="3.00" line99Value="13.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-27</successMessageUrl>
+      </type>
+      <type id="System" totalCount="59" failCount="0" failPercent="0.00" min="4.495" max="41.553" avg="6.7" sum="392.8" sum2="4502.9" std="5.7" tps="0.00" line95Value="28.00" line99Value="41.00">
+         <successMessageUrl>PiccenterDisplay-0a01077e-384080-308</successMessageUrl>
+      </type>
+   </machine>
+</transaction-report>

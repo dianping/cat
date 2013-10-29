@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
+import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
@@ -17,6 +18,7 @@ import com.dianping.cat.consumer.problem.ProblemReportTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
+import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 @RunWith(Suite.class)
@@ -40,8 +42,12 @@ TransactionReportTest.class,
 
 TransactionReportFilterTest.class,
 
+TransactionReportMergerTest.class,
+
 /* event */
 EventAnalyzerTest.class,
+
+EventReportMergerTest.class,
 
 /* heartbeat */
 HeartbeatAnalyzerTest.class,
