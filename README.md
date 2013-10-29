@@ -2,7 +2,7 @@ CAT [![Build Status](https://travis-ci.org/dianping/cat.png?branch=biz)](https:/
 ===
 
 Central Application Tracking
-#### 系统构建步骤
+
 #####1、安装Mysql服务器
 #####2、配置Hadoop集群服务器【可选】
 #####3、启动命令行，并将当前工作目录移动到cat目录
