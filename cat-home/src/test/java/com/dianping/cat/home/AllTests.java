@@ -44,10 +44,6 @@ import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-/*
- * TestHttp.class
- */
-
 /* .report.graph */
 ValueTranslaterTest.class,
 
@@ -100,12 +96,14 @@ CMDBTest.class,
 
 /* abtest */
 TrafficFilterCodeGenerationTest.class,
+
 TrafficFilterTest.class,
+
 GroupStrategyParserTest.class,
+
 GsonBuilderManagerTest.class,
 
 /* jsError */
-ParseTest.class})
+ParseTest.class })
 public class AllTests {
 }
-
