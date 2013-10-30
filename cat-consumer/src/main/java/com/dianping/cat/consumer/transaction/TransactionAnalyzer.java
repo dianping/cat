@@ -121,39 +121,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	public void process1(MessageTree tree) {
-		String domain = tree.getDomain();
-		String agent = parseAgent(tree);
-
-		if (agent != null) {
-			String brower = parseBrowser(agent);
-		}
-	}
-
-	private String parseAgent(MessageTree tree) {
-		Message message = tree.getMessage();
-
-		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			if ("URL".equals(type)) {
-				List<Message> messages = ((Transaction) message).getChildren();
-
-				for (Message temp : messages) {
-					if (temp instanceof Event) {
-						String tempType = temp.getType();
-						String tempName = temp.getName();
-						
-						if(tempType.equals("URL")&&(tempName.equals("URL.Server")||tempName.equals("ClientInfo"))){
-							return temp.getData().toString();
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-
 	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
 		int dk = 1;
 		int tk = min - min % 5;
