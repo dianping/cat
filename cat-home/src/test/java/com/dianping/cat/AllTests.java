@@ -107,8 +107,11 @@ ServiceReportMergerTest.class,
 
 /* abtest */
 GsonBuilderManagerTest.class,
+
 GroupStrategyParserTest.class,
+
 TrafficFilterTest.class,
+
 HeavyReportBuilderTest.class })
 public class AllTests {
 }
