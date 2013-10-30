@@ -15,9 +15,11 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
+import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -80,6 +82,15 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		tree.setThreadName("threadName");
 
 		return tree;
+	}
+
+	private Trace newTrace(String type, String name, long timestamp, String status, String data) {
+		DefaultTrace trace = new DefaultTrace(type, name);
+
+		trace.setStatus(status);
+		trace.addData(data);
+		trace.setTimestamp(timestamp);
+		return trace;
 	}
 
 	private Transaction newTransaction(String type, String name, long timestamp, String status, int duration, String data) {
@@ -154,6 +165,36 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	}
 
 	@Test
+	public void testTrace() throws Exception {
+		long timestamp = 1325489621987L;
+		Trace trace = newTrace("type", "name", timestamp, "0", "here is the data.");
+
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(trace);
+		check(tree, trace,
+		      "<tr><td>L15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n");
+	}
+
+	@Test
+	public void testTraceForRawData() throws Exception {
+		long timestamp = 1325489621987L;
+		String exception = "java.lang.Exception\n"
+		      + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\n"
+		      + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:108)\n";
+		Trace trace = newTrace("Exception", Exception.class.getName(), timestamp, "ERROR", exception);
+
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(trace);
+		check(tree,
+		      trace,
+		      "<tr><td>L15:33:41.987</td><td>Exception</td><td>java.lang.Exception</td><td class=\"error\">ERROR</td><td>java.lang.Exception\n<br>"
+		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\n<br>"
+		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:108)\n<br>"
+		            + "</td></tr>\r\n");
+	}
+	
+	
+	@Test
 	public void testTransactionNormal() throws Exception {
 		long timestamp = 1325489621987L;
 		Transaction root = newTransaction("URL", "Review", timestamp, "0", 100, "/review/2468");
@@ -179,6 +220,17 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>&nbsp;</td><td>5.00ms select title,content from Review where id = ?</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>&nbsp;</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>&nbsp;</td><td>100ms /review/2468</td></tr>\r\n");
+	}
+	
+	@Test
+	public void testTransactionSimple() throws Exception {
+		long timestamp = 1325489621987L;
+		Transaction transaction = newTransaction("type", "name", timestamp, "0", 10, "here is the data.");
+
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(transaction);
+		check(tree, transaction,
+		      "<tr><td>A15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>10ms here is the data.</td></tr>\r\n");
 	}
 
 	@Test
@@ -212,16 +264,5 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>&nbsp;</td><td>5.00ms select title,content from Review where id = ?</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>&nbsp;</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>&nbsp;</td><td>100ms /review/2468</td></tr>\r\n");
-	}
-
-	@Test
-	public void testTransactionSimple() throws Exception {
-		long timestamp = 1325489621987L;
-		Transaction transaction = newTransaction("type", "name", timestamp, "0", 10, "here is the data.");
-
-		MessageTree tree = new DefaultMessageTree();
-		tree.setMessage(transaction);
-		check(tree, transaction,
-		      "<tr><td>A15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>10ms here is the data.</td></tr>\r\n");
 	}
 }
