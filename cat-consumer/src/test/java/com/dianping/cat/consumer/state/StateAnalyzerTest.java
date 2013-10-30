@@ -12,6 +12,8 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.state.model.entity.Machine;
+import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 
 public class StateAnalyzerTest extends ComponentTestCase {
@@ -34,6 +36,12 @@ public class StateAnalyzerTest extends ComponentTestCase {
 	public void testProcess() throws Exception {
 
 		StateReport report = m_analyzer.getReport(m_domain);
+		
+		for(Machine machine : report.getMachines().values()){
+			for(Message message : machine.getMessages().values()){
+				System.out.println(message);
+			}
+		}
 		
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("state_analyzer.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
