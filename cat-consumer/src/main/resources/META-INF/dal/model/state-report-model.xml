@@ -44,7 +44,7 @@
 	</entity>
 	
 	<entity name="message">
-		<attribute name="id" value-type="long" key="true" />
+		<attribute name="id" value-type="long" key="true" format="0000000000000"/>
 		<attribute name="time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<attribute name="total" value-type="long" primitive="true" />
 		<attribute name="size" value-type="double" primitive="true" format="0.0" />
