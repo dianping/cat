@@ -111,6 +111,10 @@ public class MessageIdFactory {
 		saveMark();
 	}
 
+	protected void resetIndex() {
+		m_index = 0;
+	}
+
 	private void saveMark() {
 		try {
 			m_byteBuffer.rewind();
@@ -127,9 +131,5 @@ public class MessageIdFactory {
 
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
-	}
-
-	protected void resetIndex() {
-		m_index = 0;
 	}
 }

@@ -10,6 +10,7 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 
@@ -100,6 +101,23 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public void logTrace(String type, String name) {
+		logTrace(type, name, Message.SUCCESS, null);
+	}
+
+	@Override
+	public void logTrace(String type, String name, String status, String nameValuePairs) {
+		Trace trace = newTrace(type, name);
+
+		if (nameValuePairs != null && nameValuePairs.length() > 0) {
+			trace.addData(nameValuePairs);
+		}
+
+		trace.setStatus(status);
+		trace.complete();
+	}
+
+	@Override
 	public Event newEvent(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -174,6 +192,22 @@ public class DefaultMessageProducer implements MessageProducer {
 			return metric;
 		} else {
 			return NullMessage.METRIC;
+		}
+	}
+
+	@Override
+	public Trace newTrace(String type, String name) {
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isCatEnabled()) {
+			DefaultTrace trace = new DefaultTrace(type, name);
+
+			m_manager.add(trace);
+			return trace;
+		} else {
+			return NullMessage.TRACE;
 		}
 	}
 

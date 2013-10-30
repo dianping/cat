@@ -11,6 +11,21 @@ public class ClientConfigMerger extends DefaultMerger {
 	}
 
 	@Override
+	protected void mergeDomain(Domain old, Domain domain) {
+		if (domain.getIp() != null) {
+			old.setIp(domain.getIp());
+		}
+
+		if (domain.getEnabled() != null) {
+			old.setEnabled(domain.getEnabled());
+		}
+
+		if (domain.getMaxMessageSize() > 0) {
+			old.setMaxMessageSize(domain.getMaxMessageSize());
+		}
+	}
+
+	@Override
 	protected void visitConfigChildren(ClientConfig old, ClientConfig config) {
 		if (old != null) {
 			getObjects().push(old);
@@ -33,21 +48,6 @@ public class ClientConfigMerger extends DefaultMerger {
 			}
 
 			getObjects().pop();
-		}
-	}
-
-	@Override
-	protected void mergeDomain(Domain old, Domain domain) {
-		if (domain.getIp() != null) {
-			old.setIp(domain.getIp());
-		}
-
-		if (domain.getEnabled() != null) {
-			old.setEnabled(domain.getEnabled());
-		}
-
-		if (domain.getMaxMessageSize() > 0) {
-			old.setMaxMessageSize(domain.getMaxMessageSize());
 		}
 	}
 }

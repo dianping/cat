@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.state;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import junit.framework.Assert;
 
@@ -23,10 +24,13 @@ public class StateAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
-		Date date = sdf.parse("20120101 00:00");
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));  
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss:SS");
+		Date date = sdf.parse("20120101 00:00:00:00");
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
+		
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
@@ -36,6 +40,7 @@ public class StateAnalyzerTest extends ComponentTestCase {
 		StateReport report = m_analyzer.getReport(m_domain);
 		
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("state_analyzer.xml"), "utf-8");
+		
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 }

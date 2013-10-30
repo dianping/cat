@@ -92,6 +92,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 			report.accept(new TransactionStatisticsComputer());
+			
 			return report;
 		} else {
 			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());

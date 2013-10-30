@@ -48,11 +48,24 @@ public interface MessageManager {
 	 * @return true if CAT is enabled
 	 */
 	public boolean isCatEnabled();
-
+	
+	/**
+	 * Check if CAT trace mode is enabled or disabled.
+	 * 
+	 * @return true if CAT is trace mode
+	 */
+	public boolean isTraceMode();
+	
 	/**
 	 * Do cleanup for current thread environment in order to release resources in thread local objects.
 	 */
 	public void reset();
+
+	/**
+	 * Set CAT trace mode.
+	 * 
+	 */
+	public void setTraceMode(boolean traceMode);
 
 	/**
 	 * Do setup for current thread environment in order to prepare thread local objects.
@@ -65,4 +78,5 @@ public interface MessageManager {
 	 * @param transaction
 	 */
 	public void start(Transaction transaction);
+	
 }

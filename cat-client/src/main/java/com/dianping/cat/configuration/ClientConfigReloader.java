@@ -32,17 +32,6 @@ public class ClientConfigReloader implements Task {
 		m_lastModifyTime = m_file.lastModified();
 	}
 
-	@Override
-	public String getName() {
-		return "ClientConfigReloader";
-	}
-
-	private boolean isActive() {
-		synchronized (this) {
-			return m_active;
-		}
-	}
-
 	public ClientConfig getClientConfig() throws IOException, SAXException {
 		ClientConfig clientConfig = null;
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
@@ -65,6 +54,17 @@ public class ClientConfigReloader implements Task {
 		}
 
 		return clientConfig;
+	}
+
+	@Override
+	public String getName() {
+		return "ClientConfigReloader";
+	}
+
+	private boolean isActive() {
+		synchronized (this) {
+			return m_active;
+		}
 	}
 
 	@Override
