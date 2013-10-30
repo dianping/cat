@@ -25,8 +25,8 @@ public class StateAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
-		Date date = sdf.parse("20120101 00:00");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+		Date date = sdf.parse("20120101 00:00:00");
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
