@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.state;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -27,9 +28,11 @@ public class StateAnalyzerTest extends ComponentTestCase {
 		super.setUp();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		Date date = sdf.parse("20120101 00:00:00");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(1325347200000L); //20120101 00:00:00
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
-		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
+		m_analyzer.initialize(calendar.getTimeInMillis(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
 	@Test
