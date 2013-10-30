@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.state;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,6 +32,9 @@ public class StateAnalyzerTest extends ComponentTestCase {
 		Date date = sdf.parse("20120101 00:00:00:00");
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
+		
+		System.out.println(date.getTime());
+		
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
@@ -39,15 +43,7 @@ public class StateAnalyzerTest extends ComponentTestCase {
 
 		StateReport report = m_analyzer.getReport(m_domain);
 		
-		for(Machine machine : report.getMachines().values()){
-			for(Message message : machine.getMessages().values()){
-				System.out.println(message);
-			}
-		}
-		
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("state_analyzer.xml"), "utf-8");
-		
-		System.out.println(expected);
 		
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
