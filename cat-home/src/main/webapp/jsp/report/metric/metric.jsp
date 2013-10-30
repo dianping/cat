@@ -54,6 +54,7 @@
 			</th>
 		</tr>
 	</table>
+	<div class="row-fluid" style="margin-top:2px;height:30px;"></div>
       <div class="row-fluid">
         <div class="span2">
           <div class="well sidebar-nav">
