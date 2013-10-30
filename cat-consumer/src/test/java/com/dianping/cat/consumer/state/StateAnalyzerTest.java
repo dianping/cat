@@ -31,8 +31,6 @@ public class StateAnalyzerTest extends ComponentTestCase {
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
 		
-		System.out.println(date.getTime());
-		
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
