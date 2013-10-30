@@ -24,8 +24,9 @@ public class StateAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));  
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss:SS");
-		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		Date date = sdf.parse("20120101 00:00:00:00");
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
