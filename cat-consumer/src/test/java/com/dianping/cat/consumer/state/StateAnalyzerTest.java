@@ -44,6 +44,9 @@ public class StateAnalyzerTest extends ComponentTestCase {
 		}
 		
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("state_analyzer.xml"), "utf-8");
+		
+		System.out.println(expected);
+		
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 }
