@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.home.abtest.conditions.TrafficFilterCodeGenerationTest;
 import com.dianping.cat.home.abtest.conditions.TrafficFilterTest;
 import com.dianping.cat.home.abtest.groupstrategy.GroupStrategyParserTest;
@@ -55,7 +54,7 @@ ValueTranslaterTest.class,
 EventReportFilterTest.class, TransactionReportFilterTest.class,
 
 /* . report.page.transcation */
-PayloadTest.class, TransactionReportMergerTest.class,
+PayloadTest.class, 
 
 /* . report.page.cross */
 CrossReportMergerTest.class,
