@@ -37,7 +37,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
-	
+
 	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
 		List<Message> children = t.getChildren();
@@ -92,7 +92,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 			report.accept(new TransactionStatisticsComputer());
-			
+
 			return report;
 		} else {
 			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());
@@ -119,6 +119,39 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			processTransaction(report, tree, root);
 		}
+	}
+
+	public void process1(MessageTree tree) {
+		String domain = tree.getDomain();
+		String agent = parseAgent(tree);
+
+		if (agent != null) {
+			String brower = parseBrowser(agent);
+		}
+	}
+
+	private String parseAgent(MessageTree tree) {
+		Message message = tree.getMessage();
+
+		if (message instanceof Transaction) {
+			String type = message.getType();
+
+			if ("URL".equals(type)) {
+				List<Message> messages = ((Transaction) message).getChildren();
+
+				for (Message temp : messages) {
+					if (temp instanceof Event) {
+						String tempType = temp.getType();
+						String tempName = temp.getName();
+						
+						if(tempType.equals("URL")&&(tempName.equals("URL.Server")||tempName.equals("ClientInfo"))){
+							return temp.getData().toString();
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
@@ -226,14 +259,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	public void setDelegate(TransactionDelegate delegate) {
-   	m_delegate = delegate;
-   }
+		m_delegate = delegate;
+	}
 
 	public void setReportManager(ReportManager<TransactionReport> reportManager) {
-   	m_reportManager = reportManager;
-   }
+		m_reportManager = reportManager;
+	}
 
 	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
-   	m_serverConfigManager = serverConfigManager;
-   }
+		m_serverConfigManager = serverConfigManager;
+	}
 }

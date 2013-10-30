@@ -89,18 +89,6 @@ public class Cat {
 		initialize(container, configFile);
 	}
 
-	public static void initialize(PlexusContainer container, File configFile) {
-		ModuleContext ctx = new DefaultModuleContext(container);
-		Module module = ctx.lookup(Module.class, CatClientModule.ID);
-
-		if (!module.isInitialized()) {
-			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
-
-			ctx.setAttribute("cat-client-config-file", configFile);
-			initializer.execute(ctx, module);
-		}
-	}
-
 	public static void initialize(String... servers) {
 		File configFile = null;
 
@@ -117,6 +105,18 @@ public class Cat {
 			e.printStackTrace();
 		}
 		initialize(configFile);
+	}
+
+	public static void initialize(PlexusContainer container, File configFile) {
+		ModuleContext ctx = new DefaultModuleContext(container);
+		Module module = ctx.lookup(Module.class, CatClientModule.ID);
+
+		if (!module.isInitialized()) {
+			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+
+			ctx.setAttribute("cat-client-config-file", configFile);
+			initializer.execute(ctx, module);
+		}
 	}
 
 	public static boolean isEnabled() {
@@ -147,14 +147,22 @@ public class Cat {
 		Cat.getProducer().logEvent(type, name);
 	}
 	
+	public static void logTrace(String type, String name) {
+		Cat.getProducer().logTrace(type, name);
+	}
+
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
 		Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+	}
+	
+	public static void logTrace(String type, String name, String status, String nameValuePairs) {
+		Cat.getProducer().logTrace(type, name, status, nameValuePairs);
 	}
 
 	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
 		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
-	
+
 	public static void logMetric(String name, Object... keyValues) {
 		StringBuilder sb = new StringBuilder(1024);
 		int len = keyValues.length;
@@ -246,14 +254,6 @@ public class Cat {
 		Cat.getProducer().logMetric(name, status, keyValuePairs);
 	}
 
-	public static void logTrace(String type, String name) {
-		Cat.getProducer().logTrace(type, name);
-	}
-
-	public static void logTrace(String type, String name, String status, String nameValuePairs) {
-		Cat.getProducer().logTrace(type, name, status, nameValuePairs);
-	}
-
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
 		return lookup(role, null);
 	}
@@ -266,12 +266,12 @@ public class Cat {
 		return Cat.getProducer().newEvent(type, name);
 	}
 
-	public static Heartbeat newHeartbeat(String type, String name) {
-		return Cat.getProducer().newHeartbeat(type, name);
-	}
-
 	public static Trace newTrace(String type, String name) {
 		return Cat.getProducer().newTrace(type, name);
+	}
+
+	public static Heartbeat newHeartbeat(String type, String name) {
+		return Cat.getProducer().newHeartbeat(type, name);
 	}
 
 	public static Transaction newTransaction(String type, String name) {

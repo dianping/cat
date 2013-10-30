@@ -18,7 +18,7 @@ import com.dianping.cat.message.spi.MessageTree;
 public class CatAppender extends AppenderSkeleton {
 	@Override
 	protected void append(LoggingEvent event) {
-		boolean isTraceMode = Cat.getManager().isTraceMode();
+		boolean isTraceMode = Cat.getManager().hasContext();
 		Level level = event.getLevel();
 
 		if (level.isGreaterOrEqual(Level.ERROR)) {
