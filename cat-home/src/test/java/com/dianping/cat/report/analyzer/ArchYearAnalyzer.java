@@ -31,7 +31,6 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 	@Inject
 	private ReportService m_reportService;
 
-
 	@Before
 	@Override
 	public void setUp() throws Exception {
