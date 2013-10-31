@@ -51,8 +51,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private boolean m_firstMessage = true;
 
-	private boolean m_isTraceMode = false;
-
 	@Override
 	public void add(Message message) {
 		Context ctx = getContext();
@@ -100,7 +98,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_configManager;
 	}
 
-	Context getContext() {
+	private Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
 
@@ -166,12 +164,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_domain != null && m_domain.isEnabled() && m_context.get() != null && m_configManager.isCatEnabled();
 	}
 
-	@Override
 	public boolean isTraceMode() {
-		return m_isTraceMode;
+		Context content = getContext();
+
+		if (content != null) {
+			return content.isTraceMode();
+		} else {
+			return false;
+		}
 	}
 
-	String nextMessageId() {
+	private String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -191,9 +194,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_inheritableContext.set(metricType);
 	}
 
-	@Override
 	public void setTraceMode(boolean traceMode) {
-		m_isTraceMode = traceMode;
+		Context content = getContext();
+
+		if (content != null) {
+			content.setTraceMode(traceMode);
+		}
 	}
 
 	@Override
@@ -239,6 +245,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		private int m_length;
 
 		private long m_totalDurationInMicros; // for truncate message
+
+		private boolean m_traceMode;
 
 		public Context(String domain, String hostName, String ipAddress, ClientConfigManager configManager) {
 			m_tree = new DefaultMessageTree();
@@ -337,6 +345,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return false;
 		}
 
+		public boolean isTraceMode() {
+			return m_traceMode;
+		}
+
 		private void migrateMessage(DefaultMessageManager manager, Transaction source, Transaction target, int level) {
 			Transaction current = level < m_stack.size() ? m_stack.get(level) : null;
 			boolean shouldKeep = false;
@@ -371,6 +383,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				return m_stack.peek();
 			}
+		}
+
+		public void setTraceMode(boolean traceMode) {
+			m_traceMode = traceMode;
 		}
 
 		public void start(DefaultMessageManager manager, Transaction transaction) {
