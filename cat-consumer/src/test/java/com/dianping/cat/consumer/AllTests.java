@@ -15,8 +15,10 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
+import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
+import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
@@ -57,6 +59,8 @@ HeartbeatAnalyzerTest.class,
 /* state */
 StateAnalyzerTest.class,
 
+StateReportMergerTest.class,
+
 /* top */
 TopAnalyzerTest.class,
 
@@ -68,6 +72,8 @@ ProblemHandlerTest.class,
 ProblemReportTest.class,
 
 ProblemAnalyzerTest.class,
+
+ProblemReportMergerTest.class,
 
 CompositeFormatTest.class,
 
