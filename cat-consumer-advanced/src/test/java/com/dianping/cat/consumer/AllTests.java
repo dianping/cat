@@ -9,6 +9,8 @@ import com.dianping.cat.consumer.advanced.DatabaseParserTest;
 import com.dianping.cat.consumer.advanced.MatrixModelTest;
 import com.dianping.cat.consumer.advanced.SqlParsersTest;
 import com.dianping.cat.consumer.browser.BrowserReportMergerTest;
+import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
+import com.dianping.cat.consumer.sql.SqlAnalyzerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -21,7 +23,11 @@ SqlParsersTest.class,
 
 DatabaseParserTest.class,
 
-BrowserReportMergerTest.class
+BrowserReportMergerTest.class,
+
+CrossAnalyzerTest.class,
+
+SqlAnalyzerTest.class
 
 })
 public class AllTests {

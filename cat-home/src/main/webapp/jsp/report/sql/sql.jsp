@@ -60,7 +60,7 @@
 			<c:forEach var="item" items="${model.displaySqlReport.results}"
 				varStatus="status">
 				<tr class="${status.index  mod 2==0 ? 'even' : 'odd'}">
-					<td class="left"><a href="" class="graph_link" data-status="${status.index}">[:: show ::]</a></td>
+					<td class="left"><a href="" class="sql_graph_link" data-status="${status.index}">[:: show ::]</a></td>
 					<td class="left">${item.id}</td>
 					<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>
