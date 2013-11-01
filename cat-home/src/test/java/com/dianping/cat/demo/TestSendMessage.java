@@ -446,9 +446,6 @@ public class TestSendMessage {
 		for (int i = 0; i < 10; i++) {
 			Transaction t = Cat.newTransaction("Trace", "Test"+i);
 			try {
-				// your bussiness code
-				// for see the message on cat in problem report
-
 				Cat.logTrace("Trace", "Info");
 				Cat.logTrace("Trace", "Dubug", Trace.SUCCESS, "sss");
 				Trace trace = Cat.newTrace("Trace", "Error");
