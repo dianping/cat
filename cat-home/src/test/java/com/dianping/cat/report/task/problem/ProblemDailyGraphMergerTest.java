@@ -37,7 +37,7 @@ public class ProblemDailyGraphMergerTest {
 		ProblemReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerDaily.xml"), "utf-8");
 
-		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class ProblemDailyGraphMergerTest {
 		ProblemReport report = m_meger.mergeForGraph(m_reportDomain, reports);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerGraph.xml"), "utf-8");
 
-		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
 	private ProblemReport creatReport() {

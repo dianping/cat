@@ -15,6 +15,6 @@ public class DependencyGraphReport {
 		TopologyGraph front = DefaultSaxParser.parse(oldXml);
 		DefaultJsonBuilder build = new DefaultJsonBuilder();
 
-		System.out.println(build.buildJson(front));
+		System.out.println(build.build(front));
 	}
 }

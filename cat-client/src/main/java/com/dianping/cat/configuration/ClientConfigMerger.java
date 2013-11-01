@@ -1,5 +1,7 @@
 package com.dianping.cat.configuration;
 
+import java.util.Stack;
+
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Property;
@@ -26,28 +28,44 @@ public class ClientConfigMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void visitConfigChildren(ClientConfig old, ClientConfig config) {
-		if (old != null) {
-			getObjects().push(old);
+	protected void visitConfigChildren(ClientConfig to, ClientConfig from) {
+		if (to != null) {
+			Stack<Object> objs = getObjects();
 
 			// if servers is configured, then override it instead of merge
-			if (!config.getServers().isEmpty()) {
-				old.getServers().clear();
-				old.getServers().addAll(config.getServers());
+			if (!from.getServers().isEmpty()) {
+				to.getServers().clear();
+				to.getServers().addAll(from.getServers());
 			}
 
 			// only configured domain in client configure will be merged
-			for (Domain domain : config.getDomains().values()) {
-				if (old.getDomains().containsKey(domain.getId())) {
-					visitDomain(domain);
+			for (Domain source : from.getDomains().values()) {
+				Domain target = to.findDomain(source.getId());
+
+				if (target == null) {
+					target = new Domain(source.getId());
+					to.addDomain(target);
+				}
+
+				if (to.getDomains().containsKey(source.getId())) {
+					objs.push(target);
+					source.accept(this);
+					objs.pop();
 				}
 			}
 
-			for (Property property : config.getProperties().values()) {
-				visitProperty(property);
-			}
+			for (Property source : from.getProperties().values()) {
+				Property target = to.findProperty(source.getName());
 
-			getObjects().pop();
+				if (target == null) {
+					target = new Property(source.getName());
+					to.addProperty(target);
+				}
+
+				objs.push(target);
+				source.accept(this);
+				objs.pop();
+			}
 		}
 	}
 }

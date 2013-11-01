@@ -20,8 +20,10 @@ public class ProblemReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
+		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replace("\r", ""), reportOld.toString().replace("\r", ""));
 		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getProblemReport().toString()
 		      .replace("\r", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
+
 	}
 }

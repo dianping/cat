@@ -97,6 +97,6 @@ public class WaterfallMessageCodecTest extends ComponentTestCase {
 	}
 
 	private String removeExcapeCharacters(String html) {
-		return html.replaceAll("\\s*", "");
+		return html.replaceAll("\r", "");
 	}
 }
