@@ -4,14 +4,14 @@
    <parent>
       <groupId>org.unidal.maven.plugins</groupId>
       <artifactId>default</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.3</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>codegen-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Code Generation Maven Plugin</name>
-   <version>2.0.5</version>
+   <version>2.0.8</version>
    <prerequisites>
       <maven>3.0.3</maven>
    </prerequisites>
@@ -19,12 +19,12 @@
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>codegen</artifactId>
-         <version>2.0.5</version>
+         <version>2.0.8</version>
       </dependency>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>common</artifactId>
-         <version>2.0.0</version>
+         <version>2.0.3</version>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
@@ -38,7 +38,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.0.4</version>
+            <version>2.0.5</version>
             <executions>
                <execution>
                   <id>default-cli</id>
