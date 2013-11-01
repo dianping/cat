@@ -1,5 +1,5 @@
 <h4><a href="http://cat.qa.dianpingoa.com/cat/r/t?op=history&domain=Cat&date=2012051713&reportType=day" target="_blank">TransactionReport</a></h4>
-<table rules="all" border="1">
+<table rules="all" border="1" >
 	<tr>
 		<td>Type</td>
 		<td>Total Count</td>
@@ -28,3 +28,4 @@
 			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/t?op=historyGraph&domain=Cat&date=2012051713&ip=All&reportType=day&type=URL" target="_blank">Graph</a></td>
 		</tr>
 </table>
+

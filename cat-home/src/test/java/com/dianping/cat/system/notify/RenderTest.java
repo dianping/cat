@@ -21,7 +21,7 @@ public class RenderTest extends ComponentTestCase {
 		TransactionReport report = DefaultSaxParser.parse(oldXml);
 
 		String result = render.renderReport(report);
-		Assert.assertEquals(excepted.replaceAll("\\s*", ""), result.replaceAll("\\s*", ""));
+		Assert.assertEquals(excepted.replaceAll("\r", ""), result.replaceAll("\r", ""));
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class RenderTest extends ComponentTestCase {
 
 		String result = render.renderReport(report);
 //		Assert.assertEquals(excepted, result);
-		Assert.assertEquals(excepted.replaceAll("\\s*", ""), result.replaceAll("\\s*", ""));
+		Assert.assertEquals(excepted.replaceAll("\r", ""), result.replaceAll("\r", ""));
 	}
 	
 	@Test
@@ -44,7 +44,7 @@ public class RenderTest extends ComponentTestCase {
 		ProblemReport report = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(oldXml);
 
 		String result = render.renderReport(report);
-		Assert.assertEquals(excepted.replaceAll("\\s*", ""), result.replaceAll("\\s*", ""));
+		Assert.assertEquals(excepted.replaceAll("\r", ""), result.replaceAll("\r", ""));
 	}
 	
 }

@@ -59,7 +59,7 @@
       </type>
    </machine>
    <machine ip="All">
-  	 <type id="URL" totalCount="6900" failCount="0" failPercent="0.00">
+      <type id="URL" totalCount="6900" failCount="0" failPercent="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
          <name id="ClientInfo" totalCount="3450" failCount="0" failPercent="0.00">
@@ -97,4 +97,3 @@
       </type>
    </machine>
 </event-report>
-
