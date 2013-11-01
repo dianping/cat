@@ -54,6 +54,6 @@ public class GroupStrategyParserTest {
 	}
 
 	public void assertEscapeString(String expectedString, String actualString) {
-		Assert.assertEquals(expectedString.replaceAll("\\s*", ""), actualString.replaceAll("\\s*", ""));
+		Assert.assertEquals(expectedString.replaceAll("\r", ""), actualString.replaceAll("\r", ""));
 	}
 }
