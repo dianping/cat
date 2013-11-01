@@ -8,7 +8,7 @@
 		<remote id="10.1.77.194" role="Pigeon.Client">
 			<type id="PigeonCall" totalCount="111507" failCount="0" failPercent="0.00"
 				avg="0.0" sum="1937.0" sum2="34333.7" std="0.0" tps="0.00">
-				<name id="GroupService:GroupClass:GroupMethod" totalCount="1"
+				<name id="GroupService:GroupClass:GroupMethod" totalCount="1">
 				</name>
 				<name id="GroupService:GroupClass:GroupMethod1" totalCount="1"
 					failCount="0" failPercent="0.00" avg="0.0" sum="0.9" sum2="0.8"

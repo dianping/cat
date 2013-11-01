@@ -15,13 +15,16 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
+import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
+import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
+import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -57,6 +60,8 @@ HeartbeatAnalyzerTest.class,
 /* state */
 StateAnalyzerTest.class,
 
+StateReportMergerTest.class,
+
 /* top */
 TopAnalyzerTest.class,
 
@@ -69,9 +74,13 @@ ProblemReportTest.class,
 
 ProblemAnalyzerTest.class,
 
+ProblemReportMergerTest.class,
+
 CompositeFormatTest.class,
 
-DefaultFormatTest.class
+DefaultFormatTest.class,
+
+TransactionReportTypeAggergatorTest.class
 })
 public class AllTests {
 

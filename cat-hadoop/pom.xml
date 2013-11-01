@@ -9,6 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>
 	<name>cat-hadoop</name>
+	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
