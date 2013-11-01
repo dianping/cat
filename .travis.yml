@@ -1,5 +1,5 @@
 language: java
-install:
-  true
-script:
-  true
+install: true
+script: true
+notifications:
+  email: false
