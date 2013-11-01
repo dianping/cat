@@ -70,7 +70,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getBugs() {
-		return new DefaultJsonBuilder().buildJson(m_bugReport);
+		return new DefaultJsonBuilder().build(m_bugReport);
 	}
 
 	public List<Service> getCacheServices() {

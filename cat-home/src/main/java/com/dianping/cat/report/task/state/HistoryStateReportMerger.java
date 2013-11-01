@@ -1,7 +1,5 @@
 package com.dianping.cat.report.task.state;
 
-import static com.dianping.cat.consumer.state.model.Constants.ENTITY_PROCESSDOMAINS;
-
 import java.util.Stack;
 
 import com.dianping.cat.consumer.state.StateReportMerger;
@@ -15,19 +13,22 @@ public class HistoryStateReportMerger extends StateReportMerger {
 		super(stateReport);
 	}
 
-	protected void visitMachineChildren(Machine old, Machine machine) {
-		if (old != null) {
-			Stack<Object> objs = getObjects();
-			Stack<String> tags = getTags();
-			objs.push(old);
+	protected void visitMachineChildren(Machine to, Machine from) {
+		Stack<Object> objs = getObjects();
+		
+		for (ProcessDomain source : from.getProcessDomains().values()) {
+         ProcessDomain target = to.findProcessDomain(source.getName());
 
-			for (ProcessDomain processDomain : machine.getProcessDomains().values()) {
-				tags.push(ENTITY_PROCESSDOMAINS);
-				visitProcessDomain(processDomain);
-				tags.pop();
-			}
-			objs.pop();
-		}
+         if (target == null) {
+            target = new ProcessDomain(source.getName());
+            to.addProcessDomain(target);
+         }
+
+         objs.push(target);
+         source.accept(this);
+         objs.pop();
+      }
+
 	}
 
 }

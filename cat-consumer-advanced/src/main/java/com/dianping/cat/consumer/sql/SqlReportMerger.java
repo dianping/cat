@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer.sql;
 
+import java.util.Stack;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.sql.model.entity.Method;
@@ -11,16 +13,33 @@ public class SqlReportMerger extends DefaultMerger {
 
 	private boolean m_allDatabase = false;
 
-	private Database m_all;
-
 	public SqlReportMerger(SqlReport sqlReport) {
 		super(sqlReport);
 	}
 
 	@Override
-	protected void mergeDatabase(Database old, Database database) {
-		old.setConnectUrl(database.getConnectUrl());
-		super.mergeDatabase(old, database);
+	protected void visitSqlReportChildren(SqlReport to, SqlReport from) {
+		Stack<Object> objs = getObjects();
+		for (Database source : from.getDatabases().values()) {
+			Database target;
+
+			if (m_allDatabase) {
+				target = to.findOrCreateDatabase(Constants.ALL);
+			} else {
+				target = to.findOrCreateDatabase(source.getId());
+			}
+
+			objs.push(target);
+			source.accept(this);
+			objs.pop();
+		}
+	}
+
+	@Override
+	protected void mergeDatabase(Database to, Database from) {
+		if (!m_allDatabase) {
+			super.mergeDatabase(to, from);
+		}
 	}
 
 	@Override
@@ -42,7 +61,6 @@ public class SqlReportMerger extends DefaultMerger {
 				visitDatabaseChildren(machine, m);
 			}
 		}
-
 		return machine;
 	}
 
@@ -60,21 +78,8 @@ public class SqlReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	public void visitDatabase(Database domain) {
-		if (m_allDatabase) {
-			visitDatabaseChildren(m_all, domain);
-		} else {
-			super.visitDatabase(domain);
-		}
-	}
-
-	@Override
 	public void visitSqlReport(SqlReport sqlReport) {
 		SqlReport old = getSqlReport();
-
-		if (m_allDatabase) {
-			m_all = old.findOrCreateDatabase(Constants.ALL);
-		}
 		super.visitSqlReport(sqlReport);
 		old.setStartTime(sqlReport.getStartTime());
 		old.setEndTime(sqlReport.getEndTime());
