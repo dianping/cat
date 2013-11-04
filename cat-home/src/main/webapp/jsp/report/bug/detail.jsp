@@ -4,7 +4,7 @@
 	<tr>
 			<th width="10%">部门</th>
 			<th width="10%">产品线</th>
-			<th width="60%">异常名称</th>
+			<th width="70%">异常名称</th>
 			<th width="10%">异常数量</th>
 		</tr>
 	<c:forEach var="item" items="${model.errorStatis}">
@@ -15,13 +15,13 @@
 					<td  rowspan="${w:size(statis.bugs)}"><span>${statis.department}</span></td>
 					<td  rowspan="${w:size(statis.bugs)}"><span>${statis.productLine}</span></td>
 					<td>${bug.value.id}</td>
-					<td>${bug.value.count}</td>
+					<td style="text-align:right">${bug.value.count}</td>
 				</c:if>
 			</tr>
 			<c:if test="${status.index >0 }">
 				<tr>
 					<td>${bug.value.id}</td>
-					<td>${bug.value.count}</td>
+					<td style="text-align:right">${bug.value.count}</td>
 				</tr>
 			</c:if>
 		</c:forEach>
@@ -43,13 +43,13 @@
 					<td  rowspan="${w:size(statis.exceptions)}"><span>${statis.department}</span></td>
 					<td  rowspan="${w:size(statis.exceptions)}"><span>${statis.productLine}</span></td>
 					<td>${exception.value.id}</td>
-					<td>${exception.value.count}</td>
+					<td style="text-align:right">${exception.value.count}</td>
 				</c:if>
 			</tr>
 			<c:if test="${status.index >0 }">
 				<tr>
 					<td>${exception.value.id}</td>
-					<td>${exception.value.count}</td>
+					<td style="text-align:right">${exception.value.count}</td>
 				</tr>
 			</c:if>
 		</c:forEach></c:forEach>
