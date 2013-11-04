@@ -10,6 +10,8 @@ import com.dianping.cat.consumer.advanced.MatrixModelTest;
 import com.dianping.cat.consumer.advanced.SqlParsersTest;
 import com.dianping.cat.consumer.browser.BrowserReportMergerTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
 import com.dianping.cat.consumer.sql.SqlAnalyzerTest;
 
 @RunWith(Suite.class)
@@ -27,7 +29,11 @@ BrowserReportMergerTest.class,
 
 CrossAnalyzerTest.class,
 
-SqlAnalyzerTest.class
+SqlAnalyzerTest.class,
+
+MatrixAnalyzerTest.class,
+
+DependencyAnalyzerTest.class
 
 })
 public class AllTests {
