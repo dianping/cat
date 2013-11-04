@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 
 public class SqlReportMergerTest {
 	@Test
@@ -25,12 +25,12 @@ public class SqlReportMergerTest {
 		// Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""),
 		// merger.getSqlReport().toString().replaceAll("\r", ""));
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getSqlReport().toString()
-		      .replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
-		      reportNew.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
-		      reportOld.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getSqlReport().toString()
+		      .replaceAll("\r", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\r", ""),
+		      reportNew.toString().replaceAll("\r", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\r", ""),
+		      reportOld.toString().replaceAll("\r", ""));
 	}
 
 	@Test
@@ -52,10 +52,10 @@ public class SqlReportMergerTest {
 
 		// Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), actual.replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
-		      reportOld.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
-		      reportNew.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\r", ""),
+		      reportOld.toString().replaceAll("\r", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\r", ""),
+		      reportNew.toString().replaceAll("\r", ""));
 	}
 }

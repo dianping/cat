@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -20,6 +21,7 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @RunWith(JUnit4.class)
+@Ignore
 public class LocalMessageBucketManagerTest extends ComponentTestCase {
 	private DefaultMessageTree newMessageTree(String id, int i, long timestamp) {
 		DefaultMessageTree tree = new DefaultMessageTree();
@@ -87,8 +89,6 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			Assert.assertNotNull("Message " + i + " not found.", tree);
 			Assert.assertEquals(messageId, tree.getMessageId());
 		}
-
-		manager.close();
 	}
 
 	static class MockMessageIdFactory extends MessageIdFactory {

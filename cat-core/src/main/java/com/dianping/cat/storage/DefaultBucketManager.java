@@ -2,19 +2,10 @@ package com.dianping.cat.storage;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-
-import com.dianping.cat.message.spi.MessagePathBuilder;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager {
-	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
-
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
 
 	@Override
 	public void closeBucket(Bucket<?> bucket) {
@@ -22,20 +13,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			bucket.close();
 		} catch (Exception e) {
 			// ignore it
-		}
-
-		Entry key = null;
-
-		synchronized (m_map) {
-			for (Map.Entry<Entry, Bucket<?>> e : m_map.entrySet()) {
-				if (e.getValue() == bucket) {
-					key = e.getKey();
-					break;
-				}
-			}
-		}
-		if (key != null) {
-			m_map.remove(key);
 		}
 		release(bucket);
 	}
@@ -55,28 +32,8 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 	@SuppressWarnings("unchecked")
 	protected <T> Bucket<T> getBucket(Class<T> type, long timestamp, String name, String namespace) throws IOException {
-		String path;
 		Date date = new Date(timestamp);
-
-//		if (type == MessageTree.class) {
-//			path = m_pathBuilder.getMessagePath(name, date);
-//		} else {
-//		}
-		path = m_pathBuilder.getReportPath(name, date);
-
-		Entry entry = new Entry(type, path, namespace);
-		Bucket<?> bucket = m_map.get(entry);
-
-		if (bucket == null) {
-			synchronized (m_map) {
-				bucket = m_map.get(entry);
-
-				if (bucket == null) {
-					bucket = createBucket(type, date, name, namespace);
-					m_map.put(entry, bucket);
-				}
-			}
-		}
+		Bucket<?> bucket = createBucket(type, date, name, namespace);
 
 		return (Bucket<T>) bucket;
 	}
@@ -86,7 +43,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		return getBucket(String.class, timestamp, name, "report");
 	}
 
-	static class Entry {
+	public static class Entry {
 		private String m_namespace;
 
 		private String m_path;

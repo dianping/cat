@@ -8,6 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.dianping.cat.consumer.problem.aggregation.AggregationMessageFormat;
+import com.dianping.cat.consumer.problem.aggregation.CompositeFormat;
+
 public class CompositeFormatTest {
 	@Rule
 	public ExpectedException exception = ExpectedException.none();

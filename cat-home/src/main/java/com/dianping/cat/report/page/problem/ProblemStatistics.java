@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.dianping.cat.consumer.core.problem.ProblemType;
+import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -26,30 +26,38 @@ public class ProblemStatistics extends BaseVisitor {
 	private String m_ip = "";
 
 	private List<String> m_ips;
-
-	private int m_sqlThreshold = 100;
-
-	private int m_urlThreshold = 1000;
-
-	private int m_serviceThreshold = 50;
+	
+	private LongConfig m_longConfig = new LongConfig();
 
 	private List<Duration> getDurationsByType(String type, Entry entry) {
 		List<Duration> durations = new ArrayList<Duration>();
 		if (ProblemType.LONG_URL.getName().equals(type)) {
 			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
-				if (temp.getKey() >= m_urlThreshold) {
+				if (temp.getKey() >= m_longConfig.getUrlThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else if (ProblemType.LONG_SQL.getName().equals(type)) {
 			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
-				if (temp.getKey() >= m_sqlThreshold) {
+				if (temp.getKey() >= m_longConfig.getSqlThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else if (ProblemType.LONG_SERVICE.getName().equals(type)) {
 			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
-				if (temp.getKey() >= m_serviceThreshold) {
+				if (temp.getKey() >= m_longConfig.getServiceThreshold()) {
+					durations.add(temp.getValue());
+				}
+			}
+		} else if (ProblemType.LONG_CALL.getName().equals(type)) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+				if (temp.getKey() >= m_longConfig.getCallThreshold()) {
+					durations.add(temp.getValue());
+				}
+			}
+		} else if (ProblemType.LONG_CACHE.getName().equals(type)) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+				if (temp.getKey() >= m_longConfig.getCacheThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
@@ -81,18 +89,8 @@ public class ProblemStatistics extends BaseVisitor {
 		m_ips = ips;
 	}
 
-	public ProblemStatistics setServiceThreshold(int serviceThreshold) {
-		m_serviceThreshold = serviceThreshold;
-		return this;
-	}
-
-	public ProblemStatistics setSqlThreshold(int sqlThreshold) {
-		m_sqlThreshold = sqlThreshold;
-		return this;
-	}
-
-	public ProblemStatistics setUrlThreshold(int urlThreshold) {
-		m_urlThreshold = urlThreshold;
+	public ProblemStatistics setLongConfig(LongConfig config) {
+		m_longConfig = config;
 		return this;
 	}
 

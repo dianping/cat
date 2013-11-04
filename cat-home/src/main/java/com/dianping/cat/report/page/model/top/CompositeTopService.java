@@ -2,15 +2,17 @@ package com.dianping.cat.report.page.model.top;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.consumer.top.TopReportMerger;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeTopService extends BaseCompositeModelService<TopReport> {
 	public CompositeTopService() {
-		super("top");
+		super(TopAnalyzer.ID);
 	}
 
 	@Override

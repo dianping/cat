@@ -15,7 +15,10 @@ import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.home.dal.report.Graph;
+import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
+import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
+import com.dianping.cat.core.dal.Graph;
 
 @RunWith(JUnit4.class)
 public class HeartbeatGraphDataTest extends ComponentTestCase {
@@ -59,5 +62,15 @@ public class HeartbeatGraphDataTest extends ComponentTestCase {
 
 	private String getContent() throws IOException {
 		return Files.forIO().readFrom(getClass().getResourceAsStream("detail"), "utf-8");
+	}
+
+	@Test
+	public void testModel() throws Exception {
+		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat.xml"), "utf-8");
+		HeartbeatReport reportOld = DefaultSaxParser.parse(newXml);
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportOld.getDomain()));
+
+		reportOld.accept(merger);
+		Assert.assertEquals(newXml.replaceAll("\r", ""), reportOld.toString().replaceAll("\r", ""));
 	}
 }

@@ -14,13 +14,24 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.Database;
+import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.IEntity;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
@@ -28,11 +39,8 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
@@ -47,6 +55,9 @@ import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject
@@ -91,7 +102,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
 		String ipAddress = payload.getIpAddress();
-		if ("transaction".equals(report)) {
+		if (TransactionAnalyzer.ID.equals(report)) {
 			try {
 				TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(),
 				      ipAddress);
@@ -104,15 +115,15 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				return filter.buildXml((IEntity<?>) dataModel);
 			}
 
-		} else if ("event".equals(report)) {
+		} else if (EventAnalyzer.ID.equals(report)) {
 			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName(), ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.event.model.IEntity<?>) dataModel);
-		} else if ("problem".equals(report)) {
+		} else if (ProblemAnalyzer.ID.equals(report)) {
 			ProblemReportFilter filter = new ProblemReportFilter(ipAddress, payload.getThreadId(), payload.getType());
 
 			return filter.buildXml((com.dianping.cat.consumer.problem.model.IEntity<?>) dataModel);
-		} else if ("heartbeat".equals(report)) {
+		} else if (HeartbeatAnalyzer.ID.equals(report)) {
 			if (StringUtils.isEmpty(ipAddress)) {
 				HeartbeatReport reportModel = (HeartbeatReport) dataModel;
 				Set<String> ips = reportModel.getIps();
@@ -123,7 +134,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
-		} else if ("sql".equals(report)) {
+		} else if (SqlAnalyzer.ID.equals(report)) {
 			String database = payload.getDatabase();
 			SqlReportFilter filter = new SqlReportFilter(database);
 
@@ -152,14 +163,21 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		try {
 			String report = payload.getReport();
 			String domain = payload.getDomain();
-			ModelRequest request = new ModelRequest(domain, payload.getPeriod());
+			ModelPeriod period = payload.getPeriod();
+			ModelRequest request = null;
+
+			if ("logview".equals(report)) {
+				request = new ModelRequest(domain, MessageId.parse(payload.getMessageId()).getTimestamp());
+			} else {
+				request = new ModelRequest(domain, period.getStartTime());
+			}
 			ModelResponse<?> response = null;
 
-			if ("transaction".equals(report)) {
+			if (TransactionAnalyzer.ID.equals(report)) {
 				response = m_transactionService.invoke(request);
-			} else if ("event".equals(report)) {
+			} else if (EventAnalyzer.ID.equals(report)) {
 				response = m_eventService.invoke(request);
-			} else if ("problem".equals(report)) {
+			} else if (ProblemAnalyzer.ID.equals(report)) {
 				response = m_problemService.invoke(request);
 			} else if ("logview".equals(report)) {
 				String messageId = payload.getMessageId();
@@ -172,21 +190,21 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				} else {
 					response = m_messageService.invoke(request);
 				}
-			} else if ("heartbeat".equals(report)) {
+			} else if (HeartbeatAnalyzer.ID.equals(report)) {
 				response = m_heartbeatService.invoke(request);
-			} else if ("matrix".equals(report)) {
+			} else if (MatrixAnalyzer.ID.equals(report)) {
 				response = m_matrixService.invoke(request);
-			} else if ("cross".equals(report)) {
+			} else if (CrossAnalyzer.ID.equals(report)) {
 				response = m_crossService.invoke(request);
-			} else if ("sql".equals(report)) {
+			} else if (SqlAnalyzer.ID.equals(report)) {
 				response = m_sqlService.invoke(request);
-			} else if ("state".equals(report)) {
+			} else if (StateAnalyzer.ID.equals(report)) {
 				response = m_stateService.invoke(request);
-			} else if ("top".equals(report)) {
+			} else if (TopAnalyzer.ID.equals(report)) {
 				response = m_topService.invoke(request);
 			} else if ("metric".equals(report)) {
 				response = m_metricService.invoke(request);
-			} else if ("dependency".equals(report)) {
+			} else if (DependencyAnalyzer.ID.equals(report)) {
 				response = m_dependencyService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
@@ -221,7 +239,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.event.model.entity.Machine machine) {
-			if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL)) {
+			if (m_ipAddress == null || m_ipAddress.equals(Constants.ALL)) {
 				super.visitMachine(machine);
 			} else if (machine.getIp().equals(m_ipAddress)) {
 				super.visitMachine(machine);
@@ -274,7 +292,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
-			if (machine.getIp().equals(m_ip) || StringUtils.isEmpty(m_ip) || CatString.ALL.equals(m_ip)) {
+			if (machine.getIp().equals(m_ip) || StringUtils.isEmpty(m_ip) || Constants.ALL.equals(m_ip)) {
 				super.visitMachine(machine);
 			}
 		}
@@ -373,7 +391,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {
 			synchronized (machine) {
-				if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL)) {
+				if (m_ipAddress == null || m_ipAddress.equals(Constants.ALL)) {
 					super.visitMachine(machine);
 				} else if (machine.getIp().equals(m_ipAddress)) {
 					super.visitMachine(machine);

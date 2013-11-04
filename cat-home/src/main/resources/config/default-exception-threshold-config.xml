@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exception-threshold-config>
+	<domain-config id = "Default">
+		<exception-limit domain="Default" id="Total" warning="50" error="100"></exception-limit>
+		<exception-limit domain="Default" id="java.lang.IllegalArgumentException" warning="1" error="100"></exception-limit>
+	</domain-config>
+	<domain-config id = "Cat"></domain-config>
+</exception-threshold-config>
+
+

@@ -4,11 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.6.2-SNAPSHOT</version>
+	<version>0.6.2</version>
 	<name>CAT</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
 	<modules>
+		<module>cat-client</module>
 		<module>cat-core</module>
 		<module>cat-consumer</module>
 		<module>cat-hadoop</module>
@@ -18,6 +19,11 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-core</artifactId>
@@ -170,6 +176,18 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>cat.repo</id>
+			<url>https://raw.github.com/dianping/cat/mvn-repo</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>cat.repo</id>
+			<url>https://raw.github.com/dianping/cat/mvn-repo</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<distributionManagement>
 		<repository>
 			<id>dianping.repo</id>

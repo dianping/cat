@@ -13,5 +13,8 @@
     <attribute name="show-count" value-type="boolean" primitive="true"/>
     <attribute name="show-avg" value-type="boolean" primitive="true"/>
     <attribute name="show-sum" value-type="boolean" primitive="true"/>
+    <attribute name="show-count-dashboard" value-type="boolean" primitive="true"/>
+    <attribute name="show-avg-dashboard" value-type="boolean" primitive="true"/>
+    <attribute name="show-sum-dashboard" value-type="boolean" primitive="true"/>
   </entity>
 </model>

@@ -2,15 +2,17 @@ package com.dianping.cat.report.page.model.state;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeStateService extends BaseCompositeModelService<StateReport> {
 	public CompositeStateService() {
-		super("state");
+		super(StateAnalyzer.ID);
 	}
 
 	@Override

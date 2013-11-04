@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browser-report>
+   <domain-detail id="Cat">
+      <browser id="AppleWebKit" count="1">
+         <browser-version id="534.31" count="1"/>
+      </browser>
+      <browser id="Safari" count="1">
+         <browser-version id="534.31" count="1"/>
+      </browser>
+      <browser id="UCBrowser" count="1">
+         <browser-version id="534.31" count="1"/>
+      </browser>
+      <os id="Linux" count="1"/>
+      <os id="Android" count="1"/> 
+   </domain-detail>
+</browser-report>

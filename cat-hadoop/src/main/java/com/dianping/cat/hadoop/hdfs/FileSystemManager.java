@@ -14,7 +14,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 
 public class FileSystemManager implements Initializable {
 	@Inject
@@ -92,7 +92,6 @@ public class FileSystemManager implements Initializable {
 			System.setProperty("java.security.krb5.kdc", getValue(properties, "java.security.krb5.kdc", "192.168.7.80"));
 
 			UserGroupInformation.setConfiguration(config);
-
 		}
 
 		return config;

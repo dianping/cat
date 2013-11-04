@@ -8,7 +8,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.sql.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.sql.Model"scope="request" />
 <c:set var="report" value="${model.report}" />
-
 <a:report
 	title="Sql Report"
 	navUrlPrefix="database=${model.database}&domain=${model.domain}"
@@ -16,7 +15,8 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-</br>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table>
 	<tr style="text-align: left">
 		<th>Databases: &nbsp;[&nbsp; <c:choose>
@@ -43,8 +43,9 @@
 		</th>
 	</tr>
 </table>
-<br>
-<table class='data'>
+<div class="row-fluid">
+	<div class="span6">
+		<table class='data'>
 			<tr>
 			    <th></th>
 				<th class="left"><a
@@ -59,7 +60,7 @@
 			<c:forEach var="item" items="${model.displaySqlReport.results}"
 				varStatus="status">
 				<tr class="${status.index  mod 2==0 ? 'even' : 'odd'}">
-					<td class="left"><a href="" class="graph_link" data-status="${status.index}">[:: show ::]</a></td>
+					<td class="left"><a href="" class="sql_graph_link" data-status="${status.index}">[:: show ::]</a></td>
 					<td class="left">${item.id}</td>
 					<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>
@@ -95,8 +96,17 @@
 					</table></td>
 				</tr>
 			</c:forEach>
-
 		</table>
+	</div>
+	<div class="span6">
+		<div id="sqlGraph" class="pieChart"></div>
+		<script type="text/javascript">
+			var data = ${model.pieChart};
+			graphPieChart(document.getElementById('sqlGraph'), data);
+		</script>
+	</div>
+</div>
+
 <font color="white">${lastIndex+1}</font>
 
 <res:useJs value="${res.js.local.sql_js}" target="bottom-js" />

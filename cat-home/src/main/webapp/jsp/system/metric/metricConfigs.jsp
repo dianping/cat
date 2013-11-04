@@ -88,8 +88,8 @@
 				     <c:set var="key" value="${product.id}"/>
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
-					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置</h4>
-				     	<table class="table table-striped table-bordered table-condensed">
+					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>表示放入总的业务监控大盘</h4>
+				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th><h5 class='text-center'>项目</h5></th>
 				     			<th><h5 class='text-center'>类型</h5></th>
@@ -108,9 +108,21 @@
 				     			<td>${config.viewOrder}</td>
 				     			<td>${config.metricKey}</td>
 				     			<td>${config.title}</td>
-				     			<td>${config.showCount}</td>
-				     			<td>${config.showAvg}</td>
-				     			<td>${config.showSum}</td>
+				     			<td>${config.showCount}
+				     				<c:if test="${config.showCountDashboard}">
+				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				     				</c:if>
+				     			</td>
+				     			<td>${config.showAvg}
+				     				<c:if test="${config.showAvgDashboard}">
+				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				     				</c:if>
+				     			</td>
+				     			<td>${config.showSum}
+				     				<c:if test="${config.showSumDashboard}">
+				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				     				</c:if>
+				     			</td>
 					     		<td style="text-align:center">
 					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn update btn-primary btn-small">修改</a>
 						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small btn-danger delete">删除</a>

@@ -19,9 +19,6 @@ public class DisplayTypes {
 
 	private List<TransactionTypeModel> m_results = new ArrayList<TransactionTypeModel>();
 
-	public DisplayTypes() {
-	}
-
 	public DisplayTypes display(String sorted, String ip, TransactionReport report) {
 		Machine machine = report.getMachines().get(ip);
 		if (machine == null) {
@@ -77,6 +74,9 @@ public class DisplayTypes {
 			}
 			if (m_sorted.equals("95line")) {
 				return (int) (m2.getDetail().getLine95Value() * 100 - m1.getDetail().getLine95Value() * 100);
+			}
+			if (m_sorted.equals("99line")) {
+				return (int) (m2.getDetail().getLine99Value() * 100 - m1.getDetail().getLine99Value() * 100);
 			}
 			return 0;
 		}

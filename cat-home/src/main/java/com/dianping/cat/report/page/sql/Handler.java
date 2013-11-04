@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.sql;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -13,16 +15,20 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelPeriod;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 /**
  * @author youyong
@@ -38,14 +44,12 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject(type = ModelService.class, value = "sql")
+	@Inject(type = ModelService.class, value = SqlAnalyzer.ID)
 	private ModelService<SqlReport> m_service;
 
 	private SqlReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("database", payload.getDatabase());
 
 		if (m_service.isEligable(request)) {
@@ -54,7 +58,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "sql");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), SqlAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -68,13 +72,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "sql")
+	@InboundActionMeta(name = SqlAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "sql")
+	@OutboundActionMeta(name = SqlAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -83,18 +87,9 @@ public class Handler implements PageHandler<Context> {
 		String database = payload.getDatabase();
 
 		switch (payload.getAction()) {
-		case HISTORY_REPORT:
-			SqlReport historyReport = showSummarizeReport(model, payload);
-
-			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
-			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(historyDuration);
-
-			displayHistorySql.setSortBy(payload.getSortBy()).visitSqlReport(historyReport);
-			model.setReport(historyReport);
-			model.setDisplaySqlReport(displayHistorySql);
-			break;
 		case HOURLY_REPORT:
 			long hourlyDuration = TimeUtil.ONE_HOUR;
+
 			if (ModelPeriod.CURRENT == payload.getPeriod()) {
 				hourlyDuration = System.currentTimeMillis() % TimeUtil.ONE_HOUR;
 			}
@@ -104,6 +99,17 @@ public class Handler implements PageHandler<Context> {
 			displaySql.setSortBy(payload.getSortBy()).visitSqlReport(hourlyReport);
 			model.setReport(hourlyReport);
 			model.setDisplaySqlReport(displaySql);
+			model.setPieChart(buildPieChart(displaySql.getResults()));
+			break;
+		case HISTORY_REPORT:
+			SqlReport historyReport = showSummarizeReport(model, payload);
+			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
+			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(historyDuration);
+
+			displayHistorySql.setSortBy(payload.getSortBy()).visitSqlReport(historyReport);
+			model.setReport(historyReport);
+			model.setDisplaySqlReport(displayHistorySql);
+			model.setPieChart(buildPieChart(displayHistorySql.getResults()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -113,7 +119,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.SQL);
 		m_normalizePayload.normalize(model, payload);
 		if (StringUtils.isEmpty(payload.getDatabase())) {
-			payload.setDatabase(CatString.ALL);
+			payload.setDatabase(Constants.ALL);
 		}
 		model.setDatabase(payload.getDatabase());
 	}
@@ -124,5 +130,18 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 
 		return m_reportService.querySqlReport(domain, start, end);
+	}
+
+	private String buildPieChart(List<Table> tables) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Table table : tables) {
+			if(!table.getId().equals("All")){
+				items.add(new Item().setTitle(table.getId()).setNumber(table.getTotalCount()));
+			}
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
 	}
 }

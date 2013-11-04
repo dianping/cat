@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.event;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.event.EventReportMerger;
 
 public class MergeAllMachine extends BaseVisitor {
 
@@ -40,14 +40,14 @@ public class MergeAllMachine extends BaseVisitor {
 
 	@Override
 	public void visitMachine(Machine machine) {
-		m_report.findOrCreateMachine(CatString.ALL);
+		m_report.findOrCreateMachine(Constants.ALL);
 		super.visitMachine(machine);
 	}
 
 	@Override
 	public void visitName(EventName name) {
 		m_currentName = name.getId();
-		EventName temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType)
+		EventName temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
 		      .findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
@@ -57,7 +57,7 @@ public class MergeAllMachine extends BaseVisitor {
 	@Override
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
-		Range temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType)
+		Range temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
 		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
@@ -67,7 +67,7 @@ public class MergeAllMachine extends BaseVisitor {
 	@Override
 	public void visitType(EventType type) {
 		m_currentType = type.getId();
-		EventType temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType);
+		EventType temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType);
 
 		m_merger.mergeType(temp, type);
 		super.visitType(type);

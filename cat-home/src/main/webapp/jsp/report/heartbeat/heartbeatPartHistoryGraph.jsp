@@ -8,13 +8,13 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
-<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/highcharts.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <script type="text/javascript" src="/cat/js/heartbeatHistory.js"></script>
 <style type="text/css">
 .graph{
 width: 430px;
-height: 200px;
+height: 350px;
 margin: 4px auto;
 }
 </style>

@@ -12,10 +12,11 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
+import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.core.dal.GraphDao;
+import com.dianping.cat.core.dal.GraphEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.GraphDao;
-import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
@@ -112,7 +113,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		List<Graph> graphs = new ArrayList<Graph>();
 
 		try {
-			graphs = this.m_graphDao.findByDomainNameIpDuration(start, end, ip, domain, "heartbeat",
+			graphs = this.m_graphDao.findByDomainNameIpDuration(start, end, ip, domain, HeartbeatAnalyzer.ID,
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
 			Cat.logError(e);

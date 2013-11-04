@@ -3,17 +3,26 @@ package com.dianping.cat.report.page.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta(SqlAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
 
+	@EntityMeta
 	private SqlReport m_report;
 
+	@EntityMeta
 	private DisplaySqlReport m_displaySqlReport;
 
 	private String m_database;
+
+	private String m_pieChart;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -73,5 +82,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(SqlReport sqlReport) {
 		m_report = sqlReport;
 	}
+
+	public String getPieChart() {
+   	return m_pieChart;
+   }
+
+	public void setPieChart(String pieChart) {
+   	m_pieChart = pieChart;
+   }
 
 }

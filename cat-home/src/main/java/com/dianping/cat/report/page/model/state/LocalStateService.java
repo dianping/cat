@@ -1,15 +1,13 @@
 package com.dianping.cat.report.page.model.state;
 
-import java.util.Date;
-
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.model.ModelPeriod;
-import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
@@ -18,14 +16,7 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 	private BucketManager m_bucketManager;
 
 	public LocalStateService() {
-		super("state");
-	}
-
-	private StateReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "state");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+		super(StateAnalyzer.ID);
 	}
 
 	@Override
@@ -33,18 +24,20 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 		StateReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long current = System.currentTimeMillis();
-			long hour = 60 * 60 * 1000;
-			long date = current - current % (hour) - hour;
-			report = getLocalReport(date, domain);
-
-			if (report == null) {
-				report = new StateReport(domain);
-				report.setStartTime(new Date(date));
-				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
-			}
+			report = getReportFromLocalDisk(request.getStartTime(), domain);
 		}
-
 		return report;
+	}
+
+	private StateReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = null;
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID);
+			String xml = bucket.findById(domain);
+
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

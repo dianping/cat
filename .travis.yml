@@ -1,0 +1,5 @@
+language: java
+install:
+  mvn install -Dmaven.test.skip -B -fae
+script:
+  mvn test -B -fae

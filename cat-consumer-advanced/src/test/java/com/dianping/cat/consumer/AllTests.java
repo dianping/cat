@@ -5,23 +5,35 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.advanced.CrossInfoTest;
-import com.dianping.cat.consumer.advanced.DatabaseAnalyzerTest;
+import com.dianping.cat.consumer.advanced.DatabaseParserTest;
 import com.dianping.cat.consumer.advanced.MatrixModelTest;
 import com.dianping.cat.consumer.advanced.SqlParsersTest;
+import com.dianping.cat.consumer.browser.BrowserReportMergerTest;
+import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
+import com.dianping.cat.consumer.sql.SqlAnalyzerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
 CrossInfoTest.class,
 
-DatabaseAnalyzerTest.class,
-
 MatrixModelTest.class,
 
 SqlParsersTest.class,
 
-DatabaseAnalyzerTest.class
+DatabaseParserTest.class,
 
+BrowserReportMergerTest.class,
+
+CrossAnalyzerTest.class,
+
+SqlAnalyzerTest.class,
+
+MatrixAnalyzerTest.class,
+
+DependencyAnalyzerTest.class
 
 })
 public class AllTests {

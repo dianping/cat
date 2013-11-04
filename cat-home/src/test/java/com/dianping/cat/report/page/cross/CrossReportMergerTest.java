@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
+import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 
 public class CrossReportMergerTest {
 	@Test
@@ -20,14 +20,12 @@ public class CrossReportMergerTest {
 
 		reportOld.accept(merger);
 		reportNew.accept(merger);
-		// Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""),
-		// merger.getCrossReport().toString().replaceAll("\r", ""));
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getCrossReport()
-		      .toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
-		      reportNew.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
-		      reportOld.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getCrossReport()
+		      .toString().replaceAll("\r", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\r", ""),
+		      reportNew.toString().replaceAll("\r", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\r", ""),
+		      reportOld.toString().replaceAll("\r", ""));
 	}
 }

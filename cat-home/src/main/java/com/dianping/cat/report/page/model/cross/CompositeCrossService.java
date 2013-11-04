@@ -2,15 +2,17 @@ package com.dianping.cat.report.page.model.cross;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 
 public class CompositeCrossService extends BaseCompositeModelService<CrossReport> {
 	public CompositeCrossService() {
-		super("cross");
+		super(CrossAnalyzer.ID);
 	}
 
 	@Override

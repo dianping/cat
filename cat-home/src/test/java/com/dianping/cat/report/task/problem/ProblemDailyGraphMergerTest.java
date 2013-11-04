@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
-import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 
 public class ProblemDailyGraphMergerTest {
 	private ProblemMerger m_meger = new ProblemMerger();
@@ -21,7 +21,7 @@ public class ProblemDailyGraphMergerTest {
 
 	private String m_reportDomain = "MobileApi";
 
-	List<Report> reports = new ArrayList<Report>();
+	private List<ProblemReport> reports = new ArrayList<ProblemReport>();
 
 	@Before
 	public void setUp() {
@@ -37,7 +37,7 @@ public class ProblemDailyGraphMergerTest {
 		ProblemReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerDaily.xml"), "utf-8");
 
-		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
 	@Test
@@ -45,18 +45,17 @@ public class ProblemDailyGraphMergerTest {
 		ProblemReport report = m_meger.mergeForGraph(m_reportDomain, reports);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerGraph.xml"), "utf-8");
 
-		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
-	private Report creatReport() {
-		Report result = new Report();
+	private ProblemReport creatReport() {
 		try {
 			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("problemCreator.xml"), "utf-8");
 
-			result.setContent(xml);
+			return DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 }

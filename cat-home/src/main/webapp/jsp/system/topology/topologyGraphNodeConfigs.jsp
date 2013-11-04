@@ -91,7 +91,7 @@
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
 					    <h4 class="text-center text-error">拓扑图节点配置信息：${item.key}</h4>
-				     	<table class="table table-striped table-bordered table-condensed">
+				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th><h5 class='text-center'>项目</h5></th><th><h5 class='text-center'>异常Warning阀值</h5></th>
 				     			<th><h5 class='text-center'>异常Error阀值</h5></th><th><h5 class='text-center'>响应时间Warning阀值</h5></th>

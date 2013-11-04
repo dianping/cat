@@ -67,12 +67,6 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 
-	// last week sarterday
-	public static Date getLastWeek() {
-		Date date = getCurrentWeek();
-		return new Date(date.getTime() - 7 * ONE_DAY);
-	}
-
 	public static Date getYesterday() {
 		Calendar cal = Calendar.getInstance();
 

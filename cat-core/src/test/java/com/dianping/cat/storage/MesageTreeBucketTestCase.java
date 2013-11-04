@@ -115,7 +115,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 					String expect = null;
 					try {
 						id = "" + serial.incrementAndGet();
-						DefaultMessageTree mt = new DefaultMessageTree();
+						MessageTree mt = new DefaultMessageTree();
 						mt.setMessageId(id);
 						MessageTree target = bucket.findById(id);
 						Assert.assertEquals(id, target.getMessageId());
@@ -146,7 +146,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 					String expect = null;
 					try {
 						id = "" + serial.incrementAndGet();
-						DefaultMessageTree mt = new DefaultMessageTree();
+						MessageTree mt = new DefaultMessageTree();
 						mt.setMessageId(id);
 						Assert.assertTrue(bucket.storeById(id, mt));
 
@@ -177,7 +177,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 				for (int i = 0; i < timesPerThread; i++) {
 					try {
 						String id = "" + serial.incrementAndGet();
-						DefaultMessageTree mt = new DefaultMessageTree();
+						MessageTree mt = new DefaultMessageTree();
 						mt.setMessageId(id);
 						boolean success = bucket.storeById(id, mt);
 						if (!success) {
@@ -231,7 +231,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		for (int p = 0; p < threadNum; p++) {
 			for (int i = 0; i < timesPerThread; i++) {
 				String id = "" + serial.incrementAndGet();
-				DefaultMessageTree mt = new DefaultMessageTree();
+				MessageTree mt = new DefaultMessageTree();
 				mt.setMessageId(id);
 				Assert.assertTrue(bucket.storeById(id, mt));
 			}

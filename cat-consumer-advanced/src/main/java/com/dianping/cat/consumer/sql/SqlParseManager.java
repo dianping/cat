@@ -69,7 +69,7 @@ public class SqlParseManager {
 		}
 	}
 
-	private String parseSql(String sqlStatement) {
+	protected String parseSql(String sqlStatement) {
 		List<String> tables = null;
 		try {
 			tables = SqlParsers.forTable().parse(sqlStatement);

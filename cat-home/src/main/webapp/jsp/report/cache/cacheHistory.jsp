@@ -14,10 +14,11 @@
 navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 <jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 <jsp:body>
-</br>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: &nbsp; <c:forEach var="ip" items="${model.ips}">
+		<th>机器: &nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -33,10 +34,9 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 		</th>
 	</tr>
 </table>
-<br>
-<table class="data">
 	<c:choose>
 		<c:when test="${empty payload.type}">
+		<table class="data">
 		<tr><th  class="left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
@@ -50,13 +50,16 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 					<td style="text-align:left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
-					<td>${w:format(item.hited,'0.00%')}</td>
+					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-			</c:forEach>
+			</c:forEach></table>
 		</c:when>
 		<c:otherwise>
+			<div class="row-fluid">
+			<div class="span7">
+			<table>
 			<tr ><th class="left" colspan='6'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input id="queryname" style="WIDTH: 60px" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
@@ -66,6 +69,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 				var queryname=$("#queryname").val();
 				var customDate = '${model.customDate}';
 				var reportType ='${model.reportType}';
+				var type = '${payload.type}';
 				window.location.href="?op=history&domain="+domain+"&reportType="+reportType+"&type="+type+"&date="+date+"&queryname="+queryname+"&ip="+ip+customDate;
 			}
 		</script>
@@ -85,11 +89,21 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
-					<td>${w:format(item.hited,'0.00%')}</td>
+					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 			</c:forEach>
+			</table>
+			</div>
+				<div class="span5">
+					<div id="cacheGraph"></div>
+					<script type="text/javascript">
+						var data = ${model.pieChart};
+						graphPieChart(document.getElementById('cacheGraph'), data);
+					</script>
+				</div>
+			</div>
 		</c:otherwise>
 	</c:choose>
 </table>

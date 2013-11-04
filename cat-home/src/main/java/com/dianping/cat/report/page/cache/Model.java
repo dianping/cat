@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta("cache")
 public class Model extends AbstractReportModel<Action, Context> {
 	private String m_queryName;
 
+	@EntityMeta
 	private CacheReport m_report;
+
+	private String m_pieChart;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -62,6 +69,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setReport(CacheReport report) {
 		m_report = report;
+	}
+
+	public String getPieChart() {
+		return m_pieChart;
+	}
+
+	public void setPieChart(String pieChart) {
+		m_pieChart = pieChart;
 	}
 
 }

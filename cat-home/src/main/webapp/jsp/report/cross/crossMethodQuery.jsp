@@ -59,7 +59,7 @@
 			<td>${item.method}</td>
 			 <td>${item.totalCount}</td>
 		     <td>${w:format(item.failureCount,'#,###,###,###,##0')}</td>
-		     <td>${w:format(item.failurePercent,'0.00%')}</td>
+		     <td>${w:format(item.failurePercent,'0.0000%')}</td>
 		     <td>${w:format(item.avg,'0.00')}</td>
 		</tr>
 	</c:forEach></tbody>

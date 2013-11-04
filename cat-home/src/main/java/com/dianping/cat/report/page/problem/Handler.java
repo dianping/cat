@@ -17,20 +17,21 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
-import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.model.ModelPeriod;
-import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -51,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "problem")
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
 
 	@Inject
@@ -71,12 +72,12 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
 		ProblemReport report = getHourlyReportInternal(payload, type);
-		if ("FrontEnd".equals(payload.getDomain())) {
-			//ModelPeriod period = payload.getPeriod();
+		if (Constants.FRONT_END.equals(payload.getDomain())) {
+			// ModelPeriod period = payload.getPeriod();
 
-			//if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
-				report = buildFrontEndByRule(report);
-			//}
+			// if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
+			report = buildFrontEndByRule(report);
+			// }
 		}
 		return report;
 	}
@@ -88,10 +89,9 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
 		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date).setProperty("type", type);
-		if (!CatString.ALL.equals(payload.getIpAddress())) {
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
+		      .setProperty("type", type);
+		if (!Constants.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
@@ -102,7 +102,7 @@ public class Handler implements PageHandler<Context> {
 			ProblemReport report = response.getModel();
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "problem");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), ProblemAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -142,33 +142,31 @@ public class Handler implements PageHandler<Context> {
 		ProblemReport report = null;
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		String ip = model.getIpAddress();
-		int urlThreshold = payload.getLongTime();
-		int sqlThreshold = payload.getSqlLongTime();
-		int serviceThreshold = payload.getSeviceLongTime();
+		LongConfig longConfig = new LongConfig();
 
+		longConfig.setSqlThreshold(payload.getSqlThreshold()).setUrlThreshold(payload.getUrlThreshold())
+		      .setServiceThreshold(payload.getServiceThreshold());
+		longConfig.setCacheThreshold(payload.getCacheThreshold()).setCallThreshold(payload.getCallThreshold());
+		problemStatistics.setLongConfig(longConfig);
 		switch (payload.getAction()) {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			if (ip.equals(CatString.ALL)) {
+			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
 			}
-			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
-			      .setServiceThreshold(serviceThreshold);
 			problemStatistics.visitProblemReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
-			if (ip.equals(CatString.ALL)) {
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
-				      .setServiceThreshold(serviceThreshold);
+			if (ip.equals(Constants.ALL)) {
+				problemStatistics.setAllIp(true);
 				problemStatistics.visitProblemReport(report);
 			} else {
-				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
-				      .setServiceThreshold(serviceThreshold);
+				problemStatistics.setIp(ip);
 				problemStatistics.visitProblemReport(report);
 			}
 			model.setReport(report);
@@ -211,10 +209,6 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		setDefaultThreshold(model, payload);
 		model.setPage(ReportPage.PROBLEM);
-		model.setThreshold(payload.getLongTime());
-		model.setSqlThreshold(payload.getSqlLongTime());
-		model.setServiceThreshold(payload.getSeviceLongTime());
-
 		m_normalizePayload.normalize(model, payload);
 	}
 
@@ -226,10 +220,6 @@ public class Handler implements PageHandler<Context> {
 			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
 			      .intValue();
 
-			if (payload.getRealLongTime() == 0) {
-				payload.setLongTime(longUrlTime);
-			}
-
 			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
 			      && longUrlTime != 4000 && longUrlTime != 5000) {
 				double sec = (double) (longUrlTime) / (double) 1000;
@@ -240,9 +230,6 @@ public class Handler implements PageHandler<Context> {
 			}
 
 			int longSqlTime = d.getSqlThreshold();
-			if (payload.getSqlLongTime() == 0) {
-				payload.setSqlLongTime(longSqlTime);
-			}
 
 			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
 				double sec = (double) (longSqlTime);

@@ -5,19 +5,29 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
 public class TestSendMessage {
 
 	@Test
 	public void sendException() throws Exception {
-		for (int i = 0; i < 10; i++) {
-			Cat.getProducer().logError(new OutOfMemoryError());
-			Cat.getProducer().logError(new NullPointerException());
-		}
-		Thread.sleep(1000);
-	}
 
+		for (int i = 0; i < 10; i++) {
+			Transaction t = Cat.newTransaction("Midas", "XXName");
+			try {
+				t.setStatus("Fail");
+			} catch (Exception e) {
+				t.setStatus(Transaction.SUCCESS);
+				Cat.logError(e);
+				throw e;
+			} finally {
+				t.complete();
+			}
+		}
+		Thread.sleep(10000);
+	}
+	
 	@Test
 	public void sendSendUrlErrorMessage() throws Exception {
 		for (int i = 0; i < 100; i++) {
@@ -26,9 +36,8 @@ public class TestSendMessage {
 			t.addData("key and value");
 			t.setStatus(new NullPointerException());
 			t.complete();
-
 		}
-		Thread.sleep(1000);
+		Thread.sleep(10000);
 	}
 
 	@Test
@@ -120,7 +129,7 @@ public class TestSendMessage {
 	public void sendPigeonClientTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", "192.168.64."+i+":2280");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.64." + i + ":2280");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -429,5 +438,29 @@ public class TestSendMessage {
 			Thread.sleep(51);
 			t.complete();
 		}
+	}
+	
+	@Test
+	public void sendTraceInfo() throws Exception {
+
+		for (int i = 0; i < 10; i++) {
+			Transaction t = Cat.newTransaction("Trace", "Test"+i);
+			try {
+				Cat.logTrace("Trace", "Info");
+				Cat.logTrace("Trace", "Dubug", Trace.SUCCESS, "sss");
+				Trace trace = Cat.newTrace("Trace", "Error");
+
+				trace.setStatus(Trace.SUCCESS);
+				trace.addData("errorTrace");
+				t.setStatus("Fail");
+			} catch (Exception e) {
+				t.setStatus(Transaction.SUCCESS);
+				Cat.logError(e);
+				throw e;
+			} finally {
+				t.complete();
+			}
+		}
+		Thread.sleep(10000);
 	}
 }

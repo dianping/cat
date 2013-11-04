@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
@@ -42,9 +42,9 @@ public class ProblemRender {
 
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		if (ip.startsWith("10.")) {
-			m_host = CatString.ONLINE;
+			m_host = Chinese.ONLINE;
 		} else {
-			m_host = CatString.OFFLINE;
+			m_host = Chinese.OFFLINE;
 		}
 	}
 

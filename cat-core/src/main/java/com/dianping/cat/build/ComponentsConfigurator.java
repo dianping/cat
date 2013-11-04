@@ -8,93 +8,78 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatCoreModule;
+import com.dianping.cat.DomainManager;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
+import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.internal.DefaultMessageManager;
-import com.dianping.cat.message.internal.DefaultMessageProducer;
-import com.dianping.cat.message.internal.MessageIdFactory;
-import com.dianping.cat.message.io.DefaultTransportManager;
-import com.dianping.cat.message.io.MessageSender;
-import com.dianping.cat.message.io.TcpSocketHierarchySender;
-import com.dianping.cat.message.io.TcpSocketReceiver;
-import com.dianping.cat.message.io.TcpSocketSender;
-import com.dianping.cat.message.io.TransportManager;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.HostinfoDao;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessageConsumerRegistry;
-import com.dianping.cat.message.spi.MessageHandler;
-import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
-import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
-import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
-import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
-import com.dianping.cat.message.spi.internal.DummyConsumer;
-import com.dianping.cat.status.ServerStateManager;
-import com.dianping.cat.status.StatusUpdateTask;
+import com.dianping.cat.message.spi.core.DefaultMessageHandler;
+import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
+import com.dianping.cat.message.spi.core.MessageHandler;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
+import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.message.spi.core.TcpSocketReceiver.DecodeMessageTask;
+import com.dianping.cat.service.DefaultReportService;
+import com.dianping.cat.service.RemoteModelService;
+import com.dianping.cat.service.ReportService;
+import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.ChannelBufferManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ClientConfigManager.class));
-		all.add(C(ServerConfigManager.class));
-		all.add(C(ServerStateManager.class));
+		all.add(C(DomainManager.class)//
+		      .req(ServerConfigManager.class, ProjectDao.class, HostinfoDao.class));
 
-		all.add(C(MessageManager.class, DefaultMessageManager.class) //
-		      .req(ClientConfigManager.class, TransportManager.class, MessageStatistics.class));
-		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
-		      .req(MessageManager.class, MessageIdFactory.class));
-		all.add(C(MessageIdFactory.class));
+		all.add(C(TaskManager.class).req(TaskDao.class));
+		all.add(C(ServerConfigManager.class));
+		all.add(C(ServerStatisticManager.class));
+
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(ClientConfigManager.class));
 
-		all.add(C(MessageConsumer.class, DummyConsumer.ID, DummyConsumer.class));
-		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
+		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
-		all.add(C(MessageSender.class, TcpSocketSender.ID, TcpSocketSender.class) //
-		      .is(PER_LOOKUP) //
-		      .req(MessageStatistics.class, "default", "m_statistics") //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec"));
-		all.add(C(MessageSender.class, TcpSocketHierarchySender.ID, TcpSocketHierarchySender.class) //
-		      .is(PER_LOOKUP) //
-		      .req(MessageStatistics.class, "default", "m_statistics") //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec"));
-		all.add(C(TcpSocketReceiver.class) //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID)//
-		      .req(ServerConfigManager.class, MessageHandler.class)//
-		      .req(ServerStateManager.class));
-		all.add(C(TransportManager.class, DefaultTransportManager.class) //
-		      .req(ClientConfigManager.class));
+		all.add(C(RemoteModelService.class));
+		all.add(C(ReportService.class, DefaultReportService.class) //
+		      .req(ServerConfigManager.class, RemoteModelService.class) //
+		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
+
+		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
+
+		all.add(C(DecodeMessageTask.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
-		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
-		all.add(C(StatusUpdateTask.class) //
-		      .req(MessageStatistics.class, ClientConfigManager.class));
 
 		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStateManager.class));
+		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class));
 		all.add(C(ChannelBufferManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 
-		all.addAll(new ABTestComponentConfigurator().defineComponents());
+		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
-		all.addAll(new ABTestComponentConfigurator().defineComponents());
 
 		return all;
 	}

@@ -1,3 +1,5 @@
+CREATE DATABASE cat;
+
 CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
@@ -86,17 +88,14 @@ CREATE TABLE `location` (
   UNIQUE KEY `transaction_date_lat_lng` (`transaction_date`,`lat`,`lng`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于热点图地理位置表';
 
-
 CREATE TABLE `report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型, 1/xml, 9/binary 默认1',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台机器',
-  `domain` varchar(50) NOT NULL,
-  `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
-  `headers` text NOT NULL,  
+  `domain` varchar(50) NOT NULL  COMMENT '报表项目',
+  `period` timestamp NOT NULL COMMENT '报表时间段',
   `content` longtext NULL,
-  `binary_content` longblob NULL,
   `creation_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
@@ -104,6 +103,33 @@ CREATE TABLE `report` (
   KEY `IX_Period` (`period`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
 
+CREATE TABLE `report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+
+CREATE TABLE `daily_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='天报表二进制内容';
+
+CREATE TABLE `weekly_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='周报表二进制内容';
+
+CREATE TABLE `monthly_report_content` (
+  `report_id` int(11) NOT NULL COMMENT '报表ID',
+  `content` longblob NOT NULL COMMENT '二进制报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`report_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='月报表二进制内容';
 
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -119,7 +145,6 @@ CREATE TABLE `businessReport` (
   KEY `IX_Name_Period` (`name`,`period`),
   KEY `IX_Period` (`period`)
 ) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
-
 
 CREATE TABLE `sqlreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -143,7 +168,6 @@ CREATE TABLE `sqlreport` (
   `failure_over_time` varchar(512) NOT NULL COMMENT '在一个小时内的错误分布',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存放Hadoop处理的SQL报表信息';
-
 
 CREATE TABLE `sqltable` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -296,7 +320,16 @@ CREATE TABLE `abtest` (
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='AB测试内容';
+
+CREATE TABLE `abtest_report` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `run_id` int(11) DEFAULT NULL,
+  `period` datetime DEFAULT NULL,
+  `content` text,
+  `creation_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='AB测试报表';
 
 CREATE TABLE `abtest_run` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -306,23 +339,26 @@ CREATE TABLE `abtest_run` (
   `end_date` datetime DEFAULT NULL COMMENT '结束时间',
   `disabled` tinyint(4) NOT NULL COMMENT '是否有效',
   `domains` varchar(100) NOT NULL COMMENT '属于的domain，用逗号分割',
+  `conditions` text,
+  `java_fragement` text,
+  `conversion_goals` text,
   `strategy_configuration` text COMMENT '策略配置',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   `modified_date` datetime NOT NULL COMMENT '上次修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='AB测试运行实例';
 
 CREATE TABLE `group_strategy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL COMMENT 'GroupStrategy的名字',
-  `alias` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
-  `classname` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
-  `configuration` text COMMENT '配置的schema',
+  `class_name` varchar(100) NOT NULL COMMENT 'GroupStrategy的英文名',
+  `fully_qualified_name` varchar(100) NOT NULL COMMENT 'GroupStrategy的class名字',
+  `descriptor` text COMMENT '配置的schema',
   `status` tinyint(4) NOT NULL COMMENT '是否开/关，1是开，0是关',
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于记录分组策略';
 
 CREATE TABLE `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -348,6 +384,18 @@ CREATE TABLE `topologyGraph` (
   PRIMARY KEY (`id`),
   KEY `period` (`period`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21912 DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
+
+CREATE TABLE `baseline` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_name` varchar(100) DEFAULT NULL,
+  `index_key` varchar(100) DEFAULT NULL,
+  `report_period` datetime DEFAULT NULL,
+  `data` blob,
+  `creation_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
+  KEY `ix_reportperiod` (`report_period`)
+) ENGINE=InnoDB AUTO_INCREMENT=5062 DEFAULT CHARSET=utf8
 
 
 

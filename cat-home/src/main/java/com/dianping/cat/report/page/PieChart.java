@@ -5,48 +5,41 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 public class PieChart {
 
 	private List<Item> items = new ArrayList<Item>();
+
+	private transient int MAX_SIZE = 10;
 
 	public List<Item> getItems() {
 		return items;
 	}
 
-	public void setItems(List<Item> temps) {
+	public String getJsonString() {
+		return new Gson().toJson(this);
+	}
+
+	public void addItems(List<Item> temps) {
 		Collections.sort(temps, new ItemCompartor());
 		int size = temps.size();
 
-		if (size <= 10) {
+		if (size <= MAX_SIZE) {
 			this.items = temps;
 		} else {
-			this.items = temps.subList(0, 10);
+			for (int i = 0; i < MAX_SIZE; i++) {
+				this.items.add(temps.get(i));
+			}
+			Item item = new Item().setTitle("Other");
 
-			Item item = new Item();
-			item.setTitle("Other");
 			double sum = 0;
-			for (int i = 10; i < size; i++) {
+			for (int i = MAX_SIZE; i < size; i++) {
 				Item temp = temps.get(i);
+
 				sum += temp.getNumber();
 			}
-			item.setNumber(sum);
-			items.add(item);
-		}
-
-		for (Item item : items) {
-			String title = item.getTitle();
-			if (title.length() > 28) {
-				title = title.substring(0, 11) + "..." + title.substring(title.length() - 11);
-				item.setTitle(title);
-			}
-		}
-	}
-
-	public static class ItemCompartor implements Comparator<Item> {
-
-		@Override
-		public int compare(Item o1, Item o2) {
-			return (int) (o2.getNumber() - o1.getNumber());
+			this.items.add(item.setNumber(sum));
 		}
 	}
 
@@ -55,22 +48,30 @@ public class PieChart {
 
 		private double number;
 
+		public double getNumber() {
+			return number;
+		}
+
 		public String getTitle() {
 			return title;
+		}
+
+		public Item setNumber(double number) {
+			this.number = number;
+			return this;
 		}
 
 		public Item setTitle(String title) {
 			this.title = title;
 			return this;
 		}
+	}
 
-		public double getNumber() {
-			return number;
-		}
+	public static class ItemCompartor implements Comparator<Item> {
 
-		public Item setNumber(double number) {
-			this.number = number;
-			return this;
+		@Override
+		public int compare(Item o1, Item o2) {
+			return (int) (o2.getNumber() - o1.getNumber());
 		}
 	}
 }

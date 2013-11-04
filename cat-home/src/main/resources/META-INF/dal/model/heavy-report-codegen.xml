@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="heavy-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="heavy-sql" />
+    <entity-ref name="heavy-call" />
+    <entity-ref name="heavy-cache" />
+  </entity>
+  <entity name="heavy-sql">
+    <entity-ref name="url" type="list" names="urls" />
+    <entity-ref name="service" type="list" names="services" />
+  </entity>
+  <entity name="url">
+    <attribute name="domain" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <attribute name="logview" value-type="String" />
+    <attribute name="count" value-type="int" />
+  </entity>
+  <entity name="service">
+    <attribute name="domain" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <attribute name="logview" value-type="String" />
+    <attribute name="count" value-type="int" />
+  </entity>
+  <entity name="heavy-call">
+    <entity-ref name="url" type="list" names="urls" />
+    <entity-ref name="service" type="list" names="services" />
+  </entity>
+  <entity name="heavy-cache">
+    <entity-ref name="url" type="list" names="urls" />
+    <entity-ref name="service" type="list" names="services" />
+  </entity>
+</model>
+

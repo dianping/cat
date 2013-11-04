@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browser-report domain="Cat">
+   <domain-detail id="Cat">
+      <browser id="AppleWebKit" count="1">
+         <browser-version id="535.12" count="1"/>
+      </browser>
+      <browser id="Safari" count="1">
+         <browser-version id="535.12" count="1"/>
+      </browser>
+       <browser id="Chrome" count="1">
+         <browser-version id="18.0.966.0" count="1"/>
+      </browser>
+      <browser id="Maxthon" count="1">
+         <browser-version id="3.4.2.1000" count="1"/>
+      </browser>
+      <os id="Windows NT" count="1"/>
+   </domain-detail>
+</browser-report>

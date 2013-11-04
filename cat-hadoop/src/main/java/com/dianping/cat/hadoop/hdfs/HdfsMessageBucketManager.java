@@ -3,28 +3,30 @@ package com.dianping.cat.hadoop.hdfs;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.jboss.netty.util.internal.ConcurrentHashMap;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 
@@ -40,23 +42,27 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
-	private Map<String, HdfsMessageBucket> m_buckets = new HashMap<String, HdfsMessageBucket>();
-
-	@Override
-	public void close() throws IOException {
-		for (HdfsMessageBucket bucket : m_buckets.values()) {
-			bucket.close();
-		}
-	}
+	private Map<String, HdfsMessageBucket> m_buckets = new ConcurrentHashMap<String, HdfsMessageBucket>();
 
 	void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
 		long hour = 3600 * 1000L;
+		Set<String> closed = new HashSet<String>();
 
-		for (HdfsMessageBucket bucket : m_buckets.values()) {
+		for (Map.Entry<String, HdfsMessageBucket> entry : m_buckets.entrySet()) {
+			HdfsMessageBucket bucket = entry.getValue();
+			
 			if (now - bucket.getLastAccessTime() >= hour) {
-				bucket.close();
+				try {
+	            bucket.close();
+	            closed.add(entry.getKey());
+            } catch (Exception e) {
+            	Cat.logError(e);
+            }
 			}
+		}
+		for(String close:closed){
+			m_buckets.remove(close);
 		}
 	}
 
@@ -99,30 +105,33 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					if (name.contains(key) && !name.endsWith(".idx")) {
 						paths.add(path + name);
 					}
-
 					return false;
 				}
 			});
 
 			t.addData(paths.toString());
 			for (String dataFile : paths) {
-				Cat.getProducer().logEvent("HDFSBucket", dataFile);
-				HdfsMessageBucket bucket = m_buckets.get(dataFile);
+				try {
+	            Cat.getProducer().logEvent("HDFSBucket", dataFile);
+	            HdfsMessageBucket bucket = m_buckets.get(dataFile);
 
-				if (bucket == null) {
-					bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
-					bucket.initialize(dataFile);
-					m_buckets.put(dataFile, bucket);
-				}
+	            if (bucket == null) {
+	            	bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
+	            	bucket.initialize(dataFile);
+	            	m_buckets.put(dataFile, bucket);
+	            }
+	            if (bucket != null) {
+	            	MessageTree tree = bucket.findById(messageId);
 
-				if (bucket != null) {
-					MessageTree tree = bucket.findById(messageId);
-
-					if (tree != null && tree.getMessageId().equals(messageId)) {
-						t.addData("path", dataFile);
-						return tree;
-					}
-				}
+	            	if (tree != null && tree.getMessageId().equals(messageId)) {
+	            		t.addData("path", dataFile);
+	            		return tree;
+	            	}
+	            }
+            } catch (Exception e) {
+            	t.setStatus(e);
+            	Cat.logError(e);
+            }
 			}
 
 			return null;
@@ -137,7 +146,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		} finally {
 			t.complete();
 		}
-
 	}
 
 	@Override
@@ -160,7 +168,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					try {
 						closeIdleBuckets();
 					} catch (IOException e) {
-						e.printStackTrace();
+						Cat.logError(e);
 					}
 				}
 			} catch (InterruptedException e) {

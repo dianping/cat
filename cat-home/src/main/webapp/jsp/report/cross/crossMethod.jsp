@@ -12,10 +12,9 @@
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}"
 								class="current">All</a>
@@ -39,7 +38,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 		<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
@@ -73,7 +71,7 @@
 					<td class="left">${callInfo.id}</td>
 		         	<td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
 		         	<td>${w:format(callInfo.failureCount,'#,###,###,###,##0')}</td>
-		        	<td>${w:format(callInfo.failurePercent,'0.00%')}</td>
+		        	<td>${w:format(callInfo.failurePercent,'0.0000%')}</td>
 		            <td>${w:format(callInfo.avg,'0.00')}</td>
 		            <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
@@ -100,7 +98,7 @@
 					<td class="left">${serviceInfo.id}</td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
-		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>
+		            <td>${w:format(serviceInfo.failurePercent,'0.0000%')}</td>
 		            <td>${w:format(serviceInfo.avg,'0.00')}</td>
 		            <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>

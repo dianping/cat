@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.dianping.cat.consumer.DomainManager;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -200,7 +200,7 @@ public class MethodInfo extends BaseVisitor {
 			if (ip.indexOf(':') > 0) {
 				ip = ip.substring(0, ip.indexOf(':'));
 			}
-			String domain = m_domainManager.getDomainByIp(ip);
+			String domain = m_domainManager.queryDomainByIp(ip);
 
 			if (projectName.equalsIgnoreCase(domain)) {
 				return true;

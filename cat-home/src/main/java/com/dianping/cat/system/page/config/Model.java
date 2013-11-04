@@ -10,13 +10,14 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.core.dal.Project;
-import com.dianping.cat.helper.CatString;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
@@ -29,7 +30,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<AggregationRule> m_aggregationRules;
 
-	private String m_opState = CatString.SUCCESS;
+	private ExceptionLimit m_exceptionLimit;
+
+	private List<ExceptionLimit> m_exceptionLimits;
+
+	private String m_opState = SUCCESS;
 
 	private TopologyGraphConfig m_config;
 
@@ -38,14 +43,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private DomainConfig m_domainConfig;
 
 	private EdgeConfig m_edgeConfig;
-	
+
 	private ProductLine m_productLine;
 
 	private Map<String, ProductLine> m_productLines;
-	
+
 	private MetricItemConfig m_metricItemConfig;
+
+	private Map<ProductLine, List<MetricItemConfig>> m_productMetricConfigs;
 	
-	private Map<ProductLine,List<MetricItemConfig>> m_productMetricConfigs;
+	private String m_bug;
+	
+	private String m_content;
+	
+	private Map<String, Domain> m_productLineToDomains;
+
+	public static final String SUCCESS = "Success";
+
+	public static final String FAIL = "Fail";
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -75,9 +90,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_aggregationRules;
 	}
 
+	public String getBug() {
+   	return m_bug;
+   }
+
 	public TopologyGraphConfig getConfig() {
 		return m_config;
 	}
+
+	public String getContent() {
+   	return m_content;
+   }
 
 	public String getDate() {
 		return "";
@@ -108,8 +131,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_edgeConfigs;
 	}
 
+	public ExceptionLimit getExceptionLimit() {
+		return m_exceptionLimit;
+	}
+
+	public List<ExceptionLimit> getExceptionLimits() {
+		return m_exceptionLimits;
+	}
+
 	public String getIpAddress() {
 		return "";
+	}
+
+	public MetricItemConfig getMetricItemConfig() {
+		return m_metricItemConfig;
 	}
 
 	public String getOpState() {
@@ -117,12 +152,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public ProductLine getProductLine() {
-   	return m_productLine;
-   }
+		return m_productLine;
+	}
 
 	public Map<String, ProductLine> getProductLines() {
-   	return m_productLines;
-   }
+		return m_productLines;
+	}
+
+	public Map<String, Domain> getProductLineToDomains() {
+		return m_productLineToDomains;
+	}
+
+	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {
+		return m_productMetricConfigs;
+	}
 
 	public Project getProject() {
 		return m_project;
@@ -130,6 +173,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<Project> getProjects() {
 		return m_projects;
+	}
+
+	public String getReportType(){
+		return "";
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -140,9 +187,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_aggregationRules = aggregationRules;
 	}
 
+	public void setBug(String bug) {
+   	m_bug = bug;
+   }
+
 	public void setConfig(TopologyGraphConfig config) {
 		m_config = config;
 	}
+
+	public void setContent(String content) {
+   	m_content = content;
+   }
 
 	public void setDomainConfig(DomainConfig domainConfig) {
 		m_domainConfig = domainConfig;
@@ -152,25 +207,45 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_edgeConfig = edgeConfig;
 	}
 
+	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
+		m_exceptionLimit = exceptionLimit;
+	}
+
+	public void setExceptionLimits(List<ExceptionLimit> exceptionLimits) {
+		m_exceptionLimits = exceptionLimits;
+	}
+
 	public void setGraphConfig(TopologyGraphConfig config) {
 		m_config = config;
 	}
 
+	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
+		m_metricItemConfig = metricItemConfig;
+	}
+
 	public void setOpState(boolean result) {
 		if (result) {
-			m_opState = CatString.SUCCESS;
+			m_opState = SUCCESS;
 		} else {
-			m_opState = CatString.FAIL;
+			m_opState = FAIL;
 		}
 	}
 
 	public void setProductLine(ProductLine productLine) {
-   	m_productLine = productLine;
-   }
+		m_productLine = productLine;
+	}
 
 	public void setProductLines(Map<String, ProductLine> productLines) {
 		m_productLines = productLines;
-   }
+	}
+
+	public void setProductLineToDomains(Map<String, Domain> productLineToDomains) {
+		m_productLineToDomains = productLineToDomains;
+	}
+	
+	public void setProductMetricConfigs(Map<ProductLine, List<MetricItemConfig>> productMetricConfigs) {
+		m_productMetricConfigs = productMetricConfigs;
+	}
 
 	public void setProject(Project project) {
 		m_project = project;
@@ -179,23 +254,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
 	}
-	
-	public MetricItemConfig getMetricItemConfig() {
-   	return m_metricItemConfig;
-   }
-
-	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
-   	m_metricItemConfig = metricItemConfig;
-   }
-
-	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {
-   	return m_productMetricConfigs;
-   }
-
-	public void setProductMetricConfigs(Map<ProductLine, List<MetricItemConfig>> productMetricConfigs) {
-   	m_productMetricConfigs = productMetricConfigs;
-   }
-
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;
 
@@ -214,5 +272,4 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			return m_nodeConfig;
 		}
 	}
-	
 }

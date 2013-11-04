@@ -10,12 +10,11 @@
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-</br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>Machines:
+		<th>机器:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -31,7 +30,6 @@
 		</th>
 	</tr>
 </table>
-<br>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -41,12 +39,13 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right">Min(ms)</th>
-						<th class="right">Max(ms)</th>
+			<th class="right">Min(ms)</th>
+			<th class="right">Max(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=avg${model.customDate}">Avg</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=95line${model.customDate}">95Line</a>(ms)</th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=99line${model.customDate}">99Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
-						<th class="right">QPS</th>
+			<th class="right">QPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -64,6 +63,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
+					<td>${w:format(e.line99Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -71,7 +71,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-		<tr><th  class='left' colspan='12'>
+		<tr><th  style="text-align:left;" colspan='13'>
 			<input type="text" id="queryname" size="40"  value="${model.queryName}">
 		    <input  class="btn btn-primary btn-small"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 		    支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
@@ -85,20 +85,21 @@
 			}
 		</script>
 			<tr>
-			<th  style="text-align: left;">
+			<th style="text-align: left;">
 			<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
 						</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}&queryname=${model.queryName}">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right">Min(ms)</th>
-						<th class="right">Max(ms)</th>
+			<th class="right">Min(ms)</th>
+			<th class="right">Max(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=avg${model.customDate}&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=95line${model.customDate}&queryname=${model.queryName}">95Line</a>(ms)</th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=99line${model.customDate}&queryname=${model.queryName}">99Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
-						<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
-						<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -120,6 +121,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
+					<td>${w:format(e.line99Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
