@@ -46,7 +46,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 			<c:forEach var="item" items="${model.report.typeItems}" varStatus="status">
 				<c:set var="e" value="${item.type}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}  right">
 					<td style="text-align:left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
@@ -84,7 +84,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 			<c:forEach var="item" items="${model.report.nameItems}" varStatus="status">
 				<c:set var="e" value="${item.name}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}  right">
 					<td style="text-align:left;word-wrap:break-word;word-break:break-all;">
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>

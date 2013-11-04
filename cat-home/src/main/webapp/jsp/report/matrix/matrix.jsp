@@ -13,7 +13,6 @@
 <br>
 <table class='data'>
 	<tr>
-		
 		<th class="left" rowspan="2">Type</th>
 		<th class="left" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
 		<th rowspan="2" title="所有请求中总次数"><a href="?date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>

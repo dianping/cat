@@ -43,7 +43,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 					<td style="text-align: left">
 					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 					&nbsp;&nbsp;&nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${item.type}</a></td>
@@ -70,7 +70,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 					<td style="text-align: left">
 					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 					&nbsp;&nbsp;&nbsp;${e.id}</td>
