@@ -113,9 +113,14 @@ public class CatFilter implements Filter {
 			}
 
 			protected void setTraceMode(HttpServletRequest req) {
-				String mode = req.getParameter("X-CAT-TRACE-MODE");
+				String traceMode = "X-CAT-TRACE-MODE";
+				String paraMode = req.getParameter(traceMode);
+				String headMode = req.getHeader(traceMode);
 
-				if (("true").equals(mode)) {
+				if (("true").equals(paraMode)) {
+					Cat.getManager().setTraceMode(true);
+				}
+				if (headMode != null && ("true").equals(headMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
 			}

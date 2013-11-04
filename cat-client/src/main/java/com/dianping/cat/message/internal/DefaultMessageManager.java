@@ -246,7 +246,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		private long m_totalDurationInMicros; // for truncate message
 
-		private boolean m_traceMode;
+		private boolean m_traceMode = false;
 
 		public Context(String domain, String hostName, String ipAddress, ClientConfigManager configManager) {
 			m_tree = new DefaultMessageTree();
