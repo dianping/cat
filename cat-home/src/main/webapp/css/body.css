@@ -48,28 +48,24 @@ tr.odd td {
 	background-color: #eee;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align: left;
 }
 
 tr.even td {
 	background-color: white;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align: left;
 }
 
 tr.odd th {
 	background-color: #eee;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align: left;
 }
 
 tr.even th {
 	background-color: white;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align: left;
 }
 
 td.odd {
@@ -172,6 +168,10 @@ a.abtest-heartbeat {
 	display: table;
 	border-collapse: separate;
 	border-spacing: 2px;
+}
+
+.left {
+	text-align: left;
 }
 
 .right {
