@@ -43,7 +43,7 @@ function graphPieChart(container, data){
         },
         series: [{
             type: 'pie',
-            name: 'Browser share',
+            name: 'share',
             data: pieChartParse(data)
         }]
     });

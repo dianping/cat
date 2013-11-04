@@ -128,7 +128,7 @@ public class ClientConfigManager implements LogEnabled {
 				String xml = Files.forIO().readFrom(in, "utf-8");
 
 				clientConfig = DefaultSaxParser.parse(xml);
-				m_logger.info(String.format("Resource file(%s) found.", CAT_CLIENT_XML));
+				m_logger.info(String.format("Resource file(%s) found.", Cat.class.getResource(CAT_CLIENT_XML)));
 			} else {
 				m_logger.warn(String.format("Resource file(%s) not found.", CAT_CLIENT_XML));
 			}
