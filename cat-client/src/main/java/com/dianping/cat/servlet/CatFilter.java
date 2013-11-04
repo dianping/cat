@@ -300,7 +300,7 @@ public class CatFilter implements Filter {
 					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
 					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
-					if (catPageUri != null) {
+					if (catPageUri != null && t instanceof DefaultTransaction) {
 						((DefaultTransaction) t).setName(catPageUri.toString());
 					}
 

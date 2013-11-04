@@ -24,16 +24,27 @@ public class ClientConfigValidator extends DefaultValidator {
 	@Override
 	public void visitConfig(ClientConfig config) {
 		if (!"client".equals(config.getMode())) {
-			throw new RuntimeException(String.format("Attribute(%s) of /config is required in config: %s", "mode", config));
+			throw new RuntimeException(String.format("Attribute(%s) is required: %s", "mode", config));
 		} else if (config.getServers().size() == 0) {
 			config.setEnabled(false);
 			log("WARN", "CAT client was disabled due to no CAT servers configured!");
-		} else if (config.getEnabled() != null && !config.isEnabled()) {
+		} else if (!config.isEnabled()) {
 			log("WARN", "CAT client was globally disabled!");
 		}
 
 		m_config = config;
 		super.visitConfig(config);
+
+		if (m_config.isEnabled()) {
+			for (Domain domain : m_config.getDomains().values()) {
+				if (!domain.isEnabled()) {
+					m_config.setEnabled(false);
+					log("WARN", "CAT client was disabled in domain(" + domain.getId() + ") explicitly!");
+				}
+
+				break; // for first domain only
+			}
+		}
 	}
 
 	@Override
@@ -47,11 +58,6 @@ public class ClientConfigValidator extends DefaultValidator {
 
 		if (domain.getIp() == null) {
 			domain.setIp(getLocalAddress());
-		}
-
-		if (!domain.isEnabled() && m_config.isEnabled()) {
-			m_config.setEnabled(false);
-			log("WARN", "CAT client was disabled in domain(" + domain.getId() + ") explicitly!");
 		}
 	}
 
