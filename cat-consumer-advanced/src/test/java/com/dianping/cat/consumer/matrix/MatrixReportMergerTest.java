@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 
 public class MatrixReportMergerTest {
 	@Test
-	public void testTopReportMerge() throws Exception {
+	public void testMatrixReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("matrix_analyzer.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("matrix_analyzer.xml"), "utf-8");
 		MatrixReport reportOld = DefaultSaxParser.parse(oldXml);

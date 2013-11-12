@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 
 public class SqlReportMergerTest {
 	@Test
-	public void testTopReportMerge() throws Exception {
+	public void testSqlReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("sql_analyzer.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("sql_analyzer.xml"), "utf-8");
 		SqlReport reportOld = DefaultSaxParser.parse(oldXml);

@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 
 public class DependencyReportMergerTest {
 	@Test
-	public void testTopReportMerge() throws Exception {
+	public void testDependencyReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("dependency_analyzer.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("dependency_analyzer.xml"), "utf-8");
 		DependencyReport reportOld = DefaultSaxParser.parse(oldXml);
