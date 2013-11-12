@@ -4,18 +4,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.advanced.CrossInfoTest;
-import com.dianping.cat.consumer.advanced.DatabaseParserTest;
-import com.dianping.cat.consumer.advanced.MatrixModelTest;
-import com.dianping.cat.consumer.advanced.SqlParsersTest;
 import com.dianping.cat.consumer.browser.BrowserReportMergerTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
+import com.dianping.cat.consumer.cross.CrossInfoTest;
 import com.dianping.cat.consumer.cross.CrossReportMergerTest;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
 import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
+import com.dianping.cat.consumer.matrix.MatrixModelTest;
 import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
+import com.dianping.cat.consumer.sql.DatabaseParserTest;
 import com.dianping.cat.consumer.sql.SqlAnalyzerTest;
+import com.dianping.cat.consumer.sql.SqlParsersTest;
 import com.dianping.cat.consumer.sql.SqlReportMergerTest;
 
 @RunWith(Suite.class)
