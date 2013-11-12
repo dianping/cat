@@ -51,8 +51,6 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	private FieldInjecter m_fieldInjector = new FieldInjecter();
 
-	private ScriptEngineManager m_mgr;
-
 	private ScriptEngine m_engine;
 
 	private String m_domain;
@@ -78,7 +76,8 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	@Override
 	public void initialize() throws InitializationException {
 		m_domain = m_configManager.getDomain().getId();
-		m_mgr = new ScriptEngineManager();
+		ScriptEngineManager m_mgr = new ScriptEngineManager();
+		
 		m_engine = m_mgr.getEngineByExtension("java");
 	}
 
