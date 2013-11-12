@@ -8,7 +8,6 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 
 public class DependencyReportMergerTest {
-
 	@Test
 	public void testTopReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("dependency_analyzer.xml"), "utf-8");
