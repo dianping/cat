@@ -19,7 +19,7 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 
-public class OpJobAnalyzer extends ComponentTestCase {
+public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 
 	private String m_start = "2013-08-23 16:00";
 
@@ -53,8 +53,8 @@ public class OpJobAnalyzer extends ComponentTestCase {
 			Date current = new Date(start);
 			Date next = new Date(current.getTime() + TimeUtil.ONE_HOUR);
 			Set<String> domains = queryDomains(current);
-
 			System.out.println("Process " + m_sdf.format(current));
+
 			for (String domain : domains) {
 				TransactionReport report = m_reportService.queryTransactionReport(domain, current, next);
 				ReportVisitor visitor = new ReportVisitor();
@@ -83,18 +83,19 @@ public class OpJobAnalyzer extends ComponentTestCase {
 		String month1 = "2013-08-01 00:00";
 		String month2 = "2013-09-01 00:00";
 		String month3 = "2013-10-01 00:00";
-		System.out.print("domain" + "\t");
-		System.out.print(month1 + "\t");
-		System.out.print(month2 + "\t");
-		System.out.print(month3 + "\t");
-		System.out.println();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("domain").append("\t").append(month1).append("\t").append(month2).append("\t").append(month3)
+		      .append("\t\n");
 		for (String domain : domains) {
-			System.out.print(domain + "\t");
-			printDomain(m_sdf.parse(month1).getTime(), domain);
-			printDomain(m_sdf.parse(month2).getTime(), domain);
-			printDomain(m_sdf.parse(month3).getTime(), domain);
-			System.out.println();
+			sb.append(domain).append("\t");
+			printDomain(sb, m_sdf.parse(month1).getTime(), domain);
+			printDomain(sb, m_sdf.parse(month2).getTime(), domain);
+			printDomain(sb, m_sdf.parse(month3).getTime(), domain);
+			sb.append("\n");
 		}
+
+		System.out.println(sb.toString());
 	}
 
 	private void printMachine() throws Exception {
@@ -102,37 +103,37 @@ public class OpJobAnalyzer extends ComponentTestCase {
 		String month1 = "2013-08-01 00:00";
 		String month2 = "2013-09-01 00:00";
 		String month3 = "2013-10-01 00:00";
-		System.out.print("domain" + "\t");
-		System.out.print(month1 + "\t");
-		System.out.print(month2 + "\t");
-		System.out.print(month3 + "\t");
-		System.out.println();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("domain").append("\t").append(month1).append("\t").append(month2).append("\t").append(month3)
+		      .append("\t\n");
 		for (String domain : domains) {
-			System.out.print(domain + "\t");
-			printMachine(m_sdf.parse(month1).getTime(), domain);
-			printMachine(m_sdf.parse(month2).getTime(), domain);
-			printMachine(m_sdf.parse(month3).getTime(), domain);
-			System.out.println();
+			sb.append(domain).append("\t");
+			printMachine(sb, m_sdf.parse(month1).getTime(), domain);
+			printMachine(sb, m_sdf.parse(month2).getTime(), domain);
+			printMachine(sb, m_sdf.parse(month3).getTime(), domain);
+			sb.append("\n");
 		}
+		System.out.println(sb.toString());
 	}
 
-	private void printDomain(long start, String domain) {
+	private void printDomain(StringBuilder sb, long start, String domain) {
 		DomainInfo info = m_infos.get(domain);
 		Index index = info.getIndexs().get(start);
 		if (index != null) {
-			System.out.print(index.getCount() + "\t");
+			sb.append(index.getCount()).append("\t");
 		} else {
-			System.out.print(0 + "\t");
+			sb.append(0).append("\t");
 		}
 	}
 
-	private void printMachine(long start, String domain) {
+	private void printMachine(StringBuilder sb, long start, String domain) {
 		DomainInfo info = m_infos.get(domain);
 		Index index = info.getIndexs().get(start);
 		if (index != null) {
-			System.out.print(index.getMachineNumber() + "\t");
+			sb.append(index.getMachineNumber()).append("\t");
 		} else {
-			System.out.print(0 + "\t");
+			sb.append(0).append("\t");
 		}
 	}
 

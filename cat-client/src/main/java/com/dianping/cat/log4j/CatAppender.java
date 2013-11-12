@@ -18,7 +18,7 @@ import com.dianping.cat.message.spi.MessageTree;
 public class CatAppender extends AppenderSkeleton {
 	@Override
 	protected void append(LoggingEvent event) {
-		boolean isTraceMode = Cat.getManager().hasContext();
+		boolean isTraceMode = Cat.getManager().isTraceMode();
 		Level level = event.getLevel();
 
 		if (level.isGreaterOrEqual(Level.ERROR)) {
@@ -52,21 +52,32 @@ public class CatAppender extends AppenderSkeleton {
 		}
 	}
 
+	private String buildExceptionStack(Throwable exception) {
+		if (exception != null) {
+			StringWriter writer = new StringWriter(2048);
+
+			exception.printStackTrace(new PrintWriter(writer));
+			return writer.toString();
+		} else {
+			return "";
+		}
+	}
+
 	private void logTrace(LoggingEvent event) {
-		String type = "Trace";
+		String type = "Log4j";
 		String name = event.getLevel().toString();
-		String data = event.getMessage().toString();
+		Object message = event.getMessage();
+
+		String data;
+		if (message instanceof Throwable) {
+			data = buildExceptionStack((Throwable) message);
+		} else {
+			data = event.getMessage().toString();
+		}
 		ThrowableInformation info = event.getThrowableInformation();
 
 		if (info != null) {
-			Throwable exception = info.getThrowable();
-
-			if (exception != null) {
-				StringWriter writer = new StringWriter(2048);
-
-				exception.printStackTrace(new PrintWriter(writer));
-				data = data + '\n' + writer.toString();
-			}
+			data = data + '\n' + buildExceptionStack(info.getThrowable());
 		}
 		Cat.logTrace(type, name, Trace.SUCCESS, data);
 	}
