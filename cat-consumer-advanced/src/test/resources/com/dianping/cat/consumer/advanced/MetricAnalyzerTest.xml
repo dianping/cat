@@ -10,7 +10,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.task.TaskManager</role>
-			<implementation>com.dianping.cat.task.TaskManagerTest$MockTaskManager</implementation>
+			<implementation>com.dianping.cat.consumer.advanced.Configurator$MockTaskManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
