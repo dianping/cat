@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.sql;
 
 import junit.framework.Assert;
 

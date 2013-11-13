@@ -113,9 +113,14 @@ public class CatFilter implements Filter {
 			}
 
 			protected void setTraceMode(HttpServletRequest req) {
-				String mode = req.getParameter("X-CAT-TRACE-MODE");
+				String traceMode = "X-CAT-TRACE-MODE";
+				String paraMode = req.getParameter(traceMode);
+				String headMode = req.getHeader(traceMode);
 
-				if (("true").equals(mode)) {
+				if (("true").equals(paraMode)) {
+					Cat.getManager().setTraceMode(true);
+				}
+				if (headMode != null && ("true").equals(headMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
 			}
@@ -295,10 +300,10 @@ public class CatFilter implements Filter {
 					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
 					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
-					if (catPageUri != null && t instanceof DefaultTransaction) {
+					if (catPageUri != null && t instanceof DefaultTransaction && catPageUri instanceof String) {
+						System.err.println(catPageUri.toString());
 						((DefaultTransaction) t).setName(catPageUri.toString());
 					}
-
 					if (catStatus != null) {
 						t.setStatus(catStatus.toString());
 					} else {

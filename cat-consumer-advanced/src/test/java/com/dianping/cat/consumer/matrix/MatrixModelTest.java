@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.matrix;
 
 import junit.framework.Assert;
 
