@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sql-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domainName>group</domainName>
+   <databaseName>cat</databaseName>
+   <database id="cat" connect-url="mysql://10.1.1.220:3306/cat">
+      <table id="All" totalCount="100" failCount="100" failPercent="1.00" avg="101.00" sum="10100.00" tps="0.00" totalPercent="0.00">
+         <method id="SELECT" totalCount="25" failCount="25" failPercent="1.00" avg="98.00" sum="2450.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+         <method id="DELETE" totalCount="25" failCount="25" failPercent="1.00" avg="100.00" sum="2500.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+         <method id="INSERT" totalCount="25" failCount="25" failPercent="1.00" avg="102.00" sum="2550.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+         <method id="UPDATE" totalCount="25" failCount="25" failPercent="1.00" avg="104.00" sum="2600.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+      </table>
+      <table id="cat" totalCount="50" failCount="50" failPercent="1.00" avg="99.00" sum="4950.00" tps="0.00" totalPercent="0.00">
+         <method id="SELECT" totalCount="25" failCount="25" failPercent="1.00" avg="98.00" sum="2450.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+         <method id="DELETE" totalCount="25" failCount="25" failPercent="1.00" avg="100.00" sum="2500.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+      </table>
+      <table id="cat2" totalCount="50" failCount="50" failPercent="1.00" avg="103.00" sum="5150.00" tps="0.00" totalPercent="0.00">
+         <method id="INSERT" totalCount="25" failCount="25" failPercent="1.00" avg="102.00" sum="2550.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+         <method id="UPDATE" totalCount="25" failCount="25" failPercent="1.00" avg="104.00" sum="2600.00" tps="0.00" totalPercent="0.00">
+            <sql></sql>
+         </method>
+      </table>
+   </database>
+</sql-report>

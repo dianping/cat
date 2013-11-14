@@ -11,23 +11,8 @@ public class DefaultMessageStatistics implements MessageStatistics {
 	private long m_bytes;
 
 	@Override
-	public void onSending(MessageTree tree) {
-		m_produced++;
-	}
-
-	@Override
-	public void onOverflowed(MessageTree tree) {
-		m_overflowed++;
-	}
-
-	@Override
-	public void onBytes(int bytes) {
-		m_bytes += bytes;
-	}
-
-	@Override
-	public long getProduced() {
-		return m_produced;
+	public long getBytes() {
+		return m_bytes;
 	}
 
 	@Override
@@ -36,7 +21,22 @@ public class DefaultMessageStatistics implements MessageStatistics {
 	}
 
 	@Override
-	public long getBytes() {
-		return m_bytes;
+	public long getProduced() {
+		return m_produced;
+	}
+
+	@Override
+	public void onBytes(int bytes) {
+		m_bytes += bytes;
+	}
+
+	@Override
+	public void onOverflowed(MessageTree tree) {
+		m_overflowed++;
+	}
+
+	@Override
+	public void onSending(MessageTree tree) {
+		m_produced++;
 	}
 }

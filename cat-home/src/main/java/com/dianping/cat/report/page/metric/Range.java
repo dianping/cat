@@ -5,13 +5,12 @@ public enum Range {
 
 	TWO("2小时", 2),
 
-	SIX("6小时", 6),
+	SIX("8小时", 8),
 
-	NINE("9小时", 9), 
-	
-	THELVE("12小时", 12),
+	ONE_DAY("24小时", 24),
 
-	ONE_DAY("24小时", 24), ;
+	TWO_DAY("48小时", 48),
+	;
 
 	private String m_title;
 

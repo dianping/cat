@@ -32,9 +32,9 @@
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&test=${payload.test}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&test=${payload.test}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}">now</a> ]&nbsp;
+				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 			</td>
 		</tr>
 	</table>	
@@ -54,17 +54,18 @@
 			</th>
 		</tr>
 	</table>
+	<div class="row-fluid" style="margin-top:2px;height:30px;"></div>
       <div class="row-fluid">
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-            	 <li class='nav-header' id="${item.id}"><a href="?op=dashboard&date=${model.date}&domain=${model.domain}"><strong>业务大盘</strong></a></li>
+            	 <li class='nav-header' id="${item.id}"><a href="?op=dashboard&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>业务大盘</strong></a></li>
 	            <c:forEach var="item" items="${model.productLines}" varStatus="status">
-	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}"><strong>${item.title}</strong></a></li>
+	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.title}</strong></a></li>
 	              <c:if test="${payload.product eq item.id }">
 		               <c:forEach var="test" items="${model.abtests}" varStatus="status">
 		               	   <c:if test="${test.value.id ne -1}">
-				              <li id="${test.key}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${test.key}">${test.key}<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="right" data-content="${test.value.name}"></i></a>
+				              <li id="${test.key}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${payload.timeRange}&test=${test.key}">${test.key}<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="right" data-content="${test.value.name}"></i></a>
 				              </li>
 		               	   </c:if>
 		       		  </c:forEach>

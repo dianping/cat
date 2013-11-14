@@ -17,6 +17,18 @@ public enum NetworkInterfaceManager {
 		load();
 	}
 
+	public String getLocalHostAddress() {
+		return m_local.getHostAddress();
+	}
+
+	public String getLocalHostName() {
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			return m_local.getHostName();
+		}
+	}
+
 	private void load() {
 		try {
 			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
@@ -53,17 +65,5 @@ public enum NetworkInterfaceManager {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public String getLocalHostName() {
-		try {
-			return InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			return m_local.getHostName();
-		}
-	}
-
-	public String getLocalHostAddress() {
-		return m_local.getHostAddress();
 	}
 }

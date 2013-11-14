@@ -22,10 +22,12 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultMetric;
+import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -164,6 +166,22 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return parent;
 			} else {
 				return event;
+			}
+		} else if (identifier == 'L') {
+			DefaultTrace trace = new DefaultTrace(type, name);
+			String status = helper.read(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
+
+			helper.read(buf, LF); // get rid of line feed
+			trace.setTimestamp(m_dateHelper.parse(timestamp));
+			trace.setStatus(status);
+			trace.addData(data);
+
+			if (parent != null) {
+				parent.addChild(trace);
+				return parent;
+			} else {
+				return trace;
 			}
 		} else if (identifier == 'M') {
 			DefaultMetric metric = new DefaultMetric(type, name);
@@ -339,6 +357,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		} else if (message instanceof Event) {
 			return encodeLine(message, buf, 'E', Policy.DEFAULT);
+		} else if (message instanceof Trace) {
+			return encodeLine(message, buf, 'L', Policy.DEFAULT);
 		} else if (message instanceof Metric) {
 			return encodeLine(message, buf, 'M', Policy.DEFAULT);
 		} else if (message instanceof Heartbeat) {

@@ -1,0 +1,24 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
+			<implementation>com.dianping.cat.consumer.sql.Configurator$ExtendedSqlParseManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.consumer.sql.Configurator$MockSqlReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>sql</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.consumer.sql.Configurator$ExtendedSqlDelegate</implementation>
+		</component>
+	</components>
+</plexus>

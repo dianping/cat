@@ -5,6 +5,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
 public class TestSendMessage {
@@ -15,8 +16,6 @@ public class TestSendMessage {
 		for (int i = 0; i < 10; i++) {
 			Transaction t = Cat.newTransaction("Midas", "XXName");
 			try {
-				// your bussiness code
-				// for see the message on cat in problem report
 				t.setStatus("Fail");
 			} catch (Exception e) {
 				t.setStatus(Transaction.SUCCESS);
@@ -28,7 +27,7 @@ public class TestSendMessage {
 		}
 		Thread.sleep(10000);
 	}
-
+	
 	@Test
 	public void sendSendUrlErrorMessage() throws Exception {
 		for (int i = 0; i < 100; i++) {
@@ -439,5 +438,29 @@ public class TestSendMessage {
 			Thread.sleep(51);
 			t.complete();
 		}
+	}
+	
+	@Test
+	public void sendTraceInfo() throws Exception {
+
+		for (int i = 0; i < 10; i++) {
+			Transaction t = Cat.newTransaction("Trace", "Test"+i);
+			try {
+				Cat.logTrace("Trace", "Info");
+				Cat.logTrace("Trace", "Dubug", Trace.SUCCESS, "sss");
+				Trace trace = Cat.newTrace("Trace", "Error");
+
+				trace.setStatus(Trace.SUCCESS);
+				trace.addData("errorTrace");
+				t.setStatus("Fail");
+			} catch (Exception e) {
+				t.setStatus(Transaction.SUCCESS);
+				Cat.logError(e);
+				throw e;
+			} finally {
+				t.complete();
+			}
+		}
+		Thread.sleep(10000);
 	}
 }

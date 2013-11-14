@@ -13,7 +13,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
@@ -34,9 +33,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private GraphCreator m_graphCreator;
 
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "metric")
@@ -48,15 +44,14 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		Action action = payload.getAction();
-
 		normalize(model, payload);
+
 		long date = payload.getDate();
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 
-		switch (action) {
+		switch (payload.getAction()) {
 		case METRIC:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end,
 			      payload.getTest());
@@ -75,12 +70,12 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.METRIC);
-		m_normalizePayload.normalize(model, payload);
-
 		String poduct = payload.getProduct();
+		
 		if (poduct == null || poduct.length() == 0) {
-			payload.setProduct(m_serverConfigManager.getDefaultProduct());
+			payload.setAction(Action.DASHBOARD.getName());
 		}
+		m_normalizePayload.normalize(model, payload);
 		int timeRange = payload.getTimeRange();
 		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);

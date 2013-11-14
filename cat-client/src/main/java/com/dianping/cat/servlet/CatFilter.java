@@ -96,6 +96,8 @@ public class CatFilter implements Filter {
 
 					Cat.setup(getCookie(req, "JSESSIONID"));
 					ABTestManager.onRequestBegin(req, res);
+
+					setTraceMode(req);
 				} else {
 					ctx.setType(CatConstants.TYPE_URL_FORWARD);
 				}
@@ -109,10 +111,46 @@ public class CatFilter implements Filter {
 					}
 				}
 			}
+
+			protected void setTraceMode(HttpServletRequest req) {
+				String traceMode = "X-CAT-TRACE-MODE";
+				String paraMode = req.getParameter(traceMode);
+				String headMode = req.getHeader(traceMode);
+
+				if (("true").equals(paraMode)) {
+					Cat.getManager().setTraceMode(true);
+				}
+				if (headMode != null && ("true").equals(headMode)) {
+					Cat.getManager().setTraceMode(true);
+				}
+			}
 		},
 
 		ID_SETUP {
 			private String m_servers;
+
+			private String getCatServer() {
+				if (m_servers == null) {
+					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
+					List<Server> servers = manager.getConfigManager().getServers();
+
+					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
+						@Override
+						public String asString(Server server) {
+							String ip = server.getIp();
+							Integer httpPort = server.getHttpPort();
+
+							if ("127.0.0.1".equals(ip)) {
+								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+							}
+
+							return ip + ":" + httpPort;
+						}
+					});
+				}
+
+				return m_servers;
+			}
 
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
@@ -164,29 +202,6 @@ public class CatFilter implements Filter {
 				}
 
 				ctx.handle();
-			}
-
-			private String getCatServer() {
-				if (m_servers == null) {
-					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-					List<Server> servers = manager.getConfigManager().getServers();
-
-					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
-						@Override
-						public String asString(Server server) {
-							String ip = server.getIp();
-							Integer httpPort = server.getHttpPort();
-
-							if ("127.0.0.1".equals(ip)) {
-								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-							}
-
-							return ip + ":" + httpPort;
-						}
-					});
-				}
-
-				return m_servers;
 			}
 		},
 
@@ -256,11 +271,11 @@ public class CatFilter implements Filter {
 
 					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
 					String metricType = manager.getMetricType();
-					
+
 					if (metricType != null && metricType.length() > 0) {
 						Cat.logEvent(ctx.getType(), "ABTest", Message.SUCCESS, metricType);
 					}
-					
+
 					try {
 						ctx.handle();
 					} finally {
@@ -285,10 +300,10 @@ public class CatFilter implements Filter {
 					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
 					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
-					if (catPageUri != null) {
+					if (catPageUri != null && t instanceof DefaultTransaction && catPageUri instanceof String) {
+						System.err.println(catPageUri.toString());
 						((DefaultTransaction) t).setName(catPageUri.toString());
 					}
-
 					if (catStatus != null) {
 						t.setStatus(catStatus.toString());
 					} else {

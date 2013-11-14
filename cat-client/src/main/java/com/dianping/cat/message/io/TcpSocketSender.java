@@ -62,9 +62,32 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_reconnects = new AtomicInteger();
 
+	boolean checkWritable() {
+		boolean isWriteable = false;
+
+		if (m_future != null && m_future.getChannel().isOpen()) {
+			if (m_future.getChannel().isWritable()) {
+				isWriteable = true;
+			} else {
+				int count = m_attempts.incrementAndGet();
+
+				if (count % 1000 == 0 || count == 1) {
+					m_logger.error("Netty write buffer is full! Attempts: " + count);
+				}
+			}
+		}
+
+		return isWriteable;
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	@Override
+	public String getName() {
+		return "TcpSocketSender";
 	}
 
 	@Override
@@ -168,24 +191,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	boolean checkWritable() {
-		boolean isWriteable = false;
-
-		if (m_future != null && m_future.getChannel().isOpen()) {
-			if (m_future.getChannel().isWritable()) {
-				isWriteable = true;
-			} else {
-				int count = m_attempts.incrementAndGet();
-
-				if (count % 1000 == 0 || count == 1) {
-					m_logger.error("Netty write buffer is full! Attempts: " + count);
-				}
-			}
-		}
-
-		return isWriteable;
-	}
-
 	@Override
 	public void send(MessageTree tree) {
 		boolean result = m_queue.offer(tree);
@@ -250,10 +255,5 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
 			e.getChannel().close();
 		}
-	}
-
-	@Override
-	public String getName() {
-		return "TcpSocketSender";
 	}
 }

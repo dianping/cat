@@ -38,6 +38,17 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Set<String> m_unusedNames = new HashSet<String>();
 
+	public boolean discardTransaction(Transaction t) {
+		// pigeon default heartbeat is no use
+		String type = t.getType();
+		String name = t.getName();
+
+		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -313,17 +324,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
 
-	public boolean discardTransaction(Transaction t) {
-		// pigeon default heartbeat is no use
-		String type = t.getType();
-		String name = t.getName();
-
-		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
-			return true;
-		}
-		return false;
-	}
-
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
 		int len = str == null ? 0 : str.length();
@@ -351,8 +351,4 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END);
 	}
 	
-	public String getDefaultProduct(){
-		return "TuanGou";
-	}
-
 }

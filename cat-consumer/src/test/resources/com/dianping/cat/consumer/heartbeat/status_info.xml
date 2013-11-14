@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<status timestamp="2013-10-25 11:21:57.961">
+	<runtime start-time="1382671315991" up-time="1983"
+		java-version="1.6.0_65" user-name="anonymous">
+		<user-dir>/Users/anonymous/Projects/cat/cat-home</user-dir>
+		<java-classpath>servlet-api-2.5.jar,jstl-1.2.jar,mail-1.4.4.jar,activation-1.1.jar,EunitTestFwk-1.2.1.jar,junit-4.8.1.jar,foundation-service-2.0.4.jar,plexus-container-default-1.5.5.jar,plexus-utils-3.0.8.jar,plexus-classworlds-2.2.2.jar,xbean-reflect-3.4.jar,log4j-1.2.14.jar,commons-logging-api-1.1.jar,google-collections-1.0.jar,aspectjrt-1.5.4.jar,java-fragment-2.0.4.jar,netty-3.2.7.Final.jar,test-framework-2.0.4.jar,jetty-6.1.14.jar,jetty-util-6.1.14.jar,servlet-api-2.5-6.1.14.jar,jsp-2.1-6.1.14.jar,core-3.1.1.jar,jsp-api-2.1-6.1.14.jar,ant-1.6.5.jar,WebResBase-1.2.1.jar,dal-jdbc-2.0.4.jar,c3p0-0.9.1.2.jar,gson-1.6.jar,mysql-connector-java-5.1.20.jar,cobar-parser-1.3.0.jar,hadoop-core-0.20.203.0.jar,commons-cli-1.2.jar,xmlenc-0.52.jar,commons-httpclient-3.0.1.jar,commons-logging-1.0.3.jar,commons-codec-1.4.jar,commons-math-2.1.jar,commons-configuration-1.6.jar,commons-collections-3.2.1.jar,commons-lang-2.4.jar,commons-digester-1.8.jar,commons-beanutils-1.7.0.jar,commons-beanutils-core-1.8.0.jar,commons-net-1.4.1.jar,oro-2.0.8.jar,commons-el-1.0.jar,jets3t-0.7.1.jar,kfs-0.3.jar,hsqldb-1.8.0.10.jar,commons-logging-1.1.1.jar,spring-2.5.6.jar,WebResServer-1.2.1.jar,WebResTagLibrary-1.2.1.jar,WebResTag-1.2.1.jar,WebResRuntime-1.2.1.jar,WebResApi-1.2.1.jar,web-framework-2.0.4.jar,commons-fileupload-1.2.2.jar,freemarker-2.3.9.jar,commons-email-1.1.jar,javaparser-1.0.8.jar,RXTXcomm.jar,AppleScriptEngine.jar,dns_sd.jar,j3daudio.jar,j3dcore.jar,j3dutils.jar,jai_codec.jar,jai_core.jar,mlibwrapper_jai.jar,MRJToolkit.jar,vecmath.jar,apple_provider.jar,dnsns.jar,localedata.jar,sunjce_provider.jar,sunpkcs11.jar
+		</java-classpath>
+	</runtime>
+	<os name="Mac OS X" arch="x86_64" version="10.9"
+		available-processors="4" system-load-average="3.2431640625"
+		process-time="4410000000" total-physical-memory="8589934592"
+		free-physical-memory="1573031936" committed-virtual-memory="2940141568"
+		total-swap-space="1073741824" free-swap-space="1059323904" />
+	<disk>
+		<disk-volume id="/" total="120473067520" free="57517744128"
+			usable="57255600128" />
+
+		<disk-volume id="/data" total="120473067520" free="57517744128"
+			usable="57255600128" />
+	</disk>
+	<memory max="129957888" total="85000192" free="77133416"
+		heap-usage="7866776" non-heap-usage="20057416">
+		<gc name="ParNew" count="5" time="24" />
+		<gc name="ConcurrentMarkSweep" count="0" time="0" />
+	</memory>
+	<thread count="19" daemon-count="15" peek-count="19"
+		total-started-count="19" cat-thread-count="10" pigeon-thread-count="0"
+		http-thread-count="2">
+		<dump>1: "1085278557@qtp0-1" Id=13 TIMED_WAITING on
+			org.mortbay.thread.QueuedThreadPool$PoolThread@40b0095d\n\tat
+			java.lang.Object.wait(Native Method)\n\t- waiting on
+			org.mortbay.thread.QueuedThreadPool$PoolThread@40b0095d\n\tat
+			org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:565)\n\n2:
+			"2077042699@qtp0-0" Id=12 TIMED_WAITING on
+			org.mortbay.thread.QueuedThreadPool$PoolThread@7bcd280b\n\tat
+			java.lang.Object.wait(Native Method)\n\t- waiting on
+			org.mortbay.thread.QueuedThreadPool$PoolThread@7bcd280b\n\tat
+			org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:565)\n\n3:
+			"Cat-ClientConfigReloader" Id=24 TIMED_WAITING\n\tat
+			java.lang.Thread.sleep(Native Method)\n\tat
+			com.dianping.cat.configuration.ClientConfigReloader.run(ClientConfigReloader.java:109)\n\tat
+			java.lang.Thread.run(Thread.java:695)\n\tat
+			org.unidal.helper.Threads$RunnableThread.run(Threads.java:287)\n\n4:
+			"Cat-HttpABTestEntityRepository" Id=26 RUNNABLE\n\tat
+			java.lang.Throwable.fillInStackTrace(Native Method)\n\tat
+			java.lang.Throwable.&lt;init&gt;(Throwable.java:218)\n\tat
+			java.lang.Exception.&lt;init&gt;(Exception.java:59)\n\tat
+			java.lang.ClassNotFoundException.&lt;init&gt;(ClassNotFoundException.java:65)\n\tat
+			java.net.URLClassLoader$1.run(URLClassLoader.java:202)\n\tat
+			java.security.AccessController.doPrivileged(Native Method)\n\tat
+			java.net.URLClassLoader.findClass(URLClassLoader.java:190)\n\tat
+			org.mortbay.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:370)\n\t...\n\n5:
+			"Cat-MmapConsumerTask" Id=25 TIMED_WAITING\n\tat
+			java.lang.Thread.sleep(Native Method)\n\tat
+			java.lang.Thread.sleep(Thread.java:300)\n\tat
+			java.util.concurrent.TimeUnit.sleep(TimeUnit.java:328)\n\tat
+			com.dianping.cat.agent.MmapConsumerTask$QueueReader.readLine(MmapConsumerTask.java:323)\n\tat
+			com.dianping.cat.agent.MmapConsumerTask$QueueReader.next(MmapConsumerTask.java:233)\n\tat
+			com.dianping.cat.agent.MmapConsumerTask.run(MmapConsumerTask.java:68)\n\tat
+			java.lang.Thread.run(Thread.java:695)\n\tat
+			org.unidal.helper.Threads$RunnableThread.run(Threads.java:287)\n\n6:
+			"Cat-StatusUpdateTask" Id=23 RUNNABLE\n\tat
+			sun.management.ThreadImpl.dumpThreads0(Native Method)\n\tat
+			sun.management.ThreadImpl.dumpAllThreads(ThreadImpl.java:433)\n\tat
+			com.dianping.cat.status.StatusInfoCollector.visitThread(StatusInfoCollector.java:231)\n\tat
+			com.dianping.cat.status.model.transform.BaseVisitor.visitStatus(BaseVisitor.java:68)\n\tat
+			com.dianping.cat.status.StatusInfoCollector.visitStatus(StatusInfoCollector.java:217)\n\tat
+			com.dianping.cat.status.model.entity.StatusInfo.accept(StatusInfo.java:31)\n\tat
+			com.dianping.cat.status.StatusUpdateTask.run(StatusUpdateTask.java:128)\n\tat
+			java.lang.Thread.run(Thread.java:695)\n\t...\n\n7:
+			"Cat-TcpSocketHierarchySender" Id=21 TIMED_WAITING on
+			java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@9be1041\n\tat
+			sun.misc.Unsafe.park(Native Method)\n\t- waiting on
+			java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@9be1041\n\tat
+			java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)\n\tat
+			java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)\n\tat
+			java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424)\n\tat
+			com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:25)\n\tat
+			com.dianping.cat.message.io.TcpSocketHierarchySender.run(TcpSocketHierarchySender.java:104)\n\tat
+			java.lang.Thread.run(Thread.java:695)\n\tat
+			org.unidal.helper.Threads$RunnableThread.run(Threads.java:287)\n\n8:
+			"Cat-TcpSocketHierarchySender-ChannelManager" Id=22
+			TIMED_WAITING\n\tat java.lang.Thread.sleep(Native Method)\n\tat
+			com.dianping.cat.message.io.TcpSocketHierarchySender$ChannelManager.run(TcpSocketHierarchySender.java:294)\n\tat
+			java.lang.Thread.run(Thread.java:695)\n\tat
+			org.unidal.helper.Threads$RunnableThread.run(Threads.java:287)\n\n9:
+			"Cat-TcpSocketReceiver-Boss-0.0.0.0/0.0.0.0:2280-0" Id=17 RUNNABLE
+			(in native)\n\tat sun.nio.ch.KQueueArrayWrapper.kevent0(Native
+			Method)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136)\n\tat
+			sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)\n\tat
+			org.jboss.netty.channel.socket.nio.NioServerSocketPipelineSink$Boss.run(NioServerSocketPipelineSink.java:240)\n\tat
+			org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)\n\tat
+			org.jboss.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:44)\n\t...\n\n10:
+			"Cat-TcpSocketReceiver-Worker-0" Id=19 RUNNABLE (in native)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136)\n\tat
+			sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)\n\tat
+			org.jboss.netty.channel.socket.nio.SelectorUtil.select(SelectorUtil.java:38)\n\tat
+			org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:165)\n\tat
+			org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)\n\t...\n\n11:
+			"Cat-TcpSocketSender-Boss-0" Id=18 RUNNABLE (in native)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136)\n\tat
+			sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)\n\tat
+			org.jboss.netty.channel.socket.nio.NioClientSocketPipelineSink$Boss.run(NioClientSocketPipelineSink.java:255)\n\tat
+			org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)\n\tat
+			org.jboss.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:44)\n\t...\n\n12:
+			"Cat-TcpSocketSender-Worker-0" Id=20 RUNNABLE (in native)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method)\n\tat
+			sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136)\n\tat
+			sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)\n\tat
+			sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)\n\tat
+			org.jboss.netty.channel.socket.nio.SelectorUtil.select(SelectorUtil.java:38)\n\tat
+			org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:165)\n\tat
+			org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)\n\t...\n\n13:
+			"Finalizer" Id=3 WAITING on
+			java.lang.ref.ReferenceQueue$Lock@633a1778\n\tat
+			java.lang.Object.wait(Native Method)\n\t- waiting on
+			java.lang.ref.ReferenceQueue$Lock@633a1778\n\tat
+			java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)\n\tat
+			java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)\n\tat
+			java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)\n\n14:
+			"Keep-Alive-Timer" Id=27 TIMED_WAITING\n\tat
+			java.lang.Thread.sleep(Native Method)\n\tat
+			sun.net.www.http.KeepAliveCache.run(KeepAliveCache.java:149)\n\tat
+			java.lang.Thread.run(Thread.java:695)\n\n15: "ReaderThread" Id=10
+			RUNNABLE (in native)\n\tat
+			java.net.SocketInputStream.socketRead0(Native Method)\n\tat
+			java.net.SocketInputStream.read(SocketInputStream.java:129)\n\tat
+			sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:264)\n\tat
+			sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:306)\n\tat
+			sun.nio.cs.StreamDecoder.read(StreamDecoder.java:158)\n\tat
+			java.io.InputStreamReader.read(InputStreamReader.java:167)\n\tat
+			java.io.BufferedReader.fill(BufferedReader.java:136)\n\tat
+			java.io.BufferedReader.readLine(BufferedReader.java:299)\n\t...\n\n16:
+			"Reference Handler" Id=2 WAITING on
+			java.lang.ref.Reference$Lock@7adafa2c\n\tat
+			java.lang.Object.wait(Native Method)\n\t- waiting on
+			java.lang.ref.Reference$Lock@7adafa2c\n\tat
+			java.lang.Object.wait(Object.java:485)\n\tat
+			java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)\n\n17:
+			"Signal Dispatcher" Id=6 RUNNABLE\n\n18: "Timer-0" Id=14
+			TIMED_WAITING on java.util.TaskQueue@1d1d2066\n\tat
+			java.lang.Object.wait(Native Method)\n\t- waiting on
+			java.util.TaskQueue@1d1d2066\n\tat
+			java.util.TimerThread.mainLoop(Timer.java:509)\n\tat
+			java.util.TimerThread.run(Timer.java:462)\n\n19: "main" Id=1
+			RUNNABLE\n\tat java.lang.Class.copyFields(Class.java:2793)\n\tat
+			java.lang.Class.getDeclaredFields(Class.java:1779)\n\tat
+			org.apache.xbean.recipe.ReflectionUtil.findAllFieldsByType(ReflectionUtil.java:327)\n\tat
+			org.apache.xbean.recipe.ObjectRecipe.setProperty(ObjectRecipe.java:390)\n\tat
+			org.apache.xbean.recipe.ObjectRecipe.setProperties(ObjectRecipe.java:367)\n\tat
+			org.apache.xbean.recipe.ObjectRecipe.internalCreate(ObjectRecipe.java:282)\n\tat
+			org.apache.xbean.recipe.AbstractRecipe.create(AbstractRecipe.java:96)\n\tat
+			org.apache.xbean.recipe.AbstractRecipe.create(AbstractRecipe.java:61)\n\t...\n\n
+		</dump>
+	</thread>
+	<message produced="3" overflowed="0" bytes="2550" />
+</status>

@@ -21,8 +21,7 @@
 	<tr style="text-align: left">
 		<th>Databases: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.database eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}"
-								class="current">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}" class="current">All</a>
 				</c:when>
 				<c:otherwise>
 					<a href="?domain=${model.domain}&date=${model.date}">All</a>
@@ -31,8 +30,7 @@
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.database eq database}">
-						<a href="?domain=${model.domain}&database=${database}&date=${model.date}"
-									class="current">${database}</a>
+						<a href="?domain=${model.domain}&database=${database}&date=${model.date}" class="current">${database}</a>
 					</c:when>
 					<c:otherwise>
 						<a href="?domain=${model.domain}&database=${database}&date=${model.date}">${database}</a>
@@ -48,8 +46,8 @@
 		<table class='data'>
 			<tr>
 			    <th></th>
-				<th class="left"><a
-					href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=name">Table</a></th>
+				<th class="left">
+					<a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=name">Table</a></th>
 				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=total">Total</a></th>
 				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=failure">Failure</a></th>
 				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=failurePercent">Failure%</a></th>
@@ -57,10 +55,9 @@
 				<th>Percent%</th>
 				<th>TPS</th>
 			</tr>
-			<c:forEach var="item" items="${model.displaySqlReport.results}"
-				varStatus="status">
-				<tr class="${status.index  mod 2==0 ? 'even' : 'odd'}">
-					<td class="left"><a href="" class="graph_link" data-status="${status.index}">[:: show ::]</a></td>
+			<c:forEach var="item" items="${model.displaySqlReport.results}" varStatus="status">
+				<tr class="${status.index  mod 2==0 ? 'even' : 'odd'} right">
+					<td class="left"><a href="" class="sql_graph_link" data-status="${status.index}">[:: show ::]</a></td>
 					<td class="left">${item.id}</td>
 					<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>
@@ -80,11 +77,10 @@
 						<th>Percent%</th>
 						<th>TPS</th>
 
-						<c:forEach var="methodEntry" items="${item.methods}"
-							varStatus="status1">
-							<tr class="${status1.index  mod 2==0 ? 'even' : 'odd'}">
+						<c:forEach var="methodEntry" items="${item.methods}" varStatus="status1">
+							<tr class="${status1.index  mod 2==0 ? 'even' : 'odd'} right">
 								<c:set var="method" value="${methodEntry.value}" />
-								<td>${method.id}</td>
+								<td class="left">${method.id}</td>
 								<td>${w:format(method.totalCount,'#,###,###,###,##0')}</td>
 								<td>${w:format(method.failCount,'#,###,###,###,##0')}</td>
 								<td>${w:format(method.failPercent,'0.00%')}</td>

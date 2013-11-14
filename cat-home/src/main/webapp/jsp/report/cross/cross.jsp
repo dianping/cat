@@ -13,11 +13,10 @@
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
 <table class="machines">
-	<tr style="text-align: left">
+	<tr class="left">
 		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}"
-								class="current">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}" class="current">All</a>
 				</c:when>
 				<c:otherwise>
 					<a href="?domain=${model.domain}&date=${model.date}">All</a>
@@ -25,14 +24,13 @@
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
-					<c:when test="${model.ipAddress eq ip}">
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}"
-									class="current">${ip}</a>
-					</c:when>
-					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
-					</c:otherwise>
-				</c:choose>
+				<c:when test="${model.ipAddress eq ip}">
+					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}" class="current">${ip}</a>
+				</c:when>
+				<c:otherwise>
+					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+				</c:otherwise>
+			</c:choose>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
@@ -50,7 +48,7 @@
 			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.projectInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		         	<td class="left">${callInfo.type}</td>
 		         	<td class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${callInfo.projectName }">${callInfo.projectName}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
@@ -74,7 +72,7 @@
 		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${serviceInfo.projectName }">${serviceInfo.projectName}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
@@ -97,7 +95,7 @@
 		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.callServiceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left">${serviceInfo.projectName}</td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>

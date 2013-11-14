@@ -11,9 +11,11 @@ import org.junit.Test;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
+import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -87,6 +89,15 @@ public class PlainTextMessageCodecTest {
 		return tree;
 	}
 
+	private Trace newTrace(String type, String name, long timestamp, String status, String data) {
+		DefaultTrace trace = new DefaultTrace(type, name);
+
+		trace.setStatus(status);
+		trace.addData(data);
+		trace.setTimestamp(timestamp);
+		return trace;
+	}
+	
 	private Transaction newTransaction(String type, String name, long timestamp, String status, int duration, String data) {
 		DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
@@ -140,6 +151,25 @@ public class PlainTextMessageCodecTest {
 	}
 
 	@Test
+	public void testTrace() {
+		long timestamp = 1325489621987L;
+		Trace trace = newTrace("type", "name", timestamp, "0", "here is the data.");
+
+		check(trace, "L2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n");
+	}
+
+	@Test
+	public void testTraceForRawData() {
+		long timestamp = 1325489621987L;
+		String exception = "java.lang.Exception\n\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\n";
+		Trace trace = newTrace("Exception", Exception.class.getName(), timestamp, "ERROR", exception);
+
+		check(trace,
+		      "L2012-01-02 15:33:41.987\tException\tjava.lang.Exception\tERROR\t" + //
+		            "java.lang.Exception\\n\\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\\n\t\n");
+	}
+	
+	@Test
 	public void testTransactionNormal() {
 		long timestamp = 1325489621987L;
 		Transaction root = newTransaction("URL", "Review", timestamp, "0", 100, "/review/2468");
@@ -169,7 +199,7 @@ public class PlainTextMessageCodecTest {
 		      "E2012-01-02 15:33:42.027\tURL\tView\t0\tview=HTML\t\n" + //
 		      "T2012-01-02 15:33:42.087\tURL\tReview\t0\t100000us\t/review/2468\t\n");
 	}
-
+	
 	@Test
 	public void testTransactionSimple() {
 		long timestamp = 1325489621987L;
@@ -177,4 +207,5 @@ public class PlainTextMessageCodecTest {
 
 		check(transaction, "A2012-01-02 15:33:41.987\ttype\tname\t0\t10000us\there is the data.\t\n");
 	}
+
 }

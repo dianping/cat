@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.problem;
 
 import java.util.List;
+import java.util.Stack;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
@@ -16,7 +17,7 @@ public class ProblemReportMerger extends DefaultMerger {
 		super(problemReport);
 	}
 
-	protected Entry findEntry(Machine machine, Entry entry) {
+	protected Entry findOrCreateEntry(Machine machine, Entry entry) {
 		String type = entry.getType();
 		String status = entry.getStatus();
 
@@ -26,14 +27,19 @@ public class ProblemReportMerger extends DefaultMerger {
 			}
 		}
 
-		return null;
+		Entry result = new Entry();
+
+		result.setStatus(status).setType(type);
+		machine.addEntry(result);
+		return result;
 	}
 
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
+		List<String> messages = old.getMessages();
+
 		old.setValue(duration.getValue());
 		old.setCount(old.getCount() + duration.getCount());
-		List<String> messages = old.getMessages();
 		if (messages.size() < SIZE) {
 			messages.addAll(duration.getMessages());
 			if (messages.size() > SIZE) {
@@ -44,8 +50,9 @@ public class ProblemReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeSegment(Segment old, Segment segment) {
-		old.setCount(old.getCount() + segment.getCount());
 		List<String> messages = old.getMessages();
+
+		old.setCount(old.getCount() + segment.getCount());
 		if (messages.size() < SIZE) {
 			messages.addAll(segment.getMessages());
 			if (messages.size() > SIZE) {
@@ -55,18 +62,16 @@ public class ProblemReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-		Machine machine = (Machine) getObjects().peek();
-		Entry old = findEntry(machine, entry);
+	protected void visitMachineChildren(Machine to, Machine from) {
+		Stack<Object> objs = getObjects();
 
-		if (old == null) {
-			old = new Entry();
-			old.setType(entry.getType()).setStatus(entry.getStatus());
+		for (Entry source : from.getEntries()) {
+			Entry target = findOrCreateEntry(to, source);
 
-			machine.addEntry(old);
+			objs.push(target);
+			source.accept(this);
+			objs.pop();
 		}
-
-		visitEntryChildren(old, entry);
 	}
 
 	@Override

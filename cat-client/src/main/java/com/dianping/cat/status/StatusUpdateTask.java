@@ -40,14 +40,14 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	private String m_jars;
 
-	@Override
-	public String getName() {
-		return "StatusUpdateTask";
-	}
+	private void buildClasspath() {
+		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
+		StringBuilder sb = new StringBuilder();
 
-	@Override
-	public void initialize() throws InitializationException {
-		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		buildClasspath(loader, sb);
+		if (sb.length() > 0) {
+			m_jars = sb.substring(0, sb.length() - 1);
+		}
 	}
 
 	private void buildClasspath(ClassLoader loader, StringBuilder sb) {
@@ -66,14 +66,14 @@ public class StatusUpdateTask implements Task, Initializable {
 		}
 	}
 
-	private void buildClasspath() {
-		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
-		StringBuilder sb = new StringBuilder();
+	@Override
+	public String getName() {
+		return "StatusUpdateTask";
+	}
 
-		buildClasspath(loader, sb);
-		if (sb.length() > 0) {
-			m_jars = sb.substring(0, sb.length() - 1);
-		}
+	@Override
+	public void initialize() throws InitializationException {
+		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
 	private String parseJar(String path) {

@@ -156,6 +156,16 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public void logEvent(String type, String name);
+	
+	/**
+	 * Log an trace in one shot with SUCCESS status.
+	 * 
+	 * @param type
+	 *           event type
+	 * @param name
+	 *           event name
+	 */
+	public void logTrace(String type, String name);
 
 	/**
 	 * Log an event in one shot.
@@ -170,6 +180,20 @@ public interface MessageProducer {
 	 *           name value pairs in the format of "a=1&b=2&..."
 	 */
 	public void logEvent(String type, String name, String status, String nameValuePairs);
+	
+	/**
+	 * Log an trace in one shot.
+	 * 
+	 * @param type
+	 *           trace type
+	 * @param name
+	 *           trace name
+	 * @param status
+	 *           "0" means success, otherwise means error code
+	 * @param nameValuePairs
+	 *           name value pairs in the format of "a=1&b=2&..."
+	 */
+	public void logTrace(String type, String name, String status, String nameValuePairs);
 
 	/**
 	 * Log a heartbeat in one shot.
@@ -206,6 +230,16 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public Event newEvent(String type, String name);
+	
+	/**
+	 * Create a new trace with given type and name.
+	 * 
+	 * @param type
+	 *           trace type
+	 * @param name
+	 *           trace name
+	 */
+	public Trace newTrace(String type, String name);
 	
 	/**
 	 * Create a new heartbeat with given type and name.

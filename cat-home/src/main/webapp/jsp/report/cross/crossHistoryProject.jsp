@@ -50,7 +50,7 @@
 			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.projectInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		         	<td class="left">${callInfo.type}</td>
 		         	<td class="left"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${callInfo.projectName}${model.customDate}">${callInfo.projectName}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
@@ -73,7 +73,7 @@
 		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${serviceInfo.projectName}${model.customDate}">${serviceInfo.projectName}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
@@ -97,7 +97,7 @@
 		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.callServiceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left">${serviceInfo.projectName}</td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>

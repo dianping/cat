@@ -68,7 +68,7 @@
 			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		         	<td class="left">${callInfo.type}</td>
 					<td class="left">${callInfo.ip}</td>
 					<td class="left">${callInfo.id}</td>
@@ -95,7 +95,7 @@
 		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.methodInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 		            <td class="left">${serviceInfo.type}</td>
 					<td class="left">${serviceInfo.ip}</td>
 					<td class="left">${serviceInfo.id}</td>

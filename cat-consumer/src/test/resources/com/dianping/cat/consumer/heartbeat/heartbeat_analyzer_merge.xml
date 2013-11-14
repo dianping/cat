@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<heartbeat-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domain>group</domain>
+   <ip>192.168.1.1</ip>
+   <machine ip="192.168.1.1">
+      <period minute="0" thread-count="19" daemon-count="15" total-started-count="19" cat-thread-count="10" pigeon-thread-count="0" http-thread-count="2" new-gc-count="5" old-gc-count="0" memory-free="77133416" heap-usage="7866776" none-heap-usage="20057416" system-load-average="3.24" cat-message-produced="3" cat-message-overflow="0" cat-message-size="2550.00">
+         <disk path="/" total="120473067520" free="57517744128" usable="57255600128"/>
+         <disk path="/data" total="120473067520" free="57517744128" usable="57255600128"/>
+      </period>
+   </machine>
+</heartbeat-report>

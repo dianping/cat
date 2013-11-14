@@ -71,6 +71,6 @@ public class HeartbeatGraphDataTest extends ComponentTestCase {
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportOld.getDomain()));
 
 		reportOld.accept(merger);
-		Assert.assertEquals(reportOld.toString().replaceAll("\\s*", ""), newXml.replaceAll("\\s*", ""));
+		Assert.assertEquals(newXml.replaceAll("\r", ""), reportOld.toString().replaceAll("\r", ""));
 	}
 }

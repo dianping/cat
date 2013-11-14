@@ -18,6 +18,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -184,7 +185,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			count += helper.tr1(buf, null);
 		}
 
-		String link =  message.getData().toString();
+		String link = message.getData().toString();
 
 		count += helper.td1(buf);
 
@@ -213,14 +214,13 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			count += helper.tr1(buf, null);
 		}
 
-		String link =  message.getData().toString();
+		String link = message.getData().toString();
 		String name = message.getName();
-		
+
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">[:: %s ::]</a>",
-		       link, name));
+		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">[:: %s ::]</a>", link, name));
 		count += helper.td2(buf);
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
@@ -262,6 +262,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			} else {
 				return encodeLine(tree, message, buf, 'E', Policy.DEFAULT, level, counter);
 			}
+		} else if (message instanceof Trace) {
+			return encodeLine(tree, message, buf, 'L', Policy.DEFAULT, level, counter);
 		} else if (message instanceof Metric) {
 			return encodeLine(tree, message, buf, 'M', Policy.DEFAULT, level, counter);
 		} else if (message instanceof Heartbeat) {

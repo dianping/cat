@@ -26,7 +26,6 @@ import com.dianping.cat.report.page.sql.SqlReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
-import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
@@ -44,10 +43,6 @@ import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-/*
- * TestHttp.class
- */
-
 /* .report.graph */
 ValueTranslaterTest.class,
 
@@ -55,7 +50,7 @@ ValueTranslaterTest.class,
 EventReportFilterTest.class, TransactionReportFilterTest.class,
 
 /* . report.page.transcation */
-PayloadTest.class, TransactionReportMergerTest.class,
+PayloadTest.class, 
 
 /* . report.page.cross */
 CrossReportMergerTest.class,
@@ -100,12 +95,14 @@ CMDBTest.class,
 
 /* abtest */
 TrafficFilterCodeGenerationTest.class,
+
 TrafficFilterTest.class,
+
 GroupStrategyParserTest.class,
+
 GsonBuilderManagerTest.class,
 
 /* jsError */
-ParseTest.class})
+ParseTest.class })
 public class AllTests {
 }
-

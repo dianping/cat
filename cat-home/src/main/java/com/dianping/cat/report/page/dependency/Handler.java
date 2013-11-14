@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 			m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(topologyGraph));
+			model.setTopologyGraph(new DefaultJsonBuilder().build(topologyGraph));
 			break;
 		case LINE_CHART:
 			DependencyReport dependencyReport = queryDependencyReport(payload);

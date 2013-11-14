@@ -1,15 +1,15 @@
 package com.dianping.cat.message.spi;
 
 public interface MessageStatistics {
-	public long getProduced();
+	public long getBytes();
 
 	public long getOverflowed();
 
-	public long getBytes();
+	public long getProduced();
 
-	public void onSending(MessageTree tree);
+	public void onBytes(int size);
 
 	public void onOverflowed(MessageTree tree);
 
-	public void onBytes(int size);
+	public void onSending(MessageTree tree);
 }
