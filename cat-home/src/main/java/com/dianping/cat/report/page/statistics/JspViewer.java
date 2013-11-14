@@ -8,7 +8,6 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 	@Override
 	protected String getJspFilePath(Context ctx, Model model) {
 		Action action = model.getAction();
-		System.out.println(action);
 
 		switch (action) {
 		case BUG_REPORT:

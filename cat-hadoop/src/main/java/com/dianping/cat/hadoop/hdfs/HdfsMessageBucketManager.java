@@ -105,7 +105,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					if (name.contains(key) && !name.endsWith(".idx")) {
 						paths.add(path + name);
 					}
-
 					return false;
 				}
 			});

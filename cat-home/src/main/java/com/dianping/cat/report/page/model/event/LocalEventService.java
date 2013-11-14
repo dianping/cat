@@ -1,13 +1,10 @@
 package com.dianping.cat.report.page.model.event;
 
-import java.util.Date;
-
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -15,18 +12,12 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class LocalEventService extends BaseLocalModelService<EventReport> {
+
 	@Inject
 	private BucketManager m_bucketManager;
-
+	
 	public LocalEventService() {
 		super(EventAnalyzer.ID);
-	}
-
-	private EventReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 
 	@Override
@@ -34,17 +25,20 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		EventReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long current = System.currentTimeMillis();
-			long date = current - current % (TimeUtil.ONE_HOUR) - TimeUtil.ONE_HOUR;
-			report = getLocalReport(date, domain);
-
-			if (report == null) {
-				report = new EventReport(domain);
-				report.setStartTime(new Date(date));
-				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
-			}
+			report = getReportFromLocalDisk(request.getStartTime(), domain);
 		}
-
 		return report;
+	}
+	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = null;
+
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
+			String xml = bucket.findById(domain);
+
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

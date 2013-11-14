@@ -37,7 +37,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
-
+	
 	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
 		List<Message> children = t.getChildren();
@@ -223,4 +223,16 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.incCount();
 		range.setSum(range.getSum() + d);
 	}
+
+	public void setDelegate(TransactionDelegate delegate) {
+   	m_delegate = delegate;
+   }
+
+	public void setReportManager(ReportManager<TransactionReport> reportManager) {
+   	m_reportManager = reportManager;
+   }
+
+	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
+   	m_serverConfigManager = serverConfigManager;
+   }
 }

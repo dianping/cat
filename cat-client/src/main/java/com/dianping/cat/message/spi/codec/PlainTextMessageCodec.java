@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -463,6 +464,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 			if (format == null) {
 				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+				format.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 			}
 
 			try {
@@ -481,7 +483,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 			if (baseline == null) {
 				try {
-					baseline = new SimpleDateFormat("yyyy-MM-dd").parse(date).getTime();
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+					
+					format.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+					baseline = format.parse(date).getTime();
 					m_map.put(date, baseline);
 				} catch (ParseException e) {
 					return -1;

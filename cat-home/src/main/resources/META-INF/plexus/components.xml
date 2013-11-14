@@ -532,6 +532,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.impl.BrowserReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.BrowserReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.TopReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.TopReportService</implementation>
 			<requirements>
@@ -651,6 +681,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.UtilizationReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.BrowserReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -907,15 +940,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
@@ -942,6 +966,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.browser.BrowserReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.browser.BrowserReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1026,6 +1059,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.browser.BrowserReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1375,45 +1411,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>message-local</role-hint>
-			<implementation>com.dianping.cat.report.page.model.logview.LocalMessageService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
-					<role-hint>local</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>message-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.model.logview.HistoricalMessageService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
-					<role-hint>local</role-hint>
-					<field-name>m_localBucketManager</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
-					<role-hint>hdfs</role-hint>
-					<field-name>m_hdfsBucketManager</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>top-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.top.LocalTopService</implementation>
 			<requirements>
@@ -1556,6 +1553,45 @@
 						<role-hint>logview-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>message-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.LocalMessageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>message-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.HistoricalMessageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+					<field-name>m_localBucketManager</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>hdfs</role-hint>
+					<field-name>m_hdfsBucketManager</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -1972,6 +2008,15 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.CaseBuilder</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
 				</requirement>
@@ -2729,12 +2774,6 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
@@ -2850,6 +2889,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

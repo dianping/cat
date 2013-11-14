@@ -5,6 +5,8 @@ public class Constants {
 
 	public static final String CAT = "Cat";
 
+	public static final long MINUTE = 60 * 1000L;
+
 	public static final long HOUR = 60 * 60 * 1000L;
 
 	public static final long DAY = 24 * HOUR;
@@ -20,7 +22,7 @@ public class Constants {
 	public static final String REPORT_UTILIZATION = "utilization";
 
 	public static final String REPORT_HEAVY = "heavy";
-	
+
 	public static final String REPORT_ABTEST = "abtest";
 
 	public static final String REPORT_BROWSER = "browser";

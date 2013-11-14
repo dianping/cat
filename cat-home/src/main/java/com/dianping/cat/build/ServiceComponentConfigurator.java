@@ -140,15 +140,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "sql-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
-		      .req(MessageConsumer.class) //
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
-		      .req(MessageCodec.class, "html"));
-		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
-		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
-		      .req(MessageCodec.class, "html"));
-
 		all.add(C(ModelService.class, "top-local", LocalTopService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class));
@@ -179,6 +170,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "message-historical", "logview-historical" }, "m_services"));
+
+		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
+		      .req(MessageConsumer.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
+		      .req(MessageCodec.class, "html"));
+		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
+		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
+		      .req(MessageCodec.class, "html"));
 
 		all.add(C(CachedReportTask.class).req(ReportService.class));
 		return all;

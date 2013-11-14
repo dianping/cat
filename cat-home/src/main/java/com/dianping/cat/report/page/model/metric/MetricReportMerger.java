@@ -10,7 +10,6 @@ public class MetricReportMerger extends DefaultMerger {
 
 	public MetricReportMerger(MetricReport metricReport) {
 		super(metricReport);
-
 	}
 	
 	@Override

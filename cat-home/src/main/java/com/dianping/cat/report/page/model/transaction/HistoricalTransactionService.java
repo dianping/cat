@@ -19,7 +19,7 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportService m_reportSerivce;
+	private ReportService m_reportService;
 
 	public HistoricalTransactionService() {
 		super(TransactionAnalyzer.ID);
@@ -41,14 +41,19 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	}
 
 	private TransactionReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportSerivce.queryTransactionReport(domain, new Date(timestamp),
+		return m_reportService.queryTransactionReport(domain, new Date(timestamp),
 		      new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, TransactionAnalyzer.ID);
-		String xml = bucket.findById(domain);
+		Bucket<String> bucket = null;
+		try {
+			bucket = m_bucketManager.getReportBucket(timestamp, TransactionAnalyzer.ID);
+			String xml = bucket.findById(domain);
 
-		return xml == null ? null : DefaultSaxParser.parse(xml);
+			return xml == null ? null : DefaultSaxParser.parse(xml);
+		} finally {
+			bucket.close();
+		}
 	}
 }

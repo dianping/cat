@@ -178,14 +178,14 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 	</build>
 	<repositories>
 		<repository>
-			<id>cat-repo</id>
-			<url>https://raw.github.com/dianping/cat-repo/master</url>
+			<id>cat.repo</id>
+			<url>https://raw.github.com/dianping/cat/mvn-repo</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
-			<id>cat-repo</id>
-			<url>https://raw.github.com/dianping/cat-repo/master</url>
+			<id>cat.repo</id>
+			<url>https://raw.github.com/dianping/cat/mvn-repo</url>
 		</pluginRepository>
 	</pluginRepositories>
 	<distributionManagement>

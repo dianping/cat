@@ -42,7 +42,6 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 			if (config.getShowCount()) {
 				String countKey = key + ":" + COUNT;
 				putKey(datas, values, countKey);
-
 			}
 			if (config.getShowSum()) {
 				String sumKey = key + ":" + SUM;
@@ -52,12 +51,13 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		return values;
 	}
 
-	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String sumKey) {
-	   double[] value = datas.get(sumKey);
+	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
+	   double[] value = datas.get(key);
+	   
 	   if(value ==null){
 	   	value = new double[60];
 	   }
-	   values.put(sumKey, value);
+	   values.put(key, value);
    }
 
 	public class MetricDataBuilder extends BaseVisitor {
@@ -126,7 +126,6 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		public void visitMetricReport(MetricReport metricReport) {
 			super.visitMetricReport(metricReport);
 		}
-		
 	}
 
 }

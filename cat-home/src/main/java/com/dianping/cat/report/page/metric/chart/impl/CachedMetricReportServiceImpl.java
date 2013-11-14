@@ -25,7 +25,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 	@Inject
 	private ModelService<MetricReport> m_service;
 
-	private final Map<String, MetricReport> m_metricReportMap = new LinkedHashMap<String, MetricReport>() {
+	private final Map<String, MetricReport> m_metricReports = new LinkedHashMap<String, MetricReport>() {
 
 		private static final long serialVersionUID = 1L;
 
@@ -34,6 +34,22 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			return size() > 1000;
 		}
 	};
+
+	private MetricReport getReportFromDB(String product, long date) {
+		String key = product + date;
+		MetricReport result = m_metricReports.get(key);
+		if (result == null) {
+			Date start = new Date(date);
+			Date end = new Date(date + TimeUtil.ONE_HOUR);
+			try {
+				result = m_reportService.queryMetricReport(product, start, end);
+				m_metricReports.put(key, result);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public MetricReport query(String product, Date start) {
@@ -45,6 +61,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			if (m_service.isEligable(request)) {
 				ModelResponse<MetricReport> response = m_service.invoke(request);
 				MetricReport report = response.getModel();
+				
 				return report;
 			} else {
 				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
@@ -52,22 +69,6 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 		} else {
 			return getReportFromDB(product, time);
 		}
-	}
-
-	private MetricReport getReportFromDB(String product, long date) {
-		String key = product + date;
-		MetricReport result = m_metricReportMap.get(key);
-		if (result == null) {
-			Date start = new Date(date);
-			Date end = new Date(date + TimeUtil.ONE_HOUR);
-			try {
-				result = m_reportService.queryMetricReport(product, start, end);
-				m_metricReportMap.put(key, result);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		return result;
 	}
 
 }

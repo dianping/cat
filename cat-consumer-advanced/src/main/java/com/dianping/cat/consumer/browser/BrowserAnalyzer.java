@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.browser;
 
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -10,73 +9,41 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
+import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
+import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
+import com.dianping.cat.consumer.browser.model.entity.Os;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 
-public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
-		implements LogEnabled {
+public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> implements LogEnabled {
 	public static final String ID = "browser";
 
 	@Inject(ID)
 	private ReportManager<BrowserReport> m_reportManager;
-	
-	public BrowserReport update(BrowserReport report, String[] agentToken) {
-		for (String s : agentToken) {
-			for (String browser : BrowsersAndOses.BROWSERS) {
-				int index;
-				index = s.toUpperCase().indexOf(browser.toUpperCase());
-				if (index >= 0) {
-					String subS = s.substring(index);
-					String[] browserAndVersionString = split(subS, "/");
-					Browser b = report.findOrCreateDomainDetail("Cat")
-							.findOrCreateBrowser(browserAndVersionString[0]);
-					b.setCount(b.getCount() + 1);
 
-					if (browserAndVersionString.length >= 2) {
-						int i;
-						String version = browserAndVersionString[1];
-						for (i = 0; (i < version.length())
-								&& (version.charAt(i) >= '0'
-										&& version.charAt(i) <= '9' || version
-										.charAt(i) == '.'); i++)
-							;
-						version = version.substring(0, i);
-						b.findOrCreateBrowserVersion(version).setCount(
-								b.findOrCreateBrowserVersion(version)
-										.getCount() + 1);
-					}
-				}
-			}
-			for (String os : BrowsersAndOses.OSES) {
-				int index;
-				index = s.toUpperCase().indexOf(os.toUpperCase());
-				if (index >= 0) {
-					report.findOrCreateDomainDetail("Cat")
-					.findOrCreateOs(os).setCount(report.findOrCreateDomainDetail("Cat")
-					.findOrCreateOs(os).getCount() + 1);
-				}
-			}
+	@Override
+	public void doCheckpoint(boolean atEnd) {
+		if (atEnd && !isLocalMode()) {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+		} else {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public BrowserReport getReport(String domain) {
+		BrowserReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
-	}
-
-	public String[] splitAgent(String message) {
-		return null;
-	}
-
-	private String[] split(String message, String divisionChar) {
-
-		StringTokenizer tokenizer = new StringTokenizer(message, divisionChar);
-		int i = 0;
-		String[] string = new String[tokenizer.countTokens()];// 动态的决定数组的长度
-		while (tokenizer.hasMoreTokens()) {
-			string[i] = new String();
-			string[i] = tokenizer.nextToken();
-			i++;
-		}
-		return string;// 返回字符串数组
 	}
 
 	protected String parseValue(final String key, final String data) {
@@ -123,16 +90,6 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
-
-	}
-
-	@Override
-	public BrowserReport getReport(String domain) {
-		return null;
-	}
-
-	@Override
 	protected void process(MessageTree tree) {
 		Message message = tree.getMessage();
 		if (message instanceof Transaction) {
@@ -144,15 +101,13 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
 				for (Message child : children) {
 					String childType = child.getType();
 					String childName = child.getName();
-					BrowserReport report = m_reportManager.getHourlyReport(
-							getStartTime(), "Cat", true);
+					BrowserReport report = m_reportManager.getHourlyReport(getStartTime(), "Cat", true);
 
-					if ("URL".equals(childType)
-							&& ("URL.Server".equals(childName) || "ClientInfo"
-									.equals(childName))) {
+					if ("URL".equals(childType) && ("URL.Server".equals(childName) || "ClientInfo".equals(childName))) {
 						String data = (String) child.getData();
+						String domain = tree.getDomain();
 
-						updateBrowserReport(report, data);
+						updateBrowserReport(report, domain, data);
 						return;
 					}
 				}
@@ -161,40 +116,29 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport>
 
 	}
 
-	private void updateBrowserReport(BrowserReport report, String data) {
+	private void updateBrowserReport(BrowserReport report, String domain, String data) {
+		String agent = parseValue("Agent", data);
+
+		if (agent == null || agent.isEmpty()) {
+			m_logger.error("Can not get agent from url when browser analyze: " + data);
+		}
+
+		UserAgentParser uap = null;
+		try {
+			uap = new UserAgentParser(agent);
+		} catch (UserAgentParseException e) {
+			m_logger.error(e.getMessage(), e);
+		}
+		String browserName = uap.getBrowserName();
+		String osName = uap.getBrowserOperatingSystem();
+		String versionName = uap.getBrowserVersion();
+		DomainDetail detail = report.findOrCreateDomainDetail(domain);
+
+		Browser browser = detail.findOrCreateBrowser(browserName);
+		BrowserVersion version = browser.findOrCreateBrowserVersion(versionName);
+		Os os = detail.findOrCreateOs(osName);
+
+		os.setCount(os.getCount() + 1);
+		version.setCount(version.getCount() + 1);
 	}
-
-	public class BrowserAndVersion {
-		private String browser;
-		private String browserVersion;
-
-		public String getBrowser() {
-			return browser;
-		}
-
-		public void setBrowser(String browser) {
-			this.browser = browser;
-		}
-
-		public String getBrowserVersion() {
-			return browserVersion;
-		}
-
-		public void setBrowserVersion(String browserVersion) {
-			this.browserVersion = browserVersion;
-		}
-	}
-
-	private static class BrowsersAndOses {
-		public static final String OSES[] = { "Windows NT", "Linux",
-				"WindowsMobile", "Android", "Mac OS" };
-		public static final String BROWSERS[] = { "Chrome", "Maxthon",
-				"AppleWebKit", "QQBrowser", "UC Browser", "Safari",
-				"LBBROWSER", "QQ Browser", "UCBrowser" };
-	}
-
-	@Override
-   public void doCheckpoint(boolean atEnd) {
-	   
-   }
 }

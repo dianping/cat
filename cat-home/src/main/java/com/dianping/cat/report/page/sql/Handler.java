@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.sql;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -16,14 +18,18 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.google.gson.GsonBuilder;
 
 /**
  * @author youyong
@@ -82,18 +88,9 @@ public class Handler implements PageHandler<Context> {
 		String database = payload.getDatabase();
 
 		switch (payload.getAction()) {
-		case HISTORY_REPORT:
-			SqlReport historyReport = showSummarizeReport(model, payload);
-
-			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
-			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(historyDuration);
-
-			displayHistorySql.setSortBy(payload.getSortBy()).visitSqlReport(historyReport);
-			model.setReport(historyReport);
-			model.setDisplaySqlReport(displayHistorySql);
-			break;
 		case HOURLY_REPORT:
 			long hourlyDuration = TimeUtil.ONE_HOUR;
+
 			if (ModelPeriod.CURRENT == payload.getPeriod()) {
 				hourlyDuration = System.currentTimeMillis() % TimeUtil.ONE_HOUR;
 			}
@@ -103,6 +100,17 @@ public class Handler implements PageHandler<Context> {
 			displaySql.setSortBy(payload.getSortBy()).visitSqlReport(hourlyReport);
 			model.setReport(hourlyReport);
 			model.setDisplaySqlReport(displaySql);
+			model.setPieChart(buildPieChart(displaySql.getResults()));
+			break;
+		case HISTORY_REPORT:
+			SqlReport historyReport = showSummarizeReport(model, payload);
+			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
+			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(historyDuration);
+
+			displayHistorySql.setSortBy(payload.getSortBy()).visitSqlReport(historyReport);
+			model.setReport(historyReport);
+			model.setDisplaySqlReport(displayHistorySql);
+			model.setPieChart(buildPieChart(displayHistorySql.getResults()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -123,5 +131,22 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 
 		return m_reportService.querySqlReport(domain, start, end);
+	}
+
+	private String buildPieChart(List<Table> tables) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Table table : tables) {
+			if(!table.getId().equals("All")){
+				items.add(new Item().setTitle(table.getId()).setNumber(table.getTotalCount()));
+			}
+		}
+		chart.addItems(items);
+		System.err.println("========");
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		System.out.println(gsonBuilder.create().toJson(chart));
+		System.err.println("!!!!!!!!");
+		return chart.getJsonString();
 	}
 }

@@ -11,9 +11,9 @@ import com.dianping.cat.consumer.core.ProblemHandlerTest;
 import com.dianping.cat.consumer.core.ProblemReportAggregationTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
+import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
-import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 @RunWith(Suite.class)
@@ -29,13 +29,16 @@ GsonTest.class,
 
 NumberFormatTest.class,
 
-TransactionAnalyzerTest.class,
+/* transaction */
 
-TransactionReportMessageAnalyzerTest.class,
+TransactionAnalyzerTest.class,
 
 TransactionReportTest.class,
 
 TransactionReportFilterTest.class,
+
+/* event */
+EventAnalyzerTest.class,
 
 CompositeFormatTest.class,
 

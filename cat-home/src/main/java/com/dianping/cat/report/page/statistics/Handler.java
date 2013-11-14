@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -21,12 +22,15 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
-import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
+import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
+import com.dianping.cat.consumer.browser.model.entity.Os;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -46,6 +50,8 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
@@ -75,7 +81,7 @@ public class Handler implements PageHandler<Context> {
 
 		@Override
 		public void visitDomain(Domain domain) {
-			m_currentDomain= domain;
+			m_currentDomain = domain;
 			super.visitDomain(domain);
 		}
 
@@ -94,7 +100,7 @@ public class Handler implements PageHandler<Context> {
 				statis.setProductLine(productLine);
 				m_currentDomain.setDepartment(department);
 				m_currentDomain.setProductLine(productLine);
-				
+
 				Map<String, ExceptionItem> items = null;
 
 				if (isBug(m_currentDomain.getId(), exception)) {
@@ -160,20 +166,37 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
+	private String buildBrowserChart(Map<String, Browser> map) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Browser> entry : map.entrySet()) {
+			String key = entry.getKey();
+			Browser value = entry.getValue();
+			for (Entry<String, BrowserVersion> versionEntry : value.getBrowserVersions().entrySet()) {
+				String title = key + " " + versionEntry.getKey();
+				long count = versionEntry.getValue().getCount();
+				items.add(new Item().setTitle(title).setNumber(count));
+			}
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
+	}
+
 	private void buildBrowserInfo(Model model, Payload payload) {
-      try {
-	      String xml = Files.forIO().readFrom(getClass().getResourceAsStream("browser.xml"), "utf-8");
-	      BrowserReport report = DefaultSaxParser.parse(xml);
-	      model.setBrowserReport(report);
-      } catch (Exception e) {
-	      // TODO Auto-generated catch block
-	      e.printStackTrace();
-      }
+		BrowserReport report = queryBrowserReport(payload);
+		model.setBrowserReport(report);
+		DomainDetail detail = report.findDomainDetail(payload.getDomain());
+		
+		if (detail != null) {
+			model.setBrowserChart(buildBrowserChart(detail.getBrowsers()));
+			model.setOsChart(buildOsChart(detail.getOses()));
+		}
+		
 	}
 
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
-		System.out.println(bugReport.getStartTime());
 		BugReportVisitor visitor = new BugReportVisitor();
 		visitor.visitBugReport(bugReport);
 
@@ -192,6 +215,20 @@ public class Handler implements PageHandler<Context> {
 
 		model.setHeavyReport(heavyReport);
 		buildSortedHeavyInfo(model, heavyReport);
+	}
+
+	private String buildOsChart(Map<String, Os> map) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Os> entry : map.entrySet()) {
+			String title = entry.getKey();
+			Os value = entry.getValue();
+			long count = value.getCount();
+			items.add(new Item().setTitle(title).setNumber(count));
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
 	}
 
 	private void buildServiceInfo(Model model, Payload payload) {
@@ -319,7 +356,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case BROWSER_REPORT:
 		case BROWSER_HISTORY_REPORT:
-			buildBrowserInfo(model,payload);
+			buildBrowserInfo(model, payload);
 			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
@@ -332,9 +369,19 @@ public class Handler implements PageHandler<Context> {
 		return !bugConfig.contains(exception);
 	}
 
+	private BrowserReport queryBrowserReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+		BrowserReport report = m_reportService.queryBrowserReport("Cat", pair.getKey(), pair.getValue());
+		Set<String> domains = m_reportService.queryAllDomainNames(pair.getKey(), pair.getValue(), TransactionAnalyzer.ID);
+		Set<String> domainNames = report.getDomainNames();
+
+		domainNames.addAll(domains);
+		return report;
+	}
+
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		
+
 		return m_reportService.queryBugReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 

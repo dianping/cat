@@ -153,13 +153,10 @@ public class TransactionGraphCreator {
 						allDetailCache.put(key, detailLine);
 					}
 
-					// detailLine.totalCount += transactionName.getTotalCount();
 					detailLine.totalCounts = arrayAdd(detailLine.totalCounts, totalCount);
-					// detailLine.failCount += transactionName.getFailCount();
 					detailLine.failCounts = arrayAdd(detailLine.failCounts, failsCount);
 					detailLine.min += transactionName.getMin();
 					detailLine.max += transactionName.getMax();
-					// detailLine.sum += transactionName.getSum();
 					detailLine.sums = arrayAdd(detailLine.sums, sumCount);
 					detailLine.sum2 += transactionName.getSum2();
 
@@ -169,17 +166,14 @@ public class TransactionGraphCreator {
 				}
 				summaryBuilder.append(transactionType.getId());
 				summaryBuilder.append('\t');
-				// summaryBuilder.append(transactionType.getTotalCount());
 				summaryBuilder.append(arrayToString(typeCounts));
 				summaryBuilder.append('\t');
-				// summaryBuilder.append(transactionType.getFailCount());
 				summaryBuilder.append(arrayToString(typeFails));
 				summaryBuilder.append('\t');
 				summaryBuilder.append(transactionType.getMin());
 				summaryBuilder.append('\t');
 				summaryBuilder.append(transactionType.getMax());
 				summaryBuilder.append('\t');
-				// summaryBuilder.append(transactionType.getSum());
 				summaryBuilder.append(arrayToString(typeSums));
 				summaryBuilder.append('\t');
 				summaryBuilder.append(transactionType.getSum2());
@@ -196,7 +190,6 @@ public class TransactionGraphCreator {
 				summaryLine.failCounts = arrayAdd(summaryLine.failCounts, typeFails);
 				summaryLine.min += transactionType.getMin();
 				summaryLine.max += transactionType.getMax();
-				// summaryLine.sum += transactionType.getSum();
 				summaryLine.sums = arrayAdd(summaryLine.sums, typeSums);
 				summaryLine.sum2 += transactionType.getSum2();
 			}
@@ -257,4 +250,5 @@ public class TransactionGraphCreator {
 
 		return graphs;
 	}
+
 }

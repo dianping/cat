@@ -22,8 +22,8 @@ import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.report.abtest.entity.AbtestReport;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
-import com.dianping.cat.system.page.abtest.AbtestStatus;
 import com.dianping.cat.system.page.abtest.service.ABTestService;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus;
 
 public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
 	@Inject

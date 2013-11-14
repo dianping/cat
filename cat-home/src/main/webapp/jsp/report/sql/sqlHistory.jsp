@@ -14,6 +14,8 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class='databases'>
 	<tr style="text-align: left">
 		<th>Databases: &nbsp;[&nbsp; <c:choose>
@@ -40,7 +42,9 @@
 		</th>
 	</tr>
 </table>
-<table class='data'>
+<div class="row-fluid">
+	<div class="span6">
+		<table class='data'>
 			<tr>
 			    <th></th>
 				<th class="left"><a
@@ -91,8 +95,17 @@
 					</table></td>
 				</tr>
 			</c:forEach>
-
 		</table>
+	</div>
+	<div class="span6">
+		<div id="sqlGraph" class="pieChart"></div>
+		<script type="text/javascript">
+			var data = ${model.pieChart};
+			graphPieChart(document.getElementById('sqlGraph'), data);
+		</script>
+	</div>
+</div>
+
 <font color="white">${lastIndex+1}</font>
 
 <res:useJs value="${res.js.local.sql_js}" target="bottom-js" />
