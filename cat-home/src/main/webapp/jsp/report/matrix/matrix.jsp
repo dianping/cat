@@ -13,7 +13,6 @@
 <br>
 <table class='data'>
 	<tr>
-		
 		<th class="left" rowspan="2">Type</th>
 		<th class="left" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
 		<th rowspan="2" title="所有请求中总次数"><a href="?date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
@@ -48,36 +47,35 @@
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheTimePercent">Time%</td>
 		<td>Link</td>
 	</tr>
-	<c:forEach var="item" items="${model.matrix.matrixs}"
-				varStatus="status">
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td  class="left">${item.type}</td>
-					<td  class="left longText" style="white-space:normal" >${w:shorten(item.name, 120)}</td>
-					<td>${item.count}</td>
-					<td>${w:format(item.avg,'0.0')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">Log View</a></td>
-					<td>${item.callMin}</td>
-					<td>${item.callMax}</td>
-					<td>${w:format(item.callAvg,'0.0')}</td>
-					<td>${item.callTime}</td>
-					<td>${w:format(item.callTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.callUrl}?domain=${model.domain}">Link</a></td>
-				
-					<td>${item.sqlMin}</td>
-					<td>${item.sqlMax}</td>
-					<td>${w:format(item.sqlAvg,'0.0')}</td>
-					<td>${item.sqlTime}</td>
-					<td>${w:format(item.sqlTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.sqlUrl}?domain=${model.domain}">Link</a></td>
-					
-					<td>${item.cacheMin}</td>
-					<td>${item.cacheMax}</td>
-					<td>${w:format(item.cacheAvg,'0.0')}</td>
-					<td>${item.cacheTime}</td>
-					<td>${w:format(item.cacheTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Link</a></td>
-				</tr>
-			</c:forEach>
+	<c:forEach var="item" items="${model.matrix.matrixs}" varStatus="status">
+		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+			<td class="left">${item.type}</td>
+			<td class="left longText" style="white-space:normal">${w:shorten(item.name, 120)}</td>
+			<td>${w:format(item.count,'#,###,##0')}</td>
+			<td>${w:format(item.avg,'0.0')}</td>
+			<td class="center"><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">Log View</a></td>
+			<td>${item.callMin}</td>
+			<td>${item.callMax}</td>
+			<td>${w:format(item.callAvg,'0.0')}</td>
+			<td>${item.callTime}</td>
+			<td>${w:format(item.callTimePercent,'00.0%')}</td>
+			<td><a href="${model.logViewBaseUri}/${item.callUrl}?domain=${model.domain}">Link</a></td>
+		
+			<td>${item.sqlMin}</td>
+			<td>${item.sqlMax}</td>
+			<td>${w:format(item.sqlAvg,'0.0')}</td>
+			<td>${item.sqlTime}</td>
+			<td>${w:format(item.sqlTimePercent,'00.0%')}</td>
+			<td><a href="${model.logViewBaseUri}/${item.sqlUrl}?domain=${model.domain}">Link</a></td>
+			
+			<td>${item.cacheMin}</td>
+			<td>${item.cacheMax}</td>
+			<td>${w:format(item.cacheAvg,'0.0')}</td>
+			<td>${item.cacheTime}</td>
+			<td>${w:format(item.cacheTimePercent,'00.0%')}</td>
+			<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Link</a></td>
+		</tr>
+	</c:forEach>
 </table>
 
 </jsp:body>

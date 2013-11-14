@@ -64,7 +64,7 @@ public class CatAppender extends AppenderSkeleton {
 	}
 
 	private void logTrace(LoggingEvent event) {
-		String type = "Trace";
+		String type = "Log4j";
 		String name = event.getLevel().toString();
 		Object message = event.getMessage();
 

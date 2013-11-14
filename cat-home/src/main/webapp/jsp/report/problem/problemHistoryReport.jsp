@@ -73,7 +73,7 @@
 				&nbsp;&nbsp;${statistics.value.type}
 			</td>
 			<td rowspan="${w:size(statistics.value.status)*2}"
-				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${w:format(statistics.value.count,'#,###,###,###,##0')}</td>
+				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top right">${w:format(statistics.value.count,'#,###,###,###,##0')}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">
@@ -83,7 +83,7 @@
 					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"> ${w:format(status.value.count,'#,###,###,###,##0')}</td>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'} right"> ${w:format(status.value.count,'#,###,###,###,##0')}</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>

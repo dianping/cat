@@ -19,14 +19,13 @@
 		<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
-					<c:when test="${payload.realIp eq ip}">
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}"
-								class="current">${ip}</a>
-					</c:when>
-					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
-					</c:otherwise>
-				</c:choose>
+				<c:when test="${payload.realIp eq ip}">
+					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}" class="current">${ip}</a>
+				</c:when>
+				<c:otherwise>
+					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+				</c:otherwise>
+			</c:choose>
    	 		&nbsp;]&nbsp;
 		</c:forEach>
 		</th>
@@ -123,8 +122,8 @@
 		<th>CatSize</th>
 	</tr>
 	<c:forEach var="item" items="${model.result.periods}" varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'}">
-		<td>${item.minute}</td>
+		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<td class="center">${item.minute}</td>
 		<td>${item.threadCount}</td>
 		<td>${item.daemonCount}</td>
 		<td>${item.totalStartedCount}</td>
@@ -137,9 +136,9 @@
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
 		<td>${w:format(item.memoryFree,'0.0MB')}</td>
 		<td><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
-		<td>${item.catMessageProduced}</td>
-		<td>${item.catMessageOverflow}</td>
-		<td>${w:format(item.catMessageSize,'0.0MB')}</td>
+		<td>${w:format(item.catMessageProduced,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.catMessageOverflow,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.catMessageSize,'#,##0.0MB')}</td>
 		</tr>
 	</c:forEach>
 </table>
