@@ -25,12 +25,12 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.BrowserAnalyzer;
 import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
 import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
 import com.dianping.cat.consumer.browser.model.entity.Os;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -371,10 +371,14 @@ public class Handler implements PageHandler<Context> {
 
 	private BrowserReport queryBrowserReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		BrowserReport report = m_reportService.queryBrowserReport("Cat", pair.getKey(), pair.getValue());
-		Set<String> domains = m_reportService.queryAllDomainNames(pair.getKey(), pair.getValue(), TransactionAnalyzer.ID);
+		Date start = pair.getKey();
+		Date end = pair.getValue();
+		BrowserReport report = m_reportService.queryBrowserReport("Cat", start, end);
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserAnalyzer.ID);
 		Set<String> domainNames = report.getDomainNames();
 
+		report.setStartTime(start);
+		report.setEndTime(end);
 		domainNames.addAll(domains);
 		return report;
 	}

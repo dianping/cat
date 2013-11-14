@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:historyReport title="History Report" navUrlPrefix="op=historyBrowser&domain=${model.domain}&date=${model.date}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:browserHistoryReport title="History Report" navUrlPrefix="op=historyBrowser&domain=${model.domain}&date=${model.date}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 <jsp:attribute name="subtitle">From ${w:format(model.browserReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.browserReport.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 <jsp:body>
@@ -16,11 +16,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#browser').addClass('active');
-		$('.switch')[0].href="?op=browser&domain=${model.domain}";
-		for(var i=0;i<$('.domainItem').length;i++){
-			$('.domainItem')[i].href=$('.domainItem')[i].href+"&op=historyBrowser";
-		}
-		
 	});
 </script>
 	<div class="row-fluid">
@@ -34,4 +29,4 @@
 		</div>
 	</div>
 </jsp:body>
-</a:historyReport>
+</a:browserHistoryReport>
