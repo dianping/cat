@@ -61,7 +61,15 @@ public class DisplayTypes {
 				return m1.getType().compareTo(m2.getType());
 			}
 			if (m_sorted.equals("total")) {
-				return (int) (m2.getDetail().getTotalCount() - m1.getDetail().getTotalCount());
+				long value = m2.getDetail().getTotalCount() - m1.getDetail().getTotalCount();
+
+				if (value > 0) {
+					return 1;
+				} else if (value < 0) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 			if (m_sorted.equals("failure")) {
 				return (int) (m2.getDetail().getFailCount() - m1.getDetail().getFailCount());

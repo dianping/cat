@@ -48,7 +48,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 	@Inject
 	protected MetricPointParser m_parser;
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	private static final int POINT_NUMBER = 60 * 24;
 
@@ -94,8 +94,8 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 					MetricItem reportItem = report.findMetricItem(metricId);
 
 					if (reportItem == null) {
-						m_logger.warn(String.format("no %s metric item found where computing baseline, %s", metricId,
-						      reportPeriod.toString()));
+						//m_logger.warn(String.format("no %s metric item found where computing baseline, %s", metricId,
+						//     reportPeriod.toString()));
 						reportItem = new MetricItem(metricId);
 					}
 					metricItems.add(reportItem);

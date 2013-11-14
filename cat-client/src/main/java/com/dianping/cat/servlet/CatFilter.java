@@ -229,9 +229,7 @@ public class CatFilter implements Filter {
 				if (ipForwarded == null) {
 					ip = req.getRemoteAddr();
 				} else {
-					String ips[] = ipForwarded.split(",");
-
-					ip = ips[ips.length - 1].trim();
+					ip = ipForwarded;
 				}
 
 				sb.append("RemoteIP=").append(ip);
