@@ -232,7 +232,7 @@ public class CatFilter implements Filter {
 					ip = ipForwarded;
 				}
 
-				sb.append("RemoteIP=").append(ip);
+				sb.append("IPS=").append(ip);
 				sb.append("&VirtualIP=").append(req.getRemoteAddr());
 				sb.append("&Server=").append(req.getServerName());
 				sb.append("&Referer=").append(req.getHeader("referer"));
