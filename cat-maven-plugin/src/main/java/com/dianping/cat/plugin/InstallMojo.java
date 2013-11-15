@@ -1,32 +1,27 @@
 package com.dianping.cat.plugin;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Files.AutoClose;
+import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
 
 /**
  * @goal install
+ * @aggregator true
  */
-public class CatInstallMojo extends AbstractMojo {
-
-	private final String m_datasourceUrl = "JDBC-URL";
-
-	private final String m_datasourceUser = "JDBC-USER";
-
-	private final String m_datasourcePassword = "JDBC-PASSWORD";
+public class InstallMojo extends AbstractMojo {
 
 	private String m_path = "/data/appdatas/cat";
 
@@ -51,6 +46,11 @@ public class CatInstallMojo extends AbstractMojo {
 	 */
 	private String m_password;
 
+	/**
+	 * @parameter expression="${verbose}"
+	 */
+	private boolean m_verbose = false;
+
 	private void createDatabase(Statement stmt) throws SQLException {
 		try {
 			stmt.executeUpdate("create database cat");
@@ -60,7 +60,7 @@ public class CatInstallMojo extends AbstractMojo {
 				getLog().info("Database 'cat' already exists, drop it first...");
 				stmt.executeUpdate("drop database cat");
 
-				getLog().info("Database 'cat' has dropped.");
+				getLog().info("Database 'cat' has dropped");
 				stmt.executeUpdate("create database cat");
 			} else {
 				throw e;
@@ -83,13 +83,15 @@ public class CatInstallMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Delopying the Cat environment...");
+		getLog().info("Preparing Cat environment...");
 
 		validate();
 
-		setupDatabase();
-
-		setupConfigurationFiles();
+		if (setupDatabase() && setupConfigurationFiles()) {
+			getLog().info("Preparing Cat environment ... DONE");
+			getLog().info("Use following command line to start local Cat server:");
+			getLog().info("   cd cat-home; mvn jetty:run");
+		}
 	}
 
 	private Connection getConnection(String jdbcUrl) throws ClassNotFoundException, SQLException {
@@ -99,7 +101,7 @@ public class CatInstallMojo extends AbstractMojo {
 		return conn;
 	}
 
-	private void setupConfigurationFiles() {
+	private boolean setupConfigurationFiles() {
 		File path = new File(m_path);
 
 		if (!path.exists()) {
@@ -107,58 +109,77 @@ public class CatInstallMojo extends AbstractMojo {
 		}
 
 		if (!path.canRead() || !path.canWrite()) {
-			getLog()
-			      .warn(m_path
-			            + " doesn't have enough privilege to read or write this pathname, please add read and write privileges to the current user.");
+			getLog().error("Don't have privilege to read/write " + m_path);
+			return false;
 		}
 
-		getLog().info("Generating the configuration files to " + m_path + "...");
+		getLog().info("Generating the configuration files to " + m_path + " ...");
 
+		boolean isSuccess = false;
 		try {
+			debug("Generating client.xml ...");
+
 			Files.forIO().copy(getClass().getResourceAsStream("client.xml"), new FileOutputStream(m_clientPath),
 			      AutoClose.INPUT_OUTPUT);
-			getLog().info("generate client.xml .");
+
+			debug("Generating server.xml ...");
 
 			Files.forIO().copy(getClass().getResourceAsStream("server.xml"), new FileOutputStream(m_serverPath),
 			      AutoClose.INPUT_OUTPUT);
-			getLog().info("generate server.xml .");
+
+			debug("Generating datasources.xml .");
 
 			String datasources = Files.forIO().readFrom(getClass().getResourceAsStream("datasources.xml"), "utf-8");
-			datasources = datasources.replaceAll(m_datasourceUrl, m_jdbcUrl + "/cat");
-			datasources = datasources.replaceAll(m_datasourceUser, m_user);
-			datasources = datasources.replaceAll(m_datasourcePassword, m_password);
+
+			datasources = datasources.replaceAll(Pattern.quote("${jdbc.url}"), m_jdbcUrl + "/cat");
+			datasources = datasources.replaceAll(Pattern.quote("${jdbc.user}"), m_user);
+			datasources = datasources.replaceAll(Pattern.quote("${jdbc.password}"), m_password);
 
 			Files.forIO().writeTo(new File(m_datasourcePath), datasources);
-			getLog().info("generate datasources.xml .");
+
+			getLog().info("Configuration files are generated successfully");
+
+			isSuccess = true;
 		} catch (Exception e) {
 			getLog().error(e);
 		}
+
+		return isSuccess;
 	}
 
-	private void setupDatabase() {
+	private void debug(String info) {
+		if (m_verbose) {
+			getLog().debug(info);
+		}
+	}
+
+	private boolean setupDatabase() {
 		Connection conn = null;
 		Statement stmt = null;
+		boolean isSuccess = false;
 
 		try {
-			getLog().info("Connect the mysql database : " + m_jdbcUrl);
+			getLog().info("Connecting to database(" + m_jdbcUrl + ") ...");
 			conn = getConnection(m_jdbcUrl);
+			getLog().info("Connected to database(" + m_jdbcUrl + ")");
+
+			getLog().info("Creating database(cat) ...");
 			stmt = conn.createStatement();
-
-			getLog().info("Creating database...");
 			createDatabase(stmt);
-			getLog().info("Database 'cat' created successfully.");
+			getLog().info("Database(cat) is created successfully");
 
-			getLog().info("Create tables...");
+			getLog().info("Creating tables ...");
 			createTables(stmt);
-			getLog().info("Create tables successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
+			getLog().info("Tables are created successfully");
+
+			isSuccess = true;
+		} catch (Throwable e) {
+			getLog().error(e);
 		} finally {
 			try {
 				if (stmt != null) {
 					stmt.close();
 				}
-
 				if (conn != null) {
 					conn.close();
 				}
@@ -166,43 +187,24 @@ public class CatInstallMojo extends AbstractMojo {
 				// ignore it
 			}
 		}
+
+		return isSuccess;
 	}
 
 	private void validate() {
-		Reader inputStream = null;
-		BufferedReader reader = null;
-
-		try {
-			inputStream = new InputStreamReader(System.in);
-			reader = new BufferedReader(inputStream);
-
-			if (m_jdbcUrl == null || m_jdbcUrl.length() == 0) {
-				System.out.print("Please input the mysql jdbc url(jdbc:mysql://192.168.1.1:3306):");
-				m_jdbcUrl = reader.readLine();
-			}
-
-			if (m_user == null || m_user.length() == 0) {
-				System.out.print("Please input the mysql user:");
-				m_user = reader.readLine();
-			}
-
-			if (m_password == null || m_password.length() == 0) {
-				System.out.print("Please input the mysql password:");
-				m_password = reader.readLine();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-				// ignore it
-			}
-		}
+		m_jdbcUrl = PropertyProviders.fromConsole().forString("jdbc.url", "Please input jdbc url:", null,
+		      "jdbc:mysql://127.0.0.1:3306", new IValidator<String>() {
+			      @Override
+			      public boolean validate(String url) {
+				      if (url.startsWith("jdbc:mysql://")) {
+					      return true;
+				      } else {
+					      return false;
+				      }
+			      }
+		      });
+		m_user = PropertyProviders.fromConsole().forString("jdbc.user", "Please input username:", null, null, null);
+		m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, null,
+		      null);
 	}
 }

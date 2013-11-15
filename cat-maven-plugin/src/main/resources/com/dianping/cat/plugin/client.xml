@@ -1,9 +1,13 @@
-<!--客户端需要配置Cat服务器的地址。客户端使用多个地址进行热备，从第一个地址开发发送消息，如果成功发送，则停止；如果发送失败，则从第二个地址开发重新发送。 -->
-<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema"
-	xsi:noNamespaceSchemaLocation="config.xsd">
+<?xml version="1.0" encoding="utf-8"?>
+
+<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
 	<servers>
-		<!-- 开发模式的地址。真实环境下删除这行。 -->
+		<!-- Local mode for development -->
 		<server ip="127.0.0.1" port="2280" http-port="2281" />
-		<!-- <server ip="192.168.7.70" port="2280" /> -->
+		<!-- If under production environment, put actual server address as list. -->
+		<!-- 
+			<server ip="192.168.7.71" port="2280" /> 
+			<server ip="192.168.7.72" port="2280" /> 
+		-->
 	</servers>
 </config>
