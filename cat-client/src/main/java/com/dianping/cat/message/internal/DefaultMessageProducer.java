@@ -5,6 +5,7 @@ import java.io.StringWriter;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -33,31 +34,39 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logError(String message, Throwable cause) {
-		StringWriter writer = new StringWriter(2048);
+		if (Cat.isEnabled()) {
+			StringWriter writer = new StringWriter(2048);
 
-		cause.printStackTrace(new PrintWriter(writer));
-
-		if (cause instanceof Error) {
-			logEvent("Error", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
-		} else if (cause instanceof RuntimeException) {
-			logEvent("RuntimeException", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+			cause.printStackTrace(new PrintWriter(writer));
+			
+			if (cause instanceof Error) {
+				logEvent("Error", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+			} else if (cause instanceof RuntimeException) {
+				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+			} else {
+				logEvent("Exception", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+			}
 		} else {
-			logEvent("Exception", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+			cause.printStackTrace();
 		}
 	}
 
 	@Override
 	public void logError(Throwable cause) {
-		StringWriter writer = new StringWriter(2048);
+		if (Cat.isEnabled()) {
+			StringWriter writer = new StringWriter(2048);
 
-		cause.printStackTrace(new PrintWriter(writer));
-
-		if (cause instanceof Error) {
-			logEvent("Error", cause.getClass().getName(), "ERROR", writer.toString());
-		} else if (cause instanceof RuntimeException) {
-			logEvent("RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
+			cause.printStackTrace(new PrintWriter(writer));
+			
+			if (cause instanceof Error) {
+				logEvent("Error", cause.getClass().getName(), "ERROR", writer.toString());
+			} else if (cause instanceof RuntimeException) {
+				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
+			} else {
+				logEvent("Exception", cause.getClass().getName(), "ERROR", writer.toString());
+			}
 		} else {
-			logEvent("Exception", cause.getClass().getName(), "ERROR", writer.toString());
+			cause.printStackTrace();
 		}
 	}
 

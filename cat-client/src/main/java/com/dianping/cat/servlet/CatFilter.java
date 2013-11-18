@@ -229,12 +229,10 @@ public class CatFilter implements Filter {
 				if (ipForwarded == null) {
 					ip = req.getRemoteAddr();
 				} else {
-					String ips[] = ipForwarded.split(",");
-
-					ip = ips[ips.length - 1].trim();
+					ip = ipForwarded;
 				}
 
-				sb.append("RemoteIP=").append(ip);
+				sb.append("IPS=").append(ip);
 				sb.append("&VirtualIP=").append(req.getRemoteAddr());
 				sb.append("&Server=").append(req.getServerName());
 				sb.append("&Referer=").append(req.getHeader("referer"));
@@ -301,7 +299,6 @@ public class CatFilter implements Filter {
 					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
 					if (catPageUri != null && t instanceof DefaultTransaction && catPageUri instanceof String) {
-						System.err.println(catPageUri.toString());
 						((DefaultTransaction) t).setName(catPageUri.toString());
 					}
 					if (catStatus != null) {
