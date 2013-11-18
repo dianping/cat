@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 配置Cat服务器数据源。id为cat的是生产环境数据源，cat.qa是测试环境数据源，user是用户信息表。默认情况下使用cat库，也可以自行修改指向相应的表。 -->
+
 <data-sources>
 	<data-source id="cat">
 		<maximum-pool-size>3</maximum-pool-size>
@@ -8,22 +8,9 @@
 		<statement-cache-size>1000</statement-cache-size>
 		<properties>
 			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[JDBC-URL]]></url>
-			<user>JDBC-USER</user>
-			<password>JDBC-PASSWORD</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-		</properties>
-	</data-source>
-	<data-source id="cat.qa">
-		<maximum-pool-size>3</maximum-pool-size>
-		<connection-timeout>1s</connection-timeout>
-		<idle-timeout>10m</idle-timeout>
-		<statement-cache-size>1000</statement-cache-size>
-		<properties>
-			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[JDBC-URL]]></url>
-			<user>JDBC-USER</user>
-			<password>JDBC-PASSWORD</password>
+			<url><![CDATA[${jdbc.url}]]></url>
+			<user>${jdbc.user}</user>
+			<password>${jdbc.password}</password>
 			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 		</properties>
 	</data-source>
@@ -34,9 +21,9 @@
 		<statement-cache-size>1000</statement-cache-size>
 		<properties>
 			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[JDBC-URL]]></url>
-			<user>JDBC-USER</user>
-			<password>JDBC-PASSWORD</password>
+			<url><![CDATA[${jdbc.url}]]></url>
+			<user>${jdbc.user}</user>
+			<password>${jdbc.password}</password>
 			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 		</properties>
 	</data-source>
