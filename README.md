@@ -11,11 +11,11 @@ Quick Started
 #####3、安装CAT的maven plugin，使用它配置CAT的环境
 		cd cat-maven-plugin;mvn install;mvn cat:install
 		
-		确保系统的临时目录程序拥有读写权限,Linux为/tmp/目录
+确保系统的临时目录程序拥有读写权限,Linux为/tmp/目录
 #####4、运行CAT
 		cd cat-home;mvn jetty:run
 		
-		然后浏览http://localhost:2281
+然后浏览http://localhost:2281
 #####5、如果你安装了hadoop集群，请配置/data/appdatas/cat/server.xml中对应hadoop信息，如果没有hadoop集群，server.xml中localmode必须为true,CAT只能在开发环境工作。【可选】
 
 #####6、导入项目到eclipse中，在开发时，可以运行testcase启动项目 ‘com.dianping.cat.TestServer’来启动CAT
