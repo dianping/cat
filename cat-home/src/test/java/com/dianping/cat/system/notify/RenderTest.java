@@ -3,8 +3,8 @@ package com.dianping.cat.system.notify;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.unidal.lookup.ComponentTestCase;
 import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
 public class RenderTest extends ComponentTestCase {
-
+	
 	@Test
 	public void testTransaction() throws Exception {
 		ReportRender render = lookup(ReportRender.class);

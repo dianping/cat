@@ -1,5 +1,9 @@
 package com.dianping.cat;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -146,4 +150,10 @@ MetricReportForABTestVisitorTest.class,
 
 HeavyReportBuilderTest.class })
 public class AllTests {
+	
+	@BeforeClass
+   public static void setUp() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+		Locale.setDefault(Locale.CHINESE);
+   }
 }
