@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.abtest.MetricReportForABTestVisitorTest;
 import com.dianping.cat.abtest.conditions.TrafficFilterCodeGenerationTest;
 import com.dianping.cat.abtest.conditions.TrafficFilterTest;
 import com.dianping.cat.abtest.groupstrategy.GroupStrategyParserTest;
@@ -140,6 +141,8 @@ GroupStrategyParserTest.class,
 TrafficFilterTest.class,
 
 TrafficFilterCodeGenerationTest.class,
+
+MetricReportForABTestVisitorTest.class,
 
 HeavyReportBuilderTest.class })
 public class AllTests {
