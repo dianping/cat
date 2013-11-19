@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest.report;
+package com.dianping.cat.abtest.report;
 
 import java.util.Calendar;
 import java.util.Date;

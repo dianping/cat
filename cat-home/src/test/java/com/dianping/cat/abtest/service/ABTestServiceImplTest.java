@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest.service;
+package com.dianping.cat.abtest.service;
 
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;

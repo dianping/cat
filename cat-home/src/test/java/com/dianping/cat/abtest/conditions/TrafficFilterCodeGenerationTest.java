@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest.conditions;
+package com.dianping.cat.abtest.conditions;
 
 import java.io.IOException;
 import java.io.InputStream;

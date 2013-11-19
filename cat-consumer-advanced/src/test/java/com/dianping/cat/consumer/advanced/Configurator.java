@@ -47,10 +47,15 @@ public class Configurator extends AbstractResourceConfigurator {
 	public static class ExtendedMetricConfigManager extends MetricConfigManager {
 
 		private MetricItemConfig m_config = new MetricItemConfig();
-
+		
 		@Override
 		public MetricItemConfig queryMetricItemConfig(String id) {
 			return m_config;
+		}
+		
+		@Override
+		public boolean insertMetricItemConfig(MetricItemConfig config) {
+			return true;
 		}
 	}
 

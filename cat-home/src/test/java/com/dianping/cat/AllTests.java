@@ -4,9 +4,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.home.abtest.conditions.TrafficFilterTest;
-import com.dianping.cat.home.abtest.groupstrategy.GroupStrategyParserTest;
-import com.dianping.cat.home.abtest.groupstrategy.GsonBuilderManagerTest;
+import com.dianping.cat.abtest.conditions.TrafficFilterCodeGenerationTest;
+import com.dianping.cat.abtest.conditions.TrafficFilterTest;
+import com.dianping.cat.abtest.groupstrategy.GroupStrategyParserTest;
+import com.dianping.cat.abtest.groupstrategy.GsonBuilderManagerTest;
 import com.dianping.cat.report.baseline.BaselineCreatorTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CMDBTest;
@@ -50,7 +51,11 @@ import com.dianping.cat.system.notify.RenderTest;
 ValueTranslaterTest.class,
 
 /* .report.page.model */
-EventReportFilterTest.class, TransactionReportFilterTest.class,ProblemReportMergerTest.class,
+EventReportFilterTest.class, 
+
+TransactionReportFilterTest.class,
+
+ProblemReportMergerTest.class,
 
 /* . report.page.transcation */
 PayloadTest.class, 
@@ -59,23 +64,39 @@ PayloadTest.class,
 CrossReportMergerTest.class,
 
 /* graph test */
-EventGraphDataTest.class, HeartbeatGraphDataTest.class,
+EventGraphDataTest.class, 
 
-ProblemGraphDataTest.class, TransactionGraphDataTest.class,
+HeartbeatGraphDataTest.class,
+
+ProblemGraphDataTest.class, 
+
+TransactionGraphDataTest.class,
 
 /* sql test */
 SqlReportMergerTest.class,
 
 /* .report.task */
-TaskConsumerTest.class, TaskHelperTest.class,
+TaskConsumerTest.class, 
 
-HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
+TaskHelperTest.class,
 
-ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
+HistoryEventMergerTest.class, 
 
-TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
+HistoryTransactionMergerTest.class,
 
-TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class,
+ProblemCreateGraphDataTest.class, 
+
+ProblemGraphCreatorTest.class,
+
+TransactionGraphCreatorTest.class, 
+
+EventGraphCreatorTest.class, 
+
+EventDailyGraphMergerTest.class,
+
+TransactionDailyGraphMergerTest.class,
+
+ProblemDailyGraphMergerTest.class,
 
 /* alarm .render */
 RenderTest.class,
@@ -83,13 +104,19 @@ RenderTest.class,
 StateReportMergerTest.class,
 
 /* Daily Graph Test */
-DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
+DailyTransactionReportGraphTest.class, 
+
+ProblemDailyGraphTest.class,
 
 /* Metric */
-MetricReportParseTest.class, MetricReportMergerTest.class,
+MetricReportParseTest.class, 
+
+MetricReportMergerTest.class,
 
 /* Dependency */
-DependencyReportMergerTest.class, GraphConfigManagerTest.class,
+DependencyReportMergerTest.class, 
+
+GraphConfigManagerTest.class,
 
 /* CMDB */
 CMDBTest.class,
@@ -111,6 +138,8 @@ GsonBuilderManagerTest.class,
 GroupStrategyParserTest.class,
 
 TrafficFilterTest.class,
+
+TrafficFilterCodeGenerationTest.class,
 
 HeavyReportBuilderTest.class })
 public class AllTests {

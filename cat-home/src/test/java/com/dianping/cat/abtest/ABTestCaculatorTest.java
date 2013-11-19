@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest;
+package com.dianping.cat.abtest;
 
 import org.junit.Test;
 
