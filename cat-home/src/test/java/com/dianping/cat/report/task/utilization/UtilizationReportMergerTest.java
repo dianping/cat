@@ -2,7 +2,7 @@ package com.dianping.cat.report.task.utilization;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.home.utilization.transform.DefaultSaxParser;

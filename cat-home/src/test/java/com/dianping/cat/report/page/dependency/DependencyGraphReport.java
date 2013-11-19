@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.dependency;
 
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
