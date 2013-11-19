@@ -47,10 +47,10 @@ public class TransactionRender extends BaseVisitor {
 		m_totalDays = day;
 
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		if (ip.startsWith("10.")) {
-			m_host = Chinese.ONLINE;
-		} else {
+		if (ip.startsWith("192.")) {
 			m_host = Chinese.OFFLINE;
+		} else {
+			m_host = Chinese.ONLINE;
 		}
 	}
 
