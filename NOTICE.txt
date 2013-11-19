@@ -12,9 +12,10 @@ Foundation (http://www.apache.org/),including, but not limit to:
   - Apache log4j
 
 This product includes the several frameworks developped by 
-unidal (https://github.com/unidal/),including:
+unidal.org (https://github.com/unidal/),including:
   - maven-plugins (https://github.com/unidal/maven-plugins)
   - frameworks (https://github.com/unidal/frameworks)
+Copyright 2011-2013 unidal.org
 
 This product includes the Jetty HTTP server
 (http://jetty.codehaus.org/jetty/).
