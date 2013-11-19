@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.message.spi.core.HtmlMessageCodecTest;
+import com.dianping.cat.message.spi.core.MessagePathBuilderTest;
 import com.dianping.cat.message.spi.core.TcpSocketReceiverTest;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodecTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
@@ -30,8 +31,9 @@ LocalReportBucketTest.class,
 /* .task */
 TaskManagerTest.class,
 
-TcpSocketReceiverTest.class
+TcpSocketReceiverTest.class,
 
+MessagePathBuilderTest.class
 })
 public class AllTests {
 
