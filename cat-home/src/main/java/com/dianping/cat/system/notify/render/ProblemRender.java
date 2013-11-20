@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
@@ -33,29 +31,23 @@ public class ProblemRender {
 
 	private String m_typeGraphLink = "http://%s/cat/r/p?op=historyGraph&domain=%s&date=%s&ip=All&reportType=day&type=%s";
 
-	private String m_host;
+	private String m_ip;
 
-	public ProblemRender(Date date, String domain) {
+	public ProblemRender(Date date, String domain, String ip) {
 		m_domain = domain;
 		m_date = date;
 		m_dateStr = m_sdf.format(date);
-
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		if (ip.startsWith("192.")) {
-			m_host = Chinese.OFFLINE;
-		} else {
-			m_host = Chinese.ONLINE;
-		}
+		m_ip = ip;
 	}
 
 	private String buildGraphUrl(String type) {
-		return String.format(m_typeGraphLink, m_host, m_domain, m_dateStr, type);
+		return String.format(m_typeGraphLink, m_ip, m_domain, m_dateStr, type);
 	}
 
 	private String buildProblemUrl(Date date) {
 		String dateStr = m_sdf.format(m_date);
 
-		return String.format(m_problemLink, m_host, m_domain, dateStr);
+		return String.format(m_problemLink, m_ip, m_domain, dateStr);
 	}
 
 	public Map<Object, Object> getRenderResult() {

@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 
 public class TransactionRender extends BaseVisitor {
@@ -32,7 +30,7 @@ public class TransactionRender extends BaseVisitor {
 
 	private String m_currentIp;
 
-	private String m_host;
+	private String m_ip;
 
 	private String m_transactionLink = "http://%s/cat/r/t?op=history&domain=%s&date=%s&reportType=day";
 
@@ -40,28 +38,22 @@ public class TransactionRender extends BaseVisitor {
 
 	private List<Type> m_types = new ArrayList<Type>();
 
-	public TransactionRender(Date date, String domain, int day) {
+	public TransactionRender(Date date, String domain, int day, String ip) {
 		m_domain = domain;
 		m_date = date;
 		m_dateStr = m_sdf.format(date);
 		m_totalDays = day;
-
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		if (ip.startsWith("192.")) {
-			m_host = Chinese.OFFLINE;
-		} else {
-			m_host = Chinese.ONLINE;
-		}
+		m_ip = ip;
 	}
 
 	private String buildGraphUrl(TransactionType type) {
-		return String.format(m_typeGraphLink, m_host, m_domain, m_dateStr, type.getId());
+		return String.format(m_typeGraphLink, m_ip, m_domain, m_dateStr, type.getId());
 	}
 
 	private String buildTransactionUrl(Date date) {
 		String dateStr = m_sdf.format(m_date);
 
-		return String.format(m_transactionLink, m_host, m_domain, dateStr);
+		return String.format(m_transactionLink, m_ip, m_domain, dateStr);
 	}
 
 	public Map<Object, Object> getRenderResult() {

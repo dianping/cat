@@ -2,10 +2,6 @@ package com.dianping.cat.helper;
 
 public class Chinese {
 
-	public static final String ONLINE = "cat.dianpingoa.com";
-
-	public static final String OFFLINE = "cat.qa.dianpingoa.com";
-
 	public static final String RESPONSE_TIME = "响应时间";
 
 	public static final String EXCEPTION_COUNT = "错误数";
