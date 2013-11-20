@@ -62,11 +62,11 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_reconnects = new AtomicInteger();
 
-	boolean checkWritable() {
+	boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
 
-		if (m_future != null && m_future.getChannel().isOpen()) {
-			if (m_future.getChannel().isWritable()) {
+		if (future != null && future.getChannel().isOpen()) {
+			if (future.getChannel().isWritable()) {
 				isWriteable = true;
 			} else {
 				int count = m_attempts.incrementAndGet();
@@ -158,7 +158,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		while (m_active) {
 			try {
-				if (checkWritable()) {
+				if (checkWritable(m_future)) {
 					MessageTree tree = m_queue.poll();
 
 					if (tree != null) {
