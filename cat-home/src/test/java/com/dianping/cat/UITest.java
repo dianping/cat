@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Urls;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 public class UITest {
 
