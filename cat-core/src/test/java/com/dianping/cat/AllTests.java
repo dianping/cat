@@ -7,6 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.dianping.cat.analysis.AbstractMessageAnalyzerTest;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManagerTest;
 import com.dianping.cat.analysis.PeriodStrategyTest;
+import com.dianping.cat.analysis.PeriodTaskTest;
 import com.dianping.cat.message.spi.core.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.core.MessagePathBuilderTest;
 import com.dianping.cat.message.spi.core.TcpSocketReceiverTest;
@@ -51,6 +52,8 @@ ModelRequestTest.class,
 ModelPeriodTest.class,
 
 ModelResponseTest.class,
+
+PeriodTaskTest.class,
 
 ServerConfigManagerTest.class,
 

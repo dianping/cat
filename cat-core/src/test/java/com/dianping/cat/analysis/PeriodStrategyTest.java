@@ -11,6 +11,7 @@ public class PeriodStrategyTest {
 	public void test1() {
 		PeriodStrategy strategy = new PeriodStrategy(60, 5, 3);
 
+		Assert.assertEquals(60, strategy.getDuration());
 		Assert.assertEquals(0, strategy.next(4));
 		Assert.assertEquals(0, strategy.next(5));
 		Assert.assertEquals(0, strategy.next(6));
