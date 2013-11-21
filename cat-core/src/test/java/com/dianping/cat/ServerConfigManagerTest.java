@@ -7,6 +7,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultTransaction;
+
 public class ServerConfigManagerTest extends ComponentTestCase {
 
 	@Test
@@ -39,10 +42,13 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(false, manager.isJobMachine());
 		Assert.assertEquals(false, manager.isLocalMode());
 		Assert.assertEquals(true, manager.isServerService("Service"));
-		Assert.assertEquals(true,manager.validateDomain("All"));
+		Assert.assertEquals(true, manager.validateDomain("All"));
 		
+		Transaction t = new DefaultTransaction("Service", "piegonService:heartTaskService:heartBeat", null);
+		Assert.assertEquals(true, manager.discardTransaction(t));
+
 		manager.initialize(null);
-		
+
 		Assert.assertEquals(true, manager.getServerConfig() != null);
 	}
 }

@@ -1,7 +1,6 @@
 package com.dianping.cat.service;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ModelRequest {
@@ -12,7 +11,7 @@ public class ModelRequest {
 
 	private ModelPeriod m_period;
 
-	private Map<String, String> m_properties;
+	private Map<String, String> m_properties = new LinkedHashMap<String, String>();
 
 	public ModelRequest(String domain, long startTime) {
 		m_domain = domain;
@@ -29,11 +28,7 @@ public class ModelRequest {
 	}
 
 	public Map<String, String> getProperties() {
-		if (m_properties == null) {
-			return Collections.emptyMap();
-		} else {
-			return m_properties;
-		}
+		return m_properties;
 	}
 
 	public String getProperty(String name) {
@@ -41,9 +36,7 @@ public class ModelRequest {
 	}
 
 	public String getProperty(String name, String defaultValue) {
-		if (m_properties == null) {
-			return defaultValue;
-		} else if (m_properties.containsKey(name)) {
+		if (m_properties.containsKey(name)) {
 			return m_properties.get(name);
 		} else {
 			return defaultValue;
@@ -59,10 +52,6 @@ public class ModelRequest {
 	}
 
 	public ModelRequest setProperty(String name, String value) {
-		if (m_properties == null) {
-			m_properties = new HashMap<String, String>();
-		}
-
 		m_properties.put(name, value);
 		return this;
 	}
