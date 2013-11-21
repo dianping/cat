@@ -48,7 +48,10 @@ MockMessageBuilderTest.class,
 PlainTextMessageCodecTest.class,
 
 /* .servlet */
-CatFilterTest.class
+CatFilterTest.class,
+
+/* .tool */
+ToolsTest.class
 
 })
 public class AllTests {
