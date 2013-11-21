@@ -2,13 +2,15 @@ package com.dianping.cat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.unidal.helper.Splitters;
-import org.unidal.lookup.util.StringUtils;
+import com.site.helper.Splitters;
+import com.site.lookup.util.StringUtils;
 
 import com.site.helper.Stringizers;
 
@@ -29,11 +31,16 @@ public class ToolsTest {
 		Item item = new Item("aaa", "bbbbb", "ccccccccc");
 		String[] array = { "aaa", "bbbbb", "ccccccccc" };
 		List<String> list = Arrays.asList(array);
+		Map<String, String> map = new HashMap<String, String>();
 
+		map.put("a", "a");
+		map.put("b", "b");
+		map.put("c", "c");
 		item.setArray(array);
 		item.setList(list);
+		item.setMap(map);
 
-		String expected = "{\"a\": \"aaa\", \"array\": [\"aaa\", \"bbbbb\", \"c...c\"], \"b\": \"bbbbb\", \"c\": \"c...c\", \"list\": [\"aaa\", \"bbbbb\", \"c...c\"]}";
+		String expected = "{\"a\": \"aaa\", \"array\": [\"aaa\", \"bbbbb\", \"c...c\"], \"b\": \"bbbbb\", \"c\": \"c...c\", \"list\": [\"aaa\", \"bbbbb\", \"c...c\"], \"map\": {\"b\": \"b\", \"c\": \"c\", \"a\": \"a\"}}";
 		String str = Stringizers.forJson().from(item, 3, 5);
 		Assert.assertEquals(expected, str);
 	}
@@ -66,6 +73,8 @@ public class ToolsTest {
 		private String[] array;
 
 		private List<String> list;
+
+		private Map<String, String> map;
 
 		public Item(String a, String b, String c) {
 			this.a = a;
@@ -100,6 +109,15 @@ public class ToolsTest {
 		public void setList(List<String> list) {
 			this.list = list;
 		}
+
+		public Map<String, String> getMap() {
+			return map;
+		}
+
+		public void setMap(Map<String, String> map) {
+			this.map = map;
+		}
+
 	}
 
 }

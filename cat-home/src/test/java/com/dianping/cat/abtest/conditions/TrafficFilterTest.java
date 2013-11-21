@@ -23,10 +23,8 @@ import javax.servlet.http.HttpSession;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class TrafficFilterTest {
 	private Invocable m_inv;
 
