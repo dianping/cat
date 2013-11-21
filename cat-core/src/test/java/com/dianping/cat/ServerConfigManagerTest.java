@@ -33,8 +33,16 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(1000, manager.getLongSqlDefaultThreshold());
 		Assert.assertEquals(100, manager.getLongUrlDefaultThreshold());
 		Assert.assertEquals("target/bucket", manager.getStorageLocalBaseDir());
-
-		manager.initialize(file);
+		Assert.assertEquals(true, manager.isClientCall("Call"));
+		Assert.assertEquals(true, manager.isHdfsOn());
+		Assert.assertEquals(true, manager.isInitialized());
+		Assert.assertEquals(false, manager.isJobMachine());
+		Assert.assertEquals(false, manager.isLocalMode());
+		Assert.assertEquals(true, manager.isServerService("Service"));
+		Assert.assertEquals(true,manager.validateDomain("All"));
+		
+		manager.initialize(null);
+		
 		Assert.assertEquals(true, manager.getServerConfig() != null);
 	}
 }
