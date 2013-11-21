@@ -1,11 +1,10 @@
-package com.dianping.cat.consumer;
+package com.dianping.cat.analysis;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.dianping.cat.analysis.PeriodStrategy;
-
 
 public class PeriodStrategyTest {
 	@Test

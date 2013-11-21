@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModelRequest {
-	private String m_reportName;
 
 	private String m_domain;
 
@@ -23,10 +22,6 @@ public class ModelRequest {
 
 	public String getDomain() {
 		return m_domain;
-	}
-
-	public String getReportName() {
-		return m_reportName;
 	}
 
 	public ModelPeriod getPeriod() {
@@ -61,18 +56,6 @@ public class ModelRequest {
 		} else {
 			return Long.parseLong(m_properties.get("date"));
 		}
-	}
-
-	public boolean hasProperty(String name) {
-		if (m_properties != null) {
-			return m_properties.containsKey(name);
-		} else {
-			return false;
-		}
-	}
-
-	public void setReportName(String reportName) {
-		m_reportName = reportName;
 	}
 
 	public ModelRequest setProperty(String name, String value) {

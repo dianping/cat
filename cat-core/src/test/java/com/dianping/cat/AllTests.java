@@ -4,10 +4,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.analysis.PeriodStrategyTest;
 import com.dianping.cat.message.spi.core.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.core.MessagePathBuilderTest;
 import com.dianping.cat.message.spi.core.TcpSocketReceiverTest;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodecTest;
+import com.dianping.cat.service.ModelRequestTest;
 import com.dianping.cat.statistic.ServerStatisticManagerTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketTest;
@@ -36,7 +38,13 @@ TcpSocketReceiverTest.class,
 
 MessagePathBuilderTest.class,
 
-ServerStatisticManagerTest.class
+ServerStatisticManagerTest.class,
+
+PeriodStrategyTest.class,
+
+ModelRequestTest.class,
+
+ServerConfigManagerTest.class
 })
 public class AllTests {
 

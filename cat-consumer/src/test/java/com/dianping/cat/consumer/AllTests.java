@@ -31,8 +31,6 @@ import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest
 @RunWith(Suite.class)
 @SuiteClasses({
 
-PeriodStrategyTest.class,
-
 ProblemHandlerTest.class,
 
 FormatTest.class,
