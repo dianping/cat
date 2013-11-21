@@ -29,6 +29,5 @@ public class DefaultMessageAnalyzerManagerTest extends ComponentTestCase {
 		Assert.assertEquals(1, analyzer1.m_count);
 		Assert.assertEquals(2, analyzer2.m_count);
 		Assert.assertEquals(3, analyzer3.m_count);
-		
 	}
 }
