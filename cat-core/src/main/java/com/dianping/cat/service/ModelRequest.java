@@ -44,11 +44,7 @@ public class ModelRequest {
 	}
 
 	public long getStartTime() {
-		if (m_startTime >= 0) {
-			return m_startTime;
-		} else {
-			return Long.parseLong(m_properties.get("date"));
-		}
+		return m_startTime;
 	}
 
 	public ModelRequest setProperty(String name, String value) {

@@ -1,0 +1,22 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
+			<role-hint>mock1</role-hint>
+			<implementation>com.dianping.cat.analysis.Configurator$MockAnalyzer1</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
+			<role-hint>mock2</role-hint>
+			<implementation>com.dianping.cat.analysis.Configurator$MockAnalyzer2</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
+			<role-hint>state</role-hint>
+			<implementation>com.dianping.cat.analysis.Configurator$MockAnalyzer3</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+	</components>
+</plexus>

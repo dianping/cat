@@ -10,14 +10,16 @@ public class ModelRequestTest {
 	public void test() {
 		long time = System.currentTimeMillis();
 		long start = time - time % (3600 * 1000L);
-		ModelRequest request = new ModelRequest("Cat", start);
+		String domain = "Cat";
 		String str = "test";
+		ModelRequest request = new ModelRequest(domain, start);
 
 		request.setProperty(str, str);
 
 		Assert.assertEquals(ModelPeriod.CURRENT, request.getPeriod());
 		Assert.assertEquals(str, request.getProperty(str));
 		Assert.assertEquals(start, request.getStartTime());
+		Assert.assertEquals(domain, request.getDomain());
 		Assert.assertEquals("ModelRequest[domain=Cat, period=CURRENT, properties={test=test}]", request.toString());
 
 	}
