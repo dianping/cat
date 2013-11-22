@@ -92,8 +92,6 @@ public class MessageIdFactory {
 		String tmpDir = System.getProperty("java.io.tmpdir");
 		File mark = new File(tmpDir, "cat-" + domain + ".mark");
 
-		//System.out.println("Message id mark file: " + mark.getCanonicalPath());
-
 		m_markFile = new RandomAccessFile(mark, "rw");
 		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
 
