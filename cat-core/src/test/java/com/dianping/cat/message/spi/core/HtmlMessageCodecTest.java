@@ -108,7 +108,18 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	@Test
 	public void testEncode() throws Exception {
 		Cat.newTransaction("test", "test");
+		Cat.logTrace("Trace", "trace");
+		Cat.logMetric("metric", "test","test");
+		Cat.logMetricForCount("metric");
+		Cat.logMetricForCount("metric", 4);
+		Cat.logMetricForDuration("metricDuration", 100);
+		Cat.logMetricForSum("metricSum", 100);
+		Cat.logMetricForSum("metric", 100, 100);
+		Cat.logError(new RuntimeException());
+		Cat.logError("message", new RuntimeException());
+		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
 		DefaultMessageTree tree = (DefaultMessageTree)Cat.getManager().getThreadLocalMessageTree();
+		
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf =  ChannelBuffers.dynamicBuffer();
 		String messageId = "Cat-0a010680-384736-2061";
@@ -118,9 +129,11 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		tree.setParentMessageId(parentMessageId);
 		codec.encode(tree, buf);
 		
-		Assert.assertEquals(512, buf.capacity());
-		Assert.assertEquals(512, buf.array().length);
-		Assert.assertEquals(473, buf.readableBytes());
+		Assert.assertEquals(1024, buf.capacity());
+		Assert.assertEquals(1024, buf.array().length);
+		Assert.assertEquals(674, buf.readableBytes());
+		
+		System.out.println(tree);
 	}
 
 	@Test

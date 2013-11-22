@@ -181,10 +181,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
-	public String getHttpSmsApi() {
-		return "";
-	}
-
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();

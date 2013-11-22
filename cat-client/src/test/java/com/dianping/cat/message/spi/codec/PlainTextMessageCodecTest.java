@@ -11,10 +11,12 @@ import org.junit.Test;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
+import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -63,6 +65,15 @@ public class PlainTextMessageCodecTest {
 		return event;
 	}
 
+	private Metric newMetric(String type, String name, long timestamp, String status, String data) {
+		DefaultMetric Metric = new DefaultMetric(type, name);
+
+		Metric.setStatus(status);
+		Metric.addData(data);
+		Metric.setTimestamp(timestamp);
+		return Metric;
+	}
+	
 	private Heartbeat newHeartbeat(String type, String name, long timestamp, String status, String data) {
 		DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
@@ -117,6 +128,14 @@ public class PlainTextMessageCodecTest {
 		check(event, "E2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n");
 	}
 
+	@Test
+	public void testMetric() {
+		long timestamp = 1325489621987L;
+		Metric metric = newMetric("type", "name", timestamp, "0", "here is the data.");
+
+		check(metric, "M2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n");
+	}
+	
 	@Test
 	public void testEventForRawData() {
 		long timestamp = 1325489621987L;
