@@ -13,10 +13,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.ConversionRule;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageManager;
+import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestContext implements ABTestContext {
 	private String m_groupName = DEFAULT_GROUP;
@@ -27,9 +27,11 @@ public class DefaultABTestContext implements ABTestContext {
 
 	private HttpServletResponse m_response;
 
-	private ABTestGroupStrategy m_groupStrategy;
-
 	private Map<String, String> m_cookielets;
+
+	private DefaultMessageManager m_messageManager;
+
+	private ABTestCodec m_cookieCodec;
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
@@ -68,6 +70,48 @@ public class DefaultABTestContext implements ABTestContext {
 		return m_response;
 	}
 
+	public DefaultMessageManager getMessageManager() {
+		return m_messageManager;
+	}
+
+	private void isEligableRequest(List<ConversionRule> conversionRules, HttpServletRequest request) {
+		String actual = (String) request.getAttribute("url-rewrite-original-url");
+
+		if (isEmptyString(actual)) { // no url-rewrite
+			actual = request.getRequestURL().toString();
+		}
+
+		for (ConversionRule rule : conversionRules) {
+			if (actual.equalsIgnoreCase(rule.getText())) {
+				String appendMetricType = m_cookieCodec.encode(String.valueOf(m_entity.getId()), m_cookielets);
+
+				if (!isEmptyString(appendMetricType)) {
+					String metricType = m_messageManager.getMetricType();
+
+					if (!isEmptyString(metricType)) {
+						m_messageManager.setMetricType(metricType + "&" + appendMetricType);
+					} else {
+						m_messageManager.setMetricType(appendMetricType);
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
+	private boolean isEmptyString(String str) {
+		if (str != null && str.length() > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void setCookieCodec(ABTestCodec cookieCodec) {
+		m_cookieCodec = cookieCodec;
+	}
+
 	@Override
 	public void setCookielet(String name, String value) {
 		if (m_cookielets == null) {
@@ -81,18 +125,18 @@ public class DefaultABTestContext implements ABTestContext {
 		}
 	}
 
+	public void setCookielets(Map<String, String> cookielets) {
+		m_cookielets = cookielets;
+	}
+
 	@Override
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
 		setCookielet("ab", groupName);
 	}
 
-	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
-		m_groupStrategy = groupStrategy;
-	}
-
-	public void setCookielets(Map<String, String> cookielets) {
-		m_cookielets = cookielets;
+	public void setMessageManager(MessageManager messageManager) {
+		m_messageManager = (DefaultMessageManager) messageManager;
 	}
 
 	public void setup(HttpServletRequest request, HttpServletResponse response, Map<String, String> cookielets) {
@@ -110,9 +154,9 @@ public class DefaultABTestContext implements ABTestContext {
 				isAccept = (Boolean) inv.invokeFunction("isEligible", request);
 
 				if (isAccept) {
-					m_groupStrategy.apply(this);
+					m_entity.apply(this);
 				}
-				
+
 				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {
 				t.setStatus(e);
@@ -122,30 +166,10 @@ public class DefaultABTestContext implements ABTestContext {
 			}
 		}
 
-		String actual = (String) request.getAttribute("url-rewrite-original-url");
 		List<ConversionRule> conversionRules = m_entity.getConversionRules();
 
-		if (conversionRules != null) {
-			for (ConversionRule rule : conversionRules) {
-				if (actual.equalsIgnoreCase(rule.getText())) {
-					String key = String.valueOf(m_entity.getRun().getId());
-					String appendMetricType = m_entity.getCookieCodec().encode(key, m_cookielets);
-
-					if (appendMetricType != null && appendMetricType.length() > 0) {
-						// DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-						DefaultMessageManager defaultMessageManager = (DefaultMessageManager) m_entity.getMessageManager();
-						String metricType = defaultMessageManager.getMetricType();
-
-						if (metricType != null && metricType.length() > 0) {
-							defaultMessageManager.setMetricType(metricType + "&" + appendMetricType);
-						} else {
-							defaultMessageManager.setMetricType(appendMetricType);
-						}
-					}
-					
-					break;
-				}
-			}
+		if (conversionRules != null && conversionRules.size() > 0) {
+			isEligableRequest(conversionRules, request);
 		}
 	}
 }

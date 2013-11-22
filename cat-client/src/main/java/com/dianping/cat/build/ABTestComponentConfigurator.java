@@ -25,14 +25,15 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(ABTestContextManager.class, DefaultABTestContextManager.class) //
-		      .req(ABTestEntityManager.class, ABTestCodec.class));
+		      .req(ABTestEntityManager.class, MessageManager.class, ABTestCodec.class));
+
 		all.add(C(ABTestCodec.class, DefaultABTestCodec.class));
 
 		all.add(C(ABTestEntityRepository.class, HttpABTestEntityRepository.class) //
 		      .req(ClientConfigManager.class).config(E("refreshTimeInSeconds").value("60")));
 
 		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class) //
-		      .req(ABTestEntityRepository.class, MessageManager.class,ABTestCodec.class));
+		      .req(ABTestEntityRepository.class));
 
 		all.add(C(ABTestGroupStrategy.class, TrafficDistributionGroupStrategy.ID, TrafficDistributionGroupStrategy.class));
 

@@ -138,6 +138,9 @@
 					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
 				</requirement>
 			</requirements>
@@ -164,12 +167,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
 				</requirement>
 			</requirements>
 		</component>

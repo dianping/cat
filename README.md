@@ -19,8 +19,6 @@ Quick Started
 #####1、在CAT目录下，用maven构建项目
         mvn clean install
 #####2、配置CAT的环境
-		mkdir -p /data/appdata/cat; chmod 777 /data/appdata/cat
-		mkdir -p /data/applogs/cat; chmod 777 /data/applogs/cat
 		mvn cat:install
 #####3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
 #####4、运行CAT
