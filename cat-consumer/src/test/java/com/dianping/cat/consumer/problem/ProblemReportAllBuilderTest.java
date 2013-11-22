@@ -24,6 +24,6 @@ public class ProblemReportAllBuilderTest {
 		builder.visitProblemReport(reportOld);
 		builder.visitProblemReport(reportNew);
 		
-		Assert.assertEquals(expected, report.toString());
+		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 }
