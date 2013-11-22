@@ -300,26 +300,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isOfflineServer(String ip) {
-		if (ip != null && ip.startsWith("192.")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isOnlineServer(String ip) {
-		if (ip != null && ip.startsWith("10.")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isSerialWrite() {
-		return false;
-	}
-
 	public boolean isServerService(String type) {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
