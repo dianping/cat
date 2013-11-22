@@ -1,14 +1,9 @@
-PT1	Cat	localhost-cat	192.168.1.1	main	1	main	Cat-c0a80746-384747-36441	Cat-0a010680-384736-2062	Cat-0a010680-384736-2061	null
+PT1	null	localhost-cat	192.168.1.1	null	null	null	null	Cat-0a010680-384736-2062	Cat-0a010680-384736-2061	null
 t2012-01-02 15:33:41.987	transaction	transaction	
 L2012-01-02 15:33:41.987	logTrace	<trace>	0		
 L2012-01-02 15:33:41.987	logTrace	<trace>	0	data	
-M2012-01-02 15:33:41.987		logMetric	0	test=test	
-M2012-01-02 15:33:41.987		logMetricForCount	C	1	
-M2012-01-02 15:33:41.987		logMetricForCount	C	4	
-M2012-01-02 15:33:41.987		logMetricForDuration	T	100	
-M2012-01-02 15:33:41.987		logMetricForSum	S	100.00	
-M2012-01-02 15:33:41.987		logMetricForSum	S,C	100.00,100	
-E2012-01-02 15:33:41.987	RemoteLink	Call	0	Cat-0a010680-384736-2061	
-E2012-01-02 15:33:41.987	EventType	EventName	0		
-H2012-01-02 15:33:41.987	logHeartbeat	logHeartbeat	0		
-T2012-01-02 15:33:41.995	transaction	transaction	unset	8000us
+E2012-01-02 15:33:41.987	logEvent	<event>	0	data	
+E2012-01-02 15:33:41.987	RemoteLink	<event>	0	data	
+M2012-01-02 15:33:41.987	logEvent	<event>	0	data	
+H2012-01-02 15:33:41.987	logHeartbeat	<event>	0	data	
+T2012-01-02 15:33:49.987	transaction	transaction	0	8000000us

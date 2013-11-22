@@ -64,7 +64,9 @@ PlainTextMessageCodecTest.class,
 CatFilterTest.class,
 
 /* .tool */
-ToolsTest.class
+ToolsTest.class,
+
+CatTest.class
 
 })
 public class AllTests {
