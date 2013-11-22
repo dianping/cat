@@ -153,7 +153,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		String content = Files.forIO().readFrom(HtmlMessageCodecTest.class.getResourceAsStream("MessageTree.txt"),
 		      "utf-8");
 		Assert.assertEquals(content.trim(), tree.toString().trim());
-		Assert.assertEquals(6797, buf.readableBytes());
+		Assert.assertEquals(6795, buf.readableBytes());
 	}
 
 	@Test

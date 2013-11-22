@@ -37,7 +37,7 @@ public class PeriodTaskTest extends ComponentTestCase {
 
 		Assert.assertEquals(size, analyzer.m_count);
 		Assert.assertEquals(analyzer, task.getAnalyzer());
-		Assert.assertEquals("MockAnalyzer-2", task.getName());
+		Assert.assertEquals(true, task.getName().startsWith("MockAnalyzer"));
 		task.shutdown();
 	}
 
