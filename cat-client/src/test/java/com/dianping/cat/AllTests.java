@@ -29,7 +29,7 @@ CatAppenderTest.class,
 /* .message */
 MessageTest.class,
 
-TrafficDistributionGroupStrategyTest.class, 
+TrafficDistributionGroupStrategyTest.class,
 
 ABTestCodecTest.class,
 
@@ -60,7 +60,9 @@ PlainTextMessageCodecTest.class,
 CatFilterTest.class,
 
 /* .tool */
-ToolsTest.class
+ToolsTest.class,
+
+CatTest.class
 
 })
 public class AllTests {
