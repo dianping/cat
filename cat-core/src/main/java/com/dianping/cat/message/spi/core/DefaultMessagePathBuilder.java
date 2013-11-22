@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -29,7 +30,7 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	@Override
 	public String getHdfsPath(String messageId) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}", Locale.getDefault());
 
 		try {
 			MessageId id = MessageId.parse(messageId);

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.abtest;
+package com.dianping.cat.abtest;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,8 +16,9 @@ import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.home.dal.abtest.AbtestReportDao;
 import com.dianping.cat.home.dal.abtest.AbtestReportEntity;
 import com.dianping.cat.report.abtest.entity.AbtestReport;
+import com.dianping.cat.report.task.abtest.MetricReportForABTestVisitor;
 
-public class ABTestReportDateImporter extends ComponentTestCase{
+public class ABTestReportDateImporterTest extends ComponentTestCase{
 
 	private AbtestReportDao m_abtestReportDao;
 	

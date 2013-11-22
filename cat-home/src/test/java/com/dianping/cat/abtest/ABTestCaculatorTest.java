@@ -1,9 +1,11 @@
-package com.dianping.cat.home.abtest;
+package com.dianping.cat.abtest;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dianping.cat.system.page.abtest.advisor.ABTestEvaluator;
 
+@Ignore
 public class ABTestCaculatorTest {
 
 	@Test

@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest.conditions;
+package com.dianping.cat.abtest.conditions;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -44,7 +44,7 @@ public class TrafficFilterTest {
 	public void setup() throws FileNotFoundException, ScriptException {
 		ScriptEngineManager mgr = new ScriptEngineManager();
 		ScriptEngine engine = mgr.getEngineByExtension("java");
-		Reader reader = new FileReader("src/test/resources/com/dianping/cat/home/abtest/conditions/TrafficFilter");
+		Reader reader = new FileReader("src/test/resources/com/dianping/cat/abtest/conditions/TrafficFilter");
 		m_inv = (Invocable) engine.eval(reader);
 	}
 

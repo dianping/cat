@@ -50,30 +50,6 @@
 			<implementation>com.dianping.cat.service.RemoteModelService</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportService</role>
-			<implementation>com.dianping.cat.service.DefaultReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.RemoteModelService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
 			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
 			<requirements>

@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest.groupstrategy;
+package com.dianping.cat.abtest.groupstrategy;
 
 import japa.parser.ParseException;
 

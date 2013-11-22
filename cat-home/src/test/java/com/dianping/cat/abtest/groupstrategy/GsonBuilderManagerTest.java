@@ -1,4 +1,4 @@
-package com.dianping.cat.home.abtest.groupstrategy;
+package com.dianping.cat.abtest.groupstrategy;
 
 import junit.framework.Assert;
 
@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class GsonBuilderManagerTest {
+	
 	@Test
 	public void test_none_prefix_field(){
 		GsonBuilderManager manager = new GsonBuilderManager();
