@@ -108,16 +108,23 @@ public class InstallMojo extends AbstractMojo {
 		File path = new File(m_path);
 		File logPath = new File(m_logPath);
 
+		File temp = null;
+		try {
+			temp = File.createTempFile("test", "test");
+		} catch (IOException e1) {
+			getLog().error("Don't have privilege to read/write temp dir, please manually promote read/write privileges to this directory.");
+			throw new MojoFailureException("Don't have privilege to read/write temp dir");
+		}
+
 		if (!path.exists()) {
-			path.mkdirs();
-			logPath.mkdirs();
-		}
+			boolean result = logPath.mkdirs() && path.mkdirs();
 
-		if (!path.canRead() || !path.canWrite() || !logPath.canRead() || !logPath.canWrite()) {
-			getLog().error("Don't have privilege to read/write " + m_path);
-			throw new MojoFailureException("Don't have privilege to read/write " + m_path);
+			if (!result || temp.exists()) {
+				getLog().error("Don't have privilege to read/write " + m_path + ", please  manually make this directory");
+				throw new MojoFailureException("Don't have privilege to read/write " + m_path);
+			}
 		}
-
+		
 		getLog().info("Generating the configuration files to " + m_path + " ...");
 
 		boolean isSuccess = false;
