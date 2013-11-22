@@ -9,7 +9,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-public class ABTestContextManagerTest extends ComponentTestCase {
+public class ABTestCodecTest extends ComponentTestCase {
 	@Test
 	public void testCodec() throws Exception {
 		check("1=ab:A|cd:B&2=ab:A|cd:B", "1=ab:A|cd:B&2=ab:A|cd:B");

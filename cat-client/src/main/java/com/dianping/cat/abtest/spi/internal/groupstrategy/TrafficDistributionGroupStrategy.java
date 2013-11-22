@@ -42,4 +42,13 @@ public class TrafficDistributionGroupStrategy implements ABTestGroupStrategy {
 			m_percentA = 50;
 		}
 	}
+
+	public void init(int... percents) {
+		if (percents.length == 2) {
+			if (percents[0] + percents[1] == 100) {
+				m_percentControl = percents[0];
+				m_percentA = percents[1];
+			}
+		}
+	}
 }

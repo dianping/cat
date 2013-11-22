@@ -1,25 +1,36 @@
-CAT
+CAT [![Build Status](https://travis-ci.org/dianping/cat.png?branch=biz)](https://travis-ci.org/dianping/cat)
 ===
-<hr>
-Central Application Tracking  [![Build Status](https://travis-ci.org/dianping/cat.png?branch=biz)](https://travis-ci.org/dianping/cat)
+CAT的全称是Central Application Tracking，是基于Java开发的实时应用监控平台，包括实时系统监控、应用监控以及业务监控。
+CAT主要通过以下几种埋点类型收集信息：
+* Event	用来记录次数，表名单位时间内消息发生次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
+* Transaction	适合记录跨越系统边界的程序访问行为,，比如远程调用，数据库调用，也适合执行时间较长的业务逻辑监控。
+* Heartbeat	Heartbeta表示程序内定期产生的统计信息, 如CHPU%, MEM%, 连接池状态, 系统负载等。
+* Metric	用于业务监控埋点的API。
+
+
+Requirements
+---------------------
+* Java 6
+* Maven
+* MySQL
 
 Quick Started
 ---------------------
-#####1、安装Java 6+，Maven以及MySQL
-#####2、cd到CAT目录下，用maven构建项目
-        mvn eclipse:clean eclipse:eclipse
-#####3、安装CAT的maven plugin，使用它配置CAT的环境
-		cd cat-maven-plugin;mvn cat:install
-		
-确保系统的临时目录程序拥有读写权限,Linux为/tmp/目录
-#####5、如果你安装了hadoop集群，请到/data/appdatas/cat/server.xml中配置对应hadoop信息，并将localmode设置为false。默认情况下，CAT在localmode=true的开发模式下工作。
+#####1、cd到CAT目录下，用maven构建项目
+        mvn install
+#####2、安装CAT的maven plugin，使用它配置CAT的环境
+		mkdir -p /data/appdata/cat; chmod 777 /data/appdata/cat
+		mkdir -p /data/applogs/cat; chmod 777 /data/applogs/cat
+		mvn cat:install
+#####3、如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
 #####4、运行CAT
-开发模式下有两种方式启动：
-方式一：
-		cd cat-home;mvn jetty:run		
-然后浏览http://localhost:2281
-方式二：
-将项目导入到eclipse中，运行cat-home项目里得‘com.dianping.cat.TestServer’来启动CAT。
+		cd cat-home;mvn jetty:run
+然后打开浏览器，输入http://localhost:2281。
+
+或者在cat目录下输入
+				
+		mvn eclipse:clean eclipse:eclipse
+然后将项目导入到eclipse中，运行cat-home项目里得‘com.dianping.cat.TestServer’来启动CAT。
 
 Copyright and license
 ---------------------

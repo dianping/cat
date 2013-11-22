@@ -25,6 +25,8 @@ public class InstallMojo extends AbstractMojo {
 
 	private String m_path = "/data/appdatas/cat";
 
+	private String m_logPath = "/data/applogs/cat";
+
 	private String m_clientPath = m_path + File.separator + "client.xml";
 
 	private String m_serverPath = m_path + File.separator + "server.xml";
@@ -91,6 +93,7 @@ public class InstallMojo extends AbstractMojo {
 			getLog().info("Preparing Cat environment ... DONE");
 			getLog().info("Use following command line to start local Cat server:");
 			getLog().info("   cd cat-home; mvn jetty:run");
+			getLog().info("Please open http://localhost:2281/cat in your browser");
 		}
 	}
 
@@ -101,16 +104,18 @@ public class InstallMojo extends AbstractMojo {
 		return conn;
 	}
 
-	private boolean setupConfigurationFiles() {
+	private boolean setupConfigurationFiles() throws MojoFailureException {
 		File path = new File(m_path);
+		File logPath = new File(m_logPath);
 
 		if (!path.exists()) {
 			path.mkdirs();
+			logPath.mkdirs();
 		}
 
-		if (!path.canRead() || !path.canWrite()) {
+		if (!path.canRead() || !path.canWrite() || !logPath.canRead() || !logPath.canWrite()) {
 			getLog().error("Don't have privilege to read/write " + m_path);
-			return false;
+			throw new MojoFailureException("Don't have privilege to read/write " + m_path);
 		}
 
 		getLog().info("Generating the configuration files to " + m_path + " ...");
@@ -153,7 +158,7 @@ public class InstallMojo extends AbstractMojo {
 		}
 	}
 
-	private boolean setupDatabase() {
+	private boolean setupDatabase() throws MojoFailureException {
 		Connection conn = null;
 		Statement stmt = null;
 		boolean isSuccess = false;
@@ -175,6 +180,7 @@ public class InstallMojo extends AbstractMojo {
 			isSuccess = true;
 		} catch (Throwable e) {
 			getLog().error(e);
+			throw new MojoFailureException(e.getMessage());
 		} finally {
 			try {
 				if (stmt != null) {
