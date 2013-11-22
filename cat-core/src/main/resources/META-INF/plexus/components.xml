@@ -59,6 +59,9 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageHandler</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
