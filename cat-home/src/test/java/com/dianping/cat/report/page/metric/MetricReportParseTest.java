@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.metric;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;

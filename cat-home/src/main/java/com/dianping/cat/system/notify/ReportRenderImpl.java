@@ -7,6 +7,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -21,6 +22,8 @@ public class ReportRenderImpl implements ReportRender, Initializable {
 
 	public Configuration m_configuration;
 
+	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
@@ -34,7 +37,7 @@ public class ReportRenderImpl implements ReportRender, Initializable {
 
 	@Override
 	public String renderReport(EventReport report) {
-		EventRender entity = new EventRender(report.getStartTime(), report.getDomain(), 1);
+		EventRender entity = new EventRender(report.getStartTime(), report.getDomain(), 1, m_ip);
 		entity.visitEventReport(report);
 
 		Map<Object, Object> root = entity.getRenderResult();
@@ -52,7 +55,7 @@ public class ReportRenderImpl implements ReportRender, Initializable {
 
 	@Override
 	public String renderReport(ProblemReport report) {
-		ProblemRender entity = new ProblemRender(report.getStartTime(), report.getDomain());
+		ProblemRender entity = new ProblemRender(report.getStartTime(), report.getDomain(), m_ip);
 		entity.visitProblemReport(report);
 
 		Map<Object, Object> root = entity.getRenderResult();
@@ -70,7 +73,7 @@ public class ReportRenderImpl implements ReportRender, Initializable {
 
 	@Override
 	public String renderReport(TransactionReport report) {
-		TransactionRender entity = new TransactionRender(report.getStartTime(), report.getDomain(), 1);
+		TransactionRender entity = new TransactionRender(report.getStartTime(), report.getDomain(), 1, m_ip);
 		entity.visitTransactionReport(report);
 
 		Map<Object, Object> root = entity.getRenderResult();
@@ -86,4 +89,7 @@ public class ReportRenderImpl implements ReportRender, Initializable {
 		return sw.toString();
 	}
 
+	public void setIp(String ip) {
+		m_ip = ip;
+	}
 }

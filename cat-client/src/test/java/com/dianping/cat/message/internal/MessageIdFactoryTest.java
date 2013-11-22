@@ -1,7 +1,6 @@
 package com.dianping.cat.message.internal;
 
 import java.io.IOException;
-import java.util.Date;
 
 import junit.framework.Assert;
 
@@ -18,17 +17,26 @@ public class MessageIdFactoryTest {
 			return m_timestamp;
 		}
 	};
-	
+
 	@Test
-	public void test(){
-		String id="UNKNOWN-c0a82050-376665-314";
+	public void test() {
+		String id = "UNKNOWN-c0a82050-376665-314";
 		MessageId message = MessageId.parse(id);
-		System.out.println(message.getTimestamp());
-		System.out.println(message.getIpAddress());
-		System.out.println(message.getVersion());
-		
-		Date date = new Date(message.getTimestamp());
-		System.out.println(date);
+
+		Assert.assertEquals(1355994000000L, message.getTimestamp());
+		Assert.assertEquals("192.168.32.80", message.getIpAddress());
+		Assert.assertEquals(2, message.getVersion());
+		Assert.assertEquals(id, message.toString());
+
+		id = "ARCH-UNKNOWN-c0a82050-376665-314";
+		message = MessageId.parse(id);
+
+		Assert.assertEquals(1355994000000L, message.getTimestamp());
+		Assert.assertEquals("192.168.32.80", message.getIpAddress());
+		Assert.assertEquals(2, message.getVersion());
+		Assert.assertEquals("ARCH-UNKNOWN", message.getDomain());
+		Assert.assertEquals(id, message.toString());
+
 	}
 
 	private void check(String domain, String expected) {
@@ -91,14 +99,17 @@ public class MessageIdFactoryTest {
 
 		Assert.assertEquals(false, id1.equals(id3));
 		Assert.assertEquals(false, id2.equals(id4));
+	}
 
-		long time = System.currentTimeMillis();
+	@Test(timeout = 500)
+	public void test_performance() throws IOException {
+		MessageIdFactory f1 = new MessageIdFactory();
 
-		for (int i = 0; i < 10000000; i++) {
-			f2.getNextId();
+		f1.initialize("test");
+
+		for (int i = 0; i < 10000; i++) {
+			f1.getNextId();
 		}
-
-		System.out.println(System.currentTimeMillis() - time);
 	}
 
 	@Test
@@ -156,6 +167,5 @@ public class MessageIdFactoryTest {
 			offset++;
 			len--;
 		}
-		
 	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -12,6 +13,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Ignore
 public class LocalMessageRecovery extends ComponentTestCase {
 
 	private MessageCodec m_codec;

@@ -43,10 +43,6 @@ public class ServerStatistic {
 
 		private int m_processDelayCount;
 
-		private double m_avgTps;
-
-		private double m_maxTps;
-
 		private long m_blockTotal;
 
 		private long m_blockLoss;
@@ -136,22 +132,6 @@ public class ServerStatistic {
 			return 0;
 		}
 
-		public double getAvgTps() {
-			return m_avgTps;
-		}
-
-		public void setAvgTps(double avgTps) {
-			m_avgTps = avgTps;
-		}
-
-		public double getMaxTps() {
-			return m_maxTps;
-		}
-
-		public void setMaxTps(double maxTps) {
-			m_maxTps = maxTps;
-		}
-
 		public long getMessageDump() {
 			return m_messageDump;
 		}
@@ -178,14 +158,6 @@ public class ServerStatistic {
 
 		public double getProcessDelaySum() {
 			return m_processDelaySum;
-		}
-
-		public void setProcessDelaySum(double processDelaySum) {
-			m_processDelaySum = processDelaySum;
-		}
-
-		public void setProcessDelayCount(int processDelayCount) {
-			m_processDelayCount = processDelayCount;
 		}
 
 		public long getBlockTotal() {

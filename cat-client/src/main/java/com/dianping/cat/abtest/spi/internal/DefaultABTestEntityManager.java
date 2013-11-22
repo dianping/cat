@@ -14,17 +14,10 @@ import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestEntityManager extends ContainerHolder implements ABTestEntityManager, Initializable {
 	@Inject
 	private ABTestEntityRepository m_repository;
-
-	@Inject
-	private MessageManager m_messageManager;
-
-	@Inject
-	private ABTestCodec m_cookieCodec;
 
 	@Override
 	public ABTestEntity getEntity(ABTestName name) {
@@ -48,9 +41,6 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 		List<ABTestEntity> entitiesList = new ArrayList<ABTestEntity>();
 
 		for (ABTestEntity entity : m_repository.getCurrentEntities().values()) {
-			entity.setMessageManager(m_messageManager);
-			entity.setCookieCodec(m_cookieCodec);
-
 			entitiesList.add(entity);
 		}
 
@@ -63,9 +53,5 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 
 	@Override
 	public void initialize() throws InitializationException {
-		for (ABTestEntity entity : m_repository.getCurrentEntities().values()) {
-			entity.setMessageManager(m_messageManager);
-			entity.setCookieCodec(m_cookieCodec);
-		}
 	}
 }

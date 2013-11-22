@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
+import com.dianping.cat.consumer.problem.ProblemReportAllBuilderTest;
 import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
@@ -30,8 +31,6 @@ import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest
 
 @RunWith(Suite.class)
 @SuiteClasses({
-
-PeriodStrategyTest.class,
 
 ProblemHandlerTest.class,
 
@@ -82,12 +81,13 @@ ProblemAnalyzerTest.class,
 
 ProblemReportMergerTest.class,
 
+ProblemReportAllBuilderTest.class,
+
 CompositeFormatTest.class,
 
 DefaultFormatTest.class,
 
-TransactionReportTypeAggergatorTest.class
-})
+TransactionReportTypeAggergatorTest.class })
 public class AllTests {
 
 }

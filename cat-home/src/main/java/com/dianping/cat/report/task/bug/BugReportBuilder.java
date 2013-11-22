@@ -15,7 +15,6 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
@@ -52,7 +51,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
-		return m_reportService.insertDailyReport(report,binaryContent);
+		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
 	private boolean validateDomain(String domain) {
@@ -87,7 +86,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(start);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
-		return m_reportService.insertHourlyReport(report,binaryContent);
+		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -108,7 +107,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
-		return m_reportService.insertMonthlyReport(report,binaryContent);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -129,7 +128,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
-		return m_reportService.insertWeeklyReport(report,binaryContent);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private BugReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -172,12 +171,6 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	private String getDomainName() {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		if ("10.1.6.128".equals(ip)) {
-			return Chinese.ONLINE;
-		} else if ("192.168.7.70".equals(ip)) {
-			return Chinese.OFFLINE;
-		} else {
-			return ip + ":2281";
-		}
+		return ip + ":8080";
 	}
 }
