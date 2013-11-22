@@ -15,7 +15,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver.DecodeMessageTask;
 
 public class TcpSocketReceiverTest extends ComponentTestCase {
-	
+
 	private MockMessageTreeBuilder builder = new MockMessageTreeBuilder();
 
 	@Test
@@ -28,12 +28,16 @@ public class TcpSocketReceiverTest extends ComponentTestCase {
 		queue.add(buf);
 
 		MockHandler handler = new MockHandler();
-		DecodeMessageTask task = new TcpSocketReceiver().new DecodeMessageTask(0, queue, new MockCodec(),
-		      handler);
+		DecodeMessageTask task = new TcpSocketReceiver().new DecodeMessageTask(0, queue, new MockCodec(), handler);
 
 		task.handleMessage();
-		
+
 		handler.assertEqual(builder.build());
+
+		TcpSocketReceiver receiver = lookup(TcpSocketReceiver.class);
+		
+		receiver.init();
+		Assert.assertEquals(true, receiver.isActive());
 	}
 
 	public class MockHandler implements MessageHandler {

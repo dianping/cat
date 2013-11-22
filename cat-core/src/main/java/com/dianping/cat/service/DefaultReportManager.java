@@ -267,4 +267,20 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		}
 	}
 
+	public void setReportDelegate(ReportDelegate<T> reportDelegate) {
+   	m_reportDelegate = reportDelegate;
+   }
+
+	public void setBucketManager(BucketManager bucketManager) {
+   	m_bucketManager = bucketManager;
+   }
+
+	public void setReportDao(HourlyReportDao reportDao) {
+   	m_reportDao = reportDao;
+   }
+
+	public void setReportContentDao(HourlyReportContentDao reportContentDao) {
+   	m_reportContentDao = reportContentDao;
+   }
+
 }
