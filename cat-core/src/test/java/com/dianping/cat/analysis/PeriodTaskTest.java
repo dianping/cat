@@ -36,6 +36,9 @@ public class PeriodTaskTest extends ComponentTestCase {
 		task.run();
 
 		Assert.assertEquals(size, analyzer.m_count);
+		Assert.assertEquals(analyzer, task.getAnalyzer());
+		Assert.assertEquals("MockAnalyzer-2", task.getName());
+		task.shutdown();
 	}
 
 	public static class MockAnalyzer extends AbstractMessageAnalyzer<Object> {
@@ -58,6 +61,9 @@ public class PeriodTaskTest extends ComponentTestCase {
 		@Override
 		protected void process(MessageTree tree) {
 			m_count++;
+			if (m_count % 10 == 0) {
+				throw new RuntimeException();
+			}
 		}
 	}
 }
