@@ -137,6 +137,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testEncode() throws Exception {
 		MessageTree tree = buildMessageTree();
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
