@@ -45,6 +45,10 @@ public class MatrixReportFilter extends DefaultXmlBuilder {
 
 		super.visitMatrixReport(matrixReport);
 	}
+	
+	public void setMaxSize(int maxSize) {
+   	m_maxSize = maxSize;
+   }
 
 	public static class MeatricCompartor implements Comparator<Matrix> {
 

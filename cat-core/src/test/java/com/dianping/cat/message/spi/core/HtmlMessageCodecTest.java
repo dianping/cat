@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -102,6 +103,24 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		transaction.setTimestamp(timestamp);
 		transaction.setDurationInMillis(duration);
 		return transaction;
+	}
+	
+	@Test
+	public void testEncode() throws Exception {
+		Cat.newTransaction("test", "test");
+		DefaultMessageTree tree = (DefaultMessageTree)Cat.getManager().getThreadLocalMessageTree();
+		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
+		ChannelBuffer buf =  ChannelBuffers.dynamicBuffer();
+		String messageId = "Cat-0a010680-384736-2061";
+		String parentMessageId = "Cat-0a010680-384736-2062";
+		
+		tree.setRootMessageId(messageId);
+		tree.setParentMessageId(parentMessageId);
+		codec.encode(tree, buf);
+		
+		Assert.assertEquals(512, buf.capacity());
+		Assert.assertEquals(512, buf.array().length);
+		Assert.assertEquals(473, buf.readableBytes());
 	}
 
 	@Test
