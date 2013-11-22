@@ -43,8 +43,6 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		Cat.logMetricForDuration("logMetricForDuration", 100);
 		Cat.logMetricForSum("logMetricForSum", 100);
 		Cat.logMetricForSum("logMetricForSum", 100, 100);
-		Cat.logError(new RuntimeException());
-		Cat.logError("message", new RuntimeException());
 		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
 		Cat.logEvent("EventType", "EventName");
 		Cat.logHeartbeat("logHeartbeat", "logHeartbeat", Message.SUCCESS, null);
