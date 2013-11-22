@@ -65,6 +65,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
+			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</role>
 			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
 		</component>
