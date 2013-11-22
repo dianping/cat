@@ -24,7 +24,6 @@ import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver.DecodeMessageTask;
-import com.dianping.cat.service.RemoteModelService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.ChannelBufferManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
@@ -49,8 +48,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ClientConfigManager.class));
 
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
-
-		all.add(C(RemoteModelService.class));
 
 		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));

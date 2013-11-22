@@ -46,10 +46,6 @@
 			<implementation>com.dianping.cat.analysis.DefaultMessageAnalyzerManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.RemoteModelService</role>
-			<implementation>com.dianping.cat.service.RemoteModelService</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
 			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
 			<requirements>
