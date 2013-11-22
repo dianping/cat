@@ -18,8 +18,11 @@ import com.dianping.cat.consumer.advanced.MetricConfigManager;
 import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.SqltableDao;
+import com.dianping.cat.consumer.advanced.dal.UserAgentDao;
 import com.dianping.cat.consumer.browser.BrowserAnalyzer;
 import com.dianping.cat.consumer.browser.BrowserDelegate;
+import com.dianping.cat.consumer.browser.DefaultUserAgentManager;
+import com.dianping.cat.consumer.browser.UserAgentManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -120,7 +123,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = BrowserAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, BrowserAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
+		      .req(ReportManager.class, ID).req(UserAgentManager.class));
+		all.add(C(UserAgentManager.class,DefaultUserAgentManager.class).req(UserAgentDao.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //

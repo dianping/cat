@@ -6,11 +6,10 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.browser.BrowserReportMerger;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.browser.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.browser.model.transform.DefaultNativeParser;
+import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
@@ -41,7 +40,8 @@ public class BrowserDelegate implements ReportDelegate<BrowserReport> {
 
 	@Override
 	public boolean createHourlyTask(BrowserReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), BrowserAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), BrowserAnalyzer.ID,
+		      TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class BrowserDelegate implements ReportDelegate<BrowserReport> {
 
 		return report;
 	}
-	
+
 	@Override
 	public byte[] buildBinary(BrowserReport report) {
 		return DefaultNativeBuilder.build(report);

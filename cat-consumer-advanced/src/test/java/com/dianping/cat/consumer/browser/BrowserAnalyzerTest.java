@@ -1,47 +1,31 @@
 package com.dianping.cat.consumer.browser;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
+
+import com.dianping.cat.Constants;
+import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.internal.DefaultEvent;
+import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class BrowserAnalyzerTest extends ComponentTestCase {
 
-	// @SuppressWarnings("deprecation")
-	// @Test
-	// public void splitAgentTest() throws Exception {
-	// BrowserAnalyzer browserAnalyzer = new BrowserAnalyzer();
-	// String s = "Agent=Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727)";
-	//
-	// String[] strings = browserAnalyzer.splitAgent(s);
-	// String[] supposed = { "Mozilla/4.0", "compatible", "MSIE 8.0",
-	// "Windows NT 5.1", "Trident/4.0", ".NET CLR 2.0.50727" };
-	// Assert.assertEquals("Check the split result!", strings, supposed);
-	// }
-	//
-	// @Test
-	// public void updateTest() throws Exception {
-	// BrowserAnalyzer browserAnalyzer = new BrowserAnalyzer();
-	// String s =
-	// "Agent=Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.4.2.1000 Chrome/18.0.966.0 Safari/535.12";
-	// BrowserReport actual = browserAnalyzer
-	// .update(new BrowserReport("Cat"), browserAnalyzer.splitAgent(s));
-	// System.out.println(actual);
-	// }
+	private long m_timestamp;
 
-	// @Test
-	// public void updateBrowserReportTest() throws Exception {
-	// BrowserAnalyzer browserAnalyzer = new BrowserAnalyzer();
-	// String s1 =
-	// "Agent=Mozilla/5.0 (Linux; U; Android 4.0.3; zh-CN; WM8850-mid Build/IML74K) AppleWebKit/534.31 (KHTML, like Gecko) UCBrowser/9.2.4.329 U3/0.8.0 Mobile Safari/534.31";
-	// String s2 =
-	// "Agent=Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.12 (KHTML, like Gecko) Maxthon/3.4.2.1000 Chrome/18.0.966.0 Safari/535.12";
-	// BrowserReport report1 = browserAnalyzer
-	// .update(new BrowserReport("Cat"), browserAnalyzer.splitAgent(s1));
-	// report1 = browserAnalyzer
-	// .update(report1, browserAnalyzer.splitAgent(s2));
-	// // Assert.assertEquals("Check the split result!", report1.toString()
-	// // .replace("\r", ""), supposed.toString().replace("\r", ""));
-	// }
+	private BrowserAnalyzer m_analyzer;
+
+	private String m_domain = "group";
 
 	@Test
 	public void testParseValue() {
@@ -52,5 +36,69 @@ public class BrowserAnalyzerTest extends ComponentTestCase {
 		Assert.assertEquals(agent, browserAnalyzer.parseValue("Agent", data));
 		Assert.assertNull(browserAnalyzer.parseValue("UnknownKey", data));
 
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+		long currentTimeMillis = System.currentTimeMillis();
+
+		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
+
+		m_analyzer = (BrowserAnalyzer) lookup(MessageAnalyzer.class, BrowserAnalyzer.ID);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		Date date = sdf.parse("20120101 00:00");
+
+		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
+	}
+
+	@Test
+	public void testProcess() throws Exception {
+		for (int i = 1; i <= 100; i++) {
+			MessageTree tree = generateMessageTree(i);
+
+			m_analyzer.process(tree);
+		}
+
+		BrowserReport report = m_analyzer.getReport("Cat");
+
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("browser_analyzer.xml"), "utf-8");
+		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+	}
+
+	protected MessageTree generateMessageTree(int i) {
+		MessageTree tree = new DefaultMessageTree();
+
+		tree.setMessageId("" + i);
+		tree.setDomain(m_domain);
+		tree.setHostName("group001");
+		tree.setIpAddress("192.168.1.1");
+
+		DefaultTransaction t;
+
+		if (i % 2 == 0) {
+			t = new DefaultTransaction("URL", "Cat-Test-Call", null);
+			DefaultEvent event = new DefaultEvent("URL", "URL.Server");
+			event.addData("RemoteIP=221.226.186.58&VirtualIP=127.0.0.1&Server=t.dianping.com&Referer=http://youku.com.gambol.pw/abc.flv&Agent=Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.72 Safari/537.36");
+
+			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
+			event.setStatus(Message.SUCCESS);
+			t.addChild(event);
+		} else {
+			t = new DefaultTransaction("URL", "Cat-Test-Service", null);
+			DefaultEvent event = new DefaultEvent("URL", "ClientInfo");
+			event.addData("RemoteIP=111.172.157.237&VirtualIP=127.0.0.1&Server=t.dianping.com&Referer=http://t.dianping.com/wuhan?utm_source=sogou_tglogo&Agent=Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.802.30 Safari/535.1 SE 2.X MetaSr 1.0");
+			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
+			event.setStatus(Message.SUCCESS);
+			t.addChild(event);
+		}
+
+		t.complete();
+		t.setDurationInMillis(i * 2);
+		t.setTimestamp(m_timestamp + 1000);
+		tree.setMessage(t);
+
+		return tree;
 	}
 }

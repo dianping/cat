@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.advanced.MetricAnalyzerTest;
+import com.dianping.cat.consumer.browser.BrowserAnalyzerTest;
 import com.dianping.cat.consumer.browser.BrowserReportMergerTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossInfoTest;
@@ -48,7 +49,11 @@ MatrixAnalyzerTest.class,
 
 DependencyAnalyzerTest.class,
 
-DependencyReportMergerTest.class
+DependencyReportMergerTest.class,
+
+BrowserReportMergerTest.class,
+
+BrowserAnalyzerTest.class
 
 })
 public class AllTests {

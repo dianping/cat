@@ -2,11 +2,10 @@ package com.dianping.cat.consumer.browser;
 
 import java.util.List;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.advanced.dal.UserAgent;
 import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
@@ -15,27 +14,26 @@ import com.dianping.cat.consumer.browser.model.entity.Os;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.ReportManager;
 
-public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> implements LogEnabled {
+public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> {
 	public static final String ID = "browser";
 
 	@Inject(ID)
 	private ReportManager<BrowserReport> m_reportManager;
 
+	@Inject
+	private UserAgentManager m_userAgentManager;
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
+		m_userAgentManager.storeResult();
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	@Override
@@ -90,7 +88,7 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> impl
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		Message message = tree.getMessage();
 		if (message instanceof Transaction) {
 			String type = message.getType();
@@ -123,21 +121,17 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> impl
 			m_logger.error("Can not get agent from url when browser analyze: " + data);
 		}
 
-		UserAgentParser uap = null;
-		try {
-			uap = new UserAgentParser(agent);
-		} catch (UserAgentParseException e) {
-			m_logger.error(e.getMessage(), e);
-		}
-		String browserName = uap.getBrowserName();
-		String osName = uap.getBrowserOperatingSystem();
-		String versionName = uap.getBrowserVersion();
+		UserAgent userAgent = m_userAgentManager.parse(agent);
+		String browserName = userAgent.getBrowser();
+		String osName = userAgent.getOs();
+		String versionName = userAgent.getVersion();
 		DomainDetail detail = report.findOrCreateDomainDetail(domain);
 
 		Browser browser = detail.findOrCreateBrowser(browserName);
 		BrowserVersion version = browser.findOrCreateBrowserVersion(versionName);
 		Os os = detail.findOrCreateOs(osName);
 
+		browser.setCount(browser.getCount() + 1);
 		os.setCount(os.getCount() + 1);
 		version.setCount(version.getCount() + 1);
 	}

@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>browser</role-hint>
+			<implementation>com.dianping.cat.consumer.browser.Configurator$MockBrowserReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>browser</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>browser</role-hint>
+			<implementation>com.dianping.cat.consumer.browser.Configurator$ExtendedBrowserDelegate</implementation>
+		</component>
+	</components>
+</plexus>
