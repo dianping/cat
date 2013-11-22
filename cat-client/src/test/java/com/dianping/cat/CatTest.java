@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Trace;
-import com.dianping.cat.message.spi.MessageTree;
 
 public class CatTest {
 
@@ -30,10 +29,7 @@ public class CatTest {
 		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
 		Cat.logEvent("EventType", "EventName");
 		Cat.logHeartbeat("logHeartbeat", "logHeartbeat", Message.SUCCESS, null);
-		MessageTree message = Cat.getManager().getThreadLocalMessageTree();
-		String str = message.toString();
 
-		Assert.assertEquals(19, str.split("\n").length);
 		Assert.assertEquals(true, Cat.isInitialized());
 	}
 }

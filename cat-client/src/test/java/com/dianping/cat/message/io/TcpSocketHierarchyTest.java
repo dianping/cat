@@ -26,7 +26,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class TcpSocketHierarchyTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		TcpSocketHierarchySender sender = (TcpSocketHierarchySender) lookup(MessageSender.class, "tcp-socket-hierarchy");
+		TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, "tcp-socket-hierarchy");
 		List<InetSocketAddress> addresses = getServerAddresses();
 		StringBuilder result = new StringBuilder();
 		ServerBootstrap bootstrap = createServerBootstrap(result);
@@ -43,7 +43,7 @@ public class TcpSocketHierarchyTest extends ComponentTestCase {
 
 		sender.send(new DefaultMessageTree());
 
-		Thread.sleep(100 * 1000);
+		Thread.sleep(10 * 1000);
 	}
 
 	private ServerBootstrap createServerBootstrap(final StringBuilder result) {
