@@ -36,8 +36,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	private AtomicBoolean m_dirty = new AtomicBoolean();
 
-	private int m_rawSize;
-
 	private String m_dataFile;
 
 	private long m_lastAccessTime;
@@ -141,10 +139,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	public MessageBlockWriter getWriter() {
 		return m_writer;
-	}
-
-	public double getCompressionRate() {
-		return m_rawSize * 1.0 / m_dataFile.length();
 	}
 
 	@Override

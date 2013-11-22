@@ -15,7 +15,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 public abstract class StringBucketTestCase extends ComponentTestCase {
 
-	protected final static int threadNum = 10;// notice: max 9, for creating asc order id bellow
+	protected final static int threadNum = 200;// notice: max 9, for creating asc order id bellow
 
 	protected final static int timesPerThread = 1000; // notice: must be powers 10, fro creating asc order id bellow
 
