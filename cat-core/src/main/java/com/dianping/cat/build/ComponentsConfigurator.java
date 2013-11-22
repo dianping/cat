@@ -18,14 +18,12 @@ import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.core.DefaultMessageHandler;
 import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver.DecodeMessageTask;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.dump.ChannelBufferManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucket;
@@ -54,14 +52,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DecodeMessageTask.class));
 
-		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
-
 		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class));
-		all.add(C(ChannelBufferManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 
