@@ -21,11 +21,14 @@ public class DefaultMessageAnalyzerManagerTest extends ComponentTestCase {
 		long current = time - time % hour;
 		long last = time - hour;
 		long lastTwo = time - 2 * hour;
+		long lastThree = time - 3 * hour;
 
+		MockAnalyzer1 analyzer0 = (MockAnalyzer1) manager.getAnalyzer("mock1", lastThree);
 		MockAnalyzer1 analyzer1 = (MockAnalyzer1) manager.getAnalyzer("mock1", lastTwo);
 		MockAnalyzer2 analyzer2 = (MockAnalyzer2) manager.getAnalyzer("mock2", last);
 		MockAnalyzer3 analyzer3 = (MockAnalyzer3) manager.getAnalyzer("state", current);
 		
+		Assert.assertEquals(1, analyzer0.m_count);
 		Assert.assertEquals(1, analyzer1.m_count);
 		Assert.assertEquals(2, analyzer2.m_count);
 		Assert.assertEquals(3, analyzer3.m_count);

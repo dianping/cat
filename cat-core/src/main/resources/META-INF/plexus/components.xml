@@ -46,10 +46,6 @@
 			<implementation>com.dianping.cat.analysis.DefaultMessageAnalyzerManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.RemoteModelService</role>
-			<implementation>com.dianping.cat.service.RemoteModelService</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
 			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
 			<requirements>
@@ -69,12 +65,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</role>
-			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
 			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</role>
+			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.dump.MessageBucket</role>
@@ -103,10 +99,6 @@
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.dump.ChannelBufferManager</role>
-			<implementation>com.dianping.cat.storage.dump.ChannelBufferManager</implementation>
 		</component>
 		<component>
 			<role>org.unidal.initialization.Module</role>

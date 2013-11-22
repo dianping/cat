@@ -26,6 +26,17 @@ public class MessageIdFactoryTest {
 		Assert.assertEquals(1355994000000L, message.getTimestamp());
 		Assert.assertEquals("192.168.32.80", message.getIpAddress());
 		Assert.assertEquals(2, message.getVersion());
+		Assert.assertEquals(id, message.toString());
+
+		id = "ARCH-UNKNOWN-c0a82050-376665-314";
+		message = MessageId.parse(id);
+
+		Assert.assertEquals(1355994000000L, message.getTimestamp());
+		Assert.assertEquals("192.168.32.80", message.getIpAddress());
+		Assert.assertEquals(2, message.getVersion());
+		Assert.assertEquals("ARCH-UNKNOWN", message.getDomain());
+		Assert.assertEquals(id, message.toString());
+
 	}
 
 	private void check(String domain, String expected) {
