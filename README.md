@@ -16,8 +16,8 @@ Requirements
 
 Quick Started
 ---------------------
-#####1、cd到CAT目录下，用maven构建项目
-        mvn install
+#####1、在CAT目录下，用maven构建项目
+        mvn clean install
 #####2、安装CAT的maven plugin，使用它配置CAT的环境
 		mkdir -p /data/appdata/cat; chmod 777 /data/appdata/cat
 		mkdir -p /data/applogs/cat; chmod 777 /data/applogs/cat

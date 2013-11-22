@@ -144,6 +144,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		String messageId = "Cat-0a010680-384736-2061";
 		String parentMessageId = "Cat-0a010680-384736-2062";
 
+		tree.setHostName("localhost-cat");
+		tree.setIpAddress("192.168.1.1");
 		tree.setRootMessageId(messageId);
 		tree.setParentMessageId(parentMessageId);
 		codec.encode(tree, buf);
@@ -151,7 +153,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		String content = Files.forIO().readFrom(HtmlMessageCodecTest.class.getResourceAsStream("MessageTree.txt"),
 		      "utf-8");
 		Assert.assertEquals(content.trim(), tree.toString().trim());
-		Assert.assertEquals(1946, buf.readableBytes());
+		Assert.assertEquals(1929, buf.readableBytes());
 	}
 
 	@Test

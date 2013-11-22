@@ -1,4 +1,4 @@
-PT1	Cat	youyongmatoMacBook-Air.local	192.168.22.92	main	1	main	Cat-c0a80746-384747-36441	Cat-0a010680-384736-2062	Cat-0a010680-384736-2061	null
+PT1	Cat	localhost-cat	192.168.1.1	main	1	main	Cat-c0a80746-384747-36441	Cat-0a010680-384736-2062	Cat-0a010680-384736-2061	null
 t2012-01-02 15:33:41.987	transaction	transaction	
 L2012-01-02 15:33:41.987	logTrace	<trace>	0		
 L2012-01-02 15:33:41.987	logTrace	<trace>	0	data	
