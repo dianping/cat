@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -18,6 +19,7 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.AbstractMessage;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTrace;
@@ -28,6 +30,37 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @RunWith(JUnit4.class)
 public class HtmlMessageCodecTest extends ComponentTestCase {
+
+	private DefaultMessageTree buildMessageTree() {
+		long timestamp = 1325489621987L;
+		Transaction transaction = Cat.newTransaction("transaction", "transaction");
+
+		Cat.logTrace("logTrace", "<trace>");
+		Cat.logTrace("logTrace", "<trace>", Trace.SUCCESS, "data");
+		Cat.logMetric("logMetric", "test", "test");
+		Cat.logMetricForCount("logMetricForCount");
+		Cat.logMetricForCount("logMetricForCount", 4);
+		Cat.logMetricForDuration("logMetricForDuration", 100);
+		Cat.logMetricForSum("logMetricForSum", 100);
+		Cat.logMetricForSum("logMetricForSum", 100, 100);
+		Cat.logError(new RuntimeException());
+		Cat.logError("message", new RuntimeException());
+		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
+		Cat.logEvent("EventType", "EventName");
+		Cat.logHeartbeat("logHeartbeat", "logHeartbeat", Message.SUCCESS, null);
+
+		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		((DefaultTransaction) transaction).setDurationInMicros(8000);
+		((DefaultTransaction) transaction).setTimestamp(timestamp);
+		String messageId = "Cat-c0a80746-384747-36441";
+		tree.setMessageId(messageId);
+		tree.setRootMessageId(messageId);
+		tree.setParentMessageId(messageId);
+		for (Message message : transaction.getChildren()) {
+			((AbstractMessage) message).setTimestamp(timestamp);
+		}
+		return tree;
+	}
 
 	private void check(MessageTree tree, Message message, String expected) throws Exception {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
@@ -104,36 +137,23 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		transaction.setDurationInMillis(duration);
 		return transaction;
 	}
-	
+
 	@Test
 	public void testEncode() throws Exception {
-		Cat.newTransaction("test", "test");
-		Cat.logTrace("Trace", "trace");
-		Cat.logMetric("metric", "test","test");
-		Cat.logMetricForCount("metric");
-		Cat.logMetricForCount("metric", 4);
-		Cat.logMetricForDuration("metricDuration", 100);
-		Cat.logMetricForSum("metricSum", 100);
-		Cat.logMetricForSum("metric", 100, 100);
-		Cat.logError(new RuntimeException());
-		Cat.logError("message", new RuntimeException());
-		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
-		DefaultMessageTree tree = (DefaultMessageTree)Cat.getManager().getThreadLocalMessageTree();
-		
+		MessageTree tree = buildMessageTree();
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
-		ChannelBuffer buf =  ChannelBuffers.dynamicBuffer();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 		String messageId = "Cat-0a010680-384736-2061";
 		String parentMessageId = "Cat-0a010680-384736-2062";
-		
+
 		tree.setRootMessageId(messageId);
 		tree.setParentMessageId(parentMessageId);
 		codec.encode(tree, buf);
-		
-		Assert.assertEquals(1024, buf.capacity());
-		Assert.assertEquals(1024, buf.array().length);
-		Assert.assertEquals(674, buf.readableBytes());
-		
-		System.out.println(tree);
+
+		String content = Files.forIO().readFrom(HtmlMessageCodecTest.class.getResourceAsStream("MessageTree.txt"),
+		      "utf-8");
+		Assert.assertEquals(content.trim(), tree.toString().trim());
+		Assert.assertEquals(6797, buf.readableBytes());
 	}
 
 	@Test
@@ -224,8 +244,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:108)\n<br>"
 		            + "</td></tr>\r\n");
 	}
-	
-	
+
 	@Test
 	public void testTransactionNormal() throws Exception {
 		long timestamp = 1325489621987L;
@@ -253,7 +272,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>&nbsp;</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>&nbsp;</td><td>100ms /review/2468</td></tr>\r\n");
 	}
-	
+
 	@Test
 	public void testTransactionSimple() throws Exception {
 		long timestamp = 1325489621987L;
