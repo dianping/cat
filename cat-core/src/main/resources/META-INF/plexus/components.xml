@@ -35,11 +35,6 @@
 		<component>
 			<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
 			<implementation>com.dianping.cat.message.spi.core.DefaultMessagePathBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
