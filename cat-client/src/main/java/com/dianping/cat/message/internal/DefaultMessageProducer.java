@@ -36,15 +36,22 @@ public class DefaultMessageProducer implements MessageProducer {
 	public void logError(String message, Throwable cause) {
 		if (Cat.isEnabled()) {
 			StringWriter writer = new StringWriter(2048);
+			String detailMessage;
 
 			cause.printStackTrace(new PrintWriter(writer));
-			
-			if (cause instanceof Error) {
-				logEvent("Error", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
-			} else if (cause instanceof RuntimeException) {
-				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+
+			if (message != null) {
+				detailMessage = message + " " + writer.toString();
 			} else {
-				logEvent("Exception", cause.getClass().getName(), "ERROR", message + " " + writer.toString());
+				detailMessage = writer.toString();
+			}
+
+			if (cause instanceof Error) {
+				logEvent("Error", cause.getClass().getName(), "ERROR", detailMessage);
+			} else if (cause instanceof RuntimeException) {
+				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", detailMessage);
+			} else {
+				logEvent("Exception", cause.getClass().getName(), "ERROR", detailMessage);
 			}
 		} else {
 			cause.printStackTrace();
@@ -53,21 +60,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logError(Throwable cause) {
-		if (Cat.isEnabled()) {
-			StringWriter writer = new StringWriter(2048);
-
-			cause.printStackTrace(new PrintWriter(writer));
-			
-			if (cause instanceof Error) {
-				logEvent("Error", cause.getClass().getName(), "ERROR", writer.toString());
-			} else if (cause instanceof RuntimeException) {
-				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
-			} else {
-				logEvent("Exception", cause.getClass().getName(), "ERROR", writer.toString());
-			}
-		} else {
-			cause.printStackTrace();
-		}
+		logError(null, cause);
 	}
 
 	@Override
@@ -116,14 +109,16 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logTrace(String type, String name, String status, String nameValuePairs) {
-		Trace trace = newTrace(type, name);
+		if (m_manager.isTraceMode()) {
+			Trace trace = newTrace(type, name);
 
-		if (nameValuePairs != null && nameValuePairs.length() > 0) {
-			trace.addData(nameValuePairs);
+			if (nameValuePairs != null && nameValuePairs.length() > 0) {
+				trace.addData(nameValuePairs);
+			}
+
+			trace.setStatus(status);
+			trace.complete();
 		}
-
-		trace.setStatus(status);
-		trace.complete();
 	}
 
 	@Override

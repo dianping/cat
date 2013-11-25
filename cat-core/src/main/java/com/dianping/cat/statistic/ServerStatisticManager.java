@@ -6,9 +6,9 @@ public class ServerStatisticManager {
 
 	public ServerStatistic m_serverState = new ServerStatistic();
 
-	private Statistic m_currentStatistic = null;
+	private volatile Statistic m_currentStatistic = null;
 
-	private long m_currentMunite = -1;
+	private volatile long m_currentMunite = -1;
 
 	public void addBlockTotal(long total) {
 		getCurrentStatistic().addBlockTotal(total);
@@ -75,13 +75,15 @@ public class ServerStatisticManager {
 
 		time = time - time % (60 * 1000);
 
-		synchronized (this) {
-			if (time != m_currentMunite) {
-				m_currentMunite = time;
-				m_currentStatistic = m_serverState.findOrCreate(time);
+		if (time != m_currentMunite) {
+			synchronized (this) {
+				if (time != m_currentMunite) {
+					m_currentMunite = time;
+					m_currentStatistic = m_serverState.findOrCreate(time);
+				}
 			}
-			return m_currentStatistic;
 		}
+		return m_currentStatistic;
 	}
 
 	public void removeState(long time) {
