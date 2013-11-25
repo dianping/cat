@@ -135,7 +135,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 				TopologyNode nodeOld = graph.findTopologyNode(target);
 
 				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.createDatabaseNode(target)));
-			}else if("Cache".equals(type)){
+			} else if ("Cache".equals(type)) {
 				String target = dependency.getTarget();
 				TopologyNode nodeOld = graph.findTopologyNode(target);
 

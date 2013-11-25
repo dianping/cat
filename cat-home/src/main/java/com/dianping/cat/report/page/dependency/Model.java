@@ -23,7 +23,7 @@ import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta(DependencyAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
-	
+
 	@EntityMeta
 	private DependencyReport m_report;
 
@@ -42,62 +42,62 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<String> m_indexGraph;
 
 	private Map<String, List<String>> m_dependencyGraph;
-	
+
 	private String m_dashboardGraph;
 
 	private ProductLinesDashboard m_dashboardGraphData;
-	
+
 	private List<ProductLine> m_productLines;
-	
+
 	private String m_productLineGraph;
-	
+
 	private Date m_reportStart;
-	
+
 	private Date m_reportEnd;
-	
+
 	private TopMetric m_topMetric;
 
 	private TopReport m_topReport;
 
 	public List<ProductLine> getProductLines() {
-   	return m_productLines;
-   }
+		return m_productLines;
+	}
 
 	public void setProductLines(List<ProductLine> productLines) {
-   	m_productLines = productLines;
-   }
+		m_productLines = productLines;
+	}
 
 	public String getProductLineGraph() {
-   	return m_productLineGraph;
-   }
+		return m_productLineGraph;
+	}
 
 	public void setProductLineGraph(String productLineGraph) {
-   	m_productLineGraph = productLineGraph;
-   }
+		m_productLineGraph = productLineGraph;
+	}
 
 	public Date getReportStart() {
-   	return m_reportStart;
-   }
+		return m_reportStart;
+	}
 
 	public void setReportStart(Date reportStart) {
-   	m_reportStart = reportStart;
-   }
+		m_reportStart = reportStart;
+	}
 
 	public Date getReportEnd() {
-   	return m_reportEnd;
-   }
+		return m_reportEnd;
+	}
 
 	public void setReportEnd(Date reportEnd) {
-   	m_reportEnd = reportEnd;
-   }
+		m_reportEnd = reportEnd;
+	}
 
 	public String getDashboardGraph() {
-   	return m_dashboardGraph;
-   }
+		return m_dashboardGraph;
+	}
 
 	public void setDashboardGraph(String dashboardGraph) {
-   	m_dashboardGraph = dashboardGraph;
-   }
+		m_dashboardGraph = dashboardGraph;
+	}
 
 	public List<String> getIndexGraph() {
 		return m_indexGraph;
@@ -192,35 +192,35 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getTopologyGraph() {
-   	return m_topologyGraph;
-   }
+		return m_topologyGraph;
+	}
 
 	public void setTopologyGraph(String topologyGraph) {
-   	m_topologyGraph = topologyGraph;
-   }
+		m_topologyGraph = topologyGraph;
+	}
 
 	public ProductLinesDashboard getDashboardGraphData() {
-   	return m_dashboardGraphData;
-   }
+		return m_dashboardGraphData;
+	}
 
 	public void setDashboardGraphData(ProductLinesDashboard dashboardGraphData) {
-   	m_dashboardGraphData = dashboardGraphData;
-   }
+		m_dashboardGraphData = dashboardGraphData;
+	}
 
 	public TopMetric getTopMetric() {
-   	return m_topMetric;
-   }
+		return m_topMetric;
+	}
 
 	public void setTopMetric(TopMetric topMetric) {
-   	m_topMetric = topMetric;
-   }
+		m_topMetric = topMetric;
+	}
 
 	public TopReport getTopReport() {
-   	return m_topReport;
-   }
+		return m_topReport;
+	}
 
 	public void setTopReport(TopReport topReport) {
-   	m_topReport = topReport;
-   }
-	
+		m_topReport = topReport;
+	}
+
 }

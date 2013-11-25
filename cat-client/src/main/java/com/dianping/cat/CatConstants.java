@@ -12,7 +12,7 @@ public class CatConstants {
 	 * Cat instrument attribute names
 	 */
 	public static final String CAT_STATE = "cat-state";
-	
+
 	public static final String CAT_PAGE_URI = "cat-page-uri";
 
 	/**
@@ -69,7 +69,7 @@ public class CatConstants {
 	public static final String TYPE_URL_FORWARD = "URL.Forward";
 
 	public static final String TYPE_ACTION = "Action";
-	
+
 	public static final String TYPE_METRIC = "metricType";
 
 	public static final int ERROR_COUNT = 100;

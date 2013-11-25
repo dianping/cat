@@ -51,7 +51,9 @@ public class HistoricalMetricService extends BaseHistoricalModelService<MetricRe
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
-			bucket.close();
+			if (bucket != null) {
+				bucket.close();
+			}
 		}
 	}
 }

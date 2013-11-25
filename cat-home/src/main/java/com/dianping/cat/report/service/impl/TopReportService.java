@@ -64,8 +64,7 @@ public class TopReportService extends AbstractReportService<TopReport> {
 
 					try {
 						if (xml != null && xml.length() > 0) {
-							TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser
-							      .parse(xml);
+							TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(xml);
 							reportModel.accept(merger);
 						} else {
 							TopReport reportModel = queryFromHourlyBinary(report.getId(), domain);

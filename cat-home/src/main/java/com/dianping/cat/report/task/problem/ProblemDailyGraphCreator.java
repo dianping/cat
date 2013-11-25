@@ -61,14 +61,14 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 		Integer name = info.getNameCount().get(m_currentType + "\t" + m_currentName);
 
 		if (type == null) {
-			type = new Integer(count);
+			type = count;
 		} else {
 			type = type + count;
 		}
 		info.getTypesCount().put(m_currentType, type);
 
 		if (name == null) {
-			name = new Integer(count);
+			name = count;
 		} else {
 			name = name + count;
 		}

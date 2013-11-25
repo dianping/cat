@@ -20,7 +20,6 @@ import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
-import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilderTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
@@ -58,8 +57,6 @@ ConfigTest.class,
 MessageIdFactoryTest.class,
 
 MillisSecondTimerTest.class,
-
-DefaultMessagePathBuilderTest.class,
 
 MockMessageBuilderTest.class,
 

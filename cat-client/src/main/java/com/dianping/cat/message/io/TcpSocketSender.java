@@ -34,7 +34,7 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
-	public static final String ID = "tcp-socket-hierarchy";
+	public static final String ID = "tcp-socket-sender";
 
 	@Inject
 	private MessageCodec m_codec;
@@ -42,7 +42,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Inject
 	private MessageStatistics m_statistics;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(100000);
+	private MessageQueue m_queue = new DefaultMessageQueue(20000);
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -273,23 +273,23 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			try {
 				while (m_active) {
 					try {
-	               if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
-	               	m_activeIndex = m_serverAddresses.size();
-	               }
+						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
+							m_activeIndex = m_serverAddresses.size();
+						}
 
-	               for (int i = 0; i < m_activeIndex; i++) {
-	               	ChannelFuture future = createChannel(i);
+						for (int i = 0; i < m_activeIndex; i++) {
+							ChannelFuture future = createChannel(i);
 
-	               	if (future != null) {
-	               		m_lastFuture = m_activeFuture;
-	               		m_activeFuture = future;
-	               		m_activeIndex = i;
-	               		break;
-	               	}
-	               }
-               } catch (Throwable e) {
-               	Cat.logError(e);
-               }
+							if (future != null) {
+								m_lastFuture = m_activeFuture;
+								m_activeFuture = future;
+								m_activeIndex = i;
+								break;
+							}
+						}
+					} catch (Throwable e) {
+						Cat.logError(e);
+					}
 
 					Thread.sleep(2 * 1000L); // check every 2 seconds
 				}

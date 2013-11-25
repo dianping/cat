@@ -73,7 +73,7 @@ public class URLScriptProvider implements ScriptProvider {
 			} else {
 				subUrl = expectedUrl.substring(0, pos);
 			}
-			
+
 			return String.format("%s.toLowerCase().startsWith(\"%s\".toLowerCase())", m_actual, subUrl);
 		} else {
 			return "false";
@@ -91,7 +91,7 @@ public class URLScriptProvider implements ScriptProvider {
 			} else {
 				subUrl = expectedUrl.substring(0, pos);
 			}
-			
+
 			return String.format("%s.startsWith(\"%s\")", m_actual, subUrl);
 		} else {
 			return "false";

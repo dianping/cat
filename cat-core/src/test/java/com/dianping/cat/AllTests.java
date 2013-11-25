@@ -11,6 +11,7 @@ import com.dianping.cat.analysis.PeriodTaskTest;
 import com.dianping.cat.message.spi.core.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.core.TcpSocketReceiverTest;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodecTest;
+import com.dianping.cat.service.DefaultReportManagerTest;
 import com.dianping.cat.service.ModelPeriodTest;
 import com.dianping.cat.service.ModelRequestTest;
 import com.dianping.cat.service.ModelResponseTest;
@@ -56,7 +57,9 @@ ServerConfigManagerTest.class,
 
 AbstractMessageAnalyzerTest.class,
 
-DefaultMessageAnalyzerManagerTest.class
+DefaultMessageAnalyzerManagerTest.class,
+
+DefaultReportManagerTest.class
 
 })
 public class AllTests {

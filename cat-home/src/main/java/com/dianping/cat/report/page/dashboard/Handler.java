@@ -74,14 +74,12 @@ public class Handler implements PageHandler<Context> {
 
 		if (eventMachine != null) {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
-				if (eventMachine != null) {
-					Collection<EventType> types = eventMachine.getTypes().values();
+				Collection<EventType> types = eventMachine.getTypes().values();
 
-					for (EventType eventType : types) {
-						String id = eventType.getId();
-						data.put(id + COUNT, String.valueOf(eventType.getTotalCount()));
-						data.put(id + FAILURE_COUNT, String.valueOf(eventType.getFailCount()));
-					}
+				for (EventType eventType : types) {
+					String id = eventType.getId();
+					data.put(id + COUNT, String.valueOf(eventType.getTotalCount()));
+					data.put(id + FAILURE_COUNT, String.valueOf(eventType.getFailCount()));
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				EventType eventType = eventMachine.findType(type);
@@ -155,16 +153,14 @@ public class Handler implements PageHandler<Context> {
 		Machine transactionMachine = transactionReport.getMachines().get(ip);
 		if (transactionMachine != null) {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
-				if (transactionMachine != null) {
-					Collection<TransactionType> types = transactionMachine.getTypes().values();
+				Collection<TransactionType> types = transactionMachine.getTypes().values();
 
-					for (TransactionType transactionType : types) {
-						String id = transactionType.getId();
+				for (TransactionType transactionType : types) {
+					String id = transactionType.getId();
 
-						data.put(id + TIME, m_format.format(transactionType.getAvg()));
-						data.put(id + COUNT, String.valueOf(transactionType.getTotalCount()));
-						data.put(id + FAILURE_COUNT, String.valueOf(transactionType.getFailCount()));
-					}
+					data.put(id + TIME, m_format.format(transactionType.getAvg()));
+					data.put(id + COUNT, String.valueOf(transactionType.getTotalCount()));
+					data.put(id + FAILURE_COUNT, String.valueOf(transactionType.getFailCount()));
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				TransactionType transactionType = transactionMachine.findType(type);

@@ -14,7 +14,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("callSort")
-	private String m_callSort ="avg";
+	private String m_callSort = "avg";
 
 	private ReportPage m_page;
 
@@ -25,7 +25,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_remoteIp;
 
 	@FieldMeta("serviceSort")
-	private String m_serviceSort ="avg";
+	private String m_serviceSort = "avg";
 
 	@FieldMeta("queryName")
 	private String m_queryName;
@@ -103,7 +103,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
 	}
-	
+
 	public void setRemoteIp(String remoteIp) {
 		m_remoteIp = remoteIp;
 	}

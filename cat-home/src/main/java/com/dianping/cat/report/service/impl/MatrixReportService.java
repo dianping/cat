@@ -95,8 +95,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 				String xml = report.getContent();
 
 				if (xml != null && xml.length() > 0) {
-					MatrixReport reportModel = com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser
-					      .parse(xml);
+					MatrixReport reportModel = com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} else {
 					MatrixReport reportModel = queryFromDailyBinary(report.getId(), domain);

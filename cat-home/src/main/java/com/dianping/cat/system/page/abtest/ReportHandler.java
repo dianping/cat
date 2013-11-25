@@ -359,7 +359,6 @@ public class ReportHandler implements SubHandler, Initializable {
 			payload.setEndDate2(query.getEndTime());
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 	}
 

@@ -88,7 +88,6 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 	}
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
 		List<TransactionReport> reports = new ArrayList<TransactionReport>();
 		long startTime = period.getTime();
 		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
@@ -96,8 +95,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 		reports.add(report);
 		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
-		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
-		return graphs;
+		return m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
 	}
 
 	@Override

@@ -176,7 +176,7 @@ public class BugReportService extends AbstractReportService<BugReport> {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_BUG,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
-			
+
 			if (content != null && content.length() > 0) {
 				return com.dianping.cat.home.bug.transform.DefaultSaxParser.parse(content);
 			} else {

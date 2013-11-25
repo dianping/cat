@@ -37,7 +37,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.message.io.MessageSender</role>
-			<role-hint>tcp-socket-hierarchy</role-hint>
+			<role-hint>tcp-socket-sender</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>

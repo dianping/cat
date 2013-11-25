@@ -9,11 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.event.DisplayTypes;
@@ -82,16 +80,6 @@ public class EventRender extends BaseVisitor {
 	public void visitMachine(Machine machine) {
 		m_currentIp = machine.getIp();
 		super.visitMachine(machine);
-	}
-
-	@Override
-	public void visitName(EventName name) {
-		super.visitName(name);
-	}
-
-	@Override
-	public void visitRange(Range range) {
-		super.visitRange(range);
 	}
 
 	@Override

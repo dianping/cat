@@ -12,7 +12,7 @@ public enum JspFile {
 	HISTORY_METHOD("/jsp/report/cross/crossHistoryMethod.jsp"),
 
 	HISTORY_PROJECT("/jsp/report/cross/crossHistoryProject.jsp"),
-	
+
 	METHOD_QUERY("/jsp/report/cross/crossMethodQuery.jsp");
 
 	private String m_path;

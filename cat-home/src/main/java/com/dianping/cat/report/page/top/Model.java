@@ -12,15 +12,15 @@ import com.dianping.cat.report.page.AbstractReportModel;
 
 @ModelMeta(TopAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
-	
+
 	@EntityMeta
 	private TopReport m_topReport;
 
 	@EntityMeta
 	private TopMetric m_topMetric;
-	
+
 	private boolean m_refresh = false;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -39,7 +39,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
 	}
-	
+
 	public TopReport getTopReport() {
 		return m_topReport;
 	}
@@ -49,12 +49,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public TopMetric getTopMetric() {
-   	return m_topMetric;
-   }
+		return m_topMetric;
+	}
 
 	public void setTopMetric(TopMetric topMetric) {
-   	m_topMetric = topMetric;
-   }
+		m_topMetric = topMetric;
+	}
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;

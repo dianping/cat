@@ -5,9 +5,7 @@ import java.util.List;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
@@ -21,19 +19,32 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	private String m_exception;
 
+	private int SIZE = 10;
+
+	protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
+		int originalSize = oldMessages.size();
+
+		if (originalSize < size) {
+			int remainingSize = size - originalSize;
+
+			if (remainingSize >= newMessages.size()) {
+				oldMessages.addAll(newMessages);
+			} else {
+				oldMessages.addAll(newMessages.subList(0, remainingSize));
+			}
+		}
+	}
+
 	@Override
 	public void visitDuration(Duration duration) {
 		int count = duration.getCount();
-		List<String> messages = duration.getMessages();
 		Domain domainInfo = m_report.findOrCreateDomain(m_currentDomain);
 		ExceptionItem target = domainInfo.findOrCreateExceptionItem(m_exception);
 		List<String> oldMessages = target.getMessages();
-		
+		List<String> newMessages = duration.getMessages();
+
 		target.setCount(target.getCount() + count);
-		oldMessages.addAll(messages);
-		if (oldMessages.size() > 10) {
-			oldMessages = oldMessages.subList(0, 10);
-		}
+		mergeList(oldMessages, newMessages, SIZE);
 	}
 
 	@Override
@@ -47,19 +58,9 @@ public class ProblemReportVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitMachine(Machine machine) {
-		super.visitMachine(machine);
-	}
-
-	@Override
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_currentDomain = problemReport.getDomain();
 		super.visitProblemReport(problemReport);
-	}
-
-	@Override
-	public void visitSegment(Segment segment) {
-		super.visitSegment(segment);
 	}
 
 	public BugReport getReport() {

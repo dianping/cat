@@ -60,7 +60,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
+	public synchronized void  enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
@@ -190,16 +190,16 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
-		if (modifyTime > m_modifyTime) {
-			String content = config.getContent();
-			Company company = DefaultSaxParser.parse(content);
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				Company company = DefaultSaxParser.parse(content);
 
-			synchronized (this) {
 				m_company = company;
 				m_domainToProductLines = buildDomainToProductLines();
 				m_modifyTime = modifyTime;
+				m_logger.info("product line config refresh done!");
 			}
-			m_logger.info("product line config refresh done!");
 		}
 	}
 

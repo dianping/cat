@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 public class MergeAllName extends BaseVisitor {
 
 	public TransactionReport m_report;
-	
+
 	public String m_currentIp;
 
 	public String m_currentType;
@@ -23,7 +23,7 @@ public class MergeAllName extends BaseVisitor {
 	public Integer m_currentRange;
 
 	public Integer m_currentDuration;
-	
+
 	public TransactionReportMerger m_merger = new TransactionReportMerger(new TransactionReport());
 
 	public TransactionReport getReport() {
@@ -37,7 +37,7 @@ public class MergeAllName extends BaseVisitor {
 		      .findOrCreateName(m_currentName).findOrCreateDuration(m_currentDuration);
 
 		m_merger.mergeDuration(temp, duration);
-		
+
 		Duration all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
 		      .findOrCreateName(Constants.ALL).findOrCreateDuration(m_currentDuration);
 
@@ -60,7 +60,7 @@ public class MergeAllName extends BaseVisitor {
 		      .findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
-		
+
 		TransactionName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
 		      .findOrCreateName(Constants.ALL);
 		m_merger.mergeName(all, name);
@@ -76,7 +76,7 @@ public class MergeAllName extends BaseVisitor {
 		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
-		
+
 		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
 		      .findOrCreateName(Constants.ALL).findOrCreateRange(m_currentRange);
 

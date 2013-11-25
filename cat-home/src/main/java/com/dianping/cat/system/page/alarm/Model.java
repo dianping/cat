@@ -33,7 +33,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public String getDate() {
 		return "";
 	}
-	
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.SCHEDULED_REPORT_LIST;
@@ -47,7 +47,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_domains;
 	}
 
-	public String getIpAddress(){
+	public String getIpAddress() {
 		return "";
 	}
 
@@ -63,7 +63,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_opState;
 	}
 
-	public String getReportType(){
+	public String getReportType() {
 		return "";
 	}
 
@@ -110,7 +110,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setTemplateIndex(int templateIndex) {
 		m_templateIndex = templateIndex;
 	}
-	
+
 	public void setUserReportSubStates(List<UserReportSubState> userReportSubStates) {
 		m_userReportSubStates = userReportSubStates;
 	}
