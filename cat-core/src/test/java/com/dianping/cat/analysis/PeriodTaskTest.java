@@ -62,7 +62,7 @@ public class PeriodTaskTest extends ComponentTestCase {
 		protected void process(MessageTree tree) {
 			m_count++;
 			if (m_count % 10 == 0) {
-				throw new RuntimeException();
+				throw new RuntimeException("this is for test, Please ignore it");
 			}
 		}
 	}

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
@@ -47,12 +48,16 @@ public class Configurator extends AbstractResourceConfigurator {
 	public static class ExtendedMetricConfigManager extends MetricConfigManager {
 
 		private MetricItemConfig m_config = new MetricItemConfig();
-		
+
 		@Override
 		public MetricItemConfig queryMetricItemConfig(String id) {
 			return m_config;
 		}
-		
+
+		@Override
+		public void initialize() throws InitializationException {
+		}
+
 		@Override
 		public boolean insertMetricItemConfig(MetricItemConfig config) {
 			return true;
