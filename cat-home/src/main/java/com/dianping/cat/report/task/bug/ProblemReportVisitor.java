@@ -5,9 +5,7 @@ import java.util.List;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
@@ -60,19 +58,9 @@ public class ProblemReportVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitMachine(Machine machine) {
-		super.visitMachine(machine);
-	}
-
-	@Override
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_currentDomain = problemReport.getDomain();
 		super.visitProblemReport(problemReport);
-	}
-
-	@Override
-	public void visitSegment(Segment segment) {
-		super.visitSegment(segment);
 	}
 
 	public BugReport getReport() {

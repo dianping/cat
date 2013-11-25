@@ -276,7 +276,7 @@ public class DisplayHeartbeat {
 					int minute = period.getMinute();
 					Disk disk = period.getDisks().get(i);
 
-					values[minute] = disk.getFree() / K / K / K;
+					values[minute] = disk.getFree() * 1.0 / K / K / K;
 				}
 				result.add(values);
 			}

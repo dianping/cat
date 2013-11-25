@@ -9,7 +9,6 @@ import java.util.Map;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.MapUtils;
@@ -47,11 +46,6 @@ public class ProblemInfoVisitor extends BaseVisitor {
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_start = problemReport.getStartTime();
 		super.visitProblemReport(problemReport);
-	}
-
-	@Override
-	public void visitSegment(Segment segment) {
-		super.visitSegment(segment);
 	}
 
 	public String buildExceptionInfo() {

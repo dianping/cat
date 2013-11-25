@@ -101,7 +101,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 					Integer size = m_errorTimestampDomains.get(domain);
 
 					if (size == null) {
-						m_errorTimestampDomains.put(domain, size);
+						m_errorTimestampDomains.put(domain, 1);
 					} else {
 						m_errorTimestampDomains.put(domain, size + 1);
 					}
@@ -113,11 +113,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			Integer size = m_oldVersionDomains.get(domain);
 
 			if (size == null) {
-				size = 1;
+				m_oldVersionDomains.put(domain, 1);
 			} else {
-				size++;
+				m_oldVersionDomains.put(domain, size + 1);
 			}
-			m_oldVersionDomains.put(domain, size);
 		}
 	}
 

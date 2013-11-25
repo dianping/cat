@@ -10,10 +10,7 @@ import java.util.TreeMap;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MapUtils;
 
@@ -110,16 +107,6 @@ public class ProblemStatistics extends BaseVisitor {
 	}
 
 	@Override
-	public void visitDuration(Duration duration) {
-		super.visitDuration(duration);
-	}
-
-	@Override
-	public void visitEntry(Entry entry) {
-		super.visitEntry(entry);
-	}
-
-	@Override
 	public void visitMachine(Machine machine) {
 		if (m_allIp == true || m_ip.equals(machine.getIp())) {
 			List<Entry> entries = machine.getEntries();
@@ -129,21 +116,6 @@ public class ProblemStatistics extends BaseVisitor {
 		}
 		super.visitMachine(machine);
 
-	}
-
-	@Override
-	public void visitProblemReport(ProblemReport problemReport) {
-		super.visitProblemReport(problemReport);
-	}
-
-	@Override
-	public void visitSegment(Segment segment) {
-		super.visitSegment(segment);
-	}
-
-	@Override
-	public void visitThread(JavaThread thread) {
-		super.visitThread(thread);
 	}
 
 	public static class StatusStatistics {

@@ -272,8 +272,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForDaily(start, end, type, name, graphs);
 	}
 
 	public Map<String, double[]> getGraphDatasFromHour(Date start, Date end, Model model, Payload payload) {
@@ -294,7 +293,6 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForHour(start, end, type, name, graphs);
 	}
 }

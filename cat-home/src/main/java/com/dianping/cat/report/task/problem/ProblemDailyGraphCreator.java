@@ -68,7 +68,7 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 		info.getTypesCount().put(m_currentType, type);
 
 		if (name == null) {
-			name = new Integer(count);
+			name = count;
 		} else {
 			name = name + count;
 		}

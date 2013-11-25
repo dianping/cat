@@ -118,8 +118,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		Map<String, double[]> result = buildHeartbeatDatas(start, end, graphs);
-		return result;
+		return buildHeartbeatDatas(start, end, graphs);
 	}
 
 	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {

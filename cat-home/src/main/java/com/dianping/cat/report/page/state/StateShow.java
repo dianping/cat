@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 
 public class StateShow extends BaseVisitor {
@@ -204,11 +203,6 @@ public class StateShow extends BaseVisitor {
 			temp.setTotal(temp.getTotal() + detail.getTotal());
 			temp.setTotalLoss(temp.getTotalLoss() + detail.getTotalLoss());
 		}
-	}
-
-	@Override
-	public void visitStateReport(StateReport stateReport) {
-		super.visitStateReport(stateReport);
 	}
 
 	public static class DomainCompartor implements Comparator<ProcessDomain> {

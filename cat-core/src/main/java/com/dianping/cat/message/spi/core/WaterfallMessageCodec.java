@@ -100,8 +100,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		b.tag2("svg");
 		sb.append("</td></tr>");
 
-		int count = helper.write(buf, sb.toString());
-		return count;
+		return helper.write(buf, sb.toString());
 	}
 
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf, Ruler ruler) {
