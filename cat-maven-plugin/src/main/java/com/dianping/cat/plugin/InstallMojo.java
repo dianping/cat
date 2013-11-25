@@ -74,8 +74,6 @@ public class InstallMojo extends AbstractMojo {
 		String sqlTable = Files.forIO().readFrom(getClass().getResourceAsStream("Cat.sql"), "utf-8");
 		String[] tables = sqlTable.split(";");
 
-		sqlTable = sqlTable.replace("\n", " ");
-
 		for (String table : tables) {
 			if (table != null && table.trim().length() > 0) {
 				stmt.execute(table.trim() + ";");
@@ -112,7 +110,9 @@ public class InstallMojo extends AbstractMojo {
 		try {
 			temp = File.createTempFile("test", "test");
 		} catch (IOException e1) {
-			getLog().error("Don't have privilege to read/write temp dir, please manually promote read/write privileges to this directory.");
+			getLog()
+			      .error(
+			            "Don't have privilege to read/write temp dir, please manually promote read/write privileges to this directory.");
 			throw new MojoFailureException("Don't have privilege to read/write temp dir");
 		}
 
@@ -124,7 +124,7 @@ public class InstallMojo extends AbstractMojo {
 				throw new MojoFailureException("Don't have privilege to read/write " + m_path);
 			}
 		}
-		
+
 		getLog().info("Generating the configuration files to " + m_path + " ...");
 
 		boolean isSuccess = false;
@@ -185,7 +185,7 @@ public class InstallMojo extends AbstractMojo {
 			getLog().info("Tables are created successfully");
 
 			isSuccess = true;
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			getLog().error(e);
 			throw new MojoFailureException(e.getMessage());
 		} finally {
