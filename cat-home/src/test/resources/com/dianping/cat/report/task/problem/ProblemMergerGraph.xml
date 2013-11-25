@@ -207,28 +207,6 @@
             <message>MobileApi-0a0101a6-1341417970705-0</message>
             <message>MobileApi-0a0101a6-1341417976099-0</message>
             <message>MobileApi-0a0101a6-1341417983553-3</message>
-            <message>MobileApi-0a0101a6-1341417986086-0</message>
-            <message>MobileApi-0a0101a6-1341418018552-0</message>
-            <message>MobileApi-0a0101a6-1341418025985-0</message>
-            <message>MobileApi-0a0101a6-1341418030963-0</message>
-            <message>MobileApi-0a0101a6-1341418041451-0</message>
-            <message>MobileApi-0a0101a6-1341418088753-0</message>
-            <message>MobileApi-0a0101a6-1341418091201-0</message>
-            <message>MobileApi-0a0101a6-1341418097680-0</message>
-            <message>MobileApi-0a0101a6-1341418099129-2</message>
-            <message>MobileApi-0a0101a6-1341418127830-0</message>
-            <message>MobileApi-0a0101a6-1341418158993-0</message>
-            <message>MobileApi-0a0101a6-1341418187273-0</message>
-            <message>MobileApi-0a0101a6-1341418240628-0</message>
-            <message>MobileApi-0a0101a6-1341418254430-0</message>
-            <message>MobileApi-0a0101a6-1341418294399-0</message>
-            <message>MobileApi-0a0101a6-1341418296598-0</message>
-            <message>MobileApi-0a0101a6-1341418365748-0</message>
-            <message>MobileApi-0a0101a6-1341418382262-0</message>
-            <message>MobileApi-0a0101a6-1341418429770-0</message>
-            <message>MobileApi-0a0101a6-1341418463778-0</message>
-            <message>MobileApi-0a0101a6-1341418486511-0</message>
-            <message>MobileApi-0a0101a6-1341418496431-0</message>
          </duration>
          <thread group-name="jboss" name="http-0.0.0.0-8080-8" id="238">
             <segment id="0" count="5">
@@ -708,10 +686,6 @@
             <message>MobileApi-0a0101a6-1341418168597-0</message>
             <message>MobileApi-0a0101a6-1341418228597-0</message>
             <message>MobileApi-0a0101a6-1341418288598-0</message>
-            <message>MobileApi-0a0101a6-1341418348598-0</message>
-            <message>MobileApi-0a0101a6-1341418408598-0</message>
-            <message>MobileApi-0a0101a6-1341418468599-0</message>
-            <message>MobileApi-0a0101a6-1341418528599-0</message>
          </duration>
          <thread group-name="Cat" name="Cat-StatusUpdateTask" id="62">
             <segment id="0" count="5">
@@ -2033,18 +2007,6 @@
             <message>MobileApi-0a0101a6-1341418085147-0</message>
             <message>MobileApi-0a0101a6-1341418085147-0</message>
             <message>MobileApi-0a0101a6-1341418085147-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
-            <message>MobileApi-0a0101a6-1341418515816-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
