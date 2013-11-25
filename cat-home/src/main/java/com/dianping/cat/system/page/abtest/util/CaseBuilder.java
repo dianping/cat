@@ -40,7 +40,7 @@ public class CaseBuilder {
 
 			return case_;
 		} else {
-			throw new NullPointerException("Cannot builder case due to the abtest , abtestRun or groupStrategy is null");
+			throw new RuntimeException("Cannot builder case due to the abtest , abtestRun or groupStrategy is null");
 		}
 	}
 
