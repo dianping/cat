@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.abtest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.metric.model.entity.Abtest;
 import com.dianping.cat.consumer.metric.model.entity.Group;
@@ -27,9 +28,9 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 	private int m_runId;
 
 	private String m_variation;
-	
+
 	private Date m_startDate;
-	
+
 	private Date m_endDate;
 
 	public MetricReportForABTestVisitor() {
@@ -56,11 +57,14 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 		for (AbtestReport report : m_reportMap.values()) {
 			HashMap<String, String> map = m_metrics.get(report.getRunId());
 
-			for (String metric : map.keySet()) {
+			for (Entry<String, String> entry : map.entrySet()) {
+				String metric = entry.getKey();
+				String value = entry.getValue();
+				
 				for (Variation variation : report.getVariations().values()) {
 					Goal goal = variation.findOrCreateGoal(metric);
 
-					goal.setType(map.get(metric));
+					goal.setType(value);
 				}
 
 				Goal goal = new Goal();
@@ -96,8 +100,8 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 	@Override
 	public void visitGroup(Group group) {
 		m_variation = group.getName();
-		
-		if(m_variation.length() == 0){
+
+		if (m_variation.length() == 0) {
 			m_variation = "Control";
 		}
 
@@ -116,7 +120,7 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 	public void visitMetricReport(MetricReport metricReport) {
 		m_startDate = metricReport.getStartTime();
 		m_endDate = metricReport.getEndTime();
-		
+
 		super.visitMetricReport(metricReport);
 	}
 

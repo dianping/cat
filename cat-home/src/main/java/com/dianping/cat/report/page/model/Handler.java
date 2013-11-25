@@ -248,13 +248,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		@Override
 		public void visitName(EventName name) {
 			if (m_type != null) {
-				if (m_name != null && name.getId().equals(m_name)) {
-					super.visitName(name);
-				} else if ("*".equals(m_name)) {
-					super.visitName(name);
-				} else {
-					super.visitName(name);
-				}
+				super.visitName(name);
 			}
 		}
 
@@ -391,13 +385,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		@Override
 		public void visitName(TransactionName name) {
 			if (m_type != null) {
-				if (m_name != null && name.getId().equals(m_name)) {
-					visitTransactionName(name);
-				} else if ("*".equals(m_name)) {
-					visitTransactionName(name);
-				} else {
-					visitTransactionName(name);
-				}
+				visitTransactionName(name);
 			}
 		}
 
