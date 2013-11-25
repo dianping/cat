@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.heartbeat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

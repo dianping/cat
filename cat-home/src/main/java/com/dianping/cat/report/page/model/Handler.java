@@ -269,7 +269,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		public void visitType(EventType type) {
 			if (m_type == null) {
 				super.visitType(type);
-			} else if (m_type != null && type.getId().equals(m_type)) {
+			} else if (type.getId().equals(m_type)) {
 				type.setSuccessMessageUrl(null);
 				type.setFailMessageUrl(null);
 
@@ -423,7 +423,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		public void visitType(TransactionType type) {
 			if (m_type == null) {
 				super.visitType(type);
-			} else if (m_type != null && type.getId().equals(m_type)) {
+			} else if (type.getId().equals(m_type)) {
 				super.visitType(type);
 			}
 		}

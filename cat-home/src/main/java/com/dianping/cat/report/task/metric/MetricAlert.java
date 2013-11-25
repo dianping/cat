@@ -175,9 +175,6 @@ public class MetricAlert implements Task, LogEnabled {
 		double[] baseline = m_baselineService.queryHourlyBaseline(METRIC, baseLineKey, date);
 		if (baseline != null) {
 			double[] realDatas = m_parser.buildHourlyData(item, type);
-			if (realDatas == null) {
-				return result;
-			}
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(baseLineKey);
 			List<Integer> minutes = checkData(baseline, realDatas, minute, baselineConfig);
 			for (int resultMinuteInHour : minutes) {
