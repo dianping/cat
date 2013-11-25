@@ -269,8 +269,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
-				e.printStackTrace();
-				// Cat.logError(e);
+				Cat.logError(e);
 			}
 		}
 		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);

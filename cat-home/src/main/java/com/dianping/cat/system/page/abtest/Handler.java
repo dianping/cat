@@ -177,7 +177,6 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 			t.process(root, sw);
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 		return sw.toString();
 	}

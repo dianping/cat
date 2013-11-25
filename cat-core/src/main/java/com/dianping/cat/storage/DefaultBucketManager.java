@@ -24,8 +24,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			bucket.initialize(type, name, timestamp);
 			return bucket;
 		} catch (RuntimeException e) {
-			e.printStackTrace();
-
 			throw e;
 		}
 	}
