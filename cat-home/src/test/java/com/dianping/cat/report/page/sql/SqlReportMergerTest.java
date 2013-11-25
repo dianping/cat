@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.sql;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.sql.SqlReportMerger;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;

@@ -32,10 +32,6 @@ MatrixModelTest.class,
 
 MatrixReportMergerTest.class,
 
-SqlParsersTest.class,
-
-SqlReportMergerTest.class,
-
 DatabaseParserTest.class,
 
 BrowserReportMergerTest.class,
@@ -43,6 +39,10 @@ BrowserReportMergerTest.class,
 CrossAnalyzerTest.class,
 
 SqlAnalyzerTest.class,
+
+SqlParsersTest.class,
+
+SqlReportMergerTest.class,
 
 MatrixAnalyzerTest.class,
 

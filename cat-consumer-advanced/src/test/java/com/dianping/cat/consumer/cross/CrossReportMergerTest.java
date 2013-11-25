@@ -2,7 +2,7 @@ package com.dianping.cat.consumer.cross;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;

@@ -8,7 +8,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;

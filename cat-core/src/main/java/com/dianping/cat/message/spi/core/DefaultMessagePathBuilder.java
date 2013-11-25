@@ -5,49 +5,17 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.message.internal.MessageId;
 
-public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
+public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable {
 	@Inject
 	private ClientConfigManager m_configManager;
 
 	private File m_baseLogDir;
-
-	private Logger m_logger;
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public String getHdfsPath(String messageId) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
-
-		try {
-			MessageId id = MessageId.parse(messageId);
-			Date date = new Date(id.getTimestamp());
-			String path = format.format(new Object[] { date, id.getDomain(), id.getIpAddressInHex() });
-
-			return path;
-		} catch (Exception e) {
-			m_logger.error("Error when building HDFS path for " + messageId, e);
-		}
-
-		return messageId;
-	}
-
-	@Override
-	public File getLogViewBaseDir() {
-		return m_baseLogDir;
-	}
 
 	@Override
 	public String getPath(Date timestamp, String name) {

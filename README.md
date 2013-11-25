@@ -1,23 +1,41 @@
-CAT 
+CAT [![Build Status](https://travis-ci.org/dianping/cat.png?branch=biz)](https://travis-ci.org/dianping/cat)
 ===
-<hr>
-Central Application Tracking  [![Build Status](https://travis-ci.org/dianping/cat.png?branch=biz)](https://travis-ci.org/dianping/cat)
+CAT的全称是Central Application Tracking，是基于Java开发的实时应用监控平台，包括实时系统监控、应用监控以及业务监控。
+CAT主要通过以下几种埋点类型收集信息：
+* Event	用来记录次数，表名单位时间内消息发生次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
+* Transaction	适合记录跨越系统边界的程序访问行为,比如远程调用，数据库调用，也适合执行时间较长的业务逻辑监控。
+* Heartbeat	表示程序内定期产生的统计信息, 如CHPU%, MEM%, 连接池状态, 系统负载等。
+* Metric	用于业务监控埋点的API。
 
-#####1、安装Mysql服务器
-#####2、配置Hadoop集群服务器【可选】
-#####3、启动命令行，并将当前工作目录移动到cat目录
-#####4、导入mysql的脚本文件，文件在'script/Cat.sql'
-#####5、在本地磁盘中创建两个目录/data/appdatas/cat，以及/data/applogs/cat
-		mkdir -p /data/appdatas/cat 
-		mkdir -p /data/applogs/cat 
-#####6、确保运行程序对刚刚创建的两个目录拥有读写权限,比如用cat用户启动程序
-        chown cat:cat /data/appdatas/cat -R
-        chown cat:cat /data/applogs/cat -R
-#####7、确保系统的临时目录程序拥有读写权限,Linux为/tmp/目录
-#####8、拷贝script文件夹下的'client.xml datasources.xml server.xml'到/data/appdatas/cat目录下
-		cp script/*.xml /data/appdatas/cat 
-#####9、修改/data/appdatas/cat/datasource.xml中cat数据源的基本信息，使用您自己的数据库链接信息
-#####10、如果你安装了hadoop集群，请配置/data/appdatas/cat/server.xml中对应hadoop信息，如果没有hadoop集群，server.xml中localmode必须为true,CAT只能在开发环境工作。【可选】
-#####11、用maven构建项目
-        mvn eclipse:eclipse
-#####12、导入项目到eclipse中，并运行testcase启动项目 ‘com.dianping.cat.TestServer’
+
+Requirements
+---------------------
+* Java 6
+* Maven
+* MySQL
+
+Quick Started
+---------------------
+#####1、在CAT目录下，用maven构建项目
+        mvn clean install
+#####2、配置CAT的环境
+		mvn cat:install
+#####3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
+#####4、运行CAT
+		cd cat-home;mvn jetty:run
+然后打开浏览器，输入http://localhost:2281/cat。
+
+或者在cat目录下输入
+				
+		mvn eclipse:clean eclipse:eclipse
+然后将项目导入到eclipse中，运行cat-home项目里得‘com.dianping.cat.TestServer’来启动CAT。
+
+Copyright and license
+---------------------
+Copyright 2013 DianPing, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
+
+<http://www.apache.org/licenses/LICENSE-2.0>
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

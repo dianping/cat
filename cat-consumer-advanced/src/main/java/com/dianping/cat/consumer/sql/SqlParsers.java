@@ -16,30 +16,6 @@ public class SqlParsers {
 		return new TableParser();
 	}
 
-	public static Escaper forEscape() {
-		return Escaper.INSTANCE;
-	}
-
-	public enum Escaper {
-		INSTANCE;
-
-		public String unescape(String str) {
-			if (str == null || str.length() < 2) {
-				return str;
-			}
-
-			int length = str.length();
-
-			if (str.charAt(0) == '`' && str.charAt(length - 1) == '`') {
-				return str.substring(1, length - 1);
-			} else if (str.charAt(0) == '\'' && str.charAt(length - 1) == '\'') {
-				return str.substring(1, length - 1);
-			} else {
-				return str;
-			}
-		}
-	}
-
 	public static class TableParser extends EmptySQLASTVisitor {
 		private List<String> m_tables = new ArrayList<String>(3);
 

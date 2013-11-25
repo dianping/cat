@@ -102,44 +102,6 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	}
 
 	@Override
-	public String findNextById(String id, String tag) throws IOException {
-		List<String> ids = m_tagToIds.get(tag);
-
-		if (ids != null) {
-			int index = ids.indexOf(id);
-
-			index++;
-
-			if (index >= 0 && index < ids.size()) {
-				String nextId = ids.get(index);
-
-				return findById(nextId);
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public String findPreviousById(String id, String tag) throws IOException {
-		List<String> ids = m_tagToIds.get(tag);
-
-		if (ids != null) {
-			int index = ids.indexOf(id);
-
-			index--;
-
-			if (index >= 0 && index < ids.size()) {
-				String nextId = ids.get(index);
-
-				return findById(nextId);
-			}
-		}
-
-		return null;
-	}
-
-	@Override
 	public void flush() throws IOException {
 		m_writeLock.lock();
 

@@ -9,14 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.event.DisplayTypes;
 
@@ -41,30 +39,24 @@ public class EventRender extends BaseVisitor {
 
 	private List<Type> m_types = new ArrayList<Type>();
 
-	private String m_host;
+	private String m_ip;
 
-	public EventRender(Date date, String domain, int day) {
+	public EventRender(Date date, String domain, int day, String ip) {
 		m_domain = domain;
 		m_date = date;
 		m_dateStr = m_sdf.format(date);
 		m_totalDays = day;
-
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		if (ip.startsWith("10.")) {
-			m_host = Chinese.ONLINE;
-		} else {
-			m_host = Chinese.OFFLINE;
-		}
+		m_ip = ip;
 	}
 
 	private String buildEventUrl(Date date) {
 		String dateStr = m_sdf.format(m_date);
 
-		return String.format(m_eventLink, m_host, m_domain, dateStr);
+		return String.format(m_eventLink, m_ip, m_domain, dateStr);
 	}
 
 	private String buildGraphUrl(EventType type) {
-		return String.format(m_typeGraphLink, m_host, m_domain, m_dateStr, type.getId());
+		return String.format(m_typeGraphLink, m_ip, m_domain, m_dateStr, type.getId());
 	}
 
 	public Map<Object, Object> getRenderResult() {

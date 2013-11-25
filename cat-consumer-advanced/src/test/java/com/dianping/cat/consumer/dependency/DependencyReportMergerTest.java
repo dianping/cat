@@ -2,7 +2,7 @@ package com.dianping.cat.consumer.dependency;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.webres.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;

@@ -181,10 +181,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
-	public String getHttpSmsApi() {
-		return "";
-	}
-
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -298,26 +294,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		} else {
 			return true;
 		}
-	}
-
-	public boolean isOfflineServer(String ip) {
-		if (ip != null && ip.startsWith("192.")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isOnlineServer(String ip) {
-		if (ip != null && ip.startsWith("10.")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isSerialWrite() {
-		return false;
 	}
 
 	public boolean isServerService(String type) {

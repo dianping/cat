@@ -35,11 +35,6 @@
 			<artifactId>cat-hadoop</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-			<version>2.5.6</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>1.6</version>
@@ -219,6 +214,22 @@
 						</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+		        <groupId>org.mortbay.jetty</groupId>
+		        <artifactId>maven-jetty-plugin</artifactId>
+		        <version>6.1.26</version>
+		        <configuration>
+	                <scanIntervalSeconds>10</scanIntervalSeconds>
+					<contextPath>/cat</contextPath> 
+					<defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor> 
+					<connectors> 
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
+							<port>2281</port> 
+							<maxIdleTime>500000</maxIdleTime> 
+						</connector> 
+					</connectors> 
+		        </configuration>
 			</plugin>
 		</plugins>
 	</build>
