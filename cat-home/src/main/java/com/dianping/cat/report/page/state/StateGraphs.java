@@ -83,7 +83,7 @@ public class StateGraphs {
 				} 
 				continue;
 			}
-			Message message = messages.get(i * 60 * 1000 + start);
+			Message message = messages.get(i * 60 * 1000L + start);
 
 			if (message != null) {
 				if (key.equalsIgnoreCase("total")) {

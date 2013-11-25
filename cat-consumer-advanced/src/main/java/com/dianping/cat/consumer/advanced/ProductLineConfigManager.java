@@ -60,7 +60,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
+	public synchronized void  enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
