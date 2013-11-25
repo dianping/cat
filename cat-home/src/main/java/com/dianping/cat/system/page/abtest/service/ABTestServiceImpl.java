@@ -30,6 +30,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.page.abtest.util.AbtestStatus;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus.AbtestStatusUtil;
 import com.dianping.cat.system.page.abtest.util.CaseBuilder;
 
 public class ABTestServiceImpl implements ABTestService, Initializable, Task {
@@ -61,6 +62,8 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private long m_lastRefreshTime = -1;
 
 	private long m_modifyTime = 0;
+
+	private AbtestStatusUtil statusUtil = new AbtestStatusUtil();
 
 	@Override
 	public Abtest getABTestByRunId(int runId) {
@@ -121,7 +124,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 					if (status.length == 0) {
 						model.addCase(_case);
 					} else {
-						AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+						AbtestStatus _status = statusUtil.calculateStatus(run, now);
 
 						for (AbtestStatus st : status) {
 							if (st == _status) {
@@ -161,7 +164,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		Date now = new Date();
 
 		for (AbtestRun run : m_abtestRunMap.values()) {
-			AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+			AbtestStatus _status = statusUtil.calculateStatus(run, now);
 
 			if (_status == status) {
 				runs.add(run);

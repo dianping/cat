@@ -6,6 +6,7 @@ import java.util.List;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.system.page.abtest.util.AbtestStatus;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus.AbtestStatusUtil;
 
 public class ListViewModel {
 
@@ -143,7 +144,8 @@ public class ListViewModel {
 		}
 
 		public AbtestStatus getStatus() {
-			return AbtestStatus.calculateStatus(m_run, new Date());
+			AbtestStatusUtil statusUtil = new AbtestStatusUtil();
+			return statusUtil.calculateStatus(m_run, new Date());
 		}
 
 		public String getStrategyConfiguration() {

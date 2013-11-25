@@ -1,11 +1,12 @@
 package com.dianping.cat.storage.dump;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -21,8 +22,28 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @RunWith(JUnit4.class)
-@Ignore
 public class LocalMessageBucketManagerTest extends ComponentTestCase {
+
+	private String m_baseDir = "target/bucket/dump/20120729/11/";
+
+	private String m_outboxDir = "target/bucket/dump/outbox/20120729/11/";
+
+	private String m_ip = "127.0.0.1";
+
+	@Before
+	public void setup() {
+		new File(m_baseDir + "source-127.0.0.1-" + m_ip).delete();
+		new File(m_baseDir + "source-127.0.0.1-" + m_ip + ".idx").delete();
+		File file = new File(m_outboxDir + "source-127.0.0.1-" + m_ip);
+
+		file.exists();
+		file.delete();
+		new File(m_outboxDir + "source-127.0.0.1-" + m_ip + ".idx").delete();
+
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		new File(tmpDir, "cat-source.mark").delete();
+	}
+
 	private DefaultMessageTree newMessageTree(String id, int i, long timestamp) {
 		DefaultMessageTree tree = new DefaultMessageTree();
 
@@ -36,8 +57,10 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		tree.setThreadGroupName("threadGroupName");
 		tree.setThreadId("threadId" + i);
 		tree.setThreadName("threadName");
-
+		tree.setParentMessageId("Cat-0a010680-384826-3");
+		tree.setRootMessageId("Cat-0a010680-384826-3");
 		tree.setMessage(newTransaction("type", "name" + i, timestamp, "0", 123456 + i, "data" + i));
+
 		return tree;
 	}
 
@@ -53,12 +76,20 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 	}
 
 	@Test
+	public void test() {
+
+	}
+
+	@Test
 	public void testReadWrite() throws Exception {
-		MessageBucketManager manager = lookup(MessageBucketManager.class, LocalMessageBucketManager.ID);
-		MessageCodec codec =lookup(MessageCodec.class,PlainTextMessageCodec.ID);
+		LocalMessageBucketManager manager = (LocalMessageBucketManager) lookup(MessageBucketManager.class,
+		      LocalMessageBucketManager.ID);
+		MessageCodec codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 		MessageIdFactory factory = new MockMessageIdFactory();
+
+		manager.setLocalIp(m_ip);
 		long now = 1343532130488L;
-		int num = 100;
+		int num = 5000;
 
 		Thread.sleep(100);
 
@@ -68,20 +99,20 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		for (int i = 0; i < num; i++) {
 			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
 			MessageId id = MessageId.parse(tree.getMessageId());
-			
+
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8 * 1024); // 8K
 			codec.encode(tree, buf);
-			
+
 			tree.setBuffer(buf);
 			manager.storeMessage(tree, id);
 		}
 
 		Thread.yield();
-		
+
 		Thread.sleep(3000);
 
 		manager.loadMessage("source-7f000001-373203-1");
-		
+
 		for (int i = 0; i < num; i++) {
 			String messageId = "source-7f000001-373203-" + i;
 			MessageTree tree = manager.loadMessage(messageId);
