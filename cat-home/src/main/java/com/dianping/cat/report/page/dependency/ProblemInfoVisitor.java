@@ -27,7 +27,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 		int count = 0;
 		String type = entry.getType();
 		String state = entry.getStatus();
-		
+
 		for (Duration duration : entry.getDurations().values()) {
 			count += duration.getCount();
 		}
@@ -38,7 +38,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 			if (temp == null) {
 				m_errors.put(state, count);
 			} else {
-				m_errors.put(state, new Integer(temp + count));
+				m_errors.put(state, temp + count);
 			}
 		}
 	}
@@ -63,7 +63,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 			}
 		};
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
+
 		if (m_errors.size() > 0) {
 			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
 			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");
