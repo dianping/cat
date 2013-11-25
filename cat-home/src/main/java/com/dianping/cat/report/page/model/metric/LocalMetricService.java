@@ -27,7 +27,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 		}
 		return report;
 	}
-	
+
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {

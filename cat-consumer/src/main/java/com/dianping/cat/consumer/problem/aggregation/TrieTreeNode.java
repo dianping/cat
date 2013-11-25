@@ -73,19 +73,25 @@ public class TrieTreeNode {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			TrieTreeKey other = (TrieTreeKey) obj;
-			if (!getOuterType().equals(other.getOuterType()))
+			if (!getOuterType().equals(other.getOuterType())) {
 				return false;
-			if (m_ch != other.m_ch)
+			}
+			if (m_ch != other.m_ch) {
 				return false;
-			if (m_isPrefix != other.m_isPrefix)
+			}
+			if (m_isPrefix != other.m_isPrefix) {
 				return false;
+			}
 			return true;
 		}
 

@@ -22,7 +22,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;
 
-public class HistoryGraphs extends BaseHistoryGraphs{
+public class HistoryGraphs extends BaseHistoryGraphs {
 
 	public static final int K = 1024;
 
@@ -220,15 +220,14 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 			      graphData).getJsonString());
 			model.setStartedThreadGraph(getGraphItem("Started Thread (Count) ", "StartedThread", start, size, graphData)
 			      .getJsonString());
-		}else if(queryType.equalsIgnoreCase("frameworkThread")){
+		} else if (queryType.equalsIgnoreCase("frameworkThread")) {
 			model.setHttpThreadGraph(getGraphItem("Http Thread (Count) ", "HttpThread", start, size, graphData)
 			      .getJsonString());
 			model.setCatThreadGraph(getGraphItem("Cat Started Thread (Count) ", "CatThreadCount", start, size, graphData)
 			      .getJsonString());
 			model.setPigeonThreadGraph(getGraphItem("Pigeon Started Thread (Count) ", "PigeonStartedThread", start, size,
 			      graphData).getJsonString());
-		}
-		else if (queryType.equalsIgnoreCase("system")) {
+		} else if (queryType.equalsIgnoreCase("system")) {
 			model.setNewGcCountGraph(getGraphItem("NewGc Count (Count) ", "NewGcCount", start, size, graphData)
 			      .getJsonString());
 			model.setOldGcCountGraph(getGraphItem("OldGc Count (Count) ", "OldGcCount", start, size, graphData)
@@ -243,7 +242,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 			      .getJsonString());
 		} else if (queryType.equalsIgnoreCase("disk")) {
 			List<LineChart> diskInfo = getDiskInfo(graphData, start, size);
-		
+
 			model.setDisks(diskInfo.size());
 			model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
 		} else if (queryType.equalsIgnoreCase("cat")) {

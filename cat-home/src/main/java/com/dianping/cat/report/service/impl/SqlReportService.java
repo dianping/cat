@@ -95,8 +95,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 				String xml = report.getContent();
 
 				if (xml != null && xml.length() > 0) {
-					SqlReport reportModel = com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser
-					      .parse(xml);
+					SqlReport reportModel = com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} else {
 					SqlReport reportModel = queryFromDailyBinary(report.getId(), domain);
@@ -135,8 +134,7 @@ public class SqlReportService extends AbstractReportService<SqlReport> {
 
 					try {
 						if (xml != null && xml.length() > 0) {// for old xml storage
-							SqlReport reportModel = com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser
-							      .parse(xml);
+							SqlReport reportModel = com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser.parse(xml);
 							reportModel.accept(merger);
 						} else {// for new binary storage, binary is same to report id
 							SqlReport reportModel = queryFromHourlyBinary(report.getId(), domain);

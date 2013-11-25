@@ -20,8 +20,8 @@ public class StateGraphs {
 	@Inject
 	private ReportService m_reportService;
 
-	public LineChart buildGraph(StateReport report, String domain, Date start, Date end,
-	      String reportType, String key, String ip) {
+	public LineChart buildGraph(StateReport report, String domain, Date start, Date end, String reportType, String key,
+	      String ip) {
 		if (reportType.equalsIgnoreCase("graph")) {
 			return getHourlyGraph(report, domain, start, end, key, ip);
 		} else {
@@ -52,26 +52,26 @@ public class StateGraphs {
 		double[] result = new double[size];
 		StateShow show = new StateShow(ip);
 		show.visitStateReport(report);
-		Map<Long,Detail> datas = null;
+		Map<Long, Detail> datas = null;
 		String domain = "";
 		int index = key.indexOf(':');
-		if(index != -1){
-			domain = key.substring(0,index);
-			key = key.substring(index+1);
+		if (index != -1) {
+			domain = key.substring(0, index);
+			key = key.substring(index + 1);
 			ProcessDomain processDomain = show.getProcessDomainMap().get(domain);
-			if(processDomain != null){
+			if (processDomain != null) {
 				datas = processDomain.getDetails();
 			}
 		}
-		
+
 		Map<Long, Message> messages = show.getMessagesMap();
 		for (int i = 0; i < size; i++) {
-			if(index != -1){
-				if(datas == null){
+			if (index != -1) {
+				if (datas == null) {
 					continue;
 				}
 				Detail detail = datas.get(i * 60 * 1000L + start);
-				if(detail == null){
+				if (detail == null) {
 					continue;
 				}
 				if (key.equalsIgnoreCase("total")) {
@@ -79,8 +79,8 @@ public class StateGraphs {
 				} else if (key.equalsIgnoreCase("totalLoss")) {
 					result[i] = detail.getTotalLoss();
 				} else if (key.equalsIgnoreCase("size")) {
-					result[i] = detail.getSize()/ 1024 / 1024;
-				} 
+					result[i] = detail.getSize() / 1024 / 1024;
+				}
 				continue;
 			}
 			Message message = messages.get(i * 60 * 1000L + start);
@@ -122,7 +122,7 @@ public class StateGraphs {
 
 	private double[] getDataFromHourlySummary(List<StateReport> reports, long start, int size, String key, String ip) {
 		double[] result = new double[size];
-		
+
 		for (StateReport report : reports) {
 			Date startTime = report.getStartTime();
 			StateShow show = new StateShow(ip);
@@ -163,10 +163,9 @@ public class StateGraphs {
 		return result;
 	}
 
-	private LineChart getHourlyGraph(StateReport report, String domain, Date start, Date end, String key,
-	      String ip) {
+	private LineChart getHourlyGraph(StateReport report, String domain, Date start, Date end, String key, String ip) {
 		LineChart item = new LineChart();
-		
+
 		item.setStart(start).setSize(60).setTitle(key).setStep(TimeUtil.ONE_MINUTE);
 		item.addSubTitle(key);
 		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));

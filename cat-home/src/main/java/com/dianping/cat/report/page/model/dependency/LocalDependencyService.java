@@ -29,7 +29,7 @@ public class LocalDependencyService extends BaseLocalModelService<DependencyRepo
 		}
 		return report;
 	}
-	
+
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {

@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 public class MergeAllName extends BaseVisitor {
 
 	public EventReport m_report;
-	
+
 	public String m_currentIp;
 
 	public String m_currentType;
@@ -22,7 +22,7 @@ public class MergeAllName extends BaseVisitor {
 	public Integer m_currentRange;
 
 	public Integer m_currentDuration;
-	
+
 	public EventReportMerger m_merger = new EventReportMerger(new EventReport());
 
 	public EventReport getReport() {
@@ -54,7 +54,7 @@ public class MergeAllName extends BaseVisitor {
 		      .findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
-		
+
 		EventName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
 		      .findOrCreateName(Constants.ALL);
 		m_merger.mergeName(all, name);
@@ -70,7 +70,7 @@ public class MergeAllName extends BaseVisitor {
 		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
-		
+
 		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
 		      .findOrCreateName(Constants.ALL).findOrCreateRange(m_currentRange);
 

@@ -28,7 +28,7 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 		}
 		return report;
 	}
-	
+
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {

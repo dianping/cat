@@ -60,7 +60,7 @@ public class MetricReportForABTestVisitor extends BaseVisitor {
 			for (Entry<String, String> entry : map.entrySet()) {
 				String metric = entry.getKey();
 				String value = entry.getValue();
-				
+
 				for (Variation variation : report.getVariations().values()) {
 					Goal goal = variation.findOrCreateGoal(metric);
 

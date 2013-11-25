@@ -13,4 +13,4 @@ public class Session implements ISession {
 	public DpAdminLogin getMember() {
 		return m_member;
 	}
- }
+}

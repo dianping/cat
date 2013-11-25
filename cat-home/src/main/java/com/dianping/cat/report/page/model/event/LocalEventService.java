@@ -15,7 +15,7 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 
 	@Inject
 	private BucketManager m_bucketManager;
-	
+
 	public LocalEventService() {
 		super(EventAnalyzer.ID);
 	}
@@ -29,6 +29,7 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		}
 		return report;
 	}
+
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 

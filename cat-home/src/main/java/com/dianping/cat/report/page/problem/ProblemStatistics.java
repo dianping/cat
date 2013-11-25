@@ -23,7 +23,7 @@ public class ProblemStatistics extends BaseVisitor {
 	private String m_ip = "";
 
 	private List<String> m_ips;
-	
+
 	private LongConfig m_longConfig = new LongConfig();
 
 	private List<Duration> getDurationsByType(String type, Entry entry) {

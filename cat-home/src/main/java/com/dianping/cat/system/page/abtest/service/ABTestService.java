@@ -19,15 +19,15 @@ public interface ABTestService {
 	public AbtestModel getABTestModelByRunID(int runId);
 
 	public GroupStrategy getGroupStrategyById(int id);
-	
+
 	public AbtestRun getAbTestRunById(int id);
-	
+
 	public List<AbtestRun> getAbtestRunByStatus(AbtestStatus status);
-	
+
 	public List<GroupStrategy> getAllGroupStrategies();
-	
+
 	public Map<String, List<Project>> getAllProjects();
-	
+
 	public void refresh();
 
 	public void setModified();

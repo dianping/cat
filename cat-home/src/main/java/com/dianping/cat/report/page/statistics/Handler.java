@@ -140,8 +140,9 @@ public class Handler implements PageHandler<Context> {
 			if (d.getUrlCount() > 0) {
 				dUWebList.add(d);
 			}
-			if (d.getServiceCount() > 0)
+			if (d.getServiceCount() > 0) {
 				dUServiceList.add(d);
+			}
 		}
 		resetWebScore(dUWebList, findMaxWebScore(dUWebList));
 		resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));

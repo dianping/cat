@@ -77,7 +77,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta(Constants.REPORT_BUG)
 	private String m_bug;
-	
+
 	@FieldMeta("content")
 	private String m_content;
 
@@ -268,19 +268,19 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public String getBug() {
-   	return m_bug;
-   }
+		return m_bug;
+	}
 
 	public void setBug(String bug) {
-   	m_bug = bug;
-   }
+		m_bug = bug;
+	}
 
 	public String getContent() {
-   	return m_content;
-   }
+		return m_content;
+	}
 
 	public void setContent(String content) {
-   	m_content = content;
-   }
+		m_content = content;
+	}
 
 }

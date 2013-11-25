@@ -30,44 +30,44 @@ public class ExceptionThresholdConfigManager implements Initializable {
 	private static final String CONFIG_NAME = "exceptionThresholdConfig";
 
 	private static String DEFAULT_STRING = "Default";
-	
+
 	private static String TOTAL_STRING = "Total";
-	
-	public List<ExceptionLimit> queryAllExceptionLimits(){
+
+	public List<ExceptionLimit> queryAllExceptionLimits() {
 		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
-		for(DomainConfig domainConfig:m_exceptionConfig.getDomainConfigs().values()){
+		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionLimits().values());
 		}
 		return result;
 	}
-	
+
 	public ExceptionLimit queryDomainTotalLimit(String domain) {
-		ExceptionLimit result = queryDomainExceptionLimit(domain,TOTAL_STRING);
-		if(result == null){
-			result =  queryDomainExceptionLimit(DEFAULT_STRING,TOTAL_STRING);
+		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
+		if (result == null) {
+			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
 		}
 		return result;
 	}
-	
+
 	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
 		ExceptionLimit result = null;
 		if (domainConfig == null) {
 			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
 		}
-		if(domainConfig != null){
+		if (domainConfig != null) {
 			result = domainConfig.getExceptionLimits().get(exceptionName);
 		}
 		return result;
 	}
-	
-	public boolean insertExceptionLimit(ExceptionLimit limit){
+
+	public boolean insertExceptionLimit(ExceptionLimit limit) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
 		domainConfig.getExceptionLimits().put(limit.getId(), limit);
 		return storeConfig();
 	}
-	
-	public boolean deleteExceptionLimit(String domain,String exceptionName){
+
+	public boolean deleteExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
 		domainConfig.removeExceptionLimit(exceptionName);
 		return storeConfig();

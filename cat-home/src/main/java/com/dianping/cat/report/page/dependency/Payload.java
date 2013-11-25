@@ -9,18 +9,18 @@ import com.dianping.cat.report.page.AbstractReportPayload;
 public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("minute")
 	private String m_minute;
-	
+
 	@FieldMeta("all")
 	private boolean m_all;
-	
+
 	private ReportPage m_page;
 
 	@FieldMeta("op")
 	private Action m_action;
-	
+
 	@FieldMeta("productLine")
 	private String productLine;
-	
+
 	@FieldMeta("count")
 	private int m_minuteCounts = 8;
 
@@ -30,46 +30,46 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("tops")
 	private int m_topCounts = 10;
 
-   @FieldMeta("refresh")
-   private boolean m_refresh = false;
-   
-   @FieldMeta("tab")
-   private String m_tab ="tab1";
-   
-   @FieldMeta("fullScreen")
-   private boolean m_fullScreen = false;
+	@FieldMeta("refresh")
+	private boolean m_refresh = false;
+
+	@FieldMeta("tab")
+	private String m_tab = "tab1";
+
+	@FieldMeta("fullScreen")
+	private boolean m_fullScreen = false;
 
 	public int getMinuteCounts() {
-   	return m_minuteCounts;
-   }
+		return m_minuteCounts;
+	}
 
 	public void setMinuteCounts(int minuteCounts) {
-   	m_minuteCounts = minuteCounts;
-   }
+		m_minuteCounts = minuteCounts;
+	}
 
 	public int getTopCounts() {
-   	return m_topCounts;
-   }
+		return m_topCounts;
+	}
 
 	public void setTopCounts(int topCounts) {
-   	m_topCounts = topCounts;
-   }
+		m_topCounts = topCounts;
+	}
 
 	public int getFrequency() {
-   	return m_frequency;
-   }
+		return m_frequency;
+	}
 
 	public void setFrequency(int frequency) {
-   	m_frequency = frequency;
-   }
+		m_frequency = frequency;
+	}
 
 	public boolean isRefresh() {
-   	return m_refresh;
-   }
+		return m_refresh;
+	}
 
 	public void setRefresh(boolean refresh) {
-   	m_refresh = refresh;
-   }
+		m_refresh = refresh;
+	}
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -81,8 +81,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getMinute() {
-   	return m_minute;
-   }
+		return m_minute;
+	}
 
 	@Override
 	public ReportPage getPage() {
@@ -94,8 +94,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setMinute(String minute) {
-   	this.m_minute = minute;
-   }
+		this.m_minute = minute;
+	}
 
 	@Override
 	public void setPage(String page) {
@@ -110,35 +110,35 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public boolean isAll() {
-   	return m_all;
-   }
+		return m_all;
+	}
 
 	public void setAll(boolean all) {
-   	this.m_all = all;
-   }
+		this.m_all = all;
+	}
 
 	public String getProductLine() {
-   	return productLine;
-   }
+		return productLine;
+	}
 
 	public void setProductLine(String productLine) {
-   	this.productLine = productLine;
-   }
+		this.productLine = productLine;
+	}
 
 	public boolean isFullScreen() {
-   	return m_fullScreen;
-   }
+		return m_fullScreen;
+	}
 
 	public void setFullScreen(boolean fullScreen) {
-   	m_fullScreen = fullScreen;
-   }
+		m_fullScreen = fullScreen;
+	}
 
 	public String getTab() {
-   	return m_tab;
-   }
+		return m_tab;
+	}
 
 	public void setTab(String tab) {
-   	m_tab = tab;
-   }
+		m_tab = tab;
+	}
 
 }

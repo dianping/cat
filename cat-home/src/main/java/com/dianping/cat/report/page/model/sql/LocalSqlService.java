@@ -28,7 +28,7 @@ public class LocalSqlService extends BaseLocalModelService<SqlReport> {
 		}
 		return report;
 	}
-	
+
 	private SqlReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {

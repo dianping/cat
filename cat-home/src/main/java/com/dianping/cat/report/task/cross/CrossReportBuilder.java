@@ -37,7 +37,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
-		return m_reportService.insertDailyReport(report,binaryContent);
+		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
-		return m_reportService.insertMonthlyReport(report,binaryContent);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class CrossReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
-		return m_reportService.insertWeeklyReport(report,binaryContent);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private CrossReport queryDailyReportsByDuration(String domain, Date start, Date end) {
