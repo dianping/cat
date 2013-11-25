@@ -140,7 +140,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	public void shutdown() {
 	}
 
-	class ABTestVisitor extends BaseVisitor {
+	public class ABTestVisitor extends BaseVisitor {
 		private String m_domain;
 
 		private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();
