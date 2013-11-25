@@ -51,7 +51,6 @@ public enum AbtestStatus {
 							return AbtestStatus.RUNNING;
 						}
 					}
-
 				}
 			} else {
 				if (endDate != null) {

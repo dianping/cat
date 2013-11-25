@@ -230,7 +230,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 					if (current - lastModifyTime > ONE_HOUR) {
 						m_domainManager.update(ipInfo.getId(), domain, ip);
-						m_logger.info(String.format("change ip %s to domain %", ipInfo.getIp(), domain));
+						m_logger.info(String.format("change ip %s to domain %s", ipInfo.getIp(), domain));
 					}
 				}
 			}

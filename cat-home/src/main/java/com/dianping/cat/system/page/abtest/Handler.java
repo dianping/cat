@@ -317,7 +317,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
 							m_service.setModified();
 						} else {
-							error.addArgument(id, String.format("Abtest %d has been already suspended!", id));
+							error.addArgument(id, String.format("Abtest %s has been already suspended!", id));
 						}
 					} else if (payload.getDisableAbtest() == 1) {
 						// resume abtest
@@ -326,7 +326,7 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
 							m_service.setModified();
 						} else {
-							error.addArgument(id, String.format("Abtest %d has been already active!", id));
+							error.addArgument(id, String.format("Abtest %s has been already active!", id));
 						}
 					}
 				} catch (Throwable e) {

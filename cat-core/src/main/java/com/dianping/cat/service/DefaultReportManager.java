@@ -109,10 +109,10 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		}
 
 		if (report == null) {
-			return report = m_reportDelegate.makeReport(domain, startTime, HOUR);
-		} else {
-			return report;
+			report = m_reportDelegate.makeReport(domain, startTime, HOUR);
 		}
+		
+		return report;
 	}
 
 	@Override
@@ -268,19 +268,19 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	}
 
 	public void setReportDelegate(ReportDelegate<T> reportDelegate) {
-   	m_reportDelegate = reportDelegate;
-   }
+		m_reportDelegate = reportDelegate;
+	}
 
 	public void setBucketManager(BucketManager bucketManager) {
-   	m_bucketManager = bucketManager;
-   }
+		m_bucketManager = bucketManager;
+	}
 
 	public void setReportDao(HourlyReportDao reportDao) {
-   	m_reportDao = reportDao;
-   }
+		m_reportDao = reportDao;
+	}
 
 	public void setReportContentDao(HourlyReportContentDao reportContentDao) {
-   	m_reportContentDao = reportContentDao;
-   }
+		m_reportContentDao = reportContentDao;
+	}
 
 }

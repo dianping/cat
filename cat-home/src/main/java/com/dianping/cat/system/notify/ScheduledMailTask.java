@@ -125,7 +125,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				long currentDay = TimeUtil.getCurrentDay().getTime();
 				Calendar cal = Calendar.getInstance();
 
-				if ((mailRecord == null || lastSendMailTime < currentDay) && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
+				if (lastSendMailTime < currentDay && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 					m_logger.info("Send daily report starting! size :" + reports.size());
