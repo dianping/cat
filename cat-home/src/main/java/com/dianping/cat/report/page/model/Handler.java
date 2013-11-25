@@ -186,8 +186,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				request.setProperty("messageId", messageId);
 				request.setProperty("waterfall", String.valueOf(payload.isWaterfall()));
 
-				if (id.getVersion() == 1) {
-				} else {
+				if (id.getVersion() != 1) {
 					response = m_messageService.invoke(request);
 				}
 			} else if (HeartbeatAnalyzer.ID.equals(report)) {
@@ -243,21 +242,19 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitMachine(machine);
 			} else if (machine.getIp().equals(m_ipAddress)) {
 				super.visitMachine(machine);
-			} else {
-				// skip it
 			}
 		}
 
 		@Override
 		public void visitName(EventName name) {
-			if (m_type == null) {
-				// skip it
-			} else if (m_name != null && name.getId().equals(m_name)) {
-				super.visitName(name);
-			} else if ("*".equals(m_name)) {
-				super.visitName(name);
-			} else {
-				super.visitName(name);
+			if (m_type != null) {
+				if (m_name != null && name.getId().equals(m_name)) {
+					super.visitName(name);
+				} else if ("*".equals(m_name)) {
+					super.visitName(name);
+				} else {
+					super.visitName(name);
+				}
 			}
 		}
 
@@ -277,8 +274,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				type.setFailMessageUrl(null);
 
 				super.visitType(type);
-			} else {
-				// skip it
 			}
 		}
 	}
@@ -313,9 +308,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
 			if ("view".equals(m_type)) {
 				super.visitDuration(duration);
-			} else if ("graph".equals(m_type)) {
-				// skip it
-			} else {
+			} else if (!"graph".equals(m_type)) {
 				super.visitDuration(duration);
 			}
 		}
@@ -326,8 +319,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitMachine(machine);
 			} else if (machine.getIp().equals(m_ipAddress)) {
 				super.visitMachine(machine);
-			} else {
-				// skip it
 			}
 		}
 
@@ -340,9 +331,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		public void visitThread(JavaThread thread) {
 			if ("graph".equals(m_type)) {
 				super.visitThread(thread);
-			} else if ("view".equals(m_type)) {
-				// skip it
-			} else {
+			} else if (!"view".equals(m_type)) {
 				super.visitThread(thread);
 			}
 		}
@@ -395,22 +384,20 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					super.visitMachine(machine);
 				} else if (machine.getIp().equals(m_ipAddress)) {
 					super.visitMachine(machine);
-				} else {
-					// skip it
 				}
 			}
 		}
 
 		@Override
 		public void visitName(TransactionName name) {
-			if (m_type == null) {
-				// skip it
-			} else if (m_name != null && name.getId().equals(m_name)) {
-				visitTransactionName(name);
-			} else if ("*".equals(m_name)) {
-				visitTransactionName(name);
-			} else {
-				visitTransactionName(name);
+			if (m_type != null) {
+				if (m_name != null && name.getId().equals(m_name)) {
+					visitTransactionName(name);
+				} else if ("*".equals(m_name)) {
+					visitTransactionName(name);
+				} else {
+					visitTransactionName(name);
+				}
 			}
 		}
 
@@ -438,8 +425,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitType(type);
 			} else if (m_type != null && type.getId().equals(m_type)) {
 				super.visitType(type);
-			} else {
-				// skip it
 			}
 		}
 	}

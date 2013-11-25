@@ -340,11 +340,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 						long now = System.currentTimeMillis();
 						long value = m_strategy.next(now);
 
-						if (value == 0) {
-							// do nothing here
-						} else if (value > 0) {
+						if (value > 0) {
 							startPeriod(value);
-						} else {
+						} else if (value < 0) {
 							// last period is over,make it asynchronous
 							Threads.forGroup("Cat").start(new EndTaskThread(-value));
 						}
