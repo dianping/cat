@@ -22,26 +22,6 @@ public interface Bucket<T> {
 	public T findById(String id) throws IOException;
 
 	/**
-	 * Find next id with same tag in the bucket. return null if not found.
-	 * 
-	 * @param id
-	 * @param tag
-	 * @return next data for given id with tag, null if not found.
-	 * @throws IOException
-	 */
-	public T findNextById(String id, String tag) throws IOException;
-
-	/**
-	 * Find previous id with same tag in the bucket. return null if not found.
-	 * 
-	 * @param id
-	 * @param tag
-	 * @return previous data for given id with tag, null if not found.
-	 * @throws IOException
-	 */
-	public T findPreviousById(String id, String tag) throws IOException;
-
-	/**
 	 * Flush the buffered data in the bucket if have.
 	 * 
 	 * @throws IOException
