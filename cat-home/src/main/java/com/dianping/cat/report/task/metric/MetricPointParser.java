@@ -2,6 +2,7 @@ package com.dianping.cat.report.task.metric;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.Point;
@@ -13,8 +14,11 @@ public class MetricPointParser {
 	public double[] buildHourlyData(MetricItem item, MetricType type) {
 		double[] result = new double[POINT_NUMBER];
 		Map<Integer, Point> map = item.getAbtests().get("-1").getGroups().get("").getPoints();
-		for (Integer minute : map.keySet()) {
-			Point point = map.get(minute);
+
+		for (Entry<Integer, Point> entry : map.entrySet()) {
+			Integer minute = entry.getKey();
+			Point point = entry.getValue();
+
 			if (type == MetricType.AVG) {
 				result[minute] = point.getAvg();
 			} else if (type == MetricType.COUNT) {
