@@ -24,7 +24,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
 
-public class HistoryGraphs extends BaseHistoryGraphs{
+public class HistoryGraphs extends BaseHistoryGraphs {
 
 	public static final double NOTEXIST = -1;
 
@@ -269,12 +269,10 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
-				e.printStackTrace();
-				// Cat.logError(e);
+				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForDaily(start, end, type, name, graphs);
 	}
 
 	public Map<String, double[]> getGraphDatasFromHour(Date start, Date end, Model model, Payload payload) {
@@ -288,14 +286,13 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
 			try {
 				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-						TransactionAnalyzer.ID, GraphEntity.READSET_FULL);
+				      TransactionAnalyzer.ID, GraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForHour(start, end, type, name, graphs);
 	}
 }

@@ -184,9 +184,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Override
 	public StateReport getReport(String domain) {
-		StateReport report = new StateReport(domain);
-
-		report = new StateReport(Constants.CAT);
+		StateReport report = new StateReport(Constants.CAT);
+		
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		report.getMachines().clear();
@@ -231,7 +230,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 					if (current - lastModifyTime > ONE_HOUR) {
 						m_domainManager.update(ipInfo.getId(), domain, ip);
-						m_logger.info(String.format("change ip %s to domain %", ipInfo.getIp(), domain));
+						m_logger.info(String.format("change ip %s to domain %s", ipInfo.getIp(), domain));
 					}
 				}
 			}

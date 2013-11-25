@@ -140,8 +140,9 @@ public class Handler implements PageHandler<Context> {
 			if (d.getUrlCount() > 0) {
 				dUWebList.add(d);
 			}
-			if (d.getServiceCount() > 0)
+			if (d.getServiceCount() > 0) {
 				dUServiceList.add(d);
+			}
 		}
 		resetWebScore(dUWebList, findMaxWebScore(dUWebList));
 		resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));
@@ -226,7 +227,7 @@ public class Handler implements PageHandler<Context> {
 
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		
+
 		return m_reportService.queryBugReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
@@ -395,7 +396,7 @@ public class Handler implements PageHandler<Context> {
 
 		@Override
 		public void visitDomain(Domain domain) {
-			m_currentDomain= domain;
+			m_currentDomain = domain;
 			super.visitDomain(domain);
 		}
 
@@ -414,7 +415,7 @@ public class Handler implements PageHandler<Context> {
 				statis.setProductLine(productLine);
 				m_currentDomain.setDepartment(department);
 				m_currentDomain.setProductLine(productLine);
-				
+
 				Map<String, ExceptionItem> items = null;
 
 				if (isBug(m_currentDomain.getId(), exception)) {
@@ -432,12 +433,23 @@ public class Handler implements PageHandler<Context> {
 					items.put(exception, item);
 				} else {
 					List<String> messages = item.getMessages();
-					item.setCount(item.getCount() + count);
-					messages.addAll(exceptionItem.getMessages());
 
-					if (messages.size() > 10) {
-						messages = messages.subList(0, 10);
-					}
+					item.setCount(item.getCount() + count);
+					mergeList(messages, exceptionItem.getMessages(), 10);
+				}
+			}
+		}
+
+		protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
+			int originalSize = oldMessages.size();
+
+			if (originalSize < size) {
+				int remainingSize = size - originalSize;
+
+				if (remainingSize >= newMessages.size()) {
+					oldMessages.addAll(newMessages);
+				} else {
+					oldMessages.addAll(newMessages.subList(0, remainingSize));
 				}
 			}
 		}

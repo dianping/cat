@@ -54,7 +54,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
+	public synchronized void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
@@ -153,11 +153,11 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
-		if (modifyTime > m_modifyTime) {
-			String content = config.getContent();
-			MetricConfig metricConfig = DefaultSaxParser.parse(content);
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				MetricConfig metricConfig = DefaultSaxParser.parse(content);
 
-			synchronized (this) {
 				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
@@ -175,8 +175,6 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				config.setName(CONFIG_NAME);
 				config.setContent(getMetricConfig().toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-				
-				System.out.println(config.getContent());
 			} catch (Exception e) {
 				Cat.logError(e);
 				return false;
@@ -184,5 +182,5 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		}
 		return true;
 	}
-	
+
 }

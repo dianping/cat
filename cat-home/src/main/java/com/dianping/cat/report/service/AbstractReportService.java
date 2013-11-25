@@ -26,10 +26,10 @@ public abstract class AbstractReportService<T> {
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
-	
+
 	@Inject
 	protected HourlyReportContentDao m_hourlyReportContentDao;
-	
+
 	@Inject
 	protected DailyReportDao m_dailyReportDao;
 

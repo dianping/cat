@@ -14,7 +14,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("sort")
 	private String m_sortBy = "avg";
-	
+
 	@FieldMeta("tab")
 	private String m_tab = "tab1";
 

@@ -15,19 +15,19 @@ public class HistoryStateReportMerger extends StateReportMerger {
 
 	protected void visitMachineChildren(Machine to, Machine from) {
 		Stack<Object> objs = getObjects();
-		
+
 		for (ProcessDomain source : from.getProcessDomains().values()) {
-         ProcessDomain target = to.findProcessDomain(source.getName());
+			ProcessDomain target = to.findProcessDomain(source.getName());
 
-         if (target == null) {
-            target = new ProcessDomain(source.getName());
-            to.addProcessDomain(target);
-         }
+			if (target == null) {
+				target = new ProcessDomain(source.getName());
+				to.addProcessDomain(target);
+			}
 
-         objs.push(target);
-         source.accept(this);
-         objs.pop();
-      }
+			objs.push(target);
+			source.accept(this);
+			objs.pop();
+		}
 
 	}
 

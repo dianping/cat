@@ -95,8 +95,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 				String xml = report.getContent();
 
 				if (xml != null && xml.length() > 0) {
-					CrossReport reportModel = com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser
-					      .parse(xml);
+					CrossReport reportModel = com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} else {
 					CrossReport reportModel = queryFromDailyBinary(report.getId(), domain);

@@ -29,7 +29,7 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 		}
 		return report;
 	}
-	
+
 	private ProblemReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 
@@ -39,7 +39,9 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
-			bucket.close();
+			if (bucket != null) {
+				bucket.close();
+			}
 		}
 	}
 }

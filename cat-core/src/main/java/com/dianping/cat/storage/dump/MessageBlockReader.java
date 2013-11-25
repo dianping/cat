@@ -32,7 +32,7 @@ class MessageBlockReader {
 		byte[] buf;
 
 		synchronized (m_indexFile) {
-			m_indexFile.seek(index * 6);
+			m_indexFile.seek(index * 6L);
 			blockAddress = m_indexFile.readInt();
 			blockOffset = m_indexFile.readShort() & 0xFFFF;
 		}
@@ -48,9 +48,9 @@ class MessageBlockReader {
 
 		try {
 			in.skip(blockOffset);
-			
+
 			int len = in.readInt();
-			
+
 			byte[] data = new byte[len];
 
 			in.readFully(data);

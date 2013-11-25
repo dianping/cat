@@ -13,9 +13,9 @@ public enum JspFile {
 	MODEL("/jsp/system/abtest/abtestModel.jsp"),
 
 	AJAX("/jsp/system/abtest/abtestAjax.jsp"),
-	
+
 	ABTEST_CACULATOR("/jsp/system/abtest/abtestCaculator.jsp");
-	
+
 	private String m_path;
 
 	private JspFile(String path) {

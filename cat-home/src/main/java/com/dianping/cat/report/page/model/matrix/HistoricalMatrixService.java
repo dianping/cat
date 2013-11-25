@@ -52,7 +52,9 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
-			bucket.close();
+			if (bucket != null) {
+				bucket.close();
+			}
 		}
 	}
 }

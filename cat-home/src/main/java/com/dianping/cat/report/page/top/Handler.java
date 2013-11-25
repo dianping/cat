@@ -35,7 +35,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-	
+
 	@Inject
 	private ExceptionThresholdConfigManager m_configManager;
 
@@ -76,10 +76,10 @@ public class Handler implements PageHandler<Context> {
 
 		if (!payload.getPeriod().isCurrent()) {
 			minuteCount = 60;
-		}else{
+		} else {
 			minuteCount = payload.getMinuteCounts();
 		}
-		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts(),m_configManager);
+		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager);
 
 		displayTop.visitTopReport(report);
 		model.setTopReport(report);

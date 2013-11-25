@@ -155,8 +155,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 	@Override
 	public ServiceReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_SERVICE,
-			      MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
+			      Constants.REPORT_SERVICE, MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
@@ -176,7 +176,7 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_SERVICE,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
-			
+
 			if (content != null && content.length() > 0) {
 				return com.dianping.cat.home.service.transform.DefaultSaxParser.parse(content);
 			} else {

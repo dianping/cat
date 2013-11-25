@@ -94,8 +94,7 @@ public class StateReportService extends AbstractReportService<StateReport> {
 				String xml = report.getContent();
 
 				if (xml != null && xml.length() > 0) {
-					StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser
-					      .parse(xml);
+					StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} else {
 					StateReport reportModel = queryFromDailyBinary(report.getId(), domain);

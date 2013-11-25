@@ -42,7 +42,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Inject
 	private MessageStatistics m_statistics;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(100000);
+	private MessageQueue m_queue = new DefaultMessageQueue(20000);
 
 	private List<InetSocketAddress> m_serverAddresses;
 

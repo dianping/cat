@@ -43,7 +43,7 @@ public class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ABTestService.class, ABTestServiceImpl.class).req(AbtestDao.class).req(AbtestRunDao.class)
 		      .req(GroupStrategyDao.class).req(ProjectDao.class).req(CaseBuilder.class)
 		      .config(E("refreshTimeInSeconds").value("60")));
-		
+
 		all.add(C(CaseBuilder.class).req(GsonBuilderManager.class));
 
 		return all;

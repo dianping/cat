@@ -12,7 +12,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	HISTORY_METHOD("historyMethod"),
 
 	HISTORY_PROJECT("history"),
-	
+
 	METHOD_QUERY("query");
 
 	public static Action getByName(String name, Action defaultAction) {

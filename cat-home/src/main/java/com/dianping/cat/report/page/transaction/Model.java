@@ -42,7 +42,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_responseTrend;
 
 	private String m_type;
-	
+
 	private String m_pieChart;
 
 	public Model(Context ctx) {
@@ -85,7 +85,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return StringSortHelper.sortDomain(domainNames);
 		}
 	}
-	
+
 	public String getErrorTrend() {
 		return m_errorTrend;
 	}
@@ -197,5 +197,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
-	
+
 }

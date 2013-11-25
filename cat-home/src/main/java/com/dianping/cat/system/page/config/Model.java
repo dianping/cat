@@ -51,11 +51,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private MetricItemConfig m_metricItemConfig;
 
 	private Map<ProductLine, List<MetricItemConfig>> m_productMetricConfigs;
-	
+
 	private String m_bug;
-	
+
 	private String m_content;
-	
+
 	private Map<String, Domain> m_productLineToDomains;
 
 	public static final String SUCCESS = "Success";
@@ -91,16 +91,16 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getBug() {
-   	return m_bug;
-   }
+		return m_bug;
+	}
 
 	public TopologyGraphConfig getConfig() {
 		return m_config;
 	}
 
 	public String getContent() {
-   	return m_content;
-   }
+		return m_content;
+	}
 
 	public String getDate() {
 		return "";
@@ -175,7 +175,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_projects;
 	}
 
-	public String getReportType(){
+	public String getReportType() {
 		return "";
 	}
 
@@ -188,16 +188,16 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setBug(String bug) {
-   	m_bug = bug;
-   }
+		m_bug = bug;
+	}
 
 	public void setConfig(TopologyGraphConfig config) {
 		m_config = config;
 	}
 
 	public void setContent(String content) {
-   	m_content = content;
-   }
+		m_content = content;
+	}
 
 	public void setDomainConfig(DomainConfig domainConfig) {
 		m_domainConfig = domainConfig;
@@ -242,7 +242,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProductLineToDomains(Map<String, Domain> productLineToDomains) {
 		m_productLineToDomains = productLineToDomains;
 	}
-	
+
 	public void setProductMetricConfigs(Map<ProductLine, List<MetricItemConfig>> productMetricConfigs) {
 		m_productMetricConfigs = productMetricConfigs;
 	}
@@ -254,6 +254,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
 	}
+
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;
 

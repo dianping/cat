@@ -71,11 +71,11 @@ public class DisplayMatrix {
 		private int m_callMin;
 
 		private int m_callTime;
-		
+
 		private String m_callUrl;
-		
+
 		private String m_sqlUrl;
-		
+
 		private String m_cacheUrl;
 
 		private double m_callTimePercent;
@@ -177,18 +177,18 @@ public class DisplayMatrix {
 		public String getUrl() {
 			return m_url;
 		}
-		
+
 		public String getCallUrl() {
-      	return m_callUrl;
-      }
+			return m_callUrl;
+		}
 
 		public String getSqlUrl() {
-      	return m_sqlUrl;
-      }
+			return m_sqlUrl;
+		}
 
 		public String getCacheUrl() {
-      	return m_cacheUrl;
-      }
+			return m_cacheUrl;
+		}
 
 		public void setBaseInfo(Matrix matrix) {
 			m_type = matrix.getType();

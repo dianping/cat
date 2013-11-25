@@ -63,7 +63,7 @@ public enum NetworkInterfaceManager {
 
 			m_local = local;
 		} catch (SocketException e) {
-			e.printStackTrace();
+			//ignore it
 		}
 	}
 }

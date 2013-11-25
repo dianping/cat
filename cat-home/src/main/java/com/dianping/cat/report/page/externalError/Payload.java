@@ -23,7 +23,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("database")
 	private String m_database;
-	
+
 	@FieldMeta("name")
 	private String m_name;
 
@@ -35,17 +35,17 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("time")
 	private String m_time;
-	
+
 	@FieldMeta("link")
 	private String m_link;
-	
+
 	public String getLink() {
-   	return m_link;
-   }
+		return m_link;
+	}
 
 	public void setLink(String link) {
-   	m_link = link;
-   }
+		m_link = link;
+	}
 
 	@Override
 	public Action getAction() {
@@ -53,20 +53,20 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public String getContent() {
-   	return m_content;
-   }
+		return m_content;
+	}
 
 	public String getDatabase() {
-   	return m_database;
-   }
+		return m_database;
+	}
 
 	public String getIp() {
-   	return m_ip;
-   }
+		return m_ip;
+	}
 
 	public String getName() {
-   	return m_name;
-   }
+		return m_name;
+	}
 
 	@Override
 	public ReportPage getPage() {
@@ -74,61 +74,61 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public String getRecevice() {
-   	return m_recevice;
-   }
+		return m_recevice;
+	}
 
 	public String getTime() {
-   	return m_time;
-   }
+		return m_time;
+	}
 
 	public String getTitle() {
-   	return m_title;
-   }
+		return m_title;
+	}
 
 	public int getType() {
-   	return m_type;
-   }
+		return m_type;
+	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	public void setContent(String content) {
-   	m_content = content;
-   }
+		m_content = content;
+	}
 
 	public void setDatabase(String database) {
-   	m_database = database;
-   }
+		m_database = database;
+	}
 
 	public void setIp(String ip) {
-   	m_ip = ip;
-   }
+		m_ip = ip;
+	}
 
 	public void setName(String name) {
-   	m_name = name;
-   }
+		m_name = name;
+	}
 
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.EXTERNALERROR);
 	}
-	
+
 	public void setRecevice(String recevice) {
-   	m_recevice = recevice;
-   }
+		m_recevice = recevice;
+	}
 
 	public void setTime(String time) {
-   	m_time = time;
-   }
+		m_time = time;
+	}
 
 	public void setTitle(String title) {
-   	m_title = title;
-   }
+		m_title = title;
+	}
 
 	public void setType(int type) {
-   	m_type = type;
-   }
+		m_type = type;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

@@ -6,7 +6,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	GROUP("group"),
 
 	HOUR_GRAPH("hourlyGraph"),
-	
+
 	HISTORY("history"),
 
 	HISTORY_GRAPH("historyGraph"),

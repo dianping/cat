@@ -38,7 +38,7 @@ public class UtilizationConfigManager implements Initializable {
 			return false;
 		}
 	}
-	
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {

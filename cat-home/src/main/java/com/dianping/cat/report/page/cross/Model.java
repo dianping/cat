@@ -143,6 +143,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
 	}
-	
 
 }

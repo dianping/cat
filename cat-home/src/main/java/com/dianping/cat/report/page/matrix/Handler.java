@@ -26,13 +26,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ReportService m_reportService;
-	
+
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-	
+
 	@Inject(type = ModelService.class, value = MatrixAnalyzer.ID)
 	private ModelService<MatrixReport> m_service;
 
@@ -45,7 +45,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<MatrixReport> response = m_service.invoke(request);
 			MatrixReport report = response.getModel();
-			
+
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
 				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), MatrixAnalyzer.ID);
@@ -86,18 +86,18 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void normalize(Model model,Payload payload){
+	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.MATRIX);
 		m_normalizePayload.normalize(model, payload);
 	}
-	
+
 	private void showSummarizeReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
-		
+
 		if (matrixReport == null) {
 			return;
 		}

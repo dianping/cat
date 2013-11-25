@@ -33,9 +33,22 @@ public class BugReportMerger extends DefaultMerger {
 		old.getMessages().addAll(exceptionItem.getMessages());
 
 		List<String> oldMessages = old.getMessages();
+		List<String> newMessages = exceptionItem.getMessages();
 
-		if (oldMessages.size() > 10) {
-			oldMessages = oldMessages.subList(0, 10);
+		mergeList(oldMessages, newMessages, 10);
+	}
+
+	protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
+		int originalSize = oldMessages.size();
+
+		if (originalSize < size) {
+			int remainingSize = size - originalSize;
+
+			if (remainingSize >= newMessages.size()) {
+				oldMessages.addAll(newMessages);
+			} else {
+				oldMessages.addAll(newMessages.subList(0, remainingSize));
+			}
 		}
 	}
 

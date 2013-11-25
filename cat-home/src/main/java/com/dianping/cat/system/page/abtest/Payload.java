@@ -422,8 +422,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 				try {
 					Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
 					Validate.isTrue(m_domains != null && m_domains.length > 0, "'Domains' is required, choose one at least");
-					for (String domain : m_domains) {
-						Validate.isTrue(StringUtils.isNotBlank(domain), "'Domains' should not be blank");
+					if (m_domains != null) {
+						for (String domain : m_domains) {
+							Validate.isTrue(StringUtils.isNotBlank(domain), "'Domains' should not be blank");
+						}
 					}
 					Validate.isTrue(m_strategyId > 0, "'Strategy' is required, choose one at least");
 				} catch (IllegalArgumentException e) {

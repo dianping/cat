@@ -94,8 +94,6 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 					MetricItem reportItem = report.findMetricItem(metricId);
 
 					if (reportItem == null) {
-						//m_logger.warn(String.format("no %s metric item found where computing baseline, %s", metricId,
-						//     reportPeriod.toString()));
 						reportItem = new MetricItem(metricId);
 					}
 					metricItems.add(reportItem);

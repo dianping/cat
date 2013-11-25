@@ -26,7 +26,7 @@ public class CompositeTransactionService extends BaseCompositeModelService<Trans
 			return null;
 		}
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(request.getDomain()));
-		
+
 		for (ModelResponse<TransactionReport> response : responses) {
 			if (response != null) {
 				TransactionReport model = response.getModel();

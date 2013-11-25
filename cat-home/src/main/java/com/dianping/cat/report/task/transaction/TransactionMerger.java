@@ -52,8 +52,7 @@ public class TransactionMerger {
 		TransactionReport transactionReport = merge(reportDomain, reports, false);
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
 		TransactionReport all = merge(reportDomain, reports, false);
-		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
-		      .mergesForAllMachine(all);
+		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger.mergesForAllMachine(all);
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
 

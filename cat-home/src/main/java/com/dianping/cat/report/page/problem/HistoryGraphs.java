@@ -24,7 +24,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.problem.Handler.DetailOrder;
 import com.dianping.cat.report.page.problem.Handler.SummaryOrder;
 
-public class HistoryGraphs extends BaseHistoryGraphs{
+public class HistoryGraphs extends BaseHistoryGraphs {
 
 	private static final String ERROR = "errors";
 
@@ -34,7 +34,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 	@Inject
 	private DailyGraphDao m_dailyGraphDao;
 
-	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, long step, int size,String queryType) {
+	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, long step, int size, String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -176,7 +176,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		} else {
 			throw new RuntimeException("Error graph query type");
 		}
-		LineChart item = buildFail(allDatas, start, step, size,queryType);
+		LineChart item = buildFail(allDatas, start, step, size, queryType);
 		model.setErrorsTrend(item.getJsonString());
 	}
 
@@ -198,8 +198,7 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForDaily(start, end, type, name, graphs);
 	}
 
 	public Map<String, double[]> getGraphDatasFromHour(Date start, Date end, Model model, Payload payload) {
@@ -212,16 +211,15 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
 			try {
-				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, ProblemAnalyzer.ID,
-				      GraphEntity.READSET_FULL);
+				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain,
+				      ProblemAnalyzer.ID, GraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasFromHour(start, end, type, status, graphs);
-		return result;
+		return buildGraphDatasFromHour(start, end, type, status, graphs);
 	}
 
 }
