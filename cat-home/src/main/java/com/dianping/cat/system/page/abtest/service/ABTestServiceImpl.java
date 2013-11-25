@@ -96,9 +96,9 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
-			Case _case = m_caseBuilder.build(abtest, run, groupStrategy);
+			Case abtestCase = m_caseBuilder.build(abtest, run, groupStrategy);
 
-			model.addCase(_case);
+			model.addCase(abtestCase);
 		} catch (Throwable e) {
 			Cat.logError(e);
 		}
@@ -119,16 +119,16 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 					GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
-					Case _case = m_caseBuilder.build(abtest, run, groupStrategy);
+					Case abtestCase = m_caseBuilder.build(abtest, run, groupStrategy);
 
 					if (status.length == 0) {
-						model.addCase(_case);
+						model.addCase(abtestCase);
 					} else {
-						AbtestStatus _status = statusUtil.calculateStatus(run, now);
+						AbtestStatus abtestStatus = statusUtil.calculateStatus(run, now);
 
 						for (AbtestStatus st : status) {
-							if (st == _status) {
-								model.addCase(_case);
+							if (st == abtestStatus) {
+								model.addCase(abtestCase);
 							}
 						}
 					}

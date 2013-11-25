@@ -32,33 +32,33 @@ public class CaseBuilder {
 
 	public Case build(Abtest abtest, AbtestRun abtestRun, GroupStrategy groupStrategy) {
 		if (abtest != null && abtestRun != null && groupStrategy != null) {
-			Case case_ = buildCaseFromAbtest(abtest, groupStrategy);
+			Case abtestCase = buildCaseFromAbtest(abtest, groupStrategy);
 
 			Run run = buildRunFromAbtestRun(abtestRun);
 
-			case_.addRun(run);
+			abtestCase.addRun(run);
 
-			return case_;
+			return abtestCase;
 		} else {
 			throw new RuntimeException("Cannot builder case due to the abtest , abtestRun or groupStrategy is null");
 		}
 	}
 
 	private Case buildCaseFromAbtest(Abtest abtest, GroupStrategy groupStrategy) {
-		Case case_ = new Case(abtest.getId());
+		Case abtestCase = new Case(abtest.getId());
 
-		case_.setCreatedDate(abtest.getCreationDate());
-		case_.setDescription(abtest.getDescription());
-		case_.setGroupStrategy(groupStrategy.getName());
-		case_.setName(abtest.getName());
-		case_.setOwner(abtest.getOwner());
-		case_.setLastModifiedDate(abtest.getModifiedDate());
+		abtestCase.setCreatedDate(abtest.getCreationDate());
+		abtestCase.setDescription(abtest.getDescription());
+		abtestCase.setGroupStrategy(groupStrategy.getName());
+		abtestCase.setName(abtest.getName());
+		abtestCase.setOwner(abtest.getOwner());
+		abtestCase.setLastModifiedDate(abtest.getModifiedDate());
 
 		for (String domain : StringUtils.split(abtest.getDomains(), ',')) {
-			case_.addDomain(domain);
+			abtestCase.addDomain(domain);
 		}
 
-		return case_;
+		return abtestCase;
 	}
 
 	private Run buildRunFromAbtestRun(AbtestRun abtestRun) {

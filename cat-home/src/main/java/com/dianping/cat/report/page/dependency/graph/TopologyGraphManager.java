@@ -72,7 +72,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public ProductLinesDashboard buildDashboardGraph(long time) {
 		TopologyGraph topologyGraph = queryTopologyGraph(time);
 		ProductLinesDashboard dashboardGraph = new ProductLinesDashboard();
-		Set<String> m_allDomains = new HashSet<String>();
+		Set<String> allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
 			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
@@ -87,7 +87,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 						String nodeName = domain.getId();
 						TopologyNode node = topologyGraph.findTopologyNode(nodeName);
 
-						m_allDomains.add(nodeName);
+						allDomains.add(nodeName);
 						if (node != null) {
 							dashboardGraph.addNode(realName, m_graphBuilder.cloneNode(node));
 						}
@@ -100,7 +100,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				String self = edge.getSelf();
 				String to = edge.getTarget();
 
-				if (m_allDomains.contains(self) && m_allDomains.contains(to)) {
+				if (allDomains.contains(self) && allDomains.contains(to)) {
 					dashboardGraph.addEdge(m_graphBuilder.cloneEdge(edge));
 				}
 			}
