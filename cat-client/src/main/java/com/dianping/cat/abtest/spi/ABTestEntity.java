@@ -6,7 +6,6 @@ import java.util.List;
 import javax.script.Invocable;
 
 import com.dianping.cat.abtest.model.entity.Case;
-import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.ConversionRule;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
@@ -37,24 +36,8 @@ public class ABTestEntity {
 		m_groupStrategy.apply(context);
 	}
 
-	public List<Condition> getConditions() {
-		return m_run.getConditions() != null ? m_run.getConditions() : null;
-	}
-
-	public String getConditionsFragement() {
-		return m_run.getConditionsFragement();
-	}
-
 	public List<ConversionRule> getConversionRules() {
 		return m_run.getConversionRules();
-	}
-
-	public Date getEndDate() {
-		return m_run.getEndDate();
-	}
-
-	public ABTestGroupStrategy getGroupStrategy() {
-		return m_groupStrategy;
 	}
 
 	public GroupstrategyDescriptor getGroupStrategyDescriptor() {
@@ -63,6 +46,10 @@ public class ABTestEntity {
 
 	public String getGroupStrategyName() {
 		return m_groupStrategyName != null ? m_groupStrategyName : null;
+	}
+	
+	public ABTestGroupStrategy getGroupStrategy(){
+		return m_groupStrategy;
 	}
 
 	public int getId() {
