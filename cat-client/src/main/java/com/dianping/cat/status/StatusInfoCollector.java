@@ -199,7 +199,6 @@ public class StatusInfoCollector extends BaseVisitor {
 
 		runtime.setStartTime(bean.getStartTime());
 		runtime.setUpTime(bean.getUptime());
-		// runtime.setJavaClasspath(System.getProperty("java.class.path"));
 		runtime.setJavaClasspath(m_jars);
 		runtime.setJavaVersion(System.getProperty("java.version"));
 		runtime.setUserDir(System.getProperty("user.dir"));
