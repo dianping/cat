@@ -184,9 +184,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Override
 	public StateReport getReport(String domain) {
-		StateReport report = new StateReport(domain);
-
-		report = new StateReport(Constants.CAT);
+		StateReport report = new StateReport(Constants.CAT);
+		
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		report.getMachines().clear();

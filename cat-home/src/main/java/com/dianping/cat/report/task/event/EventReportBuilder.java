@@ -61,7 +61,7 @@ public class EventReportBuilder implements ReportTaskBuilder {
 			report.setPeriod(period);
 			report.setType(1);
 			byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
-			return m_reportService.insertDailyReport(report,binaryContent);
+			return m_reportService.insertDailyReport(report, binaryContent);
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
@@ -82,7 +82,6 @@ public class EventReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
 		List<EventReport> reports = new ArrayList<EventReport>();
 		long startTime = period.getTime();
 		EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
@@ -91,8 +90,7 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		reports.add(report);
 		EventReport eventReport = m_eventMerger.mergeForGraph(domain, reports);
 
-		graphs = m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
-		return graphs;
+		return m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
 	}
 
 	@Override
@@ -124,7 +122,7 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
-		return m_reportService.insertMonthlyReport(report,binaryContent);
+		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -141,7 +139,7 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
-		return m_reportService.insertWeeklyReport(report,binaryContent);
+		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -159,7 +157,7 @@ public class EventReportBuilder implements ReportTaskBuilder {
 			}
 		}
 		EventReport eventReport = merger.getEventReport();
-		
+
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
 		return eventReport;

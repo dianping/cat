@@ -58,10 +58,8 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> qeueryHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
 		HeartbeatReport transactionReport = m_reportService.queryHeartbeatReport(domain, period,
 		      new Date(period.getTime() + TimeUtil.ONE_HOUR));
-		graphs = m_heartbeatGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
-		return graphs;
+		return m_heartbeatGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
 	}
 }

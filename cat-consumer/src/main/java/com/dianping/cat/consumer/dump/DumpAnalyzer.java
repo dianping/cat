@@ -101,11 +101,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 					Integer size = m_errorTimestampDomains.get(domain);
 
 					if (size == null) {
-						size = 1;
+						m_errorTimestampDomains.put(domain, size);
 					} else {
-						size++;
+						m_errorTimestampDomains.put(domain, size + 1);
 					}
-					m_errorTimestampDomains.put(domain, size);
 				}
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system, version 2!", e);
