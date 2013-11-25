@@ -15,7 +15,7 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 	private DpAdminLoginDao m_memberDao;
 
 	private Token loginByLoginName(String account, String password) {
-		String base = new String("0000000");
+		String base = "0000000";
 		int length = account.length();
 		int offset = 7 - length;
 

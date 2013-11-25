@@ -18,14 +18,10 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	protected Bucket<?> createBucket(Class<?> type, Date timestamp, String name, String namespace) throws IOException {
-		try {
-			Bucket<?> bucket = lookup(Bucket.class, type.getName() + "-" + namespace);
+		Bucket<?> bucket = lookup(Bucket.class, type.getName() + "-" + namespace);
 
-			bucket.initialize(type, name, timestamp);
-			return bucket;
-		} catch (RuntimeException e) {
-			throw e;
-		}
+		bucket.initialize(type, name, timestamp);
+		return bucket;
 	}
 
 	@SuppressWarnings("unchecked")

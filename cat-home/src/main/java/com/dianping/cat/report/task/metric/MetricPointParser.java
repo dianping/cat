@@ -46,7 +46,7 @@ public class MetricPointParser {
 					int index = hour * 60 + minute;
 					values[index] = oneHourValues[minute];
 				}
-			} catch (NullPointerException e) {
+			} catch (Exception e) {
 				continue;
 			}
 		}
