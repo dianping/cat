@@ -4,6 +4,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.abtest.repository.ABTestRepositoryTest;
+import com.dianping.cat.abtest.repository.FieldInjecterTest;
 import com.dianping.cat.abtest.spi.internal.ABTestCodecTest;
 import com.dianping.cat.abtest.spi.internal.ABTestContextTest;
 import com.dianping.cat.abtest.spi.internal.ABTestEntityManagerTest;
@@ -38,6 +40,10 @@ ABTestCodecTest.class,
 ABTestEntityManagerTest.class,
 
 ABTestContextTest.class,
+
+FieldInjecterTest.class,
+
+ABTestRepositoryTest.class,
 
 EventTest.class,
 

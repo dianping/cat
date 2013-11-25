@@ -11,7 +11,7 @@ CAT主要通过以下几种埋点类型收集信息：
 Requirements
 ---------------------
 * Java 6
-* Maven
+* Maven 3
 * MySQL
 
 Quick Started
@@ -20,6 +20,7 @@ Quick Started
         mvn clean install
 #####2、配置CAT的环境
 		mvn cat:install
+Note：需要对/data/appdatas/cat和/data/applogs/cat有读写权限
 #####3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
 #####4、运行CAT
 		cd cat-home;mvn jetty:run
