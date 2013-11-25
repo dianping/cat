@@ -103,7 +103,7 @@ public class HdfsMessageBucket implements MessageBucket {
 			byte[] buf;
 
 			synchronized (m_indexFile) {
-				m_indexFile.seek(index * 6);
+				m_indexFile.seek(index * 6L);
 				blockAddress = m_indexFile.readInt();
 				blockOffset = m_indexFile.readShort() & 0xFFFF;
 			}

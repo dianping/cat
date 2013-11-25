@@ -72,17 +72,16 @@ public class ServerStatisticManager {
 
 	private Statistic getCurrentStatistic() {
 		long time = System.currentTimeMillis();
-		
+
 		time = time - time % (60 * 1000);
-		
-		synchronized(this){
+
+		synchronized (this) {
 			if (time != m_currentMunite) {
 				m_currentMunite = time;
 				m_currentStatistic = m_serverState.findOrCreate(time);
 			}
+			return m_currentStatistic;
 		}
-		
-		return m_currentStatistic;
 	}
 
 	public void removeState(long time) {

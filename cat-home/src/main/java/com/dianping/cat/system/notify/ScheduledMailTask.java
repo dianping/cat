@@ -114,14 +114,14 @@ public class ScheduledMailTask implements Task, LogEnabled {
 		while (active) {
 			try {
 				MailRecord mailRecord = null;
+				long lastSendMailTime = 0;
 				try {
 					mailRecord = m_mailRecordDao.findLastReportRecord(MailRecordEntity.READSET_FULL);
+					lastSendMailTime = mailRecord.getCreationDate().getTime();
 				} catch (DalNotFoundException e) {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-
-				long lastSendMailTime = mailRecord.getCreationDate().getTime();
 				long currentDay = TimeUtil.getCurrentDay().getTime();
 				Calendar cal = Calendar.getInstance();
 

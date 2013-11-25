@@ -70,7 +70,7 @@ public class StateGraphs {
 				if(datas == null){
 					continue;
 				}
-				Detail detail = datas.get(i * 60 * 1000 + start);
+				Detail detail = datas.get(i * 60 * 1000L + start);
 				if(detail == null){
 					continue;
 				}

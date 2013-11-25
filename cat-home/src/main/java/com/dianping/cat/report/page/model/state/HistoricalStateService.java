@@ -53,9 +53,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
 			if (bucket != null) {
-				if (bucket != null) {
-					bucket.close();
-				}
+				bucket.close();
 			}
 		}
 	}
