@@ -13,6 +13,8 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
 import com.dianping.cat.consumer.matrix.MatrixModelTest;
 import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
 import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
+import com.dianping.cat.consumer.metric.MetricConfigManagerTest;
+import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.sql.DatabaseParserTest;
 import com.dianping.cat.consumer.sql.SqlAnalyzerTest;
 import com.dianping.cat.consumer.sql.SqlParsersTest;
@@ -45,7 +47,11 @@ MatrixAnalyzerTest.class,
 
 DependencyAnalyzerTest.class,
 
-DependencyReportMergerTest.class
+DependencyReportMergerTest.class,
+
+ProductLineConfigManagerTest.class,
+
+MetricConfigManagerTest.class
 
 })
 public class AllTests {
