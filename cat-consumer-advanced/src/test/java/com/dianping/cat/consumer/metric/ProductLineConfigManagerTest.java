@@ -21,9 +21,9 @@ public class ProductLineConfigManagerTest {
 
 	@Test
 	public void testInitNormal() throws Exception {
-		MockProductLineConfigManager manager = new MockProductLineConfigManager();
+		ProductLineConfigManager manager = new MockProductLineConfigManager();
 
-		manager.setConfigDao(new MockConfigDao1());
+		((MockProductLineConfigManager)manager).setConfigDao(new MockConfigDao1());
 		manager.initialize();
 
 		ProductLine line1 = new ProductLine("Test1");
@@ -46,9 +46,9 @@ public class ProductLineConfigManagerTest {
 
 	@Test
 	public void testInitThrowException() throws Exception {
-		MockProductLineConfigManager manager = new MockProductLineConfigManager();
+		ProductLineConfigManager manager = new MockProductLineConfigManager();
 
-		manager.setConfigDao(new MockConfigDao2());
+		((MockProductLineConfigManager)manager).setConfigDao(new MockConfigDao2());
 		manager.initialize();
 
 		Company config = manager.getCompany();
