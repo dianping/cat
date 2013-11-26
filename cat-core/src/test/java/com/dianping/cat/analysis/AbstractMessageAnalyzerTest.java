@@ -105,7 +105,7 @@ public class AbstractMessageAnalyzerTest extends ComponentTestCase {
 		@Override
 		protected void process(MessageTree tree) {
 			m_count++;
-			throw new RuntimeException();
+			throw new RuntimeException("this is for test, Please ignore it");
 		}
 	}
 }

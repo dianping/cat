@@ -259,7 +259,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void storeReports(boolean atEnd) {
+	protected void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
@@ -305,10 +305,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 						Cat.getProducer().logError(e);
 					}
 				}
-				//for create baseline for metric
 				m_taskManager.createTask(period, Constants.CAT, ID, TaskProlicy.DAILY);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing metric reports of %s!", new Date(m_startTime)), e);
@@ -399,4 +399,29 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			return this;
 		}
 	}
+
+	public void setBucketManager(BucketManager bucketManager) {
+   	m_bucketManager = bucketManager;
+   }
+
+	public void setBusinessReportDao(BusinessReportDao businessReportDao) {
+   	m_businessReportDao = businessReportDao;
+   }
+
+	public void setConfigManager(MetricConfigManager configManager) {
+   	m_configManager = configManager;
+   }
+
+	public void setProductLineConfigManager(ProductLineConfigManager productLineConfigManager) {
+   	m_productLineConfigManager = productLineConfigManager;
+   }
+
+	public void setCodec(ABTestCodec codec) {
+   	m_codec = codec;
+   }
+
+	public void setTaskManager(TaskManager taskManager) {
+   	m_taskManager = taskManager;
+   }
+	
 }

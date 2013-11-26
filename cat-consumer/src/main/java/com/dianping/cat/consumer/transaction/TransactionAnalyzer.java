@@ -224,16 +224,4 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.incCount();
 		range.setSum(range.getSum() + d);
 	}
-
-	public void setDelegate(TransactionDelegate delegate) {
-		m_delegate = delegate;
-	}
-
-	public void setReportManager(ReportManager<TransactionReport> reportManager) {
-		m_reportManager = reportManager;
-	}
-
-	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
-		m_serverConfigManager = serverConfigManager;
-	}
 }

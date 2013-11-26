@@ -21,8 +21,6 @@ public class MergeAllName extends BaseVisitor {
 
 	public Integer m_currentRange;
 
-	public Integer m_currentDuration;
-
 	public EventReportMerger m_merger = new EventReportMerger(new EventReport());
 
 	public EventReport getReport() {
