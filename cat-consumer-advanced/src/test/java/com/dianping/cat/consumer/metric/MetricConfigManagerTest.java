@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.metric;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class MetricConfigManagerTest {
 
 		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao1());
 		manager.initialize();
-
+		manager.refreshMetricConfig();
 		MetricConfig config = manager.getMetricConfig();
 
 		Assert.assertEquals(0, config.getMetricItemConfigs().size());
@@ -93,6 +94,7 @@ public class MetricConfigManagerTest {
 
 			config.setId(keyId);
 			config.setContent(new MetricConfig().toString());
+			config.setModifyDate(new Date());
 			return config;
 		}
 
@@ -111,6 +113,7 @@ public class MetricConfigManagerTest {
 			metricItemConfig.setMetricKey("metricKey");
 			metricConfig.addMetricItemConfig(metricItemConfig);
 			config.setContent(metricConfig.toString());
+			config.setModifyDate(new Date());
 			return config;
 		}
 
