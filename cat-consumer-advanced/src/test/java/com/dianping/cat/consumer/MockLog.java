@@ -1,4 +1,4 @@
-package com.dianping.cat;
+package com.dianping.cat.consumer;
 
 import org.codehaus.plexus.logging.Logger;
 

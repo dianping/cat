@@ -13,10 +13,6 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.Configurator;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.transaction.Configurator.ExtendedTransactionDelegate;
-import com.dianping.cat.consumer.transaction.Configurator.MockTransactionReportManager;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
 
 public class RealtimeConfigConfiguration extends AbstractResourceConfigurator {
 
