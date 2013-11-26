@@ -49,7 +49,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		Entry entry = m_threadLocal.get();
 		Object attribute = request.getAttribute("url-rewrite-original-url");
 
-		if (attribute != null && attribute instanceof String) {
+		if (attribute instanceof String) {
 			String requestUrl = (String) attribute;
 
 			if (!requestUrl.contains("ajax")) {
