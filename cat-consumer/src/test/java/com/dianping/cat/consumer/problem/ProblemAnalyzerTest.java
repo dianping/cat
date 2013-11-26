@@ -33,10 +33,8 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		long currentTimeMillis = System.currentTimeMillis();
 
-		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
-
+		m_timestamp = 1385470800000L;
 		m_analyzer = (ProblemAnalyzer) lookup(MessageAnalyzer.class, ProblemAnalyzer.ID);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
@@ -68,12 +66,14 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 		tree.setThreadGroupName("Cat");
 		tree.setThreadName("Cat-ProblemAnalyzer-Test");
 		if (i < 10) {
-			Event error = new DefaultEvent("Error", "Error", null);
+			DefaultEvent error = new DefaultEvent("Error", "Error", null);
 			
+			error.setTimestamp(m_timestamp);
 			tree.setMessage(error);
 		} else if (i < 20) {
-			Heartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
 			
+			heartbeat.setTimestamp(m_timestamp);
 			tree.setMessage(heartbeat);
 		} else {
 

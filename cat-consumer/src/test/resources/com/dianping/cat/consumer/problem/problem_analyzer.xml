@@ -67,7 +67,7 @@
             <message>70</message>
          </duration>
          <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
-            <segment id="17" count="9">
+            <segment id="0" count="90">
                <message>1</message>
                <message>2</message>
                <message>3</message>
@@ -77,8 +77,6 @@
                <message>7</message>
                <message>8</message>
                <message>9</message>
-            </segment>
-            <segment id="0" count="81">
                <message>20</message>
                <message>21</message>
                <message>22</message>
@@ -130,15 +128,6 @@
                <message>68</message>
                <message>69</message>
                <message>70</message>
-               <message>71</message>
-               <message>72</message>
-               <message>73</message>
-               <message>74</message>
-               <message>75</message>
-               <message>76</message>
-               <message>77</message>
-               <message>78</message>
-               <message>79</message>
             </segment>
          </thread>
       </entry>
@@ -206,7 +195,7 @@
             <message>69</message>
          </duration>
          <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
-            <segment id="17" count="10">
+            <segment id="0" count="91">
                <message>10</message>
                <message>11</message>
                <message>12</message>
@@ -217,8 +206,6 @@
                <message>17</message>
                <message>18</message>
                <message>19</message>
-            </segment>
-            <segment id="0" count="81">
                <message>20</message>
                <message>21</message>
                <message>22</message>
@@ -269,16 +256,6 @@
                <message>67</message>
                <message>68</message>
                <message>69</message>
-               <message>70</message>
-               <message>71</message>
-               <message>72</message>
-               <message>73</message>
-               <message>74</message>
-               <message>75</message>
-               <message>76</message>
-               <message>77</message>
-               <message>78</message>
-               <message>79</message>
             </segment>
          </thread>
       </entry>
