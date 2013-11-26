@@ -5,7 +5,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.advanced.MetricAnalyzerTest;
-import com.dianping.cat.consumer.browser.BrowserReportMergerTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossInfoTest;
 import com.dianping.cat.consumer.cross.CrossReportMergerTest;
@@ -33,8 +32,6 @@ MatrixModelTest.class,
 MatrixReportMergerTest.class,
 
 DatabaseParserTest.class,
-
-BrowserReportMergerTest.class,
 
 CrossAnalyzerTest.class,
 

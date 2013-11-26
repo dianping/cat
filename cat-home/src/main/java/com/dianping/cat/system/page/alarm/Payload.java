@@ -18,27 +18,27 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("alarmTemplateId")
 	private int m_alarmTemplateId;
-	
+
 	@FieldMeta("content")
 	private String m_content;
-	
+
 	@FieldMeta("domain")
 	private String m_domain;
-	
+
 	private SystemPage m_page;
-	
+
 	@FieldMeta("scheduledReportId")
 	private int m_scheduledReportId;
 
 	@FieldMeta("templateName")
 	private String m_templateName;
-	
+
 	@FieldMeta("type")
 	private String m_type;
 
 	@FieldMeta("subState")
 	private int m_userSubState;
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -55,7 +55,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public int getAlarmTemplateId() {
 		return m_alarmTemplateId;
 	}
-	
+
 	public String getContent() {
 		return m_content;
 	}
@@ -68,7 +68,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public SystemPage getPage() {
 		return m_page;
 	}
-	
+
 	public String getReportType() {
 		return "";
 	}
@@ -104,7 +104,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setAlarmTemplateId(int alarmTemplateId) {
 		m_alarmTemplateId = alarmTemplateId;
 	}
-	
+
 	public void setContent(String content) {
 		m_content = content;
 	}
@@ -125,7 +125,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setTemplateName(String templateName) {
 		m_templateName = templateName;
 	}
-	
+
 	public void setType(String type) {
 		m_type = type;
 	}

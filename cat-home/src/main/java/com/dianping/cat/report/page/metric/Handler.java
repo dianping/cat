@@ -71,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.METRIC);
 		String poduct = payload.getProduct();
-		
+
 		if (poduct == null || poduct.length() == 0) {
 			payload.setAction(Action.DASHBOARD.getName());
 		}

@@ -127,8 +127,8 @@ public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
 		String[] domains = run.getDomains().split(",");
 		Set<String> productLineSet = new HashSet<String>();
 
-		for (String _domain : domains) {
-			String productLine = m_productLineConfigManager.queryProductLineByDomain(_domain);
+		for (String domain : domains) {
+			String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
 
 			if (!productLine.equals("Default")) {
 				productLineSet.add(productLine);

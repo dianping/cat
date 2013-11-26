@@ -25,8 +25,7 @@ public class ProblemMerger {
 			report.accept(merger);
 		}
 
-		ProblemReport problemReport = merger.getProblemReport();
-		return problemReport;
+		return merger.getProblemReport();
 	}
 
 	public ProblemReport mergeForDaily(String reportDomain, List<ProblemReport> reports, Set<String> domains) {

@@ -113,10 +113,8 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 	}
 
 	protected MessageBlock flushBlock() throws IOException {
-		boolean b = m_dirty.get();
-
-		if (b) {
-			synchronized (m_out) {
+		if (m_dirty.get()) {
+			synchronized (this) {
 				m_out.close();
 				byte[] data = m_buf.toByteArray();
 

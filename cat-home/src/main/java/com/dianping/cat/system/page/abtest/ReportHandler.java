@@ -99,8 +99,8 @@ public class ReportHandler implements SubHandler, Initializable {
 		Chart chart = new Chart();
 
 		if (goal.length() == 0) {
-			for (Goal _goal : report.getGoals()) {
-				goal = _goal.getName();
+			for (Goal targetGoal : report.getGoals()) {
+				goal = targetGoal.getName();
 
 				if (goal.length() > 0) {
 					break;
@@ -359,7 +359,6 @@ public class ReportHandler implements SubHandler, Initializable {
 			payload.setEndDate2(query.getEndTime());
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 	}
 

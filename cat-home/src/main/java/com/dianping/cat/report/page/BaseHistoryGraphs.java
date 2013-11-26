@@ -18,7 +18,7 @@ public class BaseHistoryGraphs {
 			result.add(buildSingalTitle(new Date(date.getTime() - 7 * TimeUtil.ONE_DAY), size, step));
 		} else if (queryType.equals("week")) {
 			result.add(buildSingalTitle(date, size, step));
-			result.add(buildSingalTitle(new Date(date.getTime() - 7*TimeUtil.ONE_DAY), size, step));
+			result.add(buildSingalTitle(new Date(date.getTime() - 7 * TimeUtil.ONE_DAY), size, step));
 		} else if (queryType.equals("month")) {
 			result.add(buildSingalTitle(date, size, step));
 		}
@@ -30,8 +30,7 @@ public class BaseHistoryGraphs {
 		SimpleDateFormat to = new SimpleDateFormat("MM-dd");
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(from.format(date)).append("~")
-		      .append(to.format(new Date(date.getTime() + step * size)));
+		sb.append(from.format(date)).append("~").append(to.format(new Date(date.getTime() + step * size)));
 		return sb.toString();
 	}
 }

@@ -23,7 +23,7 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @RunWith(JUnit4.class)
-public class TcpSocketTest extends ComponentTestCase {
+public class TcpSocketSenderTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, TcpSocketSender.ID);

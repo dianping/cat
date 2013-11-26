@@ -18,7 +18,7 @@ public class TopologyGraphItemBuilder {
 	private static final String DATABASE = GraphConstrant.DATABASE;
 
 	private static final String PROJECT = GraphConstrant.PROJECT;
-	
+
 	private static final String CACHE = GraphConstrant.CACHE;
 
 	public TopologyNode createDatabaseNode(String database) {
@@ -29,7 +29,7 @@ public class TopologyGraphItemBuilder {
 		node.setWeight(1);
 		return node;
 	}
-	
+
 	public TopologyNode createCacheNode(String cache) {
 		TopologyNode node = new TopologyNode(cache);
 
@@ -37,7 +37,7 @@ public class TopologyGraphItemBuilder {
 		node.setType(CACHE);
 		node.setWeight(1);
 		return node;
-   }
+	}
 
 	public TopologyEdge buildEdge(String domain, Dependency dependency) {
 		TopologyEdge edge = new TopologyEdge();
@@ -50,12 +50,9 @@ public class TopologyGraphItemBuilder {
 		edge.setWeight(1);
 
 		Pair<Integer, String> state = m_graphConfigManager.buildEdgeState(domain, dependency);
-		if (state != null) {
-			edge.setStatus(state.getKey());
-			edge.setDes(state.getValue());
-		} else {
-			edge.setStatus(OK);
-		}
+
+		edge.setStatus(state.getKey());
+		edge.setDes(state.getValue());
 		return edge;
 	}
 
@@ -75,12 +72,9 @@ public class TopologyGraphItemBuilder {
 		node.setWeight(1);
 
 		Pair<Integer, String> state = m_graphConfigManager.buildNodeState(domain, index);
-		if (state != null) {
-			node.setStatus(state.getKey());
-			node.setDes(state.getValue());
-		} else {
-			node.setStatus(OK);
-		}
+
+		node.setStatus(state.getKey());
+		node.setDes(state.getValue());
 		return node;
 	}
 

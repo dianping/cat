@@ -34,37 +34,37 @@ public class ListViewHandler implements SubHandler {
 		List<AbtestItem> totalItems = new ArrayList<AbtestItem>();
 		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
 
-		List<AbtestRun> runs = new ArrayList<AbtestRun>();
-
 		try {
-			runs = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+			List<AbtestRun> runs = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
 
-			for (AbtestRun run : runs) {
-				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
-				AbtestItem item = new AbtestItem(abtest, run);
+			if (runs != null) {
+				for (AbtestRun run : runs) {
+					Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
+					AbtestItem item = new AbtestItem(abtest, run);
 
-				totalItems.add(item);
+					totalItems.add(item);
 
-				if (status != null && item.getStatus() == status) {
-					filterItems.add(item);
-				}
+					if (status != null && item.getStatus() == status) {
+						filterItems.add(item);
+					}
 
-				switch (item.getStatus()) {
-				case CREATED:
-					createdCount++;
-					break;
-				case READY:
-					readyCount++;
-					break;
-				case RUNNING:
-					runningCount++;
-					break;
-				case TERMINATED:
-					terminatedCount++;
-					break;
-				case SUSPENDED:
-					suspendedCount++;
-					break;
+					switch (item.getStatus()) {
+					case CREATED:
+						createdCount++;
+						break;
+					case READY:
+						readyCount++;
+						break;
+					case RUNNING:
+						runningCount++;
+						break;
+					case TERMINATED:
+						terminatedCount++;
+						break;
+					case SUSPENDED:
+						suspendedCount++;
+						break;
+					}
 				}
 			}
 		} catch (Throwable e) {
@@ -101,19 +101,19 @@ public class ListViewHandler implements SubHandler {
 
 		listViewModel.setTotalPages(totalPages);
 		listViewModel.setItems(totalItems.subList(fromIndex, toIndex));
-		
+
 		model.setListViewModel(listViewModel);
 	}
 
 	public void setAbtestDao(AbtestDao abtestDao) {
-   	m_abtestDao = abtestDao;
-   }
+		m_abtestDao = abtestDao;
+	}
 
 	public void setAbtestRunDao(AbtestRunDao abtestRunDao) {
-   	m_abtestRunDao = abtestRunDao;
-   }
+		m_abtestRunDao = abtestRunDao;
+	}
 
 	public void setPageSize(int pageSize) {
-   	m_pageSize = pageSize;
-   }
+		m_pageSize = pageSize;
+	}
 }

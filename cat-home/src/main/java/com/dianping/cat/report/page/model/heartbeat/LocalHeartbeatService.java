@@ -28,7 +28,7 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 		}
 		return report;
 	}
-	
+
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {
@@ -37,7 +37,9 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
-			bucket.close();
+			if (bucket != null) {
+				bucket.close();
+			}
 		}
 	}
 }

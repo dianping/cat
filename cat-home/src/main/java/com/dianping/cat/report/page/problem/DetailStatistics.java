@@ -12,7 +12,6 @@ import org.unidal.lookup.util.StringUtils;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MapUtils;
@@ -114,11 +113,6 @@ public class DetailStatistics extends BaseVisitor {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void visitProblemReport(ProblemReport problemReport) {
-		super.visitProblemReport(problemReport);
 	}
 
 	public static class StatusStatistics {

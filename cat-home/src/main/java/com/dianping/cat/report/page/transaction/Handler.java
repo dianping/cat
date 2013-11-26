@@ -147,9 +147,9 @@ public class Handler implements PageHandler<Context> {
 
 		report = m_mergeManager.mergerAll(report, ipAddress, name);
 		TransactionType t = report.getMachines().get(ip).findType(type);
+		
 		if (t != null) {
-			TransactionName n = t.findName(name);
-			return n;
+			return t.findName(name);
 		} else {
 			return null;
 		}

@@ -13,6 +13,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -56,7 +57,7 @@ public class HdfsMessageBucket implements MessageBucket {
 			m_lastAccessTime = System.currentTimeMillis();
 			return tree;
 		} catch (EOFException e) {
-			System.out.println(e);
+			Cat.logError(e);
 			return null;
 		}
 	}
@@ -102,7 +103,7 @@ public class HdfsMessageBucket implements MessageBucket {
 			byte[] buf;
 
 			synchronized (m_indexFile) {
-				m_indexFile.seek(index * 6);
+				m_indexFile.seek(index * 6L);
 				blockAddress = m_indexFile.readInt();
 				blockOffset = m_indexFile.readShort() & 0xFFFF;
 			}

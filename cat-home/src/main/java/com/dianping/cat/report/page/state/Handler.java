@@ -46,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = CAT;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		
+
 		return m_reportService.queryStateReport(domain, start, end);
 	}
 
@@ -58,8 +58,8 @@ public class Handler implements PageHandler<Context> {
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<StateReport> response = m_service.invoke(request);
-			StateReport report = response.getModel();
-			return report;
+
+			return response.getModel();
 		} else {
 			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
 		}
@@ -119,7 +119,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.STATE);
 		String ip = payload.getIpAddress();
 		Action action = payload.getAction();
-		
+
 		if (action == Action.HOURLY || action == Action.HISTORY) {
 			if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
 				payload.setIpAddress(Constants.ALL);
@@ -127,6 +127,5 @@ public class Handler implements PageHandler<Context> {
 		}
 		m_normalizePayload.normalize(model, payload);
 	}
-	
 
 }

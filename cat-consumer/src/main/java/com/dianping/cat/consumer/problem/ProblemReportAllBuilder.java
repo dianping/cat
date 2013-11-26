@@ -68,11 +68,6 @@ public class ProblemReportAllBuilder  extends BaseVisitor {
 	}
 
 	@Override
-	public void visitMachine(Machine machine) {
-		super.visitMachine(machine);
-	}
-
-	@Override
 	public void visitSegment(Segment segment) {
 		int minute = segment.getId();
 		int count = segment.getCount();

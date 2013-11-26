@@ -12,7 +12,6 @@ import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -43,8 +42,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
 
-		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
-		      .req(ClientConfigManager.class));
+		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class));
 
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 

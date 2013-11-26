@@ -223,7 +223,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		} else {
 			try {
 				Date temp = null;
-				if (date != null && date.length() == 10) {
+				if (date.length() == 10) {
 					temp = m_hourlyFormat.parse(date);
 				} else {
 					temp = m_dayFormat.parse(date);

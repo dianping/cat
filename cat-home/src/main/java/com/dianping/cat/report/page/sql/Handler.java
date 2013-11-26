@@ -137,7 +137,7 @@ public class Handler implements PageHandler<Context> {
 		List<Item> items = new ArrayList<Item>();
 
 		for (Table table : tables) {
-			if(!table.getId().equals("All")){
+			if (!table.getId().equals("All")) {
 				items.add(new Item().setTitle(table.getId()).setNumber(table.getTotalCount()));
 			}
 		}

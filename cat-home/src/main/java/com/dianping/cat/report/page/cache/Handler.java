@@ -58,10 +58,10 @@ public class Handler implements PageHandler<Context> {
 	private CacheReport buildCacheReport(TransactionReport transactionReport, EventReport eventReport, Payload payload) {
 		String type = payload.getType();
 		String queryName = payload.getQueryName();
-		String ip  =payload.getIpAddress();
+		String ip = payload.getIpAddress();
 		String sortBy = payload.getSortBy();
 		ReportVisitor visitor = new ReportVisitor();
-		
+
 		visitor.visitTransactionReport(transactionReport);
 
 		TransactionReportVistor vistor = new TransactionReportVistor();
@@ -113,8 +113,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
-		return eventReport;
+		return m_reportService.queryEventReport(domain, start, end);
 	}
 
 	private TransactionReport getHistoryTransactionReport(Payload payload) {
@@ -219,12 +218,15 @@ public class Handler implements PageHandler<Context> {
 		}
 		calculateEventTps(payload, eventReport);
 		calculateTransactionTps(payload, transactionReport);
-		CacheReport cacheReport = buildCacheReport(transactionReport, eventReport, payload);
-		model.setReport(cacheReport);
-		if (!StringUtil.isEmpty(type)) {
-			model.setPieChart(buildPieChart(model.getReport()));
-		}
 
+		if (transactionReport != null && eventReport != null) {
+			CacheReport cacheReport = buildCacheReport(transactionReport, eventReport, payload);
+
+			model.setReport(cacheReport);
+			if (!StringUtil.isEmpty(type)) {
+				model.setPieChart(buildPieChart(model.getReport()));
+			}
+		}
 		m_jspViewer.view(ctx, model);
 	}
 

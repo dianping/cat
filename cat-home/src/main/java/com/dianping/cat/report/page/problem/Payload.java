@@ -47,7 +47,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.PROBLEM);
 	}
 
-	public String getQueryString(){
+	public String getQueryString() {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("&urlThreshold=").append(m_urlThreshold);
@@ -57,6 +57,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		sb.append("&callThreshold=").append(m_callThreshold);
 		return sb.toString();
 	}
+
 	@Override
 	public Action getAction() {
 		return m_action;

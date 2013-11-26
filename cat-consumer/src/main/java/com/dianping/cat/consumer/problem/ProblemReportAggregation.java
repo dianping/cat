@@ -29,8 +29,8 @@ public class ProblemReportAggregation extends BaseVisitor {
 	private String m_domain;
 
 	private static final int SIZE = 60;
-	
-	public void refreshRule(){
+
+	public void refreshRule() {
 		m_aggregationManger.refreshRule();
 	}
 
@@ -75,11 +75,22 @@ public class ProblemReportAggregation extends BaseVisitor {
 	protected void mergeDuration(Duration old, Duration duration) {
 		old.setValue(duration.getValue());
 		old.setCount(old.getCount() + duration.getCount());
-		List<String> messages = old.getMessages();
-		if (messages.size() < SIZE) {
-			messages.addAll(duration.getMessages());
-			if (messages.size() > SIZE) {
-				messages = messages.subList(0, SIZE);
+		List<String> oldMessages = old.getMessages();
+		List<String> newMessages = duration.getMessages();
+
+		mergeList(oldMessages, newMessages, SIZE);
+	}
+
+	protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
+		int originalSize = oldMessages.size();
+
+		if (originalSize < size) {
+			int remainingSize = size - originalSize;
+
+			if (remainingSize >= newMessages.size()) {
+				oldMessages.addAll(newMessages);
+			} else {
+				oldMessages.addAll(newMessages.subList(0, remainingSize));
 			}
 		}
 	}

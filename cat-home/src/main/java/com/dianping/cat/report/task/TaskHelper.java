@@ -120,8 +120,8 @@ public class TaskHelper {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
-	
-	public static Date thisHour(Date  period) {
+
+	public static Date thisHour(Date period) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(period);
 		cal.set(Calendar.MINUTE, 0);
@@ -129,8 +129,8 @@ public class TaskHelper {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
-	
-	public static Date nextMonthStart(Date period){
+
+	public static Date nextMonthStart(Date period) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(period);
 		cal.add(Calendar.MONTH, 1);

@@ -119,7 +119,9 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 							}
 						} finally {
 							try {
-								raf.close(); // we don't need it any more
+								if (raf != null) {
+									raf.close(); // we don't need it any more
+								}
 							} catch (IOException e) {
 								// ignore it
 							}
@@ -149,8 +151,8 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 
 		@Override
 		public String toString() {
-			return String.format("%s[size=%s, writerIndex=%s, readerIndex=%s, file=%s]", getClass().getSimpleName(), getQueueSize(),
-			      getWriterIndex(), getReaderIndex(), m_file);
+			return String.format("%s[size=%s, writerIndex=%s, readerIndex=%s, file=%s]", getClass().getSimpleName(),
+			      getQueueSize(), getWriterIndex(), getReaderIndex(), m_file);
 		}
 	}
 
@@ -189,7 +191,9 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 							}
 						} finally {
 							try {
-								raf.close(); // we don't need it any more
+								if (raf != null) {
+									raf.close(); // we don't need it any more
+								}
 							} catch (IOException e) {
 								// ignore it
 							}

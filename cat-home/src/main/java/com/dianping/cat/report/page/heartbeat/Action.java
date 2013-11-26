@@ -1,10 +1,10 @@
 package com.dianping.cat.report.page.heartbeat;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	HISTORY("history"), 
-	
+	HISTORY("history"),
+
 	VIEW("view"),
-	
+
 	PART_HISTORY("historyPart");
 
 	public static Action getByName(String name, Action defaultAction) {

@@ -25,8 +25,7 @@ public class EventMerger {
 		for (EventReport report : reports) {
 			report.accept(merger);
 		}
-		EventReport eventReport = merger.getEventReport();
-		return eventReport;
+		return merger.getEventReport();
 	}
 
 	public EventReport mergeForDaily(String reportDomain, List<EventReport> reports, Set<String> domains) {

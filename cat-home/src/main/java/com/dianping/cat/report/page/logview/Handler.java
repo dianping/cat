@@ -34,8 +34,10 @@ public class Handler implements PageHandler<Context> {
 		try {
 			if (messageId != null) {
 				MessageId id = MessageId.parse(messageId);
-				ModelRequest request = new ModelRequest(id.getDomain(), id.getTimestamp()) //
-				      .setProperty("messageId", messageId) //
+				ModelRequest request = new ModelRequest(id.getDomain(), id.getTimestamp())
+				      //
+				      .setProperty("messageId", messageId)
+				      //
 				      .setProperty("waterfall", String.valueOf(waterfall))
 				      .setProperty("timestamp", String.valueOf(id.getTimestamp()));
 
@@ -102,7 +104,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			Cat.getProducer().logEvent("Logview", "Success", Event.SUCCESS, null);
 		}
-		
+
 		switch (payload.getAction()) {
 		case VIEW:
 			model.setTable(logView);

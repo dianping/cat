@@ -44,7 +44,8 @@ public class RecordManager {
 				ScheduledReportSubscription scheduledReportSubscription = scheduledReportSubscriptions.get(i);
 				ruleIds[i] = scheduledReportSubscription.getScheduledReportId();
 			}
-			List<MailRecord> mails = m_mailRecordDao.findReportRecordByRuleId(ruleIds, MailRecordEntity.READSET_ALL_EXCLUDE_CONTENT);
+			List<MailRecord> mails = m_mailRecordDao.findReportRecordByRuleId(ruleIds,
+			      MailRecordEntity.READSET_ALL_EXCLUDE_CONTENT);
 			model.setMailRecords(mails);
 		} catch (DalNotFoundException e) {
 		} catch (DalException e) {

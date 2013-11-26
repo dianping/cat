@@ -55,8 +55,8 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				file = "unknown";
 			}
-		} 
-		
+		}
+
 		int index = file.indexOf('?');
 		if (index > -1) {
 			file = file.substring(0, index);

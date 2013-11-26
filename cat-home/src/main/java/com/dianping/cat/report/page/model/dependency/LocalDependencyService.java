@@ -29,7 +29,7 @@ public class LocalDependencyService extends BaseLocalModelService<DependencyRepo
 		}
 		return report;
 	}
-	
+
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {
@@ -38,7 +38,9 @@ public class LocalDependencyService extends BaseLocalModelService<DependencyRepo
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
-			bucket.close();
+			if (bucket != null) {
+				bucket.close();
+			}
 		}
 	}
 }

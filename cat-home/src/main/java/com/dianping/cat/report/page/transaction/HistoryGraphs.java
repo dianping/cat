@@ -24,7 +24,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
 
-public class HistoryGraphs extends BaseHistoryGraphs{
+public class HistoryGraphs extends BaseHistoryGraphs {
 
 	public static final double NOTEXIST = -1;
 
@@ -92,13 +92,13 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 	      List<DailyGraph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-		double[] total_count = new double[size];
-		double[] failure_count = new double[size];
+		double[] totalCount = new double[size];
+		double[] failureCount = new double[size];
 		double[] sum = new double[size];
 
 		for (int i = 0; i < size; i++) {
-			total_count[i] = NOTEXIST;
-			failure_count[i] = NOTEXIST;
+			totalCount[i] = NOTEXIST;
+			failureCount[i] = NOTEXIST;
 			sum[i] = NOTEXIST;
 		}
 
@@ -110,8 +110,8 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						total_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
+						totalCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
+						failureCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
 						sum[indexOfperiod] = Double.valueOf(records[SummaryOrder.SUM.ordinal()]);
 					}
 				}
@@ -124,16 +124,16 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						total_count[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
+						totalCount[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
+						failureCount[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
 						sum[indexOfperiod] = Double.valueOf(records[DetailOrder.SUM.ordinal()]);
 					}
 				}
 			}
 		}
 
-		result.put("total_count", total_count);
-		result.put("failure_count", failure_count);
+		result.put("total_count", totalCount);
+		result.put("failure_count", failureCount);
 		result.put("sum", sum);
 		return result;
 	}
@@ -269,12 +269,10 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
-				e.printStackTrace();
-				// Cat.logError(e);
+				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForDaily(start, end, type, name, graphs);
 	}
 
 	public Map<String, double[]> getGraphDatasFromHour(Date start, Date end, Model model, Payload payload) {
@@ -288,14 +286,13 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
 			try {
 				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-						TransactionAnalyzer.ID, GraphEntity.READSET_FULL);
+				      TransactionAnalyzer.ID, GraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForHour(start, end, type, name, graphs);
 	}
 }

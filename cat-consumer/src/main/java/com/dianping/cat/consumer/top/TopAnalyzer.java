@@ -86,11 +86,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		// do nothing
 	}
 
-	public void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
+	public synchronized void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
 		m_problemAnalyzer = problemAnalyzer;
 	}
 
-	public void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
+	public synchronized void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
 		m_transactionAnalyzer = transactionAnalyzer;
 	}
 

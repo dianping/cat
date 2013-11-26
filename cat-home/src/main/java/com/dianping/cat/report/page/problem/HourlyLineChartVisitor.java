@@ -7,11 +7,8 @@ import java.util.Map;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
@@ -62,11 +59,6 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitDuration(Duration duration) {
-		super.visitDuration(duration);
-	}
-
-	@Override
 	public void visitEntry(Entry entry) {
 		String type = entry.getType();
 		String state = entry.getStatus();
@@ -90,11 +82,6 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitProblemReport(ProblemReport problemReport) {
-		super.visitProblemReport(problemReport);
-	}
-
-	@Override
 	public void visitSegment(Segment segment) {
 		int minute = segment.getId();
 		int count = segment.getCount();
@@ -105,11 +92,6 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 		} else {
 			m_value.put(minute, count + temp);
 		}
-	}
-
-	@Override
-	public void visitThread(JavaThread thread) {
-		super.visitThread(thread);
 	}
 
 }

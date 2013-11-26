@@ -27,7 +27,7 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs,
 	      String abtestId) {
 		MetricDataBuilder builder = new MetricDataBuilder(abtestId);
-		
+
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
 		Map<String, double[]> values = new HashMap<String, double[]>();
@@ -52,13 +52,13 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	}
 
 	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
-	   double[] value = datas.get(key);
-	   
-	   if(value ==null){
-	   	value = new double[60];
-	   }
-	   values.put(key, value);
-   }
+		double[] value = datas.get(key);
+
+		if (value == null) {
+			value = new double[60];
+		}
+		values.put(key, value);
+	}
 
 	public class MetricDataBuilder extends BaseVisitor {
 		private Map<String, double[]> m_datas = new LinkedHashMap<String, double[]>();
@@ -85,8 +85,8 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		}
 
 		public Map<String, double[]> getDatas() {
-      	return m_datas;
-      }
+			return m_datas;
+		}
 
 		@Override
 		public void visitAbtest(Abtest abtest) {

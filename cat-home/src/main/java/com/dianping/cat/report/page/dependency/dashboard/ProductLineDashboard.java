@@ -8,13 +8,13 @@ import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.google.gson.Gson;
 
 public class ProductLineDashboard {
-	
+
 	private String id;
-	
+
 	private String type = GraphConstrant.PROJECT;
-	
+
 	private int status;
-	
+
 	private String des;
 
 	private List<TopologyNode> nodes = new ArrayList<TopologyNode>();
@@ -28,50 +28,50 @@ public class ProductLineDashboard {
 
 		return this;
 	}
-	
+
 	public List<TopologyNode> getNodes() {
-   	return nodes;
-   }
+		return nodes;
+	}
 
 	public String getId() {
-   	return id;
-   }
+		return id;
+	}
 
 	public void setId(String id) {
-   	this.id = id;
-   }
+		this.id = id;
+	}
 
 	public int getStatus() {
-   	return status;
-   }
+		return status;
+	}
 
 	public void setStatus(int status) {
-   	this.status = status;
-   }
+		this.status = status;
+	}
 
 	public String getDes() {
-   	return des;
-   }
+		return des;
+	}
 
 	public String getType() {
-   	return type;
-   }
+		return type;
+	}
 
 	public void setType(String type) {
-   	this.type = type;
-   }
+		this.type = type;
+	}
 
 	public void setDes(String des) {
-   	this.des = des;
-   }
+		this.des = des;
+	}
 
 	public List<TopologyNode> getPoints() {
-   	return nodes;
-   }
+		return nodes;
+	}
 
 	public void setPoints(List<TopologyNode> points) {
-   	this.nodes = points;
-   }
+		this.nodes = points;
+	}
 
 	public String toJson() {
 		String str = new Gson().toJson(this);
