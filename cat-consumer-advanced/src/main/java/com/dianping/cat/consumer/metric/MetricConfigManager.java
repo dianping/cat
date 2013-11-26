@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.advanced.MetricAnalyzer.ConfigItem;
+import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;

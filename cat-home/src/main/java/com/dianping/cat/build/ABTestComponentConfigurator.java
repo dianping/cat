@@ -6,7 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.consumer.advanced.MetricConfigManager;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestReportDao;

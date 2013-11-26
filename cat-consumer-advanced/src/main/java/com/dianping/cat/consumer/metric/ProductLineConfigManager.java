@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
