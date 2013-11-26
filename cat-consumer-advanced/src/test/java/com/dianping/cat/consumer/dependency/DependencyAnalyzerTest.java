@@ -69,8 +69,8 @@ public class DependencyAnalyzerTest extends ComponentTestCase {
 		DefaultEvent event;
 
 		if (i % 3 == 0) {
-			t = new DefaultTransaction("URL", "Cat-Test-Call", null);
-			event = new DefaultEvent("Call", "192.168.1.0:3000:class:method1", null);
+			t = new DefaultTransaction("Call", "Cat-Test-Call", null);
+			event = new DefaultEvent("Exception", "192.168.1.0:3000:class:method1", null);
 		} else if (i % 3 == 1) {
 			t = new DefaultTransaction("PigeonCall", "Cat-Test-Call", null);
 			event = new DefaultEvent("PigeonCall.server", "192.168.1.2:3000:class:method2", null);
