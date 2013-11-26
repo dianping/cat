@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.metric;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,7 @@ public class ProductLineConfigManagerTest {
 
 		Company config = manager.getCompany();
 
+		manager.refreshProductLineConfig();
 		Assert.assertEquals(0, config.getProductLines().size());
 	}
 
@@ -88,6 +90,7 @@ public class ProductLineConfigManagerTest {
 			Config config = new Config();
 
 			config.setId(keyId);
+			config.setModifyDate(new Date());
 			config.setContent(new Company().toString());
 			return config;
 		}
@@ -102,6 +105,7 @@ public class ProductLineConfigManagerTest {
 
 			company.addProductLine(productLine);
 			config.setContent(company.toString());
+			config.setModifyDate(new Date());
 			return config;
 		}
 
