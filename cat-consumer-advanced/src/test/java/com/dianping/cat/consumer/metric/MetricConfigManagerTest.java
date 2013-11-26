@@ -11,9 +11,9 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.Readset;
 import org.unidal.dal.jdbc.Updateset;
 
-import com.dianping.cat.MockLog;
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.MockLog;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;

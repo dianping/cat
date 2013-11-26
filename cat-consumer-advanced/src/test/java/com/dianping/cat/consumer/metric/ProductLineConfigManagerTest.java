@@ -12,7 +12,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.dal.jdbc.Readset;
 import org.unidal.dal.jdbc.Updateset;
 
-import com.dianping.cat.MockLog;
+import com.dianping.cat.consumer.MockLog;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.config.Config;
