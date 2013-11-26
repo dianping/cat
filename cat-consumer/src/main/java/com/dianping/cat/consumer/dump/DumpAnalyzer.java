@@ -132,4 +132,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
    	m_bucketManager = bucketManager;
    }
 
+	public Map<String, Integer> getErrorTimestampDomains() {
+   	return m_errorTimestampDomains;
+   }
+	
 }

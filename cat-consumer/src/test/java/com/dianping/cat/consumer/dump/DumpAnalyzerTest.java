@@ -37,20 +37,36 @@ public class DumpAnalyzerTest {
 		Thread.sleep(1000);
 
 		Assert.assertEquals(true, bucketManager.m_archive);
-		
+
 		for (int i = 0; i < size; i++) {
 			analyzer.process(generateOldMessageTree());
 		}
 
 		Assert.assertEquals(size, bucketManager.m_insert);
 		Assert.assertEquals(size, analyzer.getOldVersionDomains().get("Cat").intValue());
+
+		for (int i = 0; i < size; i++) {
+			analyzer.process(generateErrorMessageTree());
+		}
+
+		Assert.assertEquals(size, bucketManager.m_insert);
+		Assert.assertEquals(size, analyzer.getOldVersionDomains().get("Cat").intValue());
+		Assert.assertEquals(size, analyzer.getErrorTimestampDomains().get("Cat").intValue());
 	}
 
 	protected MessageTree generateOldMessageTree() {
 		DefaultMessageTree tree = (DefaultMessageTree) generateMessageTree(10);
-		
+
 		tree.setMessageId("Cat-0a010680-1385467200000-10");
-		
+
+		return tree;
+	}
+
+	protected MessageTree generateErrorMessageTree() {
+		DefaultMessageTree tree = (DefaultMessageTree) generateMessageTree(10);
+
+		tree.setMessageId("Cat-0a010680-184852-10");
+
 		return tree;
 	}
 
@@ -83,7 +99,7 @@ public class DumpAnalyzerTest {
 
 		t.complete();
 		t.setDurationInMillis(i * 2);
-		long timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
+		long timestamp = 1385467200000L;
 
 		t.setTimestamp(timestamp + 1000);
 		t2.setTimestamp(timestamp + 2000);
