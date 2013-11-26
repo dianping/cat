@@ -113,8 +113,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
-		return eventReport;
+		return m_reportService.queryEventReport(domain, start, end);
 	}
 
 	private TransactionReport getHistoryTransactionReport(Payload payload) {

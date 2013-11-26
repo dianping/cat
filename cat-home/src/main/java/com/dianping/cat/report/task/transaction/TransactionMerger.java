@@ -25,8 +25,7 @@ public class TransactionMerger {
 			report.accept(merger);
 		}
 
-		TransactionReport transactionReport = merger.getTransactionReport();
-		return transactionReport;
+		return merger.getTransactionReport();
 	}
 
 	public TransactionReport mergeForDaily(String reportDomain, List<TransactionReport> reports, Set<String> domainSet) {
