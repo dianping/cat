@@ -195,8 +195,8 @@ public class MetricAlert implements Task, LogEnabled {
 			if (response == null) {
 				return null;
 			}
-			MetricReport report = response.getModel();
-			return report;
+
+			return response.getModel();
 		} else {
 			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
 		}
