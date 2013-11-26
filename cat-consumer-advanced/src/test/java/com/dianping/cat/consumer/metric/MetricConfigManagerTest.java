@@ -22,9 +22,9 @@ public class MetricConfigManagerTest {
 
 	@Test
 	public void testInitNormal() throws Exception {
-		MockMetricConfigManager manager = new MockMetricConfigManager();
+		MetricConfigManager manager = new MockMetricConfigManager();
 
-		manager.setConfigDao(new MockConfigDao1());
+		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao1());
 		manager.initialize();
 
 		String domain1 = "domain1";
@@ -50,9 +50,9 @@ public class MetricConfigManagerTest {
 
 	@Test
 	public void testInitThrowException() throws Exception {
-		MockMetricConfigManager manager = new MockMetricConfigManager();
+		MetricConfigManager manager = new MockMetricConfigManager();
 
-		manager.setConfigDao(new MockConfigDao2());
+		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao1());
 		manager.initialize();
 
 		MetricConfig config = manager.getMetricConfig();
