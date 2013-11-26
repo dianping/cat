@@ -6,14 +6,15 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.codehaus.plexus.logging.Logger;
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.dal.jdbc.Readset;
 import org.unidal.dal.jdbc.Updateset;
 
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.MetricConfigManagerTest.MockLog;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 
@@ -44,6 +45,11 @@ public class ProductLineConfigManagerTest {
 		Map<String, ProductLine> productLines = manager.queryProductLines();
 
 		Assert.assertEquals(3, productLines.size());
+
+		manager.enableLogging(new MockLog());
+		manager.refreshProductLineConfig();
+		productLines = manager.queryProductLines();
+		Assert.assertEquals(1, productLines.size());
 	}
 
 	@Test
@@ -55,121 +61,9 @@ public class ProductLineConfigManagerTest {
 			manager.initialize();
 		} catch (Exception e) {
 		}
-		manager.enableLogging(new MockLog());
 
 		Company config = manager.getCompany();
-		try {
-			manager.refreshProductLineConfig();
-		} catch (Exception e) {
-		}
 		Assert.assertEquals(0, config.getProductLines().size());
-	}
-
-	public static class MockLog implements Logger {
-
-		@Override
-		public void debug(String message) {
-
-		}
-
-		@Override
-		public void debug(String message, Throwable throwable) {
-
-		}
-
-		@Override
-		public boolean isDebugEnabled() {
-
-			return false;
-		}
-
-		@Override
-		public void info(String message) {
-
-		}
-
-		@Override
-		public void info(String message, Throwable throwable) {
-
-		}
-
-		@Override
-		public boolean isInfoEnabled() {
-
-			return false;
-		}
-
-		@Override
-		public void warn(String message) {
-
-		}
-
-		@Override
-		public void warn(String message, Throwable throwable) {
-
-		}
-
-		@Override
-		public boolean isWarnEnabled() {
-
-			return false;
-		}
-
-		@Override
-		public void error(String message) {
-
-		}
-
-		@Override
-		public void error(String message, Throwable throwable) {
-
-		}
-
-		@Override
-		public boolean isErrorEnabled() {
-
-			return false;
-		}
-
-		@Override
-		public void fatalError(String message) {
-
-		}
-
-		@Override
-		public void fatalError(String message, Throwable throwable) {
-
-		}
-
-		@Override
-		public boolean isFatalErrorEnabled() {
-
-			return false;
-		}
-
-		@Override
-		public Logger getChildLogger(String name) {
-
-			return null;
-		}
-
-		@Override
-		public int getThreshold() {
-
-			return 0;
-		}
-
-		@Override
-		public void setThreshold(int threshold) {
-
-		}
-
-		@Override
-		public String getName() {
-
-			return null;
-		}
-
 	}
 
 	public static class MockProductLineConfigManager extends ProductLineConfigManager {
@@ -182,8 +76,8 @@ public class ProductLineConfigManagerTest {
 
 	public static class MockConfigDao2 extends MockConfigDao1 {
 		@Override
-		public Config findByName(String name, Readset<Config> readset) throws DalException {
-			throw new DalException("this is a exception for test");
+		public Config findByName(String name, Readset<Config> readset) throws DalNotFoundException {
+			throw new DalNotFoundException("this is a exception for test");
 		}
 	}
 

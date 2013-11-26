@@ -53,6 +53,9 @@ public class MetricConfigManagerTest {
 		hashSet.add(domain2);
 		List<MetricItemConfig> sets = manager.queryMetricItemConfigs(hashSet);
 		Assert.assertEquals(1, sets.size());
+		manager.enableLogging(new MockLog());
+		manager.refreshMetricConfig();
+		Assert.assertEquals(1, manager.getMetricConfig().getMetricItemConfigs().size());
 	}
 
 	@Test
@@ -66,11 +69,6 @@ public class MetricConfigManagerTest {
 		} catch (Exception e) {
 		}
 		MetricConfig config = manager.getMetricConfig();
-		Assert.assertEquals(0, config.getMetricItemConfigs().size());
-		try {
-			manager.refreshMetricConfig();
-		} catch (Exception e) {
-		}
 		Assert.assertEquals(0, config.getMetricItemConfigs().size());
 	}
 
