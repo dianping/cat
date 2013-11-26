@@ -6,6 +6,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.codehaus.plexus.logging.Logger;
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.Readset;
@@ -42,22 +43,34 @@ public class MetricConfigManagerTest {
 
 		MetricItemConfig item = manager.queryMetricItemConfig(manager.buildMetricKey(domain1, "type", "metricKey"));
 		Assert.assertEquals(true, item != null);
+
+		manager.deleteDomainConfig(manager.buildMetricKey(domain1, "type", "metricKey"));
+		Assert.assertEquals(4, s_storeCount);
+		Assert.assertEquals(2, manager.getMetricConfig().getMetricItemConfigs().size());
+
 		HashSet<String> hashSet = new HashSet<String>();
 		hashSet.add(domain1);
 		hashSet.add(domain2);
 		List<MetricItemConfig> sets = manager.queryMetricItemConfigs(hashSet);
-		Assert.assertEquals(2, sets.size());
+		Assert.assertEquals(1, sets.size());
 	}
 
 	@Test
 	public void testInitThrowException() throws Exception {
 		MetricConfigManager manager = new MockMetricConfigManager();
 
-		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao1());
-		manager.initialize();
-		manager.refreshMetricConfig();
+		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao2());
+		manager.enableLogging(new MockLog());
+		try {
+			manager.initialize();
+		} catch (Exception e) {
+		}
 		MetricConfig config = manager.getMetricConfig();
-
+		Assert.assertEquals(0, config.getMetricItemConfigs().size());
+		try {
+			manager.refreshMetricConfig();
+		} catch (Exception e) {
+		}
 		Assert.assertEquals(0, config.getMetricItemConfigs().size());
 	}
 
@@ -127,5 +140,112 @@ public class MetricConfigManagerTest {
 			s_storeCount++;
 			return 1;
 		}
+	}
+
+	public static class MockLog implements Logger {
+
+		@Override
+		public void debug(String message) {
+
+		}
+
+		@Override
+		public void debug(String message, Throwable throwable) {
+
+		}
+
+		@Override
+		public boolean isDebugEnabled() {
+
+			return false;
+		}
+
+		@Override
+		public void info(String message) {
+
+		}
+
+		@Override
+		public void info(String message, Throwable throwable) {
+
+		}
+
+		@Override
+		public boolean isInfoEnabled() {
+
+			return false;
+		}
+
+		@Override
+		public void warn(String message) {
+
+		}
+
+		@Override
+		public void warn(String message, Throwable throwable) {
+
+		}
+
+		@Override
+		public boolean isWarnEnabled() {
+
+			return false;
+		}
+
+		@Override
+		public void error(String message) {
+
+		}
+
+		@Override
+		public void error(String message, Throwable throwable) {
+
+		}
+
+		@Override
+		public boolean isErrorEnabled() {
+
+			return false;
+		}
+
+		@Override
+		public void fatalError(String message) {
+
+		}
+
+		@Override
+		public void fatalError(String message, Throwable throwable) {
+
+		}
+
+		@Override
+		public boolean isFatalErrorEnabled() {
+
+			return false;
+		}
+
+		@Override
+		public Logger getChildLogger(String name) {
+
+			return null;
+		}
+
+		@Override
+		public int getThreshold() {
+
+			return 0;
+		}
+
+		@Override
+		public void setThreshold(int threshold) {
+
+		}
+
+		@Override
+		public String getName() {
+
+			return null;
+		}
+
 	}
 }
