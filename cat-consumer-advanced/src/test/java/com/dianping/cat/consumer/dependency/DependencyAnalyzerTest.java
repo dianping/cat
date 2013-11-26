@@ -15,6 +15,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -65,22 +66,22 @@ public class DependencyAnalyzerTest extends ComponentTestCase {
 		tree.setIpAddress("192.168.1.1");
 
 		DefaultTransaction t;
-		DefaultTransaction event;
+		DefaultEvent event;
 
 		if (i % 3 == 0) {
 			t = new DefaultTransaction("URL", "Cat-Test-Call", null);
-			event = new DefaultTransaction("Call", "192.168.1.0:3000:class:method1", null);
+			event = new DefaultEvent("Call", "192.168.1.0:3000:class:method1", null);
 		} else if (i % 3 == 1) {
 			t = new DefaultTransaction("PigeonService", "Cat-Test-Service", null);
-			event = new DefaultTransaction("SQL", "192.168.1.2:3000:class:method2", null);
+			event = new DefaultEvent("PigeonCall.server", "192.168.1.2:3000:class:method2", null);
 		} else {
-			t = new DefaultTransaction("Service", "Cat-Test-Service", null);
-			event = new DefaultTransaction("Cache.CatTest", "192.168.1.2:3000:class:method2", null);
+			t = new DefaultTransaction("SQL", "Cat-Test-SQL", null);
+			event = new DefaultEvent("SQL.Database", "jdbc:mysql://127.0.0.1:3306?cat", null);
 		}
 
 		event.setTimestamp(m_timestamp + 5 * 60 * 1000);
-		event.setDurationInMillis(i);
 		event.setStatus(Message.SUCCESS);
+		t.setDurationInMillis(i);
 		t.addChild(event);
 
 		t.complete();

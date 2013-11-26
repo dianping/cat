@@ -3,14 +3,8 @@
    <domainName>group</domainName>
    <segment id="0">
       <index name="PigeonService" total-count="34" error-count="34" sum="3434.00" avg="101.00"/>
-      <index name="Service" total-count="33" error-count="33" sum="3300.00" avg="100.00"/>
+      <index name="SQL" total-count="33" error-count="33" sum="3300.00" avg="100.00"/>
       <index name="URL" total-count="33" error-count="33" sum="3366.00" avg="102.00"/>
-   </segment>
-   <segment id="5">
-      <index name="SQL" total-count="34" error-count="0" sum="1717.00" avg="50.50"/>
-      <index name="Cache.CatTest" total-count="33" error-count="0" sum="1650.00" avg="50.00"/>
-      <index name="Call" total-count="33" error-count="0" sum="1683.00" avg="51.00"/>
-      <dependency type="Cache" target="Cache.CatTest" total-count="33" avg="50.00" error-count="0" key="Cache:Cache.CatTest" sum="1650.00"/>
-      <dependency type="PigeonCall" target="Cat-CatTest" total-count="33" avg="51.00" error-count="0" key="PigeonCall:Cat-CatTest" sum="1683.00"/>
+      <dependency type="Database" target="127.0.0.1:3306" total-count="33" avg="100.00" error-count="33" key="Database:127.0.0.1:3306" sum="3300.00"/>
    </segment>
 </dependency-report>
