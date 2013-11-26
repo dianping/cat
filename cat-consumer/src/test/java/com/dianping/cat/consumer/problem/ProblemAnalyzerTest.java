@@ -13,6 +13,10 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.internal.DefaultEvent;
+import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -93,6 +97,13 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 			break;
 		}
 
+		Event error = new DefaultEvent("Error", "Error", null);
+		Event exception = new DefaultEvent("Exception", "Exception", null);
+		Heartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
+		
+		t.addChild(error);
+		t.addChild(exception);
+		t.addChild(heartbeat);
 		tree.setMessage(t);
 
 		return tree;

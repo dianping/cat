@@ -9,6 +9,7 @@ import com.dianping.cat.consumer.core.GsonTest;
 import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
+import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
@@ -89,6 +90,8 @@ ProblemReportAllBuilderTest.class,
 CompositeFormatTest.class,
 
 DefaultFormatTest.class,
+
+DumpAnalyzer.class,
 
 TransactionReportTypeAggergatorTest.class })
 public class AllTests {

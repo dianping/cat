@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.dal.jdbc.Readset;
 import org.unidal.dal.jdbc.Updateset;
 
@@ -80,8 +81,8 @@ public class AggregationConfigManagerTest {
 
 	public static class MockConfigDao2 extends MockConfigDao1 {
 		@Override
-		public Config findByName(String name, Readset<Config> readset) throws DalException {
-			throw new DalException("this is test exception, please ignore it!");
+		public Config findByName(String name, Readset<Config> readset) throws DalNotFoundException {
+			throw new DalNotFoundException("this is test exception, please ignore it!");
 		}
 	}
 
