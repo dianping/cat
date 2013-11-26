@@ -176,7 +176,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_HEAVY,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
-			
+
 			if (content != null && content.length() > 0) {
 				return com.dianping.cat.home.heavy.transform.DefaultSaxParser.parse(content);
 			} else {

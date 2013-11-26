@@ -9,7 +9,6 @@ import junit.framework.Assert;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
@@ -54,15 +53,6 @@ public class CatClientTest extends CatTestCase {
 
 		queue.initialize();
 		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);
-	}
-
-	@Test
-	public void testEvent() throws Exception {
-		MessageProducer cat = Cat.getProducer();
-		Transaction root = cat.newTransaction("System", "DumpRemoteIds-ipAddress - ts");
-		root.addData("file", "file");
-		root.setStatus(Message.SUCCESS);
-		root.complete();
 	}
 
 	public void testNormal() throws Exception {

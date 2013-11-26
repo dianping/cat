@@ -35,7 +35,7 @@ class MessageBlockWriter {
 			int seq = block.getIndex(i);
 			int size = block.getSize(i);
 
-			m_indexFile.seek(seq * 6);
+			m_indexFile.seek(seq * 6L);
 			m_indexFile.writeInt(m_blockAddress);
 			m_indexFile.writeShort(blockSize);
 			blockSize += size;

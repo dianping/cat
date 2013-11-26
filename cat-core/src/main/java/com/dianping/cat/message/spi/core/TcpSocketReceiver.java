@@ -63,7 +63,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
-	private int m_queueSize = 300000;
+	private int m_queueSize = 100000;
 
 	private volatile int m_errorCount;
 
@@ -104,7 +104,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 			@Override
 			public ChannelPipeline getPipeline() {
-				return Channels.pipeline(new MessageDecoder(), new MyHandler());
+				return Channels.pipeline(new MessageDecoder(), new MessageTreeHandler());
 			}
 		});
 
@@ -242,7 +242,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	class MyHandler extends SimpleChannelHandler {
+	class MessageTreeHandler extends SimpleChannelHandler {
 
 		@Override
 		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {

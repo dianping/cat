@@ -1,4 +1,4 @@
-package com.dianping.cat.message.spi.internal;
+package com.dianping.cat.message.spi.core;
 
 import java.text.Format;
 import java.text.MessageFormat;
@@ -50,6 +50,12 @@ public class DefaultMessagePathBuilderTest {
 		String id = domain + "-" + convertToHex(ip) + "-" + timestamp.getTime() / 3600000L + "-0";
 
 		Assert.assertEquals("Cat-c0a84099-373422-0", id);
+
+		DefaultMessagePathBuilder builder = new DefaultMessagePathBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		String str = builder.getPath(sdf.parse("2013010101"), "transaction");
+
+		Assert.assertEquals("20130101/01/transaction", str);
 	}
 
 }

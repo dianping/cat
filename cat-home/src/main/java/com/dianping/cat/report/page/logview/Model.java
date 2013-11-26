@@ -12,11 +12,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_mobileResponse;
 
 	private String m_table;
-	
+
 	private String m_logviewPath;
-	
+
 	private MessageTree m_tree;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -71,5 +71,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTree(MessageTree tree) {
 		m_tree = tree;
 	}
-	
+
 }

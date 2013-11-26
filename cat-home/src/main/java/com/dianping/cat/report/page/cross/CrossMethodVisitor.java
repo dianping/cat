@@ -1,11 +1,8 @@
 package com.dianping.cat.report.page.cross;
 
 import com.dianping.cat.DomainManager;
-import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
-import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 
@@ -35,16 +32,6 @@ public class CrossMethodVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitCrossReport(CrossReport crossReport) {
-		super.visitCrossReport(crossReport);
-	}
-
-	@Override
-	public void visitLocal(Local local) {
-		super.visitLocal(local);
-	}
-
-	@Override
 	public void visitName(Name name) {
 		String methodName = name.getId();
 		String domain = m_manager.queryDomainByIp(m_remoteIp);
@@ -64,11 +51,6 @@ public class CrossMethodVisitor extends BaseVisitor {
 		m_remoteIp = remote.getId();
 		m_currentRole = remote.getRole();
 		super.visitRemote(remote);
-	}
-
-	@Override
-	public void visitType(Type type) {
-		super.visitType(type);
 	}
 
 }

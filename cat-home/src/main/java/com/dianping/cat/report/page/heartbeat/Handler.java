@@ -175,7 +175,6 @@ public class Handler implements PageHandler<Context> {
 				String displayIp = getIpAddress(report, payload);
 
 				payload.setRealIp(displayIp);
-				// model.setIpAddress(ip);
 				return new DisplayHeartbeat(m_builder).display(report, displayIp);
 			}
 		} catch (Throwable e) {

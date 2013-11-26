@@ -77,7 +77,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 10;
 
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(100000);
 
 	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
@@ -228,6 +228,44 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
+	private void logState(final MessageTree tree) {
+		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
+		Message message = tree.getMessage();
+		if (message instanceof Transaction) {
+			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
+			      - ((Transaction) message).getDurationInMillis();
+			int fiveMinute = 1000 * 60 * 5;
+
+			if (delay < fiveMinute && delay > -fiveMinute) {
+				m_serverStateManager.addProcessDelay(delay);
+			}
+		}
+		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
+			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
+
+			StringBuilder sb = new StringBuilder("gzip thread process message number :");
+			for (int i = 0; i < m_gzipThreads; i++) {
+				sb.append(m_processMessages[i] + "\t");
+			}
+			m_logger.info(sb.toString());
+		}
+	}
+
+	private void moveFile(String path) throws IOException {
+		File outbox = new File(m_baseDir, "outbox");
+		File from = new File(m_baseDir, path);
+		File to = new File(outbox, path);
+
+		to.getParentFile().mkdirs();
+		Files.forDir().copyFile(from, to);
+		Files.forDir().delete(from);
+
+		File parentFile = from.getParentFile();
+
+		parentFile.delete(); // delete it if empty
+		parentFile.getParentFile().delete(); // delete it if empty
+	}
+
 	private void moveOldMessages() {
 		final List<String> paths = new ArrayList<String>();
 
@@ -289,24 +327,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	private void moveFile(String path) throws IOException {
-		File outbox = new File(m_baseDir, "outbox");
-		File from = new File(m_baseDir, path);
-		File to = new File(outbox, path);
-
-		to.getParentFile().mkdirs();
-		Files.forDir().copyFile(from, to);
-		Files.forDir().delete(from);
-
-		File parentFile = from.getParentFile();
-
-		parentFile.delete(); // delete it if empty
-		parentFile.getParentFile().delete(); // delete it if empty
-	}
-
 	public void setBaseDir(File baseDir) {
 		m_baseDir = baseDir;
 	}
+
+	public void setLocalIp(String localIp) {
+   	m_localIp = localIp;
+   }
 
 	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
@@ -380,26 +407,56 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	private void logState(final MessageTree tree) {
-		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-		Message message = tree.getMessage();
-		if (message instanceof Transaction) {
-			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
-			      - ((Transaction) message).getDurationInMillis();
-			int fiveMinute = 1000 * 60 * 5;
+	class BlockDumper implements Task {
+		private int m_errors;
 
-			if (delay < fiveMinute && delay > -fiveMinute) {
-				m_serverStateManager.addProcessDelay(delay);
+		private int m_success;
+
+		@Override
+		public String getName() {
+			return "LocalMessageBucketManager-BlockDumper";
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
+
+					if (block != null) {
+						long time = System.currentTimeMillis();
+						String dataFile = block.getDataFile();
+						LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+						try {
+							bucket.getWriter().writeBlock(block);
+						} catch (Throwable e) {
+							m_errors++;
+
+							if (m_errors == 1 || m_errors % 100 == 0) {
+								Cat.getProducer().logError(
+								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+							}
+						}
+						m_serverStateManager.addBlockTotal(1);
+						if ((++m_success) % 10000 == 0) {
+							int size = m_messageBlocks.size();
+
+							if (size > 0) {
+								m_logger.info("block queue size " + size);
+							}
+						}
+						long duration = System.currentTimeMillis() - time;
+						m_serverStateManager.addBlockTime(duration);
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
 			}
 		}
-		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
-			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
 
-			StringBuilder sb = new StringBuilder("gzip thread process message number :");
-			for (int i = 0; i < m_gzipThreads; i++) {
-				sb.append(m_processMessages[i] + "\t");
-			}
-			m_logger.info(sb.toString());
+		@Override
+		public void shutdown() {
 		}
 	}
 
@@ -416,24 +473,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_index = index;
 		}
 
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
+		public int getIndex() {
+			return m_index;
+		}
 
-					if (item != null) {
-						m_count++;
-						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
-							gzipMessage(item, true);
-						} else {
-							gzipMessage(item, false);
-						}
-					}
-				}
-			} catch (InterruptedException e) {
-				// ignore it
-			}
+		@Override
+		public String getName() {
+			return "Message-Gzip-" + m_index;
 		}
 
 		private void gzipMessage(MessageItem item, boolean monitor) {
@@ -491,13 +537,24 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		}
 
-		public int getIndex() {
-			return m_index;
-		}
-
 		@Override
-		public String getName() {
-			return "Message-Gzip-" + m_index;
+		public void run() {
+			try {
+				while (true) {
+					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
+
+					if (item != null) {
+						m_count++;
+						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
+							gzipMessage(item, true);
+						} else {
+							gzipMessage(item, false);
+						}
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
 		}
 
 		@Override
@@ -516,75 +573,22 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_messageId = messageId;
 		}
 
-		public MessageTree getTree() {
-			return m_tree;
-		}
-
-		public void setTree(MessageTree tree) {
-			m_tree = tree;
-		}
-
 		public MessageId getMessageId() {
 			return m_messageId;
+		}
+
+		public MessageTree getTree() {
+			return m_tree;
 		}
 
 		public void setMessageId(MessageId messageId) {
 			m_messageId = messageId;
 		}
 
-	}
-
-	class BlockDumper implements Task {
-		private int m_errors;
-
-		private int m_success;
-
-		@Override
-		public String getName() {
-			return "LocalMessageBucketManager-BlockDumper";
+		public void setTree(MessageTree tree) {
+			m_tree = tree;
 		}
 
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
-
-					if (block != null) {
-						long time = System.currentTimeMillis();
-						String dataFile = block.getDataFile();
-						LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-						try {
-							bucket.getWriter().writeBlock(block);
-						} catch (Throwable e) {
-							m_errors++;
-
-							if (m_errors == 1 || m_errors % 100 == 0) {
-								Cat.getProducer().logError(
-								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
-							}
-						}
-						m_serverStateManager.addBlockTotal(1);
-						if ((++m_success) % 10000 == 0) {
-							int size = m_messageBlocks.size();
-
-							if (size > 0) {
-								m_logger.info("block queue size " + size);
-							}
-						}
-						long duration = System.currentTimeMillis() - time;
-						m_serverStateManager.addBlockTime(duration);
-					}
-				}
-			} catch (InterruptedException e) {
-				// ignore it
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
 	}
 
 	class OldMessageMover implements Task {

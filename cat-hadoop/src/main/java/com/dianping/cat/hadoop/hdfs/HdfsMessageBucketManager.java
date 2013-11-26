@@ -51,17 +51,17 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 		for (Map.Entry<String, HdfsMessageBucket> entry : m_buckets.entrySet()) {
 			HdfsMessageBucket bucket = entry.getValue();
-			
+
 			if (now - bucket.getLastAccessTime() >= hour) {
 				try {
-	            bucket.close();
-	            closed.add(entry.getKey());
-            } catch (Exception e) {
-            	Cat.logError(e);
-            }
+					bucket.close();
+					closed.add(entry.getKey());
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 		}
-		for(String close:closed){
+		for (String close : closed) {
 			m_buckets.remove(close);
 		}
 	}
@@ -112,26 +112,26 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			t.addData(paths.toString());
 			for (String dataFile : paths) {
 				try {
-	            Cat.getProducer().logEvent("HDFSBucket", dataFile);
-	            HdfsMessageBucket bucket = m_buckets.get(dataFile);
+					Cat.getProducer().logEvent("HDFSBucket", dataFile);
+					HdfsMessageBucket bucket = m_buckets.get(dataFile);
 
-	            if (bucket == null) {
-	            	bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
-	            	bucket.initialize(dataFile);
-	            	m_buckets.put(dataFile, bucket);
-	            }
-	            if (bucket != null) {
-	            	MessageTree tree = bucket.findById(messageId);
+					if (bucket == null) {
+						bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
+						bucket.initialize(dataFile);
+						m_buckets.put(dataFile, bucket);
+					}
+					if (bucket != null) {
+						MessageTree tree = bucket.findById(messageId);
 
-	            	if (tree != null && tree.getMessageId().equals(messageId)) {
-	            		t.addData("path", dataFile);
-	            		return tree;
-	            	}
-	            }
-            } catch (Exception e) {
-            	t.setStatus(e);
-            	Cat.logError(e);
-            }
+						if (tree != null && tree.getMessageId().equals(messageId)) {
+							t.addData("path", dataFile);
+							return tree;
+						}
+					}
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
+				}
 			}
 
 			return null;

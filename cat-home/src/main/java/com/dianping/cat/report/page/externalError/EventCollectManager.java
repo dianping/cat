@@ -111,7 +111,6 @@ public class EventCollectManager implements Initializable, LogEnabled {
 		long current = System.currentTimeMillis();
 
 		if (current - date.getTime() < TimeUtil.ONE_HOUR * 2) {
-			// return queryEventsByDB(domain, date, 10);
 			return queryEventsByMemory(domain, date, 10);
 		} else {
 			return queryEventsByDB(domain, date, 10);

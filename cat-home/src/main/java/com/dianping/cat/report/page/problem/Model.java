@@ -14,7 +14,7 @@ import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta(ProblemAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
-	
+
 	@EntityMeta
 	private ProblemStatistics m_allStatistics;
 

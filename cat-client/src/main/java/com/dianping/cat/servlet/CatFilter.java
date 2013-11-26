@@ -117,10 +117,10 @@ public class CatFilter implements Filter {
 				String paraMode = req.getParameter(traceMode);
 				String headMode = req.getHeader(traceMode);
 
-				if (("true").equals(paraMode)) {
+				if ("true".equals(paraMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
-				if (headMode != null && ("true").equals(headMode)) {
+				if ("true".equals(headMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
 			}

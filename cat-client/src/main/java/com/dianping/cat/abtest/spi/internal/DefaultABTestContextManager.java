@@ -52,7 +52,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		if (attribute != null && attribute instanceof String) {
 			String requestUrl = (String) attribute;
 
-			if (requestUrl == null || !requestUrl.contains("ajax")) {
+			if (!requestUrl.contains("ajax")) {
 				entry.setup(request, response);
 			}
 		}
@@ -66,15 +66,15 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	@Override
 	public ABTestContext createContext(ABTestEntity entity) {
 		DefaultABTestContext ctx = new DefaultABTestContext(entity);
-		
+
 		if (!entity.isDisabled()) {
 			ctx.setMessageManager(m_messageManager);
 			ctx.setCookieCodec(m_cookieCodec);
 		}
-		
+
 		return ctx;
 	}
-	
+
 	public class Entry {
 		private Map<String, ABTestContext> m_map = new HashMap<String, ABTestContext>(4);
 

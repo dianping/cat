@@ -20,7 +20,7 @@ public class ProductLinesDashboard {
 	public String toJson() {
 		String str = new Gson().toJson(this);
 		str = str.replaceAll("\"m_", "\"");
-		
+
 		return str;
 	}
 

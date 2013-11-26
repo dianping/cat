@@ -9,8 +9,7 @@ public enum Range {
 
 	ONE_DAY("24小时", 24),
 
-	TWO_DAY("48小时", 48),
-	;
+	TWO_DAY("48小时", 48), ;
 
 	private String m_title;
 

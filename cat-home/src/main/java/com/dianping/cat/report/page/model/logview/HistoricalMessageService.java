@@ -87,7 +87,7 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 		} catch (Exception e) {
 			// ignore it
 		}
-		
+
 		return null;
 	}
 }

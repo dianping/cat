@@ -13,7 +13,7 @@ public class LineChart {
 	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
 	private int size;
-	
+
 	private long step;
 
 	private String start;
@@ -28,13 +28,13 @@ public class LineChart {
 
 	public LineChart() {
 	}
-	
-	public LineChart add(String title,double[] value){
+
+	public LineChart add(String title, double[] value) {
 		this.subTitles.add(title);
 		this.values.add(value);
 		return this;
 	}
-	
+
 	public LineChart addSubTitle(String title) {
 		this.subTitles.add(title);
 		return this;
@@ -115,15 +115,15 @@ public class LineChart {
 	public void setStep(long step) {
 		this.step = step;
 	}
-	
-	public double[] getValues(int index){
+
+	public double[] getValues(int index) {
 		int size = values.size();
-		
-		if(index>size){
+
+		if (index > size) {
 			return null;
-		}else{
+		} else {
 			return values.get(index);
 		}
 	}
-	
+
 }

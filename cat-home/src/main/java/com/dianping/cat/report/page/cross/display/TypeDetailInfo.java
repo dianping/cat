@@ -83,8 +83,8 @@ public class TypeDetailInfo {
 			m_tps = m_totalCount / (double) m_seconds;
 		}
 	}
-	
-	public void mergeTypeDetailInfo(TypeDetailInfo type){
+
+	public void mergeTypeDetailInfo(TypeDetailInfo type) {
 		m_totalCount += type.getTotalCount();
 		m_failureCount += type.getFailureCount();
 		m_sum += type.getSum();

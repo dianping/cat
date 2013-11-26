@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 
@@ -110,7 +111,7 @@ public class DefaultAggregationHandler implements AggregationHandler {
 		List<Map<String, AggregationMessageFormat>> eformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();
 		TrieTreeNode current = formatTree;
 		int i = 0;
-		
+
 		for (; i < cs.length; i++) {
 			sformatSet.add(current.getFormatMap());
 			TrieTreeNode node = current.getChildNode(cs[i], true);
@@ -134,7 +135,8 @@ public class DefaultAggregationHandler implements AggregationHandler {
 		}
 
 		for (Map<String, AggregationMessageFormat> amfMap : sformatSet) {
-			for (String key : amfMap.keySet()) {
+			for (Entry<String, AggregationMessageFormat> entry : amfMap.entrySet()) {
+				String key = entry.getKey();
 				if (!input.endsWith(key)) {
 					continue;
 				}
@@ -150,7 +152,8 @@ public class DefaultAggregationHandler implements AggregationHandler {
 			}
 		}
 		for (Map<String, AggregationMessageFormat> amfMap : eformatSet) {
-			for (String key : amfMap.keySet()) {
+			for (Entry<String, AggregationMessageFormat> entry : amfMap.entrySet()) {
+				String key = entry.getKey();
 				if (!input.startsWith(key)) {
 					continue;
 				}
@@ -188,23 +191,23 @@ public class DefaultAggregationHandler implements AggregationHandler {
 				continue;
 			}
 			int index1 = format.indexOf('{');
-			
+
 			if (index1 == -1 || index1 == format.length() - 1) {
 				continue;
 			}
 			int index2 = format.lastIndexOf('}');
-			
+
 			if (index2 == -1 || index2 < index1) {
 				continue;
 			}
-			
+
 			String key1 = format.substring(0, index1);
 			String key2 = format.substring(index2 + 1);
 			AggregationMessageFormat value = new AggregationMessageFormat(format);
 
 			if (rule.getDomain() != null) {
 				TrieTreeNode node = findOrCreateTrieTreeNode(rule.getType(), rule.getDomain());
-				
+
 				buildFormatTree(node, key1.toCharArray(), key2.toCharArray(), value);
 			}
 		}

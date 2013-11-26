@@ -161,9 +161,9 @@ public interface MessageProducer {
 	 * Log an trace in one shot with SUCCESS status.
 	 * 
 	 * @param type
-	 *           event type
+	 *           trace type
 	 * @param name
-	 *           event name
+	 *           trace name
 	 */
 	public void logTrace(String type, String name);
 

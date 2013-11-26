@@ -76,9 +76,9 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	@Override
 	public void initialize() throws InitializationException {
 		m_domain = m_configManager.getDomain().getId();
-		ScriptEngineManager m_mgr = new ScriptEngineManager();
+		ScriptEngineManager mgr = new ScriptEngineManager();
 		
-		m_engine = m_mgr.getEngineByExtension("java");
+		m_engine = mgr.getEngineByExtension("java");
 	}
 
 	private void refresh() {
@@ -140,7 +140,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	public void shutdown() {
 	}
 
-	class ABTestVisitor extends BaseVisitor {
+	public class ABTestVisitor extends BaseVisitor {
 		private String m_domain;
 
 		private Map<String, ABTestEntity> m_entities = new HashMap<String, ABTestEntity>();

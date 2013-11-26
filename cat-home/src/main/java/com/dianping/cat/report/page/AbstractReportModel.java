@@ -90,8 +90,9 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		if (hour < 10) {
 			return "0" + Integer.toString(hour);
-		} else
+		} else {
 			return Integer.toString(hour);
+		}
 	}
 
 	// required by report tag

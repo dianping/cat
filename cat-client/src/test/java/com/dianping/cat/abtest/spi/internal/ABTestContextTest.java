@@ -105,7 +105,18 @@ public class ABTestContextTest extends ComponentTestCase {
 		return conversionRules;
 	}
 
-	class MockGroupStrategy implements ABTestGroupStrategy {
+	public static class MockGroupStrategy implements ABTestGroupStrategy {
+		private String a;
+
+		private int b;
+
+		private boolean c;
+
+		private long d;
+
+		private double e;
+
+		private float f;
 
 		@Override
 		public void init() {
@@ -117,6 +128,29 @@ public class ABTestContextTest extends ComponentTestCase {
 			ctx.setGroupName("A");
 		}
 
+		public String getA() {
+			return a;
+		}
+
+		public int getB() {
+			return b;
+		}
+
+		public boolean isC() {
+			return c;
+		}
+
+		public long getD() {
+			return d;
+		}
+
+		public double getE() {
+			return e;
+		}
+
+		public float getF() {
+			return f;
+		}
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -56,8 +56,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_utilizationServiceList;
 	}
 
-	public void setUtilizationServiceList(
-			List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
+	public void setUtilizationServiceList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
 		m_utilizationServiceList = utilizationServiceList;
 	}
 
@@ -188,8 +187,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_utilizationReport = utilizationReport;
 	}
 
-	public void setUtilizationWebList(
-			List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
+	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
 		m_utilizationWebList = utilizationWebList;
 	}
 

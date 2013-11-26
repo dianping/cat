@@ -9,7 +9,6 @@ import java.util.Map;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.MapUtils;
@@ -27,7 +26,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 		int count = 0;
 		String type = entry.getType();
 		String state = entry.getStatus();
-		
+
 		for (Duration duration : entry.getDurations().values()) {
 			count += duration.getCount();
 		}
@@ -38,7 +37,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 			if (temp == null) {
 				m_errors.put(state, count);
 			} else {
-				m_errors.put(state, new Integer(temp + count));
+				m_errors.put(state, temp + count);
 			}
 		}
 	}
@@ -47,11 +46,6 @@ public class ProblemInfoVisitor extends BaseVisitor {
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_start = problemReport.getStartTime();
 		super.visitProblemReport(problemReport);
-	}
-
-	@Override
-	public void visitSegment(Segment segment) {
-		super.visitSegment(segment);
 	}
 
 	public String buildExceptionInfo() {
@@ -63,7 +57,7 @@ public class ProblemInfoVisitor extends BaseVisitor {
 			}
 		};
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
+
 		if (m_errors.size() > 0) {
 			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
 			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");

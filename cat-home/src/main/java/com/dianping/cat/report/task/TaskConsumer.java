@@ -71,8 +71,8 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 							}
 						}
 					} catch (Throwable e) {
-						Cat.logError(task.toString(),e);
-					} 
+						Cat.logError(task.toString(), e);
+					}
 				} else {
 					taskNotFoundDuration();
 				}

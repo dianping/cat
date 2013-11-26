@@ -24,11 +24,11 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
 
-public class HistoryGraphs extends BaseHistoryGraphs{
+public class HistoryGraphs extends BaseHistoryGraphs {
 
 	@Inject
 	private GraphDao m_graphDao;
-	
+
 	@Inject
 	private DailyGraphDao m_dailyGraphDao;
 
@@ -45,7 +45,8 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		}
 	}
 
-	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name,String queryType) {
+	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name,
+	      String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -59,13 +60,13 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
-	
+
 	public Map<String, double[]> buildGraphDatasForDaily(Date start, Date end, String type, String name,
 	      List<DailyGraph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-		double[] total_count = new double[size];
-		double[] failure_count = new double[size];
+		double[] totalCount = new double[size];
+		double[] failureCount = new double[size];
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
 			for (DailyGraph graph : graphs) {
@@ -75,8 +76,8 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						total_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
+						totalCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
+						failureCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
 					}
 				}
 			}
@@ -88,19 +89,20 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						total_count[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
+						totalCount[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
+						failureCount[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
 					}
 				}
 			}
 		}
 
-		result.put("total_count", total_count);
-		result.put("failure_count", failure_count);
+		result.put("total_count", totalCount);
+		result.put("failure_count", failureCount);
 		return result;
 	}
 
-	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name, List<Graph> graphs) {
+	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name,
+	      List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
 		double[] total_count = new double[size];
@@ -140,7 +142,8 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		return result;
 	}
 
-	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size,long step, String name,String queryType) {
+	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name,
+	      String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -171,16 +174,16 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, model, payload);
 			Map<String, double[]> lastDayGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_DAY),
 			      new Date(end.getTime() - TimeUtil.ONE_DAY), model, payload);
-			Map<String, double[]> lastWeekGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
-			      end.getTime() - TimeUtil.ONE_WEEK), model, payload);
+			Map<String, double[]> lastWeekGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastDayGraph);
 			allDatas.add(lastWeekGraph);
 		} else if (queryType.equalsIgnoreCase("week")) {
 			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, model, payload);
-			Map<String, double[]> lastWeek = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
-			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
+			Map<String, double[]> lastWeek = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
+			      end.getTime() - TimeUtil.ONE_WEEK), model, payload);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastWeek);
@@ -188,20 +191,20 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
 			Map<String, double[]> graphData = getGraphDatasFromDaily(start, end, model, payload);
-			
+
 			allDatas.add(graphData);
 		} else {
 			throw new RuntimeException("Error graph query type");
 		}
 
-		LineChart item = buildTotal(allDatas, start, size,step, display,queryType);
+		LineChart item = buildTotal(allDatas, start, size, step, display, queryType);
 		model.setHitTrend(item.getJsonString());
 
-		item = buildFail(allDatas, start, size, step,display,queryType);
+		item = buildFail(allDatas, start, size, step, display, queryType);
 		model.setFailureTrend(item.getJsonString());
 	}
-	
-	public Map<String, double[]> getGraphDatasForHour(Date start,Date end,Model model, Payload payload) {
+
+	public Map<String, double[]> getGraphDatasForHour(Date start, Date end, Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();
@@ -210,19 +213,17 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 		List<Graph> events = new ArrayList<Graph>();
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
 			try {
-				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, EventAnalyzer.ID,
-				      GraphEntity.READSET_FULL);
+				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain,
+				      EventAnalyzer.ID, GraphEntity.READSET_FULL);
 				events.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, events);
-		return result;
+		return buildGraphDatasForHour(start, end, type, name, events);
 	}
-	
-	
+
 	private Map<String, double[]> getGraphDatasFromDaily(Date start, Date end, Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();
@@ -241,7 +242,6 @@ public class HistoryGraphs extends BaseHistoryGraphs{
 				Cat.logError(e);
 			}
 		}
-		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);
-		return result;
+		return buildGraphDatasForDaily(start, end, type, name, graphs);
 	}
 }

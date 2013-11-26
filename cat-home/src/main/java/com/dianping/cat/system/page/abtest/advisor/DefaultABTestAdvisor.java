@@ -32,7 +32,7 @@ public class DefaultABTestAdvisor extends AbstractABTestAdvisor implements ABTes
 				int days = (sizePerGroup * 2) % m_pv == 0 ? (sizePerGroup * 2) / m_pv : (sizePerGroup * 2) / m_pv + 1;
 
 				advice.setDays(days);
-			} 
+			}
 
 			advices.add(advice);
 		} while (increaseCtr < expectedCTR);

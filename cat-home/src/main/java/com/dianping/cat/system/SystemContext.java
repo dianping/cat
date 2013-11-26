@@ -27,7 +27,7 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 	public DpAdminLogin getSigninMember() {
 		return m_signinMember;
 	}
-	
+
 	public void setSigninMember(DpAdminLogin signinMember) {
 		m_signinMember = signinMember;
 	}

@@ -132,7 +132,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 
 					try {
 						if (xml != null && xml.length() > 0) {
-							UtilizationReport reportModel = com.dianping.cat.home.utilization.transform.DefaultSaxParser.parse(xml);
+							UtilizationReport reportModel = com.dianping.cat.home.utilization.transform.DefaultSaxParser
+							      .parse(xml);
 							reportModel.accept(merger);
 						} else {
 							UtilizationReport reportModel = queryFromHourlyBinary(report.getId(), domain);
@@ -155,8 +156,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_UTILIZATION,
-			      MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
+			      Constants.REPORT_UTILIZATION, MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
@@ -173,10 +174,10 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_UTILIZATION,
-			      WeeklyReportEntity.READSET_FULL);
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain,
+			      Constants.REPORT_UTILIZATION, WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
-			
+
 			if (content != null && content.length() > 0) {
 				return com.dianping.cat.home.utilization.transform.DefaultSaxParser.parse(content);
 			} else {

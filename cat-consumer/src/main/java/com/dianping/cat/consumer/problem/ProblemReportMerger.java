@@ -36,29 +36,37 @@ public class ProblemReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
-		List<String> messages = old.getMessages();
+		List<String> oldMessages = old.getMessages();
+		List<String> newMessages = duration.getMessages();
 
 		old.setValue(duration.getValue());
 		old.setCount(old.getCount() + duration.getCount());
-		if (messages.size() < SIZE) {
-			messages.addAll(duration.getMessages());
-			if (messages.size() > SIZE) {
-				messages = messages.subList(0, SIZE);
+
+		mergeList(oldMessages, newMessages, SIZE);
+	}
+
+	protected List<String> mergeList(List<String> oldMessages, List<String> newMessages, int size) {
+		int originalSize = oldMessages.size();
+		
+		if (originalSize < size) {
+			int remainingSize = size - originalSize;
+
+			if (remainingSize >= newMessages.size()) {
+				oldMessages.addAll(newMessages);
+			} else {
+				oldMessages.addAll(newMessages.subList(0, remainingSize));
 			}
 		}
+		return oldMessages;
 	}
 
 	@Override
 	protected void mergeSegment(Segment old, Segment segment) {
-		List<String> messages = old.getMessages();
+		List<String> oldMessages = old.getMessages();
+		List<String> newMessages = segment.getMessages();
 
 		old.setCount(old.getCount() + segment.getCount());
-		if (messages.size() < SIZE) {
-			messages.addAll(segment.getMessages());
-			if (messages.size() > SIZE) {
-				messages = messages.subList(0, SIZE);
-			}
-		}
+		mergeList(oldMessages, newMessages, SIZE);
 	}
 
 	@Override

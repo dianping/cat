@@ -2,11 +2,11 @@ package com.dianping.cat.report.page.state;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	HOURLY("view"),
-	
+
 	HISTORY("history"),
-	
+
 	GRAPH("graph"),
-	
+
 	HISTORY_GRAPH("historyGraph");
 
 	public static Action getByName(String name, Action defaultAction) {

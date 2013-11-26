@@ -46,7 +46,7 @@ public class NavigationBar {
 		ReportPage.DEPENDENCY,
 
 		ReportPage.STATE,
-		
+
 		ReportPage.STATISTICS,
 
 		ReportPage.LOGVIEW,
