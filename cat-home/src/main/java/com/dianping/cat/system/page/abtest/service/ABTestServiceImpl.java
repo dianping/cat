@@ -30,6 +30,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.page.abtest.util.AbtestStatus;
+import com.dianping.cat.system.page.abtest.util.AbtestStatus.AbtestStatusUtil;
 import com.dianping.cat.system.page.abtest.util.CaseBuilder;
 
 public class ABTestServiceImpl implements ABTestService, Initializable, Task {
@@ -62,6 +63,8 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	private long m_modifyTime = 0;
 
+	private AbtestStatusUtil statusUtil = new AbtestStatusUtil();
+
 	@Override
 	public Abtest getABTestByRunId(int runId) {
 		AbtestRun run = getAbTestRunById(runId);
@@ -93,9 +96,9 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
-			Case _case = m_caseBuilder.build(abtest, run, groupStrategy);
+			Case abtestCase = m_caseBuilder.build(abtest, run, groupStrategy);
 
-			model.addCase(_case);
+			model.addCase(abtestCase);
 		} catch (Throwable e) {
 			Cat.logError(e);
 		}
@@ -116,16 +119,16 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 					GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
-					Case _case = m_caseBuilder.build(abtest, run, groupStrategy);
+					Case abtestCase = m_caseBuilder.build(abtest, run, groupStrategy);
 
 					if (status.length == 0) {
-						model.addCase(_case);
+						model.addCase(abtestCase);
 					} else {
-						AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+						AbtestStatus abtestStatus = statusUtil.calculateStatus(run, now);
 
 						for (AbtestStatus st : status) {
-							if (st == _status) {
-								model.addCase(_case);
+							if (st == abtestStatus) {
+								model.addCase(abtestCase);
 							}
 						}
 					}
@@ -161,7 +164,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		Date now = new Date();
 
 		for (AbtestRun run : m_abtestRunMap.values()) {
-			AbtestStatus _status = AbtestStatus.calculateStatus(run, now);
+			AbtestStatus _status = statusUtil.calculateStatus(run, now);
 
 			if (_status == status) {
 				runs.add(run);

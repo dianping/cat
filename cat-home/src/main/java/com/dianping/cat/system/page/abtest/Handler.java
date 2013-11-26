@@ -393,22 +393,22 @@ public class Handler implements PageHandler<Context>, LogEnabled, Initializable 
 		if (lastUpdateTime < m_service.getModifiedTime()) {
 			AbtestModel abtestModel = m_service.getABTestModelByStatus(AbtestStatus.READY, AbtestStatus.RUNNING);
 
-			for (Case _case : abtestModel.getCases()) {
+			for (Case abtestCase : abtestModel.getCases()) {
 				Case newCase = new Case();
 
-				for (Run run : _case.getRuns()) {
+				for (Run run : abtestCase.getRuns()) {
 					if (run.getLastModifiedDate().getTime() > lastUpdateTime) {
 						newCase.addRun(run);
 					}
 				}
 
 				if (newCase.getRuns().size() > 0) {
-					newCase.setId(_case.getId());
-					newCase.setGroupStrategy(_case.getGroupStrategy());
-					newCase.setOwner(_case.getOwner());
-					newCase.setDescription(_case.getDescription());
-					newCase.getDomains().addAll(_case.getDomains());
-					newCase.mergeAttributes(_case);
+					newCase.setId(abtestCase.getId());
+					newCase.setGroupStrategy(abtestCase.getGroupStrategy());
+					newCase.setOwner(abtestCase.getOwner());
+					newCase.setDescription(abtestCase.getDescription());
+					newCase.getDomains().addAll(abtestCase.getDomains());
+					newCase.mergeAttributes(abtestCase);
 
 					filteredModel.addCase(newCase);
 				}

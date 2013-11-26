@@ -287,7 +287,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setDomains(String[] domains) {
-		this.m_domains = domains;
+		m_domains = domains;
 	}
 
 	public void setEndDate(String endDate) {
