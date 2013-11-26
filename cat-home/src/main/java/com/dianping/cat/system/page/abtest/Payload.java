@@ -184,8 +184,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String[] getIds() {
 		if (m_ids != null) {
-			String[] ids = m_ids.split("-");
-			return ids;
+			return m_ids.split("-");
 		} else {
 			return null;
 		}

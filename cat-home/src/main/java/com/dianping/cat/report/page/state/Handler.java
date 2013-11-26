@@ -58,8 +58,8 @@ public class Handler implements PageHandler<Context> {
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<StateReport> response = m_service.invoke(request);
-			StateReport report = response.getModel();
-			return report;
+
+			return response.getModel();
 		} else {
 			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
 		}
