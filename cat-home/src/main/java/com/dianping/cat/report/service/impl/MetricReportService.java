@@ -51,7 +51,7 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "metric", Event.SUCCESS,
+					Cat.getProducer().logEvent("ErrorXML", MetricAnalyzer.ID, Event.SUCCESS,
 					      report.getProductLine() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}

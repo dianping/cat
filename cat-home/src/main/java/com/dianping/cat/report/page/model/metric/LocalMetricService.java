@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.metric;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -15,7 +16,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 	private BucketManager m_bucketManager;
 
 	public LocalMetricService() {
-		super("metric");
+		super(MetricAnalyzer.ID);
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "metric");
+			bucket = m_bucketManager.getReportBucket(timestamp, MetricAnalyzer.ID);
 			String xml = bucket.findById(domain);
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);

@@ -35,7 +35,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 		}
 	};
 
-	private MetricReport getReportFromDB(String product, long date) {
+	private MetricReport getReportFromCache(String product, long date) {
 		String key = product + date;
 		MetricReport result = m_metricReports.get(key);
 
@@ -70,7 +70,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
 			}
 		} else {
-			return getReportFromDB(product, time);
+			return getReportFromCache(product, time);
 		}
 	}
 

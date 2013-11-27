@@ -86,7 +86,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		Bucket<String> reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "metric");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
@@ -266,7 +266,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 		t.setStatus(Message.SUCCESS);
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "metric");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
 
 			for (MetricReport report : m_reports.values()) {
 				try {

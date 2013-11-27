@@ -13,7 +13,6 @@ import org.unidal.dal.jdbc.Updateset;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.MockLog;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -53,7 +52,6 @@ public class MetricConfigManagerTest {
 		hashSet.add(domain2);
 		List<MetricItemConfig> sets = manager.queryMetricItemConfigs(hashSet);
 		Assert.assertEquals(1, sets.size());
-		manager.enableLogging(new MockLog());
 		manager.refreshMetricConfig();
 		Assert.assertEquals(1, manager.getMetricConfig().getMetricItemConfigs().size());
 	}
@@ -63,7 +61,6 @@ public class MetricConfigManagerTest {
 		MetricConfigManager manager = new MockMetricConfigManager();
 
 		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao2());
-		manager.enableLogging(new MockLog());
 		try {
 			manager.initialize();
 		} catch (Exception e) {

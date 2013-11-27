@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
@@ -89,7 +90,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
-		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class).req(ModelService.class, "metric")
+		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class).req(ModelService.class, MetricAnalyzer.ID)
 		      .req(ReportService.class));
 
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
