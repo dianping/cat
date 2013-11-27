@@ -11,7 +11,7 @@ CAT [![Build Status](https://travis-ci.org/dianping/cat.png?branch=biz)](https:/
 
 消息树
 ===
-CAT监控系统将每次URL、Service的请求内部执行情况都封装为一个完整的消息树、消息树可能包括Transaction\Event\Heartbeat\Metric\Trace信息。
+CAT监控系统将每次URL、Service的请求内部执行情况都封装为一个完整的消息树、消息树可能包括Transaction、Event、Heartbeat、Metric和Trace信息。
 
 完整的消息树
 ---------------------
