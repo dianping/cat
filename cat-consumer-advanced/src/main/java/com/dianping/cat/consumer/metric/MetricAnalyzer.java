@@ -308,7 +308,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				m_taskManager.createTask(period, Constants.CAT, ID, TaskProlicy.DAILY);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing metric reports of %s!", new Date(m_startTime)), e);
