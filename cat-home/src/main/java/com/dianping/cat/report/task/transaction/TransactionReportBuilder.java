@@ -96,7 +96,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 		reports.add(report);
 		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
-		graphs = m_transactionGraphCreator.splitReportToGraphs(period, domain, name, transactionReport);
+		graphs = m_transactionGraphCreator.buildGraph(transactionReport);
 		return graphs;
 	}
 

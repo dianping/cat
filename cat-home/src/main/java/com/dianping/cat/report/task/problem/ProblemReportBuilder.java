@@ -77,7 +77,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		reports.add(report);
 		ProblemReport problemReport = m_problemMerger.mergeForGraph(domain, reports);
 
-		graphs = m_problemGraphCreator.splitReportToGraphs(period, domain, name, problemReport);
+		graphs = m_problemGraphCreator.buildGraph(problemReport);
 		return graphs;
 	}
 
