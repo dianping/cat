@@ -120,4 +120,20 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		}
 	}
 
+	public Map<String, Integer> getOldVersionDomains() {
+		return m_oldVersionDomains;
+	}
+
+	public void setServerStateManager(ServerStatisticManager serverStateManager) {
+		m_serverStateManager = serverStateManager;
+	}
+
+	public void setBucketManager(LocalMessageBucketManager bucketManager) {
+   	m_bucketManager = bucketManager;
+   }
+
+	public Map<String, Integer> getErrorTimestampDomains() {
+   	return m_errorTimestampDomains;
+   }
+	
 }

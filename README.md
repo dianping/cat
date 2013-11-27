@@ -22,7 +22,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
 ![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll02.png)
 
-分布式消息树【一台机器CALL另外一台机器】
+分布式消息树【一台机器调用另外一台机器】
 ---------------------
 
 ![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll03.png)
@@ -44,7 +44,9 @@ Quick Started
 Note：
 * Linux\Mac  需要对/data/appdatas/cat和/data/applogs/cat有读写权限
 * Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限
+
 #####3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
+
 #####4、运行CAT
 		cd cat-home;mvn jetty:run
 然后打开浏览器，输入http://localhost:2281/cat/。

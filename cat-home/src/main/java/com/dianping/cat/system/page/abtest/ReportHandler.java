@@ -20,7 +20,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.advanced.MetricConfigManager;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
