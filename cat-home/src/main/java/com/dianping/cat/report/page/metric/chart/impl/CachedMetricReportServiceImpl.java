@@ -38,9 +38,11 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 	private MetricReport getReportFromDB(String product, long date) {
 		String key = product + date;
 		MetricReport result = m_metricReports.get(key);
+
 		if (result == null) {
 			Date start = new Date(date);
 			Date end = new Date(date + TimeUtil.ONE_HOUR);
+
 			try {
 				result = m_reportService.queryMetricReport(product, start, end);
 				m_metricReports.put(key, result);
@@ -58,6 +60,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 
 		if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
 			ModelRequest request = new ModelRequest(product, time);
+
 			if (m_service.isEligable(request)) {
 				ModelResponse<MetricReport> response = m_service.invoke(request);
 				MetricReport report = response.getModel();

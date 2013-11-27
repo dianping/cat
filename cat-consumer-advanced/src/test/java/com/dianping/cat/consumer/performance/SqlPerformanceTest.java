@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
@@ -13,7 +14,7 @@ public class SqlPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		SqlAnalyzer analyzer = lookup(SqlAnalyzer.class);
+		SqlAnalyzer analyzer = (SqlAnalyzer) lookup(MessageAnalyzer.class, SqlAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();

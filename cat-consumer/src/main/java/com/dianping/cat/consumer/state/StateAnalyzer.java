@@ -217,18 +217,18 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			if (!m_domainManager.containsDomainInCat(domain)) {
 				m_domainManager.insertDomain(domain);
 			}
-			Hostinfo ipInfo = m_domainManager.queryHostInfoByIp(ip);
+			Hostinfo info = m_domainManager.queryHostInfoByIp(ip);
 
-			if (ipInfo == null) {
+			if (info == null) {
 				m_domainManager.insert(domain, ip);
-			} else if (!ipInfo.getDomain().equals(domain)) {
+			} else if (!info.getDomain().equals(domain)) {
 				// only work on online environment
 				long current = System.currentTimeMillis();
-				long lastModifyTime = ipInfo.getLastModifiedDate().getTime();
+				long lastModifyTime = info.getLastModifiedDate().getTime();
 
 				if (current - lastModifyTime > ONE_HOUR) {
-					m_domainManager.update(ipInfo.getId(), domain, ip);
-					m_logger.info(String.format("change ip %s to domain %s", ipInfo.getIp(), domain));
+					m_domainManager.update(info.getId(), domain, ip);
+					m_logger.info(String.format("old domain is %s , change ip %s to %s", info.getDomain(), ip, domain));
 				}
 			}
 		}

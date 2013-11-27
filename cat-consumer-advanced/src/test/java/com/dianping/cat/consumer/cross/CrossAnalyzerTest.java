@@ -31,7 +31,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai")); 
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
 		long currentTimeMillis = System.currentTimeMillis();
 
 		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
@@ -66,23 +66,22 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		tree.setIpAddress("192.168.1.1");
 
 		DefaultTransaction t;
-		
-		if(i%2 == 0){
+
+		if (i % 2 == 0) {
 			t = new DefaultTransaction("PigeonCall", "Cat-Test-Call", null);
 			DefaultEvent event = new DefaultEvent("PigeonCall.server", "192.168.1.0:3000:class:method1");
-			
+
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
-		}else{
+		} else {
 			t = new DefaultTransaction("PigeonService", "Cat-Test-Service", null);
 			DefaultEvent event = new DefaultEvent("PigeonService.client", "192.168.1.2:3000:class:method2");
-			
+
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
 		}
-
 
 		t.complete();
 		t.setDurationInMillis(i * 2);
@@ -90,6 +89,18 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		tree.setMessage(t);
 
 		return tree;
+	}
+
+	@Test
+	public void testFormatIp() {
+		CrossAnalyzer analyzer = new CrossAnalyzer();
+
+		Assert.assertEquals(true, analyzer.isIPAdress("10.1.6.128"));
+		Assert.assertEquals(false, analyzer.isIPAdress("10.1.6.328"));
+		Assert.assertEquals(false, analyzer.isIPAdress("2886.1.6.128"));
+		Assert.assertEquals(false, analyzer.isIPAdress("2886.1.6.1228"));
+
+		Assert.assertEquals("10.1.6.128", analyzer.formatIp("10.1.6.128"));
 	}
 
 }

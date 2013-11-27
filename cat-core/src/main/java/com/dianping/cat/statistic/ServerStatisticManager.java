@@ -78,8 +78,8 @@ public class ServerStatisticManager {
 		if (time != m_currentMunite) {
 			synchronized (this) {
 				if (time != m_currentMunite) {
-					m_currentMunite = time;
 					m_currentStatistic = m_serverState.findOrCreate(time);
+					m_currentMunite = time;
 				}
 			}
 		}
