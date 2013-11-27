@@ -148,7 +148,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 					String formatIp = formatIp(name);
 
 					if (formatIp != null && formatIp.length() > 0) {
-						crossInfo.setRemoteAddress(name);
+						crossInfo.setRemoteAddress(formatIp);
 					}
 					break;
 				}
