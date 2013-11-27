@@ -118,7 +118,6 @@ public class MetricAlert implements Task, LogEnabled {
 				if (metricConfig == null) {
 					continue;
 				}
-
 				if (metricConfig.isShowCount()) {
 					alerts.addAll(buildAlertInfo(date, productLine, MetricType.COUNT, item, minute));
 				}

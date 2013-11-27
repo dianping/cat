@@ -204,7 +204,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			for (PeriodTask task : m_tasks) {
 				task.enqueue(tree);
 			}
-
 		}
 
 		public void finish() {

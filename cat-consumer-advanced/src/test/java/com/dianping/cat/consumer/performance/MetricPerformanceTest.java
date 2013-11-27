@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
@@ -13,7 +14,7 @@ public class MetricPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		MetricAnalyzer analyzer = lookup(MetricAnalyzer.class);
+		MetricAnalyzer analyzer = (MetricAnalyzer)lookup(MessageAnalyzer.class,MetricAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		System.out.println(tree);
