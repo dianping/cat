@@ -113,6 +113,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 					InetAddress address = InetAddress.getByName(str);
 
 					result = address.getHostAddress();
+					m_logger.info(String.format("hostname %s to %s", str, result));
 				} catch (UnknownHostException e) {
 					Cat.logError(e);
 					result = "";
