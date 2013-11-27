@@ -37,10 +37,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private DomainManager m_domainManager;
-	
+
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
-	
+
 	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -78,7 +78,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				long value = entry.getValue().get();
 				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
 				Detail detail = domain.findOrCreateDetail(start);
-				
+
 				if (totals.containsKey(key)) {
 					domain.setTotal(value + domain.getTotal());
 					detail.setTotal(value);
@@ -185,7 +185,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Override
 	public StateReport getReport(String domain) {
 		StateReport report = new StateReport(Constants.CAT);
-		
+
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		report.getMachines().clear();
@@ -221,17 +221,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			if (ipInfo == null) {
 				m_domainManager.insert(domain, ip);
-			} else if (!ipInfo.getIp().equals(ip)) {
-				String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			} else if (!ipInfo.getDomain().equals(domain)) {
 				// only work on online environment
-				if (localIp.startsWith("10.")) {
-					long current = System.currentTimeMillis();
-					long lastModifyTime = ipInfo.getLastModifiedDate().getTime();
+				long current = System.currentTimeMillis();
+				long lastModifyTime = ipInfo.getLastModifiedDate().getTime();
 
-					if (current - lastModifyTime > ONE_HOUR) {
-						m_domainManager.update(ipInfo.getId(), domain, ip);
-						m_logger.info(String.format("change ip %s to domain %s", ipInfo.getIp(), domain));
-					}
+				if (current - lastModifyTime > ONE_HOUR) {
+					m_domainManager.update(ipInfo.getId(), domain, ip);
+					m_logger.info(String.format("change ip %s to domain %s", ipInfo.getIp(), domain));
 				}
 			}
 		}
