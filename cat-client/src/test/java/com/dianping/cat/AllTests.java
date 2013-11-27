@@ -10,6 +10,7 @@ import com.dianping.cat.abtest.spi.internal.ABTestCodecTest;
 import com.dianping.cat.abtest.spi.internal.ABTestContextTest;
 import com.dianping.cat.abtest.spi.internal.ABTestEntityManagerTest;
 import com.dianping.cat.abtest.spi.internal.groupstrategy.TrafficDistributionGroupStrategyTest;
+import com.dianping.cat.agent.MmapConsumerTaskTest;
 import com.dianping.cat.configuration.ConfigTest;
 import com.dianping.cat.log4j.CatAppenderTest;
 import com.dianping.cat.message.EventTest;
@@ -32,7 +33,7 @@ CatAppenderTest.class,
 MessageTest.class,
 
 /* .abtest */
-TrafficDistributionGroupStrategyTest.class, 
+TrafficDistributionGroupStrategyTest.class,
 
 ABTestCodecTest.class,
 
@@ -69,7 +70,9 @@ CatFilterTest.class,
 /* .tool */
 ToolsTest.class,
 
-CatTest.class
+CatTest.class,
+
+MmapConsumerTaskTest.class
 
 })
 public class AllTests {
