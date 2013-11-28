@@ -13,7 +13,6 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#projectList').addClass('active');
-			init();
 		});
 	</script>
 	
@@ -25,10 +24,11 @@
 		<div class="span10">
 		</br>
 
-<form name="projectUpdate" id="form" method="post" action="${model.pageUri}?op=updateSubmit">
+<form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
 	<table class="table table-striped table-bordered table-condensed">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
+		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
 			<td>项目名称</td>
 			<td>${model.project.domain}</td>
