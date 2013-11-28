@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.metric;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		Bucket<String> reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "metric");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
@@ -260,17 +260,16 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	protected void storeReports(boolean atEnd) {
-		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
 
 		t.setStatus(Message.SUCCESS);
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "metric");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
 
 			for (MetricReport report : m_reports.values()) {
 				try {
-					String xml = builder.buildXml(report);
+					String xml = new DefaultXmlBuilder(true).buildXml(report);
 					String product = report.getProduct();
 
 					reportBucket.storeById(product, xml);
@@ -308,7 +307,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				m_taskManager.createTask(period, Constants.CAT, ID, TaskProlicy.DAILY);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing metric reports of %s!", new Date(m_startTime)), e);

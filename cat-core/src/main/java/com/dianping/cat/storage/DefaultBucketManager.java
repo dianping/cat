@@ -37,41 +37,4 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		return getBucket(String.class, timestamp, name, "report");
 	}
 
-	public static class Entry {
-		private String m_namespace;
-
-		private String m_path;
-
-		private Class<?> m_type;
-
-		public Entry(Class<?> type, String path, String namespace) {
-			m_type = type;
-			m_path = path;
-			m_namespace = namespace;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof Entry) {
-				Entry e = (Entry) obj;
-
-				return e.m_type == m_type && e.m_path.equals(m_path) && e.m_namespace.equals(m_namespace);
-			}
-
-			return false;
-		}
-
-		@Override
-		public int hashCode() {
-			int hashcode = m_type.hashCode();
-
-			hashcode = hashcode * 31 + m_path.hashCode();
-			return hashcode;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("Entry[type=%s,path=%s]", m_type, m_path);
-		}
-	}
 }

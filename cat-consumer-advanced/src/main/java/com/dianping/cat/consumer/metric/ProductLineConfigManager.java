@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	@Inject
-	private ConfigDao m_configDao;
+	protected ConfigDao m_configDao;
 
 	private int m_configId;
 
