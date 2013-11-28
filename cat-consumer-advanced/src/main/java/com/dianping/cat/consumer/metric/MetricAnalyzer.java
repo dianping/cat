@@ -260,7 +260,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	protected void storeReports(boolean atEnd) {
-		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
 
@@ -270,7 +269,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			for (MetricReport report : m_reports.values()) {
 				try {
-					String xml = builder.buildXml(report);
+					String xml = new DefaultXmlBuilder(true).buildXml(report);
 					String product = report.getProduct();
 
 					reportBucket.storeById(product, xml);
