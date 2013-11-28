@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -21,7 +22,7 @@ public class HistoricalMetricService extends BaseHistoricalModelService<MetricRe
 	private ReportService m_reportService;
 
 	public HistoricalMetricService() {
-		super("metric");
+		super(MetricAnalyzer.ID);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class HistoricalMetricService extends BaseHistoricalModelService<MetricRe
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "metric");
+			bucket = m_bucketManager.getReportBucket(timestamp, MetricAnalyzer.ID);
 			String xml = bucket.findById(domain);
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);

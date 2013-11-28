@@ -14,8 +14,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.advanced.MetricConfigManager;
-import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -49,7 +50,7 @@ public class MetricAlert implements Task, LogEnabled {
 	@Inject
 	protected ReportService m_reportService;
 
-	@Inject(type = ModelService.class, value = "metric")
+	@Inject(type = ModelService.class, value = MetricAnalyzer.ID)
 	protected ModelService<MetricReport> m_service;
 
 	@Inject
@@ -57,7 +58,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	private static final String METRIC = "metric";
+	private static final String METRIC = MetricAnalyzer.ID;
 
 	private static final long TEN_SECONDS = 10 * 1000;
 
@@ -118,7 +119,6 @@ public class MetricAlert implements Task, LogEnabled {
 				if (metricConfig == null) {
 					continue;
 				}
-
 				if (metricConfig.isShowCount()) {
 					alerts.addAll(buildAlertInfo(date, productLine, MetricType.COUNT, item, minute));
 				}

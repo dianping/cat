@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.metric;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
@@ -10,7 +11,7 @@ import com.dianping.cat.service.ModelResponse;
 
 public class CompositeMetricService extends BaseCompositeModelService<MetricReport> {
 	public CompositeMetricService() {
-		super("metric");
+		super(MetricAnalyzer.ID);
 	}
 
 	@Override

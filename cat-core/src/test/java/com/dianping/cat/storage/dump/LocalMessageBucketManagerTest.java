@@ -76,25 +76,19 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void test() {
-
-	}
-
-	@Test
 	public void testReadWrite() throws Exception {
+		MessageCodec codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 		LocalMessageBucketManager manager = (LocalMessageBucketManager) lookup(MessageBucketManager.class,
 		      LocalMessageBucketManager.ID);
-		MessageCodec codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 		MessageIdFactory factory = new MockMessageIdFactory();
-
-		manager.setLocalIp(m_ip);
 		long now = 1343532130488L;
 		int num = 5000;
 
-		Thread.sleep(100);
-
+		manager.setLocalIp(m_ip);
 		factory.setIpAddress("7f000001");
 		factory.initialize("source");
+
+		Thread.sleep(100);
 
 		for (int i = 0; i < num; i++) {
 			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);

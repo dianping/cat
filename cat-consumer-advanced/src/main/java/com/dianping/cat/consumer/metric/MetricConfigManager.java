@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.advanced;
+package com.dianping.cat.consumer.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
@@ -24,23 +22,21 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.advanced.MetricAnalyzer.ConfigItem;
+import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class MetricConfigManager implements Initializable, LogEnabled {
+public class MetricConfigManager implements Initializable {
 
 	@Inject
-	private ConfigDao m_configDao;
+	protected ConfigDao m_configDao;
 
 	private int m_configId;
 
 	private MetricConfig m_metricConfig;
 
 	private long m_modifyTime;
-
-	private Logger m_logger;
 
 	private static final String CONFIG_NAME = "metricConfig";
 
@@ -51,11 +47,6 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 	public boolean deleteDomainConfig(String key) {
 		getMetricConfig().removeMetricItemConfig(key);
 		return storeConfig();
-	}
-
-	@Override
-	public synchronized void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	public MetricConfig getMetricConfig() {
@@ -161,7 +152,6 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
-			m_logger.info("metric config refresh done!");
 		}
 	}
 

@@ -8,8 +8,9 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.advanced.MetricConfigManager;
-import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -51,8 +52,8 @@ import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-import com.dianping.cat.system.page.abtest.service.ABTestService;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -84,7 +85,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricAlert.class).req(ReportService.class, ServerConfigManager.class, MetricPointParser.class)//
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineService.class, BaselineConfigManager.class)//
-		      .req(ModelService.class, "metric"));
+		      .req(ModelService.class, MetricAnalyzer.ID));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportService.class)//

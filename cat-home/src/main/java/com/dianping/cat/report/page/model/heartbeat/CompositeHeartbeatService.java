@@ -22,6 +22,9 @@ public class CompositeHeartbeatService extends BaseCompositeModelService<Heartbe
 
 	@Override
 	protected HeartbeatReport merge(ModelRequest request, List<ModelResponse<HeartbeatReport>> responses) {
+		if (responses.size() == 0) {
+			return null;
+		}
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(request.getDomain()));
 
 		for (ModelResponse<HeartbeatReport> response : responses) {

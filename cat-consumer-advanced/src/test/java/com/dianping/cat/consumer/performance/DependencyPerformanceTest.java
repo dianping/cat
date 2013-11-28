@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
@@ -13,7 +14,7 @@ public class DependencyPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		DependencyAnalyzer analyzer = lookup(DependencyAnalyzer.class);
+		DependencyAnalyzer analyzer = (DependencyAnalyzer)lookup(MessageAnalyzer.class,DependencyAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();
