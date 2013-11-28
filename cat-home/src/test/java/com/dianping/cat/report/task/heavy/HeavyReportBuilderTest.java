@@ -1,33 +1,14 @@
 package com.dianping.cat.report.task.heavy;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.unidal.lookup.ComponentTestCase;
 import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.Constants;
-import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultSaxParser;
 
 public class HeavyReportBuilderTest extends ComponentTestCase {
-
-	@Test
-	@Ignore
-	public void test() throws Exception {
-		HeavyReportBuilder builder = lookup(HeavyReportBuilder.class);
-		Date date = new SimpleDateFormat("yyyyMMddHH").parse("2013082600");
-		for (int i = 0; i < 24; i++) {
-			Date current = new Date(date.getTime() + TimeUtil.ONE_HOUR * i);
-			builder.buildHourlyTask(Constants.REPORT_HEAVY, Constants.CAT, current);
-		}
-		
-		builder.buildDailyTask(Constants.REPORT_HEAVY,  Constants.CAT, date);
-	}
 
 	@Test
 	public void testMerge() throws Exception {

@@ -56,8 +56,6 @@ ConfigTest.class,
 /* .internal */
 MessageIdFactoryTest.class,
 
-MillisSecondTimerTest.class,
-
 MockMessageBuilderTest.class,
 
 /* .spi.codec */
