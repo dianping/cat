@@ -181,10 +181,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
-	public String getHttpSmsApi() {
-		return "";
-	}
-
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -193,7 +189,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 				return longConfig.getDomains();
 			}
 		}
-		
+
 		return Collections.emptyMap();
 	}
 
@@ -330,5 +326,5 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END);
 	}
-	
+
 }

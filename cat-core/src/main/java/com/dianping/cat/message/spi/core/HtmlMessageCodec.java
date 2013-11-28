@@ -99,8 +99,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		sb.append(tree.getSessionToken()).append(" ");
 		sb.append("</td></tr>");
 
-		int count = helper.write(buf, sb.toString());
-		return count;
+		return helper.write(buf, sb.toString());
 	}
 
 	protected int encodeLine(MessageTree tree, Message message, ChannelBuffer buf, char type, Policy policy, int level,

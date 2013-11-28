@@ -15,7 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestContextManager extends ContainerHolder implements ABTestContextManager {
 	private static final String ABTEST_COOKIE_NAME = "ab";
@@ -25,6 +25,9 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 	@Inject
 	private ABTestCodec m_cookieCodec;
+
+	@Inject
+	private MessageManager m_messageManager;
 
 	private InheritableThreadLocal<Entry> m_threadLocal = new InheritableThreadLocal<Entry>() {
 		@Override
@@ -46,10 +49,10 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		Entry entry = m_threadLocal.get();
 		Object attribute = request.getAttribute("url-rewrite-original-url");
 
-		if (attribute != null && attribute instanceof String) {
+		if (attribute instanceof String) {
 			String requestUrl = (String) attribute;
 
-			if (requestUrl == null || !requestUrl.contains("ajax")) {
+			if (!requestUrl.contains("ajax")) {
 				entry.setup(request, response);
 			}
 		}
@@ -60,20 +63,20 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		m_threadLocal.remove();
 	}
 
+	@Override
+	public ABTestContext createContext(ABTestEntity entity) {
+		DefaultABTestContext ctx = new DefaultABTestContext(entity);
+
+		if (!entity.isDisabled()) {
+			ctx.setMessageManager(m_messageManager);
+			ctx.setCookieCodec(m_cookieCodec);
+		}
+
+		return ctx;
+	}
+
 	public class Entry {
 		private Map<String, ABTestContext> m_map = new HashMap<String, ABTestContext>(4);
-
-		private ABTestContext createContext(ABTestEntity entity) {
-			DefaultABTestContext ctx = new DefaultABTestContext(entity);
-
-			if (!entity.isDisabled()) {
-				ABTestGroupStrategy groupStrategy = entity.getGroupStrategy();
-
-				ctx.setGroupStrategy(groupStrategy);
-			}
-
-			return ctx;
-		}
 
 		public ABTestContext getContext(ABTestEntity entity) {
 			String name = entity.getName();

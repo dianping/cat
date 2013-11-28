@@ -184,11 +184,21 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 	</build>
 	<repositories>
 		<repository>
+		     <id>central</id>
+		     <name>Maven2 Central Repository</name>
+		     <layout>default</layout>
+		     <url>http://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
 			<id>cat.repo</id>
 			<url>https://raw.github.com/dianping/cat/mvn-repo</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2</url>
+		</pluginRepository>
 		<pluginRepository>
 			<id>cat.repo</id>
 			<url>https://raw.github.com/dianping/cat/mvn-repo</url>

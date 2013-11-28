@@ -100,8 +100,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		b.tag2("svg");
 		sb.append("</td></tr>");
 
-		int count = helper.write(buf, sb.toString());
-		return count;
+		return helper.write(buf, sb.toString());
 	}
 
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf, Ruler ruler) {
@@ -127,8 +126,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		      "http://www.w3.org/2000/svg", "version", "1.1");
 		b.tag1("g", "font-size", "12", "stroke", "gray");
 
-		int count = helper.write(buf, sb.toString());
-		return count;
+		return helper.write(buf, sb.toString());
 	}
 
 	protected int encodeRemoteCall(MessageTree tree, Event event, ChannelBuffer buf, Locator locator, Ruler ruler) {
@@ -157,8 +155,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width", "0", "fill",
 		      "blue", "onclick", "popup('" + logviewId + "');");
 
-		int count = helper.write(buf, sb.toString());
-		return count;
+		return helper.write(buf, sb.toString());
 	}
 
 	protected int encodeRuler(ChannelBuffer buf, Locator locator, Ruler ruler) {
@@ -194,8 +191,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		b.tag2("g");
 
-		int count = helper.write(buf, sb.toString());
-		return count;
+		return helper.write(buf, sb.toString());
 	}
 
 	protected int encodeTransaction(MessageTree tree, Transaction transaction, ChannelBuffer buf, Locator locator, Ruler ruler) {
@@ -275,8 +271,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		b.tag("rect", "id", tid, "x", ruler.getOffsetX() + 1, "y", y - 15, "width", ruler.getWidth(), "height", height, "fill",
 		      "#ffffff", "stroke-width", "0", "opacity", "0.01");
 
-		int count = helper.write(buf, b.getResult().toString());
-		return count;
+		return helper.write(buf, b.getResult().toString());
 	}
 
 	private int[] getTransactionDurationSegments(Transaction t) {

@@ -1,24 +1,42 @@
 package com.dianping.cat.consumer.advanced;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import junit.framework.Assert;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.junit.Before;
 import org.junit.Test;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.abtest.spi.internal.DefaultABTestCodec;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.advanced.MetricAnalyzer.ConfigItem;
+import com.dianping.cat.consumer.advanced.dal.BusinessReport;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.storage.Bucket;
+import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.task.TaskManager;
 
 public class MetricAnalyzerTest extends ComponentTestCase {
 	private long m_timestamp;
@@ -29,18 +47,26 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 
 	private final int MINITE = 60 * 1000;
 
+	private MockBusinessReportDao m_businessReportDao;
+
+	private static  int m_bucketCount = 0;
+
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
 		long currentTimeMillis = System.currentTimeMillis();
 
 		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
+		m_analyzer = new TestMetricAnalyzer();
+		m_businessReportDao = new MockBusinessReportDao();
 
-		@SuppressWarnings("unused")
-		MetricConfigManager manager = lookup(MetricConfigManager.class);
+		m_analyzer.setBucketManager(new MockBuckerManager());
+		m_analyzer.setConfigManager(new MockMetricConfigManager());
+		m_analyzer.setTaskManager(new MockTaskManager());
+		m_analyzer.setBusinessReportDao(m_businessReportDao);
+		m_analyzer.setProductLineConfigManager(new MockProductLineManager());
+		m_analyzer.setCodec(new DefaultABTestCodec());
 
-		m_analyzer = (MetricAnalyzer) lookup(MessageAnalyzer.class, MetricAnalyzer.ID);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
 
@@ -55,10 +81,15 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			m_analyzer.process(tree);
 		}
 
-		MetricReport report = m_analyzer.getReport("Default");
-
+		MetricReport report = m_analyzer.getReport(m_domain);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("metric_analyzer.xml"), "utf-8");
+
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+
+		m_analyzer.storeReports(true);
+
+		Assert.assertEquals(1, m_businessReportDao.m_count);
+		Assert.assertEquals(1, m_bucketCount);
 	}
 
 	protected MessageTree generateMessageTree(int i) {
@@ -71,13 +102,35 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 
 		DefaultTransaction t;
 
-		if (i % 2 == 0) {
+		if (i % 3 == 0) {
 			t = new DefaultTransaction("URL", "TuanGouWeb", null);
 			t.setTimestamp(m_timestamp + i * MINITE);
 			DefaultEvent event = new DefaultEvent("URL", "ABTest");
-			
+
 			event.addData("1=ab:A");
-			
+
+			DefaultMetric metric = new DefaultMetric("City", "/beijing");
+
+			metric.setTimestamp(m_timestamp + i * MINITE);
+			metric.setStatus("S");
+			metric.addData("10");
+
+			t.addChild(metric);
+			t.addChild(event);
+		} else if (i % 3 == 1) {
+			t = new DefaultTransaction("Service", "TuanGouWeb", null);
+			t.setTimestamp(m_timestamp + i * MINITE);
+			DefaultEvent event = new DefaultEvent("URL", "ABTest");
+
+			event.addData("1=ab:A");
+
+			DefaultMetric metric = new DefaultMetric("City", "/nanjing");
+
+			metric.setTimestamp(m_timestamp + i * MINITE);
+			metric.setStatus("S,C");
+			metric.addData("10,10");
+
+			t.addChild(metric);
 			t.addChild(event);
 		} else {
 			t = new DefaultTransaction("Metric", "TuanGouWeb", null);
@@ -87,8 +140,16 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			metric.setTimestamp(m_timestamp + i * MINITE);
 			metric.setStatus("C");
 			metric.addData("10");
-			
+
 			t.addChild(metric);
+
+			DefaultMetric durationMetric = new DefaultMetric("City", "/shenzhen");
+
+			durationMetric.setTimestamp(m_timestamp + i * MINITE);
+			durationMetric.setStatus("T");
+			durationMetric.addData("10");
+
+			t.addChild(durationMetric);
 		}
 
 		t.complete();
@@ -96,6 +157,138 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		tree.setMessage(t);
 
 		return tree;
+	}
+
+	public static class MockMetricConfigManager extends MetricConfigManager {
+
+		private MetricItemConfig m_config = new MetricItemConfig();
+
+		@Override
+		public void initialize() throws InitializationException {
+		}
+
+		@Override
+		public boolean insertMetricItemConfig(MetricItemConfig config) {
+			return true;
+		}
+
+		@Override
+		public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
+			return true;
+		}
+
+		@Override
+		public MetricItemConfig queryMetricItemConfig(String id) {
+			return m_config;
+		}
+	}
+
+	public class TestMetricAnalyzer extends MetricAnalyzer {
+
+		@Override
+		protected boolean isLocalMode() {
+			return false;
+		}
+	}
+
+	public class MockBuckerManager implements BucketManager {
+
+		@Override
+		public void closeBucket(Bucket<?> bucket) {
+		}
+
+		@Override
+		public Bucket<String> getReportBucket(long timestamp, String name) throws IOException {
+			return new MockStringBucket();
+		}
+
+	}
+
+	public class MockBusinessReportDao extends BusinessReportDao {
+
+		public int m_count;
+
+		@Override
+		public int insert(BusinessReport proto) throws DalException {
+			return m_count++;
+		}
+	}
+
+	public static class MockStringBucket implements Bucket<String> {
+		@Override
+		public void close() throws IOException {
+		}
+
+		@Override
+		public String findById(String id) throws IOException {
+			return "";
+		}
+
+		@Override
+		public void flush() throws IOException {
+		}
+
+		@Override
+		public Collection<String> getIds() {
+			List<String> list = new ArrayList<String>();
+
+			return list;
+		}
+
+		@Override
+		public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
+		}
+
+		@Override
+		public boolean storeById(String id, String data) throws IOException {
+			m_bucketCount++;
+			return true;
+		}
+	}
+
+	public static class MockTaskManager extends TaskManager {
+		private Map<Integer, Set<String>> m_results = new HashMap<Integer, Set<String>>();
+
+		private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		@Override
+		protected void createTask(Date period, String ip, String domain, int reportType) throws DalException {
+			Set<String> lists = m_results.get(reportType);
+
+			if (lists == null) {
+				lists = new HashSet<String>();
+				m_results.put(reportType, lists);
+			}
+
+			lists.add(sdf.format(period));
+		}
+
+		public Map<Integer, Set<String>> getResults() {
+			return m_results;
+		}
+	}
+
+	public static class MockProductLineManager extends ProductLineConfigManager {
+
+		@Override
+		public boolean insertProductLine(ProductLine line, String[] domains) {
+			return true;
+		}
+
+		@Override
+		public String queryProductLineByDomain(String domain) {
+			return domain;
+		}
+
+		@Override
+		public List<String> queryProductLineDomains(String productLine) {
+			return new ArrayList<String>();
+		}
+
+		@Override
+		public Map<String, ProductLine> queryProductLines() {
+			return new HashMap<String, ProductLine>();
+		}
 	}
 
 }

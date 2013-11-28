@@ -4,6 +4,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.abtest.repository.ABTestRepositoryTest;
+import com.dianping.cat.abtest.repository.FieldInjecterTest;
+import com.dianping.cat.abtest.spi.internal.ABTestCodecTest;
+import com.dianping.cat.abtest.spi.internal.ABTestContextTest;
+import com.dianping.cat.abtest.spi.internal.ABTestEntityManagerTest;
+import com.dianping.cat.abtest.spi.internal.groupstrategy.TrafficDistributionGroupStrategyTest;
 import com.dianping.cat.configuration.ConfigTest;
 import com.dianping.cat.log4j.CatAppenderTest;
 import com.dianping.cat.message.EventTest;
@@ -14,7 +20,6 @@ import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
-import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilderTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
@@ -25,6 +30,19 @@ CatAppenderTest.class,
 
 /* .message */
 MessageTest.class,
+
+/* .abtest */
+TrafficDistributionGroupStrategyTest.class, 
+
+ABTestCodecTest.class,
+
+ABTestEntityManagerTest.class,
+
+ABTestContextTest.class,
+
+FieldInjecterTest.class,
+
+ABTestRepositoryTest.class,
 
 EventTest.class,
 
@@ -40,8 +58,6 @@ MessageIdFactoryTest.class,
 
 MillisSecondTimerTest.class,
 
-DefaultMessagePathBuilderTest.class,
-
 MockMessageBuilderTest.class,
 
 /* .spi.codec */
@@ -51,7 +67,9 @@ PlainTextMessageCodecTest.class,
 CatFilterTest.class,
 
 /* .tool */
-ToolsTest.class
+ToolsTest.class,
+
+CatTest.class
 
 })
 public class AllTests {

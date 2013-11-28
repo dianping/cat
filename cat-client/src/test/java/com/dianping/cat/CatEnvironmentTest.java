@@ -70,6 +70,5 @@ public class CatEnvironmentTest {
 		t.complete();
 
 		Thread.sleep(10000);
-
 	}
 }

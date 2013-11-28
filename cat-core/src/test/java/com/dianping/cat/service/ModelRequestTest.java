@@ -18,6 +18,7 @@ public class ModelRequestTest {
 
 		Assert.assertEquals(ModelPeriod.CURRENT, request.getPeriod());
 		Assert.assertEquals(str, request.getProperty(str));
+		Assert.assertEquals("{test=test}", request.getProperties().toString());
 		Assert.assertEquals(start, request.getStartTime());
 		Assert.assertEquals(domain, request.getDomain());
 		Assert.assertEquals("ModelRequest[domain=Cat, period=CURRENT, properties={test=test}]", request.toString());

@@ -6,15 +6,11 @@ import java.util.List;
 import javax.script.Invocable;
 
 import com.dianping.cat.abtest.model.entity.Case;
-import com.dianping.cat.abtest.model.entity.Condition;
 import com.dianping.cat.abtest.model.entity.ConversionRule;
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
 import com.dianping.cat.abtest.model.entity.Run;
-import com.dianping.cat.abtest.spi.internal.ABTestCodec;
-import com.dianping.cat.message.spi.MessageManager;
 
 public class ABTestEntity {
-
 	private String m_name;
 
 	private Run m_run;
@@ -24,10 +20,6 @@ public class ABTestEntity {
 	private ABTestGroupStrategy m_groupStrategy;
 
 	private Invocable m_invocable;
-
-	private MessageManager m_messageManager;
-
-	private ABTestCodec m_cookieCodec;
 
 	public ABTestEntity() {
 		m_run = new Run();
@@ -40,28 +32,12 @@ public class ABTestEntity {
 		m_run = run;
 	}
 
-	public List<Condition> getConditions() {
-		return m_run.getConditions() != null ? m_run.getConditions() : null;
-	}
-
-	public String getConditionsFragement() {
-		return m_run.getConditionsFragement();
+	public void apply(ABTestContext context) {
+		m_groupStrategy.apply(context);
 	}
 
 	public List<ConversionRule> getConversionRules() {
 		return m_run.getConversionRules();
-	}
-
-	public ABTestCodec getCookieCodec() {
-		return m_cookieCodec;
-	}
-
-	public Date getEndDate() {
-		return m_run.getEndDate();
-	}
-
-	public ABTestGroupStrategy getGroupStrategy() {
-		return m_groupStrategy;
 	}
 
 	public GroupstrategyDescriptor getGroupStrategyDescriptor() {
@@ -71,13 +47,17 @@ public class ABTestEntity {
 	public String getGroupStrategyName() {
 		return m_groupStrategyName != null ? m_groupStrategyName : null;
 	}
+	
+	public ABTestGroupStrategy getGroupStrategy(){
+		return m_groupStrategy;
+	}
+
+	public int getId() {
+		return m_run.getId();
+	}
 
 	public Invocable getInvocable() {
 		return m_invocable;
-	}
-
-	public MessageManager getMessageManager() {
-		return m_messageManager;
 	}
 
 	public String getName() {
@@ -118,8 +98,8 @@ public class ABTestEntity {
 		return true;
 	}
 
-	public void setCookieCodec(ABTestCodec cookieCodec) {
-		m_cookieCodec = cookieCodec;
+	public void setConversionRules(List<ConversionRule> conversionRule) {
+		m_run.getConversionRules().addAll(conversionRule);
 	}
 
 	public void setDisabled(boolean disabled) {
@@ -132,10 +112,6 @@ public class ABTestEntity {
 
 	public void setInvocable(Invocable invocable) {
 		m_invocable = invocable;
-	}
-
-	public void setMessageManager(MessageManager messageManager) {
-		m_messageManager = messageManager;
 	}
 
 	public void setName(String name) {

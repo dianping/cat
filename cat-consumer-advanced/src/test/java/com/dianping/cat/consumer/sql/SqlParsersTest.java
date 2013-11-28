@@ -26,4 +26,5 @@ public class SqlParsersTest {
 		checkTables("select r.id,r.name,r.des from resource r where r.id in "
 		      + "(select resource_id from resource_role where role_id=?)", "resource", "resource_role");
 	}
+	
 }

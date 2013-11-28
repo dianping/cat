@@ -95,8 +95,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 				String xml = report.getContent();
 
 				if (xml != null && xml.length() > 0) {
-					EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser
-					      .parse(xml);
+					EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} else {
 					EventReport reportModel = queryFromDailyBinary(report.getId(), domain);

@@ -25,6 +25,8 @@ public class InstallMojo extends AbstractMojo {
 
 	private String m_path = "/data/appdatas/cat";
 
+	private String m_logPath = "/data/applogs/cat";
+
 	private String m_clientPath = m_path + File.separator + "client.xml";
 
 	private String m_serverPath = m_path + File.separator + "server.xml";
@@ -72,8 +74,6 @@ public class InstallMojo extends AbstractMojo {
 		String sqlTable = Files.forIO().readFrom(getClass().getResourceAsStream("Cat.sql"), "utf-8");
 		String[] tables = sqlTable.split(";");
 
-		sqlTable = sqlTable.replace("\n", " ");
-
 		for (String table : tables) {
 			if (table != null && table.trim().length() > 0) {
 				stmt.execute(table.trim() + ";");
@@ -91,6 +91,7 @@ public class InstallMojo extends AbstractMojo {
 			getLog().info("Preparing Cat environment ... DONE");
 			getLog().info("Use following command line to start local Cat server:");
 			getLog().info("   cd cat-home; mvn jetty:run");
+			getLog().info("Please open http://localhost:2281/cat in your browser");
 		}
 	}
 
@@ -101,16 +102,27 @@ public class InstallMojo extends AbstractMojo {
 		return conn;
 	}
 
-	private boolean setupConfigurationFiles() {
+	private boolean setupConfigurationFiles() throws MojoFailureException {
 		File path = new File(m_path);
+		File logPath = new File(m_logPath);
 
-		if (!path.exists()) {
-			path.mkdirs();
+		File temp = null;
+		try {
+			temp = File.createTempFile("test", "test");
+		} catch (IOException e1) {
+			getLog()
+			      .error(
+			            "Don't have privilege to read/write temp dir, please manually promote read/write privileges to this directory.");
+			throw new MojoFailureException("Don't have privilege to read/write temp dir");
 		}
 
-		if (!path.canRead() || !path.canWrite()) {
-			getLog().error("Don't have privilege to read/write " + m_path);
-			return false;
+		if (!path.exists()) {
+			boolean result = logPath.mkdirs() && path.mkdirs();
+
+			if (!result || temp.exists()) {
+				getLog().error("Don't have privilege to read/write " + m_path + ", please  manually make this directory");
+				throw new MojoFailureException("Don't have privilege to read/write " + m_path);
+			}
 		}
 
 		getLog().info("Generating the configuration files to " + m_path + " ...");
@@ -153,7 +165,7 @@ public class InstallMojo extends AbstractMojo {
 		}
 	}
 
-	private boolean setupDatabase() {
+	private boolean setupDatabase() throws MojoFailureException {
 		Connection conn = null;
 		Statement stmt = null;
 		boolean isSuccess = false;
@@ -173,8 +185,9 @@ public class InstallMojo extends AbstractMojo {
 			getLog().info("Tables are created successfully");
 
 			isSuccess = true;
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			getLog().error(e);
+			throw new MojoFailureException(e.getMessage());
 		} finally {
 			try {
 				if (stmt != null) {

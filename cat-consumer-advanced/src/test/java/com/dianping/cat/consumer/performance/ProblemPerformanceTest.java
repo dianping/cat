@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
@@ -15,7 +16,7 @@ public class ProblemPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		ProblemAnalyzer analyzer = lookup(ProblemAnalyzer.class);
+		ProblemAnalyzer analyzer = (ProblemAnalyzer)lookup(MessageAnalyzer.class,ProblemAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();
@@ -31,7 +32,7 @@ public class ProblemPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test2() throws Exception {
-		ProblemAnalyzer analyzer = lookup(ProblemAnalyzer.class);
+		ProblemAnalyzer analyzer = (ProblemAnalyzer)lookup(MessageAnalyzer.class,ProblemAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();

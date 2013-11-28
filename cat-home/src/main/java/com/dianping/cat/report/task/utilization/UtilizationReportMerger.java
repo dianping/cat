@@ -9,12 +9,11 @@ public class UtilizationReportMerger extends DefaultMerger {
 	public UtilizationReportMerger(UtilizationReport utilizationReport) {
 		super(utilizationReport);
 	}
-	
-	
+
 	@Override
 	public void visitUtilizationReport(UtilizationReport utilizationReport) {
 		UtilizationReport oldReport = getUtilizationReport();
-		
+
 		oldReport.setDomain(utilizationReport.getDomain());
 		oldReport.setStartTime(utilizationReport.getStartTime());
 		oldReport.setEndTime(utilizationReport.getEndTime());

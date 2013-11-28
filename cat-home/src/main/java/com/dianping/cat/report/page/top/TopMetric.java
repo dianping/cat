@@ -162,7 +162,7 @@ public class TopMetric extends BaseVisitor {
 
 		private double m_value;
 
-		private int m_alert ;
+		private int m_alert;
 
 		private ExceptionThresholdConfigManager m_configManager;
 
@@ -245,8 +245,8 @@ public class TopMetric extends BaseVisitor {
 				}
 			}
 			if (errorLimit > 0 && value > errorLimit) {
-				m_alert =2;
-			}else if (warningLimit > 0 && value > warningLimit) {
+				m_alert = 2;
+			} else if (warningLimit > 0 && value > warningLimit) {
 				m_alert = 1;
 			}
 		}

@@ -19,8 +19,8 @@ public class SqlMerger {
 		for (SqlReport report : reports) {
 			report.accept(merger);
 		}
-		SqlReport sqlReport = merger.getSqlReport();
-		return sqlReport;
+
+		return merger.getSqlReport();
 	}
 
 	public SqlReport mergeForDaily(String reportDomain, List<SqlReport> reports, Set<String> domains) {

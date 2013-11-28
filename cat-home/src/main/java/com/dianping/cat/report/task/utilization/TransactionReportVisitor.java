@@ -37,7 +37,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 	public void visitType(TransactionType type) {
 		String key = type.getId();
 		Domain domain = m_report.findOrCreateDomain(m_domain);
-		
+
 		if (key.indexOf("URL") >= 0) {
 			domain.setUrlCount(type.getTotalCount());
 			domain.setUrlResponseTime(type.getAvg());

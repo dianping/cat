@@ -1,18 +1,20 @@
 package com.dianping.cat.consumer.performance;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class TransactionPerformanceTest {
+public class TransactionPerformanceTest extends ComponentTestCase {
 
 	@Test
-	public void test() {
-		TransactionAnalyzer analyzer = new TransactionAnalyzer();
+	public void test() throws Exception {
+		TransactionAnalyzer analyzer = (TransactionAnalyzer)lookup(MessageAnalyzer.class,TransactionAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();

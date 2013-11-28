@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 
 public class StateShow extends BaseVisitor {
@@ -30,9 +29,9 @@ public class StateShow extends BaseVisitor {
 	private String m_ip;
 
 	private String m_sortType;
-	
+
 	private ProcessDomain m_processDomain;
-	
+
 	public StateShow(String ip) {
 		m_ip = ip;
 	}
@@ -56,7 +55,7 @@ public class StateShow extends BaseVisitor {
 
 	public List<ProcessDomain> getProcessDomains() {
 		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
-		if(m_sortType == null){
+		if (m_sortType == null) {
 			Collections.sort(temp, new DomainCompartor());
 		} else if (m_sortType.equals("total")) {
 			Collections.sort(temp, new TotalCompartor());
@@ -80,23 +79,6 @@ public class StateShow extends BaseVisitor {
 
 	public boolean isIp(String ip) {
 		boolean result = false;
-		// try {
-		// if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-		// String s[] = ip.split("\\.");
-		//
-		// if (Integer.parseInt(s[0]) <= 255) {
-		// if (Integer.parseInt(s[1]) <= 255) {
-		// if (Integer.parseInt(s[2]) <= 255) {
-		// if (Integer.parseInt(s[3]) <= 255) {
-		// result = true;
-		// }
-		// }
-		// }
-		// }
-		// }
-		// } catch (Exception e) {
-		// //ignore
-		// }
 		try {
 			char first = ip.charAt(0);
 			char next = ip.charAt(1);
@@ -208,24 +190,19 @@ public class StateShow extends BaseVisitor {
 			}
 		}
 	}
-	
-   @Override
-   public void visitDetail(Detail detail) {
-   	Map<Long,Detail> details = m_processDomain.getDetails();
-   	Long id = detail.getId();
-   	Detail temp = details.get(id);
-   	if(temp == null){
-   		details.put(id, detail);
-   	} else {
-   		temp.setSize(temp.getSize() + detail.getSize());
-   		temp.setTotal(temp.getTotal() + detail.getTotal());
-   		temp.setTotalLoss(temp.getTotalLoss() + detail.getTotalLoss());
-   	}
-   }
 
 	@Override
-	public void visitStateReport(StateReport stateReport) {
-		super.visitStateReport(stateReport);
+	public void visitDetail(Detail detail) {
+		Map<Long, Detail> details = m_processDomain.getDetails();
+		Long id = detail.getId();
+		Detail temp = details.get(id);
+		if (temp == null) {
+			details.put(id, detail);
+		} else {
+			temp.setSize(temp.getSize() + detail.getSize());
+			temp.setTotal(temp.getTotal() + detail.getTotal());
+			temp.setTotalLoss(temp.getTotalLoss() + detail.getTotalLoss());
+		}
 	}
 
 	public static class DomainCompartor implements Comparator<ProcessDomain> {
@@ -240,7 +217,7 @@ public class StateShow extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
-			return new Long(o2.getTotal()).compareTo(o1.getTotal());
+			return (int) (o2.getTotal() - o1.getTotal());
 		}
 	}
 
@@ -248,7 +225,7 @@ public class StateShow extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
-			return new Long(o2.getTotalLoss()).compareTo(o1.getTotalLoss());
+			return (int) (o2.getTotalLoss() - o1.getTotalLoss());
 		}
 	}
 

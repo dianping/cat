@@ -41,7 +41,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class TcpSocketReceiver implements LogEnabled {
-	private boolean m_active = true;
+	private boolean m_active = false;
 
 	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
@@ -63,7 +63,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
-	private int m_queueSize = 300000;
+	private int m_queueSize = 100000;
 
 	private volatile int m_errorCount;
 
@@ -104,7 +104,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 			@Override
 			public ChannelPipeline getPipeline() {
-				return Channels.pipeline(new MessageDecoder(), new MyHandler());
+				return Channels.pipeline(new MessageDecoder(), new MessageTreeHandler());
 			}
 		});
 
@@ -114,12 +114,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		m_logger.info("CAT server started at " + address);
 		m_factory = factory;
-	}
-
-	public boolean isActive() {
-		synchronized (this) {
-			return m_active;
-		}
+		m_active = true;
 	}
 
 	public void setQueueSize(int queueSize) {
@@ -247,7 +242,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	class MyHandler extends SimpleChannelHandler {
+	class MessageTreeHandler extends SimpleChannelHandler {
 
 		@Override
 		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
@@ -298,4 +293,9 @@ public class TcpSocketReceiver implements LogEnabled {
 			Threads.forGroup("Cat").start(messageDecoder);
 		}
 	}
+
+	public boolean isActive() {
+   	return m_active;
+   }
+	
 }

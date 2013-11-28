@@ -8,7 +8,7 @@ public class Token implements IToken {
 	private int m_memberId;
 
 	private String m_realName;
-	
+
 	public static final String TOKEN = "ct";
 
 	public Token(int memberId, String realName) {

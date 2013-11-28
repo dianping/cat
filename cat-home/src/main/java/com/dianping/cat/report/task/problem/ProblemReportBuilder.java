@@ -68,7 +68,6 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
 		List<ProblemReport> reports = new ArrayList<ProblemReport>();
 		long startTime = period.getTime();
 		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
@@ -77,8 +76,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		reports.add(report);
 		ProblemReport problemReport = m_problemMerger.mergeForGraph(domain, reports);
 
-		graphs = m_problemGraphCreator.buildGraph(problemReport);
-		return graphs;
+		return m_problemGraphCreator.buildGraph(problemReport);
 	}
 
 	@Override

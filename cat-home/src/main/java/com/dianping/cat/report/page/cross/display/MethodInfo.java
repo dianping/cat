@@ -10,7 +10,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.DomainManager;
-import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
@@ -143,11 +142,6 @@ public class MethodInfo extends BaseVisitor {
 	public MethodInfo setServiceSortBy(String serviceSortBy) {
 		m_serviceSortBy = serviceSortBy;
 		return this;
-	}
-
-	@Override
-	public void visitCrossReport(CrossReport crossReport) {
-		super.visitCrossReport(crossReport);
 	}
 
 	@Override

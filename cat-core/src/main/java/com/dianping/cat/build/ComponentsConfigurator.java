@@ -12,12 +12,12 @@ import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.spi.core.DefaultMessageHandler;
 import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
@@ -42,13 +42,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
 
-		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
-		      .req(ClientConfigManager.class));
+		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class));
 
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
 		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
+
+		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 
 		all.add(C(DecodeMessageTask.class));
 

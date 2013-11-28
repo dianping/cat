@@ -31,7 +31,6 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = m_taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			// Cat.logError(e);
 		}
 		return task;
 	}
@@ -42,7 +41,6 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = m_taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			// Cat.logError(e);
 		}
 		return task;
 	}
@@ -59,7 +57,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 
 		t.addData(doing.toString());
 		try {
-			result =  m_reportFacade.builderReport(doing);
+			result = m_reportFacade.builderReport(doing);
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			Cat.logError(e);

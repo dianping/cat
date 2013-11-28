@@ -11,23 +11,22 @@ public class MetricReportMerger extends DefaultMerger {
 	public MetricReportMerger(MetricReport metricReport) {
 		super(metricReport);
 	}
-	
-	@Override
-   protected void mergeGroup(Group old, Group group) {
-	   super.mergeGroup(old, group);
-   }
-
 
 	@Override
-   protected void mergeMetricItem(MetricItem old, MetricItem metricItem) {
+	protected void mergeGroup(Group old, Group group) {
+		super.mergeGroup(old, group);
+	}
+
+	@Override
+	protected void mergeMetricItem(MetricItem old, MetricItem metricItem) {
 		old.setType(metricItem.getType());
-	   super.mergeMetricItem(old, metricItem);
-   }
+		super.mergeMetricItem(old, metricItem);
+	}
 
 	@Override
-   protected void mergeMetricReport(MetricReport old, MetricReport metricReport) {
-	   super.mergeMetricReport(old, metricReport);
-   }
+	protected void mergeMetricReport(MetricReport old, MetricReport metricReport) {
+		super.mergeMetricReport(old, metricReport);
+	}
 
 	@Override
 	protected void mergePoint(Point old, Point point) {
@@ -37,5 +36,5 @@ public class MetricReportMerger extends DefaultMerger {
 			old.setAvg(old.getSum() / old.getCount());
 		}
 	}
-	
+
 }

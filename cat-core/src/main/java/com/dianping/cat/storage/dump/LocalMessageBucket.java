@@ -36,8 +36,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	private AtomicBoolean m_dirty = new AtomicBoolean();
 
-	private int m_rawSize;
-
 	private String m_dataFile;
 
 	private long m_lastAccessTime;
@@ -115,10 +113,8 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 	}
 
 	protected MessageBlock flushBlock() throws IOException {
-		boolean b = m_dirty.get();
-
-		if (b) {
-			synchronized (m_out) {
+		if (m_dirty.get()) {
+			synchronized (this) {
 				m_out.close();
 				byte[] data = m_buf.toByteArray();
 
@@ -141,10 +137,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	public MessageBlockWriter getWriter() {
 		return m_writer;
-	}
-
-	public double getCompressionRate() {
-		return m_rawSize * 1.0 / m_dataFile.length();
 	}
 
 	@Override

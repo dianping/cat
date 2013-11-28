@@ -29,15 +29,11 @@ public class CompositeProblemService extends BaseCompositeModelService<ProblemRe
 				ProblemReport model = response.getModel();
 
 				if (model != null) {
-					if (merger == null) {
-						merger = new ProblemReportMerger(model);
-					} else {
-						model.accept(merger);
-					}
+					model.accept(merger);
 				}
 			}
 		}
 
-		return merger == null ? null : merger.getProblemReport();
+		return merger.getProblemReport();
 	}
 }

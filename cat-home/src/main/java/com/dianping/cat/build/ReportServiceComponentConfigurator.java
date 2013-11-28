@@ -84,13 +84,15 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 
 		all.add(C(ReportService.class, DefaultReportService.class)
 		      .req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class)
-		      .req(HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class)
-		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class) 
-		      .req(MatrixReportService.class, SqlReportService.class, DependencyReportService.class) 
-		      .req(TopReportService.class, StateReportService.class, CrossReportService.class) 
-		      .req(HeartbeatReportService.class, MetricReportService.class, BugReportService.class) 
+		      .req(HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
+		            MonthlyReportContentDao.class)
+		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class)
+		      .req(MatrixReportService.class, SqlReportService.class, DependencyReportService.class)
+		      .req(TopReportService.class, StateReportService.class, CrossReportService.class)
+		      .req(HeartbeatReportService.class, MetricReportService.class, BugReportService.class)
 		      .req(HeavyReportService.class, ServiceReportService.class, UtilizationReportService.class)
 		      .req(BrowserReportService.class));
+
 		return all;
 	}
 }

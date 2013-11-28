@@ -31,14 +31,14 @@ public class UtilizationConfigManager implements Initializable {
 	public boolean insert(String xml) {
 		try {
 			m_utilizationConfig = DefaultSaxParser.parse(xml);
-			boolean result = storeConfig();
-			return result;
+
+			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
 	}
-	
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {

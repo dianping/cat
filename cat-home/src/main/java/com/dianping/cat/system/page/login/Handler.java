@@ -151,7 +151,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			sb.append(actionUri);
 		}
-		// m_logger.info(sb.toString());
 	}
 
 	private void redirect(Context ctx, Payload payload) {

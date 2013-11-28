@@ -64,7 +64,7 @@ public class CatClientModule extends AbstractModule {
 
 			MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
 			Threads.forGroup("Cat").start(mmapReaderTask);
-			
+
 			ABTestManager.initialize();
 		}
 	}

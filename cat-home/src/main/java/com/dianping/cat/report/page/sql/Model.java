@@ -84,11 +84,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getPieChart() {
-   	return m_pieChart;
-   }
+		return m_pieChart;
+	}
 
 	public void setPieChart(String pieChart) {
-   	m_pieChart = pieChart;
-   }
+		m_pieChart = pieChart;
+	}
 
 }

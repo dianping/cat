@@ -1,0 +1,35 @@
+<abtest-model>
+	<case id="1001" name="mock" created-date="2013-04-10 17:00:00" last-modified-date="2013-04-10 17:00:00">
+		<description>This is a mock ABTest for test</description>
+		<owner>hao.zhu@dianping.com,kezhu.wu@dianping.com</owner>
+		<group-strategy>OneVariationStrategy</group-strategy>
+		<domain>TuanGouApi</domain>
+		<domain>TuanGouWeb</domain>
+		<domain>TuanGouRemote</domain>
+		<runs>
+			<run id="1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" created-date="2013-04-10 17:00:00" last-modified-date="2013-04-10 17:00:00" disabled="false">
+				<creator>hao.zhu@dianping.com</creator>
+				<domain>TuanGouWeb</domain>
+				<domain>TuanGouRemote</domain>
+				<conditions-fragement>public boolean isEligible(Object object) { return true; }</conditions-fragement>
+				<conversion-rules>
+					<conversion-rule name="Goal-1"><![CDATA[This is value]]></conversion-rule>
+					<conversion-rule name="Goal-2"><![CDATA[This is value]]></conversion-rule>
+					<conversion-rule name="Goal-3"><![CDATA[This is value]]></conversion-rule>
+				</conversion-rules>
+				<conditions>
+					<condition name="url" seq="1" operator="and" comparator="1"><![CDATA[This is value]]></condition>
+					<condition name="url" seq="1" operator="and" comparator="1"><![CDATA[This is value]]></condition>
+				</conditions>
+				<groupstrategy-descriptor name="OneVariationStrategy" className="TrafficDistributionGroupStrategy" fullyQualifiedName="com.dianping.cat.abtest.spi.internal.groupstrategy.TrafficDistributionGroupStrategy">
+					<fields>
+					   <field name="Control" type="int" input-type="input" modifier-name="m_percentControl">50</field>
+					   <field name="Variation-A" type="int" input-type="input" modifier-name="m_percentA">50</field>
+					</fields>
+				</groupstrategy-descriptor>
+			</run>
+			<run />
+		</runs>
+	</case>
+	<case/>
+</abtest-model>

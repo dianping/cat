@@ -117,7 +117,6 @@ public class FileSystemManager implements Initializable {
 				SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
 			} catch (IOException e) {
 				Cat.logError(e);
-				//throw new InitializationException("init FileSystemManager fail", e);
 			}
 		} else {
 			m_config = new Configuration();

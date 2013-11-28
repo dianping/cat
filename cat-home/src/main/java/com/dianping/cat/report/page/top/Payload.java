@@ -25,12 +25,12 @@ public class Payload extends AbstractReportPayload<Action> {
 	private boolean m_refresh;
 
 	public int getFrequency() {
-   	return m_frequency;
-   }
+		return m_frequency;
+	}
 
 	public void setFrequency(int frequency) {
-   	m_frequency = frequency;
-   }
+		m_frequency = frequency;
+	}
 
 	public Payload() {
 		super(ReportPage.TOP);
@@ -59,12 +59,12 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public int getMinuteCounts() {
-   	return m_minuteCounts;
-   }
+		return m_minuteCounts;
+	}
 
 	public void setMinuteCounts(int minuteCount) {
-   	m_minuteCounts = minuteCount;
-   }
+		m_minuteCounts = minuteCount;
+	}
 
 	@Override
 	public void setPage(String page) {

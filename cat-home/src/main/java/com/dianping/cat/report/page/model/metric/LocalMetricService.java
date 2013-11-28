@@ -27,7 +27,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 		}
 		return report;
 	}
-	
+
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = null;
 		try {
@@ -36,7 +36,9 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
-			bucket.close();
+			if (bucket != null) {
+				bucket.close();
+			}
 		}
 	}
 }

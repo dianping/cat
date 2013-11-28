@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -86,19 +87,17 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			TransactionName other = type.findOrCreateName("OTHERS");
 
 			transactionNames = type.getNames();
-			names = transactionNames.keySet();
-
-			for (String temp : names) {
-				TransactionName tansactionName = transactionNames.get(temp);
+			for (Entry<String, TransactionName> entry : type.getNames().entrySet()) {
+				TransactionName tansactionName = entry.getValue();
 
 				if (tansactionName.getTotalCount() == 1) {
-					toRemove.add(temp);
+					toRemove.add(entry.getKey());
 					mergeName(other, tansactionName);
 				}
 			}
 
-			for (String temp : toRemove) {
-				transactionNames.remove(temp);
+			for (String name : toRemove) {
+				transactionNames.remove(name);
 			}
 		}
 

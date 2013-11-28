@@ -160,14 +160,6 @@ public class ServerStatistic {
 			return m_processDelaySum;
 		}
 
-		public void setProcessDelaySum(double processDelaySum) {
-			m_processDelaySum = processDelaySum;
-		}
-
-		public void setProcessDelayCount(int processDelayCount) {
-			m_processDelayCount = processDelayCount;
-		}
-
 		public long getBlockTotal() {
 			return m_blockTotal;
 		}

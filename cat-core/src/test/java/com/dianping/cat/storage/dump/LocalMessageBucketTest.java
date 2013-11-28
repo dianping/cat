@@ -2,13 +2,14 @@ package com.dianping.cat.storage.dump;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -18,61 +19,101 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-      
+
 @RunWith(JUnit4.class)
-@Ignore
 public class LocalMessageBucketTest extends ComponentTestCase {
-	@BeforeClass
-	public static void beforeClass() {
-		String[] files = { "dump", "dump-0", "dump-1", "dump-2" };
+
+	private final String m_baseDir = "target/bucket/hdfs/dump/";
+
+	public void setup() {
+		String[] files = { "dump", "dump-0", "dump-1", "dump-2", "outbox/dump" };
 
 		for (String file : files) {
-			new File("target/bucket/hdfs/dump/" + file).delete();
-			new File("target/bucket/hdfs/dump/" + file + ".idx").delete();
+			new File(m_baseDir + file).delete();
+			new File(m_baseDir + file + ".idx").delete();
 		}
+
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		new File(tmpDir, "cat-Test.mark").delete();
 	}
 
 	@Test
 	public void testReadWrite() throws Exception {
+		setup();
 		MessageIdFactory factory = new MockMessageIdFactory();
 		LocalMessageBucket bucket = createBucket(factory, "");
+		MessageCodec codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 
+		int count = 2000;
+		int i = 0;
+		MessageBlock block = null;
 		MessageTree tree = new DefaultMessageTree();
 
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+		for (i = 0; i < count; i++) {
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+			MessageId id = buildChannelBuffer(factory, codec, tree, buf);
 
-		codec.setBufferWriter(new EscapingBufferWriter());
-		int count = 2000;
+			block = bucket.storeMessage(buf, id);
 
-		for (int i = 0; i < count; i++) {
-			MessageId id = MessageId.parse(tree.getMessageId());
-	
-			tree.setMessageId(factory.getNextId());
-
-			codec.encode(tree, buf);
-			bucket.storeMessage(buf,id);
+			if (block != null) {
+				bucket.getWriter().writeBlock(block);
+				break;
+			}
 		}
 
-		for (int i = 0; i < count; i++) {
-			MessageTree t = bucket.findByIndex(i);
+		for (int j = 0; j < i; j++) {
+			MessageTree t = bucket.findByIndex(j);
 			int index = MessageId.parse(t.getMessageId()).getIndex();
 
-			Assert.assertEquals(i, index);
+			Assert.assertEquals(j, index);
 		}
 
 		bucket.close();
+
+		testArchive(bucket);
+	}
+
+	private void testArchive(LocalMessageBucket bucket) throws IOException {
+		File from = new File(m_baseDir, "dump");
+		File fromIdx = new File(m_baseDir, "dump.idx");
+
+		Assert.assertEquals(true, from.exists());
+		Assert.assertEquals(true, fromIdx.exists());
+
 		bucket.archive();
+
+		Assert.assertEquals(false, from.exists());
+		Assert.assertEquals(false, fromIdx.exists());
+
+		File outbox = new File(m_baseDir, "outbox" + File.separator + "dump");
+		File oubboxIdx = new File(m_baseDir, "outbox" + File.separator + "dump.idx");
+
+		Assert.assertEquals(true, outbox.exists());
+		Assert.assertEquals(true, oubboxIdx.exists());
+
+	}
+
+	private MessageId buildChannelBuffer(MessageIdFactory factory, MessageCodec codec, MessageTree tree,
+	      ChannelBuffer buf) {
+		String messageId = factory.getNextId();
+
+		tree.setMessageId(messageId);
+		MessageId id = MessageId.parse(messageId);
+
+		codec.encode(tree, buf);
+
+		return id;
 	}
 
 	@Test
 	public void testManyReadWrite() throws Exception {
+		setup();
+
 		MessageIdFactory factory = new MockMessageIdFactory();
 		LocalMessageBucket[] buckets = new LocalMessageBucket[3];
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		MessageCodec codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 
 		for (int i = 0; i < buckets.length; i++) {
 			LocalMessageBucket bucket = createBucket(factory, "-" + i);
@@ -81,25 +122,37 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		}
 
 		MessageTree tree = new DefaultMessageTree();
-		int count = 2000;
+		int count = 3000;
+		MessageBlock block = null;
+		Set<Integer> fullBucket = new HashSet<Integer>();
+		Map<Integer, Integer> maxIdForBucket = new HashMap<Integer, Integer>();
 
 		for (int i = 0; i < count; i++) {
-			MessageId id = MessageId.parse(tree.getMessageId());
-			
-			tree.setMessageId(factory.getNextId());
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
-			codec.encode(tree,buf);
-			buckets[i % buckets.length].storeMessage(buf,id);
+			MessageId id = buildChannelBuffer(factory, codec, tree, buf);
+
+			int pos = i % buckets.length;
+
+			if (!fullBucket.contains(pos)) {
+				block = buckets[pos].storeMessage(buf, id);
+			}
+
+			if (block != null && !fullBucket.contains(pos)) {
+				buckets[pos].getWriter().writeBlock(block);
+				fullBucket.add(pos);
+				maxIdForBucket.put(pos, i);
+			}
 		}
 
 		for (int i = 0; i < count; i++) {
-			MessageTree t = buckets[i % buckets.length].findByIndex(i);
+			int pos = i % buckets.length;
+			if (i <= maxIdForBucket.get(pos)) {
+				MessageTree t = buckets[pos].findByIndex(i);
 
-			Assert.assertNotNull("Can't find message tree(" + i + ").", t);
+				int index = MessageId.parse(t.getMessageId()).getIndex();
 
-			int index = MessageId.parse(t.getMessageId()).getIndex();
-
-			Assert.assertEquals(i, index);
+				Assert.assertEquals(i, index);
+			}
 		}
 
 		for (int i = 0; i < buckets.length; i++) {
@@ -110,60 +163,11 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 	private LocalMessageBucket createBucket(MessageIdFactory factory, String id) throws Exception, IOException {
 		LocalMessageBucket bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 
-		bucket.setMessageCodec(MockCodec.INSTANCE);
-		bucket.setBaseDir(new File("target/bucket/hdfs/dump"));
+		bucket.setBaseDir(new File(m_baseDir));
 		bucket.initialize("dump" + id);
 		factory.setIpAddress("7f000001");
 		factory.initialize("Test");
 		return bucket;
-	}
-
-	static enum MockCodec implements MessageCodec {
-		INSTANCE;
-
-		@Override
-		public MessageTree decode(ChannelBuffer buf) {
-			MessageTree tree = new DefaultMessageTree();
-
-			decode(buf, tree);
-			return tree;
-		}
-
-		@Override
-		public void decode(ChannelBuffer buf, MessageTree tree) {
-			int length = buf.readInt();
-			byte[] bytes = new byte[length];
-
-			buf.readBytes(bytes);
-			tree.setMessageId(new String(bytes));
-
-			int size = buf.readInt();
-			byte[] data = new byte[size];
-
-			buf.readBytes(data);
-		}
-
-		@Override
-		public void encode(MessageTree tree, ChannelBuffer buf) {
-			byte[] bytes = tree.getMessageId().getBytes();
-
-			buf.writeInt(0); // placeholder
-			buf.writeInt(bytes.length);
-			buf.writeBytes(bytes);
-
-			Random random = new Random();
-
-			int size = random.nextInt(4096);
-			byte[] data = new byte[size];
-
-			for (int i = 0; i < size; i++) {
-				data[i] = (byte) (i * size + 1);
-			}
-
-			// random.nextBytes(data);
-			buf.writeInt(data.length);
-			buf.writeBytes(data);
-		}
 	}
 
 	static class MockMessageIdFactory extends MessageIdFactory {

@@ -117,10 +117,10 @@ public class CatFilter implements Filter {
 				String paraMode = req.getParameter(traceMode);
 				String headMode = req.getHeader(traceMode);
 
-				if (("true").equals(paraMode)) {
+				if ("true".equals(paraMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
-				if (headMode != null && ("true").equals(headMode)) {
+				if ("true".equals(headMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
 			}
@@ -298,7 +298,7 @@ public class CatFilter implements Filter {
 					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
 					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
-					if (catPageUri != null && t instanceof DefaultTransaction && catPageUri instanceof String) {
+					if (t instanceof DefaultTransaction && catPageUri instanceof String) {
 						((DefaultTransaction) t).setName(catPageUri.toString());
 					}
 					if (catStatus != null) {

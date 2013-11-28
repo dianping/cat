@@ -7,59 +7,59 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.report.ReportPage;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
-   private ReportPage m_page;
+	private ReportPage m_page;
 
-   @FieldMeta("op")
-   private Action m_action;
-   
-   @FieldMeta("timestamp")
-   private long m_timestamp;
-   
-   @FieldMeta("error")
-   private String m_error;
-   
-   @FieldMeta("file")
-   private String m_file;
+	@FieldMeta("op")
+	private Action m_action;
 
-   @FieldMeta("line")
-   private String m_line;
+	@FieldMeta("timestamp")
+	private long m_timestamp;
 
-   @FieldMeta("data")
-   private String m_data;
-   
-   @Override
-   public Action getAction() {
-      return m_action;
-   }
+	@FieldMeta("error")
+	private String m_error;
 
-   public String getData() {
+	@FieldMeta("file")
+	private String m_file;
+
+	@FieldMeta("line")
+	private String m_line;
+
+	@FieldMeta("data")
+	private String m_data;
+
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public String getData() {
 		return m_data;
 	}
 
-   public String getError() {
+	public String getError() {
 		return m_error;
 	}
 
-   public String getFile() {
+	public String getFile() {
 		return m_file;
 	}
-   
-   public String getLine() {
+
+	public String getLine() {
 		return m_line;
 	}
 
 	@Override
-   public ReportPage getPage() {
-      return m_page;
-   }
+	public ReportPage getPage() {
+		return m_page;
+	}
 
 	public long getTimestamp() {
 		return m_timestamp;
 	}
 
 	public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
-   }
+		m_action = Action.getByName(action, Action.VIEW);
+	}
 
 	public void setData(String data) {
 		m_data = data;
@@ -78,19 +78,19 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	@Override
-   public void setPage(String page) {
-      m_page = ReportPage.getByName(page, ReportPage.JSERROR);
-   }
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.JSERROR);
+	}
 
 	public void setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 	}
 
 	@Override
-   public void validate(ActionContext<?> ctx) {
-      if (m_action == null) {
-         m_action = Action.VIEW;
-      }
-   }
-	
+	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.VIEW;
+		}
+	}
+
 }

@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
@@ -13,7 +14,7 @@ public class EventPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		EventAnalyzer analyzer = lookup(EventAnalyzer.class);
+		EventAnalyzer analyzer = (EventAnalyzer)lookup(MessageAnalyzer.class,EventAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();

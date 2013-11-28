@@ -1,5 +1,8 @@
 package com.dianping.cat.consumer.problem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -26,4 +29,44 @@ public class ProblemReportMergerTest {
 		      .replace("\r", ""));
 
 	}
+
+	@Test
+	public void testMergeList() {
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport("Cat"));
+		List<String> list1 = buildList1();
+		merger.mergeList(list1, buildList2(), 10);
+		Assert.assertEquals(10, list1.size());
+
+		list1 = buildList1();
+		merger.mergeList(list1, buildList2(), 25);
+		Assert.assertEquals(25, list1.size());
+
+		list1 = buildList1();
+		merger.mergeList(list1, buildList2(), 30);
+		Assert.assertEquals(30, list1.size());
+		
+		list1 = buildList1();
+		merger.mergeList(list1, buildList2(), 40);
+		Assert.assertEquals(30, list1.size());
+	}
+
+	private List<String> buildList1() {
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < 10; i++) {
+			list.add("Str" + i);
+		}
+		return list;
+	}
+
+	private List<String> buildList2() {
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < 20; i++) {
+			list.add("Str" + i);
+		}
+
+		return list;
+	}
+
 }

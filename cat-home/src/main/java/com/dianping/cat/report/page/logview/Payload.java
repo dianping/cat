@@ -18,7 +18,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("header")
 	private boolean m_showHeader = true;
-	
+
 	@FieldMeta("waterfall")
 	private boolean m_waterfall = false;
 
@@ -40,8 +40,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public boolean isWaterfall() {
-   	return m_waterfall;
-   }
+		return m_waterfall;
+	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, m_action);
@@ -60,8 +60,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setWaterfall(boolean waterfall) {
-   	m_waterfall = waterfall;
-   }
+		m_waterfall = waterfall;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

@@ -58,7 +58,7 @@ public class TrafficFilterTest {
 	}
 
 	@SuppressWarnings("rawtypes")
-	class MockHttpServletRequest implements HttpServletRequest {
+	public static class MockHttpServletRequest implements HttpServletRequest {
 
 		private String m_url;
 

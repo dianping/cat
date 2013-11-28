@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ExceptionThresholdConfigManager m_exceptionConfigManager;
-	
+
 	@Inject
 	private UtilizationConfigManager m_utilizationConfigManager;
 
@@ -245,7 +245,7 @@ public class Handler implements PageHandler<Context> {
 		case METRIC_CONFIG_ADD_OR_UPDATE:
 			metricConfigAdd(payload, model);
 			model.setProductLines(m_productLineConfigManger.queryProductLines());
-			
+
 			ProductLine productLine = m_productLineConfigManger.queryProductLines().get(payload.getProductLineName());
 			if (productLine != null) {
 				model.setProductLineToDomains(productLine.getDomains());

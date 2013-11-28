@@ -237,7 +237,7 @@ public class ThreadLevelInfo {
 
 		public TheadStatistics(int lastMinute) {
 			for (int i = 0; i <= lastMinute; i++) {
-				m_statistics.put(new Integer(i), new TreeSet<String>());
+				m_statistics.put(i, new TreeSet<String>());
 			}
 		}
 

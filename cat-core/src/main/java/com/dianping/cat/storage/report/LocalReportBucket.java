@@ -102,16 +102,6 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	}
 
 	@Override
-	public String findNextById(String id, String tag) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String findPreviousById(String id, String tag) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void flush() throws IOException {
 		m_writeLock.lock();
 

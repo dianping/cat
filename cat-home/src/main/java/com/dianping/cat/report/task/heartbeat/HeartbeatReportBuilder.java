@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.heartbeat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,10 +57,8 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> qeueryHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
 		HeartbeatReport heartbeatReport = m_reportService.queryHeartbeatReport(domain, period,
 		      new Date(period.getTime() + TimeUtil.ONE_HOUR));
-		graphs = m_heartbeatGraphCreator.buildGraph(heartbeatReport);
-		return graphs;
+		return m_heartbeatGraphCreator.buildGraph(heartbeatReport);
 	}
 }

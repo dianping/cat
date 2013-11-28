@@ -40,7 +40,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-	
+
 	@Inject
 	private DomainManager m_domainManager;
 
@@ -77,7 +77,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<CrossReport> response = m_service.invoke(request);
 			CrossReport report = response.getModel();
-			
+
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
 				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), CrossAnalyzer.ID);
@@ -97,8 +97,8 @@ public class Handler implements PageHandler<Context> {
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<CrossReport> response = m_service.invoke(request);
-			CrossReport report = response.getModel();
-			return report;
+
+			return response.getModel();
 		} else {
 			throw new RuntimeException("Internal error: no eligable cross service registered for " + request + "!");
 		}
@@ -268,14 +268,14 @@ public class Handler implements PageHandler<Context> {
 		}
 		m_jspViewer.view(ctx, model);
 	}
-	
-	private void normalize(Model model,Payload payload){
+
+	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.CROSS);
 		m_normalizePayload.normalize(model, payload);
 		model.setCallSort(payload.getCallSort());
 		model.setServiceSort(payload.getServiceSort());
 		model.setQueryName(payload.getQueryName());
-		
+
 		if (StringUtils.isEmpty(payload.getProjectName())) {
 			if (payload.getAction() == Action.HOURLY_HOST) {
 				payload.setAction("view");
