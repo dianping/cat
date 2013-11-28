@@ -18,7 +18,6 @@ import com.dianping.cat.message.HeartbeatTest;
 import com.dianping.cat.message.MessageTest;
 import com.dianping.cat.message.TransactionTest;
 import com.dianping.cat.message.internal.MessageIdFactoryTest;
-import com.dianping.cat.message.internal.MillisSecondTimerTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
 import com.dianping.cat.servlet.CatFilterTest;
