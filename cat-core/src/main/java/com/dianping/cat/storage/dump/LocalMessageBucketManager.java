@@ -313,12 +313,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error(e.getMessage(), e);
 					}
 				}
-				
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					break;
-				}
 			}
 			t.complete();
 		}
