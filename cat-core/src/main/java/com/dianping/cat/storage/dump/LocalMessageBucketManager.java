@@ -253,14 +253,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private void moveFile(String path) throws IOException {
 		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, path);
-		File parentFile = from.getParentFile();
+		File parent = from.getParentFile();
 		File to = new File(outbox, path);
 
 		to.getParentFile().mkdirs();
 		from.renameTo(to);
 
-		parentFile.delete(); // delete it if empty
-		parentFile.getParentFile().delete(); // delete it if empty
+		parent.delete(); // delete it if empty
+		parent.getParentFile().delete(); // delete it if empty
 	}
 
 	private void moveOldMessages() {

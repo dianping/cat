@@ -242,4 +242,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		m_serverConfigManager = serverConfigManager;
 	}
 
+	public void setIpConvertManager(IpConvertManager ipConvertManager) {
+   	m_ipConvertManager = ipConvertManager;
+   }
+	
 }
