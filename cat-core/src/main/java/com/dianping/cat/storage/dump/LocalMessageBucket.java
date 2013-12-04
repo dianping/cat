@@ -108,6 +108,7 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 			m_codec.decode(buf, tree);
 			return tree;
 		} catch (EOFException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
