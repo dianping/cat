@@ -19,7 +19,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.util.internal.ConcurrentHashMap;
-import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
@@ -254,13 +253,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private void moveFile(String path) throws IOException {
 		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, path);
+		File parentFile = from.getParentFile();
 		File to = new File(outbox, path);
 
 		to.getParentFile().mkdirs();
-		Files.forDir().copyFile(from, to);
-		Files.forDir().delete(from);
-
-		File parentFile = from.getParentFile();
+		from.renameTo(to);
 
 		parentFile.delete(); // delete it if empty
 		parentFile.getParentFile().delete(); // delete it if empty
@@ -316,7 +313,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error(e.getMessage(), e);
 					}
 				}
-
+				
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -332,8 +329,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	public void setLocalIp(String localIp) {
-   	m_localIp = localIp;
-   }
+		m_localIp = localIp;
+	}
 
 	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
