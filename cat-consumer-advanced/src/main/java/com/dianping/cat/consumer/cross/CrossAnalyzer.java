@@ -25,7 +25,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	public static final String ID = "cross";
 
 	@Inject(ID)
-	private ReportManager<CrossReport> m_reportManager;
+	protected ReportManager<CrossReport> m_reportManager;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
@@ -244,6 +244,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	public void setIpConvertManager(IpConvertManager ipConvertManager) {
    	m_ipConvertManager = ipConvertManager;
+   }
+
+	public void setReportManager(ReportManager<CrossReport> reportManager) {
+   	m_reportManager = reportManager;
    }
 	
 }
