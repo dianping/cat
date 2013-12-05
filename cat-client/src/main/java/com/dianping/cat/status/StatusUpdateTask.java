@@ -135,6 +135,7 @@ public class StatusUpdateTask implements Task, Initializable {
 					h.complete();
 				}
 				t.setStatus(Message.SUCCESS);
+				
 				String abtestModel = m_repository.getAbtestModel();
 
 				if (abtestModel != null) {

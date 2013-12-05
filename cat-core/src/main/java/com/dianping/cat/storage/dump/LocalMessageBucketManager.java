@@ -198,7 +198,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (block != null) {
 						m_messageBlocks.offer(block);
 
-						LockSupport.parkNanos(50 * 1000 * 1000L); // wait 50 ms
+						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 50 ms
 					}
 					MessageTree tree = bucket.findByIndex(id.getIndex());
 
@@ -258,7 +258,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		to.getParentFile().mkdirs();
 		from.renameTo(to);
-
 		parent.delete(); // delete it if empty
 		parent.getParentFile().delete(); // delete it if empty
 	}
@@ -391,6 +390,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			if (lastTotalSize == null) {
 				lastTotalSize = 0L;
 			}
+			if (totalSize == null) {
+				totalSize = 0L;
+			}
+
 			double amount = totalSize - lastTotalSize;
 			m_lastTotalSizes.put(domain, totalSize);
 			m_serverStateManager.addMessageSize(domain, amount);
