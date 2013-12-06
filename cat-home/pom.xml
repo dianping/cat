@@ -118,7 +118,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>cat</finalName>
+		<warName>cat-web</<warName>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
