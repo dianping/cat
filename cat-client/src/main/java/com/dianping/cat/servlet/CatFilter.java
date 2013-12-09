@@ -85,7 +85,6 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
-				HttpServletResponse res = ctx.getResponse();
 				boolean top = !Cat.getManager().hasContext();
 
 				ctx.setTop(top);
@@ -95,7 +94,6 @@ public class CatFilter implements Filter {
 					ctx.setType(CatConstants.TYPE_URL);
 
 					Cat.setup(getCookie(req, "JSESSIONID"));
-					ABTestManager.onRequestBegin(req, res);
 
 					setTraceMode(req);
 				} else {
@@ -107,7 +105,6 @@ public class CatFilter implements Filter {
 				} finally {
 					if (top) {
 						Cat.reset();
-						ABTestManager.onRequestEnd();
 					}
 				}
 			}
@@ -261,7 +258,6 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				if (ctx.isTop()) {
-
 					HttpServletRequest req = ctx.getRequest();
 					HttpServletResponse res = ctx.getResponse();
 
@@ -334,19 +330,19 @@ public class CatFilter implements Filter {
 
 		private List<Handler> m_handlers;
 
-		private String m_id;
-
 		private int m_index;
 
 		private int m_mode;
 
+		private String m_rootId;
+
 		private String m_parentId;
 
+		private String m_id;
+		
 		private HttpServletRequest m_request;
 
 		private HttpServletResponse m_response;
-
-		private String m_rootId;
 
 		private boolean m_top;
 
