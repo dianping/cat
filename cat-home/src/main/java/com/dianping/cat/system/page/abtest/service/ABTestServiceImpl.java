@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -23,6 +24,9 @@ import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
+import com.dianping.cat.home.dal.abtest.AbtestReport;
+import com.dianping.cat.home.dal.abtest.AbtestReportDao;
+import com.dianping.cat.home.dal.abtest.AbtestReportEntity;
 import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.home.dal.abtest.AbtestRunDao;
 import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
@@ -45,6 +49,9 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 	private GroupStrategyDao m_groupStrategyDao;
 
 	@Inject
+	private AbtestReportDao m_reportDao;
+
+	@Inject
 	private CaseBuilder m_caseBuilder;
 
 	@Inject
@@ -61,43 +68,23 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	private long m_lastRefreshTime = -1;
 
-	private long m_modifyTime = 0;
+	private AtomicLong m_modifyTime = new AtomicLong(0);
 
 	private AbtestStatusUtil statusUtil = new AbtestStatusUtil();
 
-	@Override
-	public Abtest getABTestByRunId(int runId) {
-		AbtestRun run = getAbTestRunById(runId);
-		Abtest ab = null;
-
-		if (run != null) {
-			ab = m_abtestMap.get(run.getCaseId());
-
-			if (ab == null) {
-				try {
-					ab = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
-
-					m_abtestMap.put(run.getCaseId(), ab);
-				} catch (Throwable e) {
-					Cat.logError(e);
-				}
-			}
-		}
-
-		return ab;
+	public Abtest getABTestByCaseId(int caseId) {
+		return m_abtestMap.get(caseId);
 	}
 
 	public AbtestModel getABTestModelByRunID(int runId) {
 		AbtestModel model = new AbtestModel();
 
 		try {
-			Abtest abtest = getABTestByRunId(runId);
 			AbtestRun run = getAbTestRunById(runId);
-
+			Abtest abtest = getABTestByCaseId(run.getCaseId());
 			GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
 			Case abtestCase = m_caseBuilder.build(abtest, run, groupStrategy);
-
 			model.addCase(abtestCase);
 		} catch (Throwable e) {
 			Cat.logError(e);
@@ -115,8 +102,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 			for (AbtestRun run : m_abtestRunMap.values()) {
 				try {
-					Abtest abtest = getABTestByRunId(run.getId());
-
+					Abtest abtest = getABTestByCaseId(run.getCaseId());
 					GroupStrategy groupStrategy = getGroupStrategyById(abtest.getGroupStrategy());
 
 					Case abtestCase = m_caseBuilder.build(abtest, run, groupStrategy);
@@ -211,8 +197,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		return result;
 	}
 
-	@Override
-	public GroupStrategy getGroupStrategyById(int id) {
+	private GroupStrategy getGroupStrategyById(int id) {
 		GroupStrategy groupStrategy = m_groupStrategyMap.get(id);
 
 		if (groupStrategy == null) {
@@ -228,9 +213,19 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		return groupStrategy;
 	}
 
+	public List<GroupStrategy> getGroupStrategyByName(String name) {
+		try {
+			return m_groupStrategyDao.findByName(name, GroupStrategyEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+
+		return null;
+	}
+
 	@Override
 	public long getModifiedTime() {
-		return m_modifyTime;
+		return m_modifyTime.get();
 	}
 
 	@Override
@@ -243,9 +238,27 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		refresh();
 	}
 
+	public void insertAbtest(Abtest abtest) throws DalException {
+		m_abtestDao.insert(abtest);
+		m_abtestMap.put(abtest.getId(), abtest);
+		setModified();
+	}
+
+	public void insertAbtestRun(AbtestRun run) throws DalException {
+		m_abtestRunDao.insert(run);
+		m_abtestRunMap.put(run.getId(), run);
+		setModified();
+	}
+
 	@Override
+	public void insertGroupStrategy(GroupStrategy groupStrategy) throws DalException {
+		m_groupStrategyDao.insert(groupStrategy);
+		m_groupStrategyMap.put(groupStrategy.getId(), groupStrategy);
+		setModified();
+	}
+
 	public void refresh() {
-		if (m_modifyTime > m_lastRefreshTime) {
+		if (m_modifyTime.get() > m_lastRefreshTime) {
 			try {
 				Map<Integer, Abtest> abtestMap = new ConcurrentHashMap<Integer, Abtest>();
 				Map<Integer, AbtestRun> abtestRunMap = new ConcurrentHashMap<Integer, AbtestRun>();
@@ -274,7 +287,7 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 				m_abtestRunMap = abtestRunMap;
 				m_groupStrategyMap = groupStrategyMap;
 
-				m_lastRefreshTime = m_modifyTime;
+				m_lastRefreshTime = m_modifyTime.get();
 			} catch (Throwable e) {
 				Cat.logError(e);
 			}
@@ -296,9 +309,8 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 		}
 	}
 
-	@Override
-	public synchronized void setModified() {
-		m_modifyTime = System.currentTimeMillis();
+	public void setModified() {
+		m_modifyTime.set(System.currentTimeMillis());
 	}
 
 	public void setRefreshTimeInSeconds(int refreshTimeInSeconds) {
@@ -307,5 +319,32 @@ public class ABTestServiceImpl implements ABTestService, Initializable, Task {
 
 	@Override
 	public void shutdown() {
+	}
+
+	public void updateAbtestRun(AbtestRun run) throws DalException {
+		m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+		m_abtestRunMap.put(run.getId(), run);
+		setModified();
+	}
+
+	public List<AbtestRun> getAllAbtestRun() {
+		List<AbtestRun> runs = new ArrayList<AbtestRun>();
+
+		runs.addAll(m_abtestRunMap.values());
+
+		return runs;
+	}
+
+	@Override
+	public List<AbtestReport> getReports(int runId, Date startTime, Date endTime) {
+		List<AbtestReport> reports = new ArrayList<AbtestReport>();
+
+		try {
+			reports = m_reportDao.findByRunIdDuration(runId, startTime, endTime, AbtestReportEntity.READSET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return reports;
 	}
 }

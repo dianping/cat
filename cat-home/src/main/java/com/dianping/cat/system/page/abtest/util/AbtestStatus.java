@@ -5,7 +5,6 @@ import java.util.Date;
 
 import com.dianping.cat.home.dal.abtest.AbtestRun;
 
-
 public enum AbtestStatus {
 
 	CREATED, READY, RUNNING, TERMINATED, SUSPENDED;

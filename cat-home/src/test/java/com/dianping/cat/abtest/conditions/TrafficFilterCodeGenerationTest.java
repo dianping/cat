@@ -44,13 +44,13 @@ public class TrafficFilterCodeGenerationTest {
 
 		List<Condition> conditions = m_run.getConditions();
 
-		conditions.add(getCondition("url", 1, "http://www.DIANPING.com", 1, "and"));
-		conditions.add(getCondition("url", 5, "http://www.dianping.com/*", 2, "and"));
-		conditions.add(getCondition("url", 8, "http://www.dianping.com1", 3, "and"));
-		conditions.add(getCondition("url", 3, "http://www.dianping.com2", 4, "or"));
-		conditions.add(getCondition("url", 4, "http://www.dianping.com/2", 4, "and"));
-		conditions.add(getCondition("url", 6, "http://www.dianping.com/*", 4, "and"));
-		conditions.add(getCondition("percent", 6, "100", 5, "and"));
+		conditions.add(getCondition("url", 1, "http://www.DIANPING.com", 0, "and"));
+		conditions.add(getCondition("url", 5, "http://www.dianping.com/*", 1, "and"));
+		conditions.add(getCondition("url", 8, "http://www.dianping.com1", 2, "and"));
+		conditions.add(getCondition("url", 3, "http://www.dianping.com2", 3, "or"));
+		conditions.add(getCondition("url", 4, "http://www.dianping.com/2", 3, "and"));
+		conditions.add(getCondition("url", 6, "http://www.dianping.com/*", 3, "and"));
+		conditions.add(getCondition("percent", 6, "100", 4, "and"));
 	}
 
 	public Condition getCondition(String name, int comparator, String text, int seq, String operator) {

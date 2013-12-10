@@ -15,14 +15,13 @@ import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
-import com.dianping.cat.system.page.abtest.GsonBuilderManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class CaseBuilder {
 
 	@Inject
-	private GsonBuilderManager m_gsonBuilderManager;
+	private GsonManager m_gsonBuilderManager;
 
 	private Type m_listType = new TypeToken<ArrayList<Condition>>() {
 	}.getType();
@@ -63,7 +62,7 @@ public class CaseBuilder {
 
 	private Run buildRunFromAbtestRun(AbtestRun abtestRun) {
 		Run run = new Run(abtestRun.getId());
-		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGson();
 
 		for (String domain : StringUtils.split(abtestRun.getDomains(), ',')) {
 			run.addDomain(domain);
