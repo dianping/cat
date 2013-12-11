@@ -118,7 +118,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<warName>cat-web</<warName>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -126,27 +125,6 @@
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1.1</version>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>src/main/resources</directory>
-							<filtering>false</filtering>
-							<targetPath>WEB-INF/classes</targetPath>
-						</resource>
-						<resource>
-							<directory>src/main/webapp</directory>
-							<filtering>false</filtering>
-							<includes>
-								<include>WEB-INF/web.xml</include>
-							</includes>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
@@ -202,17 +180,24 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
 				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.dianping.cat.Server</mainClass>
-						</manifest>
-					</archive>
+    				<warName>cat-web-${env}-${version}</warName>
+					<webResources>
+						<resource>
+							<directory>src/main/resources</directory>
+							<filtering>false</filtering>
+							<targetPath>WEB-INF/classes</targetPath>
+						</resource>
+						<resource>
+							<directory>src/main/webapp</directory>
+							<filtering>false</filtering>
+							<includes>
+								<include>WEB-INF/web.xml</include>
+							</includes>
+						</resource>
+					</webResources>
 				</configuration>
 			</plugin>
 			<plugin>
