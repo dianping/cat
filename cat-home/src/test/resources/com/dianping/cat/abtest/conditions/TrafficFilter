@@ -24,31 +24,40 @@ public class TrafficFilter {
 	public boolean isEligible(HttpServletRequest request) {
 		if(
 			m_condition1.accept(request)		
-			
-					&&
+				
+				 &&  
+				
+				
 			m_condition2.accept(request)		
-			
-					&&
+				
+				 &&  
+				
+				
 			m_condition3.accept(request)		
-			
-					&&
-						(
+				
+				 &&  
+				
+				 (
 			m_condition4.accept(request)		
-			
-					||
+				
+				 
+				 || 
+				
 			m_condition5.accept(request)		
-			
-					&&
+				
+				 &&  
+				
+				
 			m_condition6.accept(request)		
-			
-						)
-					&&
+				)
+				 &&  
+				
+				
 			m_condition7.accept(request)		
-			
 		) { 
 			return true; 
 		} 
-		
+	
 		return false;
 	}
 	

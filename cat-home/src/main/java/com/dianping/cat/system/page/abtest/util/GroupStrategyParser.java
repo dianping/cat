@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.abtest;
+package com.dianping.cat.system.page.abtest.util;
 
 import japa.parser.JavaParser;
 import japa.parser.ParseException;

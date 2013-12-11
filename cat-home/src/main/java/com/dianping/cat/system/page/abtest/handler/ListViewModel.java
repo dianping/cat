@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.abtest;
+package com.dianping.cat.system.page.abtest.handler;
 
 import java.util.Date;
 import java.util.List;

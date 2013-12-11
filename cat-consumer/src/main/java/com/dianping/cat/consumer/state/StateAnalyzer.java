@@ -224,9 +224,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			} else if (!info.getDomain().equals(domain)) {
 				// only work on online environment
 				long current = System.currentTimeMillis();
-				long lastModifyTime = info.getLastModifiedDate().getTime();
+				Date lastModifiedDate = info.getLastModifiedDate();
 
-				if (current - lastModifyTime > ONE_HOUR) {
+				if (lastModifiedDate != null && (current - lastModifiedDate.getTime()) > ONE_HOUR) {
 					m_domainManager.update(info.getId(), domain, ip);
 					m_logger.info(String.format("old domain is %s , change ip %s to %s", info.getDomain(), ip, domain));
 				}

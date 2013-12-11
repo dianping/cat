@@ -51,7 +51,7 @@
 						data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
 					</label>
 					<div class="controls">
-						<input type="text" name="name" id="abName" placeholder="Test1" class="input-xlarge"
+						<input type="text" name="name" id="abName" placeholder="Sample" class="input-xlarge"
 							check-type="required" required-message="Name is required!" value="${payload.name}">
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 						data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
 					</label>
 					<div class="controls">
-						<input type="text" name="owner" id="abOwn" placeholder="DamonZhu" class="input-xlarge"
+						<input type="text" name="owner" id="abOwn" placeholder="John" class="input-xlarge"
 							check-type="required" required-message="Owner is required!" value="${payload.owner}">
 					</div>
 				</div>
@@ -72,7 +72,6 @@
 					<div class="controls">
 						<div id="datetimepicker1" class="input-append date">
 							<input name="startDate" value="${payload.startDateStr}"
-								placeholder="default is current time."
 								data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
 								class="add-on"> <i data-time-icon="icon-time"
 								data-date-icon="icon-calendar"> </i>
@@ -85,7 +84,7 @@
 					<div class="controls">
 						<div id="datetimepicker2" class="input-append date">
 							<input name="endDate" value="${payload.endDateStr}"
-								placeholder="default is forever" data-format="yyyy-MM-dd hh:mm"
+								data-format="yyyy-MM-dd hh:mm"
 								type="text"></input> <span class="add-on"> <i
 								data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 							</span>
@@ -97,7 +96,7 @@
 						data-trigger="hover" class="icon-question-sign"
 						data-toggle="popover" data-placement="top"
 						data-original-title="tips"
-						data-content="you can choose one or more than one domain"></i>
+						data-content="you can choose one or more domains"></i>
 					</label>
 					<div class="controls">
 						<select multiple="" name="domains" id="domains"
@@ -117,8 +116,7 @@
 				<div class="control-group">
 					<label class="control-label">Description</label>
 					<div class="controls">
-						<textarea name="description"
-							placeholder="say something about the abtest ... " class="span6"
+						<textarea name="description" class="span6"
 							rows="3">${payload.description}</textarea>
 					</div>
 				</div>
@@ -374,7 +372,7 @@
 			$('#datetimepicker2').datetimepicker();
 			//domain selector
 			$("#domains").select2({
-				placeholder : "select which domains to run this ab test",
+				placeholder : "select domains to run this ABTest",
 				allowClear : true
 			});
 			

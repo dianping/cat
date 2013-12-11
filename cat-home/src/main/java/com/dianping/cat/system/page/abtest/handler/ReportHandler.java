@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.abtest;
+package com.dianping.cat.system.page.abtest.handler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,13 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.home.dal.abtest.Abtest;
-import com.dianping.cat.home.dal.abtest.AbtestDao;
-import com.dianping.cat.home.dal.abtest.AbtestEntity;
-import com.dianping.cat.home.dal.abtest.AbtestReportDao;
-import com.dianping.cat.home.dal.abtest.AbtestReportEntity;
 import com.dianping.cat.home.dal.abtest.AbtestRun;
-import com.dianping.cat.home.dal.abtest.AbtestRunDao;
-import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
 import com.dianping.cat.report.abtest.entity.AbtestReport;
 import com.dianping.cat.report.abtest.entity.Chart;
 import com.dianping.cat.report.abtest.entity.Goal;
@@ -36,24 +30,26 @@ import com.dianping.cat.report.abtest.entity.Variation;
 import com.dianping.cat.report.abtest.transform.BaseVisitor;
 import com.dianping.cat.report.abtest.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
-import com.dianping.cat.system.page.abtest.ListViewModel.AbtestItem;
+import com.dianping.cat.system.page.abtest.Context;
+import com.dianping.cat.system.page.abtest.Model;
+import com.dianping.cat.system.page.abtest.Payload;
+import com.dianping.cat.system.page.abtest.handler.ListViewModel.AbtestItem;
+import com.dianping.cat.system.page.abtest.service.ABTestService;
+import com.dianping.cat.system.page.abtest.util.GsonManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class ReportHandler implements SubHandler, Initializable {
-	@Inject
-	private AbtestDao m_abtestDao;
+	
+	public static final String ID = "report_handler";
 
 	@Inject
-	private AbtestRunDao m_abtestRunDao;
-
-	@Inject
-	private AbtestReportDao m_abtestReportDao;
+	private ABTestService m_service;
 
 	@Inject
 	private MetricConfigManager m_configManager;
 
-	private static GsonBuilderManager m_gsonBuilderManager = new GsonBuilderManager();
+	private static GsonManager m_gsonBuilderManager = new GsonManager();
 
 	private Calendar m_calendar = Calendar.getInstance();
 
@@ -109,7 +105,7 @@ public class ReportHandler implements SubHandler, Initializable {
 		}
 
 		String datasets = buildDateSets(datas, goal, report.getVariations().keySet(), model);
-		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGson();
 
 		String label = gson.toJson(labels, new TypeToken<List<String>>() {
 		}.getType());
@@ -164,7 +160,7 @@ public class ReportHandler implements SubHandler, Initializable {
 		}
 
 		model.setDataSets(dataSets);
-		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGson();
 
 		return gson.toJson(dataSets, new TypeToken<List<DataSets>>() {
 		}.getType());
@@ -228,7 +224,7 @@ public class ReportHandler implements SubHandler, Initializable {
 		}
 
 		String datasets = buildDateSets(datas, goal, report.getVariations().keySet(), model);
-		Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+		Gson gson = m_gsonBuilderManager.getGson();
 
 		String label = gson.toJson(labels, new TypeToken<List<String>>() {
 		}.getType());
@@ -311,11 +307,11 @@ public class ReportHandler implements SubHandler, Initializable {
 	}
 
 	@Override
-	public void handle(Context ctx, Model model, Payload payload) {
+	public void handleOutbound(Context ctx, Model model, Payload payload) {
 		int runId = payload.getId();
 		try {
-			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
-			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
+			AbtestRun run = m_service.getAbTestRunById(runId);
+			Abtest abtest = m_service.getABTestByCaseId(run.getCaseId());
 
 			AbtestItem item = new AbtestItem(abtest, run);
 
@@ -404,8 +400,7 @@ public class ReportHandler implements SubHandler, Initializable {
 		List<AbtestReport> results = new ArrayList<AbtestReport>();
 
 		try {
-			List<com.dianping.cat.home.dal.abtest.AbtestReport> reports = m_abtestReportDao.findByRunIdDuration(runId,
-			      startTime, endTime, AbtestReportEntity.READSET_FULL);
+			List<com.dianping.cat.home.dal.abtest.AbtestReport> reports = m_service.getReports(runId, startTime, endTime);
 
 			for (com.dianping.cat.home.dal.abtest.AbtestReport report : reports) {
 				String content = report.getContent();
@@ -575,7 +570,7 @@ public class ReportHandler implements SubHandler, Initializable {
 		}
 
 		public String toJson() {
-			Gson gson = m_gsonBuilderManager.getGsonBuilder().create();
+			Gson gson = m_gsonBuilderManager.getGson();
 
 			return gson.toJson(this, DataSets.class);
 		}
@@ -588,5 +583,10 @@ public class ReportHandler implements SubHandler, Initializable {
 
 			return dataSets;
 		}
+	}
+
+	@Override
+	public void handleInbound(Context ctx, Payload payload) {
+		throw new UnsupportedOperationException();
 	}
 }

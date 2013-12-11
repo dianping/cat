@@ -8,7 +8,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
 <style>
 #content {
-	width: 1200px;
+	width: 100%;
 	margin: 0 auto;
 }
 

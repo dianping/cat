@@ -15,8 +15,6 @@ import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultMessageManager;
-import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestContext implements ABTestContext {
 	private String m_groupName = DEFAULT_GROUP;
@@ -28,10 +26,6 @@ public class DefaultABTestContext implements ABTestContext {
 	private HttpServletResponse m_response;
 
 	private Map<String, String> m_cookielets;
-
-	private DefaultMessageManager m_messageManager;
-
-	private ABTestCodec m_cookieCodec;
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
@@ -70,33 +64,28 @@ public class DefaultABTestContext implements ABTestContext {
 		return m_response;
 	}
 
-	public DefaultMessageManager getMessageManager() {
-		return m_messageManager;
-	}
-
 	private void isEligableRequest(List<ConversionRule> conversionRules, HttpServletRequest request) {
+		if (m_cookielets == null) {
+			return;
+		}
+
 		String actual = (String) request.getAttribute("url-rewrite-original-url");
 
 		if (isEmptyString(actual)) { // no url-rewrite
 			actual = request.getRequestURL().toString();
 		}
 
+		boolean isAccept = false;
+
 		for (ConversionRule rule : conversionRules) {
 			if (actual.equalsIgnoreCase(rule.getText())) {
-				String appendMetricType = m_cookieCodec.encode(String.valueOf(m_entity.getId()), m_cookielets);
-
-				if (!isEmptyString(appendMetricType)) {
-					String metricType = m_messageManager.getMetricType();
-
-					if (!isEmptyString(metricType)) {
-						m_messageManager.setMetricType(metricType + "&" + appendMetricType);
-					} else {
-						m_messageManager.setMetricType(appendMetricType);
-					}
-				}
-
+				isAccept = true;
 				break;
 			}
+		}
+
+		if (!isAccept) {
+			m_cookielets.clear();
 		}
 	}
 
@@ -106,10 +95,6 @@ public class DefaultABTestContext implements ABTestContext {
 		} else {
 			return true;
 		}
-	}
-
-	public void setCookieCodec(ABTestCodec cookieCodec) {
-		m_cookieCodec = cookieCodec;
 	}
 
 	@Override
@@ -133,10 +118,6 @@ public class DefaultABTestContext implements ABTestContext {
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
 		setCookielet("ab", groupName);
-	}
-
-	public void setMessageManager(MessageManager messageManager) {
-		m_messageManager = (DefaultMessageManager) messageManager;
 	}
 
 	public void setup(HttpServletRequest request, HttpServletResponse response, Map<String, String> cookielets) {

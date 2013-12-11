@@ -59,7 +59,7 @@
 				<div class="main_feature_title">
 					<img src="img/3_number.png" height="32" width="32">
 					<h3>
-						rich and visual reports <b>(in the future)</b>
+						rich and visual reports 
 					</h3>
 				</div>
 			</div>
