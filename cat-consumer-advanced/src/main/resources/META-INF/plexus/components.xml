@@ -65,6 +65,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
+			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.consumer.cross.CrossAnalyzer</implementation>
@@ -76,6 +80,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
 				</requirement>
 			</requirements>
 		</component>

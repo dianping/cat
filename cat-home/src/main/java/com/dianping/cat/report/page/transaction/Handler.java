@@ -85,7 +85,7 @@ public class Handler implements PageHandler<Context> {
 			if (payload != null && report != null) {
 				boolean isCurrent = payload.getPeriod().isCurrent();
 				double seconds;
-				
+
 				if (isCurrent) {
 					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 				} else {
@@ -175,7 +175,6 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 		String type = payload.getType();
-
 		switch (payload.getAction()) {
 		case HOURLY_REPORT:
 			showHourlyReport(model, payload);

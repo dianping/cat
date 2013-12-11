@@ -267,7 +267,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 				}
 
 				try {
-					Thread.sleep(100);
+					Thread.sleep(200);
 				} catch (InterruptedException e) {
 					break;
 				}
