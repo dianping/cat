@@ -10,8 +10,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
-import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
