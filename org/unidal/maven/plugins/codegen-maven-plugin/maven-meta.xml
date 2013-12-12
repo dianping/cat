@@ -3,11 +3,12 @@
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>codegen-maven-plugin</artifactId>
    <versioning>
-      <latest>2.0.8</latest>
-      <release>2.0.8</release>
-      <lastUpdated>20131101144159</lastUpdated>
+      <latest>2.0.9</latest>
+      <release>2.0.9</release>
+      <lastUpdated>20131212044159</lastUpdated>
       <versions>
          <version>2.0.8</version>
+         <version>2.0.9</version>
       </versions>
    </versioning>
 </metadata>
