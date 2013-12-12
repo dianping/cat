@@ -257,8 +257,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		File to = new File(outbox, path);
 
 		to.getParentFile().mkdirs();
-		Files.forDir().copyFile(from, to);
-		Files.forDir().delete(from);
+		if(from.exists()){
+			Files.forDir().copyFile(from, to);
+			Files.forDir().delete(from);
+		}
 
 		File parentFile = from.getParentFile();
 
@@ -332,8 +334,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	public void setLocalIp(String localIp) {
-   	m_localIp = localIp;
-   }
+		m_localIp = localIp;
+	}
 
 	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
@@ -400,6 +402,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			if (lastTotalSize == null) {
 				lastTotalSize = 0L;
 			}
+			if (totalSize == null) {
+				totalSize = 0L;
+			}
+
 			double amount = totalSize - lastTotalSize;
 			m_lastTotalSizes.put(domain, totalSize);
 			m_serverStateManager.addMessageSize(domain, amount);

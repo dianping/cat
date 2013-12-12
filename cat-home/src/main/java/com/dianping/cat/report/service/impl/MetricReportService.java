@@ -6,10 +6,10 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.message.Event;
@@ -51,7 +51,7 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "metric", Event.SUCCESS,
+					Cat.getProducer().logEvent("ErrorXML", MetricAnalyzer.ID, Event.SUCCESS,
 					      report.getProductLine() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}

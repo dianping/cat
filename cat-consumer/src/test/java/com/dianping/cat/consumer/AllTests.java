@@ -9,10 +9,12 @@ import com.dianping.cat.consumer.core.GsonTest;
 import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
+import com.dianping.cat.consumer.dump.DumpAnalyzerTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
+import com.dianping.cat.consumer.problem.AggregationConfigManagerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
@@ -81,11 +83,15 @@ ProblemAnalyzerTest.class,
 
 ProblemReportMergerTest.class,
 
+AggregationConfigManagerTest.class,
+
 ProblemReportAllBuilderTest.class,
 
 CompositeFormatTest.class,
 
 DefaultFormatTest.class,
+
+DumpAnalyzerTest.class,
 
 TransactionReportTypeAggergatorTest.class })
 public class AllTests {

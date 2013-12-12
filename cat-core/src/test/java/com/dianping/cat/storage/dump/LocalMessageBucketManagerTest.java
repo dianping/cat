@@ -2,6 +2,7 @@ package com.dianping.cat.storage.dump;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -30,27 +31,42 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 
 	private String m_ip = "127.0.0.1";
 
-	@Before
-	public void setup() {
-		new File(m_baseDir + "source-127.0.0.1-" + m_ip).delete();
-		new File(m_baseDir + "source-127.0.0.1-" + m_ip + ".idx").delete();
-		File file = new File(m_outboxDir + "source-127.0.0.1-" + m_ip);
+	private MessageCodec m_codec;
 
-		file.exists();
-		file.delete();
-		new File(m_outboxDir + "source-127.0.0.1-" + m_ip + ".idx").delete();
+	private LocalMessageBucketManager m_manager;
 
-		String tmpDir = System.getProperty("java.io.tmpdir");
-		new File(tmpDir, "cat-source.mark").delete();
+	private long m_now = 1343532130488L;
+
+	private int m_threadNum = 20;
+
+	private int m_num = 1000;
+
+	public void clear(String domain, String ip) {
+		new File(m_baseDir + domain + "-" + ip + "-" + ip).delete();
+		new File(m_baseDir + domain + "-" + ip + "-" + ip + ".idx").delete();
+
+		new File(m_outboxDir + domain + "-" + ip + "-" + ip).delete();
+		new File(m_outboxDir + domain + "-" + ip + "-" + ip + ".idx").delete();
+
+		new File(System.getProperty("java.io.tmpdir"), "cat-" + domain + ".mark").delete();
+	}
+
+	private MessageIdFactory getMessageIdFactory(String ip, String domain) throws IOException {
+		MessageIdFactory factory = new MockMessageIdFactory();
+
+		factory.setIpAddress(ip);
+		factory.initialize(domain);
+
+		return factory;
 	}
 
 	private DefaultMessageTree newMessageTree(String id, int i, long timestamp) {
 		DefaultMessageTree tree = new DefaultMessageTree();
 
+		tree.setMessageId(id);
 		tree.setDomain("target");
 		tree.setHostName("localhost");
 		tree.setIpAddress("127.0.0.1");
-		tree.setMessageId(id);
 		tree.setParentMessageId("parentMessageId" + i);
 		tree.setRootMessageId("rootMessageId" + i);
 		tree.setSessionToken("sessionToken");
@@ -72,54 +88,74 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		transaction.complete();
 		transaction.setTimestamp(timestamp);
 		transaction.setDurationInMillis(duration);
+
 		return transaction;
 	}
 
-	@Test
-	public void test() {
+	@Before
+	public void setup() throws Exception {
+		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 
+		m_manager = (LocalMessageBucketManager) lookup(MessageBucketManager.class, LocalMessageBucketManager.ID);
+		m_manager.setLocalIp(m_ip);
+
+		clear("source", m_ip);
+		
+		for (int i = 0; i < m_threadNum; i++) {
+			clear("source" + i, m_ip);
+		}
 	}
 
 	@Test
-	public void testReadWrite() throws Exception {
-		LocalMessageBucketManager manager = (LocalMessageBucketManager) lookup(MessageBucketManager.class,
-		      LocalMessageBucketManager.ID);
-		MessageCodec codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
-		MessageIdFactory factory = new MockMessageIdFactory();
+	public void testMultiThreadRW() {
+		try {
+			CountDownLatch latch = new CountDownLatch(m_threadNum);
 
-		manager.setLocalIp(m_ip);
-		long now = 1343532130488L;
-		int num = 5000;
+			for (int i = 0; i < m_threadNum; i++) {
+				ReadAndWriteBucketManagerThread thread = new ReadAndWriteBucketManagerThread("7f000001", "source" + i,
+				      latch);
+				thread.setName("LocalMessageBucket-" + i);
 
-		Thread.sleep(100);
+				thread.start();
+			}
 
-		factory.setIpAddress("7f000001");
-		factory.initialize("source");
+			latch.await();
+		} catch (Throwable e) {
+			System.out.println(e);
+		}
+	}
 
-		for (int i = 0; i < num; i++) {
-			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
+	public void testReadWrite(String ip, String domain) throws Exception {
+		MessageIdFactory factory = getMessageIdFactory(ip, domain);
+
+		for (int i = 0; i < m_num; i++) {
+			String messageId = factory.getNextId();
+			DefaultMessageTree tree = newMessageTree(messageId, i, m_now + i * 10L);
 			MessageId id = MessageId.parse(tree.getMessageId());
 
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8 * 1024); // 8K
-			codec.encode(tree, buf);
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(512); // 8K
+			m_codec.encode(tree, buf);
 
 			tree.setBuffer(buf);
-			manager.storeMessage(tree, id);
+			m_manager.storeMessage(tree, id);
 		}
+		
+		Thread.sleep(1000);
 
-		Thread.yield();
-
-		Thread.sleep(3000);
-
-		manager.loadMessage("source-7f000001-373203-1");
-
-		for (int i = 0; i < num; i++) {
-			String messageId = "source-7f000001-373203-" + i;
-			MessageTree tree = manager.loadMessage(messageId);
+		for (int i = 0; i < m_num; i++) {
+			String messageId = domain + "-" + ip + "-373203-" + i;
+			MessageTree tree = m_manager.loadMessage(messageId);
 
 			Assert.assertNotNull("Message " + i + " not found.", tree);
-			Assert.assertEquals(messageId, tree.getMessageId());
+			if (tree != null) {
+				Assert.assertEquals(messageId, tree.getMessageId());
+			}
 		}
+	}
+
+	@Test
+	public void testSingleThreadRW() throws Exception {
+		testReadWrite("7f000001", "source");
 	}
 
 	static class MockMessageIdFactory extends MessageIdFactory {
@@ -133,5 +169,33 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			super.initialize(domain);
 			super.resetIndex();
 		}
+	}
+
+	class ReadAndWriteBucketManagerThread extends Thread {
+		private String m_ip;
+
+		private String m_domain;
+
+		private CountDownLatch m_latch;
+
+		public ReadAndWriteBucketManagerThread(String ip, String domain, CountDownLatch latch) {
+			m_ip = ip;
+			m_domain = domain;
+			m_latch = latch;
+		}
+
+		@Override
+		public void run() {
+			try {
+				testReadWrite(m_ip, m_domain);
+
+				System.out.println(this.getName() + "  done.");
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				m_latch.countDown();
+			}
+		}
+
 	}
 }

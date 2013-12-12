@@ -32,7 +32,7 @@ CatAppenderTest.class,
 MessageTest.class,
 
 /* .abtest */
-TrafficDistributionGroupStrategyTest.class, 
+TrafficDistributionGroupStrategyTest.class,
 
 ABTestCodecTest.class,
 

@@ -36,7 +36,6 @@ public class StateAnalyzerTest extends ComponentTestCase {
 
 	@Test
 	public void testProcess() throws Exception {
-
 		StateReport report = m_analyzer.getReport(m_domain);
 		
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("state_analyzer.xml"), "utf-8");

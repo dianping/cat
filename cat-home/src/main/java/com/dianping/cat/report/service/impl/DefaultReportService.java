@@ -166,8 +166,8 @@ public class DefaultReportService implements ReportService {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+		
 		try {
-
 			m_monthlyReportDao.deleteReportByDomainNamePeriod(report);
 			m_monthlyReportDao.insert(report);
 

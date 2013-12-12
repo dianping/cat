@@ -15,6 +15,7 @@ public class EventPerformanceTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		EventAnalyzer analyzer = (EventAnalyzer)lookup(MessageAnalyzer.class,EventAnalyzer.ID);
+
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();

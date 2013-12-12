@@ -4,8 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.advanced.MetricAnalyzerTest;
-import com.dianping.cat.consumer.browser.BrowserAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossInfoTest;
 import com.dianping.cat.consumer.cross.CrossReportMergerTest;
@@ -14,6 +12,9 @@ import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
 import com.dianping.cat.consumer.matrix.MatrixModelTest;
 import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
+import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
+import com.dianping.cat.consumer.metric.MetricConfigManagerTest;
+import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.sql.DatabaseParserTest;
 import com.dianping.cat.consumer.sql.SqlAnalyzerTest;
 import com.dianping.cat.consumer.sql.SqlParsersTest;
@@ -48,7 +49,9 @@ DependencyAnalyzerTest.class,
 
 DependencyReportMergerTest.class,
 
-BrowserAnalyzerTest.class
+ProductLineConfigManagerTest.class,
+
+MetricConfigManagerTest.class
 
 })
 public class AllTests {

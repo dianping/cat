@@ -85,10 +85,15 @@ public class Handler implements PageHandler<Context> {
 			if (payload != null && report != null) {
 				boolean isCurrent = payload.getPeriod().isCurrent();
 				double seconds;
+				
 				if (isCurrent) {
 					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 				} else {
-					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+					if (report.getEndTime() != null && report.getStartTime() != null) {
+						seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+					} else {
+						seconds = 60;
+					}
 				}
 				new TpsStatistics(seconds).visitTransactionReport(report);
 			}
@@ -147,7 +152,7 @@ public class Handler implements PageHandler<Context> {
 
 		report = m_mergeManager.mergerAll(report, ipAddress, name);
 		TransactionType t = report.getMachines().get(ip).findType(type);
-		
+
 		if (t != null) {
 			return t.findName(name);
 		} else {

@@ -1,11 +1,17 @@
 package com.dianping.cat.consumer.cross;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -31,6 +37,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private ServerConfigManager m_serverConfigManager;
 
 	private static final String UNKNOWN = "UnknownIp";
+
+	private Map<String, String> m_host = new HashMap<String, String>();
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -94,20 +102,32 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		return crossInfo;
 	}
 
-	public boolean isIp(String ip) {
-		boolean result = false;
+	public String formatIp(String str) {
+		String result = m_host.get(str);
 
-		try {
-			char first = ip.charAt(0);
-			char next = ip.charAt(1);
-			if (first >= '0' && first <= '9') {
-				if (next >= '0' && next <= '9') {
-					return true;
+		if (result == null) {
+			if (isIPAdress(str)) {
+				result = str;
+			} else {
+				try {
+					InetAddress address = InetAddress.getByName(str);
+
+					result = address.getHostAddress();
+					m_logger.info(String.format("hostname %s to %s", str, result));
+				} catch (UnknownHostException e) {
+					Cat.logError(e);
+					result = "";
 				}
 			}
-		} catch (Exception e) {
+			m_host.put(str, result);
 		}
 		return result;
+	}
+
+	public boolean isIPAdress(String str) {
+		Pattern pattern = Pattern
+		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		return pattern.matcher(str).matches();
 	}
 
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
@@ -124,8 +144,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
-					if (isIp(name)) {
-						crossInfo.setRemoteAddress(name);
+
+					String formatIp = formatIp(name);
+
+					if (formatIp != null && formatIp.length() > 0) {
+						crossInfo.setRemoteAddress(formatIp);
 					}
 					break;
 				}
@@ -249,7 +272,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
-   	m_serverConfigManager = serverConfigManager;
-   }
-	
+		m_serverConfigManager = serverConfigManager;
+	}
+
 }

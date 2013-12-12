@@ -13,10 +13,10 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.advanced.MetricAnalyzer;
-import com.dianping.cat.consumer.advanced.MetricConfigManager;
-import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;

@@ -18,7 +18,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 
 public class AggregationConfigManager implements Initializable {
 	@Inject
-	private ConfigDao m_configDao;
+	protected ConfigDao m_configDao;
 	
 	@Inject
 	protected AggregationHandler m_handler;

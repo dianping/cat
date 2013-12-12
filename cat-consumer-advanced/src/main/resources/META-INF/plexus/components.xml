@@ -215,8 +215,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
-			<implementation>com.dianping.cat.consumer.advanced.MetricConfigManager</implementation>
+			<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+			<implementation>com.dianping.cat.consumer.metric.MetricConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -224,8 +224,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.advanced.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -235,7 +235,7 @@
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>metric</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.MetricAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.metric.MetricAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -245,10 +245,10 @@
 					<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.advanced.MetricConfigManager</role>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.advanced.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>

@@ -10,11 +10,12 @@ import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class TransactionPerformanceTest extends ComponentTestCase {
+public class TransactionPerformanceTest  extends ComponentTestCase{
 
 	@Test
 	public void test() throws Exception {
-		TransactionAnalyzer analyzer = (TransactionAnalyzer)lookup(MessageAnalyzer.class,TransactionAnalyzer.ID);
+		TransactionAnalyzer analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
+		
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();
@@ -25,7 +26,7 @@ public class TransactionPerformanceTest extends ComponentTestCase {
 		}
 		System.out.println(analyzer.getReport("cat"));
 		System.out.println("Cost " + (System.currentTimeMillis() - current) / 1000);
-		// cost 62s
+		//cost 62
 	}
 
 	public MessageTree buildMessage() {

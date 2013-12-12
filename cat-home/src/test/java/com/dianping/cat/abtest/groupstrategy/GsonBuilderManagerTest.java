@@ -4,17 +4,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.system.page.abtest.GsonBuilderManager;
+import com.dianping.cat.system.page.abtest.util.GsonManager;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class GsonBuilderManagerTest {
 	
 	@Test
 	public void test_none_prefix_field(){
-		GsonBuilderManager manager = new GsonBuilderManager();
-		GsonBuilder builder = manager.getGsonBuilder();
-		Gson gson = builder.create();
+		GsonManager manager = new GsonManager();
+		Gson gson = manager.getGson();
 		
 		MockObject object = new MockObject("name", "type");
 		String json = gson.toJson(object, MockObject.class);
