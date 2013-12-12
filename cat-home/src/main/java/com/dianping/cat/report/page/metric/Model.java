@@ -9,8 +9,8 @@ import java.util.Map;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
-import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;

@@ -4,19 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.xml.sax.SAXException;
 
-import com.dianping.cat.configuration.client.IEntity;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
@@ -64,23 +57,4 @@ public class ConfigTest {
 		Assert.assertEquals("XML is not well parsed!", expected.replace("\r", ""), xml.replace("\r", ""));
 	}
 
-	@Test
-	@Ignore
-	public void testSchema() throws Exception {
-		// define the type of schema - we use W3C:
-		String schemaLang = "http://www.w3.org/2001/XMLSchema";
-
-		// get validation driver:
-		SchemaFactory factory = SchemaFactory.newInstance(schemaLang);
-
-		// create schema by reading it from an XSD file:
-		String path = "/" + IEntity.class.getPackage().getName().replace('.', '/');
-		Schema schema = factory.newSchema(new StreamSource(getClass().getResourceAsStream(path + "/config.xsd")));
-		Validator validator = schema.newValidator();
-
-		// at last perform validation:
-		validator.validate(new StreamSource(getClass().getResourceAsStream("client.xml")));
-		validator.validate(new StreamSource(getClass().getResourceAsStream("server.xml")));
-		validator.validate(new StreamSource(getClass().getResourceAsStream("config.xml")));
-	}
 }

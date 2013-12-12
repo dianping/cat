@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.performance;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
@@ -13,7 +14,7 @@ public class MatrixPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		MatrixAnalyzer analyzer = lookup(MatrixAnalyzer.class);
+		MatrixAnalyzer analyzer = (MatrixAnalyzer)lookup(MessageAnalyzer.class,MatrixAnalyzer.ID);
 		MessageTree tree = buildMessage();
 
 		long current = System.currentTimeMillis();

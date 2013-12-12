@@ -13,7 +13,8 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.advanced.ProductLineConfigManager;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
@@ -35,12 +36,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "metric")
+	@InboundActionMeta(name = MetricAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 	}
 
 	@Override
-	@OutboundActionMeta(name = "metric")
+	@OutboundActionMeta(name = MetricAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();

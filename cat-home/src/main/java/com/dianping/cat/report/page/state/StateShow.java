@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.state.model.entity.Detail;
@@ -77,19 +78,10 @@ public class StateShow extends BaseVisitor {
 		return m_total;
 	}
 
-	public boolean isIp(String ip) {
-		boolean result = false;
-		try {
-			char first = ip.charAt(0);
-			char next = ip.charAt(1);
-			if (first >= '0' && first <= '9') {
-				if (next >= '0' && next <= '9') {
-					return true;
-				}
-			}
-		} catch (Exception e) {
-		}
-		return result;
+	public boolean validateIp(String str) {
+		Pattern pattern = Pattern
+		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		return pattern.matcher(str).matches();
 	}
 
 	public int getTotalSize() {
@@ -99,7 +91,7 @@ public class StateShow extends BaseVisitor {
 			Set<String> temp = domain.getIps();
 
 			for (String str : temp) {
-				if (isIp(str)) {
+				if (validateIp(str)) {
 					ips.add(str);
 				}
 			}

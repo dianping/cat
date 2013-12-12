@@ -23,6 +23,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -201,7 +202,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_stateService.invoke(request);
 			} else if (TopAnalyzer.ID.equals(report)) {
 				response = m_topService.invoke(request);
-			} else if ("metric".equals(report)) {
+			} else if (MetricAnalyzer.ID.equals(report)) {
 				response = m_metricService.invoke(request);
 			} else if (DependencyAnalyzer.ID.equals(report)) {
 				response = m_dependencyService.invoke(request);

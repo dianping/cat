@@ -6,7 +6,6 @@ import junit.framework.Assert;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -210,20 +209,18 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	}
 
 	@Test
-	@Ignore
 	public void testMessageTree() throws Exception {
 		MessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
 		String expected1 = "<table class=\"logview\">\r\n"
-		      + "<tr class=\"header\"><td>HT1</td><td>domain</td><td>hostName</td><td>ipAddress</td><td>threadGroupName</td><td>threadId</td><td>threadName</td><td>messageId</td><td>parentMessageId</td><td>rootMessageId</td><td>sessionToken</td></tr>\r\n"
-		      + "</table>";
+		      + "<tr class=\"header\"><td colspan=5><a href=\'rootMessageId?domain=domain\'>RootLogview</a>&nbsp;&nbsp;"
+		      + "<a href=\'parentMessageId?domain=domain\'>ParentLogview</a> HT2 domain hostName ipAddress threadGroupName threadId threadName messageId parentMessageId rootMessageId sessionToken </td></tr></table>";
 
 		checkTree(tree, expected1);
 
 		String expected2 = "<table class=\"logview\">\r\n"
-		      + "<tr class=\"header\"><td>HT1</td><td>domain</td><td>hostName</td><td>ipAddress</td><td>threadGroupName</td><td>threadId</td><td>threadName</td><td>messageId</td><td>parentMessageId</td><td>rootMessageId</td><td>sessionToken</td></tr>\r\n"
-		      + "<tr class=\"odd\"><td>E15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n"
-		      + "</table>";
+		      + "<tr class=\"header\"><td colspan=5><a href=\'rootMessageId?domain=domain\'>RootLogview</a>&nbsp;&nbsp;<a href=\'parentMessageId?domain=domain\'>ParentLogview</a> HT2 domain hostName ipAddress threadGroupName threadId threadName messageId parentMessageId rootMessageId sessionToken </td></tr><tr class=\"odd\"><td>E15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>"
+		      + "\r\n</table>";
 
 		tree.setMessage(newEvent("type", "name", timestamp, "0", "here is the data."));
 		checkTree(tree, expected2);

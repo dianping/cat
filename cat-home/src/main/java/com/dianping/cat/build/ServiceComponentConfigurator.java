@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
@@ -163,7 +164,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageConsumer.class));
 		all.add(C(ModelService.class, "metric-historical", HistoricalMetricService.class) //
 		      .req(BucketManager.class, ReportService.class));
-		all.add(C(ModelService.class, "metric", CompositeMetricService.class) //
+		all.add(C(ModelService.class, MetricAnalyzer.ID, CompositeMetricService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "metric-historical" }, "m_services"));
 
