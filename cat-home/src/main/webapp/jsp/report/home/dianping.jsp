@@ -15,7 +15,6 @@
           <servers>
              <server ip="192.168.213.115" port="2280" />
          </servers>
-         <domain id="MobileApi" enabled="true"/>
       </config>
 </xmp>
 
