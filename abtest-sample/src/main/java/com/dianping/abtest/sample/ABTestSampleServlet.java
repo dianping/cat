@@ -24,17 +24,17 @@ public class ABTestSampleServlet extends HttpServlet {
 		
 		if (m_abtest.isGroupA()) {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index1.jsp");
-			Cat.logMetric("ABTestSample", "page", "index1", "group", "a");
 			rd.forward(request, response);
 		} else {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index2.jsp");
-			Cat.logMetric("ABTestSample", "page", "index2", "group", "");
 			rd.forward(request, response);
 		}
+		
+		Cat.logMetric("ABTest", "view", "index2", "group", "Control");
 	}
 
 	public static enum MyABTestId implements ABTestName {
-		CASE1("SampleTest");
+		CASE1("Sample");
 
 		private String m_id;
 

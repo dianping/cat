@@ -35,6 +35,8 @@ import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class ABTestContextTest extends ComponentTestCase {
 
+	private DefaultABTestContextManager m_contextManager;
+
 	private DefaultABTestContext m_context;
 
 	@Test
@@ -50,9 +52,9 @@ public class ABTestContextTest extends ComponentTestCase {
 		entity.setConversionRules(conversionRules);
 		entity.setGroupStrategy(new MockGroupStrategy());
 
-		ABTestContextManager contextManager = lookup(ABTestContextManager.class);
+		m_contextManager = (DefaultABTestContextManager) lookup(ABTestContextManager.class);
 
-		m_context = (DefaultABTestContext) contextManager.createContext(entity);
+		m_context = (DefaultABTestContext) m_contextManager.createContext(entity);
 
 		test(1, "100=ab:A");
 	}
@@ -64,7 +66,9 @@ public class ABTestContextTest extends ComponentTestCase {
 			m_context.setup(request, null, cookielets);
 		}
 
-		Assert.assertEquals(expectedMetric, m_context.getMessageManager().getMetricType());
+		String actual = m_contextManager.getABTestCodec().encode("100", m_context.getCookielets());
+
+		Assert.assertEquals(expectedMetric, actual);
 	}
 
 	private Case mockCase() {

@@ -532,6 +532,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.impl.BrowserReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.BrowserReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.TopReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.TopReportService</implementation>
 			<requirements>
@@ -651,6 +681,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.UtilizationReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.BrowserReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -907,15 +940,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
@@ -942,6 +966,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.browser.BrowserReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.browser.BrowserReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1026,6 +1059,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.browser.BrowserReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1861,44 +1897,85 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
-			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
+			<role>com.dianping.cat.system.page.abtest.util.GroupStrategyParser</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.GroupStrategyParser</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
-			<implementation>com.dianping.cat.system.page.abtest.GsonBuilderManager</implementation>
+			<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.GsonManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
 			<implementation>com.dianping.cat.system.page.abtest.advisor.DefaultABTestAdvisor</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.ListViewHandler</role>
-			<implementation>com.dianping.cat.system.page.abtest.ListViewHandler</implementation>
+			<role>com.dianping.cat.system.page.abtest.handler.SubHandler</role>
+			<role-hint>abtest_handler</role-hint>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ABTestHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.SubHandler</role>
+			<role-hint>advisor_handler</role-hint>
+			<implementation>com.dianping.cat.system.page.abtest.handler.AdvisorHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.SubHandler</role>
+			<role-hint>groupstrategy_handler</role-hint>
+			<implementation>com.dianping.cat.system.page.abtest.handler.GroupStrategyHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.util.GroupStrategyParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.SubHandler</role>
+			<role-hint>model_handler</role-hint>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ModelHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.ListViewHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ListViewHandler</implementation>
 			<configuration>
 				<pageSize>10</pageSize>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
-			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
+			<role>com.dianping.cat.system.page.abtest.handler.SubHandler</role>
+			<role-hint>report_handler</role-hint>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ReportHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -1927,6 +2004,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.util.CaseBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1934,7 +2014,7 @@
 			<implementation>com.dianping.cat.system.page.abtest.util.CaseBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
+					<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3293,61 +3373,31 @@
 			<implementation>com.dianping.cat.system.page.abtest.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
+					<role>com.dianping.cat.system.page.abtest.handler.GroupStrategyHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.ListViewHandler</role>
+					<role>com.dianping.cat.system.page.abtest.handler.ABTestHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
+					<role>com.dianping.cat.system.page.abtest.handler.ListViewHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
+					<role>com.dianping.cat.system.page.abtest.handler.ReportHandler</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
-			<implementation>com.dianping.cat.home.dal.abtest.AbtestDao</implementation>
-			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.system.page.abtest.handler.ModelHandler</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
-			<implementation>com.dianping.cat.home.dal.abtest.AbtestRunDao</implementation>
-			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.system.page.abtest.handler.AdvisorHandler</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
-			<implementation>com.dianping.cat.home.dal.abtest.GroupStrategyDao</implementation>
-			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3361,36 +3411,58 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.GroupStrategyParser</role>
-			<implementation>com.dianping.cat.system.page.abtest.GroupStrategyParser</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.abtest.ListViewHandler</role>
-			<implementation>com.dianping.cat.system.page.abtest.ListViewHandler</implementation>
+			<role>com.dianping.cat.system.page.abtest.handler.GroupStrategyHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.GroupStrategyHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+					<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
 				</requirement>
 				<requirement>
-					<role>int</role>
+					<role>com.dianping.cat.system.page.abtest.util.GroupStrategyParser</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.ReportHandler</role>
-			<implementation>com.dianping.cat.system.page.abtest.ReportHandler</implementation>
+			<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.GsonManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.util.GroupStrategyParser</role>
+			<implementation>com.dianping.cat.system.page.abtest.util.GroupStrategyParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.ABTestHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ABTestHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
+					<role>com.dianping.cat.system.page.abtest.util.GsonManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.ListViewHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ListViewHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>int</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.handler.ReportHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ReportHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -3398,17 +3470,22 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.abtest.AbtestReportDao</role>
-			<implementation>com.dianping.cat.home.dal.abtest.AbtestReportDao</implementation>
+			<role>com.dianping.cat.system.page.abtest.handler.ModelHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.ModelHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.system.page.abtest.service.ABTestService</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.GsonBuilderManager</role>
-			<implementation>com.dianping.cat.system.page.abtest.GsonBuilderManager</implementation>
+			<role>com.dianping.cat.system.page.abtest.handler.AdvisorHandler</role>
+			<implementation>com.dianping.cat.system.page.abtest.handler.AdvisorHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.advisor.ABTestAdvisor</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.plugin.Handler</role>

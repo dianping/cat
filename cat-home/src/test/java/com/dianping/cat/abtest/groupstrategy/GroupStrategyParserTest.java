@@ -11,8 +11,8 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.abtest.model.entity.GroupstrategyDescriptor;
-import com.dianping.cat.system.page.abtest.GroupStrategyParser;
-import com.dianping.cat.system.page.abtest.GsonBuilderManager;
+import com.dianping.cat.system.page.abtest.util.GroupStrategyParser;
+import com.dianping.cat.system.page.abtest.util.GsonManager;
 import com.google.gson.Gson;
 
 public class GroupStrategyParserTest {
@@ -44,9 +44,9 @@ public class GroupStrategyParserTest {
 
 	@Test
 	public void then_gsonbuilder_can_correctly_parse_json_to_object() throws IOException, ParseException {
-		GsonBuilderManager manager = new GsonBuilderManager();
+		GsonManager manager = new GsonManager();
 
-		Gson gson = manager.getGsonBuilder().create();
+		Gson gson = manager.getGson();
 
 		String json = gson.toJson(m_descriptorObject, GroupstrategyDescriptor.class);
 

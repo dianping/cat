@@ -90,16 +90,20 @@ public class CachedReportTask implements Task {
 			EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, EventAnalyzer.ID),
 			      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
+			
 			ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, ProblemAnalyzer.ID),
 			      com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder.build(problemReport));
+			
 			CrossReport crossReport = m_reportService.queryCrossReport(domain, start, end);
 			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, CrossAnalyzer.ID),
 			      com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder.build(crossReport));
+			
 			MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
 			new MatrixReportFilter().visitMatrixReport(matrixReport);
 			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, MatrixAnalyzer.ID),
 			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
+			
 			SqlReport sqlReport = m_reportService.querySqlReport(domain, start, end);
 			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, SqlAnalyzer.ID),
 			      com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder.build(sqlReport));
@@ -134,16 +138,20 @@ public class CachedReportTask implements Task {
 			EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, EventAnalyzer.ID),
 			      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
+			
 			ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, ProblemAnalyzer.ID),
 			      com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder.build(problemReport));
+			
 			CrossReport crossReport = m_reportService.queryCrossReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, CrossAnalyzer.ID),
 			      com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder.build(crossReport));
+			
 			MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
 			new MatrixReportFilter().visitMatrixReport(matrixReport);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, MatrixAnalyzer.ID),
 			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
+			
 			SqlReport sqlReport = m_reportService.querySqlReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, SqlAnalyzer.ID),
 			      com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder.build(sqlReport));
@@ -161,7 +169,6 @@ public class CachedReportTask implements Task {
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
 		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, Constants.REPORT_SERVICE),
 		      com.dianping.cat.home.service.transform.DefaultNativeBuilder.build(serviceReport));
-
 	}
 
 	@Override
