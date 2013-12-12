@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 			m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-			String build = new DefaultJsonBuilder().buildJson(topologyGraph);
+			String build = new DefaultJsonBuilder().build(topologyGraph);
 			
 			model.setTopologyGraph(build);
 			break;

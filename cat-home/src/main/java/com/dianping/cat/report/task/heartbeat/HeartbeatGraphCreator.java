@@ -8,120 +8,62 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
+import com.dianping.cat.consumer.heartbeat.model.transform.BaseVisitor;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.GraphLine;
 
 public class HeartbeatGraphCreator {
 
-	private void cacheHeartbeatColumn(Map<String, GraphLine> detailCache, int minute, Number value, String key) {
-		GraphLine detailLine = detailCache.get(key);
-		if (detailLine == null) {
-			detailLine = new GraphLine();
-			detailLine.minuteNumbers = new double[60];
-			detailCache.put(key, detailLine);
-		}
-		detailLine.minuteNumbers[minute] = value.doubleValue();
+	private List<Graph> m_graphs = new ArrayList<Graph>();
+
+	private HeartbeatReport m_report;
+
+	public List<Graph> buildGraph(HeartbeatReport report) {
+		m_report = report;
+		report.accept(new HeartbeatReportVisitor());
+
+		return m_graphs;
 	}
 
-	public List<Graph> splitReportToGraphs(Date reportPeriod, String domainName, String reportName,
-	      HeartbeatReport heartbeatReport) {
-		Set<String> ips = heartbeatReport.getIps();
-		List<Graph> graphs = new ArrayList<Graph>(ips.size());
+	private class HeartbeatReportVisitor extends BaseVisitor {
 
-		for (String ip : ips) {
+		private int m_currentMinute;
+
+		private Map<String, GraphLine> m_detailCache = new TreeMap<String, GraphLine>();
+
+		private void cacheHeartbeatColumn(String key, Number value) {
+			GraphLine detailLine = m_detailCache.get(key);
+			if (detailLine == null) {
+				detailLine = new GraphLine();
+				detailLine.minuteNumbers = new double[60];
+				m_detailCache.put(key, detailLine);
+			}
+			detailLine.minuteNumbers[m_currentMinute] = value.doubleValue();
+		}
+
+		private Graph buildGraph(String ip) {
 			Graph graph = new Graph();
 			graph.setIp(ip);
-			graph.setDomain(domainName);
-			graph.setName(reportName);
-			graph.setPeriod(reportPeriod);
+			graph.setDomain(m_report.getDomain());
+			graph.setName(HeartbeatAnalyzer.ID);
+			graph.setPeriod(m_report.getStartTime());
 			graph.setType(3);
-			com.dianping.cat.consumer.heartbeat.model.entity.Machine machine = heartbeatReport.getMachines().get(ip);
+			graph.setCreationDate(new Date());
+			return graph;
+		}
 
-			if (machine == null) {
-				continue;
-			}
-			List<Period> periods = machine.getPeriods();
-			Map<String, GraphLine> detailCache = new TreeMap<String, GraphLine>();
-
-			for (Period period : periods) {
-				int minute = period.getMinute();
-
-				String key = "CatMessageSize";
-				Number value = period.getCatMessageSize();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "CatMessageOverflow";
-				value = period.getCatMessageOverflow();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "CatMessageProduced";
-				value = period.getCatMessageProduced();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				List<Disk> disks = period.getDisks();
-				for (Disk d : disks) {
-					key = "Disk " + d.getPath();
-					value = d.getFree();
-					cacheHeartbeatColumn(detailCache, minute, value, key);
-				}
-
-				key = "MemoryFree";
-				value = period.getMemoryFree();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "HeapUsage";
-				value = period.getHeapUsage();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "NoneHeapUsage";
-				value = period.getNoneHeapUsage();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "SystemLoadAverage";
-				value = period.getSystemLoadAverage();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "OldGcCount";
-				value = period.getOldGcCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "NewGcCount";
-				value = period.getNewGcCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "PigeonStartedThread";
-				value = period.getPigeonThreadCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "CatThreadCount";
-				value = period.getCatThreadCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "TotalStartedThread";
-				value = period.getTotalStartedCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "DaemonThread";
-				value = period.getDaemonCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "ActiveThread";
-				value = period.getThreadCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-
-				key = "HttpThread";
-				value = period.getHttpThreadCount();
-				cacheHeartbeatColumn(detailCache, minute, value, key);
-			}
-
-			for (Entry<String, GraphLine> entry : detailCache.entrySet()) {
+		@Override
+		public void visitMachine(Machine machine) {
+			super.visitMachine(machine);
+			for (Entry<String, GraphLine> entry : m_detailCache.entrySet()) {
 				GraphLine line = entry.getValue();
 				double[] numbers = line.minuteNumbers;
 				double minValue = numbers[0];
@@ -147,8 +89,8 @@ public class HeartbeatGraphCreator {
 				line.sum2 = sum2;
 			}
 
-			StringBuilder sb = new StringBuilder(64 * detailCache.size());
-			for (Entry<String, GraphLine> entry : detailCache.entrySet()) {
+			StringBuilder sb = new StringBuilder(64 * m_detailCache.size());
+			for (Entry<String, GraphLine> entry : m_detailCache.entrySet()) {
 				GraphLine value = entry.getValue();
 				sb.append(entry.getKey());
 				sb.append('\t');
@@ -163,11 +105,92 @@ public class HeartbeatGraphCreator {
 				sb.append(TaskHelper.join(value.minuteNumbers, ','));
 				sb.append('\n');
 			}
-
+			Graph graph = buildGraph(machine.getIp());
 			graph.setDetailContent(sb.toString());
-			graph.setCreationDate(new Date());
-			graphs.add(graph);
+			m_graphs.add(graph);
 		}
-		return graphs;
+
+		@Override
+		public void visitHeartbeatReport(HeartbeatReport heartbeatReport) {
+			super.visitHeartbeatReport(heartbeatReport);
+		}
+
+		@Override
+		public void visitPeriod(Period period) {
+			m_currentMinute = period.getMinute();
+
+			String key = "CatMessageSize";
+			Number value = period.getCatMessageSize();
+			cacheHeartbeatColumn(key, value);
+
+			key = "CatMessageOverflow";
+			value = period.getCatMessageOverflow();
+			cacheHeartbeatColumn(key, value);
+
+			key = "CatMessageProduced";
+			value = period.getCatMessageProduced();
+			cacheHeartbeatColumn(key, value);
+
+			key = "MemoryFree";
+			value = period.getMemoryFree();
+			cacheHeartbeatColumn(key, value);
+
+			key = "HeapUsage";
+			value = period.getHeapUsage();
+			cacheHeartbeatColumn(key, value);
+
+			key = "NoneHeapUsage";
+			value = period.getNoneHeapUsage();
+			cacheHeartbeatColumn(key, value);
+
+			key = "SystemLoadAverage";
+			value = period.getSystemLoadAverage();
+			cacheHeartbeatColumn(key, value);
+
+			key = "OldGcCount";
+			value = period.getOldGcCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "NewGcCount";
+			value = period.getNewGcCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "PigeonStartedThread";
+			value = period.getPigeonThreadCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "CatThreadCount";
+			value = period.getCatThreadCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "TotalStartedThread";
+			value = period.getTotalStartedCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "DaemonThread";
+			value = period.getDaemonCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "ActiveThread";
+			value = period.getThreadCount();
+			cacheHeartbeatColumn(key, value);
+
+			key = "HttpThread";
+			value = period.getHttpThreadCount();
+			cacheHeartbeatColumn(key, value);
+
+			super.visitPeriod(period);
+
+		}
+
+		@Override
+		public void visitDisk(Disk disk) {
+			String key = "Disk " + disk.getPath();
+			Number value = disk.getFree();
+
+			cacheHeartbeatColumn(key, value);
+			super.visitDisk(disk);
+		}
+
 	}
 }

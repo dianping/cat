@@ -5,172 +5,203 @@ package com.dianping.cat.report.task.event;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
+import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.spi.GraphLine;
 
 public class EventGraphCreator {
 
-	private long[] arrayAdd(long[] src, long added[]) {
-		int size = added.length;
-		if (src == null) {
-			src = new long[size];
-		}
-		for (int i = 0; i < size; i++) {
-			src[i] = src[i] + added[i];
-		}
-		return src;
+	private List<Graph> m_graphs = new ArrayList<Graph>();
+
+	private EventReport m_report;
+
+	public List<Graph> buildGraph(EventReport report) {
+		m_report = report;
+		report.accept(new EventReportVisitor());
+
+		return m_graphs;
 	}
 
-	private String arrayToString(long[] array) {
-		StringBuilder sb = new StringBuilder();
-		int size = 12;
-		for (int i = 0; i < size; i++) {
-			sb.append(array[i]);
-			if (i < 11) {
-				sb.append(',');
+	private class EventReportVisitor extends BaseVisitor {
+
+		String m_currentIp;
+
+		String m_currentType;
+
+		int m_currentIndex;
+
+		GraphLine m_currentDetail;
+
+		GraphLine m_currentSummary;
+
+		GraphLine m_allDetail;
+
+		GraphLine m_allSummary;
+
+		Map<String, GraphLine> m_allDetails = new HashMap<String, GraphLine>();
+
+		Map<String, GraphLine> m_allSummaries = new HashMap<String, GraphLine>();
+
+		StringBuilder m_summaryContent;
+
+		StringBuilder m_detailContent;
+
+		StringBuilder m_allSummaryContent;
+
+		StringBuilder m_allDetailContent;
+
+		private void addRange(GraphLine graphLine, int index, Range range) {
+			graphLine.totalCounts[index] += range.getCount();
+			graphLine.failCounts[index] += range.getFails();
+		}
+
+		private String arrayToString(long[] array) {
+			StringBuilder sb = new StringBuilder();
+			int size = 12;
+			for (int i = 0; i < size; i++) {
+				sb.append(array[i]);
+				if (i < 11) {
+					sb.append(',');
+				}
 			}
+			return sb.toString();
 		}
-		return sb.toString();
-	}
 
-	private long[] getFailsCount(List<Range> ranges) {
-		long[] value = new long[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getFails();
+		private void buildContent(StringBuilder content, EventType type, GraphLine graphLine) {
+			content.append(type.getId()).append('\t');
+			content.append(arrayToString(graphLine.totalCounts)).append('\t');
+			content.append(arrayToString(graphLine.failCounts)).append('\n');
 		}
-		return value;
-	}
 
-	private long[] getTotalCount(List<Range> ranges) {
-		long[] value = new long[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getCount();
+		private void buildContent(StringBuilder content, String type, EventName name, GraphLine graphLine) {
+			content.append(type).append('\t');
+			content.append(name.getId()).append('\t');
+			content.append(arrayToString(graphLine.totalCounts)).append('\t');
+			content.append(arrayToString(graphLine.failCounts)).append('\n');
 		}
-		return value;
-	}
 
-	public List<Graph> splitReportToGraphs(Date reportPeriod, String domainName, String reportName,
-	      EventReport eventReport) {
-		Set<String> ips = eventReport.getIps();
-		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1);
-		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
-		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
-		Date creationDate = new Date();
-		for (String ip : ips) {
+		private void buildContent(StringBuilder content, String key, GraphLine graphLine) {
+			content.append(key).append('\t');
+			content.append(arrayToString(graphLine.totalCounts)).append('\t');
+			content.append(arrayToString(graphLine.failCounts)).append('\n');
+		}
+
+		private Graph buildGraph(String ip) {
 			Graph graph = new Graph();
 			graph.setIp(ip);
-			graph.setDomain(domainName);
-			graph.setName(reportName);
-			graph.setPeriod(reportPeriod);
+			graph.setDomain(m_report.getDomain());
+			graph.setName(EventAnalyzer.ID);
+			graph.setPeriod(m_report.getStartTime());
 			graph.setType(3);
-			graph.setCreationDate(creationDate);
-			Machine machine = eventReport.getMachines().get(ip);
-			Map<String, EventType> types = machine.getTypes();
-			StringBuilder detailBuilder = new StringBuilder();
-			StringBuilder summaryBuilder = new StringBuilder();
-			for (Entry<String, EventType> eventEntry : types.entrySet()) {
-				EventType eventType = eventEntry.getValue();
-				long[] typeCounts = new long[12];
-				long[] typeFails = new long[12];
+			graph.setCreationDate(new Date());
+			return graph;
+		}
 
-				Map<String, EventName> names = eventType.getNames();
-				for (Entry<String, EventName> nameEntry : names.entrySet()) {
-					EventName eventName = nameEntry.getValue();
-					List<Range> ranges = new ArrayList<Range>(eventName.getRanges().values());
-					detailBuilder.append(eventType.getId());
-					detailBuilder.append('\t');
-					detailBuilder.append(eventName.getId());
-					detailBuilder.append('\t');
-
-					long[] totalCount = getTotalCount(ranges);
-					detailBuilder.append(arrayToString(totalCount));
-					detailBuilder.append('\t');
-					long[] failCount = getFailsCount(ranges);
-					detailBuilder.append(arrayToString(failCount));
-					detailBuilder.append('\n');
-
-					String key = eventType.getId() + "\t" + eventName.getId();
-					GraphLine detailLine = allDetailCache.get(key);
-					if (detailLine == null) {
-						detailLine = new GraphLine();
-						allDetailCache.put(key, detailLine);
-					}
-
-					detailLine.totalCounts = arrayAdd(detailLine.totalCounts, totalCount);
-					detailLine.failCounts = arrayAdd(detailLine.failCounts, failCount);
-
-					typeCounts = arrayAdd(typeCounts, totalCount);
-					typeFails = arrayAdd(typeFails, failCount);
-				}
-
-				String summaryKey = eventType.getId();
-				GraphLine summaryLine = allSummaryCache.get(summaryKey);
-				if (summaryLine == null) {
-					summaryLine = new GraphLine();
-					allSummaryCache.put(summaryKey, summaryLine);
-				}
-				summaryLine.totalCounts = arrayAdd(summaryLine.totalCounts, typeCounts);
-				summaryLine.failCounts = arrayAdd(summaryLine.failCounts, typeFails);
-
-				summaryBuilder.append(eventType.getId());
-				summaryBuilder.append('\t');
-				summaryBuilder.append(arrayToString(typeCounts));
-				summaryBuilder.append('\t');
-				summaryBuilder.append(arrayToString(typeFails));
-				summaryBuilder.append('\n');
-
+		private void buildGraphLine(GraphLine graphLine, EventName name, boolean isNew) {
+			if (isNew) {
+				graphLine.totalCounts = new long[12];
+				graphLine.failCounts = new long[12];
+				graphLine.sums = new double[12];
 			}
-			graph.setDetailContent(detailBuilder.toString());
-			graph.setSummaryContent(summaryBuilder.toString());
-			graphs.add(graph);
 		}
 
-		Graph allGraph = new Graph();
-		allGraph.setIp("all");
-		allGraph.setDomain(domainName);
-		allGraph.setName(reportName);
-		allGraph.setPeriod(reportPeriod);
-		allGraph.setType(3);
-		allGraph.setCreationDate(creationDate);
-
-		StringBuilder detailSb = new StringBuilder();
-		for (Entry<String, GraphLine> entry : allDetailCache.entrySet()) {
-			detailSb.append(entry.getKey());
-			detailSb.append('\t');
-			GraphLine value = entry.getValue();
-			detailSb.append(arrayToString(value.totalCounts));
-			detailSb.append('\t');
-			detailSb.append(arrayToString(value.failCounts));
-			detailSb.append('\t');
-			detailSb.append('\n');
+		private void buildGraphLine(GraphLine graphLine, EventType type, boolean isNew) {
+			if (isNew) {
+				graphLine.totalCounts = new long[12];
+				graphLine.failCounts = new long[12];
+			}
 		}
-		allGraph.setDetailContent(detailSb.toString());
 
-		StringBuilder summarySb = new StringBuilder();
-		for (Entry<String, GraphLine> entry : allSummaryCache.entrySet()) {
-			summarySb.append(entry.getKey());
-			summarySb.append('\t');
-			GraphLine value = entry.getValue();
-			summarySb.append(arrayToString(value.totalCounts));
-			summarySb.append('\t');
-			summarySb.append(arrayToString(value.failCounts));
-			summarySb.append('\n');
+		@Override
+		public void visitEventReport(EventReport eventReport) {
+			Graph allGraph = buildGraph("all");
+			m_graphs.add(allGraph);
+			m_allDetailContent = new StringBuilder();
+			m_allSummaryContent = new StringBuilder();
+			super.visitEventReport(eventReport);
+			for (Entry<String, GraphLine> entry : m_allDetails.entrySet()) {
+				buildContent(m_allDetailContent, entry.getKey(), entry.getValue());
+			}
+			for (Entry<String, GraphLine> entry : m_allSummaries.entrySet()) {
+				buildContent(m_allSummaryContent, entry.getKey(), entry.getValue());
+			}
+			allGraph.setDetailContent(m_allDetailContent.toString());
+			allGraph.setSummaryContent(m_allSummaryContent.toString());
 		}
-		allGraph.setSummaryContent(summarySb.toString());
-		graphs.add(allGraph);
-		return graphs;
+
+		@Override
+		public void visitMachine(Machine machine) {
+			m_currentIp = machine.getIp();
+			Graph graph = buildGraph(m_currentIp);
+			m_graphs.add(graph);
+			m_summaryContent = new StringBuilder();
+			m_detailContent = new StringBuilder();
+
+			super.visitMachine(machine);
+			graph.setDetailContent(m_detailContent.toString());
+			graph.setSummaryContent(m_summaryContent.toString());
+		}
+
+		@Override
+		public void visitName(EventName name) {
+			String key = m_currentType + "\t" + name.getId();
+			m_allDetail = m_allDetails.get(key);
+			if (m_allDetail == null) {
+				m_allDetail = new GraphLine();
+				m_allDetails.put(key, m_allDetail);
+				buildGraphLine(m_allDetail, name, true);
+			} else {
+				buildGraphLine(m_allDetail, name, false);
+			}
+			m_currentDetail = new GraphLine();
+			buildGraphLine(m_currentDetail, name, true);
+			m_currentIndex = 0;
+
+			super.visitName(name);
+			buildContent(m_detailContent, m_currentType, name, m_currentDetail);
+		}
+
+		@Override
+		public void visitRange(Range range) {
+			addRange(m_currentDetail, m_currentIndex, range);
+			addRange(m_currentSummary, m_currentIndex, range);
+			addRange(m_allDetail, m_currentIndex, range);
+			addRange(m_allSummary, m_currentIndex, range);
+
+			m_currentIndex++;
+		}
+
+		@Override
+		public void visitType(EventType type) {
+			// TYPE, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
+			m_currentType = type.getId();
+			String key = m_currentType;
+			m_allSummary = m_allSummaries.get(key);
+			if (m_allSummary == null) {
+				m_allSummary = new GraphLine();
+				m_allSummaries.put(key, m_allSummary);
+				buildGraphLine(m_allSummary, type, true);
+			} else {
+				buildGraphLine(m_allSummary, type, false);
+			}
+			m_currentSummary = new GraphLine();
+			buildGraphLine(m_currentSummary, type, true);
+
+			super.visitType(type);
+
+			buildContent(m_summaryContent, type, m_currentSummary);
+		}
 	}
+
 }

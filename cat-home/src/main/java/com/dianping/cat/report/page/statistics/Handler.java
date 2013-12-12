@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -24,6 +25,12 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.BrowserAnalyzer;
+import com.dianping.cat.consumer.browser.model.entity.Browser;
+import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
+import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
+import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
+import com.dianping.cat.consumer.browser.model.entity.Os;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -43,6 +50,8 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
@@ -68,6 +77,35 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
+	private String buildBrowserChart(Map<String, Browser> map) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Browser> entry : map.entrySet()) {
+			String key = entry.getKey();
+			Browser value = entry.getValue();
+			for (Entry<String, BrowserVersion> versionEntry : value.getBrowserVersions().entrySet()) {
+				String title = key + " " + versionEntry.getKey();
+				long count = versionEntry.getValue().getCount();
+				items.add(new Item().setTitle(title).setNumber(count));
+			}
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
+	}
+
+	private void buildBrowserInfo(Model model, Payload payload) {
+		BrowserReport report = queryBrowserReport(payload);
+		model.setBrowserReport(report);
+		DomainDetail detail = report.findDomainDetail(payload.getDomain());
+		
+		if (detail != null) {
+			model.setBrowserChart(buildBrowserChart(detail.getBrowsers()));
+			model.setOsChart(buildOsChart(detail.getOses()));
+		}
+		
+	}
+
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
 		BugReportVisitor visitor = new BugReportVisitor();
@@ -88,6 +126,20 @@ public class Handler implements PageHandler<Context> {
 
 		model.setHeavyReport(heavyReport);
 		buildSortedHeavyInfo(model, heavyReport);
+	}
+
+	private String buildOsChart(Map<String, Os> map) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Os> entry : map.entrySet()) {
+			String title = entry.getKey();
+			Os value = entry.getValue();
+			long count = value.getCount();
+			items.add(new Item().setTitle(title).setNumber(count));
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
 	}
 
 	private void buildServiceInfo(Model model, Payload payload) {
@@ -152,15 +204,6 @@ public class Handler implements PageHandler<Context> {
 		model.setUtilizationReport(utilizationReport);
 	}
 
-	public Project findProjectByDomain(String domain) {
-		try {
-			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return null;
-	}
-
 	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
 		double maxScore = 0;
 		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
@@ -179,6 +222,15 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return maxScore;
+	}
+
+	public Project findProjectByDomain(String domain) {
+		try {
+			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return null;
 	}
 
 	@Override
@@ -214,6 +266,10 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
 			break;
+		case BROWSER_REPORT:
+		case BROWSER_HISTORY_REPORT:
+			buildBrowserInfo(model, payload);
+			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
@@ -223,6 +279,20 @@ public class Handler implements PageHandler<Context> {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
 		return !bugConfig.contains(exception);
+	}
+
+	private BrowserReport queryBrowserReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+		Date start = pair.getKey();
+		Date end = pair.getValue();
+		BrowserReport report = m_reportService.queryBrowserReport("Cat", start, end);
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserAnalyzer.ID);
+		Set<String> domainNames = report.getDomainNames();
+
+		report.setStartTime(start);
+		report.setEndTime(end);
+		domainNames.addAll(domains);
+		return report;
 	}
 
 	private BugReport queryBugReport(Payload payload) {
@@ -433,23 +503,12 @@ public class Handler implements PageHandler<Context> {
 					items.put(exception, item);
 				} else {
 					List<String> messages = item.getMessages();
-
 					item.setCount(item.getCount() + count);
-					mergeList(messages, exceptionItem.getMessages(), 10);
-				}
-			}
-		}
+					messages.addAll(exceptionItem.getMessages());
 
-		protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
-			int originalSize = oldMessages.size();
-
-			if (originalSize < size) {
-				int remainingSize = size - originalSize;
-
-				if (remainingSize >= newMessages.size()) {
-					oldMessages.addAll(newMessages);
-				} else {
-					oldMessages.addAll(newMessages.subList(0, remainingSize));
+					if (messages.size() > 10) {
+						messages = messages.subList(0, 10);
+					}
 				}
 			}
 		}

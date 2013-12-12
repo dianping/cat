@@ -17,10 +17,5 @@ public class ProblemReportTest {
 		String expected = source;
 
 		Assert.assertEquals(expected.replace("\r", ""), xml.replace("\r", ""));
-
-		// byte[] data = DefaultNativeBuilder.build(root);
-		// ProblemReport report = DefaultNativeParser.parse(data);
-
-		// Assert.assertEquals(root.toString(), report.toString());
 	}
 }

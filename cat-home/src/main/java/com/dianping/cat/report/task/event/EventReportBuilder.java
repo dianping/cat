@@ -90,7 +90,8 @@ public class EventReportBuilder implements ReportTaskBuilder {
 		reports.add(report);
 		EventReport eventReport = m_eventMerger.mergeForGraph(domain, reports);
 
-		return m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
+		return m_eventGraphCreator.buildGraph(eventReport);
+
 	}
 
 	@Override

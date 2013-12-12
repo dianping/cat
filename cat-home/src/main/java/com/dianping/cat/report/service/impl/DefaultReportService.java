@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -112,6 +113,9 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private UtilizationReportService m_utilizationReportService;
+
+	@Inject
+	private BrowserReportService m_browserReportService;
 
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
@@ -274,5 +278,10 @@ public class DefaultReportService implements ReportService {
 	@Override
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
 		return m_utilizationReportService.queryReport(domain, start, end);
+	}
+
+	@Override
+	public BrowserReport queryBrowserReport(String domain, Date start, Date end) {
+		return m_browserReportService.queryReport(domain, start, end);
 	}
 }
