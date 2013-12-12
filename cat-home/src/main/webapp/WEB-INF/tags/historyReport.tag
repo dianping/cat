@@ -65,10 +65,10 @@
 									<tr>
 								</c:if>
 								<td class="department">${productline.key}</td>
-								<td><div class="domain"><c:forEach var="domain" items="${productline.value.lineDomains}">&nbsp;<c:choose><c:when test="${model.domain eq domain}"><a
+								<td><div class="domain"><c:forEach var="domain" items="${productline.value.lineDomains}">&nbsp;<c:choose><c:when test="${model.domain eq domain}"><a class='domainItem'
 														href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}"
 														class="current">[&nbsp;${domain}&nbsp;]</a></c:when>
-														<c:otherwise><a
+														<c:otherwise><a class='domainItem'
 														href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}">[&nbsp;${domain}&nbsp;]</a>
 												</c:otherwise></c:choose>&nbsp;
 										</c:forEach>

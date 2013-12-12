@@ -17,8 +17,12 @@ public enum JspFile {
 
 	UTILIZATION_HISTORY_REPORT("/jsp/report/utilization/utilizationHistory.jsp"),
 
-	UTILIZATION_REPORT("/jsp/report/utilization/utilization.jsp");
+	UTILIZATION_REPORT("/jsp/report/utilization/utilization.jsp"),
+	
+	BROWSER_HISTORY_REPORT("/jsp/report/browser/browserHistory.jsp"),
 
+	BROWSER_REPORT("/jsp/report/browser/browser.jsp");
+	
 	private String m_path;
 
 	private JspFile(String path) {
