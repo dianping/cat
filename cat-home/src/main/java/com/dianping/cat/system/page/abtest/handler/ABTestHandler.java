@@ -153,6 +153,8 @@ public class ABTestHandler implements SubHandler, Initializable {
 		case DETAIL:
 			renderDetailModel(model, payload.getId());
 			break;
+		default:
+			break;
 		}
 	}
 
