@@ -224,9 +224,10 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 				t.addData("file", path);
 
 				FSDataOutputStream fdos = null;
+				FileInputStream fis = null;
 				try {
 					fdos = makeHdfsOutputStream(path);
-					FileInputStream fis = new FileInputStream(file);
+					fis = new FileInputStream(file);
 
 					long start = System.currentTimeMillis();
 
@@ -267,7 +268,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 				}
 
 				try {
-					Thread.sleep(100);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					break;
 				}

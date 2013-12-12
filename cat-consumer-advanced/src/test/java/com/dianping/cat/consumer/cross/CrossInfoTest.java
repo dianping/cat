@@ -27,6 +27,8 @@ public class CrossInfoTest extends ComponentTestCase{
 		CrossAnalyzer analyzer =new CrossAnalyzer();
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
+		analyzer.setIpConvertManager(new IpConvertManager());
+		
 		DefaultTransaction t = new DefaultTransaction("Other", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
@@ -39,6 +41,7 @@ public class CrossInfoTest extends ComponentTestCase{
 		CrossAnalyzer analyzer =new CrossAnalyzer();
 		
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
+		analyzer.setIpConvertManager(new IpConvertManager());
 		
 		DefaultTransaction t = new DefaultTransaction("Call", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -61,8 +64,10 @@ public class CrossInfoTest extends ComponentTestCase{
 	@Test
 	public void testParsePigeonServerTransaction() throws Exception {
 		CrossAnalyzer analyzer =new CrossAnalyzer();
+		
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
-
+		analyzer.setIpConvertManager(new IpConvertManager());
+		
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
@@ -86,6 +91,8 @@ public class CrossInfoTest extends ComponentTestCase{
 		CrossAnalyzer analyzer =new CrossAnalyzer();
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
+		analyzer.setIpConvertManager(new IpConvertManager());
+		
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);

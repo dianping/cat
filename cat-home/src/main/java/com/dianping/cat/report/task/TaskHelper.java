@@ -83,6 +83,27 @@ public class TaskHelper {
 		return buf.toString();
 	}
 
+	public static Date nextMonthStart(Date period) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(period);
+		cal.add(Calendar.MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		return cal.getTime();
+	}
+
+	public static Date thisHour(Date period) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(period);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
 	public static Date todayZero(Date period) {
 		if (period == null) {
 			period = new Date();
@@ -118,27 +139,6 @@ public class TaskHelper {
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
-
-	public static Date thisHour(Date period) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(period);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
-
-	public static Date nextMonthStart(Date period) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(period);
-		cal.add(Calendar.MONTH, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
 		return cal.getTime();
 	}
 }

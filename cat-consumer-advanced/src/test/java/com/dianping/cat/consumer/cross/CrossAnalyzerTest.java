@@ -93,14 +93,14 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 
 	@Test
 	public void testFormatIp() {
-		CrossAnalyzer analyzer = new CrossAnalyzer();
+		IpConvertManager analyzer = new IpConvertManager();
 
-		Assert.assertEquals(true, analyzer.isIPAdress("10.1.6.128"));
-		Assert.assertEquals(false, analyzer.isIPAdress("10.1.6.328"));
-		Assert.assertEquals(false, analyzer.isIPAdress("2886.1.6.128"));
-		Assert.assertEquals(false, analyzer.isIPAdress("2886.1.6.1228"));
+		Assert.assertEquals(true, analyzer.isIPAddress("10.1.6.128"));
+		Assert.assertEquals(false, analyzer.isIPAddress("10.1.6.328"));
+		Assert.assertEquals(false, analyzer.isIPAddress("2886.1.6.128"));
+		Assert.assertEquals(false, analyzer.isIPAddress("2886.1.6.1228"));
 
-		Assert.assertEquals("10.1.6.128", analyzer.formatIp("10.1.6.128"));
+		Assert.assertEquals("10.1.6.128", analyzer.convertHostNameToIP("10.1.6.128"));
 	}
 
 }

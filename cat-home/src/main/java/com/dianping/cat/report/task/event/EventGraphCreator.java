@@ -21,7 +21,7 @@ import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.spi.GraphLine;
 
 public class EventGraphCreator {
-	
+
 	private List<Graph> m_graphs = new ArrayList<Graph>();
 
 	private EventReport m_report;
@@ -32,8 +32,8 @@ public class EventGraphCreator {
 
 		return m_graphs;
 	}
-	
-	private class EventReportVisitor extends  BaseVisitor{
+
+	private class EventReportVisitor extends BaseVisitor {
 
 		String m_currentIp;
 
@@ -78,8 +78,8 @@ public class EventGraphCreator {
 			return sb.toString();
 		}
 
-		private void buildContent(StringBuilder content, String key, GraphLine graphLine) {
-			content.append(key).append('\t');
+		private void buildContent(StringBuilder content, EventType type, GraphLine graphLine) {
+			content.append(type.getId()).append('\t');
 			content.append(arrayToString(graphLine.totalCounts)).append('\t');
 			content.append(arrayToString(graphLine.failCounts)).append('\n');
 		}
@@ -91,12 +91,12 @@ public class EventGraphCreator {
 			content.append(arrayToString(graphLine.failCounts)).append('\n');
 		}
 
-		private void buildContent(StringBuilder content, EventType type, GraphLine graphLine) {
-			content.append(type.getId()).append('\t');
+		private void buildContent(StringBuilder content, String key, GraphLine graphLine) {
+			content.append(key).append('\t');
 			content.append(arrayToString(graphLine.totalCounts)).append('\t');
 			content.append(arrayToString(graphLine.failCounts)).append('\n');
 		}
-		
+
 		private Graph buildGraph(String ip) {
 			Graph graph = new Graph();
 			graph.setIp(ip);
@@ -121,6 +121,23 @@ public class EventGraphCreator {
 				graphLine.totalCounts = new long[12];
 				graphLine.failCounts = new long[12];
 			}
+		}
+
+		@Override
+		public void visitEventReport(EventReport eventReport) {
+			Graph allGraph = buildGraph("all");
+			m_graphs.add(allGraph);
+			m_allDetailContent = new StringBuilder();
+			m_allSummaryContent = new StringBuilder();
+			super.visitEventReport(eventReport);
+			for (Entry<String, GraphLine> entry : m_allDetails.entrySet()) {
+				buildContent(m_allDetailContent, entry.getKey(), entry.getValue());
+			}
+			for (Entry<String, GraphLine> entry : m_allSummaries.entrySet()) {
+				buildContent(m_allSummaryContent, entry.getKey(), entry.getValue());
+			}
+			allGraph.setDetailContent(m_allDetailContent.toString());
+			allGraph.setSummaryContent(m_allSummaryContent.toString());
 		}
 
 		@Override
@@ -166,23 +183,6 @@ public class EventGraphCreator {
 		}
 
 		@Override
-		public void visitEventReport(EventReport eventReport) {
-			Graph allGraph = buildGraph("all");
-			m_graphs.add(allGraph);
-			m_allDetailContent = new StringBuilder();
-			m_allSummaryContent = new StringBuilder();
-			super.visitEventReport(eventReport);
-			for (Entry<String, GraphLine> entry : m_allDetails.entrySet()) {
-				buildContent(m_allDetailContent, entry.getKey(), entry.getValue());
-			}
-			for (Entry<String, GraphLine> entry : m_allSummaries.entrySet()) {
-				buildContent(m_allSummaryContent, entry.getKey(), entry.getValue());
-			}
-			allGraph.setDetailContent(m_allDetailContent.toString());
-			allGraph.setSummaryContent(m_allSummaryContent.toString());
-		}
-
-		@Override
 		public void visitType(EventType type) {
 			// TYPE, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
 			m_currentType = type.getId();
@@ -203,7 +203,5 @@ public class EventGraphCreator {
 			buildContent(m_summaryContent, type, m_currentSummary);
 		}
 	}
-
-
 
 }

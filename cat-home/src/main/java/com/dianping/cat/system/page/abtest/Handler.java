@@ -106,6 +106,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 		case MODEL:
 			m_modelHandler.handleOutbound(ctx, model, payload);
 			break;
+		default:
+			break;
 		}
 
 		model.setAction(action);
