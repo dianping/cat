@@ -187,7 +187,7 @@ public class HeartbeatGraphCreator {
 		public void visitDisk(Disk disk) {
 			String key = "Disk " + disk.getPath();
 			Number value = disk.getFree();
-			
+
 			cacheHeartbeatColumn(key, value);
 			super.visitDisk(disk);
 		}
