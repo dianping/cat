@@ -88,7 +88,7 @@
   <xmp>
   	<config mode="client">
           <servers>
-             <server ip="192.168.7.70" port="2280" />
+             <server ip="192.168.213.115" port="2280" />
          </servers>
          <domain id="MobileApi" enabled="true"/>
       </config>
