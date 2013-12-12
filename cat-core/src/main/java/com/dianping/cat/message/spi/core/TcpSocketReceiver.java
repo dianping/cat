@@ -199,7 +199,9 @@ public class TcpSocketReceiver implements LogEnabled {
 			} catch (Throwable e) {
 				buf.resetReaderIndex();
 
-				m_logger.error("Error when handling message!", e);
+				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
+				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+
 				if (t != null) {
 					t.setStatus(e);
 				}
@@ -293,7 +295,7 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public boolean isActive() {
-		return m_active;
-	}
-
+   	return m_active;
+   }
+	
 }
