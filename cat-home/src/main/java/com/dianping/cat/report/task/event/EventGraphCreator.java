@@ -28,8 +28,8 @@ public class EventGraphCreator {
 
 	public List<Graph> buildGraph(EventReport report) {
 		m_report = report;
-		report.accept(new EventReportVisitor());
-
+		new EventReportVisitor().visitEventReport(report);
+		
 		return m_graphs;
 	}
 

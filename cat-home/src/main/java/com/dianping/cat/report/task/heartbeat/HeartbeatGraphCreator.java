@@ -28,8 +28,8 @@ public class HeartbeatGraphCreator {
 
 	public List<Graph> buildGraph(HeartbeatReport report) {
 		m_report = report;
-		report.accept(new HeartbeatReportVisitor());
-
+		new HeartbeatReportVisitor().visitHeartbeatReport(report);
+		
 		return m_graphs;
 	}
 

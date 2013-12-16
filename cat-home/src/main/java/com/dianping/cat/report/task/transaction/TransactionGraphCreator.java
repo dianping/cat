@@ -28,7 +28,7 @@ public class TransactionGraphCreator {
 
 	public List<Graph> buildGraph(TransactionReport report) {
 		m_report = report;
-		report.accept(new TransactionReportVisitor());
+		new TransactionReportVisitor().visitTransactionReport(report);
 
 		return m_graphs;
 	}

@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.google.gson.Gson;
 
 public class CacheReport {
 	private static final String ALL = "ALL";
@@ -133,6 +134,10 @@ public class CacheReport {
 
 	public void setStartTime(java.util.Date startTime) {
 		m_startTime = startTime;
+	}
+	
+	public String toString(){
+		return new Gson().toJson(this);
 	}
 
 	public static class CacheNameItem {

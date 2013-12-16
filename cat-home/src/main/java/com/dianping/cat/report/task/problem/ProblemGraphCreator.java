@@ -28,8 +28,8 @@ public class ProblemGraphCreator {
 
 	public List<Graph> buildGraph(ProblemReport report) {
 		m_report = report;
-		report.accept(new ProblemReportVisitor());
-
+		new ProblemReportVisitor().visitProblemReport(report);
+		
 		return m_graphs;
 	}
 
