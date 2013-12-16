@@ -41,7 +41,7 @@
        <dependency>
               <groupId>com.dianping.dpsf</groupId>
               <artifactId>dpsf-net</artifactId>
-             <version>1.7.3</version>
+             <version>1.8.1</version>
        </dependency>
        <dependency>
               <groupId>com.dianping.hawk</groupId>
@@ -77,7 +77,7 @@
   <xmp class="well">
       <config mode="client">
           <servers>
-             <server ip="192.168.7.70" port="2280" />
+             <server ip="192.168.213.115" port="2280" />
          </servers>
       </config>
   </xmp>
