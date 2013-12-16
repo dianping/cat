@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -20,18 +22,25 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	
+
 	private String m_browserChart;
 
 	private String m_osChart;
 
+	@EntityMeta
 	private BugReport m_bugReport;
 
+	@EntityMeta
 	private ServiceReport m_serviceReport;
 
+	@EntityMeta
 	private HeavyReport m_heavyReport;
 
+	@EntityMeta
 	private BrowserReport m_browserReport;
+
+	@EntityMeta
+	private UtilizationReport m_utilizationReport;
 
 	private List<Domain> m_serviceList;
 
@@ -49,8 +58,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, ErrorStatis> m_errorStatis;
 
-	private UtilizationReport m_utilizationReport;
-
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationList;
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
@@ -62,8 +69,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getBrowserChart() {
-   	return m_browserChart;
-   }
+		return m_browserChart;
+	}
 
 	public BrowserReport getBrowserReport() {
 		return m_browserReport;
@@ -125,8 +132,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getOsChart() {
-   	return m_osChart;
-   }
+		return m_osChart;
+	}
 
 	public List<com.dianping.cat.home.service.entity.Domain> getServiceList() {
 		return m_serviceList;
@@ -161,8 +168,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setBrowserChart(String browserChart) {
-   	m_browserChart = browserChart;
-   }
+		m_browserChart = browserChart;
+	}
 
 	public void setBrowserReport(BrowserReport browserReport) {
 		m_browserReport = browserReport;
@@ -197,8 +204,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setOsChart(String osChart) {
-   	m_osChart = osChart;
-   }
+		m_osChart = osChart;
+	}
 
 	public void setServiceList(List<com.dianping.cat.home.service.entity.Domain> serviceList) {
 		this.m_serviceList = serviceList;
@@ -231,5 +238,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
 		m_utilizationWebList = utilizationWebList;
 	}
-	
+
 }
