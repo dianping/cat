@@ -471,5 +471,4 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 	}
-
 }
