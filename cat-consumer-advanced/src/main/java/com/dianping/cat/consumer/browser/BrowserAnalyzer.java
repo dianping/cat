@@ -19,8 +19,8 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> {
 	@Inject(ID)
 	private ReportManager<BrowserReport> m_reportManager;
 
-//	@Inject
-//	private UserAgentManager m_userAgentManager;
+	@Inject
+	private UserAgentManager m_userAgentManager;
 
 	// public void removeMapItem(Map<String, Integer> map) {
 	//
