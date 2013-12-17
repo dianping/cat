@@ -383,3 +383,13 @@ CREATE TABLE `baseline` (
   KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
   KEY `ix_reportperiod` (`report_period`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5062 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_agent` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userAgent` varchar(200) NOT NULL DEFAULT '',
+  `browser` varchar(100) DEFAULT '',
+  `version` varchar(100) DEFAULT '',
+  `os` varchar(100) DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userAgent` (`userAgent`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
