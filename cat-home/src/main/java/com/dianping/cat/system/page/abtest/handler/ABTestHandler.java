@@ -139,6 +139,8 @@ public class ABTestHandler implements SubHandler, Initializable {
 		case AJAX_DETAIL:
 			handleCreateOrUpdateAction(ctx, payload, true);
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -152,6 +154,8 @@ public class ABTestHandler implements SubHandler, Initializable {
 			break;
 		case DETAIL:
 			renderDetailModel(model, payload.getId());
+			break;
+		default:
 			break;
 		}
 	}

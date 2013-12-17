@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="myConsole" class="org.apache.log4j.ConsoleAppender">  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern"    
+                value="[%d{dd HH:mm:ss,SSS\} %-5p] [%t] %c{2\} - %m%n" />  
+        </layout>  
+    </appender>
+    
+	<appender name="catAppender" class="com.dianping.cat.log4j.CatAppender">
+	</appender>
+
+	<root>
+		<level value="info" />
+		<appender-ref ref="myConsole"/> 
+		<appender-ref ref="catAppender" />
+	</root>
+</log4j:configuration>

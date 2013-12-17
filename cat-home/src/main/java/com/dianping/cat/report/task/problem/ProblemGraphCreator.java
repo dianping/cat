@@ -72,6 +72,7 @@ public class ProblemGraphCreator {
 
 			Graph graph = buildGraph(machine.getIp());
 			StringBuilder summaryBuilder = new StringBuilder();
+			
 			for (Entry<String, GraphLine> summaryEntry : m_summaryCache.entrySet()) {
 				GraphLine summaryLine = summaryEntry.getValue();
 				summaryBuilder.append(summaryEntry.getKey());
@@ -82,7 +83,9 @@ public class ProblemGraphCreator {
 				summaryBuilder.append("\n");
 			}
 			graph.setSummaryContent(summaryBuilder.toString());
+			
 			StringBuilder detailBuilder = new StringBuilder();
+			
 			for (Entry<String, GraphLine> detailEntry : m_detailCache.entrySet()) {
 				GraphLine detailLine = detailEntry.getValue();
 				detailBuilder.append(detailEntry.getKey());
@@ -93,7 +96,6 @@ public class ProblemGraphCreator {
 				detailBuilder.append("\n");
 			}
 			graph.setDetailContent(detailBuilder.toString());
-
 			graph.setCreationDate(new Date());
 			m_graphs.add(graph);
 		}
@@ -102,8 +104,8 @@ public class ProblemGraphCreator {
 		public void visitProblemReport(ProblemReport problemReport) {
 			super.visitProblemReport(problemReport);
 			Graph allGraph = buildGraph("all");
-
 			StringBuilder summaryBuilder = new StringBuilder();
+			
 			for (Entry<String, GraphLine> summaryEntry : m_allSummaryCache.entrySet()) {
 				GraphLine summaryLine = summaryEntry.getValue();
 				summaryBuilder.append(summaryEntry.getKey());
@@ -116,6 +118,7 @@ public class ProblemGraphCreator {
 			allGraph.setSummaryContent(summaryBuilder.toString());
 
 			StringBuilder detailBuilder = new StringBuilder();
+			
 			for (Entry<String, GraphLine> detailEntry : m_allDetailCache.entrySet()) {
 				GraphLine detailLine = detailEntry.getValue();
 				detailBuilder.append(detailEntry.getKey());
@@ -127,7 +130,6 @@ public class ProblemGraphCreator {
 			}
 			allGraph.setDetailContent(detailBuilder.toString());
 			allGraph.setCreationDate(new Date());
-
 			m_graphs.add(allGraph);
 		}
 
@@ -136,8 +138,8 @@ public class ProblemGraphCreator {
 			int minute = segment.getId();
 			int count = segment.getMessages().size();
 			String summaryKey = m_type;
-
 			GraphLine summaryLine = m_summaryCache.get(summaryKey);
+			
 			if (summaryLine == null) {
 				summaryLine = new GraphLine();
 				summaryLine.minuteCounts = new int[60];
@@ -147,6 +149,7 @@ public class ProblemGraphCreator {
 			summaryLine.minuteCounts[minute] = summaryLine.minuteCounts[minute] + count;
 
 			GraphLine allSummaryLine = m_allSummaryCache.get(summaryKey);
+			
 			if (allSummaryLine == null) {
 				allSummaryLine = new GraphLine();
 				allSummaryLine.minuteCounts = new int[60];
@@ -157,6 +160,7 @@ public class ProblemGraphCreator {
 
 			String detailKey = m_type + "\t" + m_status;
 			GraphLine detailLine = m_detailCache.get(detailKey);
+			
 			if (detailLine == null) {
 				detailLine = new GraphLine();
 				detailLine.minuteCounts = new int[60];
@@ -166,6 +170,7 @@ public class ProblemGraphCreator {
 			detailLine.minuteCounts[minute] = detailLine.minuteCounts[minute] + count;
 
 			GraphLine allDetailLine = m_allDetailCache.get(detailKey);
+			
 			if (allDetailLine == null) {
 				allDetailLine = new GraphLine();
 				allDetailLine.minuteCounts = new int[60];

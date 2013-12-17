@@ -33,8 +33,6 @@ public class TransactionGraphCreator {
 		return m_graphs;
 	}
 
-
-
 	public class TransactionReportVisitor extends BaseVisitor {
 
 		String m_currentIp;
@@ -123,7 +121,7 @@ public class TransactionGraphCreator {
 			content.append(arrayToString(graphLine.sums)).append('\t');
 			content.append(type.getSum2()).append('\t').append('\n');
 		}
-		
+
 		private Graph buildGraph(String ip) {
 			Graph graph = new Graph();
 			graph.setIp(ip);

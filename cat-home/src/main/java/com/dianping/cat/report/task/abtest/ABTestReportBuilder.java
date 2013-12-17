@@ -41,6 +41,11 @@ public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
 	private Calendar m_calendar = Calendar.getInstance();
 
 	@Override
+	public boolean buildDailyTask(String name, String domain, Date period) {
+		throw new UnsupportedOperationException("ABTest report don't support daily report!");
+	}
+
+	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		List<AbtestRun> runs = m_abtestService.getAbtestRunByStatus(AbtestStatus.RUNNING);
 
@@ -53,22 +58,33 @@ public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
 		return true;
 	}
 
-	private Date resetTime(String period, Date time) {
-		m_calendar.setTime(time);
-		m_calendar.set(Calendar.MINUTE, 0);
-		m_calendar.set(Calendar.SECOND, 0);
-		m_calendar.set(Calendar.MILLISECOND, 0);
+	private void buildHourlyTaskInternal(Date period, Set<String> productLineSet) {
+		MetricReportForABTestVisitor visitor = new MetricReportForABTestVisitor();
 
-		if (period.equals("day")) {
-			m_calendar.set(Calendar.HOUR_OF_DAY, 0);
+		for (String productLine : productLineSet) {
+			MetricReport metricReport = m_reportService.queryMetricReport(productLine, period, new Date(period.getTime()
+			      + TimeUtil.ONE_HOUR));
+
+			metricReport.accept(visitor);
 		}
 
-		return m_calendar.getTime();
-	}
+		Map<Integer, AbtestReport> result = visitor.getReportMap();
 
-	@Override
-	public boolean buildDailyTask(String name, String domain, Date period) {
-		throw new UnsupportedOperationException("ABTest report don't support daily report!");
+		for (AbtestReport report : result.values()) {
+			if (report.getRunId() != -1) {
+				com.dianping.cat.home.dal.abtest.AbtestReport _report = new com.dianping.cat.home.dal.abtest.AbtestReport();
+
+				_report.setRunId(report.getRunId());
+				_report.setPeriod(period);
+				_report.setContent(report.toString());
+
+				try {
+					m_abtestReportDao.insert(_report);
+				} catch (DalException e) {
+					Cat.logError(e);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -79,26 +95,6 @@ public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		throw new UnsupportedOperationException("ABTest line report don't support weekly report!");
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Date now = resetTime("hour", new Date());
-		List<AbtestRun> runs = m_abtestService.getAbtestRunByStatus(AbtestStatus.RUNNING);
-
-		for (AbtestRun run : runs) {
-			Set<String> productLineSet = getProductLinesByRunID(run);
-			Date period = getLatestPeriod(now, run.getId());
-
-			m_calendar.setTime(period);
-
-			while (!period.after(now)) {
-				buildHourlyTaskInternal(period, productLineSet);
-
-				m_calendar.add(Calendar.HOUR, 1);
-				period = m_calendar.getTime();
-			}
-		}
 	}
 
 	private Date getLatestPeriod(Date now, int runId) {
@@ -137,32 +133,36 @@ public class ABTestReportBuilder implements ReportTaskBuilder, Initializable {
 		return productLineSet;
 	}
 
-	private void buildHourlyTaskInternal(Date period, Set<String> productLineSet) {
-		MetricReportForABTestVisitor visitor = new MetricReportForABTestVisitor();
+	@Override
+	public void initialize() throws InitializationException {
+		Date now = resetTime("hour", new Date());
+		List<AbtestRun> runs = m_abtestService.getAbtestRunByStatus(AbtestStatus.RUNNING);
 
-		for (String productLine : productLineSet) {
-			MetricReport metricReport = m_reportService.queryMetricReport(productLine, period, new Date(period.getTime()
-			      + TimeUtil.ONE_HOUR));
+		for (AbtestRun run : runs) {
+			Set<String> productLineSet = getProductLinesByRunID(run);
+			Date period = getLatestPeriod(now, run.getId());
 
-			metricReport.accept(visitor);
-		}
+			m_calendar.setTime(period);
 
-		Map<Integer, AbtestReport> result = visitor.getReportMap();
+			while (!period.after(now)) {
+				buildHourlyTaskInternal(period, productLineSet);
 
-		for (AbtestReport report : result.values()) {
-			if (report.getRunId() != -1) {
-				com.dianping.cat.home.dal.abtest.AbtestReport _report = new com.dianping.cat.home.dal.abtest.AbtestReport();
-
-				_report.setRunId(report.getRunId());
-				_report.setPeriod(period);
-				_report.setContent(report.toString());
-
-				try {
-					m_abtestReportDao.insert(_report);
-				} catch (DalException e) {
-					Cat.logError(e);
-				}
+				m_calendar.add(Calendar.HOUR, 1);
+				period = m_calendar.getTime();
 			}
 		}
+	}
+
+	private Date resetTime(String period, Date time) {
+		m_calendar.setTime(time);
+		m_calendar.set(Calendar.MINUTE, 0);
+		m_calendar.set(Calendar.SECOND, 0);
+		m_calendar.set(Calendar.MILLISECOND, 0);
+
+		if (period.equals("day")) {
+			m_calendar.set(Calendar.HOUR_OF_DAY, 0);
+		}
+
+		return m_calendar.getTime();
 	}
 }

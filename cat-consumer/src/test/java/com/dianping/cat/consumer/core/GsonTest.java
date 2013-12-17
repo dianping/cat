@@ -1,11 +1,9 @@
 package com.dianping.cat.consumer.core;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -42,15 +40,6 @@ public class GsonTest {
 		      "{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}");
 		check(map(map(map(null))), //
 		      "{\"forth\":{\"forth\":{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}},\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}},\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}");
-	}
-
-	@Test
-	@Ignore
-	public void testNotSame() {
-		check(new Date(1330079278861L), "\"2012-02-24 18:27:58\"");
-		check(Date.class, "\"class java.util.Date\"");
-		check(new Object[] { "x", "y", new Object[] { 1, 2.3, true, map(null) } }, //
-		      "[\"x\",\"y\",[1,2.3,true,{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}]]");
 	}
 
 	public static class Pojo {
