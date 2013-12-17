@@ -1,10 +1,7 @@
 package com.dianping.cat.consumer.browser;
 
-import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
-import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
-import com.dianping.cat.consumer.browser.model.entity.Os;
+import com.dianping.cat.consumer.browser.model.entity.UserAgent;
 import com.dianping.cat.consumer.browser.model.transform.DefaultMerger;
 
 public class BrowserReportMerger extends DefaultMerger {
@@ -14,22 +11,13 @@ public class BrowserReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeDomainDetail(DomainDetail old, DomainDetail other) {
-	}
-
-	@Override
-	protected void mergeBrowser(Browser old, Browser browser) {
-		old.setCount(old.getCount() + browser.getCount());
-	}
-
-	@Override
-	protected void mergeOs(Os old, Os os) {
-		old.setCount(old.getCount() + os.getCount());
-	}
-
-	@Override
-	protected void mergeBrowserVersion(BrowserVersion old, BrowserVersion browserVersion) {
-		old.setCount(old.getCount() + browserVersion.getCount());
+	protected void mergeUserAgent(UserAgent old, UserAgent other) {
+		if (old.getCount() == null) {
+			old.setCount(0);
+		}
+		if (other.getCount() != null) {
+			old.setCount(old.getCount() + other.getCount());
+		}
 	}
 
 	@Override
