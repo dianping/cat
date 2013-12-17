@@ -1,8 +1,8 @@
-package com.dianping.cat.consumer.browser;
+package com.dianping.cat.report.task.browser;
 
-import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.entity.UserAgent;
-import com.dianping.cat.consumer.browser.model.transform.DefaultMerger;
+import com.dianping.cat.home.browser.entity.BrowserReport;
+import com.dianping.cat.home.browser.entity.UserAgent;
+import com.dianping.cat.home.browser.transform.DefaultMerger;
 
 public class BrowserReportMerger extends DefaultMerger {
 

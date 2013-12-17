@@ -75,7 +75,7 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	public void initialize() throws InitializationException {
 		m_domain = m_configManager.getDomain().getId();
 		ScriptEngineManager mgr = new ScriptEngineManager();
-		
+
 		m_engine = mgr.getEngineByExtension("java");
 	}
 
@@ -114,6 +114,12 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 	public void run() {
 		while (true) {
 			long start = System.currentTimeMillis();
+			try {
+				// waiting for server start
+				Thread.sleep(20000);
+			} catch (InterruptedException e) {
+				break;
+			}
 
 			try {
 				refresh();

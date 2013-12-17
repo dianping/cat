@@ -28,7 +28,7 @@ import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
-import com.dianping.cat.report.task.browser.BrowserReportBuilder;
+import com.dianping.cat.report.task.browser.BrowserMetaReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -120,7 +120,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class));
 
-		all.add(C(BrowserReportBuilder.class).req(ReportService.class));
+		all.add(C(BrowserMetaReportBuilder.class).req(ReportService.class));
 
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
@@ -134,7 +134,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
 		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class,
 		            HeavyReportBuilder.class, UtilizationReportBuilder.class, ABTestReportBuilder.class,
-		            BrowserReportBuilder.class));
+		            BrowserMetaReportBuilder.class));
 
 		return all;
 	}

@@ -24,11 +24,13 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.BrowserMetaAnalyzer;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
@@ -50,95 +52,6 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
-	public class BugReportVisitor extends BaseVisitor {
-
-		private Domain m_currentDomain;
-
-		private Map<String, ErrorStatis> m_errors = new HashMap<String, ErrorStatis>();
-
-		public ErrorStatis findOrCreateErrorStatis(String productLine) {
-			ErrorStatis statis = m_errors.get(productLine);
-
-			if (statis == null) {
-				statis = new ErrorStatis();
-				m_errors.put(productLine, statis);
-			}
-			return statis;
-		}
-
-		public Map<String, ErrorStatis> getErrors() {
-			return m_errors;
-		}
-
-		@Override
-		public void visitDomain(Domain domain) {
-			m_currentDomain = domain;
-			super.visitDomain(domain);
-		}
-
-		@Override
-		public void visitExceptionItem(ExceptionItem exceptionItem) {
-			String exception = exceptionItem.getId();
-			int count = exceptionItem.getCount();
-			Project project = findProjectByDomain(m_currentDomain.getId());
-
-			if (project != null) {
-				String productLine = project.getProjectLine();
-				String department = project.getDepartment();
-				ErrorStatis statis = findOrCreateErrorStatis(productLine);
-
-				statis.setDepartment(department);
-				statis.setProductLine(productLine);
-				m_currentDomain.setDepartment(department);
-				m_currentDomain.setProductLine(productLine);
-
-				Map<String, ExceptionItem> items = null;
-
-				if (isBug(m_currentDomain.getId(), exception)) {
-					items = statis.getBugs();
-				} else {
-					items = statis.getExceptions();
-				}
-
-				ExceptionItem item = items.get(exception);
-
-				if (item == null) {
-					item = new ExceptionItem(exception);
-					item.setCount(count);
-					item.getMessages().addAll(exceptionItem.getMessages());
-					items.put(exception, item);
-				} else {
-					List<String> messages = item.getMessages();
-					item.setCount(item.getCount() + count);
-					messages.addAll(exceptionItem.getMessages());
-
-					if (messages.size() > 10) {
-						messages = messages.subList(0, 10);
-					}
-				}
-			}
-		}
-	}
-
-	public class ClearBugReport extends BaseVisitor {
-
-		@Override
-		public void visitDomain(Domain domain) {
-			String domainName = domain.getId();
-			Set<String> removes = new HashSet<String>();
-			Map<String, ExceptionItem> items = domain.getExceptionItems();
-
-			for (ExceptionItem item : items.values()) {
-				if (!isBug(domainName, item.getId())) {
-					removes.add(item.getId());
-				}
-			}
-			for (String remove : removes) {
-				items.remove(remove);
-			}
-		}
-	}
-
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -156,35 +69,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-
-//	private String buildBrowserChart(Map<String, Browser> map) {
-//		PieChart chart = new PieChart();
-//		List<Item> items = new ArrayList<Item>();
-//
-//		for (Entry<String, Browser> entry : map.entrySet()) {
-//			String key = entry.getKey();
-//			Browser value = entry.getValue();
-//			for (Entry<String, BrowserVersion> versionEntry : value.getBrowserVersions().entrySet()) {
-//				String title = key + " " + versionEntry.getKey();
-//				long count = versionEntry.getValue().getCount();
-//				items.add(new Item().setTitle(title).setNumber(count));
-//			}
-//		}
-//		chart.addItems(items);
-//		return chart.getJsonString();
-//	}
-//
-//	private void buildBrowserInfo(Model model, Payload payload) {
-//		BrowserReport report = queryBrowserReport(payload);
-//		model.setBrowserReport(report);
-//		DomainDetail detail = report.findDomainDetail(payload.getDomain());
-//		
-//		if (detail != null) {
-//			model.setBrowserChart(buildBrowserChart(detail.getBrowsers()));
-//			model.setOsChart(buildOsChart(detail.getOses()));
-//		}
-//		
-//	}
 
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
@@ -207,20 +91,6 @@ public class Handler implements PageHandler<Context> {
 		model.setHeavyReport(heavyReport);
 		buildSortedHeavyInfo(model, heavyReport);
 	}
-
-//	private String buildOsChart(Map<String, Os> map) {
-//		PieChart chart = new PieChart();
-//		List<Item> items = new ArrayList<Item>();
-//
-//		for (Entry<String, Os> entry : map.entrySet()) {
-//			String title = entry.getKey();
-//			Os value = entry.getValue();
-//			long count = value.getCount();
-//			items.add(new Item().setTitle(title).setNumber(count));
-//		}
-//		chart.addItems(items);
-//		return chart.getJsonString();
-//	}
 
 	private void buildServiceInfo(Model model, Payload payload) {
 		ServiceReport serviceReport = queryServiceReport(payload);
@@ -262,6 +132,20 @@ public class Handler implements PageHandler<Context> {
 			model.setCacheServices(cacheServices);
 		}
 	}
+
+	// private String buildOsChart(Map<String, Os> map) {
+	// PieChart chart = new PieChart();
+	// List<Item> items = new ArrayList<Item>();
+	//
+	// for (Entry<String, Os> entry : map.entrySet()) {
+	// String title = entry.getKey();
+	// Os value = entry.getValue();
+	// long count = value.getCount();
+	// items.add(new Item().setTitle(title).setNumber(count));
+	// }
+	// chart.addItems(items);
+	// return chart.getJsonString();
+	// }
 
 	private void buildUtilizationInfo(Model model, Payload payload) {
 		UtilizationReport utilizationReport = queryUtilizationReport(payload);
@@ -346,10 +230,9 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
 			break;
-//		case BROWSER_REPORT:
-//		case BROWSER_HISTORY_REPORT:
-//			buildBrowserInfo(model, payload);
-//			break;
+		case BROWSER_REPORT:
+		case BROWSER_HISTORY_REPORT:
+			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
@@ -361,19 +244,19 @@ public class Handler implements PageHandler<Context> {
 		return !bugConfig.contains(exception);
 	}
 
-//	private BrowserReport queryBrowserReport(Payload payload) {
-//		Pair<Date, Date> pair = queryStartEndTime(payload);
-//		Date start = pair.getKey();
-//		Date end = pair.getValue();
-//		BrowserReport report = m_reportService.queryBrowserReport("Cat", start, end);
-//		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserAnalyzer.ID);
-//		Set<String> domainNames = report.getDomainNames();
-//
-//		report.setStartTime(start);
-//		report.setEndTime(end);
-//		domainNames.addAll(domains);
-//		return report;
-//	}
+	protected BrowserReport queryBrowserReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+		Date start = pair.getKey();
+		Date end = pair.getValue();
+		BrowserReport report = m_reportService.queryBrowserReport(payload.getDomain(), start, end);
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserMetaAnalyzer.ID);
+		Set<String> domainNames = report.getDomainNames();
+
+		report.setStartTime(start);
+		report.setEndTime(end);
+		domainNames.addAll(domains);
+		return report;
+	}
 
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
@@ -522,5 +405,94 @@ public class Handler implements PageHandler<Context> {
 			temp.setExceptions(MapUtils.sortMap(exceptions, compator));
 		}
 		return errors;
+	}
+
+	public class BugReportVisitor extends BaseVisitor {
+
+		private Domain m_currentDomain;
+
+		private Map<String, ErrorStatis> m_errors = new HashMap<String, ErrorStatis>();
+
+		public ErrorStatis findOrCreateErrorStatis(String productLine) {
+			ErrorStatis statis = m_errors.get(productLine);
+
+			if (statis == null) {
+				statis = new ErrorStatis();
+				m_errors.put(productLine, statis);
+			}
+			return statis;
+		}
+
+		public Map<String, ErrorStatis> getErrors() {
+			return m_errors;
+		}
+
+		@Override
+		public void visitDomain(Domain domain) {
+			m_currentDomain = domain;
+			super.visitDomain(domain);
+		}
+
+		@Override
+		public void visitExceptionItem(ExceptionItem exceptionItem) {
+			String exception = exceptionItem.getId();
+			int count = exceptionItem.getCount();
+			Project project = findProjectByDomain(m_currentDomain.getId());
+
+			if (project != null) {
+				String productLine = project.getProjectLine();
+				String department = project.getDepartment();
+				ErrorStatis statis = findOrCreateErrorStatis(productLine);
+
+				statis.setDepartment(department);
+				statis.setProductLine(productLine);
+				m_currentDomain.setDepartment(department);
+				m_currentDomain.setProductLine(productLine);
+
+				Map<String, ExceptionItem> items = null;
+
+				if (isBug(m_currentDomain.getId(), exception)) {
+					items = statis.getBugs();
+				} else {
+					items = statis.getExceptions();
+				}
+
+				ExceptionItem item = items.get(exception);
+
+				if (item == null) {
+					item = new ExceptionItem(exception);
+					item.setCount(count);
+					item.getMessages().addAll(exceptionItem.getMessages());
+					items.put(exception, item);
+				} else {
+					List<String> messages = item.getMessages();
+					item.setCount(item.getCount() + count);
+					messages.addAll(exceptionItem.getMessages());
+
+					if (messages.size() > 10) {
+						messages = messages.subList(0, 10);
+					}
+				}
+			}
+		}
+	}
+
+	public class ClearBugReport extends BaseVisitor {
+
+		@Override
+		public void visitDomain(Domain domain) {
+			String domainName = domain.getId();
+			Set<String> removes = new HashSet<String>();
+			Map<String, ExceptionItem> items = domain.getExceptionItems();
+
+			for (ExceptionItem item : items.values()) {
+				if (!isBug(domainName, item.getId())) {
+					removes.add(item.getId());
+				}
+			}
+			for (String remove : removes) {
+				items.remove(remove);
+			}
+		}
 	}
 }

@@ -5,17 +5,17 @@ import java.util.Date;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.browser.entity.BrowserReport;
+import com.dianping.cat.home.browser.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class BrowserReportBuilder implements ReportTaskBuilder {
+public class BrowserMetaReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	protected ReportService m_reportService;
@@ -38,6 +38,7 @@ public class BrowserReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
+		//TODO change browsermetareport to browserreport
 		throw new RuntimeException("Browser report don't support HourReport!");
 	}
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.browser;
+package com.dianping.cat.report.task.browser;
 
 import java.util.ArrayList;
 import java.util.List;

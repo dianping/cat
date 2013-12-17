@@ -25,7 +25,7 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
-import com.dianping.cat.report.task.browser.BrowserReportBuilder;
+import com.dianping.cat.report.task.browser.BrowserMetaReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -89,7 +89,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private UtilizationReportBuilder m_utilizationReportBuilder;
 	
 	@Inject
-	private BrowserReportBuilder m_browserReportBuilder;
+	private BrowserMetaReportBuilder m_browserReportBuilder;
 
 	private Logger m_logger;
 

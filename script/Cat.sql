@@ -399,10 +399,10 @@ CREATE TABLE `baseline` (
 
 CREATE TABLE `user_agent` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `userAgent` varchar(200) NOT NULL DEFAULT '',
-  `browser` varchar(100) DEFAULT '',
-  `version` varchar(100) DEFAULT '',
-  `os` varchar(100) DEFAULT '',
+  `userAgent` varchar(1024) NOT NULL DEFAULT '',
+  `browser` varchar(200) DEFAULT '',
+  `version` varchar(200) DEFAULT '',
+  `os` varchar(200) DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `userAgent` (`userAgent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

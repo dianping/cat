@@ -15,11 +15,8 @@ import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.SqltableDao;
-import com.dianping.cat.consumer.advanced.dal.UserAgentDao;
-import com.dianping.cat.consumer.browser.BrowserAnalyzer;
-import com.dianping.cat.consumer.browser.BrowserDelegate;
-import com.dianping.cat.consumer.browser.DefaultUserAgentManager;
-import com.dianping.cat.consumer.browser.UserAgentManager;
+import com.dianping.cat.consumer.browser.BrowserMetaAnalyzer;
+import com.dianping.cat.consumer.browser.BrowserMetaDelegate;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.cross.IpConvertManager;
@@ -122,17 +119,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	
 	private Collection<Component> defineBrowserComponents() {
 		final List<Component> all = new ArrayList<Component>();
-		final String ID = BrowserAnalyzer.ID;
+		final String ID = BrowserMetaAnalyzer.ID;
 
-		all.add(C(MessageAnalyzer.class, ID, BrowserAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(UserAgentManager.class));
-		all.add(C(UserAgentManager.class,DefaultUserAgentManager.class).req(UserAgentDao.class));
+		all.add(C(MessageAnalyzer.class, ID, BrowserMetaAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, BrowserDelegate.class).req(TaskManager.class));
-
+		all.add(C(ReportDelegate.class, ID, BrowserMetaDelegate.class).req(TaskManager.class));
 		return all;
 	}
 

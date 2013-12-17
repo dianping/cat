@@ -9,7 +9,7 @@ import java.util.Set;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
+import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;

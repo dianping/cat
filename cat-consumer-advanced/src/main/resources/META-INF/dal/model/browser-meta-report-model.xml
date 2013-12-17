@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.browsermeta.model"  enable-merger="true"  enable-sax-parser="true"
+ enable-native-parser="true"  enable-native-builder="true">
+  <entity name="browser-meta-report" root="true">
+    <attribute name="domain" value-type="String" key="true"/>
+    <element name="domain" value-type="String" type="set" names="domain-names" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="user-agent" type="map" names="user-agents"  method-find-or-create="true" />
+  </entity>
+  <entity name="user-agent">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="count"  method-inc="true" primitive="true"  />
+  </entity>
+</model>
+  
+

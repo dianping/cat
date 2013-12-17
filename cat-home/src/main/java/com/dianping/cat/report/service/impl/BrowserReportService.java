@@ -7,10 +7,6 @@ import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.browser.BrowserReportMerger;
-import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.browser.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -22,6 +18,9 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.browser.entity.BrowserReport;
+import com.dianping.cat.home.browser.transform.DefaultNativeParser;
+import com.dianping.cat.home.browser.transform.DefaultSaxParser;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentEntity;
 import com.dianping.cat.home.dal.report.MonthlyReportContent;
@@ -29,6 +28,7 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
+import com.dianping.cat.report.task.browser.BrowserReportMerger;
 
 public class BrowserReportService extends AbstractReportService<BrowserReport> {
 

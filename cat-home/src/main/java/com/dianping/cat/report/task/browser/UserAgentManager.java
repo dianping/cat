@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.browser;
+package com.dianping.cat.report.task.browser;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 

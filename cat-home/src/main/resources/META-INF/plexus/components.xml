@@ -562,6 +562,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.impl.BrowserMetaReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.BrowserMetaReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.TopReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.TopReportService</implementation>
 			<requirements>
@@ -684,6 +696,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.BrowserReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.BrowserMetaReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -970,8 +985,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.browser.BrowserReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.browser.BrowserReportBuilder</implementation>
+			<role>com.dianping.cat.report.task.browser.BrowserMetaReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.browser.BrowserMetaReportBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
@@ -1061,7 +1076,7 @@
 					<role>com.dianping.cat.report.task.abtest.ABTestReportBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.browser.BrowserReportBuilder</role>
+					<role>com.dianping.cat.report.task.browser.BrowserMetaReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
