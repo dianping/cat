@@ -54,7 +54,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_attempts = new AtomicInteger();
 
-	boolean checkWritable(ChannelFuture future) {
+	private boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
 
 		if (future != null && future.getChannel().isOpen()) {

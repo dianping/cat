@@ -38,6 +38,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		String domain = report.getDomain();
 
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_ABTEST, TaskProlicy.HOULY);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_SERVICE, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_BUG, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_HEAVY, TaskProlicy.ALL);

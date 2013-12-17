@@ -30,8 +30,6 @@ import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 
 public class HttpABTestEntityRepository extends ContainerHolder implements ABTestEntityRepository, Initializable, Task {
 
@@ -88,7 +86,6 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 			String ip = server.getIp();
 			int port = server.getHttpPort();
 			String url = String.format("http://%s:%s/cat/s/abtest?op=model&lastUpdateTime=%s", ip, port, m_lastUpdateTime);
-			Transaction t = Cat.newTransaction("ABTest", url);
 
 			try {
 				InputStream inputStream = Urls.forIO().connectTimeout(300).readTimeout(2000).openStream(url);
@@ -106,13 +103,9 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 					m_abtestModel = abtest.toString();
 					break;
 				}
-
-				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {
-				t.setStatus(e);
 				Cat.logError(e);
 			} finally {
-				t.complete();
 			}
 		}
 	}
