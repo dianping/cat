@@ -26,11 +26,11 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.browser.BrowserAnalyzer;
-import com.dianping.cat.consumer.browser.model.entity.Browser;
+//import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
+//import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
 import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
-import com.dianping.cat.consumer.browser.model.entity.Os;
+//import com.dianping.cat.consumer.browser.model.entity.Os;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -166,34 +166,34 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	private String buildBrowserChart(Map<String, Browser> map) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
-
-		for (Entry<String, Browser> entry : map.entrySet()) {
-			String key = entry.getKey();
-			Browser value = entry.getValue();
-			for (Entry<String, BrowserVersion> versionEntry : value.getBrowserVersions().entrySet()) {
-				String title = key + " " + versionEntry.getKey();
-				long count = versionEntry.getValue().getCount();
-				items.add(new Item().setTitle(title).setNumber(count));
-			}
-		}
-		chart.addItems(items);
-		return chart.getJsonString();
-	}
-
-	private void buildBrowserInfo(Model model, Payload payload) {
-		BrowserReport report = queryBrowserReport(payload);
-		model.setBrowserReport(report);
-		DomainDetail detail = report.findDomainDetail(payload.getDomain());
-		
-		if (detail != null) {
-			model.setBrowserChart(buildBrowserChart(detail.getBrowsers()));
-			model.setOsChart(buildOsChart(detail.getOses()));
-		}
-		
-	}
+//	private String buildBrowserChart(Map<String, Browser> map) {
+//		PieChart chart = new PieChart();
+//		List<Item> items = new ArrayList<Item>();
+//
+//		for (Entry<String, Browser> entry : map.entrySet()) {
+//			String key = entry.getKey();
+//			Browser value = entry.getValue();
+//			for (Entry<String, BrowserVersion> versionEntry : value.getBrowserVersions().entrySet()) {
+//				String title = key + " " + versionEntry.getKey();
+//				long count = versionEntry.getValue().getCount();
+//				items.add(new Item().setTitle(title).setNumber(count));
+//			}
+//		}
+//		chart.addItems(items);
+//		return chart.getJsonString();
+//	}
+//
+//	private void buildBrowserInfo(Model model, Payload payload) {
+//		BrowserReport report = queryBrowserReport(payload);
+//		model.setBrowserReport(report);
+//		DomainDetail detail = report.findDomainDetail(payload.getDomain());
+//		
+//		if (detail != null) {
+//			model.setBrowserChart(buildBrowserChart(detail.getBrowsers()));
+//			model.setOsChart(buildOsChart(detail.getOses()));
+//		}
+//		
+//	}
 
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
@@ -217,19 +217,19 @@ public class Handler implements PageHandler<Context> {
 		buildSortedHeavyInfo(model, heavyReport);
 	}
 
-	private String buildOsChart(Map<String, Os> map) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
-
-		for (Entry<String, Os> entry : map.entrySet()) {
-			String title = entry.getKey();
-			Os value = entry.getValue();
-			long count = value.getCount();
-			items.add(new Item().setTitle(title).setNumber(count));
-		}
-		chart.addItems(items);
-		return chart.getJsonString();
-	}
+//	private String buildOsChart(Map<String, Os> map) {
+//		PieChart chart = new PieChart();
+//		List<Item> items = new ArrayList<Item>();
+//
+//		for (Entry<String, Os> entry : map.entrySet()) {
+//			String title = entry.getKey();
+//			Os value = entry.getValue();
+//			long count = value.getCount();
+//			items.add(new Item().setTitle(title).setNumber(count));
+//		}
+//		chart.addItems(items);
+//		return chart.getJsonString();
+//	}
 
 	private void buildServiceInfo(Model model, Payload payload) {
 		ServiceReport serviceReport = queryServiceReport(payload);
@@ -355,10 +355,10 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
 			break;
-		case BROWSER_REPORT:
-		case BROWSER_HISTORY_REPORT:
-			buildBrowserInfo(model, payload);
-			break;
+//		case BROWSER_REPORT:
+//		case BROWSER_HISTORY_REPORT:
+//			buildBrowserInfo(model, payload);
+//			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);

@@ -101,4 +101,12 @@ public class BrowserAnalyzerTest extends ComponentTestCase {
 
 		return tree;
 	}
+//
+//	@Test
+//	public void testRemoveMapItem() {
+//		Map<String, Integer> map = new HashMap<String, Integer>();
+//		map.put("test1", 1);
+//		map.put("test2", 2);
+//		m_analyzer.removeMapItem(map);
+//	}
 }
