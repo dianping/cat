@@ -5,12 +5,8 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.advanced.dal.UserAgent;
-import com.dianping.cat.consumer.browser.model.entity.Browser;
 import com.dianping.cat.consumer.browser.model.entity.BrowserReport;
-import com.dianping.cat.consumer.browser.model.entity.BrowserVersion;
-import com.dianping.cat.consumer.browser.model.entity.DomainDetail;
-import com.dianping.cat.consumer.browser.model.entity.Os;
+import com.dianping.cat.consumer.browser.model.entity.UserAgent;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -26,9 +22,25 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> {
 	@Inject
 	private UserAgentManager m_userAgentManager;
 
+	// public void removeMapItem(Map<String, Integer> map) {
+	//
+	// m_userAgents.put("domain", value );
+	//
+	// Map.Entry<String, Integer> itemRemoved = null;
+	//
+	// for (Map.Entry<String, Integer> item : map.entrySet()) {
+	// if (itemRemoved == null) {
+	// itemRemoved = item;
+	// } else if (item.getValue() < itemRemoved.getValue()) {
+	// itemRemoved = item;
+	// }
+	// }
+	// map.remove(itemRemoved.getKey());
+	// }
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		m_userAgentManager.storeResult();
+		// m_userAgentManager.storeResult();
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {
@@ -115,24 +127,38 @@ public class BrowserAnalyzer extends AbstractMessageAnalyzer<BrowserReport> {
 	}
 
 	private void updateBrowserReport(BrowserReport report, String domain, String data) {
-		String agent = parseValue("Agent", data);
-
-		if (agent == null || agent.isEmpty()) {
-			m_logger.error("Can not get agent from url when browser analyze: " + data);
+		UserAgent userAgent = report.findOrCreateDomainDetail(domain).findOrCreateUserAgent(data);
+		int count = 0;
+		if(userAgent.getCount()!=null){
+			count = userAgent.getCount();
 		}
-
-		UserAgent userAgent = m_userAgentManager.parse(agent);
-		String browserName = userAgent.getBrowser();
-		String osName = userAgent.getOs();
-		String versionName = userAgent.getVersion();
-		DomainDetail detail = report.findOrCreateDomainDetail(domain);
-
-		Browser browser = detail.findOrCreateBrowser(browserName);
-		BrowserVersion version = browser.findOrCreateBrowserVersion(versionName);
-		Os os = detail.findOrCreateOs(osName);
-
-		browser.setCount(browser.getCount() + 1);
-		os.setCount(os.getCount() + 1);
-		version.setCount(version.getCount() + 1);
+		userAgent.setCount(count + 1);
 	}
+
+	// private void updateBrowserReport(BrowserReport report, String domain,
+	// String data) {
+	// String agent = parseValue("Agent", data);
+	//
+	// if (agent == null || agent.isEmpty()) {
+	// m_logger.error("Can not get agent from url when browser analyze: "
+	// + data);
+	// }
+	//
+	// UserAgent userAgent = m_userAgentManager.parse(agent);
+	// String browserName = userAgent.getBrowser();
+	// String osName = userAgent.getOs();
+	// String versionName = userAgent.getVersion();
+	// DomainDetail detail = report.findOrCreateDomainDetail(domain);
+	//
+	// Browser browser = detail.findOrCreateBrowser(browserName);
+	// BrowserVersion version = browser
+	// .findOrCreateBrowserVersion(versionName);
+	// Os os = detail.findOrCreateOs(osName);
+	//
+	// browser.setCount(browser.getCount() + 1);
+	// os.setCount(os.getCount() + 1);
+	// version.setCount(version.getCount() + 1);
+	// }
+	
 }
+

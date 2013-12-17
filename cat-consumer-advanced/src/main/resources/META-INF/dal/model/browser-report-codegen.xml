@@ -4,24 +4,13 @@
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <element name="domain" value-type="String" type="list" names="domains" />
-    <entity-ref name="domain-detail" type="list" names="domain-details" />
+    <entity-ref name="domain-detail" />
   </entity>
   <entity name="domain-detail">
     <attribute name="id" value-type="String" />
-    <entity-ref name="browser" type="list" names="browsers" />
-    <entity-ref name="os" type="list" names="oses" />
+    <entity-ref name="user-agent" type="list" names="user-agents" />
   </entity>
-  <entity name="browser">
-    <attribute name="id" value-type="String" />
-    <attribute name="count" value-type="int" />
-    <entity-ref name="browser-version" type="list" names="browser-versions" />
-  </entity>
-  <entity name="browser-version">
-  	<attribute name="id" value-type="String" />
-    <attribute name="count" value-type="int" />
-  </entity>
-  <entity name="os">
+  <entity name="user-agent">
     <attribute name="id" value-type="String" />
     <attribute name="count" value-type="int" />
   </entity>
