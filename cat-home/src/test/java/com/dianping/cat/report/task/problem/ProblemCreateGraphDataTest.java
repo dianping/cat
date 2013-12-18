@@ -19,7 +19,7 @@ public class ProblemCreateGraphDataTest {
 		ProblemReport report = DefaultSaxParser.parse(newXml);
 
 		ProblemGraphCreator creator = new ProblemGraphCreator();
-		List<Graph> graphs = creator.buildGraph(report);
+		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "problem", report);
 
 		Assert.assertEquals("The graphs size", 3, graphs.size());
 

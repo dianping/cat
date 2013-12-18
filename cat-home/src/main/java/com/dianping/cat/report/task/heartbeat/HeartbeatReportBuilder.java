@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
@@ -57,8 +58,9 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> qeueryHourlyGraphs(String name, String domain, Date period) throws DalException {
-		HeartbeatReport heartbeatReport = m_reportService.queryHeartbeatReport(domain, period, new Date(period.getTime()
+		HeartbeatReport report = m_reportService.queryHeartbeatReport(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_HOUR));
-		return m_heartbeatGraphCreator.buildGraph(heartbeatReport);
+		
+		return m_heartbeatGraphCreator.splitReportToGraphs(report.getStartTime(), report.getDomain(), HeartbeatAnalyzer.ID, report);
 	}
 }

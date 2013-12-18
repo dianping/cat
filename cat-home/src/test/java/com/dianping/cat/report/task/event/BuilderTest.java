@@ -7,6 +7,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -39,5 +40,14 @@ public class BuilderTest extends ComponentTestCase {
 		
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
 		builder.buildHourlyTask(TransactionAnalyzer.ID, "Cat", period);
+	}
+	
+
+	@Test
+	public void testEvent() throws ParseException{
+		EventReportBuilder builder = lookup(EventReportBuilder.class);
+		
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
+		builder.buildHourlyTask(EventAnalyzer.ID, "Cat", period);
 	}
 }

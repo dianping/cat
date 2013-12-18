@@ -36,16 +36,7 @@ public class TransactionDailyGraphMergerTest {
 	public void testForMergerDaily() throws Exception {
 		TransactionReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerDaily.xml"), "utf-8");
-		// Assert.assertEquals(expeted, report.toString());
 
-		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
-	}
-
-	@Test
-	public void testForMegerGraph() throws Exception {
-		TransactionReport report = m_meger.mergeForGraph(m_reportDomain, reports);
-		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerGraph.xml"), "utf-8");
-		// Assert.assertEquals(expeted, report.toString());
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 

@@ -20,7 +20,7 @@ public class ProblemGraphCreatorTest {
 		ProblemReport report = DefaultSaxParser.parse(xml);
 		String summary = Files.forIO().readFrom(getClass().getResourceAsStream("problemGraphSummary"), "utf-8");
 		String detail = Files.forIO().readFrom(getClass().getResourceAsStream("problemGraphDetail"), "utf-8");
-		List<Graph> graphs = creator.buildGraph(report);
+		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "problem", report);
 
 		Assert.assertEquals(2, graphs.size());
 		for (Graph graph : graphs) {

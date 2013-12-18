@@ -80,7 +80,7 @@ public class HeartbeatGraphDataTest extends ComponentTestCase {
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat.xml"), "utf-8");
 		HeartbeatReport report = DefaultSaxParser.parse(xml);
 		HeartbeatGraphCreator creator = new HeartbeatGraphCreator();
-		List<Graph> graphs = creator.buildGraph(report);
+		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "heartbeat", report);
 		String result = Files.forIO().readFrom(getClass().getResourceAsStream("result"), "utf-8");
 		
 		Assert.assertEquals(result, graphs.get(0).getDetailContent());

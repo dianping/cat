@@ -47,15 +47,4 @@ public class TransactionMerger {
 		return transactionReport;
 	}
 
-	public TransactionReport mergeForGraph(String reportDomain, List<TransactionReport> reports) {
-		TransactionReport transactionReport = merge(reportDomain, reports, false);
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
-		TransactionReport all = merge(reportDomain, reports, false);
-		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger.mergesForAllMachine(all);
-		transactionReport.addMachine(allMachines);
-		transactionReport.getIps().add("All");
-
-		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
-		return transactionReport;
-	}
 }

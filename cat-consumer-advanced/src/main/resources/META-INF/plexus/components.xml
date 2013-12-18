@@ -267,39 +267,27 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>browser</role-hint>
-			<implementation>com.dianping.cat.consumer.browser.BrowserAnalyzer</implementation>
+			<role-hint>browserMeta</role-hint>
+			<implementation>com.dianping.cat.consumer.browser.BrowserMetaAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ReportManager</role>
-					<role-hint>browser</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.browser.UserAgentManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.browser.UserAgentManager</role>
-			<implementation>com.dianping.cat.consumer.browser.DefaultUserAgentManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.dal.UserAgentDao</role>
+					<role-hint>browserMeta</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.service.ReportManager</role>
-			<role-hint>browser</role-hint>
+			<role-hint>browserMeta</role-hint>
 			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
 			<configuration>
-				<name>browser</name>
+				<name>browserMeta</name>
 			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ReportDelegate</role>
-					<role-hint>browser</role-hint>
+					<role-hint>browserMeta</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -314,8 +302,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.service.ReportDelegate</role>
-			<role-hint>browser</role-hint>
-			<implementation>com.dianping.cat.consumer.browser.BrowserDelegate</implementation>
+			<role-hint>browserMeta</role-hint>
+			<implementation>com.dianping.cat.consumer.browser.BrowserMetaDelegate</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>

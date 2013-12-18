@@ -88,14 +88,11 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 	}
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<TransactionReport> reports = new ArrayList<TransactionReport>();
 		long startTime = period.getTime();
 		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
 		      + TimeUtil.ONE_HOUR));
-
-		reports.add(report);
-		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(domain, reports);
-		return m_transactionGraphCreator.buildGraph(transactionReport);
+		
+		return m_transactionGraphCreator.splitReportToGraphs(period, domain, TransactionAnalyzer.ID, report);
 	}
 
 	@Override
@@ -104,7 +101,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 			List<Graph> graphs = buildHourlyGraphs(name, domain, period);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
-					m_graphDao.insert(graph); // use mysql unique index and insert
+					m_graphDao.insert(graph);
 				}
 			}
 		} catch (Exception e) {

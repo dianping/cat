@@ -8,7 +8,6 @@
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/cat/js/highcharts.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
-<script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <style type="text/css">
 .graph {
 	width: 550px;

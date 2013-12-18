@@ -40,14 +40,6 @@ public class EventDailyGraphMergerTest {
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
-	@Test
-	public void testForMegerGraph() throws Exception {
-		EventReport report = m_meger.mergeForGraph(m_reportDomain, reports);
-		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("EventMergerGraph.xml"), "utf-8");
-
-		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
-	}
-
 	private EventReport creatReport() {
 		EventReport result = new EventReport();
 		try {
