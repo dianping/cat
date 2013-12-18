@@ -333,6 +333,8 @@ public class Handler implements PageHandler<Context> {
 					}
 				} else if (sortBy.equals("failurePercent")) {
 					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
+				} else if (sortBy.equals("availability")) {
+					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
 				} else {
 					return (int) (d2.getAvg() - d1.getAvg());
 				}

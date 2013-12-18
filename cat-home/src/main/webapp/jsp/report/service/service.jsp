@@ -43,7 +43,8 @@
 					<th class="left">Server(Domain)</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=total">Total</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=failure">Failure</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=failurePercent">Failure%</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">Failure%</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=availability">Availability%</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=avg">Avg(ms)</th>
 				</tr>
 			
@@ -53,6 +54,7 @@
 						<td style="text-align:right">${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 						<td style="text-align:right">${w:format(item.failureCount,'#,###,###,###,##0')}</td>
 						<td style="text-align:right">${w:format(item.failurePercent,'0.00000%')}</td>
+						<td style="text-align:right">${w:format(1-item.failurePercent,'0.00000%')}</td>
 						<td style="text-align:right">${w:format(item.avg,'0.00')}</td>
 					</tr>
 				</c:forEach>
