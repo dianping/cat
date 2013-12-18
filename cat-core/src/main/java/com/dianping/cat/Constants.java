@@ -27,5 +27,4 @@ public class Constants {
 
 	public static final String REPORT_BROWSER = "browser";
 
-	public static final String REPORT_ROUTER = "router";
 }
