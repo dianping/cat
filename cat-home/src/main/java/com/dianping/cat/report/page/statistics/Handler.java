@@ -324,7 +324,13 @@ public class Handler implements PageHandler<Context> {
 				if (sortBy.equals("failure")) {
 					return (int) (d2.getFailureCount() - d1.getFailureCount());
 				} else if (sortBy.equals("total")) {
-					return (int) (d2.getTotalCount() - d1.getTotalCount());
+					long value = d2.getTotalCount() - d1.getTotalCount();
+
+					if (value > 0) {
+						return 1;
+					} else {
+						return -1;
+					}
 				} else if (sortBy.equals("failurePercent")) {
 					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
 				} else {

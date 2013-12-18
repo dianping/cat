@@ -52,7 +52,7 @@
 						<td>${item.id}</td>
 						<td style="text-align:right">${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 						<td style="text-align:right">${w:format(item.failureCount,'#,###,###,###,##0')}</td>
-						<td style="text-align:right">${w:format(item.failurePercent,'0.00%')}</td>
+						<td style="text-align:right">${w:format(item.failurePercent,'0.00000%')}</td>
 						<td style="text-align:right">${w:format(item.avg,'0.00')}</td>
 					</tr>
 				</c:forEach>
