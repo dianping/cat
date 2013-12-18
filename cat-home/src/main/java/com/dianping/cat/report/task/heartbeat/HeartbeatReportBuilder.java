@@ -37,7 +37,10 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 			List<Graph> graphs = qeueryHourlyGraphs(name, domain, period);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
-					m_graphDao.insert(graph); // use mysql unique index and
+					if (graph.getSummaryContent() == null) {
+						graph.setSummaryContent("");
+					}
+					m_graphDao.insert(graph);
 				}
 			}
 		} catch (Exception e) {
@@ -60,7 +63,8 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 	private List<Graph> qeueryHourlyGraphs(String name, String domain, Date period) throws DalException {
 		HeartbeatReport report = m_reportService.queryHeartbeatReport(domain, period, new Date(period.getTime()
 		      + TimeUtil.ONE_HOUR));
-		
-		return m_heartbeatGraphCreator.splitReportToGraphs(report.getStartTime(), report.getDomain(), HeartbeatAnalyzer.ID, report);
+
+		return m_heartbeatGraphCreator.splitReportToGraphs(report.getStartTime(), report.getDomain(),
+		      HeartbeatAnalyzer.ID, report);
 	}
 }
