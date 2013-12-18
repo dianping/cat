@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 
 @RunWith(JUnit4.class)
 public class HeartbeatGraphDataTest extends ComponentTestCase {
@@ -72,5 +73,16 @@ public class HeartbeatGraphDataTest extends ComponentTestCase {
 
 		reportOld.accept(merger);
 		Assert.assertEquals(newXml.replaceAll("\r", ""), reportOld.toString().replaceAll("\r", ""));
+	}
+
+	@Test
+	public void test1() throws Exception {
+		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat.xml"), "utf-8");
+		HeartbeatReport report = DefaultSaxParser.parse(xml);
+		HeartbeatGraphCreator creator = new HeartbeatGraphCreator();
+		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "heartbeat", report);
+		String result = Files.forIO().readFrom(getClass().getResourceAsStream("result"), "utf-8");
+		
+		Assert.assertEquals(result, graphs.get(0).getDetailContent());
 	}
 }

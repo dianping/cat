@@ -77,7 +77,7 @@ function TabManager() {
 	};
 	
 	this.headersWillBeSent = function(tabId, headers) {
-		headers.push({name: "X-CAT-TRACING", value: "true"});
+		headers.push({name: "X-CAT-TRACE-MODE", value: "true"});
 		return {requestHeaders: headers};
 	};
 	
@@ -115,10 +115,12 @@ function TabManager() {
 
 var tabMgr = new TabManager();
 var responseCallback = function(details) {
-	var headers = details.responseHeaders;
-	var tabId = details.tabId;
-	var url = details.url;
-	tabMgr.headersReceived(tabId, headers, url);
+	if("main_frame" == details.type){
+		var headers = details.responseHeaders;
+		var tabId = details.tabId;
+		var url = details.url;
+		tabMgr.headersReceived(tabId, headers, url);
+	}
 };
 var requestCallback = function(details) {
 	var headers = details.requestHeaders;
@@ -128,7 +130,7 @@ var requestCallback = function(details) {
 var filter = {urls: ["*://*/*"]};
 
 chrome.webRequest.onHeadersReceived.addListener(responseCallback, filter, ["responseHeaders"]);
-//chrome.webRequest.onBeforeSendHeaders.addListener(requestCallback, filter, ["blocking", "requestHeaders"]);
+chrome.webRequest.onBeforeSendHeaders.addListener(requestCallback, filter, ["blocking", "requestHeaders"]);
 
 chrome.pageAction.onClicked.addListener(function(tab) {
 	//alert(localStorage["favorite_color"]);

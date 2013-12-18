@@ -68,21 +68,18 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<ProblemReport> reports = new ArrayList<ProblemReport>();
 		long startTime = period.getTime();
 		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
 		      + TimeUtil.ONE_HOUR));
 
-		reports.add(report);
-		ProblemReport problemReport = m_problemMerger.mergeForGraph(domain, reports);
-
-		return m_problemGraphCreator.splitReportToGraphs(period, domain, name, problemReport);
+		return m_problemGraphCreator.splitReportToGraphs(period, domain, ProblemAnalyzer.ID, report);
 	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		try {
 			List<Graph> graphs = buildHourlyGraphs(name, domain, period);
+			
 			if (graphs != null) {
 				for (Graph graph : graphs) {
 					this.m_graphDao.insert(graph); // use mysql unique index and

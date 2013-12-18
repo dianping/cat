@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.metric.chart;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,10 +68,16 @@ public class GraphCreator {
 			Map<String, double[]> sevenDayValues = m_pruductDataFetcher.buildGraphData(sevenDayReport, metricConfigs,
 			      abtestId);
 
-			mergeMap(allCurrentValues, currentValues, totalSize, index);
+			if (isCurrentMode(endDate)) {
+				Calendar cal = Calendar.getInstance();
+				int minute = cal.get(Calendar.MINUTE) - 1;
+
+				mergeMap(allCurrentValues, currentValues, totalSize + minute - 60, index);
+			} else {
+				mergeMap(allCurrentValues, currentValues, totalSize, index);
+			}
 			mergeMap(allOneDayValues, oneDayValues, totalSize, index);
 			mergeMap(allSevenDayValues, sevenDayValues, totalSize, index);
-
 			index++;
 		}
 		allCurrentValues = m_dataExtractor.extract(allCurrentValues);
@@ -136,8 +143,8 @@ public class GraphCreator {
 		String id = key.substring(0, index);
 		String type = key.substring(index + 1);
 		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
-
 		String des = "";
+
 		if (MetricType.AVG.name().equals(type)) {
 			des = Chinese.Suffix_AVG;
 		} else if (MetricType.SUM.name().equals(type)) {
@@ -146,6 +153,12 @@ public class GraphCreator {
 			des = Chinese.Suffix_COUNT;
 		}
 		return config.getTitle() + des;
+	}
+
+	private boolean isCurrentMode(Date date) {
+		Date current = TimeUtil.getCurrentHour();
+
+		return current.getTime() == date.getTime();
 	}
 
 	private void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
@@ -160,9 +173,9 @@ public class GraphCreator {
 			}
 			if (value != null) {
 				int length = value.length;
-
-				for (int i = 0; i < length; i++) {
-					result[index * 60 + i] = value[i];
+				int pos = index * 60;
+				for (int i = 0; i < length && pos < size; i++, pos++) {
+					result[pos] = value[i];
 				}
 			}
 		}

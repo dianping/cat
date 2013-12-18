@@ -79,7 +79,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public void flush(MessageTree tree) {
 		MessageSender sender = m_transportManager.getSender();
 
-		if (sender != null && !shouldThrottle(tree)) {
+		if (sender != null && isCatEnabled()) {
 			sender.send(tree);
 
 			if (m_statistics != null) {
@@ -213,14 +213,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		m_context.set(ctx);
-	}
-
-	private boolean shouldThrottle(MessageTree tree) {
-		if (!isCatEnabled()) {
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
@@ -479,5 +471,4 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 	}
-
 }

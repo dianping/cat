@@ -135,7 +135,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, ProblemDelegate.class) //
-		      .req(ProblemReportAggregation.class, TaskManager.class));
+		      .req(ProblemReportAggregation.class, TaskManager.class, ServerConfigManager.class));
 
 		return all;
 	}
@@ -180,7 +180,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class));
+		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class, ServerConfigManager.class));
 
 		return all;
 	}

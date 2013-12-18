@@ -15,6 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.abtest.ABTestName;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
+import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultABTestContextManager extends ContainerHolder implements ABTestContextManager {
@@ -35,6 +36,10 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			return new Entry();
 		}
 	};
+	
+	public ABTestCodec getABTestCodec(){
+		return m_cookieCodec;
+	}
 
 	@Override
 	public ABTestContext getContext(ABTestName testName) {
@@ -48,13 +53,16 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	public void onRequestBegin(HttpServletRequest request, HttpServletResponse response) {
 		Entry entry = m_threadLocal.get();
 		Object attribute = request.getAttribute("url-rewrite-original-url");
+		String requestUrl = null;
 
 		if (attribute instanceof String) {
-			String requestUrl = (String) attribute;
+			requestUrl = (String) attribute;
+		} else {
+			requestUrl = request.getRequestURL().toString();
+		}
 
-			if (!requestUrl.contains("ajax")) {
-				entry.setup(request, response);
-			}
+		if (!requestUrl.contains("ajax")) {
+			entry.setup(request, response);
 		}
 	}
 
@@ -66,11 +74,6 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	@Override
 	public ABTestContext createContext(ABTestEntity entity) {
 		DefaultABTestContext ctx = new DefaultABTestContext(entity);
-
-		if (!entity.isDisabled()) {
-			ctx.setMessageManager(m_messageManager);
-			ctx.setCookieCodec(m_cookieCodec);
-		}
 
 		return ctx;
 	}
@@ -140,7 +143,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 				Map<String, String> newCookielets = ctx.getCookielets();
 
-				if (newCookielets != null) {
+				if (newCookielets != null && !newCookielets.isEmpty()) {
 					map.put(key, newCookielets);
 				} else {
 					map.remove(key);
@@ -149,7 +152,14 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 			String newValue = m_cookieCodec.encode(map);
 
+			setMetricType(newValue);
 			setCookie(request, response, ABTEST_COOKIE_NAME, newValue);
+		}
+
+		private void setMetricType(String metricType) {
+			DefaultMessageManager messageManager = (DefaultMessageManager) m_messageManager;
+
+			messageManager.setMetricType(metricType);
 		}
 	}
 }

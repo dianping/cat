@@ -19,7 +19,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.util.internal.ConcurrentHashMap;
-import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
@@ -77,7 +76,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 10;
 
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(100000);
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(200000);
 
 	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
@@ -199,7 +198,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (block != null) {
 						m_messageBlocks.offer(block);
 
-						LockSupport.parkNanos(50 * 1000 * 1000L); // wait 50 ms
+						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 50 ms
 					}
 					MessageTree tree = bucket.findByIndex(id.getIndex());
 
@@ -254,16 +253,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private void moveFile(String path) throws IOException {
 		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, path);
+		File parent = from.getParentFile();
 		File to = new File(outbox, path);
 
 		to.getParentFile().mkdirs();
-		Files.forDir().copyFile(from, to);
-		Files.forDir().delete(from);
-
-		File parentFile = from.getParentFile();
-
-		parentFile.delete(); // delete it if empty
-		parentFile.getParentFile().delete(); // delete it if empty
+		from.renameTo(to);
+		parent.delete(); // delete it if empty
+		parent.getParentFile().delete(); // delete it if empty
 	}
 
 	private void moveOldMessages() {
@@ -316,12 +312,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error(e.getMessage(), e);
 					}
 				}
-
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					break;
-				}
 			}
 			t.complete();
 		}
@@ -332,8 +322,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	public void setLocalIp(String localIp) {
-   	m_localIp = localIp;
-   }
+		m_localIp = localIp;
+	}
 
 	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
@@ -400,6 +390,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			if (lastTotalSize == null) {
 				lastTotalSize = 0L;
 			}
+			if (totalSize == null) {
+				totalSize = 0L;
+			}
+
 			double amount = totalSize - lastTotalSize;
 			m_lastTotalSizes.put(domain, totalSize);
 			m_serverStateManager.addMessageSize(domain, amount);

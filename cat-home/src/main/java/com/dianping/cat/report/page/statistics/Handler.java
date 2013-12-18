@@ -24,11 +24,13 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.browser.BrowserMetaAnalyzer;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
@@ -131,6 +133,20 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	// private String buildOsChart(Map<String, Os> map) {
+	// PieChart chart = new PieChart();
+	// List<Item> items = new ArrayList<Item>();
+	//
+	// for (Entry<String, Os> entry : map.entrySet()) {
+	// String title = entry.getKey();
+	// Os value = entry.getValue();
+	// long count = value.getCount();
+	// items.add(new Item().setTitle(title).setNumber(count));
+	// }
+	// chart.addItems(items);
+	// return chart.getJsonString();
+	// }
+
 	private void buildUtilizationInfo(Model model, Payload payload) {
 		UtilizationReport utilizationReport = queryUtilizationReport(payload);
 		List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
@@ -152,15 +168,6 @@ public class Handler implements PageHandler<Context> {
 		model.setUtilizationReport(utilizationReport);
 	}
 
-	public Project findProjectByDomain(String domain) {
-		try {
-			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return null;
-	}
-
 	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
 		double maxScore = 0;
 		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
@@ -179,6 +186,15 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return maxScore;
+	}
+
+	public Project findProjectByDomain(String domain) {
+		try {
+			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return null;
 	}
 
 	@Override
@@ -214,6 +230,9 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
 			break;
+		case BROWSER_REPORT:
+		case BROWSER_HISTORY_REPORT:
+			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
@@ -223,6 +242,20 @@ public class Handler implements PageHandler<Context> {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
 		return !bugConfig.contains(exception);
+	}
+
+	protected BrowserReport queryBrowserReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+		Date start = pair.getKey();
+		Date end = pair.getValue();
+		BrowserReport report = m_reportService.queryBrowserReport(payload.getDomain(), start, end);
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserMetaAnalyzer.ID);
+		Set<String> domainNames = report.getDomainNames();
+
+		report.setStartTime(start);
+		report.setEndTime(end);
+		domainNames.addAll(domains);
+		return report;
 	}
 
 	private BugReport queryBugReport(Payload payload) {
@@ -291,8 +324,16 @@ public class Handler implements PageHandler<Context> {
 				if (sortBy.equals("failure")) {
 					return (int) (d2.getFailureCount() - d1.getFailureCount());
 				} else if (sortBy.equals("total")) {
-					return (int) (d2.getTotalCount() - d1.getTotalCount());
+					long value = d2.getTotalCount() - d1.getTotalCount();
+
+					if (value > 0) {
+						return 1;
+					} else {
+						return -1;
+					}
 				} else if (sortBy.equals("failurePercent")) {
+					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
+				} else if (sortBy.equals("availability")) {
 					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
 				} else {
 					return (int) (d2.getAvg() - d1.getAvg());
@@ -433,23 +474,12 @@ public class Handler implements PageHandler<Context> {
 					items.put(exception, item);
 				} else {
 					List<String> messages = item.getMessages();
-
 					item.setCount(item.getCount() + count);
-					mergeList(messages, exceptionItem.getMessages(), 10);
-				}
-			}
-		}
+					messages.addAll(exceptionItem.getMessages());
 
-		protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
-			int originalSize = oldMessages.size();
-
-			if (originalSize < size) {
-				int remainingSize = size - originalSize;
-
-				if (remainingSize >= newMessages.size()) {
-					oldMessages.addAll(newMessages);
-				} else {
-					oldMessages.addAll(newMessages.subList(0, remainingSize));
+					if (messages.size() > 10) {
+						messages = messages.subList(0, 10);
+					}
 				}
 			}
 		}

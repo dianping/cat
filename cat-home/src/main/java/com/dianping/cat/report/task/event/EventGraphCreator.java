@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dianping.cat.report.task.event;
 
 import java.util.ArrayList;
@@ -131,7 +128,6 @@ public class EventGraphCreator {
 				summaryBuilder.append('\t');
 				summaryBuilder.append(arrayToString(typeFails));
 				summaryBuilder.append('\n');
-
 			}
 			graph.setDetailContent(detailBuilder.toString());
 			graph.setSummaryContent(summaryBuilder.toString());

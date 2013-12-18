@@ -27,8 +27,8 @@ class MessageBlockReader {
 	}
 
 	public byte[] readMessage(int index) throws IOException {
-		int blockAddress;
-		int blockOffset;
+		int blockAddress = 0;
+		int blockOffset = 0;
 		byte[] buf;
 
 		synchronized (m_indexFile) {
@@ -48,7 +48,6 @@ class MessageBlockReader {
 
 		try {
 			in.skip(blockOffset);
-
 			int len = in.readInt();
 
 			byte[] data = new byte[len];

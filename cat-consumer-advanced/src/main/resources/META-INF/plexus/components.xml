@@ -65,6 +65,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
+			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.consumer.cross.CrossAnalyzer</implementation>
@@ -76,6 +80,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -259,6 +266,51 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
+			<role-hint>browserMeta</role-hint>
+			<implementation>com.dianping.cat.consumer.browser.BrowserMetaAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportManager</role>
+					<role-hint>browserMeta</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportManager</role>
+			<role-hint>browserMeta</role-hint>
+			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<configuration>
+				<name>browserMeta</name>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role-hint>browserMeta</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role-hint>browserMeta</role-hint>
+			<implementation>com.dianping.cat.consumer.browser.BrowserMetaDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer-advanced</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerAdvancedModule</implementation>
@@ -284,6 +336,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>user-agent</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>user-agent</logical-table-name>
+				<physical-table-name>user_agent</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
 			<implementation>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</implementation>
 			<requirements>
@@ -295,6 +357,15 @@
 		<component>
 			<role>com.dianping.cat.consumer.advanced.dal.SqltableDao</role>
 			<implementation>com.dianping.cat.consumer.advanced.dal.SqltableDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.dal.UserAgentDao</role>
+			<implementation>com.dianping.cat.consumer.advanced.dal.UserAgentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

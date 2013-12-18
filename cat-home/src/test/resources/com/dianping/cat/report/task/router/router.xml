@@ -1,0 +1,7 @@
+<router-report startTime="2013-12-17 00:00" endTime="2013-12-18 00:00">
+	<domain id="Cat" server="10.1.6.145" port="2280">
+		<host ip="192.168.8.21" server="10.1.6.145" port="2280"></host>
+		<host ip="192.168.8.22" server="10.1.6.145" port="2280"></host>
+	</domain>
+	<domain></domain>
+</router-report>

@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.event;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
@@ -23,8 +21,9 @@ public class EventGraphCreatorTest {
 		EventGraphCreator creator = new EventGraphCreator();
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"), "utf-8");
 		EventReport report = DefaultSaxParser.parse(xml);
-		Date date = new Date();
-		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", EventAnalyzer.ID, report);
+		List<Graph> graphs =	creator.splitReportToGraphs(report.getStartTime(),report.getDomain(),"event",report);
+		
+		//List<Graph> graphs = creator.buildGraph(report);
 		Map<String, Range> realResult = new HashMap<String, Range>();
 		Map<String, Range> excepectedResult = buildExceptedResult();
 		buildResultResult(graphs, realResult);

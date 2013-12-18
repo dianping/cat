@@ -24,4 +24,7 @@ public class Constants {
 	public static final String REPORT_HEAVY = "heavy";
 
 	public static final String REPORT_ABTEST = "abtest";
+
+	public static final String REPORT_BROWSER = "browser";
+
 }

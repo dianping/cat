@@ -13,7 +13,7 @@
 		<attribute name="ip" value-type="String" key="true"/>
 		<entity-ref name="type" type="map" names="types" method-find-or-create="true" />
 	</entity>
-	<entity name="type" class-name="TransactionType">
+	<entity name="type" class-name="TransactionType" dynamic-attributes="true">
 		<attribute name="id" key="true" />
 		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />

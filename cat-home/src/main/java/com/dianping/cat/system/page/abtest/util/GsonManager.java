@@ -1,21 +1,22 @@
-package com.dianping.cat.system.page.abtest;
+package com.dianping.cat.system.page.abtest.util;
 
 import com.google.gson.FieldNamingStrategy;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class GsonBuilderManager {
+public class GsonManager {
 	private GsonBuilder m_gsonBuilder;
 
-	public GsonBuilderManager() {
+	public GsonManager() {
 		m_gsonBuilder = new GsonBuilder();
 
 		m_gsonBuilder.setFieldNamingStrategy(new NonPrexFieldNamingStrategy());
 	}
 
-	public GsonBuilder getGsonBuilder() {
-		return m_gsonBuilder;
+	public Gson getGson(){
+		return m_gsonBuilder.create();
 	}
-
+	
 	public class NonPrexFieldNamingStrategy implements FieldNamingStrategy {
 		@Override
 		public String translateName(java.lang.reflect.Field f) {

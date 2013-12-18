@@ -395,10 +395,17 @@ CREATE TABLE `baseline` (
   PRIMARY KEY (`id`),
   KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
   KEY `ix_reportperiod` (`report_period`)
-) ENGINE=InnoDB AUTO_INCREMENT=5062 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=5062 DEFAULT CHARSET=utf8;
 
-
-
+CREATE TABLE `user_agent` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userAgent` varchar(1024) NOT NULL DEFAULT '',
+  `browser` varchar(200) DEFAULT '',
+  `version` varchar(200) DEFAULT '',
+  `os` varchar(200) DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userAgent` (`userAgent`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

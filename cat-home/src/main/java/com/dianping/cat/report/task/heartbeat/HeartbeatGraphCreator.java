@@ -18,7 +18,7 @@ import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.GraphLine;
 
-public class HeartbeatGraphCreator {
+public class HeartbeatGraphCreator  {
 
 	private void cacheHeartbeatColumn(Map<String, GraphLine> detailCache, int minute, Number value, String key) {
 		GraphLine detailLine = detailCache.get(key);

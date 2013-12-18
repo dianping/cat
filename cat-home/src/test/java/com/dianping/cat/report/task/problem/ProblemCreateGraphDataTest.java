@@ -7,7 +7,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
@@ -20,7 +19,7 @@ public class ProblemCreateGraphDataTest {
 		ProblemReport report = DefaultSaxParser.parse(newXml);
 
 		ProblemGraphCreator creator = new ProblemGraphCreator();
-		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), "Cat", ProblemAnalyzer.ID, report);
+		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "problem", report);
 
 		Assert.assertEquals("The graphs size", 3, graphs.size());
 

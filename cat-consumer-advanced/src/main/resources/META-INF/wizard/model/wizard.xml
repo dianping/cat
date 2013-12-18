@@ -9,7 +9,7 @@
    <model package="com.dianping.cat.advanced.metric-config" name="metric-config">
       <sample-model>src/test/resources/com/dianping/cat/consumer/model/metric-config.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.advanced.browser-report" name="browser-report">
-      <sample-model>src/test/resources/com/dianping/cat/consumer/model/browser.xml</sample-model>
+   <model package="com.dianping.cat.advanced.browser-meta-report" name="browser-meta-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/model/browser-meta.xml</sample-model>
    </model>
 </wizard>

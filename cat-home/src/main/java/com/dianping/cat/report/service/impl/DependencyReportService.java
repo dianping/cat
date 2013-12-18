@@ -31,7 +31,7 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 
 	@Override
 	public DependencyReport queryDailyReport(String domain, Date start, Date end) {
-		throw new RuntimeException("Dependency report don't support daily report");
+		throw new UnsupportedOperationException("Dependency report don't support daily report");
 	}
 
 	private DependencyReport queryFromHourlyBinary(int id, String domain) throws DalException {
@@ -90,12 +90,12 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 
 	@Override
 	public DependencyReport queryMonthlyReport(String domain, Date start) {
-		throw new RuntimeException("Dependency report don't support monthly report");
+		throw new UnsupportedOperationException("Dependency report don't support monthly report");
 	}
 
 	@Override
 	public DependencyReport queryWeeklyReport(String domain, Date start) {
-		throw new RuntimeException("Dependency report don't support weekly report");
+		throw new UnsupportedOperationException("Dependency report don't support weekly report");
 	}
 
 }
