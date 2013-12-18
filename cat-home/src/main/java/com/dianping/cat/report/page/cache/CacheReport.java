@@ -135,8 +135,8 @@ public class CacheReport {
 	public void setStartTime(java.util.Date startTime) {
 		m_startTime = startTime;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return new Gson().toJson(this);
 	}
 

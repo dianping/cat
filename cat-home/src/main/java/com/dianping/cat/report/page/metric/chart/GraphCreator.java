@@ -44,41 +44,40 @@ public class GraphCreator {
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
 
-	public Map<String, LineChart> buildChartsByProductLine(String productLine,
-			Date startDate, Date endDate, String abtestId) {
+	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate,
+	      String abtestId) {
 		long start = startDate.getTime();
 		long end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
-		Calendar cal = Calendar.getInstance();
-		int minute = cal.get(Calendar.MINUTE);
 		Map<String, double[]> allCurrentValues = new HashMap<String, double[]>();
 		Map<String, double[]> allOneDayValues = new HashMap<String, double[]>();
 		Map<String, double[]> allSevenDayValues = new HashMap<String, double[]>();
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			List<String> domains = m_productLineConfigManager
-					.queryProductLineDomains(productLine);
-			List<MetricItemConfig> metricConfigs = m_metricConfigManager
-					.queryMetricItemConfigs(new HashSet<String>(domains));
-			MetricReport metricReport = m_metricReportService.query(
-					productLine, new Date(start));
-			MetricReport oneDayReport = m_metricReportService.query(
-					productLine, new Date(start - TimeUtil.ONE_DAY));
-			MetricReport sevenDayReport = m_metricReportService.query(
-					productLine, new Date(start - TimeUtil.ONE_DAY * 7));
-			Map<String, double[]> currentValues = m_pruductDataFetcher
-					.buildGraphData(metricReport, metricConfigs, abtestId);
+			List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine);
+			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
+			      domains));
+			MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
+			MetricReport oneDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
+			MetricReport sevenDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY * 7));
+			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs,
+			      abtestId);
 			Map<String, double[]> oneDayValues = m_pruductDataFetcher
-					.buildGraphData(oneDayReport, metricConfigs, abtestId);
-			Map<String, double[]> sevenDayValues = m_pruductDataFetcher
-					.buildGraphData(sevenDayReport, metricConfigs, abtestId);
+			      .buildGraphData(oneDayReport, metricConfigs, abtestId);
+			Map<String, double[]> sevenDayValues = m_pruductDataFetcher.buildGraphData(sevenDayReport, metricConfigs,
+			      abtestId);
 
-			mergeMap(allCurrentValues, currentValues, totalSize + minute - 60,
-					index);
+			if (isCurrentMode(endDate)) {
+				Calendar cal = Calendar.getInstance();
+				int minute = cal.get(Calendar.MINUTE) - 1;
+
+				mergeMap(allCurrentValues, currentValues, totalSize + minute - 60, index);
+			} else {
+				mergeMap(allCurrentValues, currentValues, totalSize, index);
+			}
 			mergeMap(allOneDayValues, oneDayValues, totalSize, index);
 			mergeMap(allSevenDayValues, sevenDayValues, totalSize, index);
-
 			index++;
 		}
 		allCurrentValues = m_dataExtractor.extract(allCurrentValues);
@@ -100,8 +99,7 @@ public class GraphCreator {
 			double[] baselines = queryBaseline(key, startDate, endDate);
 
 			lineChart.add(Chinese.CURRENT_VALUE, allCurrentValues.get(key));
-			lineChart.add(Chinese.BASELINE_VALUE,
-					m_dataExtractor.extract(baselines));
+			lineChart.add(Chinese.BASELINE_VALUE, m_dataExtractor.extract(baselines));
 			lineChart.add(Chinese.ONEDAY_VALUE, allOneDayValues.get(key));
 			lineChart.add(Chinese.ONEWEEK_VALUE, allSevenDayValues.get(key));
 			charts.put(key, lineChart);
@@ -109,22 +107,18 @@ public class GraphCreator {
 		return charts;
 	}
 
-	public Map<String, LineChart> buildDashboard(Date start, Date end,
-			String abtestId) {
-		Collection<ProductLine> productLines = m_productLineConfigManager
-				.queryProductLines().values();
+	public Map<String, LineChart> buildDashboard(Date start, Date end, String abtestId) {
+		Collection<ProductLine> productLines = m_productLineConfigManager.queryProductLines().values();
 		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 
 		for (ProductLine productLine : productLines) {
 			if (showInDashboard(productLine.getId())) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(),
-						start, end, abtestId));
+				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
 			}
 		}
 
-		Collection<MetricItemConfig> configs = m_metricConfigManager
-				.getMetricConfig().getMetricItemConfigs().values();
+		Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values();
 
 		for (MetricItemConfig config : configs) {
 			String key = config.getId();
@@ -148,10 +142,9 @@ public class GraphCreator {
 		int index = key.lastIndexOf(":");
 		String id = key.substring(0, index);
 		String type = key.substring(index + 1);
-		MetricItemConfig config = m_metricConfigManager
-				.queryMetricItemConfig(id);
-
+		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
 		String des = "";
+
 		if (MetricType.AVG.name().equals(type)) {
 			des = Chinese.Suffix_AVG;
 		} else if (MetricType.SUM.name().equals(type)) {
@@ -162,8 +155,13 @@ public class GraphCreator {
 		return config.getTitle() + des;
 	}
 
-	private void mergeMap(Map<String, double[]> all,
-			Map<String, double[]> item, int size, int index) {
+	private boolean isCurrentMode(Date date) {
+		Date current = TimeUtil.getCurrentHour();
+
+		return current.getTime() == date.getTime();
+	}
+
+	private void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
 		for (Entry<String, double[]> entry : item.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();
@@ -176,15 +174,14 @@ public class GraphCreator {
 			if (value != null) {
 				int length = value.length;
 				int pos = index * 60;
-				for (int i = 0; i < length && pos < size; i++,pos++) {
+				for (int i = 0; i < length && pos < size; i++, pos++) {
 					result[pos] = value[i];
 				}
 			}
 		}
 	}
 
-	private void put(Map<String, LineChart> charts,
-			Map<String, LineChart> result, String key) {
+	private void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
 		LineChart value = charts.get(key);
 
 		if (value != null) {
@@ -200,8 +197,7 @@ public class GraphCreator {
 		long endLong = end.getTime();
 
 		for (; startLong < endLong; startLong += TimeUtil.ONE_HOUR) {
-			double[] values = m_baselineService.queryHourlyBaseline(
-					MetricAnalyzer.ID, key, new Date(startLong));
+			double[] values = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, key, new Date(startLong));
 
 			for (int j = 0; j < values.length; j++) {
 				result[index * 60 + j] = values[j];
@@ -212,14 +208,11 @@ public class GraphCreator {
 	}
 
 	private boolean showInDashboard(String productline) {
-		List<String> domains = m_productLineConfigManager
-				.queryProductLineDomains(productline);
-		List<MetricItemConfig> configs = m_metricConfigManager
-				.queryMetricItemConfigs(new HashSet<String>(domains));
+		List<String> domains = m_productLineConfigManager.queryProductLineDomains(productline);
+		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 
 		for (MetricItemConfig config : configs) {
-			if (config.isShowAvgDashboard() || config.isShowCountDashboard()
-					|| config.isShowSumDashboard()) {
+			if (config.isShowAvgDashboard() || config.isShowCountDashboard() || config.isShowSumDashboard()) {
 				return true;
 			}
 		}

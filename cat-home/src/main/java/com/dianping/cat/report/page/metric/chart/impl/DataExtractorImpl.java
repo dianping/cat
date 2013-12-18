@@ -19,6 +19,7 @@ public class DataExtractorImpl implements DataExtractor {
 		int length = values.length;
 		m_step = intervalCalculate(length);
 		int size = length / m_step;
+
 		if (size * m_step < length) {
 			size++;
 		}
