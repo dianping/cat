@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeParser;
@@ -22,6 +23,9 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+
+	@Inject
+	private ServerConfigManager m_manager;
 
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
@@ -79,8 +83,14 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public boolean createHourlyTask(TransactionReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
-		      TaskProlicy.ALL);
+		String domain = report.getDomain();
+
+		if (m_manager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
+			      TaskProlicy.ALL);
+		} else {
+			return true;
+		}
 	}
 
 	@Override
