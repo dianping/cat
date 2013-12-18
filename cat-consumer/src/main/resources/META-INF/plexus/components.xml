@@ -62,6 +62,9 @@
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -210,6 +213,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

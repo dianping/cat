@@ -23,7 +23,7 @@
 		<query-defs>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
-				INSERT INTO <TABLE/>
+				INSERT IGNORE INTO <TABLE/>
 					(<FIELDS/>) 
 				VALUES
 					(<VALUES/>)
