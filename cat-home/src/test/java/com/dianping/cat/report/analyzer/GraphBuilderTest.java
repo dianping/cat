@@ -22,8 +22,8 @@ public class GraphBuilderTest extends ComponentTestCase {
 	public void test() throws ParseException{
 		HeartbeatReportBuilder builder = lookup(HeartbeatReportBuilder.class);
 		
-		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
-		builder.buildHourlyTask(HeartbeatAnalyzer.ID, "Cat", period);
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-18 10:00:00");
+		builder.buildHourlyTask(HeartbeatAnalyzer.ID, "ReviewWeb", period);
 	}
 
 	@Test
