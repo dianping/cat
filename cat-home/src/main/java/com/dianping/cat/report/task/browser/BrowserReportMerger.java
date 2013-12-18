@@ -12,12 +12,7 @@ public class BrowserReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeUserAgent(UserAgent old, UserAgent other) {
-		if (old.getCount() == null) {
-			old.setCount(0);
-		}
-		if (other.getCount() != null) {
-			old.setCount(old.getCount() + other.getCount());
-		}
+		old.setCount(old.getCount()+other.getCount());
 	}
 
 	@Override
@@ -30,4 +25,5 @@ public class BrowserReportMerger extends DefaultMerger {
 		oldReport.getDomainNames().addAll(browserReport.getDomainNames());
 		super.visitBrowserReport(browserReport);
 	}
+	
 }

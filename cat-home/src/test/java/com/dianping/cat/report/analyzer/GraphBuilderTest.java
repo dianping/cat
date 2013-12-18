@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.event;
+package com.dianping.cat.report.analyzer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,11 +11,12 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 
-public class BuilderTest extends ComponentTestCase {
+public class GraphBuilderTest extends ComponentTestCase {
 	
 	@Test
 	public void test() throws ParseException{
@@ -25,7 +26,6 @@ public class BuilderTest extends ComponentTestCase {
 		builder.buildHourlyTask(HeartbeatAnalyzer.ID, "Cat", period);
 	}
 
-	
 	@Test
 	public void testProblem() throws ParseException{
 		ProblemReportBuilder builder = lookup(ProblemReportBuilder.class);

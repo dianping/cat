@@ -18,7 +18,6 @@ public class BrowserMetaAnalyzer extends AbstractMessageAnalyzer<BrowserMetaRepo
 	@Inject(ID)
 	protected ReportManager<BrowserMetaReport> m_reportManager;
 
-	
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
@@ -95,10 +94,13 @@ public class BrowserMetaAnalyzer extends AbstractMessageAnalyzer<BrowserMetaRepo
 					if ("URL".equals(childType) && ("URL.Server".equals(childName) || "ClientInfo".equals(childName))) {
 						String data = (String) child.getData();
 						String agent = parseValue("agent", data);
-						String domain = tree.getDomain();
-						BrowserMetaReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-						
-						report.findOrCreateUserAgent(agent).incCount();
+
+						if (agent != null) {
+							String domain = tree.getDomain();
+							BrowserMetaReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+
+							report.findOrCreateUserAgent(agent).incCount();
+						}
 						return;
 					}
 				}
@@ -106,4 +108,3 @@ public class BrowserMetaAnalyzer extends AbstractMessageAnalyzer<BrowserMetaRepo
 		}
 	}
 }
-
