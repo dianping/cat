@@ -68,14 +68,7 @@ public class GraphCreator {
 			Map<String, double[]> sevenDayValues = m_pruductDataFetcher.buildGraphData(sevenDayReport, metricConfigs,
 			      abtestId);
 
-			if (isCurrentMode(endDate)) {
-				Calendar cal = Calendar.getInstance();
-				int minute = cal.get(Calendar.MINUTE) - 1;
-
-				mergeMap(allCurrentValues, currentValues, totalSize + minute - 60, index);
-			} else {
-				mergeMap(allCurrentValues, currentValues, totalSize, index);
-			}
+			mergeMap(allCurrentValues, currentValues, totalSize, index);
 			mergeMap(allOneDayValues, oneDayValues, totalSize, index);
 			mergeMap(allSevenDayValues, sevenDayValues, totalSize, index);
 			index++;
@@ -83,6 +76,22 @@ public class GraphCreator {
 		allCurrentValues = m_dataExtractor.extract(allCurrentValues);
 		allOneDayValues = m_dataExtractor.extract(allOneDayValues);
 		allSevenDayValues = m_dataExtractor.extract(allSevenDayValues);
+
+		if (isCurrentMode(endDate)) {
+			// remove the minute of future
+			Map<String, double[]> newCurrentValues = new HashMap<String, double[]>();
+			int step = m_dataExtractor.getStep();
+			int minute = Calendar.getInstance().get(Calendar.MINUTE);
+			int removeLength = 60 / step - (minute / step);
+
+			for (Entry<String, double[]> entry : allCurrentValues.entrySet()) {
+				String key = entry.getKey();
+				double[] value = entry.getValue();
+
+				newCurrentValues.put(key, convert(value, removeLength));
+			}
+			allCurrentValues = newCurrentValues;
+		}
 
 		int step = m_dataExtractor.getStep();
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
@@ -105,6 +114,19 @@ public class GraphCreator {
 			charts.put(key, lineChart);
 		}
 		return charts;
+	}
+
+	public double[] convert(double[] value, int removeLength) {
+		int length = value.length;
+		int newLength = length - removeLength;
+		double[] result = new double[newLength];
+
+		for (int i = 0; i < newLength; i++) {
+			result[i] = value[i];
+
+			result[i] = Math.random() * 1000;
+		}
+		return result;
 	}
 
 	public Map<String, LineChart> buildDashboard(Date start, Date end, String abtestId) {
@@ -158,7 +180,7 @@ public class GraphCreator {
 	private boolean isCurrentMode(Date date) {
 		Date current = TimeUtil.getCurrentHour();
 
-		return current.getTime() == date.getTime();
+		return current.getTime() == date.getTime() - TimeUtil.ONE_HOUR;
 	}
 
 	private void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
