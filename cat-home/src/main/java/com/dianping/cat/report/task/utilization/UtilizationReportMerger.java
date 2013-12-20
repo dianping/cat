@@ -38,11 +38,14 @@ public class UtilizationReportMerger extends DefaultMerger {
 	protected void mergeApplicationState(ApplicationState to, ApplicationState from) {
 		to.setAvg95((to.getAvg95() * to.getCount() + from.getAvg95() * from.getCount())
 		      / (to.getCount() + from.getCount()));
+		if (from.getMaxQps() > to.getMaxQps()) {
+			to.setMaxQps(from.getMaxQps());
+		}
 		to.setSum(to.getSum() + from.getSum());
 		to.setCount(to.getCount() + from.getCount());
 		to.setFailureCount(to.getFailureCount() + from.getFailureCount());
 		to.setAvg(to.getSum() / to.getCount());
-		to.setFailurePercent(to.getFailureCount() / to.getCount());
+		to.setFailurePercent(to.getFailureCount() * 1.0 / to.getCount());
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class UtilizationReportMerger extends DefaultMerger {
 		}
 		to.setSum(to.getSum() + from.getSum());
 		to.setCount(to.getCount() + from.getCount());
-		to.setAvg(to.getCount() * 1.0 / to.getSum());
+		to.setAvg(to.getSum() * 1.0 / to.getCount());
 	}
 
 }

@@ -52,26 +52,6 @@ public class HeartbeatReportVisitor extends BaseVisitor {
 		return sum;
 	}
 
-	private double computeDurationMax(List<Double> values) {
-		int size = values.size();
-		double[] result = new double[size];
-
-		for (int i = 0; i < size - 1; i++) {
-			double first = values.get(i);
-			double next = values.get(i + 1);
-
-			result[i] = next - first;
-		}
-
-		double max = 0;
-		for (Double d : result) {
-			if (d > max) {
-				max = d;
-			}
-		}
-		return max;
-	}
-
 	private double findMax(List<Double> values) {
 		double max = 0;
 
@@ -121,8 +101,8 @@ public class HeartbeatReportVisitor extends BaseVisitor {
 		MachineState fullGcState = current.findOrCreateMachineState("fullGc");
 		MachineState loadState = current.findOrCreateMachineState("load");
 
-		updateMachineState(newGcState, newgc, computeDurationMax(m_newGcs));
-		updateMachineState(fullGcState, fullgc, computeDurationMax(m_fullGcs));
+		updateMachineState(newGcState, newgc, newgc);
+		updateMachineState(fullGcState, fullgc, fullgc);
 		updateMachineState(loadState, load, findMax(m_loads));
 	}
 

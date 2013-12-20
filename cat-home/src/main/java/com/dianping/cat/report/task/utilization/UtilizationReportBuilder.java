@@ -122,6 +122,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		utilizationReport.setStartTime(start);
 		utilizationReport.setEndTime(end);
 
+		System.out.println(utilizationReport);
 		HourlyReport report = new HourlyReport();
 
 		report.setContent("");
