@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.statistics;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +16,6 @@ import java.util.Set;
 import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
@@ -46,7 +44,6 @@ import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
-import com.dianping.cat.home.utilization.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
@@ -262,13 +259,7 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		UtilizationReport report = m_reportService.queryUtilizationReport(Constants.CAT, pair.getKey(), pair.getValue());
-		try {
-	      String newXml = Files.forIO().readFrom(new File("/tmp/test"), "utf-8");
-      
-	      return DefaultSaxParser.parse(newXml);
-		} catch (Exception e) {
-	      e.printStackTrace();
-      }
+
 		return report;
 	}
 
