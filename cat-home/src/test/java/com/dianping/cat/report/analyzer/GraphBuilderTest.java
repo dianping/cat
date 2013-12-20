@@ -15,6 +15,7 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class GraphBuilderTest extends ComponentTestCase {
 	
@@ -46,6 +47,14 @@ public class GraphBuilderTest extends ComponentTestCase {
 	@Test
 	public void testEvent() throws ParseException{
 		EventReportBuilder builder = lookup(EventReportBuilder.class);
+		
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
+		builder.buildHourlyTask(EventAnalyzer.ID, "Cat", period);
+	}
+	
+	@Test
+	public void testUtilization() throws ParseException{
+		UtilizationReportBuilder builder = lookup(UtilizationReportBuilder.class);
 		
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
 		builder.buildHourlyTask(EventAnalyzer.ID, "Cat", period);

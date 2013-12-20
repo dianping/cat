@@ -85,6 +85,9 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	public boolean createHourlyTask(TransactionReport report) {
 		String domain = report.getDomain();
 
+		if (domain.equals(Constants.ALL)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, TransactionAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		}
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
 			      TaskProlicy.ALL);

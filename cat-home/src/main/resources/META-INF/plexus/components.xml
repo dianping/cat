@@ -982,6 +982,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.DomainManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3142,9 +3148,6 @@
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
@@ -3161,15 +3164,6 @@
 		<component>
 			<role>com.dianping.cat.system.config.BugConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BugConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
-			<implementation>com.dianping.cat.system.config.UtilizationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3377,6 +3371,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
+			<implementation>com.dianping.cat.system.config.UtilizationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

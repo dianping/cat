@@ -118,7 +118,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
 
-		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class));
+		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class,
+		      ServerConfigManager.class, DomainManager.class));
 
 		all.add(C(BrowserMetaReportBuilder.class).req(ReportService.class));
 
