@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
@@ -21,6 +22,8 @@ public class TransactionReportVisitor extends BaseVisitor {
 	private Set<String> m_types = new HashSet<String>();
 
 	private static final String MEMCACHED = "Cache.memcached";
+
+	private double m_maxQps = 0;
 
 	public TransactionReportVisitor() {
 		m_types.add("URL");
@@ -40,6 +43,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
+
 		if (Constants.ALL.equals(ip)) {
 			super.visitMachine(machine);
 		}
@@ -53,6 +57,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
+		m_maxQps = 0;
 		String typeName = type.getId();
 		Domain domain = m_report.findOrCreateDomain(m_domain);
 
@@ -63,8 +68,26 @@ public class TransactionReportVisitor extends BaseVisitor {
 		} else if (typeName.startsWith(MEMCACHED)) {
 			typeName = MEMCACHED;
 		}
+		ApplicationState applicationState = null;
+
 		if (m_types.contains(typeName)) {
-			copyAttribute(type, domain.findOrCreateApplicationState(typeName));
+			applicationState = domain.findOrCreateApplicationState(typeName);
+			copyAttribute(type, applicationState);
+		}
+		super.visitType(type);
+
+		int number = domain.getMachineNumber();
+		if (applicationState != null && number > 0) {
+			applicationState.setMaxQps(m_maxQps / (5 * 60 * 1.0) / number);
+		}
+	}
+
+	@Override
+	public void visitRange(Range range) {
+		long count = range.getCount();
+
+		if (count > m_maxQps) {
+			m_maxQps = count;
 		}
 	}
 

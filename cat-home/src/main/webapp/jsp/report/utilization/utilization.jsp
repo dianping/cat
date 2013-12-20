@@ -9,8 +9,6 @@
 
 <a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
-<res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 
@@ -19,6 +17,7 @@
 		$('#utilization').addClass('active');
 		initTable($('#web_content'));
 		initTable($('#service_content'));
+		$('i[tips]').popover();
 	});
 </script>
 <div class="report">

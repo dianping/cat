@@ -76,10 +76,10 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 			if (m_configManger.validateDomain(domainName)) {
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
 				int size = transactionReport.getMachines().size();
+				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 
 				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
 				transactionVisitor.visitTransactionReport(transactionReport);
-				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 			}
 		}
 
