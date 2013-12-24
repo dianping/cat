@@ -7,6 +7,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -56,7 +57,7 @@ public class GraphBuilderTest extends ComponentTestCase {
 	public void testUtilization() throws ParseException{
 		UtilizationReportBuilder builder = lookup(UtilizationReportBuilder.class);
 		
-		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
-		builder.buildHourlyTask(EventAnalyzer.ID, "Cat", period);
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-24 10:00:00");
+		builder.buildHourlyTask(Constants.REPORT_UTILIZATION, "Cat", period);
 	}
 }
