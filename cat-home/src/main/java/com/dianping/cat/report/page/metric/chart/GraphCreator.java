@@ -123,8 +123,6 @@ public class GraphCreator {
 
 		for (int i = 0; i < newLength; i++) {
 			result[i] = value[i];
-
-			result[i] = Math.random() * 1000;
 		}
 		return result;
 	}
