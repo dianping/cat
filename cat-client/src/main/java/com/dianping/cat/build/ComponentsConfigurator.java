@@ -8,7 +8,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatClientModule;
-import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.agent.MmapConsumerTask;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.MessageProducer;
@@ -52,7 +51,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
 		all.add(C(StatusUpdateTask.class) //
-		      .req(MessageStatistics.class, ClientConfigManager.class, ABTestEntityRepository.class));
+		      .req(MessageStatistics.class, ClientConfigManager.class));
 
 		all.add(C(MmapConsumerTask.class) //
 		      .req(ClientConfigManager.class, MessageManager.class));
@@ -60,7 +59,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Module.class, CatClientModule.ID, CatClientModule.class));
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
-		all.addAll(new ABTestComponentConfigurator().defineComponents());
 
 		return all;
 	}

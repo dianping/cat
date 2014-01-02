@@ -75,9 +75,6 @@
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -112,51 +109,6 @@
 					<role-hint>escape</role-hint>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestContextManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestCodec</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
-			<configuration>
-				<refreshTimeInSeconds>60</refreshTimeInSeconds>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.abtest.spi.ABTestGroupStrategy</role>
-			<role-hint>OneVariationStrategy</role-hint>
-			<implementation>com.dianping.cat.abtest.spi.internal.groupstrategy.TrafficDistributionGroupStrategy</implementation>
 		</component>
 	</components>
 </plexus>

@@ -8,11 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.abtest.MetricReportForABTestVisitorTest;
-import com.dianping.cat.abtest.conditions.TrafficFilterCodeGenerationTest;
-import com.dianping.cat.abtest.conditions.TrafficFilterTest;
-import com.dianping.cat.abtest.groupstrategy.GroupStrategyParserTest;
-import com.dianping.cat.abtest.groupstrategy.GsonBuilderManagerTest;
 import com.dianping.cat.report.baseline.BaselineCreatorTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CMDBTest;
@@ -136,17 +131,6 @@ ParseTest.class,
 
 /* service */
 ServiceReportMergerTest.class,
-
-/* abtest */
-GsonBuilderManagerTest.class,
-
-GroupStrategyParserTest.class,
-
-TrafficFilterTest.class,
-
-TrafficFilterCodeGenerationTest.class,
-
-MetricReportForABTestVisitorTest.class,
 
 HeavyReportBuilderTest.class })
 public class AllTests {

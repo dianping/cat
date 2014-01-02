@@ -159,7 +159,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/abtest-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/browser-report-manifest.xml,</manifest>
 						</configuration>
 					</execution>
@@ -173,7 +172,6 @@
 							<manifest><![CDATA[
 					${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/abtest-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]></manifest>
 						</configuration>
 					</execution>

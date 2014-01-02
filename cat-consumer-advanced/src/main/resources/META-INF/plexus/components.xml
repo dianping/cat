@@ -240,6 +240,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.metric.ABTestCodec</role>
+			<implementation>com.dianping.cat.consumer.metric.DefaultABTestCodec</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.consumer.metric.MetricAnalyzer</implementation>
@@ -258,7 +262,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
+					<role>com.dianping.cat.consumer.metric.ABTestCodec</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>

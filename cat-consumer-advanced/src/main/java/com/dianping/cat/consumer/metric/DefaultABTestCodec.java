@@ -1,4 +1,4 @@
-package com.dianping.cat.abtest.spi.internal;
+package com.dianping.cat.consumer.metric;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

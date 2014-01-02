@@ -59,8 +59,7 @@
 						<configuration>
 							<manifest>
 							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/abtest-manifest.xml,</manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -71,16 +70,6 @@
                   </goals>
                   <configuration>
                      <className>com.dianping.cat.build.ComponentsConfigurator</className>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate dal model files</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-model</goal>
-                  </goals>
-                  <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/abtest-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

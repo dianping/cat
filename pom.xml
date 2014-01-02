@@ -16,7 +16,6 @@
 		<module>cat-consumer-advanced</module>
 		<module>cat-home</module>
 		<module>cat-maven-plugin</module>
-		<module>abtest-sample</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

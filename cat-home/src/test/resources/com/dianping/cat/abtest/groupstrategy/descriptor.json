@@ -1,1 +1,0 @@
-{"className":"RetinaImgGroupStrategy","fullyQualifiedName":"com.dianping.tuangou.web.biz.dealgroup.RetinaImgGroupStrategy","fields":[{"name":"percentage","type":"int","inputType":"input","modifierName":"m_percentage"},{"name":"deals","type":"String","inputType":"input","modifierName":"m_deals"}]}

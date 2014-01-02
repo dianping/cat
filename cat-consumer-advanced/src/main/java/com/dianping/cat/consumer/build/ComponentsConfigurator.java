@@ -10,7 +10,6 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
@@ -22,6 +21,8 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixDelegate;
+import com.dianping.cat.consumer.metric.ABTestCodec;
+import com.dianping.cat.consumer.metric.DefaultABTestCodec;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
@@ -61,6 +62,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricConfigManager.class).req(ConfigDao.class));
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
+		all.add(C(ABTestCodec.class,DefaultABTestCodec.class));
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
 		      .req(ProductLineConfigManager.class, ABTestCodec.class, TaskManager.class));
