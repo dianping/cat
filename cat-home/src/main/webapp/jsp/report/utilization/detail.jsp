@@ -22,8 +22,8 @@
 								<th>QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器URL每秒的访问最大量"></i></th>
 								<th>错误量</th>
 								<th>错误量%</th>
-								<th>响应时间</th>
-								<th>95Line<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内URL响应时间的95线"></i></th>
+								<th>响应时间(ms)</th>
+								<th>95Line(ms)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内URL响应时间的95线"></i></th>
 								<th>Load(平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
 								<th>Load(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
 								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
@@ -39,7 +39,7 @@
 									<td style="text-align:right">${w:format(item.applicationStates.URL.failureCount,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.failurePercent,'###0%')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.avg,'#0.0')}</td>
-									<td style="text-align:right">${w:format(item.applicationStates.URL.avg95/1000,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.avg95,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.load.avg,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.load.avgMax,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.fullGc.avg,'#0.0')}</td>

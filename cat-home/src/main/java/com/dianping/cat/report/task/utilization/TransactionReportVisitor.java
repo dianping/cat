@@ -1,6 +1,9 @@
 package com.dianping.cat.report.task.utilization;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.Constants;
@@ -23,7 +26,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 	private static final String MEMCACHED = "Cache.memcached";
 
-	private double m_maxQps = 0;
+	private Map<Integer, Long> m_counts = new HashMap<Integer, Long>();
 
 	public TransactionReportVisitor() {
 		m_types.add("URL");
@@ -57,7 +60,6 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		m_maxQps = 0;
 		String typeName = type.getId();
 		Domain domain = m_report.findOrCreateDomain(m_domain);
 
@@ -76,18 +78,32 @@ public class TransactionReportVisitor extends BaseVisitor {
 		}
 		super.visitType(type);
 
-		int number = domain.getMachineNumber();
-		if (applicationState != null && number > 0) {
-			applicationState.setMaxQps(m_maxQps / (5 * 60 * 1.0) / number);
+		if (applicationState != null) {
+			long max = 0;
+
+			for (Entry<Integer, Long> entry : m_counts.entrySet()) {
+				long value = entry.getValue();
+
+				if (value > max) {
+					max = value;
+				}
+			}
+			applicationState.setMaxQps(max * 1.0 / (5 * 60));
 		}
+
+		m_counts.clear();
 	}
 
 	@Override
 	public void visitRange(Range range) {
 		long count = range.getCount();
+		int value = range.getValue();
+		Long old = m_counts.get(value);
 
-		if (count > m_maxQps) {
-			m_maxQps = count;
+		if (old == null) {
+			m_counts.put(value, count);
+		} else {
+			m_counts.put(value, count + old);
 		}
 	}
 
