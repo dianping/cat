@@ -29,7 +29,11 @@ public class DefaultProblemHandler extends ProblemHandler {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			processTransaction(machine, (Transaction) message, tree);
+			String type = message.getType();
+
+			if (!"ABTest".equals(type)) {
+				processTransaction(machine, (Transaction) message, tree);
+			}
 		} else if (message instanceof Event) {
 			processEvent(machine, (Event) message, tree);
 		} else if (message instanceof Heartbeat) {
@@ -85,10 +89,13 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 	private void processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
 		String type = heartbeat.getType().toLowerCase();
-		String status = heartbeat.getName();
-		Entry entry = findOrCreateEntry(machine, type, status);
 
-		updateEntry(tree, entry, 0);
+		if ("heartbeat".equals(type)) {
+			String status = heartbeat.getName();
+			Entry entry = findOrCreateEntry(machine, type, status);
+
+			updateEntry(tree, entry, 0);
+		}
 	}
 
 	public void setErrorType(String type) {
