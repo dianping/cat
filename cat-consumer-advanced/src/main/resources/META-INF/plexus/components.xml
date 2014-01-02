@@ -266,51 +266,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>browserMeta</role-hint>
-			<implementation>com.dianping.cat.consumer.browser.BrowserMetaAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
-					<role-hint>browserMeta</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
-			<role-hint>browserMeta</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
-			<configuration>
-				<name>browserMeta</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
-					<role-hint>browserMeta</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
-			<role-hint>browserMeta</role-hint>
-			<implementation>com.dianping.cat.consumer.browser.BrowserMetaDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer-advanced</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerAdvancedModule</implementation>

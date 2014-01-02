@@ -25,13 +25,11 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.browser.BrowserMetaAnalyzer;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
@@ -190,9 +188,6 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
 			break;
-		case BROWSER_REPORT:
-		case BROWSER_HISTORY_REPORT:
-			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
@@ -202,20 +197,6 @@ public class Handler implements PageHandler<Context> {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
 		return !bugConfig.contains(exception);
-	}
-
-	protected BrowserReport queryBrowserReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-		Date start = pair.getKey();
-		Date end = pair.getValue();
-		BrowserReport report = m_reportService.queryBrowserReport(payload.getDomain(), start, end);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserMetaAnalyzer.ID);
-		Set<String> domainNames = report.getDomainNames();
-
-		report.setStartTime(start);
-		report.setEndTime(end);
-		domainNames.addAll(domains);
-		return report;
 	}
 
 	private BugReport queryBugReport(Payload payload) {

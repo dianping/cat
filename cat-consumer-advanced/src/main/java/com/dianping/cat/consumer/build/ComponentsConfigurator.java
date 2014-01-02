@@ -15,8 +15,6 @@ import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.advanced.dal.SqltableDao;
-import com.dianping.cat.consumer.browser.BrowserMetaAnalyzer;
-import com.dianping.cat.consumer.browser.BrowserMetaDelegate;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.cross.IpConvertManager;
@@ -50,7 +48,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineMatrixComponents());
 		all.addAll(defineDependencyComponents());
 		all.addAll(defineMetricComponents());
-		all.addAll(defineBrowserComponents());
 
 		all.add(C(Module.class, CatConsumerAdvancedModule.ID, CatConsumerAdvancedModule.class));
 
@@ -117,20 +114,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		return all;
 	}
 	
-	private Collection<Component> defineBrowserComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = BrowserMetaAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, BrowserMetaAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, BrowserMetaDelegate.class).req(TaskManager.class));
-		return all;
-	}
-
 	private Collection<Component> defineSqlComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = SqlAnalyzer.ID;
