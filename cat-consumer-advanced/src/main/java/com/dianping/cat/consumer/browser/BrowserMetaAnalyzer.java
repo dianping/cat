@@ -93,7 +93,7 @@ public class BrowserMetaAnalyzer extends AbstractMessageAnalyzer<BrowserMetaRepo
 
 					if ("URL".equals(childType) && ("URL.Server".equals(childName) || "ClientInfo".equals(childName))) {
 						String data = (String) child.getData();
-						String agent = parseValue("agent", data);
+						String agent = parseValue("Agent", data);
 
 						if (agent != null) {
 							String domain = tree.getDomain();
