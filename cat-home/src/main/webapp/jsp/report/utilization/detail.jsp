@@ -39,7 +39,7 @@
 									<td style="text-align:right">${w:format(item.applicationStates.URL.maxQps,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.maxQps/item.machineNumber,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.failureCount,'###0')}</td>
-									<td style="text-align:right">${w:format(item.applicationStates.URL.failurePercent,'###0%')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.failurePercent,'###%')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.avg,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.avg95,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.load.avg,'#0.0')}</td>
@@ -78,9 +78,9 @@
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.count,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.maxQps,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failureCount,'###0')}</td>
-									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failurePercent,'###0%')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failurePercent,'###%')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.avg,'#0.0')}</td>
-									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.avg95/1000,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.avg95,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.load.avg,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.load.avgMax,'#0.0')}</td>
 									<td style="text-align:right">${w:format(item.machineStates.fullGc.avg,'#0.0')}</td>

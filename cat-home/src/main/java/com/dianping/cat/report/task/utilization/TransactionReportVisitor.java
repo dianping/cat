@@ -108,13 +108,19 @@ public class TransactionReportVisitor extends BaseVisitor {
 	}
 
 	private void copyAttribute(TransactionType type, ApplicationState state) {
-		state.setAvg95((state.getCount() * state.getAvg95() + type.getTotalCount() * type.getLine95Value())
-		      / (state.getCount() + type.getTotalCount()));
+		long newTotal = state.getCount() + type.getTotalCount();
+
+		if (newTotal > 0) {
+			state.setAvg95((state.getCount() * state.getAvg95() + type.getTotalCount() * type.getLine95Value()) / newTotal);
+		}
 		state.setSum(state.getSum() + type.getSum());
 		state.setFailureCount(state.getFailureCount() + type.getFailCount());
-		state.setCount(state.getCount() + type.getTotalCount());
-		state.setFailurePercent(state.getFailureCount() * 1.0 / state.getCount());
-		state.setAvg(state.getSum() * 1.0 / state.getCount());
+		state.setCount(newTotal);
+
+		if (state.getCount() > 0) {
+			state.setFailurePercent(state.getFailureCount() * 1.0 / state.getCount());
+			state.setAvg(state.getSum() * 1.0 / state.getCount());
+		}
 	}
 
 }
