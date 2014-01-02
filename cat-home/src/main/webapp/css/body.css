@@ -110,6 +110,10 @@ a.url {
 	background-color: #cc0000;
 }
 
+a. long-service{
+	background-color: #9966dd;
+}
+
 a.sql {
 	background-color: purple;
 }
@@ -123,10 +127,6 @@ a.cache {
 }
 
 a.heartbeat {
-	background-color: #009933;
-}
-
-a.abtest-heartbeat {
 	background-color: #009933;
 }
 
