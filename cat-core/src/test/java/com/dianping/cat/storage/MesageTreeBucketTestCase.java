@@ -112,7 +112,6 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
-					String expect = null;
 					try {
 						id = "" + serial.incrementAndGet();
 						MessageTree mt = new DefaultMessageTree();
@@ -120,7 +119,6 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 						MessageTree target = bucket.findById(id);
 						Assert.assertEquals(id, target.getMessageId());
 					} catch (Throwable e) {
-						System.out.println(Thread.currentThread().getName() + ":" + id + ":" + expect);
 						e.printStackTrace();
 						fail.incrementAndGet();
 					}
@@ -143,7 +141,6 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
-					String expect = null;
 					try {
 						id = "" + serial.incrementAndGet();
 						MessageTree mt = new DefaultMessageTree();
@@ -153,7 +150,6 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 						MessageTree target = bucket.findById(id);
 						Assert.assertEquals(id, target.getMessageId());
 					} catch (Throwable e) {
-						System.out.println(Thread.currentThread().getName() + ":" + id + ":" + expect);
 						e.printStackTrace();
 						fail.incrementAndGet();
 					}

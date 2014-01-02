@@ -43,8 +43,6 @@ public class DumpUploaderSample extends ComponentTestCase {
 		analyzer.analyze(queue);
 		analyzer.doCheckpoint(true);
 
-		System.out.println("checkpoint");
-
 		UploaderAndCleaner uploader = lookup(UploaderAndCleaner.class);
 
 		uploader.setSleepPeriod(0);

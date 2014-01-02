@@ -22,7 +22,6 @@ public class CatEnvironmentTest {
 		Thread.sleep(100);
 		Assert.assertEquals(true, Cat.isInitialized());
 		Cat.destroy();
-		System.out.println();
 	}
 
 	@Test
@@ -39,7 +38,6 @@ public class CatEnvironmentTest {
 
 		Assert.assertEquals(true, Cat.isInitialized());
 		Cat.destroy();
-		System.out.println();
 	}
 
 	@Test
@@ -56,7 +54,6 @@ public class CatEnvironmentTest {
 
 		Assert.assertEquals(true, Cat.isInitialized());
 		Cat.destroy();
-		System.out.println();
 	}
 	
 	
