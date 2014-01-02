@@ -1,4 +1,4 @@
-package com.dianping.cat.report.baseline;
+package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +9,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dianping.cat.report.baseline.BaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 
 public class BaselineCreatorTest {
