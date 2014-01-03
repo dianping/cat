@@ -116,8 +116,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		if (message instanceof Transaction) {
 			Transaction root = (Transaction) message;
+			
+			//TODO remove me
+			String type = message.getType();
 
-			processTransaction(report, tree, root);
+			if (!"ABTest".equals(type)) {
+				processTransaction(report, tree, root);
+			}
 		}
 	}
 

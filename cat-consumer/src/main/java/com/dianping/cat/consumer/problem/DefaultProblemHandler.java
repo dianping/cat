@@ -31,6 +31,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 		if (message instanceof Transaction) {
 			String type = message.getType();
 
+			//TODO remove me
 			if (!"ABTest".equals(type)) {
 				processTransaction(machine, (Transaction) message, tree);
 			}
