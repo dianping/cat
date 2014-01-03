@@ -121,7 +121,7 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 
 			latch.await();
 		} catch (Throwable e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -188,8 +188,6 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		public void run() {
 			try {
 				testReadWrite(m_ip, m_domain);
-
-				System.out.println(this.getName() + "  done.");
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {

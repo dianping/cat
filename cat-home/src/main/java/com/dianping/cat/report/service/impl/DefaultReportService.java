@@ -7,7 +7,6 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.browsermeta.model.entity.BrowserMetaReport;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -31,7 +30,6 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
@@ -114,12 +112,6 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private UtilizationReportService m_utilizationReportService;
-
-	@Inject
-	private BrowserReportService m_browserReportService;
-
-	@Inject
-	private BrowserMetaReportService m_browserMetaReportService;
 
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
@@ -284,13 +276,4 @@ public class DefaultReportService implements ReportService {
 		return m_utilizationReportService.queryReport(domain, start, end);
 	}
 
-	@Override
-	public BrowserReport queryBrowserReport(String domain, Date start, Date end) {
-		return m_browserReportService.queryReport(domain, start, end);
-	}
-
-	@Override
-	public BrowserMetaReport queryBrowserMetaReport(String domain, Date start, Date end) {
-		return m_browserMetaReportService.queryReport(domain, start, end);
-	}
 }

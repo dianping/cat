@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.EventAnalyzer;
@@ -41,46 +42,6 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		return report;
 	}
 
-	private EventReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new EventReport(domain);
-		}
-	}
-
-	private EventReport queryFromDailyBinary(int id, String domain) throws DalException {
-		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new EventReport(domain);
-		}
-	}
-
-	private EventReport queryFromWeeklyBinary(int id, String domain) throws DalException {
-		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new EventReport(domain);
-		}
-	}
-
-	private EventReport queryFromMonthlyBinary(int id, String domain) throws DalException {
-		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new EventReport(domain);
-		}
-	}
-
 	@Override
 	public EventReport queryDailyReport(String domain, Date start, Date end) {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
@@ -102,6 +63,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 					reportModel.accept(merger);
 				}
+			} catch (DalNotFoundException e) {
+				m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -111,6 +74,46 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
 		return eventReport;
+	}
+
+	private EventReport queryFromDailyBinary(int id, String domain) throws DalException {
+		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new EventReport(domain);
+		}
+	}
+
+	private EventReport queryFromHourlyBinary(int id, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new EventReport(domain);
+		}
+	}
+
+	private EventReport queryFromMonthlyBinary(int id, String domain) throws DalException {
+		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new EventReport(domain);
+		}
+	}
+
+	private EventReport queryFromWeeklyBinary(int id, String domain) throws DalException {
+		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new EventReport(domain);
+		}
 	}
 
 	@Override
@@ -142,6 +145,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 							reportModel.accept(merger);
 						}
+					} catch (DalNotFoundException e) {
+						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -170,6 +175,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 			} else {
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -188,6 +195,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 			} else {
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

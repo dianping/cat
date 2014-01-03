@@ -26,8 +26,6 @@ public class ConfigTest {
 		globalConfig.accept(new ClientConfigMerger(clientConfig));
 		clientConfig.accept(new ClientConfigValidator());
 
-		// System.out.println(clientConfig);
-
 		List<Server> servers = clientConfig.getServers();
 
 		Assert.assertEquals(3, servers.size());

@@ -113,9 +113,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 
-		// for abtest module
-		all.addAll(new ABTestComponentConfigurator().defineComponents());
-
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
 

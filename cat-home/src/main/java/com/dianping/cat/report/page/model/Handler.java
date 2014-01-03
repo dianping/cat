@@ -224,7 +224,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
+	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
 		private String m_name;
@@ -288,7 +288,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
-	static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
+	public static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
 		// view is show the summary,detail show the thread info
@@ -348,7 +348,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
-	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+	public static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
 		private String m_name;

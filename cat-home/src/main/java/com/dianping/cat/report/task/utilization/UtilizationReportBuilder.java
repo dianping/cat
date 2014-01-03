@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.utilization;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -7,7 +8,11 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.DomainManager;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.cross.model.entity.CrossReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -15,8 +20,12 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.utilization.entity.ApplicationState;
+import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.home.utilization.transform.DefaultNativeBuilder;
+import com.dianping.cat.report.page.cross.display.ProjectInfo;
+import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
@@ -29,6 +38,12 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	private TransactionMergeManager m_mergeManager;
+
+	@Inject
+	private ServerConfigManager m_configManger;
+
+	@Inject
+	private DomainManager m_domainManager;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -53,17 +68,65 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		UtilizationReport utilizationReport = new UtilizationReport(Constants.CAT);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-		TransactionReportVisitor visitor = new TransactionReportVisitor().setReport(utilizationReport);
+		TransactionReportVisitor transactionVisitor = new TransactionReportVisitor()
+		      .setUtilizationReport(utilizationReport);
+		HeartbeatReportVisitor heartbeatVisitor = new HeartbeatReportVisitor().setUtilizationReport(utilizationReport);
 
 		for (String domainName : domains) {
-			TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
-			int size = transactionReport.getMachines().size();
+			if (m_configManger.validateDomain(domainName)) {
+				TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
+				int size = transactionReport.getMachines().size();
+				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 
-			transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
-			visitor.visitTransactionReport(transactionReport);
-			utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
+				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
+				transactionVisitor.visitTransactionReport(transactionReport);
+			}
 		}
+
+		for (String domainName : domains) {
+			if (m_configManger.validateDomain(domainName)) {
+				HeartbeatReport heartbeatReport = m_reportService.queryHeartbeatReport(domainName, start, end);
+
+				heartbeatVisitor.visitHeartbeatReport(heartbeatReport);
+			}
+		}
+
+		for (String domainName : domains) {
+			if (m_configManger.validateDomain(domainName)) {
+				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
+				ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
+
+				projectInfo.setDomainManager(m_domainManager);
+				projectInfo.setClientIp(Constants.ALL);
+				projectInfo.visitCrossReport(crossReport);
+				Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
+
+				for (TypeDetailInfo typeInfo : callInfos) {
+					String project = typeInfo.getProjectName();
+
+					if (!validataService(project)) {
+						long failure = typeInfo.getFailureCount();
+						Domain d = utilizationReport.findOrCreateDomain(project);
+						ApplicationState service = d.findApplicationState("PigeonService");
+
+						if (service != null) {
+							service.setFailureCount(service.getFailureCount() + failure);
+							
+							long count = service.getCount();
+							if (count > 0) {
+								service.setFailurePercent(service.getFailureCount() * 1.0 / count);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		utilizationReport.setStartTime(start);
+		utilizationReport.setEndTime(end);
+
 		HourlyReport report = new HourlyReport();
+
 		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
@@ -92,6 +155,10 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 		byte[] binaryContent = DefaultNativeBuilder.build(utilizationReport);
 		return m_reportService.insertMonthlyReport(report, binaryContent);
+	}
+
+	private boolean validataService(String projectName) {
+		return projectName.equalsIgnoreCase(ProjectInfo.ALL_SERVER) || projectName.equalsIgnoreCase("UnknownProject");
 	}
 
 	@Override

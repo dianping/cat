@@ -4,14 +4,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 
@@ -27,14 +25,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Date m_endTime;
 
-	private Map<Integer, Abtest> m_abtests;
-
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public Map<Integer, Abtest> getAbtests() {
-		return m_abtests;
 	}
 
 	public Range[] getAllRange() {
@@ -70,10 +62,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Date getStartTime() {
 		return m_startTime;
-	}
-
-	public void setAbtests(Map<Integer, Abtest> abtests) {
-		m_abtests = abtests;
 	}
 
 	public void setEndTime(Date endTime) {

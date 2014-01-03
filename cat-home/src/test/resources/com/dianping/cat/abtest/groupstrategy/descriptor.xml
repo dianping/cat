@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<groupstrategy-descriptor className="RetinaImgGroupStrategy" fullyQualifiedName="com.dianping.tuangou.web.biz.dealgroup.RetinaImgGroupStrategy">
-   <fields>
-      <field name="percentage" type="int" input-type="input" modifier-name="m_percentage"/>
-      <field name="deals" type="String" input-type="input" modifier-name="m_deals"/>
-   </fields>
-</groupstrategy-descriptor>

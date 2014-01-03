@@ -19,7 +19,6 @@ import org.unidal.helper.Joiners.IBuilder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.abtest.ABTestManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Message;
@@ -50,7 +49,6 @@ public class CatFilter implements Filter {
 		m_handlers.add(CatHandler.ID_SETUP);
 		m_handlers.add(CatHandler.LOG_SPAN);
 		m_handlers.add(CatHandler.LOG_CLIENT_PAYLOAD);
-		m_handlers.add(CatHandler.LOG_ABTEST_METRIC);
 	}
 
 	static enum CatHandler implements Handler {
@@ -251,33 +249,6 @@ public class CatFilter implements Filter {
 				}
 
 				Cat.logEvent(type, type + ".Method", Message.SUCCESS, sb.toString());
-			}
-		},
-
-		LOG_ABTEST_METRIC {
-			@Override
-			public void handle(Context ctx) throws IOException, ServletException {
-				if (ctx.isTop()) {
-					HttpServletRequest req = ctx.getRequest();
-					HttpServletResponse res = ctx.getResponse();
-
-					ABTestManager.onRequestBegin(req, res);
-
-					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-					String metricType = manager.getMetricType();
-
-					if (metricType != null && metricType.length() > 0) {
-						Cat.logEvent(ctx.getType(), "ABTest", Message.SUCCESS, metricType);
-					}
-
-					try {
-						ctx.handle();
-					} finally {
-						ABTestManager.onRequestEnd();
-					}
-				} else {
-					ctx.handle();
-				}
 			}
 		},
 

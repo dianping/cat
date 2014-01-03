@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -41,46 +42,6 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		return report;
 	}
 
-	private TransactionReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new TransactionReport(domain);
-		}
-	}
-
-	private TransactionReport queryFromDailyBinary(int id, String domain) throws DalException {
-		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new TransactionReport(domain);
-		}
-	}
-
-	private TransactionReport queryFromWeeklyBinary(int id, String domain) throws DalException {
-		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new TransactionReport(domain);
-		}
-	}
-
-	private TransactionReport queryFromMonthlyBinary(int id, String domain) throws DalException {
-		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new TransactionReport(domain);
-		}
-	}
-
 	@Override
 	public TransactionReport queryDailyReport(String domain, Date start, Date end) {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
@@ -103,6 +64,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 					reportModel.accept(merger);
 				}
+			} catch (DalNotFoundException e) {
+				m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -112,6 +75,46 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
 		return transactionReport;
+	}
+
+	private TransactionReport queryFromDailyBinary(int id, String domain) throws DalException {
+		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new TransactionReport(domain);
+		}
+	}
+
+	private TransactionReport queryFromHourlyBinary(int id, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new TransactionReport(domain);
+		}
+	}
+
+	private TransactionReport queryFromMonthlyBinary(int id, String domain) throws DalException {
+		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new TransactionReport(domain);
+		}
+	}
+
+	private TransactionReport queryFromWeeklyBinary(int id, String domain) throws DalException {
+		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new TransactionReport(domain);
+		}
 	}
 
 	@Override
@@ -143,6 +146,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 							reportModel.accept(merger);
 						}
+					} catch (DalNotFoundException e) {
+						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -171,6 +176,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			} else {
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -189,6 +196,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			} else {
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

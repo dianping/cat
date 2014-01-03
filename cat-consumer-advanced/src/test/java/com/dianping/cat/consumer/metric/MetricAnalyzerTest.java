@@ -22,14 +22,10 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.abtest.spi.internal.DefaultABTestCodec;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.message.internal.DefaultEvent;

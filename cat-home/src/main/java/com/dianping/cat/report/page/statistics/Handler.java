@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.statistics;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -24,13 +25,11 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.browser.BrowserMetaAnalyzer;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
@@ -49,7 +48,6 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.system.config.BugConfigManager;
-import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -63,9 +61,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
-
-	@Inject
-	private UtilizationConfigManager m_configManager;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -133,59 +128,22 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	// private String buildOsChart(Map<String, Os> map) {
-	// PieChart chart = new PieChart();
-	// List<Item> items = new ArrayList<Item>();
-	//
-	// for (Entry<String, Os> entry : map.entrySet()) {
-	// String title = entry.getKey();
-	// Os value = entry.getValue();
-	// long count = value.getCount();
-	// items.add(new Item().setTitle(title).setNumber(count));
-	// }
-	// chart.addItems(items);
-	// return chart.getJsonString();
-	// }
-
 	private void buildUtilizationInfo(Model model, Payload payload) {
 		UtilizationReport utilizationReport = queryUtilizationReport(payload);
-		List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
+		Collection<com.dianping.cat.home.utilization.entity.Domain> dUList = utilizationReport.getDomains().values();
 		List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 		List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 		for (com.dianping.cat.home.utilization.entity.Domain d : dUList) {
-			if (d.getUrlCount() > 0) {
+			if (d.findApplicationState("URL") != null) {
 				dUWebList.add(d);
 			}
-			if (d.getServiceCount() > 0) {
+			if (d.findApplicationState("PigeonService") != null) {
 				dUServiceList.add(d);
 			}
 		}
-		resetWebScore(dUWebList, findMaxWebScore(dUWebList));
-		resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));
-		model.setUtilizationList(dUList);
 		model.setUtilizationWebList(dUWebList);
 		model.setUtilizationServiceList(dUServiceList);
 		model.setUtilizationReport(utilizationReport);
-	}
-
-	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
-		double maxScore = 0;
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			if (d.getServiceScore() > maxScore) {
-				maxScore = d.getServiceScore();
-			}
-		}
-		return maxScore;
-	}
-
-	private double findMaxWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
-		double maxScore = 0;
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			if (d.getWebScore() > maxScore) {
-				maxScore = d.getWebScore();
-			}
-		}
-		return maxScore;
 	}
 
 	public Project findProjectByDomain(String domain) {
@@ -230,9 +188,6 @@ public class Handler implements PageHandler<Context> {
 		case UTILIZATION_HISTORY_REPORT:
 			buildUtilizationInfo(model, payload);
 			break;
-		case BROWSER_REPORT:
-		case BROWSER_HISTORY_REPORT:
-			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
@@ -242,20 +197,6 @@ public class Handler implements PageHandler<Context> {
 		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
 
 		return !bugConfig.contains(exception);
-	}
-
-	protected BrowserReport queryBrowserReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-		Date start = pair.getKey();
-		Date end = pair.getValue();
-		BrowserReport report = m_reportService.queryBrowserReport(payload.getDomain(), start, end);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, BrowserMetaAnalyzer.ID);
-		Set<String> domainNames = report.getDomainNames();
-
-		report.setStartTime(start);
-		report.setEndTime(end);
-		domainNames.addAll(domains);
-		return report;
 	}
 
 	private BugReport queryBugReport(Payload payload) {
@@ -299,20 +240,8 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		UtilizationReport report = m_reportService.queryUtilizationReport(Constants.CAT, pair.getKey(), pair.getValue());
-		new UtilizationReportScore().setConfigManager(m_configManager).visitUtilizationReport(report);
+
 		return report;
-	}
-
-	private void resetServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore) {
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			d.setServiceScore(d.getServiceScore() * 100.0 / maxScore);
-		}
-	}
-
-	private void resetWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore) {
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			d.setWebScore(d.getWebScore() * 100.0 / maxScore);
-		}
 	}
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
@@ -337,41 +266,6 @@ public class Handler implements PageHandler<Context> {
 					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
 				} else {
 					return (int) (d2.getAvg() - d1.getAvg());
-				}
-			}
-		});
-		return result;
-	}
-
-	private List<com.dianping.cat.home.utilization.entity.Domain> sort(UtilizationReport utilizationReport,
-	      final String sortBy) {
-		List<com.dianping.cat.home.utilization.entity.Domain> result = new ArrayList<com.dianping.cat.home.utilization.entity.Domain>(
-		      utilizationReport.getDomains().values());
-		Collections.sort(result, new Comparator<com.dianping.cat.home.utilization.entity.Domain>() {
-			public int compare(com.dianping.cat.home.utilization.entity.Domain d1,
-			      com.dianping.cat.home.utilization.entity.Domain d2) {
-				if (sortBy.equals("urlCount")) {
-					return (int) (d2.getUrlCount() - d1.getUrlCount());
-				} else if (sortBy.equals("urlResponse")) {
-					return (int) (100 * d2.getUrlResponseTime() - 100 * d1.getUrlResponseTime());
-				} else if (sortBy.equals("serviceCount")) {
-					return (int) (d2.getServiceCount() - d1.getServiceCount());
-				} else if (sortBy.equals("serviceResponse")) {
-					return (int) (100 * d2.getServiceResponseTime() - 100 * d1.getServiceResponseTime());
-				} else if (sortBy.equals("sqlCount")) {
-					return (int) (d2.getSqlCount() - d1.getSqlCount());
-				} else if (sortBy.equals("pigeonCallCount")) {
-					return (int) (d2.getPigeonCallCount() - d1.getPigeonCallCount());
-				} else if (sortBy.equals("swallowCallCount")) {
-					return (int) (d2.getSwallowCallCount() - d1.getSwallowCallCount());
-				} else if (sortBy.equals("memcacheCount")) {
-					return (int) (d2.getMemcacheCount() - d1.getMemcacheCount());
-				} else if (sortBy.equals("webScore")) {
-					return (int) (d2.getWebScore() - d1.getWebScore());
-				} else if (sortBy.equals("serviceScore")) {
-					return (int) (d2.getServiceScore() - d1.getServiceScore());
-				} else {
-					return (int) (d2.getWebScore() - d1.getWebScore());
 				}
 			}
 		});
