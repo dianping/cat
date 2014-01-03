@@ -14,7 +14,6 @@ public class AppSimulator extends CatTestCase {
 	public void simulateHierarchyTransaction() throws Exception {
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL", "WebPage");
-		String id = Cat.getManager().getThreadLocalMessageTree().getMessageId();
 		String id1 = cat.createMessageId();
 		String id2 = cat.createMessageId();
 
@@ -39,12 +38,6 @@ public class AppSimulator extends CatTestCase {
 			t.setStatus(e);
 		} finally {
 			t.complete();
-		}
-
-		if (isCatServerAlive()) {
-			System.out.println("Please open page http://localhost:2281/cat/r/m/" + id);
-		} else {
-			System.out.println("CAT server is not started at localhost:2280, so no log view dumped!");
 		}
 	}
 

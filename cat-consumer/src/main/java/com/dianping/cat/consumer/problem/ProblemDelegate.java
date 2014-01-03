@@ -9,9 +9,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -88,6 +88,9 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	public boolean createHourlyTask(ProblemReport report) {
 		String domain = report.getDomain();
 
+		if (domain.equals(Constants.ALL)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		}
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
 		} else {

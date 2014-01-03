@@ -16,7 +16,6 @@ public class ExternalErrorTest {
 		for (int i = 0; i < 10; i++) {
 			try {
 				String buildUrl = buildUrl(i);
-				System.out.println(buildUrl);
 				URL url = new URL(buildUrl);
 				URLConnection URLconnection = url.openConnection();
 				URLconnection.setRequestProperty("User-Agent",

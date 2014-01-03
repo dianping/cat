@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.top.TopAnalyzer;
@@ -70,6 +71,8 @@ public class TopReportService extends AbstractReportService<TopReport> {
 							TopReport reportModel = queryFromHourlyBinary(report.getId(), domain);
 							reportModel.accept(merger);
 						}
+					} catch (DalNotFoundException e) {
+						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

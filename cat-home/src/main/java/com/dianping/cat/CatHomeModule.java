@@ -14,7 +14,6 @@ import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.notify.ScheduledMailTask;
@@ -37,13 +36,11 @@ public class CatHomeModule extends AbstractModule {
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-			MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
 			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
 			CachedReportTask cachedReportTask = ctx.lookup(CachedReportTask.class);
 
 			Threads.forGroup("Cat").start(cachedReportTask);
 			Threads.forGroup("Cat").start(domainNavManager);
-			Threads.forGroup("Cat").start(metricAlert);
 			Threads.forGroup("Cat").start(taskConsumer);
 		}
 		executeAlarmModule(ctx);

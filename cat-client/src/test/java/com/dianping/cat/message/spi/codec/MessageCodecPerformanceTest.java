@@ -21,7 +21,6 @@ public class MessageCodecPerformanceTest extends CatTestCase {
 		ChannelBuffer buf = new DynamicChannelBuffer(10240);
 		codec.encode(tree, buf);
 
-		long time = System.currentTimeMillis();
 		int count = 5000000;
 		for (int i = 0; i < count; i++) {
 
@@ -32,7 +31,6 @@ public class MessageCodecPerformanceTest extends CatTestCase {
 			buf.resetReaderIndex();
 			result.setBuffer(buf);
 		}
-		System.out.println((System.currentTimeMillis() - time)/(double)(count));
 	}
 
 	public MessageTree buildMessage() {

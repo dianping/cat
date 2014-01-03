@@ -145,6 +145,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		if (m_serverConfigManager.discardTransaction(t)) {
 			return;
+		//TODO remove me
+		} else if ("ABTest".equals(t.getType())) {
+			return;
 		} else {
 			String ip = tree.getIpAddress();
 			TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());

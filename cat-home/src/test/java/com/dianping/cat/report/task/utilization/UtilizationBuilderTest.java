@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.DomainManager;
 
@@ -13,7 +12,6 @@ public class UtilizationBuilderTest extends ComponentTestCase{
 	
 	@Test
 	public void testHourlyReport() throws Exception{
-		Cat.initialize("192.168.7.43");
 		UtilizationReportBuilder builder = lookup(UtilizationReportBuilder.class);
 		DomainManager manager = lookup(DomainManager.class);
 		

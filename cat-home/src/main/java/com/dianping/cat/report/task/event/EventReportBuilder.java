@@ -95,10 +95,6 @@ public class EventReportBuilder implements ReportTaskBuilder {
 			List<Graph> graphs = buildHourlyGraphs(name, domain, period);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
-
-					if (graph.getIp().equalsIgnoreCase("all")) {
-						System.out.println(graph.getSummaryContent());
-					}
 					this.m_graphDao.insert(graph);
 				}
 			}

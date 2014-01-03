@@ -9,8 +9,6 @@ public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
 
-		SystemPage.ABTEST,
-
 		SystemPage.ALARM,
 
 		SystemPage.CONFIG,

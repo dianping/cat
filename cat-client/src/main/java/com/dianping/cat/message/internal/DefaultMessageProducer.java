@@ -2,6 +2,7 @@ package com.dianping.cat.message.internal;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -34,7 +35,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logError(String message, Throwable cause) {
-		if (Cat.isEnabled()) {
+		if (Cat.isEnabled() && needLogged(cause)) {
 			StringWriter writer = new StringWriter(2048);
 			String detailMessage;
 
@@ -55,6 +56,22 @@ public class DefaultMessageProducer implements MessageProducer {
 			}
 		} else {
 			cause.printStackTrace();
+		}
+	}
+
+	private boolean needLogged(Throwable cause) {
+		DefaultMessageManager manager = (DefaultMessageManager) m_manager;
+		Set<Throwable> exceptions = manager.getKnownExceptions();
+
+		if (exceptions != null) {
+			boolean result = exceptions.contains(cause);
+
+			if (!result) {
+				exceptions.add(cause);
+			}
+			return !result;
+		} else {
+			return false;
 		}
 	}
 
