@@ -4,12 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.abtest.repository.ABTestRepositoryTest;
-import com.dianping.cat.abtest.repository.FieldInjecterTest;
-import com.dianping.cat.abtest.spi.internal.ABTestCodecTest;
-import com.dianping.cat.abtest.spi.internal.ABTestContextTest;
-import com.dianping.cat.abtest.spi.internal.ABTestEntityManagerTest;
-import com.dianping.cat.abtest.spi.internal.groupstrategy.TrafficDistributionGroupStrategyTest;
 import com.dianping.cat.configuration.ConfigTest;
 import com.dianping.cat.log4j.CatAppenderTest;
 import com.dianping.cat.message.EventTest;
@@ -29,19 +23,6 @@ CatAppenderTest.class,
 
 /* .message */
 MessageTest.class,
-
-/* .abtest */
-TrafficDistributionGroupStrategyTest.class,
-
-ABTestCodecTest.class,
-
-ABTestEntityManagerTest.class,
-
-ABTestContextTest.class,
-
-FieldInjecterTest.class,
-
-ABTestRepositoryTest.class,
 
 EventTest.class,
 

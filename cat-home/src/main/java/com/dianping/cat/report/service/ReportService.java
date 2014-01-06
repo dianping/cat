@@ -3,7 +3,6 @@ package com.dianping.cat.report.service;
 import java.util.Date;
 import java.util.Set;
 
-import com.dianping.cat.consumer.browsermeta.model.entity.BrowserMetaReport;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -19,7 +18,6 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
@@ -67,7 +65,4 @@ public interface ReportService {
 
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end);
 
-	public BrowserReport queryBrowserReport(String domain, Date start, Date end);
-	
-	public BrowserMetaReport queryBrowserMetaReport(String domain, Date start, Date end);
 }

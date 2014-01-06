@@ -62,14 +62,14 @@
             	 <li class='nav-header' id="${item.id}"><a href="?op=dashboard&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>业务大盘</strong></a></li>
 	            <c:forEach var="item" items="${model.productLines}" varStatus="status">
 	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.title}</strong></a></li>
-	              <c:if test="${payload.product eq item.id }">
+	              <%-- <c:if test="${payload.product eq item.id }">
 		               <c:forEach var="test" items="${model.abtests}" varStatus="status">
 		               	   <c:if test="${test.value.id ne -1}">
 				              <li id="${test.key}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${payload.timeRange}&test=${test.key}">${test.key}<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="right" data-content="${test.value.name}"></i></a>
 				              </li>
 		               	   </c:if>
 		       		  </c:forEach>
-	              </c:if>
+	              </c:if> --%>
 	            </c:forEach>
               <li >&nbsp;</li>
             </ul>

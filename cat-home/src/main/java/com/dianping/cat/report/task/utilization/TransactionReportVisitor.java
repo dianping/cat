@@ -1,10 +1,18 @@
 package com.dianping.cat.report.task.utilization;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.home.utilization.entity.ApplicationState;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
@@ -14,7 +22,23 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 	private UtilizationReport m_report;
 
-	public TransactionReportVisitor setReport(UtilizationReport report) {
+	private Set<String> m_types = new HashSet<String>();
+
+	private static final String MEMCACHED = "Cache.memcached";
+
+	private Map<Integer, Long> m_counts = new HashMap<Integer, Long>();
+
+	public TransactionReportVisitor() {
+		m_types.add("URL");
+		m_types.add("Service");
+		m_types.add("PigeonService");
+		m_types.add("Call");
+		m_types.add("PigeonCall");
+		m_types.add("SQL");
+		m_types.add(MEMCACHED);
+	}
+
+	public TransactionReportVisitor setUtilizationReport(UtilizationReport report) {
 		m_report = report;
 		return this;
 	}
@@ -22,6 +46,7 @@ public class TransactionReportVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
+
 		if (Constants.ALL.equals(ip)) {
 			super.visitMachine(machine);
 		}
@@ -35,23 +60,66 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		String key = type.getId();
+		String typeName = type.getId();
 		Domain domain = m_report.findOrCreateDomain(m_domain);
 
-		if (key.indexOf("URL") >= 0) {
-			domain.setUrlCount(type.getTotalCount());
-			domain.setUrlResponseTime(type.getAvg());
-		} else if (key.indexOf("Service") >= 0 || key.indexOf("PigeonService") >= 0) {
-			domain.setServiceCount(type.getTotalCount());
-			domain.setServiceResponseTime(type.getAvg());
-		} else if (key.indexOf("SQL") >= 0) {
-			domain.setSqlCount(type.getTotalCount());
-		} else if (key.indexOf("Cache.memcached") >= 0) {
-			domain.setMemcacheCount(type.getTotalCount() + domain.getMemcacheCount());
-		} else if (key.indexOf("SwallowHeartbeat") >= 0) {
-			domain.setSwallowCallCount(type.getTotalCount());
-		} else if (key.indexOf("PigeonCall") >= 0 || key.indexOf("Call") >= 0) {
-			domain.setPigeonCallCount(type.getTotalCount());
+		if ("Service".equals(typeName)) {
+			typeName = "PigeonService";
+		} else if ("Call".equals(typeName)) {
+			typeName = "PigeonCall";
+		} else if (typeName.startsWith(MEMCACHED)) {
+			typeName = MEMCACHED;
+		}
+		ApplicationState applicationState = null;
+
+		if (m_types.contains(typeName)) {
+			applicationState = domain.findOrCreateApplicationState(typeName);
+			copyAttribute(type, applicationState);
+		}
+		super.visitType(type);
+
+		if (applicationState != null) {
+			long max = 0;
+
+			for (Entry<Integer, Long> entry : m_counts.entrySet()) {
+				long value = entry.getValue();
+
+				if (value > max) {
+					max = value;
+				}
+			}
+			applicationState.setMaxQps(max * 1.0 / (5 * 60));
+		}
+
+		m_counts.clear();
+	}
+
+	@Override
+	public void visitRange(Range range) {
+		long count = range.getCount();
+		int value = range.getValue();
+		Long old = m_counts.get(value);
+
+		if (old == null) {
+			m_counts.put(value, count);
+		} else {
+			m_counts.put(value, count + old);
+		}
+	}
+
+	private void copyAttribute(TransactionType type, ApplicationState state) {
+		long newTotal = state.getCount() + type.getTotalCount();
+
+		if (newTotal > 0) {
+			state.setAvg95((state.getCount() * state.getAvg95() + type.getTotalCount() * type.getLine95Value()) / newTotal);
+		}
+		state.setSum(state.getSum() + type.getSum());
+		state.setFailureCount(state.getFailureCount() + type.getFailCount());
+		state.setCount(newTotal);
+
+		if (state.getCount() > 0) {
+			state.setFailurePercent(state.getFailureCount() * 1.0 / state.getCount());
+			state.setAvg(state.getSum() * 1.0 / state.getCount());
 		}
 	}
 

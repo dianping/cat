@@ -1,7 +1,9 @@
 package com.dianping.cat.message.internal;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -136,6 +138,16 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	Set<Throwable> getKnownExceptions() {
+		Context ctx = m_context.get();
+
+		if (ctx != null) {
+			return ctx.getKnownExceptions();
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public boolean hasContext() {
 		return m_context.get() != null;
@@ -240,6 +252,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		private boolean m_traceMode = false;
 
+		private Set<Throwable> m_knownExceptions = new HashSet<Throwable>();
+
 		public Context(String domain, String hostName, String ipAddress, ClientConfigManager configManager) {
 			m_tree = new DefaultMessageTree();
 			m_stack = new Stack<Transaction>();
@@ -256,6 +270,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setIpAddress(ipAddress);
 			m_configManager = configManager;
 			m_length = 1;
+		}
+
+		public Set<Throwable> getKnownExceptions() {
+			return m_knownExceptions;
 		}
 
 		public void add(DefaultMessageManager manager, Message message) {

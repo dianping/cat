@@ -58,8 +58,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, ErrorStatis> m_errorStatis;
 
-	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationList;
-
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
@@ -151,10 +149,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_sqlUrls;
 	}
 
-	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationList() {
-		return m_utilizationList;
-	}
-
 	public UtilizationReport getUtilizationReport() {
 		return m_utilizationReport;
 	}
@@ -221,10 +215,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setSqlUrls(List<Url> sqlUrls) {
 		m_sqlUrls = sqlUrls;
-	}
-
-	public void setUtilizationList(List<com.dianping.cat.home.utilization.entity.Domain> dUList) {
-		m_utilizationList = dUList;
 	}
 
 	public void setUtilizationReport(UtilizationReport utilizationReport) {

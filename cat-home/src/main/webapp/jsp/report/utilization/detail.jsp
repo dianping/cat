@@ -4,71 +4,91 @@
 		<%@include file="../bugTree.jsp"%>
 	</div>
 	<div class="span10">
-		<div class="tabbable "  > <!-- Only required for left/right tabs -->
-			<ul class="nav nav-tabs alert-info">
-			 	<li class="text-right "><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>Web</strong></a></li>
+			</br>
+			<div class="tabbable "  > <!-- Only required for left/right tabs -->
+			<ul class="nav nav-tabs">
+			 	<li class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>Web</strong></a></li>
 			 	<li class="text-right "><a id="tab2Href" href="#tab2" data-toggle="tab"><strong>Service</strong></a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab1">
 					<div class="report">
-						<table class="table table-striped table-bordered table-condensed table-hover">
+						<table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
+							<thead>
 							<tr>
-								<th class="left">id</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&tab=tab1">Machine Number</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=urlCount&tab=tab1">URL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=urlResponse&tab=tab1">URL Response Time</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=sqlCount&tab=tab1">SQL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=pigeonCallCount&tab=tab1">Pigeon Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=swallowCallCount&tab=tab1">Swallow Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=memcacheCount&tab=tab1">Memcache Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=webScore&tab=tab1">Web Score</th>
-							</tr>
-						
+								<th>Web应用</th>
+								<th>机器数</th>
+								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的URL访问总量"></i></th>
+								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器URL每秒的访问最大量"></i></th>
+								<th>单机QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器URL每秒的访问最大量"></i></th>
+								<th>错误量</th>
+								<th>错误量%</th>
+								<th>响应时间(ms)</th>
+								<th>95Line(ms)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内URL响应时间的95线"></i></th>
+								<th>Load(平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
+								<th>Load(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
+								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
+								<th>FullGc(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内单台机器fullGc的最大数量"></i></th>
+							</tr></thead>
+						<tbody>
 							<c:forEach var="item" items="${model.utilizationWebList}" varStatus="status">
-								<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+								<tr>
 									<td>${item.id}</td>
 									<td style="text-align:right">${item.machineNumber}</td>
-									<td style="text-align:right">${w:format(item.urlCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.urlResponseTime,'0.0')}</td>
-									<td style="text-align:right">${w:format(item.sqlCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.pigeonCallCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.swallowCallCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.memcacheCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.webScore,'0.00')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.count,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.maxQps,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.maxQps/item.machineNumber,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.failureCount,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.failurePercent,'###%')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.avg,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.URL.avg95,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.load.avg,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.load.avgMax,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.fullGc.avg,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.fullGc.avgMax,'#0.0')}</td>
 								</tr>
-							</c:forEach>
+							</c:forEach></tbody>
 						</table>
+						
 					</div>
 				</div>
 				<div class="tab-pane" id="tab2">
 					<div class="report">
-						<table class="table table-striped table-bordered table-condensed table-hover">
-							<tr>
-								<th class="left">id</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&tab=tab2">Machine Number</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=serviceCount&tab=tab2">Service Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=serviceResponse&tab=tab2">Service Response Time</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=sqlCount&tab=tab2">SQL Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=pigeonCallCount&tab=tab2">Pigeon Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=swallowCallCount&tab=tab2">Swallow Call Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=memcacheCount&tab=tab2">Memcache Count</th>
-								<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=utilization&sort=serviceScore&tab=tab2">Service Score</th>
-							</tr>
-						
+						<table id="service_content" class="table table-striped table-bordered table-condensed table-hover">
+							<thead>
+								<tr>
+								<th>Service应用</th>
+								<th>机器数</th>
+								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的Service访问总量"></i></th>
+								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器Service每秒的访问最大量"></i></th>
+								<th>单机QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器Service每秒的访问最大量"></i></th>
+								<th>错误量</th>
+								<th>错误量%</th>
+								<th>响应时间</th>
+								<th>95Line<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内Service响应时间的95线"></i></th>
+								<th>Load(平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
+								<th>Load(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
+								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
+								<th>FullGc(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内单台机器fullGc的最大数量"></i></th>
+							</tr></thead>
+						<tbody>
 							<c:forEach var="item" items="${model.utilizationServiceList}" varStatus="status">
-								<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+								<tr>
 									<td>${item.id}</td>
 									<td style="text-align:right">${item.machineNumber}</td>
-									<td style="text-align:right">${w:format(item.serviceCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.serviceResponseTime,'0.0')}</td>
-									<td style="text-align:right">${w:format(item.sqlCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.pigeonCallCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.swallowCallCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.memcacheCount,'#,###,###,###,##0')}</td>
-									<td style="text-align:right">${w:format(item.serviceScore,'0.00')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.count,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.maxQps,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.maxQps/item.machineNumber,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failureCount,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failurePercent,'###%')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.avg,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.avg95,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.load.avg,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.load.avgMax,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.fullGc.avg,'#0.0')}</td>
+									<td style="text-align:right">${w:format(item.machineStates.fullGc.avgMax,'#0.0')}</td>
 								</tr>
-							</c:forEach>
+							</c:forEach></tbody>
 						</table>
 					</div>
 				</div>

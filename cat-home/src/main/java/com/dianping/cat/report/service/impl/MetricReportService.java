@@ -3,6 +3,7 @@ package com.dianping.cat.report.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -55,6 +56,8 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 					      report.getProductLine() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + group + " " + start + " " + end);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

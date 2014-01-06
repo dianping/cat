@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -72,6 +73,8 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 							HeartbeatReport reportModel = queryFromHourlyBinary(report.getId(), domain);
 							reportModel.accept(merger);
 						}
+					} catch (DalNotFoundException e) {
+						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

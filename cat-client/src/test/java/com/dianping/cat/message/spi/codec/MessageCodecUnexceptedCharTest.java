@@ -22,12 +22,8 @@ public class MessageCodecUnexceptedCharTest extends CatTestCase {
 		MessageTree tree = buildMessage();
 		ChannelBuffer buf = new DynamicChannelBuffer(10240);
 		codec.encode(tree, buf);
-		System.out.println(tree);
 		MessageTree result = new DefaultMessageTree();
-		int size =buf.readInt();
-		System.out.println("==============size:"+size);
 		codec.decode(buf, result);
-		System.out.println(result);
 		Assert.assertEquals(tree.toString(), result.toString());
 	}
 

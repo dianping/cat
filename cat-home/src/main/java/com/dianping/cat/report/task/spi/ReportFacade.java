@@ -24,8 +24,6 @@ import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Task;
-import com.dianping.cat.report.task.abtest.ABTestReportBuilder;
-import com.dianping.cat.report.task.browser.BrowserMetaReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -80,17 +78,11 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private MetricBaselineReportBuilder m_metricBaselineReportBuilder;
 
 	@Inject
-	private ABTestReportBuilder m_abtestReportBuilder;
-
-	@Inject
 	private HeavyReportBuilder m_heavyReportBuilder;
 
 	@Inject
 	private UtilizationReportBuilder m_utilizationReportBuilder;
 	
-	@Inject
-	private BrowserMetaReportBuilder m_browserReportBuilder;
-
 	private Logger m_logger;
 
 	private Map<String, ReportTaskBuilder> m_reportBuilders = new HashMap<String, ReportTaskBuilder>();
@@ -165,8 +157,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(Constants.REPORT_SERVICE, m_serviceReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_HEAVY, m_heavyReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_UTILIZATION, m_utilizationReportBuilder);
-		m_reportBuilders.put(Constants.REPORT_ABTEST, m_abtestReportBuilder);
-		m_reportBuilders.put(Constants.REPORT_BROWSER, m_browserReportBuilder);
 	}
 
 }

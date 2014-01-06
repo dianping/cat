@@ -10,15 +10,24 @@
   <entity name="domain">
     <attribute name="id" value-type="String" key="true"/>
     <attribute name="machine-number" value-type="int"  primitive="true"/>
-    <attribute name="url-count" value-type="long"  primitive="true"/>
-    <attribute name="url-response-time" value-type="double"  primitive="true"/>
-    <attribute name="service-count" value-type="long"  primitive="true"/>
-    <attribute name="service-response-time" value-type="double"  primitive="true"/>
-    <attribute name="sql-count" value-type="long"  primitive="true"/>
-    <attribute name="pigeon-call-count" value-type="long"  primitive="true"/>
-    <attribute name="swallow-call-count" value-type="long"  primitive="true"/>
-    <attribute name="memcache-count" value-type="long"  primitive="true"/>
-    <attribute name="web-score" value-type="double"  primitive="true"/>
-    <attribute name="service-score" value-type="double"  primitive="true"/>
+    <entity-ref name="machineState" type="map" names="machineStates"  method-find-or-create='true'/>
+    <entity-ref name="applicationState" type="map" names="applicationStates"  method-find-or-create='true'/>
+  </entity>
+  <entity name="machineState">
+  	<attribute name="id" value-type="String" key="true"/>
+    <attribute name="count" value-type="long"  primitive="true"/>
+    <attribute name="sum" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg-max" value-type="double"  format="0.0000" primitive="true"/>
+  </entity>
+  <entity name="applicationState">
+  	<attribute name="id" value-type="String" key="true"/>
+    <attribute name="failure-count" value-type="long"  primitive="true"/>
+    <attribute name="failure-percent" value-type="double" format="0.000000" primitive="true"/>
+    <attribute name="count" value-type="long"  primitive="true"/>
+    <attribute name="maxQps" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="sum" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg95" value-type="double" format="0.0000" primitive="true"/>
   </entity>
 </model>
