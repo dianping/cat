@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -22,7 +24,7 @@ import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 
-public abstract class AbstractReportService<T> {
+public abstract class AbstractReportService<T> implements LogEnabled {
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
@@ -47,6 +49,8 @@ public abstract class AbstractReportService<T> {
 
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
+
+	protected Logger m_logger;
 
 	public static final int s_hourly = 1;
 
@@ -139,4 +143,10 @@ public abstract class AbstractReportService<T> {
 		}
 		return s_customer;
 	}
+
+	@Override
+   public void enableLogging(Logger logger) {
+		m_logger = logger;
+   }
+	
 }

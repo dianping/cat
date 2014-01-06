@@ -107,12 +107,15 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 					if (!validataService(project)) {
 						long failure = typeInfo.getFailureCount();
 						Domain d = utilizationReport.findOrCreateDomain(project);
-						ApplicationState service = d.findOrCreateApplicationState("PigeonService");
+						ApplicationState service = d.findApplicationState("PigeonService");
 
-						service.setFailureCount(service.getFailureCount() + failure);
-						long count = service.getCount();
-						if (count > 0) {
-							service.setFailurePercent(service.getFailureCount() * 1.0 / count);
+						if (service != null) {
+							service.setFailureCount(service.getFailureCount() + failure);
+							
+							long count = service.getCount();
+							if (count > 0) {
+								service.setFailurePercent(service.getFailureCount() * 1.0 / count);
+							}
 						}
 					}
 				}

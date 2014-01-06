@@ -19,7 +19,7 @@
 								<th>Web应用</th>
 								<th>机器数</th>
 								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的URL访问总量"></i></th>
-								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器URL每秒的访问最大量"></i></th>
+								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器URL每秒的访问最大量"></i></th>
 								<th>单机QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器URL每秒的访问最大量"></i></th>
 								<th>错误量</th>
 								<th>错误量%</th>
@@ -60,7 +60,8 @@
 								<th>Service应用</th>
 								<th>机器数</th>
 								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的Service访问总量"></i></th>
-								<th>QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器Service每秒的访问最大量"></i></th>
+								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器Service每秒的访问最大量"></i></th>
+								<th>单机QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器Service每秒的访问最大量"></i></th>
 								<th>错误量</th>
 								<th>错误量%</th>
 								<th>响应时间</th>
@@ -77,6 +78,7 @@
 									<td style="text-align:right">${item.machineNumber}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.count,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.maxQps,'###0')}</td>
+									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.maxQps/item.machineNumber,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failureCount,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.failurePercent,'###%')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.PigeonService.avg,'#0.0')}</td>

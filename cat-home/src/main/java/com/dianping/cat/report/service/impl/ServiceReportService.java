@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -18,58 +19,18 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.service.entity.ServiceReport;
-import com.dianping.cat.home.service.transform.DefaultNativeParser;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentEntity;
 import com.dianping.cat.home.dal.report.MonthlyReportContent;
 import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
+import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.service.transform.DefaultNativeParser;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.report.task.service.ServiceReportMerger;
 
 public class ServiceReportService extends AbstractReportService<ServiceReport> {
-
-	private ServiceReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new ServiceReport(domain);
-		}
-	}
-
-	private ServiceReport queryFromDailyBinary(int id, String domain) throws DalException {
-		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new ServiceReport(domain);
-		}
-	}
-
-	private ServiceReport queryFromWeeklyBinary(int id, String domain) throws DalException {
-		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new ServiceReport(domain);
-		}
-	}
-
-	private ServiceReport queryFromMonthlyBinary(int id, String domain) throws DalException {
-		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new ServiceReport(domain);
-		}
-	}
 
 	@Override
 	public ServiceReport makeReport(String domain, Date start, Date end) {
@@ -100,6 +61,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 					ServiceReport reportModel = queryFromDailyBinary(report.getId(), domain);
 					reportModel.accept(merger);
 				}
+			} catch (DalNotFoundException e) {
+				m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -109,6 +72,46 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 		serviceReport.setStartTime(start);
 		serviceReport.setEndTime(end);
 		return serviceReport;
+	}
+
+	private ServiceReport queryFromDailyBinary(int id, String domain) throws DalException {
+		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new ServiceReport(domain);
+		}
+	}
+
+	private ServiceReport queryFromHourlyBinary(int id, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new ServiceReport(domain);
+		}
+	}
+
+	private ServiceReport queryFromMonthlyBinary(int id, String domain) throws DalException {
+		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new ServiceReport(domain);
+		}
+	}
+
+	private ServiceReport queryFromWeeklyBinary(int id, String domain) throws DalException {
+		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new ServiceReport(domain);
+		}
 	}
 
 	@Override
@@ -138,6 +141,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 							ServiceReport reportModel = queryFromHourlyBinary(report.getId(), domain);
 							reportModel.accept(merger);
 						}
+					} catch (DalNotFoundException e) {
+						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -164,6 +169,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 			} else {
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -182,6 +189,8 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 			} else {
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}
+		} catch (DalNotFoundException e) {
+			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
