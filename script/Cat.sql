@@ -1,5 +1,7 @@
 CREATE DATABASE cat;
 
+use cat;
+
 CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
@@ -96,7 +98,7 @@ CREATE TABLE `report` (
   `domain` varchar(50) NOT NULL  COMMENT '报表项目',
   `period` timestamp NOT NULL COMMENT '报表时间段',
   `content` longtext NULL,
-  `creation_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '报表创建时间',
+  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
   KEY `IX_Name_Period` (`name`,`period`),
@@ -139,12 +141,12 @@ CREATE TABLE `businessReport` (
   `productLine` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
   `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
   `content` longblob COMMENT '用于存放报表的具体内容',
-  `creation_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '报表创建时间',
+  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
   KEY `IX_Name_Period` (`name`,`period`),
   KEY `IX_Period` (`period`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
 CREATE TABLE `sqlreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -275,19 +277,6 @@ CREATE TABLE `project` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
 
-CREATE TABLE `event` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) NOT NULL COMMENT '1、运维系统告警，2、DB告警，3、CAT内容告警',
-  `link` varchar(500)  COMMENT '详细信息link',
-  `domain` varchar(50) Binary COMMENT '错误机器上项目或者数据库名',
-  `ip` varchar(32)  COMMENT '错误机器IP',
-  `subject` varchar(200)  COMMENT '事件标题',
-  `content` text  COMMENT '事件内容',
-  `date` datetime NOT NULL COMMENT '事件发生时间',
-  `creation_date` datetime NOT NULL COMMENT '记录创建时间',
-  PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件记录表';
-
 CREATE TABLE `topologyGraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-client机器ip',
@@ -372,18 +361,7 @@ CREATE TABLE `event` (
   `creation_date` datetime NOT NULL COMMENT '记录创建时间',
   PRIMARY KEY (`id`),
   KEY `ix_date_domain` (`date`,`domain`)
-) ENGINE=InnoDB AUTO_INCREMENT=23106 DEFAULT CHARSET=utf8 COMMENT='事件记录表';
-
-CREATE TABLE `topologyGraph` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台cat-client机器ip',
-  `period` datetime NOT NULL COMMENT '报表时间段,精确到分钟',
-  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/binary',
-  `content` longblob COMMENT '用于存放报表的具体内容',
-  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
-  PRIMARY KEY (`id`),
-  KEY `period` (`period`)
-) ENGINE=InnoDB AUTO_INCREMENT=21912 DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件记录表';
 
 CREATE TABLE `baseline` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -395,7 +373,7 @@ CREATE TABLE `baseline` (
   PRIMARY KEY (`id`),
   KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
   KEY `ix_reportperiod` (`report_period`)
-) ENGINE=InnoDB AUTO_INCREMENT=5062 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user_agent` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -406,9 +384,4 @@ CREATE TABLE `user_agent` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `userAgent` (`userAgent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-
-
 
