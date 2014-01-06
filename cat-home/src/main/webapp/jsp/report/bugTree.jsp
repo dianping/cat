@@ -7,8 +7,8 @@
   	  <li id="utilization" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization"><strong>容量规划</strong></a></li>
   	  <li id="service" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service"><strong>服务可用性</strong></a></li>
   	  <li id="heavy" class="text-right" id="heavy"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy"><strong>重量级访问</strong></a></li>
-      <li id="browser" class="text-right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=browser"><strong>浏览器报表</strong></a></li>
-    </ul>
+<%--       <li id="browser" class="text-right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=browser"><strong>浏览器报表</strong></a></li>
+ --%>    </ul>
 </div>
 <style>
 	.nav-list  li  a{
