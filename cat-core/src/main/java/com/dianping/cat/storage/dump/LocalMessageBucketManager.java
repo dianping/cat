@@ -393,8 +393,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	class BlockDumper implements Task {
 		private int m_errors;
 
-		private int m_success;
-
 		@Override
 		public String getName() {
 			return "LocalMessageBucketManager-BlockDumper";
@@ -422,13 +420,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_serverStateManager.addBlockTotal(1);
-						if ((++m_success) % 10000 == 0) {
-							int size = m_messageBlocks.size();
-
-							if (size > 0) {
-								m_logger.info("block queue size " + size);
-							}
-						}
 						long duration = System.currentTimeMillis() - time;
 						m_serverStateManager.addBlockTime(duration);
 					}
