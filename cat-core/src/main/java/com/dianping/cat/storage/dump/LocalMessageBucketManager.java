@@ -66,8 +66,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Map<String, Long> m_totals = new HashMap<String, Long>();
 
-	private long m_totalSize;
-
 	private Map<String, Long> m_totalSizes = new HashMap<String, Long>();
 
 	private Map<String, Long> m_lastTotalSizes = new HashMap<String, Long>();
@@ -238,15 +236,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
 			}
-		}
-		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
-			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
-
-			StringBuilder sb = new StringBuilder("gzip thread process message number :");
-			for (int i = 0; i < m_gzipThreads; i++) {
-				sb.append(m_processMessages[i] + "\t");
-			}
-			m_logger.info(sb.toString());
 		}
 	}
 
@@ -508,8 +497,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					}
 				}
 				String domain = id.getDomain();
-				m_totalSize += buf.readableBytes();
 				Long lastTotalSize = m_totalSizes.get(domain);
+				
 				if (lastTotalSize == null) {
 					m_totalSizes.put(domain, (long) buf.readableBytes());
 				} else {
