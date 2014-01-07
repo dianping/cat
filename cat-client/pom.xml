@@ -9,18 +9,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-client</artifactId>
 	<name>cat-client</name>
-    <packaging>jar</packaging>
+	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>foundation-service</artifactId>
 			<version>2.0.4</version>
 		</dependency>
-		<dependency>
-         <groupId>org.unidal.framework</groupId>
-         <artifactId>java-fragment</artifactId>
-         <version>2.0.4</version>
-      </dependency>
 		<dependency>
 			<groupId>org.jboss.netty</groupId>
 			<artifactId>netty</artifactId>
@@ -58,23 +53,23 @@
 						</goals>
 						<configuration>
 							<manifest>
-							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,</manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-   </build>
+								${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate plexus component descriptor</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>plexus</goal>
+						</goals>
+						<configuration>
+							<className>com.dianping.cat.build.ComponentsConfigurator</className>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 
