@@ -16,6 +16,7 @@ public class CatConsumerModule extends AbstractModule {
 	protected void execute(ModuleContext ctx) {
 		TcpSocketReceiver receiver = ctx.lookup(TcpSocketReceiver.class);
 		ServerConfigManager manager = ctx.lookup(ServerConfigManager.class);
+		
 		ctx.lookup(AggregationConfigManager.class);
 		int encodeThreadNumber = 12;
 

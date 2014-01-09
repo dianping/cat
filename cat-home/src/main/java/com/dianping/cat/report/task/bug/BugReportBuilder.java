@@ -40,7 +40,6 @@ public class BugReportBuilder implements ReportTaskBuilder {
 			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=day&domain=%s&date=%s",
 			      getDomainName(), d.getId(), m_daily_formate.format(period)));
 		}
-
 		DailyReport report = new DailyReport();
 
 		report.setContent(bugReport.toString());
