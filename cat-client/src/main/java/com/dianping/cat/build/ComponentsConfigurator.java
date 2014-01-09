@@ -8,7 +8,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatClientModule;
-import com.dianping.cat.agent.MmapConsumerTask;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.DefaultMessageManager;
@@ -53,8 +52,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StatusUpdateTask.class) //
 		      .req(MessageStatistics.class, ClientConfigManager.class));
 
-		all.add(C(MmapConsumerTask.class) //
-		      .req(ClientConfigManager.class, MessageManager.class));
+		// all.add(C(MmapConsumerTask.class) //
+		// .req(ClientConfigManager.class, MessageManager.class));
 
 		all.add(C(Module.class, CatClientModule.ID, CatClientModule.class));
 

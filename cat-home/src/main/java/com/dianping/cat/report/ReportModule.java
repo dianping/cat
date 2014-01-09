@@ -21,8 +21,6 @@ com.dianping.cat.report.page.logview.Handler.class,
 
 com.dianping.cat.report.page.model.Handler.class,
 
-com.dianping.cat.report.page.sql.Handler.class,
-
 com.dianping.cat.report.page.dashboard.Handler.class,
 
 com.dianping.cat.report.page.matrix.Handler.class,

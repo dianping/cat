@@ -352,36 +352,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.impl.SqlReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.SqlReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.service.impl.StateReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.StateReportService</implementation>
 			<requirements>
@@ -620,9 +590,6 @@
 					<role>com.dianping.cat.report.service.impl.MatrixReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.impl.SqlReportService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.service.impl.DependencyReportService</role>
 				</requirement>
 				<requirement>
@@ -693,10 +660,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
 			<implementation>com.dianping.cat.report.task.problem.ProblemMerger</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.sql.SqlMerger</role>
-			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.metric.MetricPointParser</role>
@@ -855,18 +818,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.sql.SqlReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
@@ -947,9 +898,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
@@ -1270,49 +1218,6 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>cross-historical</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>sql-local</role-hint>
-			<implementation>com.dianping.cat.report.page.model.sql.LocalSqlService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>sql-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.model.sql.HistoricalSqlService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.report.page.model.sql.CompositeSqlService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hints>
-						<role-hint>sql-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -2120,11 +2025,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>sql-local</role-hint>
-					<field-name>m_sqlService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>state-local</role-hint>
 					<field-name>m_stateService</field-name>
 				</requirement>
@@ -2244,18 +2144,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.sql.LocalSqlService</role>
-			<implementation>com.dianping.cat.report.page.model.sql.LocalSqlService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.model.state.LocalStateService</role>
 			<implementation>com.dianping.cat.report.page.model.state.LocalStateService</implementation>
 			<requirements>
@@ -2300,35 +2188,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.sql.Handler</role>
-			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.sql.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>sql</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.sql.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.sql.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

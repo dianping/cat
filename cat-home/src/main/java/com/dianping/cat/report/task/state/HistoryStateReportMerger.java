@@ -28,7 +28,6 @@ public class HistoryStateReportMerger extends StateReportMerger {
 			source.accept(this);
 			objs.pop();
 		}
-
 	}
 
 }

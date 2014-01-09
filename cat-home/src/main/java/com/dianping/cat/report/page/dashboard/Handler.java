@@ -239,7 +239,7 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", type);
 		}
 
-		if (m_transactionService.isEligable(request)) {
+		if (m_eventService.isEligable(request)) {
 			ModelResponse<EventReport> response = m_eventService.invoke(request);
 			EventReport report = response.getModel();
 

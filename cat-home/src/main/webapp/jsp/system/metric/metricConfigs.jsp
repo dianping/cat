@@ -41,7 +41,7 @@
 				}
 				//var cell = document.getElementById('');
 				$.ajax({
-					type: "get",
+					type: "post",
 					url: anchor.href,
 					success : function(response, textStatus) {
 						$('#myModal').html(response);

@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -85,9 +84,6 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private MatrixReportService m_matrixReportService;
-
-	@Inject
-	private SqlReportService m_sqlReportService;
 
 	@Inject
 	private DependencyReportService m_dependencyReportService;
@@ -253,10 +249,6 @@ public class DefaultReportService implements ReportService {
 
 	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
 		return m_serviceReportService.queryReport(domain, start, end);
-	}
-
-	public SqlReport querySqlReport(String domain, Date start, Date end) {
-		return m_sqlReportService.queryReport(domain, start, end);
 	}
 
 	public StateReport queryStateReport(String domain, Date start, Date end) {

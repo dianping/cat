@@ -106,7 +106,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		String type = helper.readRaw(buf, TAB);
 		String name = helper.readRaw(buf, TAB);
 
-		if (identifier == 't') {
+		switch (identifier) {
+		case 't':
 			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -118,48 +119,48 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 			stack.push(parent);
 			return transaction;
-		} else if (identifier == 'A') {
-			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
+		case 'A':
+			DefaultTransaction tran = new DefaultTransaction(type, name, null);
 			String status = helper.read(buf, TAB);
 			String duration = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
-			transaction.setTimestamp(m_dateHelper.parse(timestamp));
-			transaction.setStatus(status);
-			transaction.addData(data);
+			tran.setTimestamp(m_dateHelper.parse(timestamp));
+			tran.setStatus(status);
+			tran.addData(data);
 
 			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
-			transaction.setDurationInMicros(d);
+			tran.setDurationInMicros(d);
 
 			if (parent != null) {
-				parent.addChild(transaction);
+				parent.addChild(tran);
 				return parent;
 			} else {
-				return transaction;
+				return tran;
 			}
-		} else if (identifier == 'T') {
-			String status = helper.read(buf, TAB);
-			String duration = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
+		case 'T':
+			String transactionStatus = helper.read(buf, TAB);
+			String transactionDuration = helper.read(buf, TAB);
+			String transactionData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
-			parent.setStatus(status);
-			parent.addData(data);
+			parent.setStatus(transactionStatus);
+			parent.addData(transactionData);
 
-			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
-			parent.setDurationInMicros(d);
+			long transactionD = Long.parseLong(transactionDuration.substring(0, transactionDuration.length() - 2));
+			parent.setDurationInMicros(transactionD);
 
 			return stack.pop();
-		} else if (identifier == 'E') {
+		case 'E':
 			DefaultEvent event = new DefaultEvent(type, name);
-			String status = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
+			String eventStatus = helper.read(buf, TAB);
+			String eventData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			event.setTimestamp(m_dateHelper.parse(timestamp));
-			event.setStatus(status);
-			event.addData(data);
+			event.setStatus(eventStatus);
+			event.addData(eventData);
 
 			if (parent != null) {
 				parent.addChild(event);
@@ -167,31 +168,15 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			} else {
 				return event;
 			}
-		} else if (identifier == 'L') {
-			DefaultTrace trace = new DefaultTrace(type, name);
-			String status = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
-
-			helper.read(buf, LF); // get rid of line feed
-			trace.setTimestamp(m_dateHelper.parse(timestamp));
-			trace.setStatus(status);
-			trace.addData(data);
-
-			if (parent != null) {
-				parent.addChild(trace);
-				return parent;
-			} else {
-				return trace;
-			}
-		} else if (identifier == 'M') {
+		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
-			String status = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
+			String metricStatus = helper.read(buf, TAB);
+			String metricData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			metric.setTimestamp(m_dateHelper.parse(timestamp));
-			metric.setStatus(status);
-			metric.addData(data);
+			metric.setStatus(metricStatus);
+			metric.addData(metricData);
 
 			if (parent != null) {
 				parent.addChild(metric);
@@ -199,15 +184,31 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			} else {
 				return metric;
 			}
-		} else if (identifier == 'H') {
+		case 'L':
+			DefaultTrace trace = new DefaultTrace(type, name);
+			String traceStatus = helper.read(buf, TAB);
+			String traceData = helper.readRaw(buf, TAB);
+
+			helper.read(buf, LF); // get rid of line feed
+			trace.setTimestamp(m_dateHelper.parse(timestamp));
+			trace.setStatus(traceStatus);
+			trace.addData(traceData);
+
+			if (parent != null) {
+				parent.addChild(trace);
+				return parent;
+			} else {
+				return trace;
+			}
+		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String status = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
+			String heartbeatStatus = helper.read(buf, TAB);
+			String heartbeatData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
-			heartbeat.setStatus(status);
-			heartbeat.addData(data);
+			heartbeat.setStatus(heartbeatStatus);
+			heartbeat.addData(heartbeatData);
 
 			if (parent != null) {
 				parent.addChild(heartbeat);
@@ -215,11 +216,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			} else {
 				return heartbeat;
 			}
-		} else {
+		default:
 			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
 			      + buf.toString(Charset.forName("utf-8")));
 			throw new RuntimeException("Unknown identifier int name");
 		}
+
 	}
 
 	protected void decodeMessage(ChannelBuffer buf, MessageTree tree) {
@@ -504,7 +506,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			if (baseline == null) {
 				try {
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					
+
 					format.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 					baseline = format.parse(date).getTime();
 					m_map.put(date, baseline);

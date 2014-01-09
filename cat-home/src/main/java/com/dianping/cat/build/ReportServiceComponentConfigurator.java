@@ -27,7 +27,6 @@ import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.report.service.impl.MetricReportService;
 import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.report.service.impl.ServiceReportService;
-import com.dianping.cat.report.service.impl.SqlReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.report.service.impl.TransactionReportService;
@@ -51,9 +50,6 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 		all.add(C(CrossReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(SqlReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 		all.add(C(StateReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
@@ -83,7 +79,7 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      .req(HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
 		            MonthlyReportContentDao.class)
 		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class)
-		      .req(MatrixReportService.class, SqlReportService.class, DependencyReportService.class)
+		      .req(MatrixReportService.class,  DependencyReportService.class)
 		      .req(TopReportService.class, StateReportService.class, CrossReportService.class)
 		      .req(HeartbeatReportService.class, MetricReportService.class, BugReportService.class)
 		      .req(HeavyReportService.class, ServiceReportService.class, UtilizationReportService.class));

@@ -19,8 +19,6 @@ import com.dianping.cat.consumer.matrix.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -104,9 +102,6 @@ public class CachedReportTask implements Task {
 			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, MatrixAnalyzer.ID),
 			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
 			
-			SqlReport sqlReport = m_reportService.querySqlReport(domain, start, end);
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, SqlAnalyzer.ID),
-			      com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder.build(sqlReport));
 		}
 		String domain = "Cat";
 
@@ -152,9 +147,6 @@ public class CachedReportTask implements Task {
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, MatrixAnalyzer.ID),
 			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
 			
-			SqlReport sqlReport = m_reportService.querySqlReport(domain, start, end);
-			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, SqlAnalyzer.ID),
-			      com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder.build(sqlReport));
 		}
 		String domain = "Cat";
 

@@ -6,7 +6,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
@@ -94,6 +96,7 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		}
 		StateReport stateReport = merger.getStateReport();
 
+		new ClearDetailInfo().visitStateReport(stateReport);
 		stateReport.setStartTime(start);
 		stateReport.setEndTime(end);
 		return stateReport;
@@ -113,9 +116,18 @@ public class StateReportBuilder implements ReportTaskBuilder {
 		}
 		StateReport stateReport = merger.getStateReport();
 
+		new ClearDetailInfo().visitStateReport(stateReport);
 		stateReport.setStartTime(period);
 		stateReport.setEndTime(endDate);
 		return stateReport;
+	}
+
+	public static class ClearDetailInfo extends BaseVisitor {
+
+		@Override
+		public void visitProcessDomain(ProcessDomain processDomain) {
+			processDomain.getDetails().clear();
+		}
 	}
 
 }

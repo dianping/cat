@@ -50,8 +50,6 @@ public class GraphCreator {
 		long end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
 		Map<String, double[]> allCurrentValues = new HashMap<String, double[]>();
-		Map<String, double[]> allOneDayValues = new HashMap<String, double[]>();
-		Map<String, double[]> allSevenDayValues = new HashMap<String, double[]>();
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
@@ -59,23 +57,13 @@ public class GraphCreator {
 			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
 			      domains));
 			MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
-			MetricReport oneDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
-			MetricReport sevenDayReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY * 7));
 			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs,
-			      abtestId);
-			Map<String, double[]> oneDayValues = m_pruductDataFetcher
-			      .buildGraphData(oneDayReport, metricConfigs, abtestId);
-			Map<String, double[]> sevenDayValues = m_pruductDataFetcher.buildGraphData(sevenDayReport, metricConfigs,
 			      abtestId);
 
 			mergeMap(allCurrentValues, currentValues, totalSize, index);
-			mergeMap(allOneDayValues, oneDayValues, totalSize, index);
-			mergeMap(allSevenDayValues, sevenDayValues, totalSize, index);
 			index++;
 		}
 		allCurrentValues = m_dataExtractor.extract(allCurrentValues);
-		allOneDayValues = m_dataExtractor.extract(allOneDayValues);
-		allSevenDayValues = m_dataExtractor.extract(allSevenDayValues);
 
 		if (isCurrentMode(endDate)) {
 			// remove the minute of future
@@ -109,8 +97,6 @@ public class GraphCreator {
 
 			lineChart.add(Chinese.CURRENT_VALUE, allCurrentValues.get(key));
 			lineChart.add(Chinese.BASELINE_VALUE, m_dataExtractor.extract(baselines));
-			lineChart.add(Chinese.ONEDAY_VALUE, allOneDayValues.get(key));
-			lineChart.add(Chinese.ONEWEEK_VALUE, allSevenDayValues.get(key));
 			charts.put(key, lineChart);
 		}
 		return charts;

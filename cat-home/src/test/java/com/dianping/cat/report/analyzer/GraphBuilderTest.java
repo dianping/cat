@@ -11,53 +11,74 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.state.HistoryStateReportMerger;
+import com.dianping.cat.report.task.state.StateReportBuilder.ClearDetailInfo;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 
 public class GraphBuilderTest extends ComponentTestCase {
-	
+
 	@Test
-	public void test() throws ParseException{
+	public void test() throws ParseException {
 		HeartbeatReportBuilder builder = lookup(HeartbeatReportBuilder.class);
-		
+
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-18 10:00:00");
 		builder.buildHourlyTask(HeartbeatAnalyzer.ID, "ReviewWeb", period);
 	}
 
 	@Test
-	public void testProblem() throws ParseException{
+	public void testProblem() throws ParseException {
 		ProblemReportBuilder builder = lookup(ProblemReportBuilder.class);
-		
+
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
 		builder.buildHourlyTask(ProblemAnalyzer.ID, "Cat", period);
 	}
-	
+
 	@Test
-	public void testTransaction() throws ParseException{
+	public void testTransaction() throws ParseException {
 		TransactionReportBuilder builder = lookup(TransactionReportBuilder.class);
-		
+
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
 		builder.buildHourlyTask(TransactionAnalyzer.ID, "Cat", period);
 	}
-	
 
 	@Test
-	public void testEvent() throws ParseException{
+	public void testEvent() throws ParseException {
 		EventReportBuilder builder = lookup(EventReportBuilder.class);
-		
+
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
 		builder.buildHourlyTask(EventAnalyzer.ID, "Cat", period);
 	}
-	
+
 	@Test
-	public void testUtilization() throws ParseException{
+	public void testUtilization() throws ParseException {
 		UtilizationReportBuilder builder = lookup(UtilizationReportBuilder.class);
-		
+
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-24 10:00:00");
 		builder.buildHourlyTask(Constants.REPORT_UTILIZATION, "Cat", period);
+	}
+
+	@Test
+	public void testStateReportBuilder() throws ParseException {
+		ReportService service = lookup(ReportService.class);
+		Date date = TimeUtil.getCurrentMonth();
+		long start = date.getTime();
+		long end = System.currentTimeMillis();
+		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport("Cat"));
+
+		for (; start < end; start = start + TimeUtil.ONE_DAY) {
+			StateReport stateReport = service.queryStateReport("Cat", new Date(start), new Date(start + TimeUtil.ONE_DAY));
+
+			stateReport.accept(merger);
+		}
+		StateReport report = merger.getStateReport();
+		new ClearDetailInfo().visitStateReport(report);
 	}
 }
