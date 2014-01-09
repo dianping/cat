@@ -13,10 +13,10 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.advanced.dal.SqltableDao;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.cross.IpConvertManager;
+import com.dianping.cat.consumer.dependency.DatabaseParser;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
@@ -26,10 +26,6 @@ import com.dianping.cat.consumer.metric.DefaultABTestCodec;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.consumer.sql.DatabaseParser;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.consumer.sql.SqlDelegate;
-import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
@@ -44,7 +40,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.addAll(defineSqlComponents());
 		all.addAll(defineCrossComponents());
 		all.addAll(defineMatrixComponents());
 		all.addAll(defineDependencyComponents());
@@ -88,7 +83,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineDependencyComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = DependencyAnalyzer.ID;
-
+		
+		all.add(C(DatabaseParser.class));
 		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportManager.class, ID).req(ServerConfigManager.class, DomainManager.class, DatabaseParser.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
@@ -112,23 +108,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, CrossDelegate.class).req(TaskManager.class));
-
-		return all;
-	}
-	
-	private Collection<Component> defineSqlComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = SqlAnalyzer.ID;
-
-		all.add(C(SqlParseManager.class).req(SqltableDao.class));
-		all.add(C(DatabaseParser.class));
-		all.add(C(MessageAnalyzer.class, ID, SqlAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(SqlParseManager.class, DatabaseParser.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, SqlDelegate.class).req(TaskManager.class));
 
 		return all;
 	}

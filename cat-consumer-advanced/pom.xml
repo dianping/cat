@@ -55,13 +55,13 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
+                     <manifest>
 							${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/browser-meta-report-manifest.xml,</manifest>
+							</manifest>
                   </configuration>
                </execution>
                <execution>
