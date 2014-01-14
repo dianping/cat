@@ -66,15 +66,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Map<String, Long> m_totals = new HashMap<String, Long>();
 
-	private long m_totalSize;
-
 	private Map<String, Long> m_totalSizes = new HashMap<String, Long>();
 
 	private Map<String, Long> m_lastTotalSizes = new HashMap<String, Long>();
 
 	private Logger m_logger;
 
-	private int m_gzipThreads = 10;
+	private int m_gzipThreads = 6;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(200000);
 
@@ -239,15 +237,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				m_serverStateManager.addProcessDelay(delay);
 			}
 		}
-		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
-			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
-
-			StringBuilder sb = new StringBuilder("gzip thread process message number :");
-			for (int i = 0; i < m_gzipThreads; i++) {
-				sb.append(m_processMessages[i] + "\t");
-			}
-			m_logger.info(sb.toString());
-		}
 	}
 
 	private void moveFile(String path) throws IOException {
@@ -404,8 +393,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	class BlockDumper implements Task {
 		private int m_errors;
 
-		private int m_success;
-
 		@Override
 		public String getName() {
 			return "LocalMessageBucketManager-BlockDumper";
@@ -433,13 +420,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_serverStateManager.addBlockTotal(1);
-						if ((++m_success) % 10000 == 0) {
-							int size = m_messageBlocks.size();
-
-							if (size > 0) {
-								m_logger.info("block queue size " + size);
-							}
-						}
 						long duration = System.currentTimeMillis() - time;
 						m_serverStateManager.addBlockTime(duration);
 					}
@@ -508,8 +488,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					}
 				}
 				String domain = id.getDomain();
-				m_totalSize += buf.readableBytes();
 				Long lastTotalSize = m_totalSizes.get(domain);
+				
 				if (lastTotalSize == null) {
 					m_totalSizes.put(domain, (long) buf.readableBytes());
 				} else {

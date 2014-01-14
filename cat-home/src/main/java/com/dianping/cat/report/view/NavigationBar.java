@@ -37,8 +37,6 @@ public class NavigationBar {
 
 		ReportPage.CACHE,
 
-		ReportPage.SQL,
-
 		ReportPage.MATRIX,
 
 		ReportPage.DEPENDENCY,

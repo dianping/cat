@@ -41,8 +41,6 @@ import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import com.dianping.cat.report.task.sql.SqlMerger;
-import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
@@ -65,7 +63,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TransactionMerger.class));
 		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
-		all.add(C(SqlMerger.class));
 
 		all.add(C(MetricPointParser.class));
 		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
@@ -98,8 +95,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MatrixReportBuilder.class).req(ReportService.class));
 
-		all.add(C(SqlReportBuilder.class).req(ReportService.class, SqlMerger.class));
-
 		all.add(C(CrossReportBuilder.class).req(ReportService.class));
 
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
@@ -115,9 +110,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
-		            SqlReportBuilder.class, StateReportBuilder.class, DependencyReportBuilder.class,
-		            BugReportBuilder.class, ServiceReportBuilder.class, MetricBaselineReportBuilder.class,
-		            HeavyReportBuilder.class, UtilizationReportBuilder.class));
+		            StateReportBuilder.class, DependencyReportBuilder.class, BugReportBuilder.class,
+		            ServiceReportBuilder.class, MetricBaselineReportBuilder.class, HeavyReportBuilder.class,
+		            UtilizationReportBuilder.class));
 
 		return all;
 	}

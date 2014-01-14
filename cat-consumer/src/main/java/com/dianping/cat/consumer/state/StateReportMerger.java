@@ -78,7 +78,6 @@ public class StateReportMerger extends DefaultMerger {
 		old.setSize(old.getSize() + processDomain.getSize());
 		old.setTotal(old.getTotal() + processDomain.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + processDomain.getTotalLoss());
-
 	}
 
 	@Override

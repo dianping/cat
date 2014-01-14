@@ -265,7 +265,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 						if (m_activeIndex == -1) {
 							m_activeIndex = m_serverAddresses.size();
 						}
-						
+
 						for (int i = 0; i < m_activeIndex; i++) {
 							ChannelFuture future = createChannel(i);
 
@@ -296,20 +296,28 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private static class ExceptionHandler extends SimpleChannelHandler {
 		private Logger m_logger;
 
+		private volatile int m_error;
+
 		public ExceptionHandler(Logger logger) {
 			m_logger = logger;
 		}
 
 		@Override
 		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-			m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-			e.getChannel().close();
+			if (m_error % 1000 == 0) {
+				m_error++;
+				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
+				e.getChannel().close();
+			}
 		}
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
-			m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-			e.getChannel().close();
+			if (m_error % 1000 == 0) {
+				m_error++;
+				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
+				e.getChannel().close();
+			}
 		}
 	}
 }
