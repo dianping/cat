@@ -296,7 +296,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private static class ExceptionHandler extends SimpleChannelHandler {
 		private Logger m_logger;
 
-		private volatile int m_error;
+		private volatile int m_error = -1;
 
 		public ExceptionHandler(Logger logger) {
 			m_logger = logger;
@@ -304,8 +304,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		@Override
 		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+			m_error++;
 			if (m_error % 1000 == 0) {
-				m_error++;
 				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
 				e.getChannel().close();
 			}
@@ -313,8 +313,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+			m_error++;
 			if (m_error % 1000 == 0) {
-				m_error++;
 				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
 				e.getChannel().close();
 			}
