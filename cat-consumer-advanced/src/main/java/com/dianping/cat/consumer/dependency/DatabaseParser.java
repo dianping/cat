@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.sql;
+package com.dianping.cat.consumer.dependency;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

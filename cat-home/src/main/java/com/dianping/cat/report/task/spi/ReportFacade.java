@@ -20,7 +20,6 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Task;
@@ -34,7 +33,6 @@ import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.service.ServiceReportBuilder;
-import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
@@ -58,9 +56,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private CrossReportBuilder m_crossReportBuilder;
-
-	@Inject
-	private SqlReportBuilder m_sqlReportBuilder;
 
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
@@ -148,7 +143,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(TransactionAnalyzer.ID, m_tansactionBuilder);
 		m_reportBuilders.put(MatrixAnalyzer.ID, m_matrixReportBuilder);
 		m_reportBuilders.put(CrossAnalyzer.ID, m_crossReportBuilder);
-		m_reportBuilders.put(SqlAnalyzer.ID, m_sqlReportBuilder);
 		m_reportBuilders.put(StateAnalyzer.ID, m_stateReportBuilder);
 		m_reportBuilders.put(DependencyAnalyzer.ID, m_dependendcyReportBuilder);
 		m_reportBuilders.put(MetricAnalyzer.ID, m_metricBaselineReportBuilder);

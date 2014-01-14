@@ -28,8 +28,6 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -51,7 +49,6 @@ import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.metric.LocalMetricService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
@@ -84,9 +81,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "cross-local")
 	private LocalCrossService m_crossService;
-
-	@Inject(type = ModelService.class, value = "sql-local")
-	private LocalSqlService m_sqlService;
 
 	@Inject(type = ModelService.class, value = "state-local")
 	private LocalStateService m_stateService;
@@ -135,11 +129,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
-		} else if (SqlAnalyzer.ID.equals(report)) {
-			String database = payload.getDatabase();
-			SqlReportFilter filter = new SqlReportFilter(database);
-
-			return filter.buildXml((com.dianping.cat.consumer.sql.model.IEntity<?>) dataModel);
 		} else {
 			return String.valueOf(dataModel);
 		}
@@ -196,8 +185,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_matrixService.invoke(request);
 			} else if (CrossAnalyzer.ID.equals(report)) {
 				response = m_crossService.invoke(request);
-			} else if (SqlAnalyzer.ID.equals(report)) {
-				response = m_sqlService.invoke(request);
 			} else if (StateAnalyzer.ID.equals(report)) {
 				response = m_stateService.invoke(request);
 			} else if (TopAnalyzer.ID.equals(report)) {
@@ -328,22 +315,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitThread(thread);
 			} else if (!"view".equals(m_type)) {
 				super.visitThread(thread);
-			}
-		}
-	}
-
-	static class SqlReportFilter extends com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder {
-
-		private String m_database;
-
-		public SqlReportFilter(String database) {
-			m_database = database;
-		}
-
-		@Override
-		public void visitDatabase(Database database) {
-			if ("All".equals(m_database) || database.getId().equals(m_database)) {
-				super.visitDatabase(database);
 			}
 		}
 	}

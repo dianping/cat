@@ -21,7 +21,6 @@ import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
-import com.dianping.cat.report.page.sql.SqlReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
@@ -71,9 +70,6 @@ HeartbeatGraphDataTest.class,
 ProblemGraphDataTest.class, 
 
 TransactionGraphDataTest.class,
-
-/* sql test */
-SqlReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, 

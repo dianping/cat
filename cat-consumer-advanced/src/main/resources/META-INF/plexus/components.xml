@@ -1,70 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-			<implementation>com.dianping.cat.consumer.sql.SqlParseManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.dal.SqltableDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.sql.DatabaseParser</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.consumer.sql.SqlAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
-					<role-hint>sql</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
-			<configuration>
-				<name>sql</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
-					<role-hint>sql</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.consumer.sql.SqlDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
 			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
 		</component>
@@ -168,6 +104,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.dependency.DatabaseParser</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.consumer.dependency.DependencyAnalyzer</implementation>
@@ -184,7 +124,7 @@
 					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
+					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>

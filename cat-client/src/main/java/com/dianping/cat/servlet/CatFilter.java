@@ -109,12 +109,8 @@ public class CatFilter implements Filter {
 
 			protected void setTraceMode(HttpServletRequest req) {
 				String traceMode = "X-CAT-TRACE-MODE";
-				String paraMode = req.getParameter(traceMode);
 				String headMode = req.getHeader(traceMode);
 
-				if ("true".equals(paraMode)) {
-					Cat.getManager().setTraceMode(true);
-				}
 				if ("true".equals(headMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
@@ -310,7 +306,7 @@ public class CatFilter implements Filter {
 		private String m_parentId;
 
 		private String m_id;
-		
+
 		private HttpServletRequest m_request;
 
 		private HttpServletResponse m_response;

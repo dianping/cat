@@ -23,9 +23,6 @@
          <page name="model" title="Model" path="model" standalone="false">
             <description>Service Model</description>
          </page>
-         <page name="sql" title="SQL" path="sql" view="/jsp/report/sql/sql.jsp">
-            <description>SQL Report</description>
-         </page>
          <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
             <description>Dashboard</description>
          </page>

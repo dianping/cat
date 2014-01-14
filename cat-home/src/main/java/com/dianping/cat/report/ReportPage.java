@@ -19,8 +19,6 @@ public enum ReportPage implements Page {
 
 	MODEL("model", "model", "Model", "Service Model", false),
 
-	SQL("sql", "sql", "SQL", "SQL Report", true),
-
 	DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
 
 	MATRIX("matrix", "matrix", "Matrix", "Matrix", true),

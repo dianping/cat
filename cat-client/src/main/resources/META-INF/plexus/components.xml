@@ -78,18 +78,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.MmapConsumerTask</role>
-			<implementation>com.dianping.cat.agent.MmapConsumerTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-client</role-hint>
 			<implementation>com.dianping.cat.CatClientModule</implementation>
