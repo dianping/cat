@@ -251,7 +251,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		@Override
 		public String getName() {
-			return "TcpSocketHierarchySender-ChannelManager";
+			return "TcpSocketSender-ChannelManager";
 		}
 
 		@Override
@@ -307,7 +307,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_error++;
 			if (m_error % 1000 == 0) {
 				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-				e.getChannel().close();
 			}
 		}
 
@@ -316,7 +315,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_error++;
 			if (m_error % 1000 == 0) {
 				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-				e.getChannel().close();
 			}
 		}
 	}
