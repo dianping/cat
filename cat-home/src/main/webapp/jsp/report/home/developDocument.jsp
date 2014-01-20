@@ -59,7 +59,11 @@
   <dt><h5 class="text-success">3.Event</h5></dt>
   <dd>Event用来记录次数，表名单位时间内消息发生次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小</dd>
   <dt><h5 class="text-success">4.Metric</h5></dt>
-  <dd>用于业务监控埋点的API（正在开发中）</dd>
+  <h5 class='text-error'> Metric一共有三个API，分别用来记录次数、平均、总和，统一粒度为一分钟</h5>
+  <p>1).logMetricForCount用于记录一个指标值出现的次数</p>
+  <p>2).logMetricForDuration用于记录一个指标出现的平均值</p>
+  <p>3).logMetricForSum用于记录一个指标出现的总和</p>
+  <p>4).修改指标一些图形描述信息，请到<a href="/cat/s/config?op=metricConfigList">Config进行配置</a></p>
   <dt><h5 class="text-success">5.Heartbeat<span class="text-error"><strong>  这个是系统CAT客户端使用，应用程序不使用此API.</strong></span></h5></dt>
   <dd>Heartbeta表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。</dd>
   <dt><h5 class="text-success">6.一份埋点的样例</strong></span></h5></dt>

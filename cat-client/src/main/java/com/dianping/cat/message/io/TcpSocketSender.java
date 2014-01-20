@@ -146,7 +146,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		future.getChannel().write(buf);
 
-		if (m_statistics != null) {
+		if (m_statistics != null) {	
 			m_statistics.onBytes(size);
 		}
 	}
