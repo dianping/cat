@@ -34,13 +34,15 @@ import com.dianping.cat.message.spi.MessageTree;
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public static final String ID = "tcp-socket-sender";
 
+	public static final int SIZE = 10000;
+
 	@Inject
 	private MessageCodec m_codec;
 
 	@Inject
 	private MessageStatistics m_statistics;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(20000);
+	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -146,7 +148,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		future.getChannel().write(buf);
 
-		if (m_statistics != null) {	
+		if (m_statistics != null) {
 			m_statistics.onBytes(size);
 		}
 	}
@@ -165,7 +167,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_manager.shutdown();
 	}
 
-	private static class ChannelManager implements Task {
+	public class ChannelManager implements Task {
 		private List<InetSocketAddress> m_serverAddresses;
 
 		private ClientBootstrap m_bootstrap;
@@ -179,6 +181,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		private boolean m_active = true;
 
 		private int m_activeIndex = -1;
+
+		private long m_lastStalledTime = 0;
 
 		private AtomicInteger m_reconnects = new AtomicInteger(999);
 
@@ -254,11 +258,30 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			return "TcpSocketSender-ChannelManager";
 		}
 
+		private boolean isChannelStalled() {
+			return m_activeFuture != null && m_queue.size() > SIZE * 3.0 / 4;
+		}
+
 		@Override
 		public void run() {
 			try {
 				while (m_active) {
 					try {
+						if (isChannelStalled()) {
+							long time = System.currentTimeMillis();
+
+							if (time - m_lastStalledTime > 5 * 60 * 1000) {
+								try {
+									m_activeFuture.getChannel().close();
+									m_activeFuture = null;
+									m_lastStalledTime = time;
+								} catch (Throwable e) {
+									Cat.logError(e);
+								}
+							} else {
+								m_logger.info("no need to switch actvie future to null.");
+							}
+						}
 						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
 							m_activeIndex = m_serverAddresses.size();
 						}
