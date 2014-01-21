@@ -132,10 +132,10 @@ public class GraphCreator {
 		Collections.sort(configs, new Comparator<MetricItemConfig>() {
 			@Override
 			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
-				return o1.getShowDashboardOrder() - o2.getShowDashboardOrder();
+				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
 			}
 		});
-		
+
 		for (MetricItemConfig config : configs) {
 			String key = config.getId();
 			if (config.getShowAvg() && config.getShowAvgDashboard()) {
