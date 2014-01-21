@@ -20,7 +20,7 @@
    			 	<li class="text-right active"><a href="#tab0" data-toggle="tab"><strong>点评内部</strong></a></li>
    			 	<li class="text-right"><a href="#tab1" data-toggle="tab"><strong>版本说明</strong></a></li>
    			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>集成文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>业务监控集成</strong></a></li>
+   			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>业务监控</strong></a></li>
    			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>开发者文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>设计文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>用户文档</strong></a></li>

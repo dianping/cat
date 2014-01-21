@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -63,12 +62,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private long m_error;
 
 	private long m_total;
-
-	private Map<String, Long> m_totals = new HashMap<String, Long>();
-
-	private Map<String, Long> m_totalSizes = new HashMap<String, Long>();
-
-	private Map<String, Long> m_lastTotalSizes = new HashMap<String, Long>();
 
 	private Logger m_logger;
 
@@ -188,7 +181,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						}
 					}
 				}
-
 				if (bucket != null) {
 					// flush the buffer if have data
 					MessageBlock block = bucket.flushBlock();
@@ -225,15 +217,22 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	private void logState(final MessageTree tree) {
-		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-		Message message = tree.getMessage();
-		if (message instanceof Transaction) {
-			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
-			      - ((Transaction) message).getDurationInMillis();
-			int fiveMinute = 1000 * 60 * 5;
+	private void logStorageState(final MessageTree tree, String domain) {
+		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
 
-			if (delay < fiveMinute && delay > -fiveMinute) {
+		m_serverStateManager.addMessageSize(domain, size);
+		m_serverStateManager.addMessageSize(size);
+		m_total++;
+
+		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
+			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
+
+			Message message = tree.getMessage();
+			
+			if (message instanceof Transaction) {
+				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
+				      - ((Transaction) message).getDurationInMillis();
+				
 				m_serverStateManager.addProcessDelay(delay);
 			}
 		}
@@ -363,31 +362,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
-		m_total++;
-		Long value = m_totals.get(domain);
-		if (value == null) {
-			m_totals.put(domain, 1L);
-		} else {
-			m_totals.put(domain, value + 1);
-		}
-		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
-			logState(tree);
-		}
-		if (value != null && value % CatConstants.SUCCESS_COUNT == 0) {
-			Long lastTotalSize = m_lastTotalSizes.get(domain);
-			Long totalSize = m_totalSizes.get(domain);
-			if (lastTotalSize == null) {
-				lastTotalSize = 0L;
-			}
-			if (totalSize == null) {
-				totalSize = 0L;
-			}
-
-			double amount = totalSize - lastTotalSize;
-			m_lastTotalSizes.put(domain, totalSize);
-			m_serverStateManager.addMessageSize(domain, amount);
-			m_serverStateManager.addMessageSize(amount);
-		}
+		logStorageState(tree, domain);
 	}
 
 	class BlockDumper implements Task {
@@ -487,15 +462,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error("Error when offer the block to the dump!");
 					}
 				}
-				String domain = id.getDomain();
-				Long lastTotalSize = m_totalSizes.get(domain);
-				
-				if (lastTotalSize == null) {
-					m_totalSizes.put(domain, (long) buf.readableBytes());
-				} else {
-					m_totalSizes.put(domain, lastTotalSize + buf.readableBytes());
-				}
-
 				if (t != null) {
 					t.setStatus(Message.SUCCESS);
 				}
