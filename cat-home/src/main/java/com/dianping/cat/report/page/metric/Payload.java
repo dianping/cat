@@ -25,7 +25,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_test = "-1";
 
 	@FieldMeta("timeRange")
-	private int m_timeRange = 2;
+	private int m_timeRange = 24;
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
