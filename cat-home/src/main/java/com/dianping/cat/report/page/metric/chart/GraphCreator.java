@@ -1,7 +1,10 @@
 package com.dianping.cat.report.page.metric.chart;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -123,9 +126,16 @@ public class GraphCreator {
 				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
 			}
 		}
+		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
+		      .getMetricItemConfigs().values());
 
-		Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values();
-
+		Collections.sort(configs, new Comparator<MetricItemConfig>() {
+			@Override
+			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
+				return o1.getShowDashboardOrder() - o2.getShowDashboardOrder();
+			}
+		});
+		
 		for (MetricItemConfig config : configs) {
 			String key = config.getId();
 			if (config.getShowAvg() && config.getShowAvgDashboard()) {
