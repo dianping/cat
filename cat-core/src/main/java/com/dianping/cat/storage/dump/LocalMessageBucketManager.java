@@ -83,7 +83,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					keys.add(key);
 				}
 			}
-
 			try {
 				for (String key : keys) {
 					LocalMessageBucket bucket = m_buckets.get(key);
@@ -109,7 +108,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (LocalMessageBucket bucket : m_buckets.values()) {
 				bucket.close();
 			}
-
 			m_buckets.clear();
 		}
 	}
@@ -161,7 +159,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (name.contains(key) && !name.endsWith(".idx")) {
 						paths.add(path + name);
 					}
-
 					return Direction.NEXT;
 				}
 			});
@@ -217,21 +214,21 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	private void logStorageState(final MessageTree tree, String domain) {
+	private void logStorageState(final MessageTree tree) {
 		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
+		String domain = tree.getDomain();
 
 		m_serverStateManager.addMessageSize(domain, size);
 		m_total++;
-
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
 
 			Message message = tree.getMessage();
-			
+
 			if (message instanceof Transaction) {
 				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
 				      - ((Transaction) message).getDurationInMillis();
-				
+
 				m_serverStateManager.addProcessDelay(delay);
 			}
 		}
@@ -316,12 +313,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}
-
 		long current = System.currentTimeMillis();
 		long currentHour = current - current % ONE_HOUR;
 		long lastHour = currentHour - ONE_HOUR;
 		long nextHour = currentHour + ONE_HOUR;
-
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
 		String currentHourStr = sdf.format(new Date(currentHour));
 		String lastHourStr = sdf.format(new Date(lastHour));
@@ -349,8 +344,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		int bucketIndex = abs % m_gzipThreads;
 		m_processMessages[bucketIndex]++;
-		
-		logStorageState(tree, domain);
+
+		logStorageState(tree);
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 		boolean result = items.offer(new MessageItem(tree, id));

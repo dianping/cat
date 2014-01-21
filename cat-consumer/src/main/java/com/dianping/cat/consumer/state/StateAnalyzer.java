@@ -44,7 +44,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-	private void buildStateInfo(Machine machine) {
+	private Machine buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
 		long start = m_startTime;
 		long end = m_startTime + minute * 60;
@@ -82,13 +82,13 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				}
 				if (totalLosses.containsKey(domain)) {
 					long losses = totalLosses.get(domain).get();
-					
+
 					processDomain.setTotalLoss(losses + processDomain.getTotalLoss());
 					detail.setTotalLoss(losses);
 				}
 				if (sizes.containsKey(domain)) {
 					long totalSize = sizes.get(domain).get();
-					
+
 					processDomain.setSize(totalSize + processDomain.getSize());
 					detail.setSize(totalSize);
 				}
@@ -153,15 +153,16 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		}
 		machine.setAvgTps(avgTps);
 		machine.setMaxTps(maxTps);
+		return machine;
 	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
+		long startTime = getStartTime();
 		StateReport stateReport = getReport(Constants.CAT);
-		Map<String, StateReport> reports = m_reportManager.getHourlyReports(getStartTime());
+		Map<String, StateReport> reports = m_reportManager.getHourlyReports(startTime);
 
 		reports.put(Constants.CAT, stateReport);
-		long startTime = getStartTime();
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
 		} else {
@@ -189,13 +190,11 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-		report.getMachines().clear();
 
-		Machine machine = report.findOrCreateMachine(m_ip);
-
-		buildStateInfo(machine);
+		Machine machine = buildStateInfo(report.findOrCreateMachine(m_ip));
 		StateReport stateReport = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(m_ip).getProcessDomains();
+
 		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
 			ProcessDomain processDomain = processDomains.get(entry.getKey());
 
