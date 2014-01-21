@@ -38,12 +38,8 @@ public class ServerStatisticManager {
 		getCurrentStatistic().addMessageDumpLoss(total);
 	}
 
-	public void addMessageSize(String domain, double size) {
+	public void addMessageSize(String domain, int size) {
 		getCurrentStatistic().addMessageSize(domain, size);
-	}
-
-	public void addMessageSize(double size) {
-		getCurrentStatistic().addMessageSize(size);
 	}
 
 	public void addMessageTotal(String domain, long total) {

@@ -221,7 +221,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
 
 		m_serverStateManager.addMessageSize(domain, size);
-		m_serverStateManager.addMessageSize(size);
 		m_total++;
 
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
@@ -350,6 +349,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		int bucketIndex = abs % m_gzipThreads;
 		m_processMessages[bucketIndex]++;
+		
+		logStorageState(tree, domain);
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 		boolean result = items.offer(new MessageItem(tree, id));
@@ -362,7 +363,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
-		logStorageState(tree, domain);
 	}
 
 	class BlockDumper implements Task {

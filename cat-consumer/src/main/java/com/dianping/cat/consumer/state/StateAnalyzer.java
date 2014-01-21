@@ -57,39 +57,40 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		for (; start < end; start += minute) {
 			Statistic state = m_serverStateManager.findState(start);
 			Message temp = machine.findOrCreateMessage(start);
-			Map<String, AtomicLong> totals = state.getMessageTotals();
 			long messageTotal = state.getMessageTotal();
-			temp.setTotal(messageTotal);
-
-			Map<String, AtomicLong> totalLosses = state.getMessageTotalLosses();
 			long messageTotalLoss = state.getMessageTotalLoss();
-			temp.setTotalLoss(messageTotalLoss);
-
-			Map<String, Double> sizes = state.getMessageSizes();
 			double messageSize = state.getMessageSize();
-			temp.setSize(messageSize);
 
+			temp.setTotal(messageTotal).setTotalLoss(messageTotalLoss).setSize(messageSize);
 			machine.setTotal(messageTotal + machine.getTotal());
 			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
 			machine.setSize(messageSize + machine.getSize());
 
-			for (Entry<String, AtomicLong> entry : totals.entrySet()) {
-				String key = entry.getKey();
-				long value = entry.getValue().get();
-				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
-				Detail detail = domain.findOrCreateDetail(start);
+			Map<String, AtomicLong> totals = state.getMessageTotals();
+			Map<String, AtomicLong> totalLosses = state.getMessageTotalLosses();
+			Map<String, AtomicLong> sizes = state.getMessageSizes();
 
-				if (totals.containsKey(key)) {
-					domain.setTotal(value + domain.getTotal());
+			for (Entry<String, AtomicLong> entry : totals.entrySet()) {
+				String domain = entry.getKey();
+				long value = entry.getValue().get();
+				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
+				Detail detail = processDomain.findOrCreateDetail(start);
+
+				if (totals.containsKey(domain)) {
+					processDomain.setTotal(value + processDomain.getTotal());
 					detail.setTotal(value);
 				}
-				if (totalLosses.containsKey(key)) {
-					domain.setTotalLoss(totalLosses.get(key).get() + domain.getTotalLoss());
-					detail.setTotalLoss(totalLosses.get(key).get());
+				if (totalLosses.containsKey(domain)) {
+					long losses = totalLosses.get(domain).get();
+					
+					processDomain.setTotalLoss(losses + processDomain.getTotalLoss());
+					detail.setTotalLoss(losses);
 				}
-				if (sizes.containsKey(key)) {
-					domain.setSize(sizes.get(key) + domain.getSize());
-					detail.setSize(sizes.get(key));
+				if (sizes.containsKey(domain)) {
+					long totalSize = sizes.get(domain).get();
+					
+					processDomain.setSize(totalSize + processDomain.getSize());
+					detail.setSize(totalSize);
 				}
 			}
 
