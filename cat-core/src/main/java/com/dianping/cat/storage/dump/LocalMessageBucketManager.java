@@ -360,7 +360,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class BlockDumper implements Task {
+	private class BlockDumper implements Task {
 		private int m_errors;
 
 		@Override
@@ -404,7 +404,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class MessageGzip implements Task {
+	private class MessageGzip implements Task {
 
 		private int m_index;
 
@@ -415,10 +415,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
 			m_messageQueue = messageQueue;
 			m_index = index;
-		}
-
-		public int getIndex() {
-			return m_index;
 		}
 
 		@Override

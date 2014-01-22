@@ -10,10 +10,6 @@ public class ServerStatisticManager {
 
 	private volatile long m_currentMunite = -1;
 
-	public void addBlockTotal(long total) {
-		getCurrentStatistic().addBlockTotal(total);
-	}
-
 	public void addBlockLoss(long total) {
 		getCurrentStatistic().addBlockLoss(total);
 	}
@@ -22,16 +18,12 @@ public class ServerStatisticManager {
 		getCurrentStatistic().addBlockTime(total);
 	}
 
-	public void addPigeonTimeError(long total) {
-		getCurrentStatistic().addPigeonTimeError(total);
+	public void addBlockTotal(long total) {
+		getCurrentStatistic().addBlockTotal(total);
 	}
 
 	public void addMessageDump(long total) {
 		getCurrentStatistic().addMessageDump(total);
-	}
-
-	public void addNetworkTimeError(long total) {
-		getCurrentStatistic().addNetworkTimeError(total);
 	}
 
 	public void addMessageDumpLoss(long total) {
@@ -42,20 +34,28 @@ public class ServerStatisticManager {
 		getCurrentStatistic().addMessageSize(domain, size);
 	}
 
+	public void addMessageTotal(long total) {
+		getCurrentStatistic().addMessageTotal(total);
+	}
+
 	public void addMessageTotal(String domain, long total) {
 		getCurrentStatistic().addMessageTotal(domain, total);
 	}
 
-	public void addMessageTotal(long total) {
-		getCurrentStatistic().addMessageTotal(total);
+	public void addMessageTotalLoss(long total) {
+		getCurrentStatistic().addMessageTotalLoss(total);
 	}
 
 	public void addMessageTotalLoss(String domain, long total) {
 		getCurrentStatistic().addMessageTotalLoss(domain, total);
 	}
 
-	public void addMessageTotalLoss(long total) {
-		getCurrentStatistic().addMessageTotalLoss(total);
+	public void addNetworkTimeError(long total) {
+		getCurrentStatistic().addNetworkTimeError(total);
+	}
+
+	public void addPigeonTimeError(long total) {
+		getCurrentStatistic().addPigeonTimeError(total);
 	}
 
 	public void addProcessDelay(double delay) {

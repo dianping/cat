@@ -50,16 +50,22 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		long end = m_startTime + minute * 60;
 		int size = 0;
 		double maxTps = 0;
-
-		if (end > System.currentTimeMillis()) {
-			end = System.currentTimeMillis();
+		long current = System.currentTimeMillis();
+		
+		if (end > current) {
+			end = current;
 		}
 		for (; start < end; start += minute) {
 			Statistic state = m_serverStateManager.findState(start);
+
+			if (state == null) {
+				continue;
+			}
+
 			Message temp = machine.findOrCreateMessage(start);
 			long messageTotal = state.getMessageTotal();
 			long messageTotalLoss = state.getMessageTotalLoss();
-			double messageSize = state.getMessageSize();
+			long messageSize = state.getMessageSize();
 
 			temp.setTotal(messageTotal).setTotalLoss(messageTotalLoss).setSize(messageSize);
 			machine.setTotal(messageTotal + machine.getTotal());

@@ -2,6 +2,7 @@ package com.dianping.cat.statistic;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ServerStatistic {
@@ -27,17 +28,17 @@ public class ServerStatistic {
 
 		private long m_messageTotalLoss;
 
-		private double m_messageSize;
+		private long m_messageSize;
 
 		private long m_messageDump;
 
 		private long m_messageDumpLoss;
 
-		private Map<String, AtomicLong> m_messageTotals = new ConcurrentHashMap<String, AtomicLong>(256);
+		private ConcurrentMap<String, AtomicLong> m_messageTotals = new ConcurrentHashMap<String, AtomicLong>(256);
 
-		private Map<String, AtomicLong> m_messageTotalLosses = new ConcurrentHashMap<String, AtomicLong>(256);
+		private ConcurrentMap<String, AtomicLong> m_messageTotalLosses = new ConcurrentHashMap<String, AtomicLong>(256);
 
-		private Map<String, AtomicLong> m_messageSizes = new ConcurrentHashMap<String, AtomicLong>(256);
+		private ConcurrentMap<String, AtomicLong> m_messageSizes = new ConcurrentHashMap<String, AtomicLong>(256);
 
 		private double m_processDelaySum;
 
@@ -104,7 +105,7 @@ public class ServerStatistic {
 
 		public void addMessageTotalLoss(String domain, long messageTotalLoss) {
 			m_messageTotalLoss += messageTotalLoss;
-			
+
 			AtomicLong value = m_messageTotalLosses.get(domain);
 			if (value != null) {
 				value.addAndGet(messageTotalLoss);
@@ -153,7 +154,7 @@ public class ServerStatistic {
 			return m_messageDumpLoss;
 		}
 
-		public double getMessageSize() {
+		public long getMessageSize() {
 			return m_messageSize;
 		}
 
