@@ -182,7 +182,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		private int m_activeIndex = -1;
 
-		private long m_lastStalledTime = 0;
+		private int m_retriedTimes = 0;
 
 		private AtomicInteger m_reconnects = new AtomicInteger(999);
 
@@ -259,7 +259,23 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 
 		private boolean isChannelStalled() {
-			return m_activeFuture != null && m_queue.size() > SIZE * 3.0 / 4;
+			m_retriedTimes++;
+			int size = m_queue.size();
+			boolean stalled = m_activeFuture != null && size >= SIZE - 1;
+
+			if (stalled) {
+				if (m_retriedTimes >= 5) {
+					m_retriedTimes = 0;
+					m_logger.info("need to set active future to null. queue size:" + size + ",activeIndex:" + m_activeIndex);
+					return true;
+				} else {
+					m_logger.info("no need set active future to null due to retry time is not enough. queue size:" + size
+					      + ",retriedTimes:" + m_retriedTimes + ",activeIndex:" + m_activeIndex);
+					return false;
+				}
+			} else {
+				return false;
+			}
 		}
 
 		@Override
@@ -268,18 +284,12 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				while (m_active) {
 					try {
 						if (isChannelStalled()) {
-							long time = System.currentTimeMillis();
-
-							if (time - m_lastStalledTime > 5 * 60 * 1000) {
-								try {
-									m_activeFuture.getChannel().close();
-									m_activeFuture = null;
-									m_lastStalledTime = time;
-								} catch (Throwable e) {
-									Cat.logError(e);
-								}
-							} else {
-								m_logger.info("no need to switch actvie future to null.");
+							try {
+								m_activeFuture.getChannel().close();
+								m_activeFuture = null;
+								m_activeIndex = -1;
+							} catch (Throwable e) {
+								Cat.logError(e);
 							}
 						}
 						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
