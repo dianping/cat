@@ -86,8 +86,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
 				Detail detail = processDomain.findOrCreateDetail(start);
 
-				processDomain.setSize(value + processDomain.getTotalLoss());
-				detail.setSize(value + detail.getTotalLoss());
+				processDomain.setSize(value + processDomain.getSize());
+				detail.setSize(value + detail.getSize());
 			}
 
 			long messageTotal = state.getMessageTotal();
