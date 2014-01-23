@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ServerStatistic {
 	private Map<Long, Statistic> m_statistics = new ConcurrentHashMap<Long, Statistic>(100);
 
-	public Statistic findOrCreate(Long time) {
+	public synchronized Statistic findOrCreate(Long time) {
 		Statistic state = m_statistics.get(time);
 
 		if (state == null) {
@@ -92,6 +92,7 @@ public class ServerStatistic {
 
 		public void addMessageTotal(String domain, long messageTotal) {
 			AtomicLong value = m_messageTotals.get(domain);
+			
 			if (value != null) {
 				value.addAndGet(messageTotal);
 			} else {

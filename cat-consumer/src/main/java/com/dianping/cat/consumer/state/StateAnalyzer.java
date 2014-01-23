@@ -48,30 +48,16 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		long minute = 1000 * 60;
 		long start = m_startTime;
 		long end = m_startTime + minute * 60;
-		int size = 0;
 		double maxTps = 0;
 		long current = System.currentTimeMillis();
-		
+		int size = 0;
+
 		if (end > current) {
 			end = current;
 		}
 		for (; start < end; start += minute) {
-			Statistic state = m_serverStateManager.findState(start);
-
-			if (state == null) {
-				continue;
-			}
-
+			Statistic state = m_serverStateManager.findOrCreateState(start);
 			Message temp = machine.findOrCreateMessage(start);
-			long messageTotal = state.getMessageTotal();
-			long messageTotalLoss = state.getMessageTotalLoss();
-			long messageSize = state.getMessageSize();
-
-			temp.setTotal(messageTotal).setTotalLoss(messageTotalLoss).setSize(messageSize);
-			machine.setTotal(messageTotal + machine.getTotal());
-			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
-			machine.setSize(messageSize + machine.getSize());
-
 			Map<String, AtomicLong> totals = state.getMessageTotals();
 			Map<String, AtomicLong> totalLosses = state.getMessageTotalLosses();
 			Map<String, AtomicLong> sizes = state.getMessageSizes();
@@ -82,73 +68,67 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
 				Detail detail = processDomain.findOrCreateDetail(start);
 
-				if (totals.containsKey(domain)) {
-					processDomain.setTotal(value + processDomain.getTotal());
-					detail.setTotal(value);
-				}
-				if (totalLosses.containsKey(domain)) {
-					long losses = totalLosses.get(domain).get();
+				processDomain.setTotal(value + processDomain.getTotal());
+				detail.setTotal(value + detail.getTotal());
+			}
+			for (Entry<String, AtomicLong> entry : totalLosses.entrySet()) {
+				String domain = entry.getKey();
+				long value = entry.getValue().get();
+				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
+				Detail detail = processDomain.findOrCreateDetail(start);
 
-					processDomain.setTotalLoss(losses + processDomain.getTotalLoss());
-					detail.setTotalLoss(losses);
-				}
-				if (sizes.containsKey(domain)) {
-					long totalSize = sizes.get(domain).get();
+				processDomain.setTotalLoss(value + processDomain.getTotalLoss());
+				detail.setTotalLoss(value + detail.getTotalLoss());
+			}
+			for (Entry<String, AtomicLong> entry : sizes.entrySet()) {
+				String domain = entry.getKey();
+				long value = entry.getValue().get();
+				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
+				Detail detail = processDomain.findOrCreateDetail(start);
 
-					processDomain.setSize(totalSize + processDomain.getSize());
-					detail.setSize(totalSize);
-				}
+				processDomain.setSize(value + processDomain.getTotalLoss());
+				detail.setSize(value + detail.getTotalLoss());
 			}
 
+			long messageTotal = state.getMessageTotal();
+			long messageTotalLoss = state.getMessageTotalLoss();
+			long messageSize = state.getMessageSize();
+			long blockTotal = state.getBlockTotal();
+			long blockLoss = state.getBlockLoss();
+			long blockTime = state.getBlockTime();
+			long pigeonTimeError = state.getPigeonTimeError();
+			long networkTimeError = state.getNetworkTimeError();
+			long messageDump = state.getMessageDump();
+			long messageDumpLoss = state.getMessageDumpLoss();
+			int processDelayCount = state.getProcessDelayCount();
+			double processDelaySum = state.getProcessDelaySum();
+
+			temp.setTotal(messageTotal).setTotalLoss(messageTotalLoss).setSize(messageSize);
+			temp.setBlockTotal(blockTotal).setBlockLoss(blockLoss).setBlockTime(blockTime);
+			temp.setPigeonTimeError(pigeonTimeError).setNetworkTimeError(networkTimeError).setDump(messageDump);
+			temp.setDumpLoss(messageDumpLoss).setDelayCount(processDelayCount).setDelaySum(processDelaySum);
+
+			machine.setTotal(messageTotal + machine.getTotal()).setTotalLoss(messageTotalLoss + machine.getTotalLoss())
+			      .setSize(messageSize + machine.getSize());
+			machine.setBlockTotal(machine.getBlockTotal() + blockTotal).setBlockLoss(machine.getBlockLoss() + blockLoss)
+			      .setBlockTime(machine.getBlockTime() + blockTime);
+			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError)
+			      .setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError)
+			      .setDump(machine.getDump() + messageDump);
+			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss)
+			      .setDelayCount(machine.getDelayCount() + processDelayCount)
+			      .setDelaySum(machine.getDelaySum() + processDelaySum);
+
+			double avg = 0;
+			long count = machine.getDelayCount();
+
+			if (count > 0) {
+				avg = machine.getDelaySum() / count;
+				machine.setDelayAvg(avg);
+			}
 			if (messageTotal > maxTps) {
 				maxTps = messageTotal;
 			}
-
-			long blockTotal = state.getBlockTotal();
-			temp.setBlockTotal(blockTotal);
-			machine.setBlockTotal(machine.getBlockTotal() + blockTotal);
-
-			long blockLoss = state.getBlockLoss();
-			temp.setBlockLoss(blockLoss);
-			machine.setBlockLoss(machine.getBlockLoss() + blockLoss);
-
-			long blockTime = state.getBlockTime();
-			temp.setBlockTime(blockTime);
-			machine.setBlockTime(machine.getBlockTime() + blockTime);
-
-			long pigeonTimeError = state.getPigeonTimeError();
-			temp.setPigeonTimeError(pigeonTimeError);
-			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError);
-
-			long networkTimeError = state.getNetworkTimeError();
-			temp.setNetworkTimeError(networkTimeError);
-			machine.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError);
-
-			long messageDump = state.getMessageDump();
-			temp.setDump(messageDump);
-			machine.setDump(machine.getDump() + messageDump);
-
-			long messageDumpLoss = state.getMessageDumpLoss();
-			temp.setDumpLoss(messageDumpLoss);
-			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss);
-
-			int processDelayCount = state.getProcessDelayCount();
-			temp.setDelayCount(processDelayCount);
-			machine.setDelayCount(machine.getDelayCount() + processDelayCount);
-
-			double processDelaySum = state.getProcessDelaySum();
-			temp.setDelaySum(processDelaySum);
-			machine.setDelaySum(machine.getDelaySum() + processDelaySum);
-
-			double sum = machine.getDelaySum();
-			long count = machine.getDelayCount();
-			double avg = 0;
-
-			if (count > 0) {
-				avg = sum / count;
-				machine.setDelayAvg(avg);
-			}
-
 			temp.setTime(new Date(start));
 			size++;
 		}

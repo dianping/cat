@@ -62,7 +62,7 @@ public class ServerStatisticManager {
 		getCurrentStatistic().addProcessDelay(delay);
 	}
 
-	public Statistic findState(long time) {
+	public Statistic findOrCreateState(long time) {
 		return m_serverState.findOrCreate(time);
 	}
 

@@ -58,14 +58,14 @@ public class ServerStatisticManagerTest {
 		
 		manager.removeState(time);
 
-		Assert.assertEquals(true, null != manager.findState(time));
+		Assert.assertEquals(true, null != manager.findOrCreateState(time));
 	}
 
 	private Statistic findState(ServerStatisticManager manager, long time) {
-		Statistic state = manager.findState(time);
+		Statistic state = manager.findOrCreateState(time);
 
 		if (state == null) {
-			state = manager.findState(time + 60 * 1000);
+			state = manager.findOrCreateState(time + 60 * 1000);
 		}
 		return state;
 	}
