@@ -17,6 +17,7 @@ import org.unidal.lookup.ContainerLoader;
 
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -276,6 +277,10 @@ public class Cat {
 
 	public static Transaction newTransaction(String type, String name) {
 		return Cat.getProducer().newTransaction(type, name);
+	}
+	
+	public static ForkedTransaction newForkedTransaction(String type, String name) {
+		return Cat.getProducer().newForkedTransaction(type, name);
 	}
 
 	// this should be called when a thread ends to clean some thread local data

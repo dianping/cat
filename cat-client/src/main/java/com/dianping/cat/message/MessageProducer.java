@@ -271,5 +271,5 @@ public interface MessageProducer {
 	 */
 	public Transaction newTransaction(String type, String name);
 
-	
+	public ForkedTransaction newForkedTransaction(String type, String name);
 }

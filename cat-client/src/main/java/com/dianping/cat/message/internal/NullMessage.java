@@ -3,6 +3,7 @@ package com.dianping.cat.message.internal;
 import java.util.Collections;
 import java.util.List;
 
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -10,7 +11,7 @@ import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat {
+public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat, ForkedTransaction {
 	TRANSACTION,
 
 	EVENT,
@@ -39,6 +40,10 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	}
 
 	@Override
+   public void fork() {
+   }
+
+	@Override
 	public List<Message> getChildren() {
 		return Collections.emptyList();
 	}
@@ -57,6 +62,11 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	public long getDurationInMillis() {
 		return 0;
 	}
+
+	@Override
+   public String getForkedMessageId() {
+	   return null;
+   }
 
 	@Override
 	public String getName() {

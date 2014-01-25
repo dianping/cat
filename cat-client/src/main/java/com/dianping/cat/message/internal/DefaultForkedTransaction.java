@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
-public class DefaultTransaction extends AbstractMessage implements Transaction {
+public class DefaultForkedTransaction extends AbstractMessage implements Transaction, ForkedTransaction {
 	private long m_durationInMicro = -1; // must be less than 0
 
 	private List<Message> m_children;
@@ -19,16 +21,18 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	private long m_durationStart;
 
-	public DefaultTransaction(String type, String name, MessageManager manager) {
+	private String m_forkedMessageId;
+
+	public DefaultForkedTransaction(String type, String name, MessageManager manager) {
 		super(type, name);
 
 		m_manager = manager;
-		m_standalone = true;
+		m_standalone = false;
 		m_durationStart = System.nanoTime();
 	}
 
 	@Override
-	public DefaultTransaction addChild(Message message) {
+	public DefaultForkedTransaction addChild(Message message) {
 		if (m_children == null) {
 			m_children = new ArrayList<Message>();
 		}
@@ -58,6 +62,18 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	}
 
 	@Override
+	public void fork() {
+		m_manager.setup();
+		m_manager.start(this, false);
+
+		MessageTree tree = m_manager.getThreadLocalMessageTree();
+
+		if (tree != null) {
+			m_forkedMessageId = tree.getMessageId();
+		}
+	}
+
+	@Override
 	public List<Message> getChildren() {
 		if (m_children == null) {
 			return Collections.emptyList();
@@ -78,7 +94,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 				Message lastChild = m_children.get(len - 1);
 
 				if (lastChild instanceof Transaction) {
-					DefaultTransaction trx = (DefaultTransaction) lastChild;
+					DefaultForkedTransaction trx = (DefaultForkedTransaction) lastChild;
 
 					duration = (trx.getTimestamp() - getTimestamp()) * 1000L + trx.getDurationInMicros();
 				} else {
@@ -96,6 +112,11 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	}
 
 	@Override
+	public String getForkedMessageId() {
+		return m_forkedMessageId;
+	}
+
+	@Override
 	public boolean hasChildren() {
 		return m_children != null && m_children.size() > 0;
 	}
@@ -103,19 +124,6 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	@Override
 	public boolean isStandalone() {
 		return m_standalone;
-	}
-
-	void replaceChild(Message from, Message to) {
-		int len = m_children.size();
-
-		for (int i = 0; i < len; i++) {
-			Message message = m_children.get(i);
-
-			if (message == from) {
-				m_children.set(i, to);
-				break;
-			}
-		}
 	}
 
 	public void setDurationInMicros(long duration) {
