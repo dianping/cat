@@ -3,8 +3,8 @@ package com.dianping.cat.message.internal;
 import java.util.Collections;
 import java.util.List;
 
-import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
@@ -40,8 +40,8 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-   public void fork() {
-   }
+	public void fork() {
+	}
 
 	@Override
 	public List<Message> getChildren() {
@@ -64,9 +64,9 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-   public String getForkedMessageId() {
-	   return null;
-   }
+	public String getForkedMessageId() {
+		throw new UnsupportedOperationException();
+	}
 
 	@Override
 	public String getName() {

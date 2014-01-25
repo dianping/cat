@@ -13,13 +13,13 @@ import com.dianping.cat.message.Transaction;
 
 public class MultiThreadingTest {
 	@Test
-	public void testDeferredTransaction() throws Exception {
+	public void testForkedTransaction() throws Exception {
 		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
 		Cat.setup(null);
 
-		Transaction t = Cat.newTransaction("RootType3", "RootName");
-		ForkedTransaction d1 = Cat.newForkedTransaction("ChildType", "Child1");
-		ForkedTransaction d2 = Cat.newForkedTransaction("ChildType", "Child2");
+		Transaction t = Cat.newTransaction("RootType", "RootName");
+		ForkedTransaction d1 = Cat.newForkedTransaction("ForkedType", "Child1");
+		ForkedTransaction d2 = Cat.newForkedTransaction("ForkedType", "Child2");
 
 		Threads.forGroup().start(new MockThread(d1, 500)); // will run away
 		Threads.forGroup().start(new MockThread(d2, 100)); // will be back in time

@@ -323,7 +323,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				Transaction current = m_stack.pop();
 
 				if (transaction == current) {
-					m_validator.validate(m_stack.peek(), current);
+					m_validator.validate(m_stack.isEmpty() ? null : m_stack.peek(), current);
 				} else {
 					while (transaction != current && !m_stack.empty()) {
 						m_validator.validate(m_stack.peek(), current);

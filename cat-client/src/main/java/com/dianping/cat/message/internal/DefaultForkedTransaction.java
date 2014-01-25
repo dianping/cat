@@ -21,6 +21,10 @@ public class DefaultForkedTransaction extends AbstractMessage implements Transac
 
 	private long m_durationStart;
 
+	private String m_rootMessageId;
+
+	private String m_parentMessageId;
+
 	private String m_forkedMessageId;
 
 	public DefaultForkedTransaction(String type, String name, MessageManager manager) {
@@ -29,6 +33,13 @@ public class DefaultForkedTransaction extends AbstractMessage implements Transac
 		m_manager = manager;
 		m_standalone = false;
 		m_durationStart = System.nanoTime();
+
+		MessageTree tree = manager.getThreadLocalMessageTree();
+
+		if (tree != null) {
+			m_rootMessageId = tree.getRootMessageId();
+			m_parentMessageId = tree.getMessageId();
+		}
 	}
 
 	@Override
@@ -70,6 +81,8 @@ public class DefaultForkedTransaction extends AbstractMessage implements Transac
 
 		if (tree != null) {
 			m_forkedMessageId = tree.getMessageId();
+			tree.setRootMessageId(m_rootMessageId == null ? m_parentMessageId : m_rootMessageId);
+			tree.setParentMessageId(m_parentMessageId);
 		}
 	}
 
