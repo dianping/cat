@@ -95,6 +95,10 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return getDurationInMicros() / 1000L;
 	}
 
+	protected MessageManager getManager() {
+		return m_manager;
+	}
+
 	@Override
 	public boolean hasChildren() {
 		return m_children != null && m_children.size() > 0;
@@ -105,7 +109,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return m_standalone;
 	}
 
-	void replaceChild(Message from, Message to) {
+	protected void replaceChild(Message from, Message to) {
 		int len = m_children.size();
 
 		for (int i = 0; i < len; i++) {

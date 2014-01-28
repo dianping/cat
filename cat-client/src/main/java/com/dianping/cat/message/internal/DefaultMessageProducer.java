@@ -6,12 +6,13 @@ import java.io.StringWriter;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -58,14 +59,6 @@ public class DefaultMessageProducer implements MessageProducer {
 			}
 		} else {
 			cause.printStackTrace();
-		}
-	}
-
-	private boolean shouldLog(Throwable e) {
-		if (m_manager instanceof DefaultMessageManager) {
-			return ((DefaultMessageManager) m_manager).shouldLog(e);
-		} else {
-			return true;
 		}
 	}
 
@@ -164,6 +157,23 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public ForkedTransaction newForkedTransaction(String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isCatEnabled()) {
+			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
+
+			m_manager.start(transaction, true);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -211,6 +221,23 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isCatEnabled()) {
+			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
+
+			m_manager.start(transaction, true);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	@Override
 	public Trace newTrace(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -243,23 +270,6 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 	}
 
-	@Override
-	public ForkedTransaction newForkedTransaction(String type, String name) {
-		// this enable CAT client logging cat message without explicit setup
-		if (!m_manager.hasContext()) {
-			m_manager.setup();
-		}
-
-		if (m_manager.isCatEnabled()) {
-			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
-
-			m_manager.start(transaction, true);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
-		}
-	}
-
 	public Transaction newTransaction(Transaction parent, String type, String name) {
 		// this enable CAT client logging cat message without explicit setup
 		if (!m_manager.hasContext()) {
@@ -274,6 +284,14 @@ public class DefaultMessageProducer implements MessageProducer {
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;
+		}
+	}
+
+	private boolean shouldLog(Throwable e) {
+		if (m_manager instanceof DefaultMessageManager) {
+			return ((DefaultMessageManager) m_manager).shouldLog(e);
+		} else {
+			return true;
 		}
 	}
 }

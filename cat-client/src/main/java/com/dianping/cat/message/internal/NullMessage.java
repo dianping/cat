@@ -8,10 +8,11 @@ import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat, ForkedTransaction {
+public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat, ForkedTransaction, TaggedTransaction {
 	TRANSACTION,
 
 	EVENT,
@@ -33,6 +34,10 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 
 	@Override
 	public void addData(String key, Object value) {
+	}
+
+	@Override
+	public void bind(String tag, String childMessageId, String title) {
 	}
 
 	@Override
@@ -73,8 +78,21 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 		throw new UnsupportedOperationException();
 	}
 
+	public String getParentMessageId() {
+	   return null;
+   }
+
+	public String getRootMessageId() {
+	   return null;
+   }
+
 	@Override
 	public String getStatus() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getTag() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -115,4 +133,8 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	@Override
 	public void setStatus(Throwable e) {
 	}
+
+	@Override
+   public void start() {
+   }
 }

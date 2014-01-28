@@ -404,7 +404,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	class TransactionHelper {
 		private void linkAsRunAway(Transaction parent, DefaultForkedTransaction transaction) {
-			DefaultEvent event = new DefaultEvent("RemoteCall", "ThreadRunAway");
+			DefaultEvent event = new DefaultEvent("RemoteCall", "RunAway");
 
 			event.addData(transaction.getForkedMessageId(), transaction.getType() + ":" + transaction.getName());
 			event.setTimestamp(transaction.getTimestamp());
@@ -419,12 +419,19 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 
-		private void markAsNotCompleted(DefaultTransaction transaction) {
-			DefaultEvent notCompleteEvent = new DefaultEvent("CAT", "BadInstrument");
+		private void markAsRunAway(Transaction parent, DefaultTaggedTransaction transaction) {
+			transaction.addData("RunAway");
+			transaction.setStatus(Message.SUCCESS);
+			transaction.setStandalone(true);
+			transaction.complete();
+		}
 
-			notCompleteEvent.setStatus("TransactionNotCompleted");
-			notCompleteEvent.setCompleted(true);
-			transaction.addChild(notCompleteEvent);
+		private void markAsNotCompleted(DefaultTransaction transaction) {
+			DefaultEvent event = new DefaultEvent("CAT", "BadInstrument");
+
+			event.setStatus("TransactionNotCompleted");
+			event.setCompleted(true);
+			transaction.addChild(event);
 			transaction.setCompleted(true);
 		}
 
@@ -519,10 +526,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					// developer can fix the code
 					markAsNotCompleted((DefaultTransaction) transaction);
 				}
-			} else {
-				if (!transaction.isCompleted() && transaction instanceof DefaultForkedTransaction) {
+			} else if (!transaction.isCompleted()) {
+				if (transaction instanceof DefaultForkedTransaction) {
 					// link it as run away message since the forked transaction is not completed yet
 					linkAsRunAway(parent, (DefaultForkedTransaction) transaction);
+				} else if (transaction instanceof DefaultTaggedTransaction) {
+					// link it as run away message since the forked transaction is not completed yet
+					markAsRunAway(parent, (DefaultTaggedTransaction) transaction);
 				}
 			}
 		}
