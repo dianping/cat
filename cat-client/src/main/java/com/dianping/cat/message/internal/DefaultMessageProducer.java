@@ -2,16 +2,17 @@ package com.dianping.cat.message.internal;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -35,43 +36,29 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logError(String message, Throwable cause) {
-		if (Cat.isEnabled() && needLogged(cause)) {
-			StringWriter writer = new StringWriter(2048);
-			String detailMessage;
+		if (Cat.isEnabled()) {
+			if (shouldLog(cause)) {
+				StringWriter writer = new StringWriter(2048);
 
-			cause.printStackTrace(new PrintWriter(writer));
+				if (message != null) {
+					writer.write(message);
+					writer.write(' ');
+				}
 
-			if (message != null) {
-				detailMessage = message + " " + writer.toString();
-			} else {
-				detailMessage = writer.toString();
-			}
+				cause.printStackTrace(new PrintWriter(writer));
 
-			if (cause instanceof Error) {
-				logEvent("Error", cause.getClass().getName(), "ERROR", detailMessage);
-			} else if (cause instanceof RuntimeException) {
-				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", detailMessage);
-			} else {
-				logEvent("Exception", cause.getClass().getName(), "ERROR", detailMessage);
+				String detailMessage = writer.toString();
+
+				if (cause instanceof Error) {
+					logEvent("Error", cause.getClass().getName(), "ERROR", detailMessage);
+				} else if (cause instanceof RuntimeException) {
+					logEvent("RuntimeException", cause.getClass().getName(), "ERROR", detailMessage);
+				} else {
+					logEvent("Exception", cause.getClass().getName(), "ERROR", detailMessage);
+				}
 			}
 		} else {
 			cause.printStackTrace();
-		}
-	}
-
-	private boolean needLogged(Throwable cause) {
-		DefaultMessageManager manager = (DefaultMessageManager) m_manager;
-		Set<Throwable> exceptions = manager.getKnownExceptions();
-
-		if (exceptions != null) {
-			boolean result = exceptions.contains(cause);
-
-			if (!result) {
-				exceptions.add(cause);
-			}
-			return !result;
-		} else {
-			return false;
 		}
 	}
 
@@ -170,6 +157,23 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public ForkedTransaction newForkedTransaction(String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isCatEnabled()) {
+			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
+
+			m_manager.start(transaction, true);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -217,6 +221,23 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isCatEnabled()) {
+			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
+
+			m_manager.start(transaction, true);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	@Override
 	public Trace newTrace(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -242,7 +263,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (m_manager.isCatEnabled()) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
-			m_manager.start(transaction);
+			m_manager.start(transaction, false);
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;
@@ -263,6 +284,14 @@ public class DefaultMessageProducer implements MessageProducer {
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;
+		}
+	}
+
+	private boolean shouldLog(Throwable e) {
+		if (m_manager instanceof DefaultMessageManager) {
+			return ((DefaultMessageManager) m_manager).shouldLog(e);
+		} else {
+			return true;
 		}
 	}
 }
