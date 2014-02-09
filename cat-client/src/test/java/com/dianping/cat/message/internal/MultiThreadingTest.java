@@ -11,9 +11,7 @@ import org.unidal.helper.Threads;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageTree;
 
 public class MultiThreadingTest {
 	@After
@@ -44,12 +42,12 @@ public class MultiThreadingTest {
 
 	@Test
 	public void testTaggedTransaction() throws Exception {
-		Transaction t = Cat.newTransaction("TaggedRoot3", "Root");
-		TaggedTransaction t1 = Cat.newTaggedTransaction("TaggedChild", "Child1", "Tag1");
-		TaggedTransaction t2 = Cat.newTaggedTransaction("TaggedChild", "Child2", "Tag2");
+		Transaction t = Cat.newTransaction("TaggedRoot", "Root");
+		Cat.newTaggedTransaction("TaggedChild", "Child1", "Tag1");
+		Cat.newTaggedTransaction("TaggedChild", "Child2", "Tag2");
 
-		Threads.forGroup().start(new TaggedThread(t1, 500, "Tag1"));
-		Threads.forGroup().start(new TaggedThread(t2, 100, "Tag2"));
+		Threads.forGroup().start(new TaggedThread(500, "Tag1"));
+		Threads.forGroup().start(new TaggedThread(100, "Tag2"));
 
 		TimeUnit.MILLISECONDS.sleep(200);
 
@@ -58,14 +56,11 @@ public class MultiThreadingTest {
 	}
 
 	static class TaggedThread extends Thread {
-		private TaggedTransaction m_transaction;
-
 		private int m_timeout;
 
 		private String m_tag;
 
-		public TaggedThread(TaggedTransaction t, int timeout, String tag) {
-			m_transaction = t;
+		public TaggedThread(int timeout, String tag) {
 			m_timeout = timeout;
 			m_tag = tag;
 		}
@@ -73,15 +68,12 @@ public class MultiThreadingTest {
 		@Override
 		public void run() {
 			Transaction t = Cat.newTransaction("TaggedThread", m_tag);
-			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
-			m_transaction.start();
-			
 			try {
 				TimeUnit.MILLISECONDS.sleep(m_timeout);
 
 				t.setStatus(Message.SUCCESS);
-				m_transaction.bind(m_tag, tree.getMessageId(), "child");
+				Cat.getManager().bind(m_tag, "Child Tagged Thread");
 			} catch (Exception e) {
 				Cat.logError(e);
 				t.setStatus(e);
