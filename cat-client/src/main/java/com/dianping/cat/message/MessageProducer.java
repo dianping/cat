@@ -138,14 +138,14 @@ public interface MessageProducer {
 	 *           root cause exception
 	 */
 	public void logError(Throwable cause);
-	
+
 	/**
 	 * Log an error.
 	 * 
 	 * @param cause
 	 *           root cause exception
 	 */
-	public void logError(String message,Throwable cause);
+	public void logError(String message, Throwable cause);
 
 	/**
 	 * Log an event in one shot with SUCCESS status.
@@ -156,7 +156,7 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public void logEvent(String type, String name);
-	
+
 	/**
 	 * Log an trace in one shot with SUCCESS status.
 	 * 
@@ -180,7 +180,7 @@ public interface MessageProducer {
 	 *           name value pairs in the format of "a=1&b=2&..."
 	 */
 	public void logEvent(String type, String name, String status, String nameValuePairs);
-	
+
 	/**
 	 * Log an trace in one shot.
 	 * 
@@ -230,7 +230,7 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public Event newEvent(String type, String name);
-	
+
 	/**
 	 * Create a new trace with given type and name.
 	 * 
@@ -240,7 +240,7 @@ public interface MessageProducer {
 	 *           trace name
 	 */
 	public Trace newTrace(String type, String name);
-	
+
 	/**
 	 * Create a new heartbeat with given type and name.
 	 * 
@@ -271,5 +271,27 @@ public interface MessageProducer {
 	 */
 	public Transaction newTransaction(String type, String name);
 
-	
+	/**
+	 * Create a forked transaction for child thread.
+	 * 
+	 * @param type
+	 *           transaction type
+	 * @param name
+	 *           transaction name
+	 * @return forked transaction
+	 */
+	public ForkedTransaction newForkedTransaction(String type, String name);
+
+	/**
+	 * Create a tagged transaction for another process or thread.
+	 * 
+	 * @param type
+	 *           transaction type
+	 * @param name
+	 *           transaction name
+	 * @param tag
+	 *           tag applied to the transaction
+	 * @return tagged transaction
+	 */
+	public TaggedTransaction newTaggedTransaction(String type, String name, String tag);
 }

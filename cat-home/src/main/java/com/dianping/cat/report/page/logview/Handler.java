@@ -34,12 +34,11 @@ public class Handler implements PageHandler<Context> {
 		try {
 			if (messageId != null) {
 				MessageId id = MessageId.parse(messageId);
-				ModelRequest request = new ModelRequest(id.getDomain(), id.getTimestamp())
-				      //
-				      .setProperty("messageId", messageId)
-				      //
-				      .setProperty("waterfall", String.valueOf(waterfall))
-				      .setProperty("timestamp", String.valueOf(id.getTimestamp()));
+				long timestamp = id.getTimestamp();
+				ModelRequest request = new ModelRequest(id.getDomain(), timestamp) //
+				      .setProperty("messageId", messageId) //
+				      .setProperty("waterfall", String.valueOf(waterfall)) //
+				      .setProperty("timestamp", String.valueOf(timestamp));
 
 				if (m_service.isEligable(request)) {
 					ModelResponse<String> response = m_service.invoke(request);
@@ -71,10 +70,8 @@ public class Handler implements PageHandler<Context> {
 	private String getPath(String messageId) {
 		MessageId id = MessageId.parse(messageId);
 		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
-		final StringBuilder sb = new StringBuilder();
-		sb.append('/').append(path);
-
 		final String key = id.getDomain() + '-' + id.getIpAddress();
+
 		return path + key;
 	}
 
@@ -100,9 +97,9 @@ public class Handler implements PageHandler<Context> {
 		String logView = getLogView(messageId, payload.isWaterfall());
 
 		if (logView == null || logView.length() == 0) {
-			Cat.getProducer().logEvent("Logview", "Fail", Event.SUCCESS, null);
+			Cat.logEvent("Logview", "Fail", Event.SUCCESS, null);
 		} else {
-			Cat.getProducer().logEvent("Logview", "Success", Event.SUCCESS, null);
+			Cat.logEvent("Logview", "Success", Event.SUCCESS, null);
 		}
 
 		switch (payload.getAction()) {
@@ -111,11 +108,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DETAIL:
 			String path = getPath(messageId);
+
 			model.setLogviewPath(path);
 			break;
 		}
 
 		m_jspViewer.view(ctx, model);
 	}
-
 }
