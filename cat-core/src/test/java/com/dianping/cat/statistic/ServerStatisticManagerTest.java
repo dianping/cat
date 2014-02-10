@@ -36,9 +36,9 @@ public class ServerStatisticManagerTest {
 		Assert.assertEquals(3, findState(manager, time).getBlockTotal());
 		Assert.assertEquals(4, findState(manager, time).getMessageDump());
 		Assert.assertEquals(5, findState(manager, time).getMessageDumpLoss());
-		Assert.assertEquals(7.0, findState(manager, time).getMessageSize());
+		Assert.assertEquals(7, findState(manager, time).getMessageSize());
 		Assert.assertEquals(7, findState(manager, time).getMessageTotal());
-		Assert.assertEquals(8, findState(manager, time).getMessageTotalLoss());
+		Assert.assertEquals(11, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(9, findState(manager, time).getPigeonTimeError());
 		Assert.assertEquals(10, findState(manager, time).getNetworkTimeError());
 		Assert.assertEquals(11.0, findState(manager, time).getProcessDelaySum());
@@ -53,7 +53,7 @@ public class ServerStatisticManagerTest {
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
 		Assert.assertEquals(14, findState(manager, time).getMessageTotal());
-		Assert.assertEquals(16, findState(manager, time).getMessageTotalLoss());
+		Assert.assertEquals(19, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(18, findState(manager, time).getPigeonTimeError());
 		
 		manager.removeState(time);

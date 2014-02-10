@@ -8,7 +8,7 @@
 
 </br>
 <h4 class="text-success">第一步:确定业务指标</h4>
-<h4 class="text-error">1).每个指标都有一个String作为它的唯一KEY，这个KEY在整个产品线中，不能重复。产品线的配置参考第二步。</h4>
+<h4 class="text-error">1).每个指标都有一个String作为它的唯一KEY，这个KEY在整个产品线中，不能重复。产品线的配置参考第三步。</h4>
 <p>比如团购业务中，有两个核心指标，一个订单数量，一个是销售总金额</p>
 <p>对这两个指标定义两个唯一的String，PayCount 和 PayAmount</p>
 </br>
@@ -23,7 +23,6 @@
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business04.png"/>
 
 </br>
-
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
 <p>业务监控展示的是一个产品线下所有的业务指标信息，CAT提供了产品的配置信息</p>
