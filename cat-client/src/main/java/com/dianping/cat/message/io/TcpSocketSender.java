@@ -52,6 +52,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private transient boolean m_active;
 
+	private volatile int m_error = -1;
+
 	private AtomicInteger m_errors = new AtomicInteger();
 
 	private AtomicInteger m_attempts = new AtomicInteger();
@@ -200,7 +202,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 				@Override
 				public ChannelPipeline getPipeline() {
-					return Channels.pipeline(new ExceptionHandler(m_logger));
+					return Channels.pipeline(new ExceptionHandler());
 				}
 			});
 
@@ -326,14 +328,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	private static class ExceptionHandler extends SimpleChannelHandler {
-		private Logger m_logger;
-
-		private volatile int m_error = -1;
-
-		public ExceptionHandler(Logger logger) {
-			m_logger = logger;
-		}
+	private class ExceptionHandler extends SimpleChannelHandler {
 
 		@Override
 		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
@@ -347,7 +342,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
 			m_error++;
 			if (m_error % 1000 == 0) {
-				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
+				m_logger.warn("Channel disconnected due to " + e.getCause());
 			}
 		}
 	}
