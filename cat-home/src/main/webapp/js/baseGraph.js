@@ -82,8 +82,6 @@ function parseMetricLineData(data) {
 			var item = [];
 			item[0] = Number(key);
 			item[1] = map[key];
-
-			console.log(item);
 			series.data[j] = item;
 			j++;
 		}

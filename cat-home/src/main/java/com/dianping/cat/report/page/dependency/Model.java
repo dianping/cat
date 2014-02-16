@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.view.StringSortHelper;
@@ -26,6 +27,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private DependencyReport m_report;
+	
+	@EntityMeta
+	private List<LineChart> m_lineCharts;
 
 	private Segment m_segment;
 
@@ -59,80 +63,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private TopReport m_topReport;
 
-	public List<ProductLine> getProductLines() {
-		return m_productLines;
-	}
-
-	public void setProductLines(List<ProductLine> productLines) {
-		m_productLines = productLines;
-	}
-
-	public String getProductLineGraph() {
-		return m_productLineGraph;
-	}
-
-	public void setProductLineGraph(String productLineGraph) {
-		m_productLineGraph = productLineGraph;
-	}
-
-	public Date getReportStart() {
-		return m_reportStart;
-	}
-
-	public void setReportStart(Date reportStart) {
-		m_reportStart = reportStart;
-	}
-
-	public Date getReportEnd() {
-		return m_reportEnd;
-	}
-
-	public void setReportEnd(Date reportEnd) {
-		m_reportEnd = reportEnd;
+	public Model(Context ctx) {
+		super(ctx);
 	}
 
 	public String getDashboardGraph() {
 		return m_dashboardGraph;
 	}
 
-	public void setDashboardGraph(String dashboardGraph) {
-		m_dashboardGraph = dashboardGraph;
-	}
-
-	public List<String> getIndexGraph() {
-		return m_indexGraph;
-	}
-
-	public void setIndexGraph(List<String> indexGraph) {
-		m_indexGraph = indexGraph;
-	}
-
-	public Map<String, List<String>> getDependencyGraph() {
-		return m_dependencyGraph;
-	}
-
-	public void setDependencyGraph(Map<String, List<String>> dependencyGraph) {
-		m_dependencyGraph = dependencyGraph;
-	}
-
-	public Map<String, List<Event>> getEvents() {
-		return m_events;
-	}
-
-	public void setEvents(Map<String, List<Event>> events) {
-		m_events = events;
-	}
-
-	public List<Integer> getMinutes() {
-		return m_minutes;
-	}
-
-	public void setMinutes(List<Integer> minutes) {
-		m_minutes = minutes;
-	}
-
-	public Model(Context ctx) {
-		super(ctx);
+	public ProductLinesDashboard getDashboardGraphData() {
+		return m_dashboardGraphData;
 	}
 
 	@Override
@@ -140,17 +80,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.LINE_CHART;
 	}
 
+	public Map<String, List<String>> getDependencyGraph() {
+		return m_dependencyGraph;
+	}
+
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
-	}
-
-	public int getMaxMinute() {
-		return m_maxMinute;
-	}
-
-	public void setMaxMinute(int maxMinute) {
-		m_maxMinute = maxMinute;
 	}
 
 	@Override
@@ -167,56 +103,132 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
-	public DependencyReport getReport() {
-		return m_report;
+	public Map<String, List<Event>> getEvents() {
+		return m_events;
 	}
 
-	public Segment getSegment() {
-		return m_segment;
+	public List<String> getIndexGraph() {
+		return m_indexGraph;
 	}
 
-	public void setReport(DependencyReport report) {
-		m_report = report;
-	}
+	public List<LineChart> getLineCharts() {
+   	return m_lineCharts;
+   }
 
-	public void setSegment(Segment segment) {
-		m_segment = segment;
+	public int getMaxMinute() {
+		return m_maxMinute;
 	}
 
 	public int getMinute() {
 		return m_minute;
 	}
 
-	public void setMinute(int minute) {
-		m_minute = minute;
+	public List<Integer> getMinutes() {
+		return m_minutes;
 	}
 
-	public String getTopologyGraph() {
-		return m_topologyGraph;
+	public String getProductLineGraph() {
+		return m_productLineGraph;
 	}
 
-	public void setTopologyGraph(String topologyGraph) {
-		m_topologyGraph = topologyGraph;
+	public List<ProductLine> getProductLines() {
+		return m_productLines;
 	}
 
-	public ProductLinesDashboard getDashboardGraphData() {
-		return m_dashboardGraphData;
+	public DependencyReport getReport() {
+		return m_report;
 	}
 
-	public void setDashboardGraphData(ProductLinesDashboard dashboardGraphData) {
-		m_dashboardGraphData = dashboardGraphData;
+	public Date getReportEnd() {
+		return m_reportEnd;
+	}
+
+	public Date getReportStart() {
+		return m_reportStart;
+	}
+
+	public Segment getSegment() {
+		return m_segment;
 	}
 
 	public TopMetric getTopMetric() {
 		return m_topMetric;
 	}
 
-	public void setTopMetric(TopMetric topMetric) {
-		m_topMetric = topMetric;
+	public String getTopologyGraph() {
+		return m_topologyGraph;
 	}
 
 	public TopReport getTopReport() {
 		return m_topReport;
+	}
+
+	public void setDashboardGraph(String dashboardGraph) {
+		m_dashboardGraph = dashboardGraph;
+	}
+
+	public void setDashboardGraphData(ProductLinesDashboard dashboardGraphData) {
+		m_dashboardGraphData = dashboardGraphData;
+	}
+
+	public void setDependencyGraph(Map<String, List<String>> dependencyGraph) {
+		m_dependencyGraph = dependencyGraph;
+	}
+
+	public void setEvents(Map<String, List<Event>> events) {
+		m_events = events;
+	}
+
+	public void setIndexGraph(List<String> indexGraph) {
+		m_indexGraph = indexGraph;
+	}
+
+	public void setLineCharts(List<LineChart> lineCharts) {
+   	m_lineCharts = lineCharts;
+   }
+
+	public void setMaxMinute(int maxMinute) {
+		m_maxMinute = maxMinute;
+	}
+
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+
+	public void setMinutes(List<Integer> minutes) {
+		m_minutes = minutes;
+	}
+
+	public void setProductLineGraph(String productLineGraph) {
+		m_productLineGraph = productLineGraph;
+	}
+
+	public void setProductLines(List<ProductLine> productLines) {
+		m_productLines = productLines;
+	}
+
+	public void setReport(DependencyReport report) {
+		m_report = report;
+	}
+
+	public void setReportEnd(Date reportEnd) {
+		m_reportEnd = reportEnd;
+	}
+
+	public void setReportStart(Date reportStart) {
+		m_reportStart = reportStart;
+	}
+
+	public void setSegment(Segment segment) {
+		m_segment = segment;
+	}
+
+	public void setTopMetric(TopMetric topMetric) {
+		m_topMetric = topMetric;
+	}
+
+	public void setTopologyGraph(String topologyGraph) {
+		m_topologyGraph = topologyGraph;
 	}
 
 	public void setTopReport(TopReport topReport) {

@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -97,11 +96,6 @@ public class GraphCreator {
 			if (value != null) {
 				current.put(time, value);
 			}
-		}
-		Set<Long> sets = current.keySet();
-		
-		for (Long key : sets) {
-			current.put(key, 100 * Math.random());
 		}
 	}
 
