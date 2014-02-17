@@ -28,7 +28,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private int m_frequency = 10;
 
 	@FieldMeta("tops")
-	private int m_topCounts = 10;
+	private int m_topCounts = 11;
 
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;

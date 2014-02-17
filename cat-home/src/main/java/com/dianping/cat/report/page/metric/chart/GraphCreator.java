@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -47,7 +48,7 @@ public class GraphCreator {
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
 
-	private int m_lastMinute = 5;
+	private int m_lastMinute = 6;
 
 	private int m_extraTime = 1;
 
@@ -87,6 +88,17 @@ public class GraphCreator {
 			endTime = currentTime - currentTime % TimeUtil.ONE_MINUTE - m_extraTime * TimeUtil.ONE_MINUTE;
 		} else {
 			endTime = end.getTime();
+		}
+		long start = endTime - minute * TimeUtil.ONE_MINUTE;
+		Set<Long> sets = new HashSet<Long>();
+
+		for (Entry<Long, Double> entry : current.entrySet()) {
+			if (entry.getKey() >= start) {
+				sets.add(entry.getKey());
+			}
+		}
+		for (Long temp : sets) {
+			current.remove(temp);
 		}
 
 		for (int i = minute; i > 0; i--) {
