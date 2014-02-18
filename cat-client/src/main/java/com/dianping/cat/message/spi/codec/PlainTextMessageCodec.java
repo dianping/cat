@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -15,8 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -33,7 +39,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
+public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initializable {
 	public static final String ID = "plain-text";
 
 	private static final String VERSION = "PT1"; // plain text version 1
@@ -41,6 +47,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	private static final byte TAB = '\t'; // tab character
 
 	private static final byte LF = '\n'; // line feed character
+
+	private Map<String, Pair<Long, ChannelBuffer>> m_bufs = new ConcurrentHashMap<String, Pair<Long, ChannelBuffer>>();
 
 	@Inject
 	private BufferWriter m_writer = new EscapingBufferWriter();
@@ -65,6 +73,17 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	public void decode(ChannelBuffer buf, MessageTree tree) {
 		buf.markReaderIndex();
 
+		String key = Thread.currentThread().getName();
+		Pair<Long, ChannelBuffer> pair = m_bufs.get(key);
+
+		if (pair == null) {
+			pair = new Pair<Long, ChannelBuffer>(System.currentTimeMillis(), buf);
+
+			m_bufs.put(key, pair);
+		} else {
+			pair.setKey(System.currentTimeMillis());
+			pair.setValue(buf);
+		}
 		decodeHeader(buf, tree);
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
@@ -237,9 +256,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		while (buf.readableBytes() > 0) {
 			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
-			
-			m_logger.info(Thread.currentThread().getName()+" in plaintext while true loop");
-			
+
+			m_logger.info(Thread.currentThread().getName() + " in plaintext while true loop");
+
 			if (message instanceof DefaultTransaction) {
 				parent = message;
 			} else {
@@ -391,7 +410,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
-	protected  class BufferHelper {
+	protected class BufferHelper {
+
 		private BufferWriter m_writer;
 
 		public BufferHelper(BufferWriter writer) {
@@ -414,51 +434,49 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		public String readRaw(ChannelBuffer buf, byte separator) {
 			try {
-	         int count = buf.bytesBefore(separator);
+				int count = buf.bytesBefore(separator);
 
-	         if (count < 0) {
-	         	return null;
-	         } else {
-	         	byte[] data = new byte[count];
-	         	String str;
+				if (count < 0) {
+					return null;
+				} else {
+					byte[] data = new byte[count];
+					String str;
 
-	         	buf.readBytes(data);
-	         	buf.readByte(); // get rid of separator
+					buf.readBytes(data);
+					buf.readByte(); // get rid of separator
 
-	         	int length = data.length;
+					int length = data.length;
 
-	         	m_logger.info(Thread.currentThread()+" " +"read raw start, length:" + length);
-	         	for (int i = 0; i < length; i++) {
-	         		if (data[i] == '\\') {
-	         			if (i + 1 < length) {
-	         				byte b = data[i + 1];
+					for (int i = 0; i < length; i++) {
+						if (data[i] == '\\') {
+							if (i + 1 < length) {
+								byte b = data[i + 1];
 
-	         				if (b == 't') {
-	         					data[i] = '\t';
-	         				} else if (b == 'r') {
-	         					data[i] = '\r';
-	         				} else if (b == 'n') {
-	         					data[i] = '\n';
-	         				} else {
-	         					data[i] = b;
-	         				}
+								if (b == 't') {
+									data[i] = '\t';
+								} else if (b == 'r') {
+									data[i] = '\r';
+								} else if (b == 'n') {
+									data[i] = '\n';
+								} else {
+									data[i] = b;
+								}
 
-	         				System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
-	         				length--;
-	         			}
-	         		}
-	         	}
+								System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
+								length--;
+							}
+						}
+					}
 
-	         	try {
-	         		str = new String(data, 0, length, "utf-8");
-	         	} catch (UnsupportedEncodingException e) {
-	         		str = new String(data, 0, length);
-	         	}
-	         	return str;
-	         }
-         } finally {
-         	m_logger.info(Thread.currentThread()+" " +"read raw end");
-         }
+					try {
+						str = new String(data, 0, length, "utf-8");
+					} catch (UnsupportedEncodingException e) {
+						str = new String(data, 0, length);
+					}
+					return str;
+				}
+			} finally {
+			}
 		}
 
 		public int write(ChannelBuffer buf, byte b) {
@@ -577,6 +595,47 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return DEFAULT;
 			}
 		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup("Cat").start(new PrintThread());
+	}
+
+	public class PrintThread implements Task {
+
+		@Override
+		public void run() {
+			while (true) {
+				for (Entry<String, Pair<Long, ChannelBuffer>> entry : m_bufs.entrySet()) {
+					Pair<Long, ChannelBuffer> pair = entry.getValue();
+
+					if (System.currentTimeMillis() - pair.getKey() > 1000) {
+						ChannelBuffer channelBuffer = pair.getValue();
+
+						channelBuffer.markReaderIndex();
+						m_logger.info("====" + channelBuffer.toString(Charset.forName("utf-8")) + "====");
+					}
+				}
+
+				try {
+					Thread.sleep(1000 * 5);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "print-thread";
+		}
+
+		@Override
+		public void shutdown() {
+
+		}
+
 	}
 
 }
