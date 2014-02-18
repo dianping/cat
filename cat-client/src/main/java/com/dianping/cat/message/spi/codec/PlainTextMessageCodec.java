@@ -51,6 +51,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	private Logger m_logger;
 
+	private int m_maxDecodeNumber = 5000;
+
 	@Override
 	public MessageTree decode(ChannelBuffer buf) {
 		MessageTree tree = new DefaultMessageTree();
@@ -61,8 +63,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
-		decodeHeader(buf, tree);
+		buf.markReaderIndex();
 
+		decodeHeader(buf, tree);
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}
@@ -121,7 +124,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return transaction;
 		case 'A':
 			DefaultTransaction tran = new DefaultTransaction(type, name, null);
-			String status = helper.read(buf, TAB);
+			String status = helper.readRaw(buf, TAB);
 			String duration = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
@@ -140,7 +143,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return tran;
 			}
 		case 'T':
-			String transactionStatus = helper.read(buf, TAB);
+			String transactionStatus = helper.readRaw(buf, TAB);
 			String transactionDuration = helper.read(buf, TAB);
 			String transactionData = helper.readRaw(buf, TAB);
 
@@ -149,12 +152,13 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			parent.addData(transactionData);
 
 			long transactionD = Long.parseLong(transactionDuration.substring(0, transactionDuration.length() - 2));
+
 			parent.setDurationInMicros(transactionD);
 
 			return stack.pop();
 		case 'E':
 			DefaultEvent event = new DefaultEvent(type, name);
-			String eventStatus = helper.read(buf, TAB);
+			String eventStatus = helper.readRaw(buf, TAB);
 			String eventData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -170,7 +174,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
-			String metricStatus = helper.read(buf, TAB);
+			String metricStatus = helper.readRaw(buf, TAB);
 			String metricData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -186,7 +190,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'L':
 			DefaultTrace trace = new DefaultTrace(type, name);
-			String traceStatus = helper.read(buf, TAB);
+			String traceStatus = helper.readRaw(buf, TAB);
 			String traceData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -202,7 +206,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String heartbeatStatus = helper.read(buf, TAB);
+			String heartbeatStatus = helper.readRaw(buf, TAB);
 			String heartbeatData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -230,9 +234,19 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		tree.setMessage(parent);
 
+		int total = m_maxDecodeNumber;
+
 		while (buf.readableBytes() > 0) {
 			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
 
+			total--;
+			if (total == 0) {
+				buf.resetReaderIndex();
+				String messageTree = buf.toString(Charset.forName("utf-8"));
+				m_logger.warn("Decode message in a dead loop" + messageTree);
+
+				throw new RuntimeException("Error when decoding cat message! message tree:" + messageTree);
+			}
 			if (message instanceof DefaultTransaction) {
 				parent = message;
 			} else {
@@ -312,7 +326,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		count += helper.write(buf, TAB);
 
 		if (policy != Policy.WITHOUT_STATUS) {
-			count += helper.write(buf, message.getStatus());
+			count += helper.writeRaw(buf, message.getStatus());
 			count += helper.write(buf, TAB);
 
 			Object data = message.getData();
