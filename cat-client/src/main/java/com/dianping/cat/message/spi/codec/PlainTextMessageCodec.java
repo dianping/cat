@@ -257,8 +257,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 		while (buf.readableBytes() > 0) {
 			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
 
-			m_logger.info(Thread.currentThread().getName() + " in plaintext while true loop");
-
 			if (message instanceof DefaultTransaction) {
 				parent = message;
 			} else {
