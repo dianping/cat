@@ -4,7 +4,8 @@
 		<a id="navlineChart" class="btn  btn-small btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}">实时趋势图</a>
 		<a id="navdependencyGraph" class="btn btn-small btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">实时拓扑图</a>
 		<a id="navproductLine" class="btn btn-small btn-primary" href="?op=productLine&minute=${model.minute}&domain=${model.domain}&date=${model.date}">产品线监控</a>
-		<a id="navdashboard" class="btn btn-small btn-primary" href="?op=dashboard&minute=${model.minute}&domain=${model.domain}&date=${model.date}">监控仪表盘</a>
+		<a id="navmetricDashboard" class="btn btn-small btn-primary" href="?op=metricDashboard&minute=${model.minute}&domain=${model.domain}&date=${model.date}">监控仪表盘</a>
+		<a id="navdashboard" class="btn btn-small btn-primary" href="?op=dashboard&minute=${model.minute}&domain=${model.domain}&date=${model.date}">应用监控盘</a>
 		<a id="navbussiness" class="btn btn-small btn-primary" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控大盘</a>
 	</div>
 	<div class="span4 text-center">

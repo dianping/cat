@@ -201,6 +201,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		public void distribute(MessageTree tree) {
 			m_serverStateManager.addMessageTotal(tree.getDomain(), 1);
+			
 			for (PeriodTask task : m_tasks) {
 				task.enqueue(tree);
 			}

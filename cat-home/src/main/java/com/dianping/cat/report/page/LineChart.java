@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -24,9 +25,17 @@ public class LineChart {
 
 	private List<double[]> values = new ArrayList<double[]>();
 
+	private List<Map<Long, Double>> datas = new ArrayList<Map<Long, Double>>();
+
 	private double[] ylable;
 
 	public LineChart() {
+	}
+
+	public LineChart add(String title, Map<Long, Double> data) {
+		this.datas.add(data);
+		this.subTitles.add(title);
+		return this;
 	}
 
 	public LineChart add(String title, double[] value) {
@@ -126,4 +135,12 @@ public class LineChart {
 		}
 	}
 
+	public List<Map<Long, Double>> getDatas() {
+   	return datas;
+   }
+
+	public void setDatas(List<Map<Long, Double>> datas) {
+   	this.datas = datas;
+   }
+	
 }

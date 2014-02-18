@@ -21,7 +21,7 @@ public class ServerStatisticManagerTest {
 		manager.addBlockTotal(3);
 		manager.addMessageDump(4);
 		manager.addMessageDumpLoss(5);
-		manager.addMessageSize(6);
+		manager.addMessageSize(domain,6);
 		manager.addMessageTotal(7);
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
@@ -36,15 +36,15 @@ public class ServerStatisticManagerTest {
 		Assert.assertEquals(3, findState(manager, time).getBlockTotal());
 		Assert.assertEquals(4, findState(manager, time).getMessageDump());
 		Assert.assertEquals(5, findState(manager, time).getMessageDumpLoss());
-		Assert.assertEquals(6.0, findState(manager, time).getMessageSize());
+		Assert.assertEquals(7, findState(manager, time).getMessageSize());
 		Assert.assertEquals(7, findState(manager, time).getMessageTotal());
-		Assert.assertEquals(8, findState(manager, time).getMessageTotalLoss());
+		Assert.assertEquals(11, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(9, findState(manager, time).getPigeonTimeError());
 		Assert.assertEquals(10, findState(manager, time).getNetworkTimeError());
 		Assert.assertEquals(11.0, findState(manager, time).getProcessDelaySum());
 		Assert.assertEquals(11.0, findState(manager, time).getAvgProcessDelay());
 		Assert.assertEquals(1, findState(manager, time).getProcessDelayCount());
-		Assert.assertEquals(1.0, findState(manager, time).getMessageSizes().get(domain));
+		Assert.assertEquals(7, findState(manager, time).getMessageSizes().get(domain).get());
 		Assert.assertEquals(2, findState(manager, time).getMessageTotals().get(domain).get());
 		Assert.assertEquals(3, findState(manager, time).getMessageTotalLosses().get(domain).get());
 
@@ -53,19 +53,19 @@ public class ServerStatisticManagerTest {
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
 		Assert.assertEquals(14, findState(manager, time).getMessageTotal());
-		Assert.assertEquals(16, findState(manager, time).getMessageTotalLoss());
+		Assert.assertEquals(19, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(18, findState(manager, time).getPigeonTimeError());
 		
 		manager.removeState(time);
 
-		Assert.assertEquals(true, null != manager.findState(time));
+		Assert.assertEquals(true, null != manager.findOrCreateState(time));
 	}
 
 	private Statistic findState(ServerStatisticManager manager, long time) {
-		Statistic state = manager.findState(time);
+		Statistic state = manager.findOrCreateState(time);
 
 		if (state == null) {
-			state = manager.findState(time + 60 * 1000);
+			state = manager.findOrCreateState(time + 60 * 1000);
 		}
 		return state;
 	}

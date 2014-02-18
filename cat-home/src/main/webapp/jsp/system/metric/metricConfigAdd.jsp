@@ -143,6 +143,12 @@
 			</td>
 		</tr>
 		<tr>
+			<td></td>
+			<td></td>
+			<td style="text-align:right" class="text-success">监控大盘顺序</td>
+			<td><input class="input-mini" name="metricItemConfig.showDashboardOrder" value="${model.metricItemConfig.showDashboardOrder}" required/></td>
+		</tr>
+		<tr>
 			<td style="text-align:center" colspan='4'><input class='btn btn-primary' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 		</tr>
 	</table>

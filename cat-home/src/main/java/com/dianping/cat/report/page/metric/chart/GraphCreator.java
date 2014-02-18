@@ -1,7 +1,10 @@
 package com.dianping.cat.report.page.metric.chart;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -44,47 +48,16 @@ public class GraphCreator {
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
 
-	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate,
-	      String abtestId) {
-		long start = startDate.getTime();
-		long end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
-		Map<String, double[]> allCurrentValues = new HashMap<String, double[]>();
-		int index = 0;
+	private int m_lastMinute = 6;
 
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine);
-			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
-			      domains));
-			MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
-			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs,
-			      abtestId);
+	private int m_extraTime = 1;
 
-			mergeMap(allCurrentValues, currentValues, totalSize, index);
-			index++;
-		}
-		allCurrentValues = m_dataExtractor.extract(allCurrentValues);
-
-		if (isCurrentMode(endDate)) {
-			// remove the minute of future
-			Map<String, double[]> newCurrentValues = new HashMap<String, double[]>();
-			int step = m_dataExtractor.getStep();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			int removeLength = 60 / step - (minute / step);
-
-			for (Entry<String, double[]> entry : allCurrentValues.entrySet()) {
-				String key = entry.getKey();
-				double[] value = entry.getValue();
-
-				newCurrentValues.put(key, convert(value, removeLength));
-			}
-			allCurrentValues = newCurrentValues;
-		}
-
+	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
+	      final Map<String, double[]> dataWithOutFutures) {
 		int step = m_dataExtractor.getStep();
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 
-		for (Entry<String, double[]> entry : allCurrentValues.entrySet()) {
+		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
@@ -95,22 +68,56 @@ public class GraphCreator {
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 			double[] baselines = queryBaseline(key, startDate, endDate);
 
-			lineChart.add(Chinese.CURRENT_VALUE, allCurrentValues.get(key));
-			lineChart.add(Chinese.BASELINE_VALUE, m_dataExtractor.extract(baselines));
+			// lineChart.add(Chinese.CURRENT_VALUE, allCurrentValues.get(key));
+			// lineChart.add(Chinese.BASELINE_VALUE, m_dataExtractor.extract(baselines));
+			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
+			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
+
+			addLastMinuteData(current, all, m_lastMinute, endDate);
+			lineChart.add(Chinese.CURRENT_VALUE, current);
+			lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), startDate, step));
 			charts.put(key, lineChart);
 		}
 		return charts;
 	}
 
-	public double[] convert(double[] value, int removeLength) {
-		int length = value.length;
-		int newLength = length - removeLength;
-		double[] result = new double[newLength];
-
-		for (int i = 0; i < newLength; i++) {
-			result[i] = value[i];
+	private void addLastMinuteData(Map<Long, Double> current, Map<Long, Double> all, int minute, Date end) {
+		long endTime = 0;
+		long currentTime = System.currentTimeMillis();
+		if (end.getTime() > currentTime) {
+			endTime = currentTime - currentTime % TimeUtil.ONE_MINUTE - m_extraTime * TimeUtil.ONE_MINUTE;
+		} else {
+			endTime = end.getTime();
 		}
-		return result;
+		long start = endTime - minute * TimeUtil.ONE_MINUTE;
+		Set<Long> sets = new HashSet<Long>();
+
+		for (Entry<Long, Double> entry : current.entrySet()) {
+			if (entry.getKey() >= start) {
+				sets.add(entry.getKey());
+			}
+		}
+		for (Long temp : sets) {
+			current.remove(temp);
+		}
+
+		for (int i = minute; i > 0; i--) {
+			long time = endTime - i * TimeUtil.ONE_MINUTE;
+			Double value = all.get(time);
+
+			if (value != null) {
+				current.put(time, value);
+			}
+		}
+	}
+
+	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate,
+	      String abtestId) {
+		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate, abtestId);
+		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
+		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+
+		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
 	public Map<String, LineChart> buildDashboard(Date start, Date end, String abtestId) {
@@ -123,8 +130,15 @@ public class GraphCreator {
 				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
 			}
 		}
+		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
+		      .getMetricItemConfigs().values());
 
-		Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values();
+		Collections.sort(configs, new Comparator<MetricItemConfig>() {
+			@Override
+			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
+				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
+			}
+		});
 
 		for (MetricItemConfig config : configs) {
 			String key = config.getId();
@@ -142,6 +156,28 @@ public class GraphCreator {
 			}
 		}
 		return result;
+	}
+
+	public double[] convert(double[] value, int removeLength) {
+		int length = value.length;
+		int newLength = length - removeLength;
+		double[] result = new double[newLength];
+
+		for (int i = 0; i < newLength; i++) {
+			result[i] = value[i];
+		}
+		return result;
+	}
+
+	private Map<Long, Double> convertToMap(double[] data, Date start, int step) {
+		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
+		int length = data.length;
+		long startTime = start.getTime();
+
+		for (int i = 0; i < length; i++) {
+			map.put(startTime + step * i * TimeUtil.ONE_MINUTE, data[i]);
+		}
+		return map;
 	}
 
 	private String findTitle(String key) {
@@ -187,6 +223,27 @@ public class GraphCreator {
 		}
 	}
 
+	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate, String abtestId) {
+		long start = startDate.getTime();
+		long end = endDate.getTime();
+		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		Map<String, double[]> oldCurrentValues = new HashMap<String, double[]>();
+		int index = 0;
+
+		for (; start < end; start += TimeUtil.ONE_HOUR) {
+			List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine);
+			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
+			      domains));
+			MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
+			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs,
+			      abtestId);
+
+			mergeMap(oldCurrentValues, currentValues, totalSize, index);
+			index++;
+		}
+		return oldCurrentValues;
+	}
+
 	private void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
 		LineChart value = charts.get(key);
 
@@ -211,6 +268,25 @@ public class GraphCreator {
 			index++;
 		}
 		return result;
+	}
+
+	private Map<String, double[]> removeFutureData(Date endDate, final Map<String, double[]> allCurrentValues) {
+		if (isCurrentMode(endDate)) {
+			// remove the minute of future
+			Map<String, double[]> newCurrentValues = new HashMap<String, double[]>();
+			int step = m_dataExtractor.getStep();
+			int minute = Calendar.getInstance().get(Calendar.MINUTE);
+			int removeLength = 60 / step - (minute / step);
+
+			for (Entry<String, double[]> entry : allCurrentValues.entrySet()) {
+				String key = entry.getKey();
+				double[] value = entry.getValue();
+
+				newCurrentValues.put(key, convert(value, removeLength));
+			}
+			return newCurrentValues;
+		}
+		return allCurrentValues;
 	}
 
 	private boolean showInDashboard(String productline) {
