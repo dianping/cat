@@ -67,7 +67,20 @@ public class StateShow extends BaseVisitor {
 		} else {
 			Collections.sort(temp, new DomainCompartor());
 		}
+
+		temp.add(0, mergeAll(temp));
 		return temp;
+	}
+
+	private ProcessDomain mergeAll(List<ProcessDomain> domains) {
+		ProcessDomain all = new ProcessDomain("ALL");
+
+		for (ProcessDomain temp : domains) {
+			all.setSize(all.getSize() + temp.getSize());
+			all.setTotal(all.getTotal() + temp.getTotal());
+			all.setTotalLoss(all.getTotalLoss() + temp.getTotalLoss());
+		}
+		return all;
 	}
 
 	public Map<String, ProcessDomain> getProcessDomainMap() {

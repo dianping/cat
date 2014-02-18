@@ -91,7 +91,7 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		@Override
 		public void visitAbtest(Abtest abtest) {
 			String abtestId = abtest.getRunId();
-			if (m_abtestId.equals(abtestId)) {
+			if (abtestId.equals(m_abtestId)) {
 				super.visitAbtest(abtest);
 			}
 		}

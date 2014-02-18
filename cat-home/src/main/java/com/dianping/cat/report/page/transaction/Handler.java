@@ -132,7 +132,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private TransactionName getTransactionName(Payload payload) {
+	private TransactionName getTransactionName(Model model, Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();
@@ -151,6 +151,8 @@ public class Handler implements PageHandler<Context> {
 		TransactionReport report = response.getModel();
 
 		report = m_mergeManager.mergerAll(report, ipAddress, name);
+		model.setReport(report);
+		
 		TransactionType t = report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
@@ -223,7 +225,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void showHourlyGraphs(Model model, Payload payload) {
-		TransactionName name = getTransactionName(payload);
+		TransactionName name = getTransactionName(model, payload);
 
 		if (name != null) {
 			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));

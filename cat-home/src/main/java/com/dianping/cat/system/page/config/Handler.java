@@ -323,10 +323,10 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void metricConfigList(Payload payload, Model model) {
-		Map<String, ProductLine> productLins = m_productLineConfigManger.queryProductLines();
+		Map<String, ProductLine> productLines = m_productLineConfigManger.queryProductLines();
 		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
 
-		for (Entry<String, ProductLine> entry : productLins.entrySet()) {
+		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
 			Set<String> domains = entry.getValue().getDomains().keySet();
 			List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 

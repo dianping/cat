@@ -2,7 +2,7 @@
 <state-report domain="Cat" startTime="2012-11-22 23:00:00" endTime="2012-11-22 23:59:59">
    <machine ip="192.168.66.125" total="240" totalLoss="0" maxTps="50.0" avgTps="4.0" blockTotal="2" blockLoss="1" blockTime="1" pigeonTimeError="4" networkTimeError="3" dump="240" dumpLoss="0" size="100.0" delaySum="100.0" delayAvg="50.0" delayCount="2">
       <processDomains>
-         <processDomain name="Cat" total="0" totalLoss="0" size="0.0">
+         <processDomain name="Cat" total="10" totalLoss="10" size="10.0">
             <ip>192.168.66.125</ip>
          </processDomain>
       </processDomains>

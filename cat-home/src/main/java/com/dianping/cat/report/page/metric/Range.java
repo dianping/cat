@@ -5,7 +5,9 @@ public enum Range {
 
 	TWO("2小时", 2),
 
-	SIX("8小时", 8),
+	SIX("6小时", 6),
+	
+	EIGHT("8小时", 8),
 
 	ONE_DAY("24小时", 24),
 

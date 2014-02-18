@@ -14,12 +14,7 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 public class TransactionStatisticsComputer extends BaseVisitor {
 	private double computeLineValue(Map<Integer, AllDuration> durations, double percent) {
 		int totalCount = 0;
-		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o2 - o1;
-			}
-		});
+		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(TransactionComparator.DESC);
 
 		sorted.putAll(durations);
 
@@ -67,7 +62,7 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			name.setFailPercent(failPercent);
 			name.setAvg(avg);
 			name.setStd(std);
-			
+
 			double line95 = computeLineValue(name.getAllDurations(), 95);
 			double line999 = computeLineValue(name.getAllDurations(), 99.9);
 			name.setLine95Value(line95);
@@ -102,6 +97,15 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			double line999 = computeLineValue(type.getAllDurations(), 99.9);
 			type.setLine95Value(line95);
 			type.setLine99Value(line999);
+		}
+	}
+
+	private static enum TransactionComparator implements Comparator<Integer> {
+		DESC {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o2 - o1;
+			}
 		}
 	}
 }

@@ -38,6 +38,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+	
 	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
 		List<Message> children = t.getChildren();
@@ -91,7 +93,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-			report.accept(new TransactionStatisticsComputer());
+			report.accept(m_computer);
 
 			return report;
 		} else {

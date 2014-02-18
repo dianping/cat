@@ -6,7 +6,7 @@ public interface DataExtractor {
 
 	public double[] extract(double[] values);
 
-	public Map<String, double[]> extract(Map<String, double[]> values);
+	public Map<String, double[]> extract(final Map<String, double[]> values);
 
 	public int getStep();
 }

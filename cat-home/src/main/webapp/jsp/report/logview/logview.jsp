@@ -14,7 +14,7 @@
 
 <c:choose>
 	<c:when test="${empty model.table}">
-		<div class="error"></div>Sorry, this message had already been archived.</div>
+		<div class="error">Sorry, the message is not there. It could be missing or archived.</div>
 	</c:when>
 	<c:otherwise>
 		<c:choose>

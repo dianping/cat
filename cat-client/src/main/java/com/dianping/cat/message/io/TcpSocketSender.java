@@ -34,13 +34,15 @@ import com.dianping.cat.message.spi.MessageTree;
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public static final String ID = "tcp-socket-sender";
 
+	public static final int SIZE = 10000;
+
 	@Inject
 	private MessageCodec m_codec;
 
 	@Inject
 	private MessageStatistics m_statistics;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(20000);
+	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -49,6 +51,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private Logger m_logger;
 
 	private transient boolean m_active;
+
+	private volatile int m_error = -1;
 
 	private AtomicInteger m_errors = new AtomicInteger();
 
@@ -165,7 +169,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_manager.shutdown();
 	}
 
-	private static class ChannelManager implements Task {
+	public class ChannelManager implements Task {
 		private List<InetSocketAddress> m_serverAddresses;
 
 		private ClientBootstrap m_bootstrap;
@@ -179,6 +183,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		private boolean m_active = true;
 
 		private int m_activeIndex = -1;
+
+		private int m_retriedTimes = 0;
 
 		private AtomicInteger m_reconnects = new AtomicInteger(999);
 
@@ -196,7 +202,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 				@Override
 				public ChannelPipeline getPipeline() {
-					return Channels.pipeline(new ExceptionHandler(m_logger));
+					return Channels.pipeline(new ExceptionHandler());
 				}
 			});
 
@@ -251,7 +257,27 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		@Override
 		public String getName() {
-			return "TcpSocketHierarchySender-ChannelManager";
+			return "TcpSocketSender-ChannelManager";
+		}
+
+		private boolean isChannelStalled() {
+			m_retriedTimes++;
+			int size = m_queue.size();
+			boolean stalled = m_activeFuture != null && size >= SIZE - 1;
+
+			if (stalled) {
+				if (m_retriedTimes >= 5) {
+					m_retriedTimes = 0;
+					m_logger.info("need to set active future to null. queue size:" + size + ",activeIndex:" + m_activeIndex);
+					return true;
+				} else {
+					m_logger.info("no need set active future to null due to retry time is not enough. queue size:" + size
+					      + ",retriedTimes:" + m_retriedTimes + ",activeIndex:" + m_activeIndex);
+					return false;
+				}
+			} else {
+				return false;
+			}
 		}
 
 		@Override
@@ -259,6 +285,15 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			try {
 				while (m_active) {
 					try {
+						if (isChannelStalled()) {
+							try {
+								m_activeFuture.getChannel().close();
+								m_activeFuture = null;
+								m_activeIndex = -1;
+							} catch (Throwable e) {
+								Cat.logError(e);
+							}
+						}
 						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
 							m_activeIndex = m_serverAddresses.size();
 						}
@@ -293,30 +328,21 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	private static class ExceptionHandler extends SimpleChannelHandler {
-		private Logger m_logger;
-
-		private volatile int m_error;
-
-		public ExceptionHandler(Logger logger) {
-			m_logger = logger;
-		}
+	private class ExceptionHandler extends SimpleChannelHandler {
 
 		@Override
 		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+			m_error++;
 			if (m_error % 1000 == 0) {
-				m_error++;
 				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-				e.getChannel().close();
 			}
 		}
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+			m_error++;
 			if (m_error % 1000 == 0) {
-				m_error++;
-				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-				e.getChannel().close();
+				m_logger.warn("Channel disconnected due to " + e.getCause());
 			}
 		}
 	}
