@@ -605,6 +605,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 		@Override
 		public void run() {
 			while (true) {
+				m_logger.info("print thread start");
 				for (Entry<String, Pair<Long, ChannelBuffer>> entry : m_bufs.entrySet()) {
 					Pair<Long, ChannelBuffer> pair = entry.getValue();
 
