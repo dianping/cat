@@ -36,9 +36,20 @@
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
-				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
-				<br/>
-				<%@ include file="../top/topMetric.jsp"%>
+				<div class="row-fluid">
+					<div class="span12">
+					   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+			   				<div style="float:left;">
+					   				<div id="${item.title}" class="metricGraph"></div>
+					   			</div>
+						</c:forEach>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<%@ include file="../top/topMetric.jsp"%>
+					</div>
+				</div>
 			</div>
 	    </div>
 	</c:when>
@@ -52,9 +63,8 @@
 				<div class="span12 text-center">
 					<%@ include file="dependencyOpNav.jsp"%>
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
+				</div>
 			</div>
-			</div>
-			<div id="fullScreenData">
 			<div class="row-fluid">
 				<div class="span12">
 				   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
@@ -69,7 +79,6 @@
 					<%@ include file="../top/topMetric.jsp"%>
 				</div>
 			</div>
-	    </div>
 	</jsp:body>
 	</a:report>
 	</c:otherwise>
