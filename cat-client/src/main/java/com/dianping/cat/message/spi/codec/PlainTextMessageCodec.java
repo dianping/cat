@@ -427,6 +427,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	         	int length = data.length;
 
+	         	m_logger.info(Thread.currentThread()+" " +"read raw start, length:" + length);
 	         	for (int i = 0; i < length; i++) {
 	         		if (data[i] == '\\') {
 	         			if (i + 1 < length) {
@@ -456,6 +457,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	         	return str;
 	         }
          } finally {
+         	m_logger.info(Thread.currentThread()+" " +"read raw end");
          }
 		}
 
