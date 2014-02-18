@@ -27,6 +27,8 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	@Inject
 	private ServerConfigManager m_manager;
 
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -54,7 +56,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public String buildXml(TransactionReport report) {
-		report.accept(new TransactionStatisticsComputer());
+		report.accept(m_computer);
 
 		String xml = new TransactionReportUrlFilter().buildXml(report);
 
