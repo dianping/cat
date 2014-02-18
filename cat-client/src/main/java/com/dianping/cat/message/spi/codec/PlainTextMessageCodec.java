@@ -612,7 +612,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 					if (System.currentTimeMillis() - pair.getKey() > 1000) {
 						ChannelBuffer channelBuffer = pair.getValue();
 
-						channelBuffer.markReaderIndex();
+						channelBuffer.resetReaderIndex();
 						m_logger.info("====" + channelBuffer.toString(Charset.forName("utf-8")) + "====");
 					}
 				}
