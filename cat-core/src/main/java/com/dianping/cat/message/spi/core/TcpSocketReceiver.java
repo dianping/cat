@@ -176,7 +176,7 @@ public class TcpSocketReceiver implements LogEnabled {
 					decodeMessage(buf, false);
 				}
 				
-				m_logger.info(Thread.currentThread()+" in b");
+				m_logger.info(Thread.currentThread()+" in tcpsocketsend end!");
 			}
 		}
 

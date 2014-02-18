@@ -238,7 +238,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		while (buf.readableBytes() > 0) {
 			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
 			
-			m_logger.info(Thread.currentThread().getName()+" in A");
+			m_logger.info(Thread.currentThread().getName()+" in plaintext while true loop");
 			
 			if (message instanceof DefaultTransaction) {
 				parent = message;
@@ -413,7 +413,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public String readRaw(ChannelBuffer buf, byte separator) {
-      	m_logger.info(Thread.currentThread()+" this is d");
 			try {
 	         int count = buf.bytesBefore(separator);
 
@@ -457,7 +456,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	         	return str;
 	         }
          } finally {
-         	m_logger.info(Thread.currentThread()+" this is e");
          }
 		}
 
