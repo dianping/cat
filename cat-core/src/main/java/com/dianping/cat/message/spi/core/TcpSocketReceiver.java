@@ -149,7 +149,7 @@ public class TcpSocketReceiver implements LogEnabled {
 				try {
 					handleMessage();
 				} catch (Exception e) {
-					active = false;
+					//ignore
 				}
 			}
 			try {
@@ -165,7 +165,7 @@ public class TcpSocketReceiver implements LogEnabled {
 			}
 		}
 
-		public void handleMessage() throws InterruptedException {
+		public void handleMessage() throws InterruptedException  {
 			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
 			if (buf != null) {
@@ -175,6 +175,8 @@ public class TcpSocketReceiver implements LogEnabled {
 				} else {
 					decodeMessage(buf, false);
 				}
+				
+				m_logger.info(Thread.currentThread()+" in b");
 			}
 		}
 

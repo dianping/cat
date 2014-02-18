@@ -225,7 +225,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			      + buf.toString(Charset.forName("utf-8")));
 			throw new RuntimeException("Unknown identifier int name");
 		}
-
 	}
 
 	protected void decodeMessage(ChannelBuffer buf, MessageTree tree) {
@@ -238,19 +237,22 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		while (buf.readableBytes() > 0) {
 			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
+			
+			m_logger.info(Thread.currentThread().getName()+" in A");
+			
+			if (message instanceof DefaultTransaction) {
+				parent = message;
+			} else {
+				break;
+			}
 
 			total--;
-			if (total == 0) {
+			if (total <= 0) {
 				buf.resetReaderIndex();
 				String messageTree = buf.toString(Charset.forName("utf-8"));
 				m_logger.warn("Decode message in a dead loop" + messageTree);
 
 				throw new RuntimeException("Error when decoding cat message! message tree:" + messageTree);
-			}
-			if (message instanceof DefaultTransaction) {
-				parent = message;
-			} else {
-				break;
 			}
 		}
 	}
@@ -389,7 +391,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
-	protected static class BufferHelper {
+	protected  class BufferHelper {
 		private BufferWriter m_writer;
 
 		public BufferHelper(BufferWriter writer) {
@@ -411,47 +413,52 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public String readRaw(ChannelBuffer buf, byte separator) {
-			int count = buf.bytesBefore(separator);
+      	m_logger.info(Thread.currentThread()+" this is d");
+			try {
+	         int count = buf.bytesBefore(separator);
 
-			if (count < 0) {
-				return null;
-			} else {
-				byte[] data = new byte[count];
-				String str;
+	         if (count < 0) {
+	         	return null;
+	         } else {
+	         	byte[] data = new byte[count];
+	         	String str;
 
-				buf.readBytes(data);
-				buf.readByte(); // get rid of separator
+	         	buf.readBytes(data);
+	         	buf.readByte(); // get rid of separator
 
-				int length = data.length;
+	         	int length = data.length;
 
-				for (int i = 0; i < length; i++) {
-					if (data[i] == '\\') {
-						if (i + 1 < length) {
-							byte b = data[i + 1];
+	         	for (int i = 0; i < length; i++) {
+	         		if (data[i] == '\\') {
+	         			if (i + 1 < length) {
+	         				byte b = data[i + 1];
 
-							if (b == 't') {
-								data[i] = '\t';
-							} else if (b == 'r') {
-								data[i] = '\r';
-							} else if (b == 'n') {
-								data[i] = '\n';
-							} else {
-								data[i] = b;
-							}
+	         				if (b == 't') {
+	         					data[i] = '\t';
+	         				} else if (b == 'r') {
+	         					data[i] = '\r';
+	         				} else if (b == 'n') {
+	         					data[i] = '\n';
+	         				} else {
+	         					data[i] = b;
+	         				}
 
-							System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
-							length--;
-						}
-					}
-				}
+	         				System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
+	         				length--;
+	         			}
+	         		}
+	         	}
 
-				try {
-					str = new String(data, 0, length, "utf-8");
-				} catch (UnsupportedEncodingException e) {
-					str = new String(data, 0, length);
-				}
-				return str;
-			}
+	         	try {
+	         		str = new String(data, 0, length, "utf-8");
+	         	} catch (UnsupportedEncodingException e) {
+	         		str = new String(data, 0, length);
+	         	}
+	         	return str;
+	         }
+         } finally {
+         	m_logger.info(Thread.currentThread()+" this is e");
+         }
 		}
 
 		public int write(ChannelBuffer buf, byte b) {

@@ -41,10 +41,10 @@ public class PlainTextCodecTest {
 	}
 
 	public MessageTree buildMessages() {
-		Transaction t = Cat.newTransaction("type1", "name1");
-		Transaction t2 = Cat.newTransaction("type2", "name2");
-		Transaction t3 = Cat.newTransaction("type3", "name3");
-		Transaction t4 = Cat.newTransaction("type4", "name4");
+		Transaction t = Cat.newTransaction("type1", "name1\t\n\t\n\\");
+		Transaction t2 = Cat.newTransaction("type2", "name\t\n\t\n2\\");
+		Transaction t3 = Cat.newTransaction("type3", "name3\t\n\t\n\\");
+		Transaction t4 = Cat.newTransaction("type4", "name4\t\n\t\n\\");
 
 		Cat.logEvent("type1\t\n", "name\t\n", "sdfsdf\t\n", convertException(new NullPointerException()));
 		Cat.logHeartbeat("type1\t\n", "name\t\n", "sdfsdf\t\n", convertException(new NullPointerException()));
@@ -70,6 +70,7 @@ public class PlainTextCodecTest {
 
 		cause.printStackTrace(new PrintWriter(writer));
 
+		writer.write("\\\b\\c\\x\1\1\2\2\34\5\5");
 		return writer.toString();
 	}
 
