@@ -186,6 +186,7 @@ public class TcpSocketReceiver implements LogEnabled {
 			}
 			try {
 				buf.markReaderIndex();
+				
 				// read the size of the message
 				buf.readInt();
 				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);

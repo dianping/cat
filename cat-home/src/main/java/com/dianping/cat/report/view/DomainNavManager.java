@@ -2,7 +2,6 @@ package com.dianping.cat.report.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -116,7 +115,7 @@ public class DomainNavManager implements Task, Initializable {
 
 	public static class Department {
 
-		private Map<String, ProjectLine> m_projectLines = new HashMap<String, ProjectLine>();
+		private Map<String, ProjectLine> m_projectLines = new TreeMap<String, ProjectLine>();
 
 		public ProjectLine findOrCreatProjectLine(String projectLine) {
 			if (projectLine == null) {
