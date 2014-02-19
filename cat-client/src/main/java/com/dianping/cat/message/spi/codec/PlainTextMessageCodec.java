@@ -71,8 +71,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
-		buf.markReaderIndex();
-
 		String key = Thread.currentThread().getName();
 		Pair<Long, ChannelBuffer> pair = m_bufs.get(key);
 
@@ -611,9 +609,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 					if (System.currentTimeMillis() - pair.getKey() > 1000) {
 						ChannelBuffer channelBuffer = pair.getValue();
+						ChannelBuffer clone = channelBuffer.copy();
 
-						channelBuffer.resetReaderIndex();
-						m_logger.info("====" + channelBuffer.toString(Charset.forName("utf-8")) + "====");
+						clone.readerIndex(0);
+						m_logger.info("====" + clone.toString(Charset.forName("utf-8")) + "====");
 					}
 				}
 
