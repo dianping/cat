@@ -224,9 +224,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		private ChannelFuture createChannel(int index) {
 			InetSocketAddress address = m_serverAddresses.get(index);
+			ChannelFuture future = null;
 			try {
-				ChannelFuture future = m_bootstrap.connect(address);
-
+				future = m_bootstrap.connect(address);
 				future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 				if (!future.isSuccess()) {
@@ -236,6 +236,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					if (count % 100 == 0) {
 						m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
 					}
+					future.getChannel().close();
 				} else {
 					m_logger.info("Connected to CAT server at " + address);
 					return future;
@@ -295,6 +296,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 							}
 						}
 						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
+							m_activeFuture.getChannel().close();
+							m_activeFuture = null;
 							m_activeIndex = m_serverAddresses.size();
 						}
 						if (m_activeIndex == -1) {

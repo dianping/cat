@@ -59,8 +59,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 	private Logger m_logger;
 
-	private int m_maxDecodeNumber = 5000;
-
 	@Override
 	public MessageTree decode(ChannelBuffer buf) {
 		MessageTree tree = new DefaultMessageTree();
@@ -250,8 +248,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 		tree.setMessage(parent);
 
-		int total = m_maxDecodeNumber;
-
 		while (buf.readableBytes() > 0) {
 			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
 
@@ -259,15 +255,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 				parent = message;
 			} else {
 				break;
-			}
-
-			total--;
-			if (total <= 0) {
-				buf.resetReaderIndex();
-				String messageTree = buf.toString(Charset.forName("utf-8"));
-				m_logger.warn("Decode message in a dead loop" + messageTree);
-
-				throw new RuntimeException("Error when decoding cat message! message tree:" + messageTree);
 			}
 		}
 	}
@@ -603,16 +590,25 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 		@Override
 		public void run() {
 			while (true) {
-				m_logger.info("print thread start");
 				for (Entry<String, Pair<Long, ChannelBuffer>> entry : m_bufs.entrySet()) {
 					Pair<Long, ChannelBuffer> pair = entry.getValue();
 
 					if (System.currentTimeMillis() - pair.getKey() > 1000) {
 						ChannelBuffer channelBuffer = pair.getValue();
-						ChannelBuffer clone = channelBuffer.copy();
 
-						clone.readerIndex(0);
-						m_logger.info("====" + clone.toString(Charset.forName("utf-8")) + "====");
+						synchronized (channelBuffer) {
+							int readIndex = channelBuffer.readerIndex();
+
+							channelBuffer.readerIndex(0);
+
+							String tree = channelBuffer.toString(Charset.forName("utf-8"));
+
+							if (tree != null && tree.length() > 0) {
+								m_logger.info("====" + tree + "====");
+							}
+							channelBuffer.readerIndex(readIndex);
+						}
+						channelBuffer.readerIndex(0);
 					}
 				}
 
@@ -631,9 +627,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 		@Override
 		public void shutdown() {
-
 		}
-
 	}
 
 }

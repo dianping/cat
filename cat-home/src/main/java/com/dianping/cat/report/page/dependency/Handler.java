@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.dependency;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -186,18 +185,16 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildMetricDashboard(Model model, Payload payload, long date) {
-	   Date start = new Date(date - 6 * TimeUtil.ONE_HOUR);
-	   Date end = new Date(date + TimeUtil.ONE_HOUR);
+		Date start = new Date(date - payload.getRange() * TimeUtil.ONE_HOUR);
+		Date end = new Date(date + TimeUtil.ONE_HOUR);
 
-	   System.err.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(start));
-	   System.err.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(end));
-	   Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end, "-1");
+		Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end, "-1");
 
-	   model.setReportStart(new Date(payload.getDate()));
-	   model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-	   model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
-	   m_externalInfoBuilder.buildTopErrorInfo(payload, model);
-   }
+		model.setReportStart(new Date(payload.getDate()));
+		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
+		model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
+		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
+	}
 
 	private void buildProductLineChart(Model model, Payload payload, Date reportTime) {
 		String productLine = payload.getProductLine();
