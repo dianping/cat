@@ -28,33 +28,11 @@ public class PlainTextCodecTest {
 
 		codec.encode(tree, buf);
 
+		buf.readInt();
 		MessageTree tree2 = new DefaultMessageTree();
 		codec.decode(buf, tree2);
 
 		Thread.sleep(1000);
-	}
-
-	@Test
-	public void testChannelBufCopy() throws InterruptedException {
-		MessageTree tree = buildMessages();
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
-		codec.encode(tree, buf);
-
-		buf.readerIndex(100);
-
-		System.out.println(buf.readerIndex());
-
-		int readIndex = buf.readerIndex();
-
-		buf.readerIndex(0);
-
-		String msg = buf.toString(Charset.forName("utf-8"));
-		System.err.println(msg);
-		buf.readerIndex(readIndex);
-
-		System.err.println(buf.toString(Charset.forName("utf-8")));
 	}
 
 	public MessageTree buildMessages() {

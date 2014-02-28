@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -19,8 +18,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -80,9 +77,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 			pair.setKey(System.currentTimeMillis());
 			pair.setValue(buf);
 		}
-		
+
 		decodeHeader(buf, tree);
-		
+
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}
@@ -433,6 +430,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 					buf.readByte(); // get rid of separator
 
 					int length = data.length;
+					int writeIndex = 0;
 
 					for (int i = 0; i < length; i++) {
 						if (data[i] == '\\') {
@@ -440,23 +438,29 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 								byte b = data[i + 1];
 
 								if (b == 't') {
-									data[i] = '\t';
+									data[writeIndex] = '\t';
+									i++;
 								} else if (b == 'r') {
-									data[i] = '\r';
+									data[writeIndex] = '\r';
+									i++;
 								} else if (b == 'n') {
-									data[i] = '\n';
-								} else {
-									data[i] = b;
+									data[writeIndex] = '\n';
+									i++;
+								} else{
+									data[writeIndex] = '\\';
 								}
-
-								System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
-								length--;
+							}else{
+								data[writeIndex] = '\\';
 							}
+						} else {
+							data[writeIndex] = data[i];
 						}
+						writeIndex++;
 					}
 
 					try {
-						str = new String(data, 0, length, "utf-8");
+						str = new String(data,0,writeIndex,"utf-8");
+						
 					} catch (UnsupportedEncodingException e) {
 						str = new String(data, 0, length);
 					}
@@ -586,50 +590,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new PrintThread());
-	}
-
-	public class PrintThread implements Task {
-
-		@Override
-		public void run() {
-			while (true) {
-				for (Entry<String, Pair<Long, ChannelBuffer>> entry : m_bufs.entrySet()) {
-					Pair<Long, ChannelBuffer> pair = entry.getValue();
-
-					if (System.currentTimeMillis() - pair.getKey() > 1000) {
-						ChannelBuffer channelBuffer = pair.getValue();
-						String str = null;
-
-						synchronized (channelBuffer) {
-							int oldReadIndex = channelBuffer.readerIndex();
-
-							channelBuffer.readerIndex(0);
-							str = channelBuffer.toString(Charset.forName("utf-8"));
-							channelBuffer.readerIndex(oldReadIndex);
-						}
-						if (str != null && str.length() > 0) {
-							m_logger.info("====" + str + "====");
-						}
-					}
-				}
-
-				try {
-					Thread.sleep(1000 * 5);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		@Override
-		public String getName() {
-			return "print-thread";
-		}
-
-		@Override
-		public void shutdown() {
-		}
 	}
 
 }
