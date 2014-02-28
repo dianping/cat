@@ -50,8 +50,6 @@ public class GraphCreator implements LogEnabled {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
-	
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
 	private int m_lastMinute = 6;
 
@@ -267,8 +265,9 @@ public class GraphCreator implements LogEnabled {
 		// if current report is not exist, use last day value replace it.
 		if (sum == 0 && start < TimeUtil.getCurrentHour().getTime()) {
 			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
-
-			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:" + m_sdf.format(new Date(start)));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+			
+			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:" + sdf.format(new Date(start)));
 			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs, abtestId);
 		}
 
