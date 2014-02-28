@@ -80,10 +80,14 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 			pair.setKey(System.currentTimeMillis());
 			pair.setValue(buf);
 		}
+		
 		decodeHeader(buf, tree);
+		
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}
+
+		m_bufs.remove(key);
 	}
 
 	protected void decodeHeader(ChannelBuffer buf, MessageTree tree) {
@@ -595,20 +599,18 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 					if (System.currentTimeMillis() - pair.getKey() > 1000) {
 						ChannelBuffer channelBuffer = pair.getValue();
+						String str = null;
 
 						synchronized (channelBuffer) {
-							int readIndex = channelBuffer.readerIndex();
+							int oldReadIndex = channelBuffer.readerIndex();
 
 							channelBuffer.readerIndex(0);
-
-							String tree = channelBuffer.toString(Charset.forName("utf-8"));
-
-							if (tree != null && tree.length() > 0) {
-								m_logger.info("====" + tree + "====");
-							}
-							channelBuffer.readerIndex(readIndex);
+							str = channelBuffer.toString(Charset.forName("utf-8"));
+							channelBuffer.readerIndex(oldReadIndex);
 						}
-						channelBuffer.readerIndex(0);
+						if (str != null && str.length() > 0) {
+							m_logger.info("====" + str + "====");
+						}
 					}
 				}
 
