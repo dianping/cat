@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.metric.chart;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -49,6 +50,8 @@ public class GraphCreator implements LogEnabled {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
+	
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
 	private int m_lastMinute = 6;
 
@@ -265,7 +268,7 @@ public class GraphCreator implements LogEnabled {
 		if (sum == 0 && start < TimeUtil.getCurrentHour().getTime()) {
 			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
 
-			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:" + new Date(start));
+			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:" + m_sdf.format(new Date(start)));
 			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs, abtestId);
 		}
 
