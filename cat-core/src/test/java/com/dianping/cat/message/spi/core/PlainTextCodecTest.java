@@ -2,7 +2,6 @@ package com.dianping.cat.message.spi.core;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;

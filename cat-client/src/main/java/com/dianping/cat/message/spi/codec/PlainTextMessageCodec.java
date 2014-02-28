@@ -460,7 +460,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 					try {
 						str = new String(data,0,writeIndex,"utf-8");
-						
 					} catch (UnsupportedEncodingException e) {
 						str = new String(data, 0, length);
 					}

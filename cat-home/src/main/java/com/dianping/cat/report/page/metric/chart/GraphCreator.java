@@ -263,11 +263,12 @@ public class GraphCreator implements LogEnabled {
 		}
 
 		// if current report is not exist, use last day value replace it.
-		if (sum == 0 && start < TimeUtil.getCurrentHour().getTime()) {
+		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
 			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
-			
-			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:" + sdf.format(new Date(start)));
+
+			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:"
+			      + sdf.format(new Date(start)));
 			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs, abtestId);
 		}
 
