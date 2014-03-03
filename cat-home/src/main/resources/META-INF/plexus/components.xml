@@ -83,6 +83,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.BugConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BugConfigManager</implementation>
 			<requirements>
@@ -2904,6 +2913,9 @@
 					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
@@ -2932,6 +2944,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
 			<implementation>com.dianping.cat.system.config.UtilizationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

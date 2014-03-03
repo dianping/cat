@@ -33,7 +33,9 @@ public enum JspFile {
 
 	BUG_CONFIG_UPDATE("/jsp/system/bug/bugConfig.jsp"),
 
-	UTILIZATION_CONFIG_UPDATE("/jsp/system/utilization/utilizationConfig.jsp"), ;
+	UTILIZATION_CONFIG_UPDATE("/jsp/system/utilization/utilizationConfig.jsp"),
+	
+	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"), ;
 
 	private String m_path;
 

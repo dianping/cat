@@ -36,6 +36,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -60,6 +61,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+	
+	@Inject
+	private DomainGroupConfigManager m_configManager;
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
