@@ -10,7 +10,8 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
-<a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&group=${payload.group}&domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>"
+ navUrlPrefix="op=groupReport&group=${payload.group}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 <jsp:body>
 <res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
@@ -20,21 +21,21 @@
 	<tr class="left">
 		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
-						class="current">All</a>
+					<a href="?op=view&domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
+						>All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">All</a>
+					<a href="?op=view&domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
-							class="current">${ip}</a>
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
+						>${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -47,9 +48,16 @@
 	<tr class="left">
 		<th>机器分组: &nbsp;&nbsp; 
 			<c:forEach var="group" items="${model.groups}">
-	   	  		&nbsp;[&nbsp;
-	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
-	   	 		&nbsp;]&nbsp;
+				<c:choose><c:when test="${payload.group eq group}">
+		   	  		&nbsp;[&nbsp;
+		   	  			<a class="current" href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	 		&nbsp;]&nbsp;
+	   	 		</c:when>
+	   	 		<c:otherwise>
+		   	  		&nbsp;[&nbsp;
+		   	  			<a href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	 		&nbsp;]&nbsp;
+	   	 		</c:otherwise></c:choose>
 			 </c:forEach>
 		</th>
 	</tr>
@@ -58,16 +66,16 @@
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
-			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+			<tr><th class="left"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=type">Type</a></th>
+				<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">Total Count</a></th>
+				<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">Failure Count</a></th>
+				<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failurePercent">Failure%</a></th>
 				<th>Sample Link</th>
 				<th>Min(ms)</th>
 				<th>Max(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">Avg</a>(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">95Line</a>(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">99.9Line</a>(ms)</th>
+				<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=avg">Avg</a>(ms)</th>
+				<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=95line">95Line</a>(ms)</th>
+				<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=99line">99.9Line</a>(ms)</th>
 				<th>Std(ms)</th>
 				<th>QPS</th>
 			</tr>
@@ -75,8 +83,8 @@
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
-					<td class="left"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
-					&nbsp;&nbsp;<a href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
+					<td class="left"><a href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${item.type}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
+					&nbsp;&nbsp;<a href="?op=groupReport&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
 					<td>&nbsp;${w:format(e.failPercent/100,'0.0000%')}</td>
@@ -94,22 +102,22 @@
 		</c:when>
 		<c:otherwise>
 			<tr><th class="left" colspan="13"><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
-		    <input  class="btn btn-primary  btn-small"  value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+		    <input  class="btn btn-primary  btn-small"  value="Filter" onclick="selectGroupByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列。
 			</th></tr>
 			<tr>
-			<th  style="text-align: left;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
-			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
+			<th  style="text-align: left;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
+			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
 			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
 			<th>Std(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
+			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
 			<tr class="graphs"><td colspan="12"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -118,7 +126,7 @@
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space:normal">
-							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>
 						<c:otherwise>

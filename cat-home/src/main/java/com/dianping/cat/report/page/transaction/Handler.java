@@ -18,6 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -61,14 +62,14 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-	
+
 	@Inject
 	private DomainGroupConfigManager m_configManager;
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
 
-	private void buildTransactionNameGraph(List<TransactionNameModel> names, Model model) {
+	private void buildTransactionNamePieChart(List<TransactionNameModel> names, Model model) {
 		PieChart chart = new PieChart();
 		List<Item> items = new ArrayList<Item>();
 
@@ -128,24 +129,21 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
-			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
 
-	private TransactionName getTransactionName(Model model, Payload payload) {
+	private TransactionReport getTransactionGraphReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = payload.getIpAddress();
 		String ipAddress = payload.getIpAddress();
+		String name = payload.getName();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType()) //
 		      .setProperty("name", payload.getName())//
 		      .setProperty("ip", ipAddress);
+
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
@@ -154,16 +152,7 @@ public class Handler implements PageHandler<Context> {
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 
-		report = m_mergeManager.mergerAll(report, ipAddress, name);
-		model.setReport(report);
-		
-		TransactionType t = report.getMachines().get(ip).findType(type);
-
-		if (t != null) {
-			return t.findName(name);
-		} else {
-			return null;
-		}
+		return report;
 	}
 
 	@Override
@@ -180,27 +169,86 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
+		String domain = payload.getDomain();
+		Action action = payload.getAction();
+		String ipAddress = payload.getIpAddress();
+		String group = payload.getGroup();
 		String type = payload.getType();
-		switch (payload.getAction()) {
+		String name = payload.getName();
+		String ip = payload.getIpAddress();
+
+		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
+		switch (action) {
 		case HOURLY_REPORT:
-			showHourlyReport(model, payload);
-			DisplayNames displayNameReport = model.getDisplayNameReport();
-			if ((!StringUtils.isEmpty(type)) && displayNameReport != null) {
-				buildTransactionNameGraph(displayNameReport.getResults(), model);
+			TransactionReport report = getHourlyReport(payload);
+
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			calculateTps(payload, report);
+			if (report != null) {
+				model.setReport(report);
+
+				buildTransactionMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_REPORT:
-			showSummarizeReport(model, payload);
-			displayNameReport = model.getDisplayNameReport();
-			if ((!StringUtils.isEmpty(type)) && displayNameReport != null) {
-				buildTransactionNameGraph(displayNameReport.getResults(), model);
+			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+			      payload.getHistoryEndDate());
+			calculateTps(payload, report);
+
+			if (report != null) {
+				model.setReport(report);
+				buildTransactionMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_GRAPH:
 			m_historyGraph.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
-			showHourlyGraphs(model, payload);
+			report = getTransactionGraphReport(model, payload);
+
+			if (name == null || name.length() == 0) {
+				name = Constants.ALL;
+			}
+			report = m_mergeManager.mergerAllName(report, ip, name);
+			model.setReport(report);
+			buildTransactionNameGraph(model, report, type, name, ip);
+			break;
+		case HOURLY_GROUP_REPORT:
+			report = getHourlyReport(payload);
+			report = filterReportByGroup(report, domain, group);
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			calculateTps(payload, report);
+			if (report != null) {
+				model.setReport(report);
+
+				buildTransactionMetaInfo(model, payload, report);
+			}
+			break;
+		case HISTORY_GROUP_REPORT:
+			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+			      payload.getHistoryEndDate());
+			
+			calculateTps(payload, report);
+			report = filterReportByGroup(report, domain, group);
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			
+			if (report != null) {
+				model.setReport(report);
+				buildTransactionMetaInfo(model, payload, report);
+			}
+			break;
+		case GROUP_GRAPHS:
+			report = getTransactionGraphReport(model, payload);
+			report = filterReportByGroup(report, domain, group);
+
+			if (name == null || name.length() == 0) {
+				name = Constants.ALL;
+			}
+			report = m_mergeManager.mergerAllName(report, ip, name);
+			model.setReport(report);
+			buildTransactionNameGraph(model, report, type, name, ip);
+			break;
+		case HISTORY_GROUP_GRAPH:
 			break;
 		}
 
@@ -208,6 +256,59 @@ public class Handler implements PageHandler<Context> {
 			m_xmlViewer.view(ctx, model);
 		} else {
 			m_jspViewer.view(ctx, model);
+		}
+	}
+
+	private void buildTransactionNameGraph(Model model, TransactionReport report, String type, String name, String ip) {
+		TransactionType t = report.findOrCreateMachine(ip).findOrCreateType(type);
+		TransactionName transactionName = t.findOrCreateName(name);
+
+		if (transactionName != null) {
+			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count",
+			      transactionName));
+			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", transactionName));
+			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+			      "Average Duration (ms)", transactionName));
+			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count",
+			      transactionName));
+
+			model.setGraph1(graph1);
+			model.setGraph2(graph2);
+			model.setGraph3(graph3);
+			model.setGraph4(graph4);
+		}
+	}
+
+	private TransactionReport filterReportByGroup(TransactionReport report, String domain, String group) {
+		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+		List<String> removes = new ArrayList<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			String ip = machine.getIp();
+
+			if (!ips.contains(ip)) {
+				removes.add(ip);
+			}
+		}
+		for (String ip : removes) {
+			report.getMachines().remove(ip);
+		}
+		return report;
+	}
+
+	private void buildTransactionMetaInfo(Model model, Payload payload, TransactionReport report) {
+		String type = payload.getType();
+		String sorted = payload.getSortBy();
+		String queryName = payload.getQueryName();
+		String ip = payload.getIpAddress();
+
+		if (!StringUtils.isEmpty(type)) {
+			DisplayNames displayNames = new DisplayNames();
+
+			model.setDisplayNameReport(displayNames.display(sorted, type, ip, report, queryName));
+			buildTransactionNamePieChart(displayNames.getResults(), model);
+		} else {
+			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
 		}
 	}
 
@@ -225,67 +326,6 @@ public class Handler implements PageHandler<Context> {
 		String queryName = payload.getQueryName();
 		if (queryName != null) {
 			model.setQueryName(queryName);
-		}
-	}
-
-	private void showHourlyGraphs(Model model, Payload payload) {
-		TransactionName name = getTransactionName(model, payload);
-
-		if (name != null) {
-			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
-			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-			      "Average Duration (ms)", name));
-			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
-
-			model.setGraph1(graph1);
-			model.setGraph2(graph2);
-			model.setGraph3(graph3);
-			model.setGraph4(graph4);
-		}
-	}
-
-	private void showHourlyReport(Model model, Payload payload) {
-		try {
-			TransactionReport report = getHourlyReport(payload);
-
-			if (report != null) {
-				model.setReport(report);
-
-				String type = payload.getType();
-				String sorted = payload.getSortBy();
-				String queryName = payload.getQueryName();
-				String ip = payload.getIpAddress();
-				if (!StringUtils.isEmpty(type)) {
-					model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, report, queryName));
-				} else {
-					model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
-				}
-			}
-		} catch (Throwable e) {
-			Cat.logError(e);
-			model.setException(e);
-		}
-	}
-
-	private void showSummarizeReport(Model model, Payload payload) {
-		String type = payload.getType();
-		String sorted = payload.getSortBy();
-		String ip = payload.getIpAddress();
-		String domain = model.getDomain();
-
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
-		calculateTps(payload, transactionReport);
-		model.setReport(transactionReport);
-		if (transactionReport != null) {
-			if (!StringUtils.isEmpty(type)) {
-				model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
-				      payload.getQueryName()));
-			} else {
-				model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
-			}
 		}
 	}
 

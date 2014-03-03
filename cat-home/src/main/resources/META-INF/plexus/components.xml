@@ -1831,6 +1831,9 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_service</field-name>
@@ -1865,6 +1868,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
 			<implementation>com.dianping.cat.report.page.transaction.TransactionMergeManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
@@ -2944,15 +2956,6 @@
 		<component>
 			<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
 			<implementation>com.dianping.cat.system.config.UtilizationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
-			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

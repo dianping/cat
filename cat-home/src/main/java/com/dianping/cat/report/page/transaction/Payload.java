@@ -26,7 +26,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private boolean m_xml;
 	
 	@FieldMeta("group")
-	private boolean m_group;
+	private String m_group;
 	
 	public Payload() {
 		super(ReportPage.TRANSACTION);
@@ -81,11 +81,11 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_xml = xml;
 	}
 
-	public boolean isGroup() {
+	public String getGroup() {
    	return m_group;
    }
 
-	public void setGroup(boolean group) {
+	public void setGroup(String group) {
    	m_group = group;
    }
 
