@@ -5,7 +5,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 
 public class EventMergeManager {
 
-	public EventReport mergerAll(EventReport report, String ipAddress, String allName) {
+	public EventReport mergerAllName(EventReport report, String ipAddress, String allName) {
 		EventReport temp = mergerAllIp(report, ipAddress);
 
 		return mergerAllName(temp, allName);

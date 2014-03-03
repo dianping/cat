@@ -106,7 +106,7 @@
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列。
 			</th></tr>
 			<tr>
-			<th  style="text-align: left;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
+			<th  style="text-align: left;"><a href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
 			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
 			<th><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
@@ -126,7 +126,7 @@
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space:normal">
-							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+							<a href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>
 						<c:otherwise>
