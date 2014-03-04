@@ -15,11 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -36,7 +33,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initializable {
+public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	public static final String ID = "plain-text";
 
 	private static final String VERSION = "PT1"; // plain text version 1
@@ -44,8 +41,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 	private static final byte TAB = '\t'; // tab character
 
 	private static final byte LF = '\n'; // line feed character
-
-	private Map<String, Pair<Long, ChannelBuffer>> m_bufs = new ConcurrentHashMap<String, Pair<Long, ChannelBuffer>>();
 
 	@Inject
 	private BufferWriter m_writer = new EscapingBufferWriter();
@@ -66,25 +61,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
-		String key = Thread.currentThread().getName();
-		Pair<Long, ChannelBuffer> pair = m_bufs.get(key);
-
-		if (pair == null) {
-			pair = new Pair<Long, ChannelBuffer>(System.currentTimeMillis(), buf);
-
-			m_bufs.put(key, pair);
-		} else {
-			pair.setKey(System.currentTimeMillis());
-			pair.setValue(buf);
-		}
-
 		decodeHeader(buf, tree);
 
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}
-
-		m_bufs.remove(key);
 	}
 
 	protected void decodeHeader(ChannelBuffer buf, MessageTree tree) {
@@ -394,7 +375,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
-	protected class BufferHelper {
+	protected static class BufferHelper {
 
 		private BufferWriter m_writer;
 
@@ -446,10 +427,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 								} else if (b == 'n') {
 									data[writeIndex] = '\n';
 									i++;
-								} else{
+								} else {
 									data[writeIndex] = '\\';
 								}
-							}else{
+							} else {
 								data[writeIndex] = '\\';
 							}
 						} else {
@@ -459,7 +440,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 					}
 
 					try {
-						str = new String(data,0,writeIndex,"utf-8");
+						str = new String(data, 0, writeIndex, "utf-8");
 					} catch (UnsupportedEncodingException e) {
 						str = new String(data, 0, length);
 					}
@@ -585,10 +566,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initiali
 				return DEFAULT;
 			}
 		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
 	}
 
 }

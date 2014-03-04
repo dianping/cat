@@ -148,8 +148,10 @@ public class TcpSocketReceiver implements LogEnabled {
 			while (active) {
 				try {
 					handleMessage();
+				} catch (InterruptedException e) {
+					active = false;
 				} catch (Exception e) {
-					//ignore
+					// ignore
 				}
 			}
 			try {
@@ -165,7 +167,7 @@ public class TcpSocketReceiver implements LogEnabled {
 			}
 		}
 
-		public void handleMessage() throws InterruptedException  {
+		public void handleMessage() throws InterruptedException {
 			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
 			if (buf != null) {
@@ -186,7 +188,7 @@ public class TcpSocketReceiver implements LogEnabled {
 			}
 			try {
 				buf.markReaderIndex();
-				
+
 				// read the size of the message
 				buf.readInt();
 				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
@@ -292,7 +294,7 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public boolean isActive() {
-   	return m_active;
-   }
-	
+		return m_active;
+	}
+
 }
