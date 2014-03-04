@@ -62,7 +62,9 @@ public class DefaultTaggedTransaction extends DefaultTransaction implements Tagg
 	public void start() {
 		MessageTree tree = getManager().getThreadLocalMessageTree();
 
-		tree.setParentMessageId(m_parentMessageId);
-		tree.setRootMessageId(m_rootMessageId);
+		if (tree != null && tree.getRootMessageId() == null) {
+			tree.setParentMessageId(m_parentMessageId);
+			tree.setRootMessageId(m_rootMessageId);
+		}
 	}
 }

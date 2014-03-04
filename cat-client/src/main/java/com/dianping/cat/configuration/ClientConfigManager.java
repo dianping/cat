@@ -97,6 +97,10 @@ public class ClientConfigManager implements LogEnabled {
 		}
 	}
 
+	public int getTaggedTransactionCacheSize() {
+	   return 1024;
+   }
+
 	public void initialize(File configFile) throws Exception {
 		ClientConfig globalConfig = null;
 		ClientConfig clientConfig = null;
