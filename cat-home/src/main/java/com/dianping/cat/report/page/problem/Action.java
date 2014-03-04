@@ -5,15 +5,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	GROUP("group"),
 
+	THREAD("thread"),
+	
 	HOUR_GRAPH("hourlyGraph"),
 
-	HISTORY("history"),
+	HISTORY_REPORT("history"),
 
 	HISTORY_GRAPH("historyGraph"),
 
-	THREAD("thread"),
-
-	VIEW("view");
+	HOULY_REPORT("view");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
