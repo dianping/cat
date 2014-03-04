@@ -2,7 +2,10 @@ package com.dianping.cat.message.internal;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
@@ -18,6 +21,7 @@ import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
@@ -53,6 +57,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private TransactionHelper m_validator = new TransactionHelper();
 
+	private Map<String, TaggedTransaction> m_taggedTransactions;
+
 	private Logger m_logger;
 
 	@Override
@@ -61,6 +67,20 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (ctx != null) {
 			ctx.add(message);
+		}
+	}
+
+	@Override
+	public void bind(String tag, String title) {
+		TaggedTransaction t = m_taggedTransactions.get(tag);
+
+		if (t != null) {
+			MessageTree tree = getThreadLocalMessageTree();
+
+			if (tree != null) {
+				t.start();
+				t.bind(tag, tree.getMessageId(), title);
+			}
 		}
 	}
 
@@ -161,6 +181,18 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} catch (IOException e) {
 			throw new InitializationException("Error while initializing MessageIdFactory!", e);
 		}
+
+		// initialize the tagged transaction cache
+		final int size = m_configManager.getTaggedTransactionCacheSize();
+
+		m_taggedTransactions = new LinkedHashMap<String, TaggedTransaction>(size * 4 / 3 + 1, 0.75f, true) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected boolean removeEldestEntry(Entry<String, TaggedTransaction> eldest) {
+				return size() >= size;
+			}
+		};
 	}
 
 	@Override
@@ -240,6 +272,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (ctx != null) {
 			ctx.start(transaction, forked);
+
+			if (transaction instanceof TaggedTransaction) {
+				TaggedTransaction tt = (TaggedTransaction) transaction;
+
+				m_taggedTransactions.put(tt.getTag(), tt);
+			}
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
@@ -434,7 +472,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		private void markAsRunAway(Transaction parent, DefaultTaggedTransaction transaction) {
-			transaction.addData("RunAway");
+			if (!transaction.hasChildren()) {
+				transaction.addData("RunAway");
+			}
+
 			transaction.setStatus(Message.SUCCESS);
 			transaction.setStandalone(true);
 			transaction.complete();
