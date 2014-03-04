@@ -13,7 +13,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HISTORY_GRAPH("historyGraph"),
 
-	HOULY_REPORT("view");
+	HOULY_REPORT("view"),
+	
+	GROUP_GRAPHS("groupGraphs"),
+
+	HISTORY_GROUP_GRAPH("historyGroupGraph"),
+
+	HISTORY_GROUP_REPORT("historyGroupReport"),
+
+	HOURLY_GROUP_REPORT("groupReport");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
