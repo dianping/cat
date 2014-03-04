@@ -21,6 +21,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+	
+	@FieldMeta("group")
+	private String m_group;
 
 	public Payload() {
 		super(ReportPage.EVENT);
@@ -66,6 +69,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
+
+	public String getGroup() {
+   	return m_group;
+   }
+
+	public void setGroup(String group) {
+   	m_group = group;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

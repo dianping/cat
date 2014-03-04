@@ -127,7 +127,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, Action.HOULY_REPORT);
 	}
 
 	public void setGroupName(String groupName) {
@@ -161,7 +161,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.HOULY_REPORT;
 		}
 	}
 }

@@ -12,7 +12,7 @@
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
 	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常规范配置</strong></a></li>
 	       <li class="text-right" id="aggregationList"><a href="?op=aggregations"><strong>前端合并规则</strong></a></li>
-	       <li class="text-right" id="utilizationConfigUpdate"><a href="?op=utilizationConfigUpdate"><strong>资源权重配置</strong></a></li>
+	       <li class="text-right" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate"><strong>机器分组配置</strong></a></li>
          </ul>
 </div>
 <style>

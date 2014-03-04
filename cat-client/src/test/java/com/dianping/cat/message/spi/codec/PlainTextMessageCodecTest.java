@@ -73,7 +73,7 @@ public class PlainTextMessageCodecTest {
 		Metric.setTimestamp(timestamp);
 		return Metric;
 	}
-	
+
 	private Heartbeat newHeartbeat(String type, String name, long timestamp, String status, String data) {
 		DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
@@ -108,7 +108,7 @@ public class PlainTextMessageCodecTest {
 		trace.setTimestamp(timestamp);
 		return trace;
 	}
-	
+
 	private Transaction newTransaction(String type, String name, long timestamp, String status, int duration, String data) {
 		DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
@@ -135,7 +135,7 @@ public class PlainTextMessageCodecTest {
 
 		check(metric, "M2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n");
 	}
-	
+
 	@Test
 	public void testEventForRawData() {
 		long timestamp = 1325489621987L;
@@ -187,7 +187,7 @@ public class PlainTextMessageCodecTest {
 		      "L2012-01-02 15:33:41.987\tException\tjava.lang.Exception\tERROR\t" + //
 		            "java.lang.Exception\\n\\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\\n\t\n");
 	}
-	
+
 	@Test
 	public void testTransactionNormal() {
 		long timestamp = 1325489621987L;
@@ -218,7 +218,7 @@ public class PlainTextMessageCodecTest {
 		      "E2012-01-02 15:33:42.027\tURL\tView\t0\tview=HTML\t\n" + //
 		      "T2012-01-02 15:33:42.087\tURL\tReview\t0\t100000us\t/review/2468\t\n");
 	}
-	
+
 	@Test
 	public void testTransactionSimple() {
 		long timestamp = 1325489621987L;

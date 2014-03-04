@@ -30,4 +30,7 @@
    <model package="com.dianping.cat.home.utilization-config" name="utilization-config">
       <sample-model>src/test/resources/com/dianping/cat/system/config/utilizationConfig.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.domainGroup" name="domainGroup">
+      <sample-model>src/test/resources/com/dianping/cat/system/config/domainGroup.xml</sample-model>
+   </model>
 </wizard>

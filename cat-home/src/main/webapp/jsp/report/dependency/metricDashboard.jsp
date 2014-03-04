@@ -29,6 +29,7 @@
 </style>
  <c:choose>
 	<c:when test="${payload.fullScreen}">
+		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
 			<div class="row-fluid">
 				<div class="span12 text-center">
