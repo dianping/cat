@@ -14,10 +14,12 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.LINE_CHART.getPath();
 		case TOPOLOGY:
 			return JspFile.TOPOLOGY.getPath();
-		case DASHBOARD:
-			return JspFile.DASHBOARD.getPath();
+		case DEPENDENCY_DASHBOARD:
+			return JspFile.DEPENDENCY_DASHBOARD.getPath();
 		case PRODUCT_LINE:
 			return JspFile.PRODUCT_LINE.getPath();
+		case METRIC_DASHBOARD:
+			return JspFile.METRIC_DASHBOARD.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

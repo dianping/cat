@@ -83,6 +83,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.BugConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BugConfigManager</implementation>
 			<requirements>
@@ -1822,6 +1831,9 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_service</field-name>
@@ -1858,6 +1870,15 @@
 			<implementation>com.dianping.cat.report.page.transaction.TransactionMergeManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
 			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
 			<requirements>
@@ -1883,6 +1904,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2551,6 +2575,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2899,6 +2926,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>

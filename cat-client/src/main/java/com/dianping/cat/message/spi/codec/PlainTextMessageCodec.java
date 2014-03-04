@@ -15,8 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -33,7 +36,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
+public class PlainTextMessageCodec implements MessageCodec, LogEnabled, Initializable {
 	public static final String ID = "plain-text";
 
 	private static final String VERSION = "PT1"; // plain text version 1
@@ -41,6 +44,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	private static final byte TAB = '\t'; // tab character
 
 	private static final byte LF = '\n'; // line feed character
+
+	private Map<String, Pair<Long, ChannelBuffer>> m_bufs = new ConcurrentHashMap<String, Pair<Long, ChannelBuffer>>();
 
 	@Inject
 	private BufferWriter m_writer = new EscapingBufferWriter();
@@ -61,11 +66,25 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
+		String key = Thread.currentThread().getName();
+		Pair<Long, ChannelBuffer> pair = m_bufs.get(key);
+
+		if (pair == null) {
+			pair = new Pair<Long, ChannelBuffer>(System.currentTimeMillis(), buf);
+
+			m_bufs.put(key, pair);
+		} else {
+			pair.setKey(System.currentTimeMillis());
+			pair.setValue(buf);
+		}
+
 		decodeHeader(buf, tree);
 
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}
+
+		m_bufs.remove(key);
 	}
 
 	protected void decodeHeader(ChannelBuffer buf, MessageTree tree) {
@@ -121,7 +140,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return transaction;
 		case 'A':
 			DefaultTransaction tran = new DefaultTransaction(type, name, null);
-			String status = helper.read(buf, TAB);
+			String status = helper.readRaw(buf, TAB);
 			String duration = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
@@ -140,7 +159,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return tran;
 			}
 		case 'T':
-			String transactionStatus = helper.read(buf, TAB);
+			String transactionStatus = helper.readRaw(buf, TAB);
 			String transactionDuration = helper.read(buf, TAB);
 			String transactionData = helper.readRaw(buf, TAB);
 
@@ -149,12 +168,13 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			parent.addData(transactionData);
 
 			long transactionD = Long.parseLong(transactionDuration.substring(0, transactionDuration.length() - 2));
+
 			parent.setDurationInMicros(transactionD);
 
 			return stack.pop();
 		case 'E':
 			DefaultEvent event = new DefaultEvent(type, name);
-			String eventStatus = helper.read(buf, TAB);
+			String eventStatus = helper.readRaw(buf, TAB);
 			String eventData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -170,7 +190,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
-			String metricStatus = helper.read(buf, TAB);
+			String metricStatus = helper.readRaw(buf, TAB);
 			String metricData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -186,7 +206,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'L':
 			DefaultTrace trace = new DefaultTrace(type, name);
-			String traceStatus = helper.read(buf, TAB);
+			String traceStatus = helper.readRaw(buf, TAB);
 			String traceData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -202,7 +222,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String heartbeatStatus = helper.read(buf, TAB);
+			String heartbeatStatus = helper.readRaw(buf, TAB);
 			String heartbeatData = helper.readRaw(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -221,7 +241,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			      + buf.toString(Charset.forName("utf-8")));
 			throw new RuntimeException("Unknown identifier int name");
 		}
-
 	}
 
 	protected void decodeMessage(ChannelBuffer buf, MessageTree tree) {
@@ -312,7 +331,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		count += helper.write(buf, TAB);
 
 		if (policy != Policy.WITHOUT_STATUS) {
-			count += helper.write(buf, message.getStatus());
+			count += helper.writeRaw(buf, message.getStatus());
 			count += helper.write(buf, TAB);
 
 			Object data = message.getData();
@@ -375,7 +394,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
-	protected static class BufferHelper {
+	protected class BufferHelper {
+
 		private BufferWriter m_writer;
 
 		public BufferHelper(BufferWriter writer) {
@@ -397,46 +417,55 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public String readRaw(ChannelBuffer buf, byte separator) {
-			int count = buf.bytesBefore(separator);
+			try {
+				int count = buf.bytesBefore(separator);
 
-			if (count < 0) {
-				return null;
-			} else {
-				byte[] data = new byte[count];
-				String str;
+				if (count < 0) {
+					return null;
+				} else {
+					byte[] data = new byte[count];
+					String str;
 
-				buf.readBytes(data);
-				buf.readByte(); // get rid of separator
+					buf.readBytes(data);
+					buf.readByte(); // get rid of separator
 
-				int length = data.length;
+					int length = data.length;
+					int writeIndex = 0;
 
-				for (int i = 0; i < length; i++) {
-					if (data[i] == '\\') {
-						if (i + 1 < length) {
-							byte b = data[i + 1];
+					for (int i = 0; i < length; i++) {
+						if (data[i] == '\\') {
+							if (i + 1 < length) {
+								byte b = data[i + 1];
 
-							if (b == 't') {
-								data[i] = '\t';
-							} else if (b == 'r') {
-								data[i] = '\r';
-							} else if (b == 'n') {
-								data[i] = '\n';
-							} else {
-								data[i] = b;
+								if (b == 't') {
+									data[writeIndex] = '\t';
+									i++;
+								} else if (b == 'r') {
+									data[writeIndex] = '\r';
+									i++;
+								} else if (b == 'n') {
+									data[writeIndex] = '\n';
+									i++;
+								} else{
+									data[writeIndex] = '\\';
+								}
+							}else{
+								data[writeIndex] = '\\';
 							}
-
-							System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
-							length--;
+						} else {
+							data[writeIndex] = data[i];
 						}
+						writeIndex++;
 					}
-				}
 
-				try {
-					str = new String(data, 0, length, "utf-8");
-				} catch (UnsupportedEncodingException e) {
-					str = new String(data, 0, length);
+					try {
+						str = new String(data,0,writeIndex,"utf-8");
+					} catch (UnsupportedEncodingException e) {
+						str = new String(data, 0, length);
+					}
+					return str;
 				}
-				return str;
+			} finally {
 			}
 		}
 
@@ -556,6 +585,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return DEFAULT;
 			}
 		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
 	}
 
 }

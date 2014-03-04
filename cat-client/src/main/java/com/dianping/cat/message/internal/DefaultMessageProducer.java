@@ -31,12 +31,12 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public boolean isEnabled() {
-		return m_manager.isCatEnabled();
+		return m_manager.isMessageEnabled();
 	}
 
 	@Override
 	public void logError(String message, Throwable cause) {
-		if (Cat.isEnabled()) {
+		if (Cat.getManager().isCatEnabled()) {
 			if (shouldLog(cause)) {
 				StringWriter writer = new StringWriter(2048);
 
@@ -131,7 +131,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
 			m_manager.add(event);
@@ -146,7 +146,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled() && parent != null) {
+		if (m_manager.isMessageEnabled() && parent != null) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
 			parent.addChild(event);
@@ -163,7 +163,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
 
 			m_manager.start(transaction, true);
@@ -179,7 +179,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
 			m_manager.add(heartbeat);
@@ -194,7 +194,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled() && parent != null) {
+		if (m_manager.isMessageEnabled() && parent != null) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
 			parent.addChild(heartbeat);
@@ -210,7 +210,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name);
 
 			m_manager.add(metric);
@@ -227,7 +227,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
 
 			m_manager.start(transaction, true);
@@ -243,7 +243,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultTrace trace = new DefaultTrace(type, name);
 
 			m_manager.add(trace);
@@ -260,7 +260,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
 			m_manager.start(transaction, false);
@@ -276,7 +276,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled() && parent != null) {
+		if (m_manager.isMessageEnabled() && parent != null) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
 			parent.addChild(transaction);

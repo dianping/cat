@@ -15,6 +15,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	private ReportPage m_page;
 
+	@FieldMeta("range")
+	private int m_range = 24;
+
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -28,7 +31,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private int m_frequency = 10;
 
 	@FieldMeta("tops")
-	private int m_topCounts = 10;
+	private int m_topCounts = 11;
 
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
@@ -139,6 +142,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setTab(String tab) {
 		m_tab = tab;
+	}
+
+	public int getRange() {
+		return m_range;
+	}
+
+	public void setRange(int range) {
+		m_range = range;
 	}
 
 }

@@ -64,18 +64,24 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
+		
+		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
+		
 		for (String domainName : domains) {
 			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
-				new TransactionReportVisitor(topReport).visitTransactionReport(report);
+				transactionReportVisitor.visitTransactionReport(report);
 			}
 		}
+
+		ProblemReportVisitor problemReportVisitor = new ProblemReportVisitor(topReport);
+		
 		for (String domainName : domains) {
 			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
-				new ProblemReportVisitor(topReport).visitProblemReport(report);
+				problemReportVisitor.visitProblemReport(report);
 			}
 		}
 		return topReport;

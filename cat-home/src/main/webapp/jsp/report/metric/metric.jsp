@@ -15,7 +15,7 @@
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
-			graphLineChart(document.getElementById('${item.title}'), data);
+			graphMetricChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
 		var product = '${payload.product}';

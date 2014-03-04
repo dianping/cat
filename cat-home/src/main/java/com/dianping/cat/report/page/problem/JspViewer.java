@@ -10,7 +10,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case VIEW:
+		case HOULY_REPORT:
 			return JspFile.ALL.getPath();
 		case GROUP:
 			return JspFile.GROUP.getPath();
@@ -18,7 +18,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.THREAD.getPath();
 		case DETAIL:
 			return JspFile.DETAIL.getPath();
-		case HISTORY:
+		case HISTORY_REPORT:
 			return JspFile.HISTORY.getPath();
 		case HISTORY_GRAPH:
 			return JspFile.HISTORY_GRAPH.getPath();

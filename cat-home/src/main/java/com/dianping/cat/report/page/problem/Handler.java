@@ -145,7 +145,7 @@ public class Handler implements PageHandler<Context> {
 		longConfig.setCacheThreshold(payload.getCacheThreshold()).setCallThreshold(payload.getCallThreshold());
 		problemStatistics.setLongConfig(longConfig);
 		switch (payload.getAction()) {
-		case VIEW:
+		case HOULY_REPORT:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
 			if (ip.equals(Constants.ALL)) {
@@ -156,7 +156,7 @@ public class Handler implements PageHandler<Context> {
 			problemStatistics.visitProblemReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
-		case HISTORY:
+		case HISTORY_REPORT:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);

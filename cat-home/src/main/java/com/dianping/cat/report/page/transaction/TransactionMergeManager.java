@@ -5,7 +5,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public class TransactionMergeManager {
 
-	public TransactionReport mergerAll(TransactionReport report, String ipAddress, String allName) {
+	public TransactionReport mergerAllName(TransactionReport report, String ipAddress, String allName) {
 		TransactionReport temp = mergerAllIp(report, ipAddress);
 
 		return mergerAllName(temp, allName);

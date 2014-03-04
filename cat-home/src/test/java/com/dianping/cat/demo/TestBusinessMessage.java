@@ -14,6 +14,15 @@ public class TestBusinessMessage {
 	private static final String PayOrder = "PayOrder";
 
 	@Test
+	public void testEvent() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			Cat.logError(new NullPointerException());
+		}
+		
+		Thread.sleep(10000);
+	}
+	
+	@Test
 	public void test() throws Exception {
 		while (true) {
 			for (int i = 0; i < 1000; i++) {

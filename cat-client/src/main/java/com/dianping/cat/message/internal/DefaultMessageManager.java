@@ -103,7 +103,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public void flush(MessageTree tree) {
 		MessageSender sender = m_transportManager.getSender();
 
-		if (sender != null && isCatEnabled()) {
+		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
 			if (m_statistics != null) {
@@ -197,6 +197,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public boolean isCatEnabled() {
+		return m_domain != null && m_domain.isEnabled() && m_configManager.isCatEnabled();
+	}
+
+	@Override
+	public boolean isMessageEnabled() {
 		return m_domain != null && m_domain.isEnabled() && m_context.get() != null && m_configManager.isCatEnabled();
 	}
 
@@ -484,7 +489,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				if (child != current) {
 					target.addChild(child);
 				} else {
-					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(), DefaultMessageManager.this);
+					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(),
+					      DefaultMessageManager.this);
 
 					cloned.setTimestamp(current.getTimestamp());
 					cloned.setDurationInMicros(current.getDurationInMicros());
@@ -514,7 +520,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
-				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), DefaultMessageManager.this);
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
+				      DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());

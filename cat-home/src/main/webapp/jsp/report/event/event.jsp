@@ -44,6 +44,17 @@
 		</th>
 	</tr>
 </table>
+<table class="groups">
+	<tr class="left">
+		<th>机器分组: &nbsp;&nbsp; 
+			<c:forEach var="group" items="${model.groups}">
+	   	  		&nbsp;[&nbsp;
+	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	 		&nbsp;]&nbsp;
+			 </c:forEach>
+		</th>
+	</tr>
+</table>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -76,7 +87,7 @@
 		</c:when>
 		<c:otherwise>
 			<tr>
-			<th class="left"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}" class="graph_link" data-status="-1">[:: show ::]</a>
+			<th class="left"><a href="?op=groupGraphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
@@ -93,7 +104,7 @@
 					<td class="left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a	href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
+						<a	href="?op=groupGraphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
 					</c:when>
 					</c:choose>
 					&nbsp;&nbsp;${e.id}

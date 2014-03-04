@@ -30,6 +30,20 @@
 		</th>
 	</tr>
 </table>
+
+
+<table class="groups">
+	<tr class="left">
+		<th>机器分组: &nbsp;&nbsp; 
+			<c:forEach var="group" items="${model.groups}">
+	   	  		&nbsp;[&nbsp;
+	   	  			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	 		&nbsp;]&nbsp;
+			 </c:forEach>
+		</th>
+	</tr>
+</table>
+
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">

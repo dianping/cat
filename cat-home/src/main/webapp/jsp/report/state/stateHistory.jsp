@@ -162,7 +162,7 @@
 			<td>${item.name}</td>
 			<td style="text-align:right;">${w:format(item.total,'#,###,###,###,##0.#')}</td>
 			<td style="text-align:right;">${w:format(item.totalLoss,'#,###,###,###,##0.#')}</td>
-			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'0.00#')}</td>
+			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'#,###,##0.000')}</td>
 			<td style="text-align:center;">${w:size(item.ips)}</td>
 			<td style="white-space: normal">${item.ips}</td>
 		</tr>

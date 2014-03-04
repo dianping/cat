@@ -2,12 +2,13 @@ package com.dianping.cat.statistic;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ServerStatistic {
 	private Map<Long, Statistic> m_statistics = new ConcurrentHashMap<Long, Statistic>(100);
 
-	public Statistic findOrCreate(Long time) {
+	public synchronized Statistic findOrCreate(Long time) {
 		Statistic state = m_statistics.get(time);
 
 		if (state == null) {
@@ -27,17 +28,17 @@ public class ServerStatistic {
 
 		private long m_messageTotalLoss;
 
-		private double m_messageSize;
+		private long m_messageSize;
 
 		private long m_messageDump;
 
 		private long m_messageDumpLoss;
 
-		private Map<String, AtomicLong> m_messageTotals = new ConcurrentHashMap<String, AtomicLong>(256);
+		private ConcurrentMap<String, AtomicLong> m_messageTotals = new ConcurrentHashMap<String, AtomicLong>(256);
 
-		private Map<String, AtomicLong> m_messageTotalLosses = new ConcurrentHashMap<String, AtomicLong>(256);
+		private ConcurrentMap<String, AtomicLong> m_messageTotalLosses = new ConcurrentHashMap<String, AtomicLong>(256);
 
-		private Map<String, Double> m_messageSizes = new ConcurrentHashMap<String, Double>(256);
+		private ConcurrentMap<String, AtomicLong> m_messageSizes = new ConcurrentHashMap<String, AtomicLong>(256);
 
 		private double m_processDelaySum;
 
@@ -53,20 +54,16 @@ public class ServerStatistic {
 
 		private long m_networkTimeError;
 
-		public void addBlockTotal(long block) {
-			m_blockTotal += block;
-		}
-
 		public void addBlockLoss(long blockLoss) {
 			m_blockLoss += blockLoss;
 		}
 
-		public void addPigeonTimeError(long pigeonTimeError) {
-			m_pigeonTimeError += pigeonTimeError;
+		public void addBlockTime(long blockTime) {
+			m_blockTime += blockTime;
 		}
 
-		public void addNetworkTimeError(long networkTimeError) {
-			m_networkTimeError += networkTimeError;
+		public void addBlockTotal(long block) {
+			m_blockTotal += block;
 		}
 
 		public void addMessageDump(long messageDump) {
@@ -77,30 +74,15 @@ public class ServerStatistic {
 			m_messageDumpLoss += messageDumpLoss;
 		}
 
-		public void addMessageTotal(String domain, long messageTotal) {
-			AtomicLong value = m_messageTotals.get(domain);
-			if (value != null) {
-				value.set(value.get() + messageTotal);
-			} else {
-				m_messageTotals.put(domain, new AtomicLong(messageTotal));
-			}
-		}
+		public void addMessageSize(String domain, int size) {
+			m_messageSize += size;
 
-		public void addMessageTotalLoss(String domain, long messageTotalLoss) {
-			AtomicLong value = m_messageTotalLosses.get(domain);
-			if (value != null) {
-				value.set(value.get() + messageTotalLoss);
-			} else {
-				m_messageTotalLosses.put(domain, new AtomicLong(messageTotalLoss));
-			}
-		}
+			AtomicLong value = m_messageSizes.get(domain);
 
-		public void addMessageSize(String domain, double messageSize) {
-			Double value = m_messageSizes.get(domain);
 			if (value != null) {
-				m_messageSizes.put(domain, value + messageSize);
+				value.addAndGet(size);
 			} else {
-				m_messageSizes.put(domain, messageSize);
+				m_messageSizes.put(domain, new AtomicLong(size));
 			}
 		}
 
@@ -108,16 +90,37 @@ public class ServerStatistic {
 			m_messageTotal += messageTotal;
 		}
 
+		public void addMessageTotal(String domain, long messageTotal) {
+			AtomicLong value = m_messageTotals.get(domain);
+			
+			if (value != null) {
+				value.addAndGet(messageTotal);
+			} else {
+				m_messageTotals.put(domain, new AtomicLong(messageTotal));
+			}
+		}
+
 		public void addMessageTotalLoss(long messageTotalLoss) {
 			m_messageTotalLoss += messageTotalLoss;
 		}
 
-		public void addMessageSize(double messageSize) {
-			m_messageSize += messageSize;
+		public void addMessageTotalLoss(String domain, long messageTotalLoss) {
+			m_messageTotalLoss += messageTotalLoss;
+
+			AtomicLong value = m_messageTotalLosses.get(domain);
+			if (value != null) {
+				value.addAndGet(messageTotalLoss);
+			} else {
+				m_messageTotalLosses.put(domain, new AtomicLong(messageTotalLoss));
+			}
 		}
 
-		public void addBlockTime(long blockTime) {
-			m_blockTime += blockTime;
+		public void addNetworkTimeError(long networkTimeError) {
+			m_networkTimeError += networkTimeError;
+		}
+
+		public void addPigeonTimeError(long pigeonTimeError) {
+			m_pigeonTimeError += pigeonTimeError;
 		}
 
 		public void addProcessDelay(double processDelay) {
@@ -132,6 +135,18 @@ public class ServerStatistic {
 			return 0;
 		}
 
+		public long getBlockLoss() {
+			return m_blockLoss;
+		}
+
+		public long getBlockTime() {
+			return m_blockTime;
+		}
+
+		public long getBlockTotal() {
+			return m_blockTotal;
+		}
+
 		public long getMessageDump() {
 			return m_messageDump;
 		}
@@ -140,44 +155,12 @@ public class ServerStatistic {
 			return m_messageDumpLoss;
 		}
 
-		public Map<String, Double> getMessageSizes() {
+		public long getMessageSize() {
+			return m_messageSize;
+		}
+
+		public Map<String, AtomicLong> getMessageSizes() {
 			return m_messageSizes;
-		}
-
-		public Map<String, AtomicLong> getMessageTotals() {
-			return m_messageTotals;
-		}
-
-		public Map<String, AtomicLong> getMessageTotalLosses() {
-			return m_messageTotalLosses;
-		}
-
-		public int getProcessDelayCount() {
-			return m_processDelayCount;
-		}
-
-		public double getProcessDelaySum() {
-			return m_processDelaySum;
-		}
-
-		public long getBlockTotal() {
-			return m_blockTotal;
-		}
-
-		public long getBlockLoss() {
-			return m_blockLoss;
-		}
-
-		public long getPigeonTimeError() {
-			return m_pigeonTimeError;
-		}
-
-		public long getNetworkTimeError() {
-			return m_networkTimeError;
-		}
-
-		public long getBlockTime() {
-			return m_blockTime;
 		}
 
 		public long getMessageTotal() {
@@ -188,8 +171,28 @@ public class ServerStatistic {
 			return m_messageTotalLoss;
 		}
 
-		public double getMessageSize() {
-			return m_messageSize;
+		public Map<String, AtomicLong> getMessageTotalLosses() {
+			return m_messageTotalLosses;
+		}
+
+		public Map<String, AtomicLong> getMessageTotals() {
+			return m_messageTotals;
+		}
+
+		public long getNetworkTimeError() {
+			return m_networkTimeError;
+		}
+
+		public long getPigeonTimeError() {
+			return m_pigeonTimeError;
+		}
+
+		public int getProcessDelayCount() {
+			return m_processDelayCount;
+		}
+
+		public double getProcessDelaySum() {
+			return m_processDelaySum;
 		}
 	}
 
