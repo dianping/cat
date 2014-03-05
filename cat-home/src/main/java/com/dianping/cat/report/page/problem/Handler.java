@@ -3,8 +3,10 @@ package com.dianping.cat.report.page.problem;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,6 +34,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
@@ -54,6 +57,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
+
+	@Inject
+	private DomainGroupConfigManager m_configManager;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -140,11 +146,14 @@ public class Handler implements PageHandler<Context> {
 		String ip = model.getIpAddress();
 		LongConfig longConfig = new LongConfig();
 		Action action = payload.getAction();
+		String domain = payload.getDomain();
+		String group = payload.getGroup();
 
 		longConfig.setSqlThreshold(payload.getSqlThreshold()).setUrlThreshold(payload.getUrlThreshold())
 		      .setServiceThreshold(payload.getServiceThreshold());
 		longConfig.setCacheThreshold(payload.getCacheThreshold()).setCallThreshold(payload.getCallThreshold());
 		problemStatistics.setLongConfig(longConfig);
+		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
 		switch (action) {
 		case HOULY_REPORT:
 			report = getHourlyReport(payload, VIEW);
@@ -178,6 +187,53 @@ public class Handler implements PageHandler<Context> {
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
 			break;
+		case HOUR_GRAPH:
+			report = getHourlyReport(payload, DETAIL);
+			String type = payload.getType();
+			String state = payload.getStatus();
+			Date start = report.getStartTime();
+			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
+
+			vistor.visitProblemReport(report);
+			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
+			break;
+		case HOURLY_GROUP_REPORT:
+			report = getHourlyReport(payload, VIEW);
+			report = filterReportByGroup(report, domain, group);
+			model.setReport(report);
+			if (ip.equals(Constants.ALL)) {
+				problemStatistics.setAllIp(true);
+			} else {
+				problemStatistics.setIp(ip);
+			}
+			problemStatistics.visitProblemReport(report);
+			model.setAllStatistics(problemStatistics);
+			break;
+		case GROUP_GRAPHS:
+			report = getHourlyReport(payload, DETAIL);
+			report = filterReportByGroup(report, domain, group);
+			type = payload.getType();
+			state = payload.getStatus();
+			start = report.getStartTime();
+			vistor = new HourlyLineChartVisitor(ip, type, state, start);
+			vistor.visitProblemReport(report);
+			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
+			break;
+		case  HISTORY_GROUP_REPORT:
+			report = showSummarizeReport(model, payload);
+			report = filterReportByGroup(report, domain, group);
+			if (ip.equals(Constants.ALL)) {
+				problemStatistics.setAllIp(true);
+				problemStatistics.visitProblemReport(report);
+			} else {
+				problemStatistics.setIp(ip);
+				problemStatistics.visitProblemReport(report);
+			}
+			model.setReport(report);
+			model.setAllStatistics(problemStatistics);
+		case HISTORY_GROUP_GRAPH:
+			m_historyGraphs.buildTrendGraph(model, payload);
+			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);
 			String groupName = payload.getGroupName();
@@ -189,26 +245,25 @@ public class Handler implements PageHandler<Context> {
 		case DETAIL:
 			showDetail(model, payload);
 			break;
-		case HOUR_GRAPH:
-			report = getHourlyReport(payload, DETAIL);
-			String type = payload.getType();
-			String state = payload.getStatus();
-			Date start = report.getStartTime();
-			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
-
-			vistor.visitProblemReport(report);
-			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
-			break;
-		case GROUP_GRAPHS:
-			break;
-		case HISTORY_GROUP_GRAPH:
-			break;
-		case HISTORY_GROUP_REPORT:
-			break;
-		case HOURLY_GROUP_REPORT:
-			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
+		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+		List<String> removes = new ArrayList<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			String ip = machine.getIp();
+
+			if (!ips.contains(ip)) {
+				removes.add(ip);
+			}
+		}
+		for (String ip : removes) {
+			report.getMachines().remove(ip);
+		}
+		return report;
 	}
 
 	private void normalize(Model model, Payload payload) {

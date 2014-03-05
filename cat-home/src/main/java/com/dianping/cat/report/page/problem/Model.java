@@ -45,6 +45,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private ThreadLevelInfo m_threadLevelInfo;
+	
+	private List<String> m_groups;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -109,6 +111,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String getGroupName() {
 		return m_groupName;
 	}
+
+	public List<String> getGroups() {
+   	return m_groups;
+   }
 
 	public int getHour() {
 		return m_hour;
@@ -183,6 +189,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
 	}
+
+	public void setGroups(List<String> groups) {
+   	m_groups = groups;
+   }
 
 	public void setHour(int hour) {
 		m_hour = hour;

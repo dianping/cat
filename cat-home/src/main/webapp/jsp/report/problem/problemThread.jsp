@@ -14,7 +14,7 @@
 	<tr><td title="time\group">T\G</td>
 		<c:forEach var="group" items="${model.threadLevelInfo.groups}" varStatus="status">
 			<td colspan="${group.number}" title="${group.name}">
-				<a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}
+				<a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&groupName=${group.name}&date=${model.date}
 				&threshold=${model.threshold}" onclick="return requestGroupInfo(this)">${w:shorten(group.name, 20)}</a>
 			</td>
 		</c:forEach>
