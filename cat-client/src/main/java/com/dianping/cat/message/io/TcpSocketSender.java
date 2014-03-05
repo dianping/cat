@@ -25,7 +25,6 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
@@ -302,7 +301,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 						m_lastFuture = null;
 					}
 				} catch (Throwable e) {
-					Cat.logError(e);
+					m_logger.error(e.getMessage(), e);
 				}
 				try {
 					for (int i = 0; i < m_activeIndex; i++) {
@@ -316,7 +315,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 						}
 					}
 				} catch (Throwable e) {
-					Cat.logError(e);
+					m_logger.error(e.getMessage(), e);
 				}
 
 				try {

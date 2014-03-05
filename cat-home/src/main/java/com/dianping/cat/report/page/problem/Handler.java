@@ -139,12 +139,13 @@ public class Handler implements PageHandler<Context> {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		String ip = model.getIpAddress();
 		LongConfig longConfig = new LongConfig();
+		Action action = payload.getAction();
 
 		longConfig.setSqlThreshold(payload.getSqlThreshold()).setUrlThreshold(payload.getUrlThreshold())
 		      .setServiceThreshold(payload.getServiceThreshold());
 		longConfig.setCacheThreshold(payload.getCacheThreshold()).setCallThreshold(payload.getCallThreshold());
 		problemStatistics.setLongConfig(longConfig);
-		switch (payload.getAction()) {
+		switch (action) {
 		case HOULY_REPORT:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
@@ -197,6 +198,14 @@ public class Handler implements PageHandler<Context> {
 
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
+			break;
+		case GROUP_GRAPHS:
+			break;
+		case HISTORY_GROUP_GRAPH:
+			break;
+		case HISTORY_GROUP_REPORT:
+			break;
+		case HOURLY_GROUP_REPORT:
 			break;
 		}
 		m_jspViewer.view(ctx, model);

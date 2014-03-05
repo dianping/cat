@@ -16,7 +16,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
@@ -58,8 +57,6 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 
 	@Override
 	public void run() {
-		Cat.setup(null);
-
 		try {
 			m_descriptor.ensureOpen(0, 24);
 			m_reader.ensureOpen(m_descriptor.getReaderIndex(), m_descriptor.getQueueSize());
@@ -75,8 +72,6 @@ public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 			}
 		} catch (InterruptedException e) {
 			// ignore it
-		} finally {
-			Cat.reset();
 		}
 	}
 
