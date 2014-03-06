@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -336,7 +337,7 @@ public class Handler implements PageHandler<Context> {
 			return false;
 		}
 	}
-
+	
 	private void metricConfigList(Payload payload, Model model) {
 		Map<String, ProductLine> productLines = m_productLineConfigManger.queryProductLines();
 		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
@@ -354,13 +355,14 @@ public class Handler implements PageHandler<Context> {
 		}
 		
 		Map<String, MetricItemConfig> allConfigs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
-		Set<String> keys = allConfigs.keySet();
+		Set<String> keysClone = new HashSet<String>(allConfigs.keySet());
+		
 		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
 
 		for (String key : exists) {
-			keys.remove(key);
+			keysClone.remove(key);
 		}
-		for (String str : keys) {
+		for (String str : keysClone) {
 			otherConfigs.add(allConfigs.get(str));
 		}
 		ProductLine otherProductLine = new ProductLine("Other").setTitle("Other");
