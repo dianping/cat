@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -339,13 +340,31 @@ public class Handler implements PageHandler<Context> {
 	private void metricConfigList(Payload payload, Model model) {
 		Map<String, ProductLine> productLines = m_productLineConfigManger.queryProductLines();
 		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
+		Set<String> exists = new HashSet<String>();
 
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
 			Set<String> domains = entry.getValue().getDomains().keySet();
 			List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 
+			for (MetricItemConfig config : configs) {
+				exists.add(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
+			}
+
 			metricConfigs.put(entry.getValue(), configs);
 		}
+		
+		Map<String, MetricItemConfig> allConfigs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
+		Set<String> keys = allConfigs.keySet();
+		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
+
+		for (String key : exists) {
+			keys.remove(key);
+		}
+		for (String str : keys) {
+			otherConfigs.add(allConfigs.get(str));
+		}
+		ProductLine otherProductLine = new ProductLine("Other").setTitle("Other");
+		metricConfigs.put(otherProductLine, otherConfigs);
 		model.setProductMetricConfigs(metricConfigs);
 	}
 

@@ -169,30 +169,6 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		model.setErrorsTrend(item.getJsonString());
 	}
 
-	public void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
-		String queryType = payload.getReportType();
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String name = payload.getStatus();
-		String ip = model.getIpAddress();
-
-		long step = TimeUtil.ONE_MINUTE;
-		if (queryType.equalsIgnoreCase("week")) {
-			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-			step = TimeUtil.ONE_DAY;
-		} else if (queryType.equalsIgnoreCase("month")) {
-			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-			step = TimeUtil.ONE_DAY;
-		}
-
-		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, queryType, domain, type, name, ip);
-		LineChart item = buildFail(allDatas, start, step, size, queryType);
-		model.setErrorsTrend(item.getJsonString());
-	}
-
 	private List<Map<String, double[]>> buildLineChartData(Date start, Date end, String domain, String type,
 	      String name, String ip, String queryType) {
 		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
@@ -221,6 +197,30 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			throw new RuntimeException("Error graph query type");
 		}
 		return allDatas;
+	}
+
+	public void buildTrendGraph(Model model, Payload payload) {
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+		String queryType = payload.getReportType();
+		String domain = model.getDomain();
+		String type = payload.getType();
+		String name = payload.getStatus();
+		String ip = model.getIpAddress();
+
+		long step = TimeUtil.ONE_MINUTE;
+		if (queryType.equalsIgnoreCase("week")) {
+			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
+			step = TimeUtil.ONE_DAY;
+		} else if (queryType.equalsIgnoreCase("month")) {
+			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
+			step = TimeUtil.ONE_DAY;
+		}
+
+		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, queryType, domain, type, name, ip);
+		LineChart item = buildFail(allDatas, start, step, size, queryType);
+		model.setErrorsTrend(item.getJsonString());
 	}
 
 	private Map<String, double[]> getGraphDatasFromDaily(Date start, Date end, String domain, String type, String name,
