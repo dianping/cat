@@ -25,7 +25,6 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
@@ -186,7 +185,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		private int m_retriedTimes = 0;
 
-		private AtomicInteger m_reconnects = new AtomicInteger(999);
+		private AtomicInteger m_reconnects = new AtomicInteger(99);
 
 		public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses) {
 			int len = serverAddresses.size();
@@ -224,34 +223,34 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		private ChannelFuture createChannel(int index) {
 			InetSocketAddress address = m_serverAddresses.get(index);
-			try {
-				ChannelFuture future = m_bootstrap.connect(address);
+			ChannelFuture future = null;
 
+			try {
+				future = m_bootstrap.connect(address);
 				future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 				if (!future.isSuccess()) {
-					future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 					int count = m_reconnects.incrementAndGet();
 
 					if (count % 100 == 0) {
 						m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
 					}
+					future.getChannel().close();
 				} else {
 					m_logger.info("Connected to CAT server at " + address);
 					return future;
 				}
 			} catch (Throwable e) {
 				m_logger.error("Error when connect server " + address.getAddress(), e);
+
+				if (future != null) {
+					future.getChannel().close();
+				}
 			}
 			return null;
 		}
 
 		public ChannelFuture getChannel() {
-			if (m_lastFuture != null && m_lastFuture != m_activeFuture) {
-				m_lastFuture.getChannel().close();
-				m_lastFuture = null;
-			}
-
 			return m_activeFuture;
 		}
 
@@ -282,43 +281,48 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		@Override
 		public void run() {
-			try {
-				while (m_active) {
-					try {
-						if (isChannelStalled()) {
-							try {
-								m_activeFuture.getChannel().close();
-								m_activeFuture = null;
-								m_activeIndex = -1;
-							} catch (Throwable e) {
-								Cat.logError(e);
-							}
-						}
-						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
-							m_activeIndex = m_serverAddresses.size();
-						}
-						if (m_activeIndex == -1) {
-							m_activeIndex = m_serverAddresses.size();
-						}
-
-						for (int i = 0; i < m_activeIndex; i++) {
-							ChannelFuture future = createChannel(i);
-
-							if (future != null) {
-								m_lastFuture = m_activeFuture;
-								m_activeFuture = future;
-								m_activeIndex = i;
-								break;
-							}
-						}
-					} catch (Throwable e) {
-						Cat.logError(e);
+			while (m_active) {
+				try {
+					if (isChannelStalled()) {
+						m_activeFuture.getChannel().close();
+						m_activeFuture = null;
+						m_activeIndex = -1;
 					}
-
-					Thread.sleep(2 * 1000L); // check every 2 seconds
+					if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
+						m_activeFuture.getChannel().close();
+						m_activeFuture = null;
+						m_activeIndex = m_serverAddresses.size();
+					}
+					if (m_activeIndex == -1) {
+						m_activeIndex = m_serverAddresses.size();
+					}
+					if (m_lastFuture != null && m_lastFuture != m_activeFuture) {
+						m_lastFuture.getChannel().close();
+						m_lastFuture = null;
+					}
+				} catch (Throwable e) {
+					m_logger.error(e.getMessage(), e);
 				}
-			} catch (InterruptedException e) {
-				// ignore
+				try {
+					for (int i = 0; i < m_activeIndex; i++) {
+						ChannelFuture future = createChannel(i);
+
+						if (future != null) {
+							m_lastFuture = m_activeFuture;
+							m_activeFuture = future;
+							m_activeIndex = i;
+							break;
+						}
+					}
+				} catch (Throwable e) {
+					m_logger.error(e.getMessage(), e);
+				}
+
+				try {
+					Thread.sleep(2 * 1000L); // check every 2 seconds
+				} catch (InterruptedException e) {
+					// ignore
+				}
 			}
 		}
 

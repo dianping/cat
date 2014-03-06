@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.3</version>
+		<version>1.0.5</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-home</artifactId>
@@ -159,7 +159,8 @@
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/browser-report-manifest.xml,</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/browser-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/domainGroup-manifest.xml,</manifest>
 						</configuration>
 					</execution>
 					<execution>

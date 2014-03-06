@@ -43,6 +43,22 @@
 	</tr>
 </table>
 
+<table class="groups">
+	<tr class="left">
+		<th>机器分组: &nbsp;&nbsp; 
+			<c:if test="${empty model.groups}">
+			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
+				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a></span>
+			</c:if> 
+			<c:forEach var="group" items="${model.groups}">
+	   	  		&nbsp;[&nbsp;
+	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	 		&nbsp;]&nbsp;
+			 </c:forEach>
+		</th>
+	</tr>
+</table>
+
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
@@ -53,9 +69,9 @@
 				<th>Sample Link</th>
 				<th>Min(ms)</th>
 				<th>Max(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&sort=99line">99.9Line</a>(ms)</th>
+				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">Avg</a>(ms)</th>
+				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">95Line</a>(ms)</th>
+				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">99.9Line</a>(ms)</th>
 				<th>Std(ms)</th>
 				<th>QPS</th>
 			</tr>
@@ -92,9 +108,9 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
 			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
 			<th>Std(ms)</th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>

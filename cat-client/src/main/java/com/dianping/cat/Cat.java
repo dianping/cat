@@ -121,10 +121,6 @@ public class Cat {
 		initialize(configFile);
 	}
 
-	public static boolean isEnabled() {
-		return Cat.getProducer().isEnabled();
-	}
-
 	public static boolean isInitialized() {
 		synchronized (s_instance) {
 			return s_instance.m_container != null;

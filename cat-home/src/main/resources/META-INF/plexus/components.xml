@@ -83,6 +83,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.BugConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BugConfigManager</implementation>
 			<requirements>
@@ -1707,6 +1716,9 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
@@ -1758,6 +1770,24 @@
 			<implementation>com.dianping.cat.ServerConfigManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.config.ConfigDao</role>
+			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 			<implementation>com.dianping.cat.report.page.PayloadNormalizer</implementation>
 			<requirements>
@@ -1788,15 +1818,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.core.config.ConfigDao</role>
-			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -1820,6 +1841,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1883,6 +1907,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2902,6 +2929,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>

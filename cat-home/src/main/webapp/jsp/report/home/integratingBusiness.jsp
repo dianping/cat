@@ -26,6 +26,7 @@
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
 <p>业务监控展示的是一个产品线下所有的业务指标信息，CAT提供了产品的配置信息</p>
+<p><span class='text-error'>必须把一个产品线下的所有项目加入到此产品线，这样这个产品线下所有指标才能正确展示</span></p>
 <h4 class="text-error">url : <a href="" target="_blank">链接</a></h4>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business01.png"/>
 </br> 

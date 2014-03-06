@@ -10,7 +10,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("group")
+	@FieldMeta("groupName")
 	private String m_groupName;
 
 	@FieldMeta("linkCount")
@@ -42,6 +42,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+	
+	@FieldMeta("group")
+	private String m_group;
 
 	public Payload() {
 		super(ReportPage.PROBLEM);
@@ -127,7 +130,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, Action.HOULY_REPORT);
 	}
 
 	public void setGroupName(String groupName) {
@@ -157,11 +160,19 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
+	
+	public String getGroup() {
+   	return m_group;
+   }
+
+	public void setGroup(String group) {
+   	m_group = group;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.HOULY_REPORT;
 		}
 	}
 }

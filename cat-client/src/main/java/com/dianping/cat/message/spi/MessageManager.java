@@ -43,6 +43,14 @@ public interface MessageManager {
 	public boolean hasContext();
 
 	/**
+	 * Check if current context logging is enabled or disabled.
+	 * 
+	 * @return true if current context is enabled
+	 */
+	public boolean isMessageEnabled();
+	
+
+	/**
 	 * Check if CAT logging is enabled or disabled.
 	 * 
 	 * @return true if CAT is enabled
@@ -79,5 +87,15 @@ public interface MessageManager {
 	 * @param forked
 	 */
 	public void start(Transaction transaction, boolean forked);
+
+	/**
+	 * Binds the current message tree to the transaction tagged with <code>tag</code>.
+	 * 
+	 * @param tag
+	 *           tag name of the tagged transaction
+	 * @param title
+	 *           title shown in the logview
+	 */
+	public void bind(String tag, String title);
 
 }

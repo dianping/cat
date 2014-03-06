@@ -80,7 +80,7 @@ public class TransactionGraphDataTest {
 			String name = "Result";
 			Map<String, double[]> graphDates = handler.buildGraphDatasForHour(start, end, type, name, graphs);
 			double[] sum = graphDates.get("sum");
-			assertArray(-1.0, sum);
+			assertArray(0, sum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

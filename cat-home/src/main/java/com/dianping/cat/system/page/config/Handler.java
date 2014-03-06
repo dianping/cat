@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +40,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
+import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 
@@ -66,6 +68,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private UtilizationConfigManager m_utilizationConfigManager;
+
+	@Inject
+	private DomainGroupConfigManager m_domainGroupConfigManger;
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
@@ -298,6 +303,16 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_utilizationConfigManager.getUtilizationConfig().toString());
 			break;
+
+		case DOMAIN_GROUP_CONFIG_UPDATE:
+			String domainGroupContent = payload.getContent();
+			if (!StringUtils.isEmpty(domainGroupContent)) {
+				model.setOpState(m_domainGroupConfigManger.insert(domainGroupContent));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_domainGroupConfigManger.getDomainGroup().toString());
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -325,13 +340,31 @@ public class Handler implements PageHandler<Context> {
 	private void metricConfigList(Payload payload, Model model) {
 		Map<String, ProductLine> productLines = m_productLineConfigManger.queryProductLines();
 		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
+		Set<String> exists = new HashSet<String>();
 
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
 			Set<String> domains = entry.getValue().getDomains().keySet();
 			List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 
+			for (MetricItemConfig config : configs) {
+				exists.add(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
+			}
+
 			metricConfigs.put(entry.getValue(), configs);
 		}
+		
+		Map<String, MetricItemConfig> allConfigs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
+		Set<String> keys = allConfigs.keySet();
+		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
+
+		for (String key : exists) {
+			keys.remove(key);
+		}
+		for (String str : keys) {
+			otherConfigs.add(allConfigs.get(str));
+		}
+		ProductLine otherProductLine = new ProductLine("Other").setTitle("Other");
+		metricConfigs.put(otherProductLine, otherConfigs);
 		model.setProductMetricConfigs(metricConfigs);
 	}
 

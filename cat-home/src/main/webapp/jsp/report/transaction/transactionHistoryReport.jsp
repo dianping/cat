@@ -30,6 +30,24 @@
 		</th>
 	</tr>
 </table>
+
+
+<table class="groups">
+	<tr class="left">
+		<th>机器分组: &nbsp;&nbsp;
+			<c:if test="${empty model.groups}">
+			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
+				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a></span>
+			</c:if> 
+			<c:forEach var="group" items="${model.groups}">
+	   	  		&nbsp;[&nbsp;
+	   	  			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	 		&nbsp;]&nbsp;
+			 </c:forEach>
+		</th>
+	</tr>
+</table>
+
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">

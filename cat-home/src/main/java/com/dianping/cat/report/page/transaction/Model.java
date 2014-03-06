@@ -19,6 +19,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
+	
+	private List<String> m_groups;
 
 	private String m_errorTrend;
 
@@ -197,5 +199,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
+
+	public List<String> getGroups() {
+   	return m_groups;
+   }
+
+	public void setGroups(List<String> groups) {
+   	m_groups = groups;
+   }
 
 }

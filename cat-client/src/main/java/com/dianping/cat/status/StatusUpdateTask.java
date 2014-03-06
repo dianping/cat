@@ -84,19 +84,18 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	@Override
 	public void run() {
-		buildClasspath();
-		MessageProducer cat = Cat.getProducer();
-		Transaction reboot = cat.newTransaction("System", "Reboot");
-
-		reboot.setStatus(Message.SUCCESS);
-		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
-		reboot.complete();
-
-		// try to avoid send heartbeat at 59-01 second
+		// try to wait cat client init success
+		try {
+			Thread.sleep(10 * 1000);
+		} catch (InterruptedException e) {
+			return;
+		}
+		
 		while (true) {
 			Calendar cal = Calendar.getInstance();
 			int second = cal.get(Calendar.SECOND);
 
+			// try to avoid send heartbeat at 59-01 second
 			if (second < 2 || second > 58) {
 				try {
 					Thread.sleep(1000);
@@ -107,6 +106,14 @@ public class StatusUpdateTask implements Task, Initializable {
 				break;
 			}
 		}
+
+		buildClasspath();
+		MessageProducer cat = Cat.getProducer();
+		Transaction reboot = cat.newTransaction("System", "Reboot");
+
+		reboot.setStatus(Message.SUCCESS);
+		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
+		reboot.complete();
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();

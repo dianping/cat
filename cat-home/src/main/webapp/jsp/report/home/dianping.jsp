@@ -30,6 +30,7 @@
 <div>
 	<a class="btn btn-small btn-primary" href="http://cat.qa.dianpingoa.com/cat/r">测试环境</a>
 	<a class="btn btn-small btn-primary" href="http://10.1.8.64:8080/cat/r">预发环境</a>
+	<a class="btn btn-small btn-primary" href="http://cat-ppe01.hm/cat/r">PPE环境</a>
 	<a class="btn btn-small btn-primary" href="http://cat.dianpingoa.com/cat/r">生产环境</a>
 	<a class="btn btn-small btn-primary" href="http://10.1.8.152:8080/cat/r">BA后台环境</a>
 </div>
