@@ -46,7 +46,7 @@
 			</c:if> 
 				<c:forEach var="group" items="${model.groups}">
 		   	  		&nbsp;[&nbsp;
-		   	  			<a  href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${group}${payload.queryString}">${group}</a>
+		   	  			<a  href="?op=historyGroupReport&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&group=${group}${payload.queryString}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 				 </c:forEach>
 			</th>

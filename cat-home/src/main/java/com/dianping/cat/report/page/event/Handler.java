@@ -276,6 +276,9 @@ public class Handler implements PageHandler<Context> {
 			buildEventNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
+			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+
+			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
 			break;
 		}
 		m_jspViewer.view(ctx, model);

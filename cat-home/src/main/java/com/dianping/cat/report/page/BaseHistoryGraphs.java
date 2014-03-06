@@ -4,10 +4,37 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.helper.TimeUtil;
 
 public class BaseHistoryGraphs {
+	
+	protected void mergeValue(double[] src, double[] des) {
+		int length = src.length;
+
+		for (int i = 0; i < length; i++) {
+			src[i] = src[i] + des[i];
+		}
+	}
+
+	protected void mergerList(List<Map<String, double[]>> src, List<Map<String, double[]>> des) {
+		int length = src.size();
+
+		for (int i = 0; i < length; i++) {
+			Map<String, double[]> first = src.get(i);
+			Map<String, double[]> next = des.get(i);
+
+			for (Entry<String, double[]> entry : first.entrySet()) {
+				String key = entry.getKey();
+				double[] firstValue = entry.getValue();
+				double[] nextValue = next.get(key);
+
+				mergeValue(firstValue, nextValue);
+			}
+		}
+	}
 
 	protected List<String> buildSubTitle(Date date, int size, long step, String queryType) {
 		List<String> result = new ArrayList<String>();

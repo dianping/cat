@@ -231,8 +231,11 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
+			break;
 		case HISTORY_GROUP_GRAPH:
-			m_historyGraphs.buildTrendGraph(model, payload);
+			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+
+			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
 			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);
