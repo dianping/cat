@@ -227,11 +227,11 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GROUP_REPORT:
 			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
-			
+
 			calculateTps(payload, report);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
-			
+
 			if (report != null) {
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);
@@ -249,6 +249,9 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
+			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+
+			m_historyGraph.buildGroupTrendGraph(model, payload, ips);
 			break;
 		}
 
