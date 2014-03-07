@@ -47,6 +47,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private ThreadLevelInfo m_threadLevelInfo;
 	
 	private List<String> m_groups;
+	
+	private List<String> m_groupIps;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -214,4 +216,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_threadLevelInfo = threadLevelInfo;
 	}
 
+	public List<String> getGroupIps() {
+   	return m_groupIps;
+   }
+
+	public void setGroupIps(List<String> groupIps) {
+   	m_groupIps = groupIps;
+   }
+	
 }
