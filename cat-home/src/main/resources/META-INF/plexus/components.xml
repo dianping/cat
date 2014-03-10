@@ -110,6 +110,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -207,6 +216,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2510,6 +2522,9 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
 				</requirement>
 			</requirements>
@@ -2526,6 +2541,15 @@
 		<component>
 			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -2553,6 +2577,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2964,6 +2991,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>

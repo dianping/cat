@@ -27,9 +27,11 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
+import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public class GraphCreator implements LogEnabled {
 
@@ -50,6 +52,9 @@ public class GraphCreator implements LogEnabled {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
+
+	@Inject
+	private MetricGroupConfigManager m_metricGroupConfigManager;
 
 	private int m_lastMinute = 6;
 
@@ -125,16 +130,25 @@ public class GraphCreator implements LogEnabled {
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
-	public Map<String, LineChart> buildDashboard(Date start, Date end, String abtestId) {
-		Collection<ProductLine> productLines = m_productLineConfigManager.queryProductLines().values();
-		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
+	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String abtestId, String metricGroup) {
+		Map<String, LineChart> allCharts = buildAllCharts(start, end, abtestId);
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
+		List<MetricKeyConfig> metricConfigs = m_metricGroupConfigManager.queryMetricGroupConfig(metricGroup);
 
-		for (ProductLine productLine : productLines) {
-			if (showInDashboard(productLine.getId())) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
-			}
+		for (MetricKeyConfig metric : metricConfigs) {
+			String domain = metric.getMetricDomain();
+			String type = metric.getMetricType();
+			String key = metric.getMetricKey();
+			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":"
+			      + metric.getDisplayType().toUpperCase();
+
+			put(allCharts, result, id);
 		}
+		return result;
+	}
+
+	public Map<String, LineChart> buildDashboard(Date start, Date end, String abtestId) {
+		Map<String, LineChart> allCharts = buildAllCharts(start, end, abtestId);
 		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
 		      .getMetricItemConfigs().values());
 
@@ -145,6 +159,7 @@ public class GraphCreator implements LogEnabled {
 			}
 		});
 
+		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		for (MetricItemConfig config : configs) {
 			String key = config.getId();
 			if (config.getShowAvg() && config.getShowAvgDashboard()) {
@@ -161,6 +176,18 @@ public class GraphCreator implements LogEnabled {
 			}
 		}
 		return result;
+	}
+
+	private Map<String, LineChart> buildAllCharts(Date start, Date end, String abtestId) {
+		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
+		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
+
+		for (ProductLine productLine : productLines) {
+			if (showInDashboard(productLine.getId())) {
+				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
+			}
+		}
+		return allCharts;
 	}
 
 	public double[] convert(double[] value, int removeLength) {
@@ -236,7 +263,7 @@ public class GraphCreator implements LogEnabled {
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine);
+			List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
 			      domains));
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, abtestId, start, metricConfigs);
@@ -321,7 +348,7 @@ public class GraphCreator implements LogEnabled {
 	}
 
 	private boolean showInDashboard(String productline) {
-		List<String> domains = m_productLineConfigManager.queryProductLineDomains(productline);
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productline);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 
 		for (MetricItemConfig config : configs) {

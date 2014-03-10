@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.home.browser.entity.BrowserReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -19,7 +17,6 @@ import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -35,9 +32,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private HeavyReport m_heavyReport;
-
-	@EntityMeta
-	private BrowserReport m_browserReport;
 
 	@EntityMeta
 	private UtilizationReport m_utilizationReport;
@@ -68,10 +62,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getBrowserChart() {
 		return m_browserChart;
-	}
-
-	public BrowserReport getBrowserReport() {
-		return m_browserReport;
 	}
 
 	public BugReport getBugReport() {
@@ -110,15 +100,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Collection<String> getDomains() {
-		if (m_browserReport == null) {
-			ArrayList<String> arrayList = new ArrayList<String>();
-
-			arrayList.add(getDomain());
-			return arrayList;
-		} else {
-			Set<String> domainNames = m_browserReport.getDomainNames();
-			return StringSortHelper.sortDomain(domainNames);
-		}
+		return new ArrayList<String>();
 	}
 
 	public Map<String, ErrorStatis> getErrorStatis() {
@@ -163,10 +145,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setBrowserChart(String browserChart) {
 		m_browserChart = browserChart;
-	}
-
-	public void setBrowserReport(BrowserReport browserReport) {
-		m_browserReport = browserReport;
 	}
 
 	public void setBugReport(BugReport bugReport) {

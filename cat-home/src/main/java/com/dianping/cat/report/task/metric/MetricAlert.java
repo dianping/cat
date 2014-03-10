@@ -135,7 +135,7 @@ public class MetricAlert implements Task {
 	}
 
 	private void processProductLine(ProductLine productLine) {
-		List<String> domains = m_productLineConfigManager.queryProductLineDomains(productLine.getId());
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 		long current = (System.currentTimeMillis() - DATA_AREADY_TIME * 1000) / 1000 / 60;
 		int minute = (int) (current % (60));

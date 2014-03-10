@@ -280,12 +280,12 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public List<String> queryProductLineDomains(String productLine) {
+		public List<String> queryDomainsByProductLine(String productLine) {
 			return new ArrayList<String>();
 		}
 
 		@Override
-		public Map<String, ProductLine> queryProductLines() {
+		public Map<String, ProductLine> queryAllProductLines() {
 			return new HashMap<String, ProductLine>();
 		}
 	}

@@ -48,10 +48,16 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "productLineConfig";
 
-	public Company getCompany() {
-		synchronized (this) {
-			return m_company;
+	private Map<String, String> buildDomainToProductLines() {
+		Map<String, ProductLine> productLines = getCompany().getProductLines();
+		Map<String, String> domainToProductLines = new HashMap<String, String>();
+
+		for (ProductLine product : productLines.values()) {
+			for (Domain domain : product.getDomains().values()) {
+				domainToProductLines.put(domain.getId(), product.getId());
+			}
 		}
+		return domainToProductLines;
 	}
 
 	public boolean deleteProductLine(String line) {
@@ -60,8 +66,14 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	@Override
-	public synchronized void  enableLogging(Logger logger) {
+	public synchronized void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public Company getCompany() {
+		synchronized (this) {
+			return m_company;
+		}
 	}
 
 	@Override
@@ -108,13 +120,19 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return storeConfig();
 	}
 
-	public String queryProductLineByDomain(String domain) {
-		String productLine = m_domainToProductLines.get(domain);
+	public Map<String, ProductLine> queryAllProductLines() {
+		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
-		return productLine == null ? "Default" : productLine;
+		for (ProductLine line : getCompany().getProductLines().values()) {
+			String id = line.getId();
+			if (id != null && id.length() > 0) {
+				productLines.put(id, line);
+			}
+		}
+		return sortProductLineByOrder(productLines);
 	}
 
-	public List<String> queryProductLineDomains(String productLine) {
+	public List<String> queryDomainsByProductLine(String productLine) {
 		List<String> domains = new ArrayList<String>();
 		ProductLine line = getCompany().findProductLine(productLine);
 
@@ -126,15 +144,53 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return domains;
 	}
 
-	public Map<String, ProductLine> queryProductLines() {
+	public Map<String, ProductLine> queryMetricProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
 		for (ProductLine line : getCompany().getProductLines().values()) {
 			String id = line.getId();
-			if (id != null && id.length() > 0) {
+			if (id != null && id.length() > 0 && line.getMetricDashboard()) {
 				productLines.put(id, line);
 			}
 		}
+		return sortProductLineByOrder(productLines);
+	}
+
+	public String queryProductLineByDomain(String domain) {
+		String productLine = m_domainToProductLines.get(domain);
+
+		return productLine == null ? "Default" : productLine;
+	}
+
+	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				Company company = DefaultSaxParser.parse(content);
+
+				m_company = company;
+				m_domainToProductLines = buildDomainToProductLines();
+				m_modifyTime = modifyTime;
+				m_logger.info("product line config refresh done!");
+			}
+		}
+	}
+
+	public <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
+		Map<K, V> result = new LinkedHashMap<K, V>();
+		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
+		Collections.sort(entries, compator);
+		for (Entry<K, V> entry : entries) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+
+		return result;
+	}
+
+	private Map<String, ProductLine> sortProductLineByOrder(Map<String, ProductLine> productLines) {
 		return sortMap(productLines, new Comparator<Map.Entry<String, ProductLine>>() {
 
 			@Override
@@ -142,18 +198,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				return (int) (o1.getValue().getOrder() * 100 - o2.getValue().getOrder() * 100);
 			}
 		});
-	}
-
-	private Map<String, String> buildDomainToProductLines() {
-		Map<String, ProductLine> productLines = getCompany().getProductLines();
-		Map<String, String> domainToProductLines = new HashMap<String, String>();
-
-		for (ProductLine product : productLines.values()) {
-			for (Domain domain : product.getDomains().values()) {
-				domainToProductLines.put(domain.getId(), product.getId());
-			}
-		}
-		return domainToProductLines;
 	}
 
 	private boolean storeConfig() {
@@ -173,34 +217,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			m_domainToProductLines = buildDomainToProductLines();
 		}
 		return true;
-	}
-
-	public <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
-		Map<K, V> result = new LinkedHashMap<K, V>();
-		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
-		Collections.sort(entries, compator);
-		for (Entry<K, V> entry : entries) {
-			result.put(entry.getKey(), entry.getValue());
-		}
-
-		return result;
-	}
-
-	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-		long modifyTime = config.getModifyDate().getTime();
-
-		synchronized (this) {
-			if (modifyTime > m_modifyTime) {
-				String content = config.getContent();
-				Company company = DefaultSaxParser.parse(content);
-
-				m_company = company;
-				m_domainToProductLines = buildDomainToProductLines();
-				m_modifyTime = modifyTime;
-				m_logger.info("product line config refresh done!");
-			}
-		}
 	}
 
 }
