@@ -83,7 +83,7 @@ public class MetricGroupConfigManager implements Initializable {
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-domain-group-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-metric-group-config.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

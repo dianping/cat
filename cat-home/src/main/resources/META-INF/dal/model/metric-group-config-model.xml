@@ -12,7 +12,7 @@
   </entity>
   <entity name="metric-key-config">
     <attribute name="metric-domain" value-type="String" />
-    <attribute name="metric-type" value-type="String" />
+    <attribute name="metric-type" value-type="String" default-value="Metric"/>
     <attribute name="metric-key" value-type="String" />
     <attribute name="display-type" value-type="String" />
   </entity>
