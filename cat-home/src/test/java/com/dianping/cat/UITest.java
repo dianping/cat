@@ -115,5 +115,4 @@ public class UITest {
 			return m_title;
 		}
 	}
-
 }
