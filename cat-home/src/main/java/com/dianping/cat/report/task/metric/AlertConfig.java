@@ -46,11 +46,11 @@ public class AlertConfig {
 				return new Pair<Boolean, String>(false, "");
 			}
 			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (value[i] / baseline[i] > 0.5 && baseline[i] >= 20) {
+				if (value[i] / baseline[i] > 0.5 || baseline[i] < 20) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			} else if (type == MetricType.AVG) {
-				if (value[i] / baseline[i] < 2 && baseline[i] >= 5) {
+				if (value[i] / baseline[i] < 2 || baseline[i] < 5) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
