@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.metric;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,6 +58,8 @@ public class MetricAlert implements Task, LogEnabled {
 	private static final int DATA_CHECK_MINUTE = 2;
 
 	private static final int DATA_AREADY_MINUTE = 1;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
@@ -159,9 +163,11 @@ public class MetricAlert implements Task, LogEnabled {
 				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
 			}
 			if (alert != null && alert.getKey()) {
-				sendAlertInfo(productLine, config, alert.getValue());
+				String content = alert.getValue() + " [minute:" + minute + " ][ time:" + m_sdf.format(new Date()) + "]";
 
-				Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, alert.getValue());
+				sendAlertInfo(productLine, config, content);
+
+				Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, content);
 			}
 		}
 	}
@@ -208,7 +214,7 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 		boolean active = true;
 		while (active) {
-			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
+			Transaction t = Cat.newTransaction("MetricAlert", "Minute:" + Calendar.getInstance().get(Calendar.MINUTE));
 			long current = System.currentTimeMillis();
 
 			m_currentReports.clear();
