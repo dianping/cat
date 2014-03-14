@@ -1,5 +1,9 @@
 package com.dianping.cat.system.tool;
 
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.Security;
 import java.util.List;
 
@@ -8,13 +12,16 @@ import javax.mail.Authenticator;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 
-public class DefaultGMailImpl implements MailSMS, Initializable {
+public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	@Inject
 	private ServerConfigManager m_manager;
@@ -26,6 +33,8 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 	private Authenticator m_authenticator;
 
 	private boolean m_emailEnabled = false;
+
+	private Logger m_logger;
 
 	private HtmlEmail createHtmlEmail() throws EmailException {
 		HtmlEmail email = new HtmlEmail();
@@ -53,8 +62,7 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 		m_emailEnabled = true;
 	}
 
-	@Override
-	public boolean sendEmail(String title, String content, List<String> emails) {
+	public boolean sendEmailByGmail(String title, String content, List<String> emails) {
 		if (m_emailEnabled) {
 			try {
 				HtmlEmail email = createHtmlEmail();
@@ -81,4 +89,35 @@ public class DefaultGMailImpl implements MailSMS, Initializable {
 		}
 	}
 
+	@Override
+	public boolean sendEmail(String title, String content, List<String> emails) {
+		for (String email : emails) {
+			try {
+				content = content.replaceAll(",", " ");
+				
+				String value = title + "," + content;
+				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
+				URLConnection conn = url.openConnection();
+				
+				conn.setDoOutput(true);
+				OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+				writer.write("&value=" + value);
+				writer.flush();
+
+				InputStream in = conn.getInputStream();
+				String result = Files.forIO().readFrom(in, "utf-8");
+
+				m_logger.info(title + " " + result);
+			} catch (Exception e) {
+				m_logger.error(e.getMessage(), e);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 }

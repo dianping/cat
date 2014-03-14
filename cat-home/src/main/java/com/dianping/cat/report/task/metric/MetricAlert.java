@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -19,6 +22,7 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -27,7 +31,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class MetricAlert implements Task {
+public class MetricAlert implements Task, LogEnabled {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
@@ -47,25 +51,27 @@ public class MetricAlert implements Task {
 	@Inject
 	private AlertConfig m_alertConfig;
 
-	private static final long DURATION = 1 * TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
-	private static final int DATA_CHECK_TIME = 2;
+	private static final int DATA_CHECK_MINUTE = 2;
 
-	private static final int DATA_AREADY_TIME = 1;
+	private static final int DATA_AREADY_MINUTE = 1;
 
 	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
 	private Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
-	private boolean computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
+	private Logger m_logger;
+
+	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		if (minute >= DATA_CHECK_TIME) {
+		if (minute >= DATA_CHECK_MINUTE) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 			      config.getMetricKey());
-			value = queryRealData(minute - DATA_CHECK_TIME, minute - 1, metricKey, report, type);
-			baseline = queryBaseLine(minute - DATA_CHECK_TIME, minute - 1, metricKey,
+			value = queryRealData(minute - DATA_CHECK_MINUTE, minute - 1, metricKey, report, type);
+			baseline = queryBaseLine(minute - DATA_CHECK_MINUTE, minute - 1, metricKey,
 			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -76,14 +82,14 @@ public class MetricAlert implements Task {
 			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
-			double[] lastValue = queryRealData(60 - (DATA_CHECK_TIME - minute), 59, metricKey, lastReport, type);
-			double[] lastBaseline = queryBaseLine(60 - (DATA_CHECK_TIME - minute), 59, metricKey, new Date(
+			double[] lastValue = queryRealData(60 - (DATA_CHECK_MINUTE - minute), 59, metricKey, lastReport, type);
+			double[] lastBaseline = queryBaseLine(60 - (DATA_CHECK_MINUTE - minute), 59, metricKey, new Date(
 			      ModelPeriod.CURRENT.getStartTime()), type);
 
 			value = mergerArray(lastValue, currentValue);
 			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
-		return m_alertConfig.checkData(value, baseline);
+		return m_alertConfig.checkData(value, baseline, type);
 	}
 
 	private MetricReport fetchMetricReport(String product, ModelPeriod period) {
@@ -103,7 +109,7 @@ public class MetricAlert implements Task {
 			}
 		}
 		ModelRequest request = new ModelRequest(product, period.getStartTime());
-		
+
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 
@@ -137,12 +143,12 @@ public class MetricAlert implements Task {
 	private void processProductLine(ProductLine productLine) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
-		long current = (System.currentTimeMillis() - DATA_AREADY_TIME * 1000) / 1000 / 60;
+		long current = (System.currentTimeMillis() - DATA_AREADY_MINUTE * TimeUtil.ONE_MINUTE) / 1000 / 60;
 		int minute = (int) (current % (60));
 		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
-			boolean alert = false;
+			Pair<Boolean, String> alert = null;
 			if (config.isShowAvg()) {
 				alert = computeAlertInfo(minute, product, config, MetricType.AVG);
 			}
@@ -152,8 +158,10 @@ public class MetricAlert implements Task {
 			if (config.isShowSum()) {
 				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
 			}
-			if (alert) {
-				sendAlertInfo(productLine, config);
+			if (alert != null && alert.getKey()) {
+				sendAlertInfo(productLine, config, alert.getValue());
+
+				Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, alert.getValue());
 			}
 		}
 	}
@@ -195,8 +203,8 @@ public class MetricAlert implements Task {
 	public void run() {
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		boolean active = true;
 		while (active) {
@@ -233,16 +241,21 @@ public class MetricAlert implements Task {
 		}
 	}
 
-	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config) {
+	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		String title = m_alertConfig.buildMailTitle(productLine, config);
-		String content = m_alertConfig.buildMailContent(productLine, config);
 
+		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);
 	}
 
 	@Override
 	public void shutdown() {
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }
