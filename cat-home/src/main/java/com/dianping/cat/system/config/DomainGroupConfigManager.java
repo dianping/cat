@@ -33,6 +33,16 @@ public class DomainGroupConfigManager implements Initializable {
 		return m_domainGroup;
 	}
 
+	public String queryDefaultGroup(String domain) {
+		List<String> groups = queryDomainGroup(domain);
+
+		if (groups.size() >= 1) {
+			return groups.get(0);
+		} else {
+			return "";
+		}
+	}
+
 	public List<String> queryDomainGroup(String domain) {
 		Domain domainGroup = m_domainGroup.findDomain(domain);
 

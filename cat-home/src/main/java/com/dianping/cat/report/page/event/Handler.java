@@ -206,6 +206,11 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
 
+
+		if (StringUtils.isEmpty(group)) {
+			group = m_configManager.queryDefaultGroup(domain);
+			payload.setGroup(group);
+		}
 		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
 		switch (action) {
 		case HOURLY_REPORT:

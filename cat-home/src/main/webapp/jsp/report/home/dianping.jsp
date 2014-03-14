@@ -2,7 +2,7 @@
 
 
 </br>
-<h4 class="text-error">CAT QA环境机器调整通知</h4>
+<h4 class="text-error">CAT QA环境机器调整通知，Version 1.0.5</h4>
 1、线下的CAT的环境是一台虚拟机【ip:192.168.7.70】，无法满足线下的需求，目前已经正式替换为一台物理机【ip:192.168.213.115】。</br>
 
 2、目前现有机器上/data/appdatas/cat/client.xml需要重新配置。</br>
