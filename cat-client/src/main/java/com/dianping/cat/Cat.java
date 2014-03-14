@@ -20,7 +20,6 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
@@ -154,32 +153,7 @@ public class Cat {
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
-		StringBuilder sb = new StringBuilder(1024);
-		int len = keyValues.length;
-		boolean first = true;
-
-		if (len % 2 == 1) {
-			throw new IllegalArgumentException("Key values should be paired!");
-		}
-
-		for (int i = 0; i < len; i += 2) {
-			Object key = keyValues[i];
-			Object value = keyValues[i + 1];
-
-			if (first) {
-				first = false;
-			} else {
-				sb.append('&');
-			}
-
-			sb.append(key).append('=');
-
-			if (value != null) {
-				sb.append(value);
-			}
-		}
-
-		logMetricInternal(name, Message.SUCCESS, sb.toString());
+		//TO REMOVE ME
 	}
 
 	/**
@@ -240,7 +214,7 @@ public class Cat {
 		logMetricInternal(name, "S,C", String.format("%.2f,%s", sum, quantity));
 	}
 
-	static void logMetricInternal(String name, String status, String keyValuePairs) {
+	private static void logMetricInternal(String name, String status, String keyValuePairs) {
 		Cat.getProducer().logMetric(name, status, keyValuePairs);
 	}
 

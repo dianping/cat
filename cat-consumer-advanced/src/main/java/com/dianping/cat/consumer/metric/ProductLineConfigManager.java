@@ -110,6 +110,36 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		m_domainToProductLines = buildDomainToProductLines();
 	}
 
+	public boolean insertIfNotExsit(String line, String domain) {
+		Company company = getCompany();
+
+		if (company != null) {
+			ProductLine productLine = company.getProductLines().get(line);
+
+			if (productLine == null) {
+				productLine = new ProductLine();
+				productLine.setId(line);
+				productLine.setTitle(line);
+				productLine.addDomain(new Domain(domain));
+				company.addProductLine(productLine);
+
+				return storeConfig();
+			} else {
+				Map<String, Domain> domains = productLine.getDomains();
+
+				if (domains.containsKey(domain)) {
+					return true;
+				} else {
+					domains.put(domain, new Domain(domain));
+
+					return storeConfig();
+				}
+			}
+		} else {
+			return false;
+		}
+	}
+
 	public boolean insertProductLine(ProductLine line, String[] domains) {
 		getCompany().removeProductLine(line.getId());
 		getCompany().addProductLine(line);

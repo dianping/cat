@@ -64,7 +64,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		m_analyzer.setTaskManager(new MockTaskManager());
 		m_analyzer.setBusinessReportDao(m_businessReportDao);
 		m_analyzer.setProductLineConfigManager(new MockProductLineManager());
-		m_analyzer.setCodec(new DefaultABTestCodec());
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
@@ -106,8 +105,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			t.setTimestamp(m_timestamp + i * MINITE);
 			DefaultEvent event = new DefaultEvent("URL", "ABTest");
 
-			event.addData("1=ab:A");
-
 			DefaultMetric metric = new DefaultMetric("City", "/beijing");
 
 			metric.setTimestamp(m_timestamp + i * MINITE);
@@ -120,8 +117,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			t = new DefaultTransaction("Service", "TuanGouWeb", null);
 			t.setTimestamp(m_timestamp + i * MINITE);
 			DefaultEvent event = new DefaultEvent("URL", "ABTest");
-
-			event.addData("1=ab:A");
 
 			DefaultMetric metric = new DefaultMetric("City", "/nanjing");
 

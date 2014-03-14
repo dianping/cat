@@ -2806,6 +2806,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.systemMonitor.Handler</role>
+			<implementation>com.dianping.cat.report.page.systemMonitor.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.systemMonitor.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.systemMonitor.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.systemMonitor.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>

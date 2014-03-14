@@ -56,6 +56,9 @@
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" template="default">
             <description>Statistics</description>
          </page>
+         <page name="systemMonitor" title="SystemMonitor" path="systemMonitor" template="default">
+            <description>SystemMonitor</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">
