@@ -17,7 +17,6 @@ public class DefaultBaselineCreator implements BaselineCreator {
 
 	@Override
 	public double[] createBaseLine(List<double[]> valueList, List<Double> weights, Set<Integer> omittedPoints, int number) {
-
 		double[] result = new double[number];
 
 		denoise(valueList, omittedPoints, number);
@@ -44,7 +43,47 @@ public class DefaultBaselineCreator implements BaselineCreator {
 				result[i] = totalValue / totalWeight;
 			}
 		}
+		return denoise(result, 20);
+	}
+
+	private double[] denoise(double[] data, int mixNumber) {
+		int number = data.length;
+		double[] result = new double[number];
+
+		for (int i = 0; i < number; i++) {
+			if (i % mixNumber == mixNumber - 1) {
+				double[] tmp = new double[mixNumber];
+				System.arraycopy(data, i + 1 - mixNumber, tmp, 0, mixNumber);
+				double avg = avgExcludeMinMax(tmp);
+
+				for (int j = 0; j < mixNumber; j++) {
+					result[i - j] = avg;
+				}
+			}
+		}
 		return result;
+	}
+
+	private double avgExcludeMinMax(double[] data) {
+		double min = 0;
+		double max = 0;
+		double sum = 0;
+		int length = data.length;
+
+		for (int i = 0; i < length; i++) {
+			if (data[i] > max) {
+				max = data[i];
+			}
+			if (data[i] < min) {
+				min = data[i];
+			}
+			sum = sum + data[i];
+		}
+		if (length - 2 > 0) {
+			return (sum - max - min) / (length - 2);
+		} else {
+			return 0;
+		}
 	}
 
 	private void denoise(List<double[]> valueList, Set<Integer> omittedPoints, int number) {
@@ -64,8 +103,8 @@ public class DefaultBaselineCreator implements BaselineCreator {
 		if (data < 0) {
 			return false;
 		}
-
 		List<Double> oneMinuteDataList = new ArrayList<Double>();
+
 		for (double[] values : list) {
 			if (values[n] > 0) {
 				oneMinuteDataList.add(values[n]);

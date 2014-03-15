@@ -70,30 +70,46 @@ public class MetricAlert implements Task, LogEnabled {
 	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		if (minute >= DATA_CHECK_MINUTE) {
+		String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+		      config.getMetricKey());
+
+		if (minute > DATA_CHECK_MINUTE) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
-			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-			      config.getMetricKey());
-			value = queryRealData(minute - DATA_CHECK_MINUTE, minute - 1, metricKey, report, type);
-			baseline = queryBaseLine(minute - DATA_CHECK_MINUTE, minute - 1, metricKey,
-			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+			int start = minute + 1 - DATA_CHECK_MINUTE;
+			int end = minute;
+
+			value = queryRealData(start, end, metricKey, report, type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
+		} else if (minute < 0) {
+			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+			int start = minute + 1 - (DATA_CHECK_MINUTE);
+			int end = 60 + minute;
+
+			value = queryRealData(start, end, metricKey, lastReport, type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
-			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-			      config.getMetricKey());
-			double[] currentValue = queryRealData(0, minute - 1, metricKey, currentReport, type);
-			double[] currentBaseline = queryBaseLine(0, minute - 1, metricKey,
+			int currentStart = 0, currentEnd = minute;
+			double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
+			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
 			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
-			double[] lastValue = queryRealData(60 - (DATA_CHECK_MINUTE - minute), 59, metricKey, lastReport, type);
-			double[] lastBaseline = queryBaseLine(60 - (DATA_CHECK_MINUTE - minute), 59, metricKey, new Date(
-			      ModelPeriod.CURRENT.getStartTime()), type);
+			int lastStart = 60 + 1 - (DATA_CHECK_MINUTE - minute);
+			int lastEnd = 59;
+			double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
+			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
+			      new Date(ModelPeriod.LAST.getStartTime()), type);
 
 			value = mergerArray(lastValue, currentValue);
 			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
 		return m_alertConfig.checkData(value, baseline, type);
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	private MetricReport fetchMetricReport(String product, ModelPeriod period) {
@@ -147,8 +163,8 @@ public class MetricAlert implements Task, LogEnabled {
 	private void processProductLine(ProductLine productLine) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
-		long current = (System.currentTimeMillis() - DATA_AREADY_MINUTE * TimeUtil.ONE_MINUTE) / 1000 / 60;
-		int minute = (int) (current % (60));
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
@@ -163,7 +179,8 @@ public class MetricAlert implements Task, LogEnabled {
 				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
 			}
 			if (alert != null && alert.getKey()) {
-				String content = alert.getValue() + " [minute:" + minute + " ][ time:" + m_sdf.format(new Date()) + "]";
+				String content = alert.getValue() + " [minute:" + (minute + 60) % 60 + " ][ time:"
+				      + m_sdf.format(new Date()) + "]";
 
 				sendAlertInfo(productLine, config, content);
 
@@ -257,11 +274,6 @@ public class MetricAlert implements Task, LogEnabled {
 
 	@Override
 	public void shutdown() {
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }
