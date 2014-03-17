@@ -32,8 +32,6 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	private Authenticator m_authenticator;
 
-	private boolean m_emailEnabled = false;
-
 	private Logger m_logger;
 
 	private HtmlEmail createHtmlEmail() throws EmailException {
@@ -59,44 +57,40 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 		m_name = m_manager.getEmailAccount();
 		m_password = m_manager.getEmailPassword();
 		m_authenticator = new DefaultAuthenticator(m_name, m_password);
-		m_emailEnabled = true;
 	}
 
-	public boolean sendEmailByGmail(String title, String content, List<String> emails) {
-		if (m_emailEnabled) {
-			try {
-				HtmlEmail email = createHtmlEmail();
+	public boolean sendEmail(String title, String content, List<String> emails) {
+		try {
+			HtmlEmail email = createHtmlEmail();
 
-				email.setSubject(title);
-				email.setFrom("CAT@dianping.com");
+			email.setSubject(title);
+			email.setFrom("CAT@dianping.com");
 
-				if (content != null) {
-					email.setHtmlMsg(content);
-				}
-				if (emails != null && emails.size() > 0) {
-					for (String to : emails) {
-						email.addTo(to);
-					}
-					email.send();
-				}
-				return true;
-			} catch (EmailException e) {
-				Cat.logError(e);
-				return false;
+			if (content != null) {
+				email.setHtmlMsg(content);
 			}
-		} else {
-			return false;
+			if (emails != null && emails.size() > 0) {
+				for (String to : emails) {
+					email.addTo(to);
+				}
+				email.send();
+			}
+			return true;
+		} catch (EmailException e) {
+			Cat.logError(e);
+
+			return sendEmailInternal(title, content, emails);
 		}
 	}
 
-	@Override
-	public boolean sendEmail(String title, String content, List<String> emails) {
+	public boolean sendEmailInternal(String title, String content, List<String> emails) {
 		for (String email : emails) {
 			try {
 				title = title.replaceAll(",", " ");
 				content = content.replaceAll(",", " ");
 
 				String value = title + "," + content;
+
 				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
 				URLConnection conn = url.openConnection();
 

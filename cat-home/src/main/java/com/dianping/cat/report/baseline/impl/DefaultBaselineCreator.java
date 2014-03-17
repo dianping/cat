@@ -9,9 +9,9 @@ import com.dianping.cat.report.baseline.BaselineCreator;
 
 public class DefaultBaselineCreator implements BaselineCreator {
 
-	private static final double NORMAL_DATA_LOWER_LIMIT = 0.2;
+	private static final double NORMAL_DATA_LOWER_LIMIT = 0.25;
 
-	private static final double NORMAL_DATA_UPPER_LIMIT = 5;
+	private static final double NORMAL_DATA_UPPER_LIMIT = 4;
 
 	private static final double MIN_NOISY_DATA = 50;
 
@@ -43,7 +43,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 				result[i] = totalValue / totalWeight;
 			}
 		}
-		return denoise(result, 20);
+		return denoise(result, 5);
 	}
 
 	private double[] denoise(double[] data, int mixNumber) {
@@ -65,7 +65,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 	}
 
 	private double avgExcludeMinMax(double[] data) {
-		double min = 0;
+		double min = Double.MAX_VALUE;
 		double max = 0;
 		double sum = 0;
 		int length = data.length;

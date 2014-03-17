@@ -179,7 +179,7 @@ public class MetricAlert implements Task, LogEnabled {
 				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
 			}
 			if (alert != null && alert.getKey()) {
-				String content = alert.getValue() + " [minute:" + (minute + 60) % 60 + " ][ time:"
+				String content = "[ " + alert.getValue() + " ][ minute:" + (minute + 60) % 60 + " ][ time:"
 				      + m_sdf.format(new Date()) + "]";
 
 				sendAlertInfo(productLine, config, content);
