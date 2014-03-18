@@ -17,7 +17,6 @@ public class AlertConfig {
 		List<String> emails = new ArrayList<String>();
 
 		emails.add("yong.you@dianping.com");
-		emails.add("he.huang@dianping.com");
 		return emails;
 	}
 
