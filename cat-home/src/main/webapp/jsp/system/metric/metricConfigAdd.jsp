@@ -62,6 +62,21 @@
 			<td colspan='3'><input name="metricItemConfig.title" value="${model.metricItemConfig.title}" required/></td>
 		</tr>
 		<tr>
+			<td style="text-align:right" class="text-success">是否告警</td>
+			<td>
+				<c:choose>
+					<c:when test="${model.metricItemConfig.alarm}">
+						<input type="radio" name="metricItemConfig.alarm" value="true" checked />是	
+						<input type="radio" name="metricItemConfig.alarm" value="false" />否
+					</c:when>
+					<c:otherwise>
+				    	<input type="radio" name="metricItemConfig.alarm" value="true" />是
+						<input type="radio" name="metricItemConfig.alarm" value="false" checked />否
+					</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+		<tr>
 			<td style="text-align:right" class="text-success">显示次数曲线</td>
 			<td>
 				<c:choose>

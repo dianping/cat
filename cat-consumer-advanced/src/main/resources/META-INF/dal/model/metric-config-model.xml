@@ -17,5 +17,6 @@
     <attribute name="show-avg-dashboard" value-type="boolean" primitive="true"/>
     <attribute name="show-sum-dashboard" value-type="boolean" primitive="true"/>
     <attribute name="show-dashboard-order" value-type="double" primitive="true"/>
+    <attribute name="alarm" value-type="boolean" primitive="true"  default-value="false"/>
   </entity>
 </model>

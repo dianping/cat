@@ -91,21 +91,30 @@
 					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>表示放入总的业务监控大盘</h4>
 				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
-				     			<th><h5 class='text-center'>项目</h5></th>
-				     			<th><h5 class='text-center'>类型</h5></th>
-				     			<th><h5 class='text-center'>显示顺序</h5></th>
-				     			<th><h5 class='text-center'>MetricKey</h5></th>
-				     			<th><h5 class='text-center'>标题</h5></th>
-				     			<th><h5 class='text-center'>显示次数</h5></th>
-				     			<th><h5 class='text-center'>显示平均值</h5></th>
-				     			<th><h5 class='text-center'>显示总和</h5></th>
-				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a></h5></th>
+				     			<th width="10%"><h5 class='text-center'>项目</h5></th>
+				     			<th width="5%"><h5 class='text-center'>类型</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示顺序</h5></th>
+				     			<th width="8%"><h5 class='text-center'>是否告警</h5></th>
+				     			<th width="15%"><h5 class='text-center'>MetricKey</h5></th>
+				     			<th width="16%"><h5 class='text-center'>标题</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示次数</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示平均值</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示总和</h5></th>
+				     			<th width="14%"><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a></h5></th>
 				     		</tr>
 					     	<c:forEach var="config" items="${value}">
 				     			<tr>
 				     			<td>${config.domain}</td>
 				     			<td>${config.type}</td>
 				     			<td>${config.viewOrder}</td>
+				     			<td>
+				     				<c:if test="${config.alarm}">
+				     					<span class="text-error">是</span>
+				     				</c:if>
+				     				<c:if test="${config.alarm == false}">
+				     					<span>否</span>
+				     				</c:if>
+				     			</td>
 				     			<td>${config.metricKey}</td>
 				     			<td>${config.title}</td>
 				     			<td>${config.showCount}

@@ -168,6 +168,10 @@ public class MetricAlert implements Task, LogEnabled {
 		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
+			if (!config.getAlarm()) {
+				continue;
+			}
+
 			Pair<Boolean, String> alert = null;
 			if (config.isShowAvg()) {
 				alert = computeAlertInfo(minute, product, config, MetricType.AVG);
@@ -180,7 +184,8 @@ public class MetricAlert implements Task, LogEnabled {
 			}
 			if (alert != null && alert.getKey()) {
 				String content = "[ " + alert.getValue() + " ][ minute:" + (minute + 60) % 60 + " ][ time:"
-				      + m_sdf.format(new Date()) + "][ time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date())+" ]" ;
+				      + m_sdf.format(new Date()) + "][ time:"
+				      + new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date()) + " ]";
 
 				sendAlertInfo(productLine, config, content);
 
@@ -194,7 +199,7 @@ public class MetricAlert implements Task, LogEnabled {
 		int length = end - start + 1;
 		double[] result = new double[length];
 		System.arraycopy(baseline, start, result, 0, length);
-		
+
 		return result;
 	}
 
