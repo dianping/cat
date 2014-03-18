@@ -10,6 +10,7 @@
 	       <li class="text-right" id="exceptionConfigList"><a href="?op=exceptionThresholds"><strong>异常阀值配置</strong></a></li>
            <li class='nav-header'><h4>其他配置</h4></li>
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
+	       <li class="text-right" id="metricGroupConfigUpdate"><a href="?op=metricGroupConfigUpdate"><strong>业务指标分组</strong></a></li>
 	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常规范配置</strong></a></li>
 	       <li class="text-right" id="aggregationList"><a href="?op=aggregations"><strong>前端合并规则</strong></a></li>
 	       <li class="text-right" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate"><strong>机器分组配置</strong></a></li>

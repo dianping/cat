@@ -20,6 +20,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<LineChart> m_lineCharts;
 
 	private Collection<ProductLine> m_productLines;
+	
+	private List<String> m_metricGroups;
 
 	private Date m_startTime;
 
@@ -80,4 +82,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_startTime = startTime;
 	}
 
+	public List<String> getMetricGroups() {
+   	return m_metricGroups;
+   }
+
+	public void setMetricGroups(List<String> metricGroups) {
+   	m_metricGroups = metricGroups;
+   }
+	
 }

@@ -18,7 +18,7 @@ public class CatConsumerModule extends AbstractModule {
 		ServerConfigManager manager = ctx.lookup(ServerConfigManager.class);
 		
 		ctx.lookup(AggregationConfigManager.class);
-		int encodeThreadNumber = 10;
+		int encodeThreadNumber = 12;
 
 		if (manager.isLocalMode()) {
 			encodeThreadNumber = 1;

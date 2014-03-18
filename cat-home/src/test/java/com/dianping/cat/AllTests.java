@@ -9,7 +9,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.graph.ValueTranslaterTest;
-import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
@@ -31,7 +30,6 @@ import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
-import com.dianping.cat.report.task.metric.BaselineCreatorTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
@@ -113,12 +111,6 @@ MetricReportMergerTest.class,
 DependencyReportMergerTest.class, 
 
 GraphConfigManagerTest.class,
-
-/* CMDB */
-CMDBTest.class,
-
-/* BaseLine */
-BaselineCreatorTest.class,
 
 MetricReportParseTest.class,
 

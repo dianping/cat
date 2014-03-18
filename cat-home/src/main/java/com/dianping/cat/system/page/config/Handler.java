@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,6 +42,7 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -76,6 +76,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private BugConfigManager m_bugConfigManager;
 
+	@Inject
+	private MetricGroupConfigManager m_metricGroupConfigManager;
+	
 	@Inject
 	private DomainNavManager m_manager;
 
@@ -233,7 +236,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case TOPOLOGY_GRAPH_PRODUCT_LINE:
-			model.setProductLines(m_productLineConfigManger.queryProductLines());
+			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
 			graphPruductLineAddOrUpdate(payload, model);
@@ -241,18 +244,18 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
 			model.setOpState(m_productLineConfigManger.deleteProductLine(payload.getProductLineName()));
-			model.setProductLines(m_productLineConfigManger.queryProductLines());
+			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
-			model.setProductLines(m_productLineConfigManger.queryProductLines());
+			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			break;
 
 		case METRIC_CONFIG_ADD_OR_UPDATE:
 			metricConfigAdd(payload, model);
-			model.setProductLines(m_productLineConfigManger.queryProductLines());
+			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 
-			ProductLine productLine = m_productLineConfigManger.queryProductLines().get(payload.getProductLineName());
+			ProductLine productLine = m_productLineConfigManger.queryAllProductLines().get(payload.getProductLineName());
 			if (productLine != null) {
 				model.setProductLineToDomains(productLine.getDomains());
 			}
@@ -314,6 +317,15 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_domainGroupConfigManger.getDomainGroup().toString());
 			break;
+		case METRIC_GROUP_CONFIG_UPDATE:
+			String metricGroupConfig = payload.getContent();
+			if (!StringUtils.isEmpty(metricGroupConfig)) {
+				model.setOpState(m_metricGroupConfigManager.insert(metricGroupConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_metricGroupConfigManager.getMetricGroupConfig().toString());
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -337,9 +349,9 @@ public class Handler implements PageHandler<Context> {
 			return false;
 		}
 	}
-	
+
 	private void metricConfigList(Payload payload, Model model) {
-		Map<String, ProductLine> productLines = m_productLineConfigManger.queryProductLines();
+		Map<String, ProductLine> productLines = m_productLineConfigManger.queryAllProductLines();
 		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
 		Set<String> exists = new HashSet<String>();
 
@@ -353,10 +365,9 @@ public class Handler implements PageHandler<Context> {
 
 			metricConfigs.put(entry.getValue(), configs);
 		}
-		
+
 		Map<String, MetricItemConfig> allConfigs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
 		Set<String> keysClone = new HashSet<String>(allConfigs.keySet());
-		
 		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
 
 		for (String key : exists) {

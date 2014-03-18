@@ -487,12 +487,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	 * Thread safe date helper class. DateFormat is NOT thread safe.
 	 */
 	protected static class DateHelper {
-		private BlockingQueue<SimpleDateFormat> m_queue = new ArrayBlockingQueue<SimpleDateFormat>(20);
+		private BlockingQueue<SimpleDateFormat> m_formats = new ArrayBlockingQueue<SimpleDateFormat>(20);
 
 		private Map<String, Long> m_map = new ConcurrentHashMap<String, Long>();
 
 		public String format(long timestamp) {
-			SimpleDateFormat format = m_queue.poll();
+			SimpleDateFormat format = m_formats.poll();
 
 			if (format == null) {
 				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -502,8 +502,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			try {
 				return format.format(new Date(timestamp));
 			} finally {
-				if (m_queue.remainingCapacity() > 0) {
-					m_queue.offer(format);
+				if (m_formats.remainingCapacity() > 0) {
+					m_formats.offer(format);
 				}
 			}
 		}

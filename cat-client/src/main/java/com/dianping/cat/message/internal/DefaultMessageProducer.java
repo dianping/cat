@@ -95,7 +95,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logMetric(String name, String status, String nameValuePairs) {
-		String type = ((DefaultMessageManager) m_manager).getMetricType();
+		String type = "";
 		Metric metric = newMetric(type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
