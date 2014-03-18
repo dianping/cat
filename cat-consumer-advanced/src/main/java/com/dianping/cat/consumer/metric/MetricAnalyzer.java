@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -25,7 +26,6 @@ import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -51,10 +51,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	private ABTestCodec m_codec;
-
-	@Inject
 	private TaskManager m_taskManager;
+
+	private Map<String, String> m_abtests;
 
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
@@ -102,36 +101,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private Map<String, String> parseABtests(Transaction transaction) {
-		String abtest = queryAbTest(transaction);
-
-		return parseABTests(abtest);
-	}
-
-	private String queryAbTest(Transaction transaction) {
-		List<Message> messages = transaction.getChildren();
-
-		for (Message message : messages) {
-			if (message instanceof Event) {
-				if ("URL".equals(message.getType()) && "ABTest".equals(message.getName())) {
-					String data = (String) message.getData();
-
-					return data;
-				}
-			}
-		}
-		return "";
-	}
-
-	public Map<String, String> parseABTests(String str) {
-		// -1 is the all metric,design for default
-		Map<String, String> abtests = new HashMap<String, String>();
-		abtests.put("-1", "");
-
-		abtests.putAll(m_codec.decode(str));
-		return abtests;
-	}
-
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -144,6 +113,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 
 			m_reports.put(product, report);
+		}
+
+		if (m_abtests == null) {
+			m_abtests = new HashMap<String, String>();
+			m_abtests.put("-1", "");
 		}
 
 		Message message = tree.getMessage();
@@ -166,15 +140,18 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		String status = metric.getStatus();
 		ConfigItem config = parseValue(status, data);
 
+		if (!StringUtils.isEmpty(type)) {
+			group = type;
+			m_productLineConfigManager.insertIfNotExsit(group, domain);
+		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			String key = m_configManager.buildMetricKey(domain, "Metric", name);
 			MetricItem metricItem = report.findOrCreateMetricItem(key);
-			Map<String, String> abtests = parseABTests(type);
 
 			metricItem.addDomain(domain).setType(status);
-			updateMetric(metricItem, abtests, min, config.getCount(), config.getValue());
+			updateMetric(metricItem, m_abtests, min, config.getCount(), config.getValue());
 
 			config.setTitle(name);
 			m_configManager.insertIfNotExist(domain, "Metric", name, config);
@@ -250,10 +227,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				int min = (int) (current % (60));
 				double sum = transaction.getDurationInMicros();
 				MetricItem metricItem = report.findOrCreateMetricItem(key);
-				Map<String, String> abtests = parseABtests(transaction);
 
 				metricItem.addDomain(domain).setType("C");
-				updateMetric(metricItem, abtests, min, 1, sum);
+				updateMetric(metricItem, m_abtests, min, 1, sum);
 			}
 		}
 	}
@@ -398,27 +374,23 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	public void setBucketManager(BucketManager bucketManager) {
-   	m_bucketManager = bucketManager;
-   }
+		m_bucketManager = bucketManager;
+	}
 
 	public void setBusinessReportDao(BusinessReportDao businessReportDao) {
-   	m_businessReportDao = businessReportDao;
-   }
+		m_businessReportDao = businessReportDao;
+	}
 
 	public void setConfigManager(MetricConfigManager configManager) {
-   	m_configManager = configManager;
-   }
+		m_configManager = configManager;
+	}
 
 	public void setProductLineConfigManager(ProductLineConfigManager productLineConfigManager) {
-   	m_productLineConfigManager = productLineConfigManager;
-   }
-
-	public void setCodec(ABTestCodec codec) {
-   	m_codec = codec;
-   }
+		m_productLineConfigManager = productLineConfigManager;
+	}
 
 	public void setTaskManager(TaskManager taskManager) {
-   	m_taskManager = taskManager;
-   }
-	
+		m_taskManager = taskManager;
+	}
+
 }

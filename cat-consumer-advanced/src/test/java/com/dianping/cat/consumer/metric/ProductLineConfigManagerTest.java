@@ -40,15 +40,15 @@ public class ProductLineConfigManagerTest {
 		Assert.assertEquals(2, s_storeCount);
 		Assert.assertEquals("Default", manager.queryProductLineByDomain("domain"));
 		Assert.assertEquals("Test1", manager.queryProductLineByDomain("domain1"));
-		List<String> pDomains = manager.queryProductLineDomains("Test1");
+		List<String> pDomains = manager.queryDomainsByProductLine("Test1");
 		Assert.assertEquals(2, pDomains.size());
-		Map<String, ProductLine> productLines = manager.queryProductLines();
+		Map<String, ProductLine> productLines = manager.queryAllProductLines();
 
 		Assert.assertEquals(3, productLines.size());
 
 		manager.enableLogging(new MockLog());
 		manager.refreshProductLineConfig();
-		productLines = manager.queryProductLines();
+		productLines = manager.queryAllProductLines();
 		Assert.assertEquals(1, productLines.size());
 	}
 

@@ -153,6 +153,12 @@ public class Handler implements PageHandler<Context> {
 		      .setServiceThreshold(payload.getServiceThreshold());
 		longConfig.setCacheThreshold(payload.getCacheThreshold()).setCallThreshold(payload.getCallThreshold());
 		problemStatistics.setLongConfig(longConfig);
+
+		if (StringUtils.isEmpty(group)) {
+			group = m_configManager.queryDefaultGroup(domain);
+			payload.setGroup(group);
+		}
+		model.setGroupIps(m_configManager.queryIpByDomainAndGroup(domain, group));
 		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
 		switch (action) {
 		case HOULY_REPORT:
@@ -219,7 +225,7 @@ public class Handler implements PageHandler<Context> {
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
 			break;
-		case  HISTORY_GROUP_REPORT:
+		case HISTORY_GROUP_REPORT:
 			report = showSummarizeReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 			if (ip.equals(Constants.ALL)) {

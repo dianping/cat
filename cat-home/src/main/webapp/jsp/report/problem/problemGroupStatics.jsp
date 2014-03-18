@@ -49,7 +49,20 @@
 				 </c:forEach>
 			</th>
 		</tr>
-		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$.each($('table.machines a'),function(index,item){
+					var id=$(item).text();
+					<c:forEach var="ip" items="${model.groupIps}">
+						group = '${ip}';
+						if(group == id){
+							$(item).addClass('current');
+						}
+					</c:forEach>
+				});
+				
+			});
+			</script>
 		<tr><th>
 		<%@ include file="problemQuery.jsp" %>
 		<script>

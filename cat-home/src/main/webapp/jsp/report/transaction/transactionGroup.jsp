@@ -16,7 +16,6 @@
 <jsp:body>
 <res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-
 <table class="machines">
 	<tr class="left">
 		<th>机器: &nbsp;[&nbsp; <c:choose>
@@ -29,15 +28,8 @@
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
-   	  		<c:choose>
-					<c:when test="${model.ipAddress eq ip}">
 						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
 						>${ip}</a>
-					</c:when>
-					<c:otherwise>
-						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
-					</c:otherwise>
-				</c:choose>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
@@ -67,7 +59,20 @@
 		</th>
 	</tr>
 </table>
-
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.each($('table.machines a'),function(index,item){
+			var id=$(item).text();
+			<c:forEach var="ip" items="${model.groupIps}">
+				group = '${ip}';
+				if(group == id){
+					$(item).addClass('current');
+				}
+			</c:forEach>
+		});
+		
+});
+</script>
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">

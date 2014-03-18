@@ -59,7 +59,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	UTILIZATION_CONFIG_UPDATE("utilizationConfigUpdate"),
 	
-	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),;
+	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
+	
+	METRIC_GROUP_CONFIG_UPDATE("metricGroupConfigUpdate"),;
 
 	private String m_name;
 

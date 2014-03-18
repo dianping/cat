@@ -21,8 +21,6 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixDelegate;
-import com.dianping.cat.consumer.metric.ABTestCodec;
-import com.dianping.cat.consumer.metric.DefaultABTestCodec;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
@@ -57,10 +55,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricConfigManager.class).req(ConfigDao.class));
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
-		all.add(C(ABTestCodec.class,DefaultABTestCodec.class));
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
-		      .req(ProductLineConfigManager.class, ABTestCodec.class, TaskManager.class));
+		      .req(ProductLineConfigManager.class, TaskManager.class));
 
 		return all;
 	}
@@ -83,7 +80,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineDependencyComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = DependencyAnalyzer.ID;
-		
+
 		all.add(C(DatabaseParser.class));
 		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportManager.class, ID).req(ServerConfigManager.class, DomainManager.class, DatabaseParser.class));

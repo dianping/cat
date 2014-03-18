@@ -1,7 +1,9 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 
-
 </br>
+<h4 class="text-error">CAT BA环境调整，一周内全部调整至生产环境CAT.</h4>
+</br>
+
 <h4 class="text-error">CAT QA环境机器调整通知</h4>
 1、线下的CAT的环境是一台虚拟机【ip:192.168.7.70】，无法满足线下的需求，目前已经正式替换为一台物理机【ip:192.168.213.115】。</br>
 
@@ -29,8 +31,6 @@
 <h4 class="text-error">CAT其他环境</h4>
 <div>
 	<a class="btn btn-small btn-primary" href="http://cat.qa.dianpingoa.com/cat/r">测试环境</a>
-	<a class="btn btn-small btn-primary" href="http://10.1.8.64:8080/cat/r">预发环境</a>
 	<a class="btn btn-small btn-primary" href="http://cat-ppe01.hm/cat/r">PPE环境</a>
 	<a class="btn btn-small btn-primary" href="http://cat.dianpingoa.com/cat/r">生产环境</a>
-	<a class="btn btn-small btn-primary" href="http://10.1.8.152:8080/cat/r">BA后台环境</a>
 </div>
