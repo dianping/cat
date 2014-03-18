@@ -18,12 +18,11 @@ public class DefaultGmailTest extends ComponentTestCase {
 		List<String> emails = new ArrayList<String>();
 		emails.add("yong.you@dianping.com");
 
-		String content = Files.forIO().readFrom(new File("/data/applogs/cat/cat_20140314.log"), "utf-8");
-		
-		System.out.println(content);
-		
+		String content = Files.forIO().readFrom(new File("/data/applogs/cat/cat_20140313.log"), "utf-8");
 		boolean result = mailsms.sendEmail("title", content, emails);
 		Assert.assertEquals(true, result);
+		
+		Thread.sleep(1000*5);
 	}
 
 }
