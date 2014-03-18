@@ -82,7 +82,7 @@ public class MetricAlert implements Task, LogEnabled {
 			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
-			int start = minute + 1 - (DATA_CHECK_MINUTE);
+			int start = 60 + minute + 1 - (DATA_CHECK_MINUTE);
 			int end = 60 + minute;
 
 			value = queryRealData(start, end, metricKey, lastReport, type);
@@ -195,6 +195,9 @@ public class MetricAlert implements Task, LogEnabled {
 		double[] result = new double[length];
 		System.arraycopy(baseline, start, result, 0, length);
 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		System.out.println(sdf.format(date) +" " + start +" " +end);
 		return result;
 	}
 
