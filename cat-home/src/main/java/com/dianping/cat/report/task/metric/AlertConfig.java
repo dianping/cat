@@ -21,13 +21,7 @@ public class AlertConfig {
 	}
 
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
-		String title = "业务告警, 产品线[" + productLine.getTitle() + "], 业务指标[" + config.getTitle() + "]";
-
-		return title;
-	}
-
-	public String buildMailContent(ProductLine productLine, MetricItemConfig config) {
-		String title = "业务告警, 产品线[" + productLine.getTitle() + "], 业务指标[" + config.getTitle() + "]";
+		String title = "[业务告警] 产品线[" + productLine.getTitle() + "] 业务指标[" + config.getTitle() + "]";
 
 		return title;
 	}

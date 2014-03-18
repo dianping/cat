@@ -19,7 +19,9 @@ public class DefaultGmailTest extends ComponentTestCase {
 		emails.add("yong.you@dianping.com");
 
 		String content = Files.forIO().readFrom(new File("/data/applogs/cat/cat_20140313.log"), "utf-8");
-		boolean result = mailsms.sendEmail("title", content, emails);
+		String title ="业务告警, 产品线[支付], 业务指标[创建订单]";
+		content = content +content;
+		boolean result = mailsms.sendEmail(title, content, emails);
 		Assert.assertEquals(true, result);
 		
 		Thread.sleep(1000*5);
