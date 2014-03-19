@@ -1435,6 +1435,30 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
+			<role-hint>cat</role-hint>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<configuration>
+				<id>cat</id>
+				<maximum-pool-size>3</maximum-pool-size>
+				<connection-timeout>1s</connection-timeout>
+				<idle-timeout>10m</idle-timeout>
+				<statement-cache-size>1000</statement-cache-size>
+				<properties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
+					<user>root</user>
+					<password>root</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+				</properties>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>baseline</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
@@ -1621,6 +1645,30 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
+			<role-hint>user</role-hint>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<configuration>
+				<id>user</id>
+				<maximum-pool-size>3</maximum-pool-size>
+				<connection-timeout>1s</connection-timeout>
+				<idle-timeout>10m</idle-timeout>
+				<statement-cache-size>1000</statement-cache-size>
+				<properties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://192.168.8.44:3306/hawk</url>
+					<user>hawk</user>
+					<password>hawk</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+				</properties>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2746,6 +2794,24 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.alteration.Handler</role>
+			<implementation>com.dianping.cat.report.page.alteration.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.alteration.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.alteration.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.alteration.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -7,13 +7,15 @@ import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 final class UserDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
-	@Override
-	public List<Component> defineComponents() {
-		List<Component> all = new ArrayList<Component>();
+   @Override
+   public List<Component> defineComponents() {
+      List<Component> all = new ArrayList<Component>();
 
-		defineSimpleTableProviderComponents(all, "user", com.dianping.cat.home.dal.user._INDEX.getEntityClasses());
-		defineDaoComponents(all, com.dianping.cat.home.dal.user._INDEX.getDaoClasses());
+      all.add(defineJdbcDataSourceComponent("user", "com.mysql.jdbc.Driver", "jdbc:mysql://192.168.8.44:3306/hawk", "hawk", "hawk", "<![CDATA[useUnicode=true&autoReconnect=true]]>"));
 
-		return all;
-	}
+      defineSimpleTableProviderComponents(all, "user", com.dianping.cat.home.dal.user._INDEX.getEntityClasses());
+      defineDaoComponents(all, com.dianping.cat.home.dal.user._INDEX.getDaoClasses());
+
+      return all;
+   }
 }
