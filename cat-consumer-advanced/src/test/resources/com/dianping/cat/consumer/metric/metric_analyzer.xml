@@ -2,30 +2,6 @@
 <metric-report product="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
    <metric-item id="group:PigeonService:TuanGouWeb" type="C">
       <domain>group</domain>
-      <abtest run-id="1">
-         <group name="A">
-            <point id="1" count="1" sum="2000.0" avg="2000.0"/>
-            <point id="4" count="1" sum="8000.0" avg="8000.0"/>
-            <point id="7" count="1" sum="14000.0" avg="14000.0"/>
-            <point id="10" count="1" sum="20000.0" avg="20000.0"/>
-            <point id="13" count="1" sum="26000.0" avg="26000.0"/>
-            <point id="16" count="1" sum="32000.0" avg="32000.0"/>
-            <point id="19" count="1" sum="38000.0" avg="38000.0"/>
-            <point id="22" count="1" sum="44000.0" avg="44000.0"/>
-            <point id="25" count="1" sum="50000.0" avg="50000.0"/>
-            <point id="28" count="1" sum="56000.0" avg="56000.0"/>
-            <point id="31" count="1" sum="62000.0" avg="62000.0"/>
-            <point id="34" count="1" sum="68000.0" avg="68000.0"/>
-            <point id="37" count="1" sum="74000.0" avg="74000.0"/>
-            <point id="40" count="1" sum="80000.0" avg="80000.0"/>
-            <point id="43" count="1" sum="86000.0" avg="86000.0"/>
-            <point id="46" count="1" sum="92000.0" avg="92000.0"/>
-            <point id="49" count="1" sum="98000.0" avg="98000.0"/>
-            <point id="52" count="1" sum="104000.0" avg="104000.0"/>
-            <point id="55" count="1" sum="110000.0" avg="110000.0"/>
-            <point id="58" count="1" sum="116000.0" avg="116000.0"/>
-         </group>
-      </abtest>
       <abtest run-id="-1">
          <group name="">
             <point id="1" count="1" sum="2000.0" avg="2000.0"/>
@@ -134,30 +110,6 @@
    </metric-item>
    <metric-item id="group:URL:TuanGouWeb" type="C">
       <domain>group</domain>
-      <abtest run-id="1">
-         <group name="A">
-            <point id="3" count="1" sum="6000.0" avg="6000.0"/>
-            <point id="6" count="1" sum="12000.0" avg="12000.0"/>
-            <point id="9" count="1" sum="18000.0" avg="18000.0"/>
-            <point id="12" count="1" sum="24000.0" avg="24000.0"/>
-            <point id="15" count="1" sum="30000.0" avg="30000.0"/>
-            <point id="18" count="1" sum="36000.0" avg="36000.0"/>
-            <point id="21" count="1" sum="42000.0" avg="42000.0"/>
-            <point id="24" count="1" sum="48000.0" avg="48000.0"/>
-            <point id="27" count="1" sum="54000.0" avg="54000.0"/>
-            <point id="30" count="1" sum="60000.0" avg="60000.0"/>
-            <point id="33" count="1" sum="66000.0" avg="66000.0"/>
-            <point id="36" count="1" sum="72000.0" avg="72000.0"/>
-            <point id="39" count="1" sum="78000.0" avg="78000.0"/>
-            <point id="42" count="1" sum="84000.0" avg="84000.0"/>
-            <point id="45" count="1" sum="90000.0" avg="90000.0"/>
-            <point id="48" count="1" sum="96000.0" avg="96000.0"/>
-            <point id="51" count="1" sum="102000.0" avg="102000.0"/>
-            <point id="54" count="1" sum="108000.0" avg="108000.0"/>
-            <point id="57" count="1" sum="114000.0" avg="114000.0"/>
-            <point id="0" count="1" sum="120000.0" avg="120000.0"/>
-         </group>
-      </abtest>
       <abtest run-id="-1">
          <group name="">
             <point id="3" count="1" sum="6000.0" avg="6000.0"/>

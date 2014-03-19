@@ -75,7 +75,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		Set<String> allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
+			Map<String, ProductLine> groups = m_productLineConfigManger.queryAllProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String realName = entry.getValue().getTitle();
@@ -111,7 +111,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
 		TopologyGraph topologyGraph = queryTopologyGraph(time);
 		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		List<String> domains = m_productLineConfigManger.queryProductLineDomains(productLine);
+		List<String> domains = m_productLineConfigManger.queryDomainsByProductLine(productLine);
 
 		if (topologyGraph != null) {
 			for (String domain : domains) {

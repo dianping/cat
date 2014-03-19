@@ -110,6 +110,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -207,6 +216,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1428,6 +1440,35 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+			<implementation>com.dianping.cat.report.task.metric.AlertConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.MetricAlert</role>
+			<implementation>com.dianping.cat.report.task.metric.MetricAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
@@ -2529,6 +2570,9 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
 				</requirement>
 			</requirements>
@@ -2545,6 +2589,15 @@
 		<component>
 			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -2572,6 +2625,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2798,11 +2854,29 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.systemMonitor.Handler</role>
+			<implementation>com.dianping.cat.report.page.systemMonitor.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.systemMonitor.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
 			<implementation>com.dianping.cat.report.page.alteration.Handler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.alteration.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.systemMonitor.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.systemMonitor.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3003,6 +3077,9 @@
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 			</requirements>
@@ -3054,7 +3131,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.system.tool.MailSMS</role>
-			<implementation>com.dianping.cat.system.tool.DefaultGMailImpl</implementation>
+			<implementation>com.dianping.cat.system.tool.DefaultMailImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>

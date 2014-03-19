@@ -32,3 +32,5 @@ function selectGroupByName(date, domain, ip, type) {
 			+ date + "&queryname=" + queryname + "&ip=" + ip;
 }
 
+
+

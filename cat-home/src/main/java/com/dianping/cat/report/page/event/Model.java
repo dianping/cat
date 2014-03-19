@@ -22,6 +22,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<String> m_groups;
 	
+	private List<String> m_groupIps;
+	
 	private String m_failureTrend;
 
 	private String m_graph1;
@@ -186,6 +188,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setGroups(List<String> groups) {
    	m_groups = groups;
+   }
+
+	public List<String> getGroupIps() {
+   	return m_groupIps;
+   }
+
+	public void setGroupIps(List<String> groupIps) {
+   	m_groupIps = groupIps;
    }
 
 }
