@@ -19,7 +19,7 @@
 			<form name="domainGroupConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=domainGroupConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">项目机器分组配置</h4>
+				<h4 class="text-center text-error">项目机器分组配置【请不要修改其他项目节点，新增自己项目节点即可】</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>

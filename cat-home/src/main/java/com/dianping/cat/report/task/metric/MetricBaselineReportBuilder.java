@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.metric;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +101,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 				values.add(oneDayValue);
 			}
 
-			double[] result = m_baselineCreator.createBaseLine(values, weights, new HashSet<Integer>(), POINT_NUMBER);
+			double[] result = m_baselineCreator.createBaseLine(values, weights, POINT_NUMBER);
 			Baseline baseline = new Baseline();
 			baseline.setDataInDoubleArray(result);
 			baseline.setIndexKey(key);

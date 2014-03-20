@@ -212,7 +212,7 @@ public class Handler implements PageHandler<Context> {
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 		model.setProductLineGraph(productLineGraph.toJson());
-		model.setProductLines(new ArrayList<ProductLine>(m_productLineConfigManger.queryProductLines().values()));
+		model.setProductLines(new ArrayList<ProductLine>(m_productLineConfigManger.queryAllProductLines().values()));
 	}
 
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {

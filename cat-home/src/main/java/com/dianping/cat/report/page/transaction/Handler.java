@@ -177,6 +177,11 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
 
+		if (StringUtils.isEmpty(group)) {
+			group = m_configManager.queryDefaultGroup(domain);
+			payload.setGroup(group);
+		}
+		model.setGroupIps(m_configManager.queryIpByDomainAndGroup(domain, group));
 		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
 		switch (action) {
 		case HOURLY_REPORT:
@@ -231,7 +236,6 @@ public class Handler implements PageHandler<Context> {
 			calculateTps(payload, report);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
-
 			if (report != null) {
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);
@@ -240,7 +244,7 @@ public class Handler implements PageHandler<Context> {
 		case GROUP_GRAPHS:
 			report = getTransactionGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
-
+			
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}

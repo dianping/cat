@@ -48,7 +48,7 @@
 							value="${model.productLine.email}" required /></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">是否显示到监控大盘</td>
+						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>
 						<td><c:choose>
 								<c:when test="${model.productLine.dashboard}">
 									<input type="radio" name="productLine.dashboard" value="true" checked />是	
@@ -59,6 +59,19 @@
 									<input type="radio" name="productLine.dashboard" value="false" checked />否
 						</c:otherwise>
 							</c:choose></td>
+					</tr>
+					<tr>
+						<td style="text-align: right" class="text-success">是否显示到业务监控大盘</td>
+						<td><c:choose>
+							<c:when test="${model.productLine.metricDashboard}">
+								<input type="radio" name="productLine.metricDashboard" value="true" checked />是	
+								<input type="radio" name="productLine.metricDashboard" value="false" />否
+							</c:when>
+							<c:otherwise>
+								<input type="radio" name="productLine.metricDashboard" value="true" />是
+								<input type="radio" name="productLine.metricDashboard" value="false" checked />否
+							</c:otherwise>
+						</c:choose></td>
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
