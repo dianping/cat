@@ -46,12 +46,13 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ip = payload.getIp();
 		String user = payload.getUser();
+		String hostname = payload.getHostname();
 				
 		switch(action){
 		case INSERT: 
 			String content = payload.getContent();
 			String url = payload.getUrl();
-			String date = payload.getDate();
+			String date = payload.getDate();			
 			
 			Alteration alt = new Alteration();	
 			alt.setType(type);
@@ -60,16 +61,17 @@ public class Handler implements PageHandler<Context> {
 			alt.setIp(ip);
 			alt.setUser(user);
 			alt.setContent(content);
-			alt.setUrl(url);			
+			alt.setUrl(url);		
+			//alt.setHostname(hostname);
 			
 			try {
 				alt.setDate(m_sdf.parse(date));
 				
 				m_alterationDao.insert(alt);
-				model.setStatus("{\"status\":\"success\"}");
+				model.setStatus("{\"status\":\"200\"}");
 			} catch (Exception e) {
 				Cat.logError(e);
-				model.setStatus("{\"status\":\"fail\"}");	
+				model.setStatus("{\"status\":\"500\"}");	
 			}
 			break;
 		case VIEW:
@@ -80,8 +82,10 @@ public class Handler implements PageHandler<Context> {
 			//model.setResult(m_manager.getEmailPassword()+  " action2  " + domain+" " +ip);
 			break;
 		}
-
-		model.setAction(action);
+		if(action==null)
+			model.setAction(action);
+		else
+			model.setAction(Action.VIEW);
 		model.setPage(ReportPage.ALTERATION);
 
 		if (!ctx.isProcessStopped()) {

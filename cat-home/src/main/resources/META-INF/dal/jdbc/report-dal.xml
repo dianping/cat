@@ -2,12 +2,33 @@
 <entities do-package="com.dianping.cat.home.dal.report" gen="true">
 	<entity name="alteration" table="alteration" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="type" value-type="String" />
+		<var name="domain" value-type="String" />
+		<var name="hostname" value-type="String" />
 		<query-defs>
-			<query name="find-by-period" type="SELECT">
-				<param name="period" />
-				<statement><![CDATA[SELECT <FIELDS/>
+			<query name="find-by-dtdh" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<param name="domain" />
+				<param name="hostname" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
 			        FROM <TABLE/>
-			        WHERE <FIELD name='period'/> = ${period}]]></statement>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='hostname'>
+						AND <FIELD name='hostname'/> = ${hostname} 
+					</IF>				
+					]]></statement>
 			</query>
 		</query-defs>
 	</entity>

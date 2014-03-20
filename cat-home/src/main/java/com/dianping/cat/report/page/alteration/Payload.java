@@ -43,6 +43,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	
 	@FieldMeta("granularity")
 	private long m_granularity;
+	
+	@FieldMeta("hostname")
+	private String m_hostname;
 
 	public String getStartTime() {
 		return m_startTime;
@@ -132,6 +135,15 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setGranularity(long m_granularity) {
 		this.m_granularity = m_granularity;
 	}
+	
+	public String getHostname() {
+		return m_hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.m_hostname = hostname;
+	}
+
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
