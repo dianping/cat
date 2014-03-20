@@ -6,7 +6,16 @@ import org.unidal.web.mvc.ViewModel;
 public class Model extends ViewModel<ReportPage, Action, Context> {
 	
 	private String m_status;
+	private boolean m_isViewDataSuccess;
 	
+	public boolean isViewDataSuccess() {
+		return m_isViewDataSuccess;
+	}
+
+	public void setViewDataSuccess(boolean isViewDataSuccess) {
+		this.m_isViewDataSuccess = isViewDataSuccess;
+	}
+
 	public String getStatus() {
 		return m_status;
 	}
