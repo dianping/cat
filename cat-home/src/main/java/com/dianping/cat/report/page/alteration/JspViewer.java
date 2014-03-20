@@ -9,6 +9,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
+		case INSERT:
+			return JspFile.INSERT.getPath();
 		case VIEW:
 			return JspFile.VIEW.getPath();
 		}

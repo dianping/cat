@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.alteration;
 
 public enum JspFile {
-	VIEW("/jsp/report/alteration.jsp"),
-
+	INSERT("/jsp/report/alteration/alter_insertResult.jsp"),
+	VIEW("/jsp/report/alteration/alter_view.jsp"),
 	;
 
 	private String m_path;
