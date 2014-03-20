@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.home.dal.report" gen="true">
+	<entity name="alteration" table="alteration" alias="a">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-period" type="SELECT">
+				<param name="period" />
+				<statement><![CDATA[SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='period'/> = ${period}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 	<entity name="event" table="event" alias="e">
-    	<member name="creation-date" insert-expr="NOW()" />
-    	<var name="start-date" value-type="Date" />
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-date" value-type="Date" />
 		<var name="end-date" value-type="Date" />
-    	<query-defs>
+		<query-defs>
 			<query name="find-by-domain-time" type="SELECT" multiple="true">
 				<param name="domain" />
 				<param name="start-date" />
@@ -18,22 +29,22 @@
 					]]></statement>
 			</query>
 		</query-defs>
-	</entity>	
+	</entity>
 	<entity name="topology-graph" table="topologyGraph" alias="t">
-    <member name="creation-date" insert-expr="NOW()" />
-    <query-defs>
-      <query name="find-by-period" type="SELECT">
-        <param name="period" />
-        <statement><![CDATA[SELECT <FIELDS/>
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-period" type="SELECT">
+				<param name="period" />
+				<statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
-  <entity name="baseline" table="baseline" alias="b">
-    	<member name="creation-date" insert-expr="NOW()" />
-    	<var name="dataInDoubleArray" value-type="double[]" />
-    	<query-defs>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="baseline" table="baseline" alias="b">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="dataInDoubleArray" value-type="double[]" />
+		<query-defs>
 			<query name="find-by-report-name-key-time" type="SELECT">
 				<param name="report-period" />
 				<param name="report-name" />

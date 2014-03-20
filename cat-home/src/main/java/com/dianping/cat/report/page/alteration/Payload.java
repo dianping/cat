@@ -22,6 +22,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("ip")
 	private String m_ip;
+	
+	@FieldMeta("date")
+	private String m_date;
 
 	@FieldMeta("user")
 	private String m_user;
@@ -76,6 +79,15 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setIp(String ip) {
 		this.m_ip = ip;
 	}
+	
+	public String getDate() {
+		return m_date;
+	}
+
+	public void setDate(String date) {
+		this.m_date = date;
+	}
+
 
 	public String getUser() {
 		return m_user;

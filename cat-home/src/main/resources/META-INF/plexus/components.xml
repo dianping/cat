@@ -2897,6 +2897,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.alteration.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2905,6 +2908,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlterationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
