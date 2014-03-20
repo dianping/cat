@@ -239,11 +239,13 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case GRAPHS:
 			report = getEventGraphReport(model, payload);
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
 
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 				report = m_mergeManager.mergerAllName(report, ip, name);
 			}
+			
 			model.setReport(report);
 			buildEventNameGraph(model, report, type, name, ip);
 			break;
