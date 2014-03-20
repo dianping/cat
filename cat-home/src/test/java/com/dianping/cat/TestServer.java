@@ -13,9 +13,6 @@ import org.unidal.test.jetty.JettyServer;
 public class TestServer extends JettyServer {
 	public static void main(String[] args) throws Exception {
 		TestServer server = new TestServer();
-
-        System.out.println("test");
-        
 		System.setProperty("devMode", "true");
 		server.startServer();
 		server.startWebApp();
