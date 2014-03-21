@@ -41,7 +41,6 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		System.out.println("action :" + action.getName());
 		Pair<Boolean,String> result = getStatus(payload);
 		
 		if(!result.getKey()){
