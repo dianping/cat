@@ -293,28 +293,6 @@ void* deal_packet(void* arg)
         if(dst >= inner_net_ip_start && dst <= inner_net_ip_end &&
                 (src < inner_net_ip_start || src > inner_net_ip_end)) //in
         {
-            /*
-            buffer[ip_len] = '\0';
-            find = strstr(buffer+ip->ihl*4+tcp->doff*4, "X-Forwarded-For:");
-            if(find && 4 == sscanf(find+16, "%u.%u.%u.%u", &ip1,&ip2,&ip3,&ip4))
-            {
-                xffip = ip1*256*256*256+ip2*256*256+ip3*256+ip4;
-                //if(xffip == 3524688386)
-                    //printf(":%u\n", xffip);
-                pos = find_ipseg(xffip);
-                pthread_mutex_lock(&g_stat.mutex);
-                if(-1 != pos)
-                {
-                    g_stat.city[g_ipinfo.info[pos].cityid].count++;
-                    g_stat.city[g_ipinfo.info[pos].cityid].traffic += ip_len;
-                }
-                //else
-                //    printf("no find %u\n", xffip);
-                g_stat.all_in_count++;
-                g_stat.all_in_traffic += ip_len;
-                pthread_mutex_unlock(&g_stat.mutex);
-            }
-            */
             pthread_mutex_lock(&g_stat.mutex);
             g_stat.all_in_count++;
             g_stat.all_in_traffic += ip_len;
@@ -330,11 +308,7 @@ void* deal_packet(void* arg)
         }
         else
         {
-            //struct in_addr addr;
-            //addr.s_addr = ip->saddr;
-            //fprintf(stderr, "except pakage:%s==>", inet_ntoa(addr));
-            //addr.s_addr = ip->daddr;
-            //fprintf(stderr, "%s\n", inet_ntoa(addr));
+            fprintf(stderr, "%s\n", inet_ntoa(addr));
         }
 	}
 }
@@ -431,7 +405,6 @@ void send_stat()
 int main(int argc, char **argv)
 {
     char *device = "eth5";
-	//char *filter = "host 10.10.253.20";
     char errbuf[1024];
 	pthread_t tid[DEALTHREADCOUNT];
 	pthread_t snifftid;
@@ -465,17 +438,7 @@ int main(int argc, char **argv)
         perror(errbuf);
         exit(1);
     }
-    /*
-    if(pcap_compile(g_phandle,&fcode,filter,0,0) == -1)
-    {
-		fprintf(stderr,"pcap_compile: %s\n",pcap_geterr(g_phandle));
-        exit(1);
-    }
-    if(pcap_setfilter(g_phandle,&fcode)==-1){
-        fprintf(stderr,"pcap_setfilter: %s\n",pcap_geterr(g_phandle));
-        exit(1);
-    }
-    */
+
 	memset(&g_sniffcond, 0, sizeof(pthread_cond_t));
 	memset(&g_sniffmutex, 0, sizeof(pthread_mutex_t));
 	g_sniffenable = 1;
