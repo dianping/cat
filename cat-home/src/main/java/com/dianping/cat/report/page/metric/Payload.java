@@ -30,6 +30,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
 
+	@FieldMeta("group")
+	private String m_group;
+
 	public Payload() {
 		super(ReportPage.METRIC);
 	}
@@ -95,6 +98,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setTest(String test) {
 		m_test = test;
+	}
+
+	public String getGroup() {
+		return m_group;
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
 	}
 
 	@Override

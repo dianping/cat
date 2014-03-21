@@ -45,7 +45,20 @@
 		</th>
 	</tr>
 </table>
-
+<script type="text/javascript">
+$(document).ready(function() {
+	$.each($('table.machines a'),function(index,item){
+		var id=$(item).text();
+		<c:forEach var="ip" items="${model.groupIps}">
+			group = '${ip}';
+			if(group == id){
+				$(item).addClass('current');
+			}
+		</c:forEach>
+	});
+	
+});
+</script>
 
 <table class='data'>
 	<c:choose>

@@ -43,8 +43,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
 
-	private InheritableThreadLocal<String> m_inheritableContext = new InheritableThreadLocal<String>();
-
 	private MessageIdFactory m_factory;
 
 	private long m_throttleTimes;
@@ -132,10 +130,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		return null;
-	}
-
-	public String getMetricType() {
-		return m_inheritableContext.get();
 	}
 
 	@Override
@@ -229,10 +223,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		m_context.remove();
-	}
-
-	public void setMetricType(String metricType) {
-		m_inheritableContext.set(metricType);
 	}
 
 	public void setTraceMode(boolean traceMode) {

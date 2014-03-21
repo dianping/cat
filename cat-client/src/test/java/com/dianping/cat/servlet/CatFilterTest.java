@@ -8,12 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +28,6 @@ import org.unidal.test.jetty.JettyServer;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class CatFilterTest extends JettyServer {
@@ -66,7 +60,6 @@ public class CatFilterTest extends JettyServer {
 	@Override
 	protected void postConfigure(WebAppContext context) {
 		context.addServlet(MockServlet.class, "/*");
-		context.addFilter(MockABTestFilter.class, "/*", Handler.REQUEST);
 		context.addFilter(CatFilter.class, "/*", Handler.REQUEST);
 	}
 
@@ -165,30 +158,6 @@ public class CatFilterTest extends JettyServer {
 			return values.get(0);
 		} else {
 			return Joiners.by(',').join(values);
-		}
-	}
-
-	public static class MockABTestFilter implements Filter {
-		@Override
-		public void init(FilterConfig filterConfig) throws ServletException {
-		}
-
-		@Override
-		public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-		      ServletException {
-			String metricType = ((HttpServletRequest) request).getParameter("metricType");
-
-			if (metricType != null) {
-				DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-
-				manager.setMetricType(metricType);
-			}
-			
-			chain.doFilter(request, response);
-		}
-
-		@Override
-		public void destroy() {
 		}
 	}
 
