@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.systemMonitor;
+package com.dianping.cat.report.page.monitor;
 
 import com.google.gson.annotations.SerializedName;
 

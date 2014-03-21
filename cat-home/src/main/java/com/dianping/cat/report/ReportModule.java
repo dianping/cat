@@ -43,7 +43,7 @@ com.dianping.cat.report.page.externalError.Handler.class,
 
 com.dianping.cat.report.page.statistics.Handler.class,
 
-com.dianping.cat.report.page.systemMonitor.Handler.class
+com.dianping.cat.report.page.monitor.Handler.class
 })
 public class ReportModule extends AbstractModule {
 
