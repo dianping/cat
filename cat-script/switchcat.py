@@ -5,34 +5,38 @@ import subprocess
 import time
 import urllib2
 
-monitor = [{'name':'ctc',
+monitor = [{'group':'switch',
             'type':'cisco',
             'public':'dianpingP@ssword',
             'version':'2c',
             'ip':'172.25.21.88',
-            'group':[{
-                'key':'to-outer',
-                'port':[10101,10102,10601,10602],
-                'catch':0b1111
-            }]
+            'port':[10101,10102,10601,10602]
           }]
 
 CISCO_IN_TRAFFIC_OID = '.1.3.6.1.2.1.2.2.1.10.'
 CISCO_IN_COUNT_OID = '.1.3.6.1.2.1.2.2.1.11.'
 CISCO_OUT_TRAFFIC_OID = '.1.3.6.1.2.1.2.2.1.16.'
 CISCO_OUT_COUNT_OID = '.1.3.6.1.2.1.2.2.1.17.'
+CISCO_NAME_OID = '.1.3.6.1.2.1.1.5'
+CISCO_PORT_NAME_OID = '.1.3.6.1.2.1.2.2.1.2.'
 SLEEP_TIME = 8 #s
-SNMP_CMD = 'snmpget'
 
 SERVER = '10.128.120.38:2281'
-DATA_GROUP = 'TestGroup'
-DATA_DOMAIN = 'net'
 
 if __name__ == '__main__':
     while True:
         try:
             for unit in monitor:
-                cmdpre = SNMP_CMD+' -c '+unit['public']+' -v '+unit['version']+' '+unit['ip']+' '
+                if not unit.get('name'):
+                    try:
+                        cmd = 'snmpwalk -c '+unit['public']+' -v '+unit['version']+' '+unit['ip']+' '+CISCO_NAME_OID
+                        p = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell=True)
+                        p.wait()
+                        unit['name'] = p.stdout.read().split(': ')[1].strip()
+                    except Exception, e:
+                        print str(e)
+                        unit['name'] = 'unknown'
+                cmd = 'snmpget -c '+unit['public']+' -v '+unit['version']+' '+unit['ip']+' '
                 if unit['type'] == 'cisco':
                     in_traffic_oid = CISCO_IN_TRAFFIC_OID
                     out_traffic_oid = CISCO_OUT_TRAFFIC_OID
@@ -41,63 +45,61 @@ if __name__ == '__main__':
                 else:
                     print 'The unit ' + unit['name'] + '\'s type can not resolved!! [' + unit['type'] + ']'
                     continue
-                for group in unit['group']:
-                    if not group:
+                if not unit.get('portname'):
+                    try:
+                        cmd = 'snmpget -c '+unit['public']+' -v '+unit['version']+' '+unit['ip']+' '
+                        if unit['type'] == 'cisco':
+                            for p in unit['port']:
+                                cmd += CISCO_PORT_NAME_OID + str(p) + ' '
+                        else:
+                            raise Exception('unknown device type!')
+                        p = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell=True)
+                        p.wait()
+                        unit['portname'] = p.stdout.read().split(': ')[1].strip()
+                    except Exception, e:
+                        print str(e)
+                        unit['portname'] = unit['port']
+                for port in unit['port']:
+                    if not port:
                         continue
-                    cmd = cmdpre
-                    for port in group['port']:
-                        cmd += in_traffic_oid + str(port) + ' '
-                        cmd += out_traffic_oid + str(port) + ' '
-                        cmd += in_count_oid + str(port) + ' '
-                        cmd += out_count_oid + str(port) + ' '
-                    p = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell=True)
-                    p.wait()
-                    if not group.get('last'):
-                        group['last'] = [int(r.split(': ')[1]) for r in p.stdout.read().split('\n') if r]
-                    else:
-                        now = [int(r.split(': ')[1]) for r in p.stdout.read().split('\n') if r]
-                        diff = []
-                        i = 0
-                        while i < len(now):
-                            d = now[i]-group['last'][i]
-                            if d < 0:
-                                d += 4294967296
-                            diff.append(d)
-                            i += 1
-                        group['last'] = now
-                        if group['catch'] & 0b1000:
-                            data = sum(diff[::4])
-                            print 'in-traffic:' + str(data)
-                            try:
-                                urllib2.urlopen('http://'+SERVER+'/cat/r/systemMonitor?group='+DATA_GROUP+'&domain='+
-                                            DATA_DOMAIN+'&key='+unit['name']+'-'+group['key']+'/in-traffic'+'&op=sum&sum='+str(data),timeout=0)
-                            except Exception, e:
-                                pass
-                        if group['catch'] & 0b0100:
-                            data = sum(diff[1::4])
-                            print 'out-traffic:' + str(data)
-                            try:
-                                response = urllib2.urlopen('http://'+SERVER+'/cat/r/systemMonitor?group='+DATA_GROUP+'&domain='+
-                                            DATA_DOMAIN+'&key='+unit['name']+'-'+group['key']+'/out-traffic'+'&op=sum&sum='+str(data),timeout=0)
-                            except Exception, e:
-                                pass
-                        if group['catch'] & 0b0010:
-                            data = sum(diff[2::4])
-                            print 'in-packets:' + str(data)
-                            try:
-                                response = urllib2.urlopen('http://'+SERVER+'/cat/r/systemMonitor?group='+DATA_GROUP+'&domain='+
-                                            DATA_DOMAIN+'&key='+unit['name']+'-'+group['key']+'/in-packets'+'&op=sum&sum='+str(data),timeout=0)
-                            except Exception, e:
-                                pass
-                        if group['catch'] & 0b0001:
-                            data = sum(diff[3::4])
-                            print 'out-packets:' + str(data)
-                            try:
-                                response = urllib2.urlopen('http://'+SERVER+'/cat/r/systemMonitor?group='+DATA_GROUP+'&domain='+
-                                        DATA_DOMAIN+'&key='+unit['name']+'-'+group['key']+'/out-packets'+'&op=sum&sum='+str(data),timeout=0)
-                            except Exception, e:
-                                pass
+                    cmd += in_traffic_oid + str(port) + ' '
+                    cmd += out_traffic_oid + str(port) + ' '
+                    cmd += in_count_oid + str(port) + ' '
+                    cmd += out_count_oid + str(port) + ' '
+                p = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell=True)
+                p.wait()
+                result = [r.split(': ')[1] for r in p.stdout.read().split('\n') if r]
+                if not unit.get('last'):
+                    unit['last'] = [int(r) for r in result]
+                else:
+                    now = [int(r) for r in result]
+                    diff = []
+                    i = 0
+                    while i < len(now):
+                        d = now[i]-unit['last'][i]
+                        if d < 0:
+                            d += 4294967296
+                        diff.append(d)
+                        i += 1
+                    unit['last'] = now
+                    print unit['last']
+                    i = 0
+                    while i < len(unit['port']):
+                        try:
+                            #in
+                            print 'http://'+SERVER+'/cat/r/systemMonitor?group='+unit['group']+'&domain='+ \
+                                    unit['name']+'&key='+str(unit['portname'][i])+'-in&op=sum&sum='+str(diff[::4][i])
+                            #urllib2.urlopen('http://'+SERVER+'/cat/r/systemMonitor?group='+unit['group']+'&domain='+
+                            #            unit['name']+'&key='+unit['name']+'-'+group['key']+'/in-traffic'+'&op=sum&sum='+str(data),timeout=0)
+                            #out
+                            print 'http://'+SERVER+'/cat/r/systemMonitor?group='+unit['group']+'&domain='+ \
+                                    unit['name']+'&key='+str(unit['portname'][i])+'-in&op=sum&sum='+str(diff[1::4][i])
+                            #urllib2.urlopen('http://'+SERVER+'/cat/r/systemMonitor?group='+unit['group']+'&domain='+
+                            #            unit['name']+'&key='+unit['name']+'-'+group['key']+'/in-traffic'+'&op=sum&sum='+str(data),timeout=0)
+                        except Exception, e:
+                            print str(e)
+                        i += 1
         except Exception, e:
-            print 'exception!!!'
+            print 'exception!!! ' + str(e)
 
         time.sleep(SLEEP_TIME)
