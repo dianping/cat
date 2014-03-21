@@ -1,9 +1,7 @@
 package com.dianping.cat.report.page.systemMonitor;
 
 public enum JspFile {
-	VIEW("/jsp/report/systemMonitor.jsp"),
-
-	;
+	METTIC_VIEW("/jsp/report/systemMonitor.jsp");
 
 	private String m_path;
 

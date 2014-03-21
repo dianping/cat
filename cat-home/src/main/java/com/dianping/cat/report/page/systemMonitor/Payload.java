@@ -1,12 +1,12 @@
 package com.dianping.cat.report.page.systemMonitor;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
+
 import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
-   private ReportPage m_page;
+public class Payload extends AbstractReportPayload<Action> {
 
    @FieldMeta("op")
    private Action m_action;
@@ -34,6 +34,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
    @FieldMeta("sum")
    private double m_sum;
+   
+   public Payload(){
+	   super(ReportPage.SYSTEMMONITOR);
+   }
    
    public String getDomain() {
    	return m_domain;
@@ -92,22 +96,12 @@ public class Payload implements ActionPayload<ReportPage, Action> {
    }
 
 	public void setAction(String action) {
-      m_action = Action.getByName(action, Action.SYSTEM_API);
+      m_action = Action.getByName(action, Action.COUNT_API);
    }
 
    @Override
    public Action getAction() {
       return m_action;
-   }
-
-   @Override
-   public ReportPage getPage() {
-      return m_page;
-   }
-
-   @Override
-   public void setPage(String page) {
-      m_page = ReportPage.getByName(page, ReportPage.SYSTEMMONITOR);
    }
 
    public long getTimestamp() {
@@ -121,7 +115,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@Override
    public void validate(ActionContext<?> ctx) {
       if (m_action == null) {
-         m_action = Action.SYSTEM_API;
+         m_action = Action.COUNT_API;
       }
    }
 }

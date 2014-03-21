@@ -9,8 +9,12 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case SYSTEM_API:
-			return JspFile.VIEW.getPath();
+		case COUNT_API:
+		case AVG_API:
+		case SUM_API:
+			return JspFile.METTIC_VIEW.getPath();
+		default:
+			break;
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

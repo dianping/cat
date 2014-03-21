@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.systemMonitor;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -13,6 +15,11 @@ import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.report.ReportPage;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.apache.commons.lang.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -22,6 +29,9 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
+	
+	private Gson m_gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+	
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -32,66 +42,92 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@OutboundActionMeta(name = "systemMonitor")
-	public void handleOutbound(Context ctx) throws ServletException, IOException {
+	public void handleOutbound(Context ctx) throws ServletException,
+			IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-
-		System.out.println(System.currentTimeMillis());
-		switch (action) {
-		case SYSTEM_API:
-			String domain = payload.getDomain();
-			String group = payload.getGroup();
-			String type = payload.getType();
-			String key = payload.getKey();
-			long time = payload.getTimestamp();
-
-			if (time < TimeUtil.getCurrentHour().getTime()) {
-				time = System.currentTimeMillis();
+		
+		HttpStatus status = new HttpStatus();
+		String statusStr = null;
+		
+		Set<String> mustPara = new HashSet<String>();
+		String domain = payload.getDomain();
+		String group = payload.getGroup();
+		String key = payload.getKey();
+		if(domain == null)
+			mustPara.add("domain");
+		if(group == null)
+			mustPara.add("group");
+		if(key == null)
+			mustPara.add("key");
+		if(mustPara.size() > 0){
+			status.setStatusCode(String.valueOf(-1));
+			status.setErrorMsg("Unknown [ " + StringUtils.join(mustPara, " ") + " ] name!");
+			statusStr = m_gson.toJson(status);
+			model.setAction(action);
+			model.setStatus(statusStr);
+			model.setPage(ReportPage.SYSTEMMONITOR);
+			if (!ctx.isProcessStopped()) {
+				m_jspViewer.view(ctx, model);
 			}
-			DefaultMetric defaultMetric = null;
-			int count = payload.getCount();
+			return;
+		}
+		
+			
+		long time = payload.getTimestamp();
 
-			Transaction t = Cat.newTransaction("test", "test");
-			if (count == 0) {
-				count = 1;
-			}
-			if ("count".equalsIgnoreCase(type)) {
-				Metric metric = Cat.getProducer().newMetric(group, key);
+		if (time < TimeUtil.getCurrentHour().getTime()) {
+			time = System.currentTimeMillis();
+		}
+		DefaultMetric defaultMetric = null;
+		int count = payload.getCount();
 
-				defaultMetric = (DefaultMetric) metric;
-				defaultMetric.setStatus("C");
-				defaultMetric.addData(String.valueOf(count));
-			} else if ("avg".equalsIgnoreCase(type)) {
-				Metric metric = Cat.getProducer().newMetric(group, key);
-
-				defaultMetric = (DefaultMetric) metric;
-				defaultMetric.setStatus("T");
-				defaultMetric.addData(String.format("%.2f", payload.getAvg()));
-			} else if ("sum".equalsIgnoreCase(type)) {
-				Metric metric = Cat.getProducer().newMetric(group, key);
-
-				defaultMetric = (DefaultMetric) metric;
-				defaultMetric.setStatus("S,C");
-				defaultMetric.addData(String.format("%.2f,%s", payload.getSum(), count));
-			}
-			if (defaultMetric != null) {
-				defaultMetric.setTimestamp(time);
-			}
-			t.complete();
-			DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-
-			tree.setDomain(domain);
-			Message message = tree.getMessage();
-
-			if (message instanceof Transaction) {
-				((DefaultTransaction) message).setTimestamp(time);
-			}
-
-			System.out.println(tree);
-			break;
+		Transaction t = Cat.newTransaction("SystemMetric", action.toString());
+		if (count == 0) {
+			count = 1;
 		}
 
+		Metric metric = Cat.getProducer().newMetric(group, key);
+		defaultMetric = (DefaultMetric) metric;
+		
+		switch (action) {
+		case COUNT_API:
+			defaultMetric.setStatus("C");
+			defaultMetric.addData(String.valueOf(count));
+			break;
+		case AVG_API:
+			defaultMetric.setStatus("T");
+			defaultMetric.addData(String.format("%.2f", payload.getAvg()));
+			break;
+		case SUM_API:
+			defaultMetric.setStatus("S,C");
+			defaultMetric.addData(String.format("%s,%.2f", count, payload.getSum()));
+			break;
+		default:
+			throw new RuntimeException("Unknown action: " + action);
+		}
+		
+		if (defaultMetric != null) {
+			defaultMetric.setTimestamp(time);
+		}
+
+		t.complete();
+		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager()
+				.getThreadLocalMessageTree();
+
+		tree.setDomain(domain);
+		Message message = tree.getMessage();
+
+		if (message instanceof Transaction) {
+			((DefaultTransaction) message).setTimestamp(time);
+		}
+
+		System.out.println(tree);
+		
+		status.setStatusCode(String.valueOf(0));
+		statusStr = m_gson.toJson(status);
+		model.setStatus(statusStr);
 		model.setAction(action);
 		model.setPage(ReportPage.SYSTEMMONITOR);
 		if (!ctx.isProcessStopped()) {
