@@ -42,15 +42,15 @@
 
 <p> 1).op = count时，用于记录一个指标值出现的次数</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/systemMonitor?group=myGroup&domain=myApp&key=myKey&op=count
+	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=count
 </pre>
 <p> 2).op = avg时，用于记录一个指标出现的平均值</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/systemMonitor?group=myGroup&domain=myApp&key=myKey&op=avg&avg=500
+	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=avg&avg=500
 </pre>
 <p> 3).op = sum时，用于记录一个指标出现的总和</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/systemMonitor?group=myGroup&domain=myApp&key=myKey&op=sum&sum=500
+	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=sum&sum=500
 </pre>
 <p>返回说明</p>
 <pre>
