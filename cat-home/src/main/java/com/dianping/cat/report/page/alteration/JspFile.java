@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.alteration;
 
 public enum JspFile {
 	INSERT("/jsp/report/alteration/alter_insertResult.jsp"),
+
 	VIEW("/jsp/report/alteration/alter_view.jsp"),
 	;
 

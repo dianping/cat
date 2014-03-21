@@ -1,27 +1,34 @@
 package com.dianping.cat.report.page.alteration;
 
-import com.dianping.cat.report.ReportPage;
-import org.unidal.web.mvc.ViewModel;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class Model extends ViewModel<ReportPage, Action, Context> {
-	
+import com.dianping.cat.Constants;
+import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.page.alteration.Handler.AltBarrel;
+
+public class Model extends AbstractReportModel<Action, Context> {
+
 	private String m_status;
-	private boolean m_isViewDataSuccess;
-	
-	public boolean isViewDataSuccess() {
-		return m_isViewDataSuccess;
-	}
 
-	public void setViewDataSuccess(boolean isViewDataSuccess) {
-		this.m_isViewDataSuccess = isViewDataSuccess;
-	}
+	private List<AltBarrel> m_barrels;
 
 	public String getStatus() {
 		return m_status;
 	}
 
 	public void setStatus(String status) {
-		this.m_status = status;
+		m_status = status;
+	}
+
+	public List<AltBarrel> getBarrels() {
+		return m_barrels;
+	}
+
+	public void setBarrels(List<AltBarrel> barrels) {
+		m_barrels = barrels;
 	}
 
 	public Model(Context ctx) {
@@ -32,4 +39,14 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
+
+	@Override
+	public Collection<String> getDomains() {
+		return new ArrayList<String>();
+	}
+
+	@Override
+   public String getDomain() {
+	   return Constants.CAT;
+   }
 }

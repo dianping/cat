@@ -4,9 +4,9 @@
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-time" value-type="Date" />
 		<var name="end-time" value-type="Date" />
-		<var name="type" value-type="String" />
-		<var name="domain" value-type="String" />
-		<var name="hostname" value-type="String" />
+		<param name="type" />
+		<param name="domain" />
+		<param name="hostname" />
 		<query-defs>
 			<query name="find-by-dtdh" type="SELECT" multiple="true">
 				<param name="start-time" />
@@ -27,7 +27,8 @@
 					</IF>
 					<IF type='NOT_NULL' field='hostname'>
 						AND <FIELD name='hostname'/> = ${hostname} 
-					</IF>				
+					</IF>
+					ORDER BY <FIELD name='date'/> DESC 				
 					]]></statement>
 			</query>
 		</query-defs>

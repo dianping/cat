@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.alteration;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	INSERT("insert"),
+
 	VIEW("view");
 
 	private String m_name;
