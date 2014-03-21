@@ -54,7 +54,7 @@
 </pre>
 <p>返回说明</p>
 <pre>
-	<span class="text-error">{"statusCode":"-1","errorMsg":"Unknown [ domain group key ] name!"} ——> 失败 [必需参数缺失]</span>
+	<span class="text-error">{"statusCode":"-1","errorMsg":"Unknown [ domain,group,key ] name!"} ——> 失败 [必需参数缺失]</span>
 	<span class="text-success">{"statusCode":"0"} ——> 成功</span>
 </pre>
 </br>
