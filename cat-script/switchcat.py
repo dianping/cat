@@ -104,7 +104,6 @@ def get_port_stat(server, ports, type, public, version):
 def send_data(group, domain, key, data):
     url = 'http://%s/cat/r/systemMonitor?group=%s&domain=%s&key=%s&op=sum&sum=%d' % \
                 (DATA_RECEIVER, group, domain, key, data)
-    print url
     try:
         urllib2.urlopen(url, timeout=0)
     except Exception, e:
