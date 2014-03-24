@@ -11,16 +11,16 @@ import com.dianping.cat.report.page.alteration.Handler.AltBarrel;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
-	private String m_status;
+	private String m_insertResult;
 
 	private List<AltBarrel> m_barrels;
 
-	public String getStatus() {
-		return m_status;
+	public String getInsertResult() {
+		return m_insertResult;
 	}
 
-	public void setStatus(String status) {
-		m_status = status;
+	public void setInsertResult(String insertResult) {
+		m_insertResult = insertResult;
 	}
 
 	public List<AltBarrel> getBarrels() {

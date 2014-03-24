@@ -69,15 +69,21 @@ public class Handler implements PageHandler<Context> {
 			alt.setUrl(url);
 			alt.setHostname(hostname);
 			alt.setDate(date);
-
-			try {
-				m_alterationDao.insert(alt);
-				model.setStatus("{\"status\":200}");
-			} catch (Exception e) {
-				Cat.logError(e);
-				model.setStatus("{\"status\":500}");
+			
+			if(!isArguComplete(alt)){
+				setInsertResult(model, 2);
+				break;
+			}else{
+				try {
+					m_alterationDao.insert(alt);
+					setInsertResult(model, 0);
+				} catch (Exception e) {
+					Cat.logError(e);
+					setInsertResult(model, 1);
+				}
+				break;
 			}
-			break;
+			
 		case VIEW:
 			long granularity = payload.getGranularity();
 			List<Alteration> alts;
@@ -93,77 +99,25 @@ public class Handler implements PageHandler<Context> {
 				break;
 			}
 			
-			System.out.println(alts.size());
-
-			/*
-			long startMill = startTime.getTime();
-			long endMill = endTime.getTime() - granularity;
-			List<Alteration> tmpAlts = new ArrayList<Alteration>();
-			int tmp = 0,
-			length = alts.size();
-			while (startMill <= endMill) {
-				endMill -= granularity;
-				for (int i = tmp; i < alts.size() && alts.get(i).getDate().getTime() > endMill; i++) {
-					tmp++;
-					tmpAlts.add(alts.get(i));
-				}
-				if (tmp >= length)
-					break;
-				if (tmpAlts.size() > 0)
-					barrels.add(new AltBarrel(sdf.format(new Date(endMill)), sdf.format(new Date(endMill + granularity)),
-					      tmpAlts));
-			}
-			int l = barrels.size();
-			if (l > 10) {
-				barrels = barrels.subList(0, 10);
-			}			
-			model.setBarrels(barrels);
-			*/
-			
-			long startMill = startTime.getTime();
 			long endMill = endTime.getTime();
 			Map<Long, List<Alteration>> alterations = new TreeMap<Long, List<Alteration>>();
 			
 
 			for (Alteration alt_genBarrel : alts) {
 				long barTime = alt_genBarrel.getDate().getTime();
-				long key;
-				List<Alteration> tmpAlts_genBarrel;
+				long key = getBarrelKey(barTime, endMill, granularity);
+				List<Alteration> tmpAlts_genBarrel = alterations.get(key);
 				
-				if(endMill == barTime){
-					key = barTime - granularity;
-				}
-				if((endMill-barTime)/granularity == 0){
-					key = barTime;
-				}
-				else{
-					key = endMill - ((endMill-barTime)/granularity+1)*granularity;
-				}
-				
-				if(alterations.get(key)==null){
+				if(tmpAlts_genBarrel==null){
 					alterations.put(key, new ArrayList<Alteration>());
+					tmpAlts_genBarrel = alterations.get(key);	
+					barrels.add(new AltBarrel(sdf.format(new Date(key)), sdf.format(new Date(key + granularity)),
+							tmpAlts_genBarrel));
 				}
 				
-				tmpAlts_genBarrel = alterations.get(key);
 				tmpAlts_genBarrel.add(alt_genBarrel);				
-			}					
+			}						
 			
-			Iterator it=alterations.entrySet().iterator();  
-			while (it.hasNext()) {
-				Map.Entry ent = (Map.Entry) it.next();
-				long key = (Long) ent.getKey();
-				List<Alteration> value = (List<Alteration>) ent.getValue();
-				barrels.add(new AltBarrel(sdf.format(new Date(key - granularity)), sdf.format(new Date(key)),
-						value));
-
-			}
-			
-			int l = barrels.size();
-			System.out.println(l);
-			if (l > 10) {
-				barrels = barrels.subList(0, 10);
-			}	
-
 			model.setBarrels(barrels);
 			break;
 		}
@@ -174,6 +128,50 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	public boolean isArguComplete(Alteration alt){
+		if(alt.getType()==null||"".equals(alt.getType()))
+			return false;
+		if(alt.getTitle()==null||"".equals(alt.getTitle()))
+			return false;
+		if(alt.getDomain()==null||"".equals(alt.getDomain()))
+			return false;
+		if(alt.getHostname()==null||"".equals(alt.getHostname()))
+			return false;
+		if(alt.getDate()==null||"".equals(alt.getDate()))
+			return false;
+		if(alt.getUser()==null||"".equals(alt.getUser()))
+			return false;
+		if(alt.getContent()==null||"".equals(alt.getContent()))
+			return false;
+			
+		return true;
+	}
+	
+	private long getBarrelKey(long barTime, long endMill, long granularity) {
+		long key;
+		if(endMill == barTime){
+			key = barTime - granularity;
+		}else if((endMill-barTime)/granularity == 0){
+			key = barTime;
+		}
+		else{
+			key = endMill - ((endMill-barTime)/granularity+1)*granularity;
+		}
+		return key;
+   }
+	
+	//status code: 0-success 1-fail 2-fail(lack args)
+	public void setInsertResult(Model model, int status){
+		if(status==0){
+			model.setInsertResult("{\"status\":200}");
+		}else if(status==1){
+			model.setInsertResult("{\"status\":500}");
+		}else if(status==2){
+			model.setInsertResult("{\"status\":200, \"errorMessage\":\"lack args\"}");
+		}
+		
 	}
 
 	public class AltBarrel {
@@ -189,6 +187,15 @@ public class Handler implements PageHandler<Context> {
 			this.alterations = tmpAlts;
 		}
 
+		public List<Alteration> getMiniAlterations() {
+			int length = alterations.size();
+
+			if (length > 10) {
+				return alterations.subList(0, 10);
+			}
+			return alterations;
+		}
+		
 		public List<Alteration> getAlterations() {
 			// TODO
 			int length = alterations.size();

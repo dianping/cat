@@ -43,7 +43,7 @@
 						<th width="5%">变更用户</th>
 						<th width="5%">详情</th>
 					</tr>
-					<c:forEach var="item" items="${barrel.alterations}" varStatus="index">
+					<c:forEach var="item" items="${barrel.miniAlterations}" varStatus="index">
 						<tr>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
