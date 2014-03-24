@@ -54,7 +54,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">显示顺序</td>
+			<td style="text-align:right" class="text-success">显示顺序（数字）</td>
 			<td colspan='3'><input  name="metricItemConfig.viewOrder" value="${model.metricItemConfig.viewOrder}" required/></td>
 		</tr>
 		<tr>

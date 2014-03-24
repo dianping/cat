@@ -8,6 +8,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.site.helper.Splitters;
 
 public class AlertConfig {
 
@@ -15,8 +16,11 @@ public class AlertConfig {
 
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> emails = new ArrayList<String>();
+		String emailList = productLine.getEmail();
 
 		emails.add("yong.you@dianping.com");
+		emails.add("he.huang@dianping.com");
+		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
 		return emails;
 	}
 

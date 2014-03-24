@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.metric.chart.impl;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +21,12 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	private final String AVG = MetricType.AVG.name();
 
 	@Override
-	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs
-	      ) {
+	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
 		MetricDataBuilder builder = new MetricDataBuilder();
 
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
-		Map<String, double[]> values = new HashMap<String, double[]>();
+		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 
 		for (MetricItemConfig config : metricConfigs) {
 			String key = config.getId();
@@ -61,7 +59,6 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	public class MetricDataBuilder extends BaseVisitor {
 		private Map<String, double[]> m_datas = new LinkedHashMap<String, double[]>();
 
-
 		private String m_metricKey;
 
 		private String m_currentComputeType;
@@ -88,7 +85,7 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		public void visitMetricItem(MetricItem metricItem) {
 			m_metricKey = metricItem.getId();
 			m_currentComputeType = metricItem.getType();
-			
+
 			double[] sum = findOrCreateStatistic(m_currentComputeType, m_metricKey, SUM);
 			double[] count = findOrCreateStatistic(m_currentComputeType, m_metricKey, COUNT);
 			double[] avg = findOrCreateStatistic(m_currentComputeType, m_metricKey, AVG);

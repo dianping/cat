@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -108,8 +107,6 @@ public class GraphCreator implements LogEnabled {
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 			double[] baselines = queryBaseline(key, startDate, endDate);
 
-			// lineChart.add(Chinese.CURRENT_VALUE, allCurrentValues.get(key));
-			// lineChart.add(Chinese.BASELINE_VALUE, m_dataExtractor.extract(baselines));
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
@@ -147,6 +144,8 @@ public class GraphCreator implements LogEnabled {
 				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
 			}
 		});
+
+		System.out.println(configs);
 
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		for (MetricItemConfig config : configs) {
@@ -280,16 +279,22 @@ public class GraphCreator implements LogEnabled {
 	}
 
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
-		long start = startDate.getTime();
-		long end = endDate.getTime();
+		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
-		Map<String, double[]> oldCurrentValues = new HashMap<String, double[]>();
+		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
 			      domains));
+			Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
+				@Override
+				public int compare(MetricItemConfig o1, MetricItemConfig o2) {
+					return (int) (o1.getViewOrder() * 100 - o2.getViewOrder() * 100);
+				}
+			});
+
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start, metricConfigs);
 
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);
@@ -344,7 +349,7 @@ public class GraphCreator implements LogEnabled {
 			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
-			m_logger.error("replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
+			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
 			      + sdf.format(new Date(start)));
 			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs);
 		}
@@ -354,7 +359,7 @@ public class GraphCreator implements LogEnabled {
 	private Map<String, double[]> removeFutureData(Date endDate, final Map<String, double[]> allCurrentValues) {
 		if (isCurrentMode(endDate)) {
 			// remove the minute of future
-			Map<String, double[]> newCurrentValues = new HashMap<String, double[]>();
+			Map<String, double[]> newCurrentValues = new LinkedHashMap<String, double[]>();
 			int step = m_dataExtractor.getStep();
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
 			int removeLength = 60 / step - (minute / step);

@@ -91,7 +91,6 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 					seg.setCount(point.getCount());
 					seg.setAvg(point.getAvg());
 					seg.setSum(point.getSum());
-
 					segs.put(seg.getId(), seg);
 				}
 			}
