@@ -22,7 +22,7 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
@@ -206,18 +206,18 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
 		double[] all = new double[60];
-		Map<Integer, Point> map = report.findOrCreateMetricItem(metricKey).getPoints();
+		Map<Integer, Segment> map = report.findOrCreateMetricItem(metricKey).getSegments();
 
-		for (Entry<Integer, Point> entry : map.entrySet()) {
+		for (Entry<Integer, Segment> entry : map.entrySet()) {
 			Integer minute = entry.getKey();
-			Point point = entry.getValue();
+			Segment seg = entry.getValue();
 
 			if (type == MetricType.AVG) {
-				all[minute] = point.getAvg();
+				all[minute] = seg.getAvg();
 			} else if (type == MetricType.COUNT) {
-				all[minute] = (double) point.getCount();
+				all[minute] = (double) seg.getCount();
 			} else if (type == MetricType.SUM) {
-				all[minute] = point.getSum();
+				all[minute] = seg.getSum();
 			}
 		}
 		int length = end - start + 1;

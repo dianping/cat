@@ -344,7 +344,7 @@ public class GraphCreator implements LogEnabled {
 			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
-			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:"
+			m_logger.error("replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
 			      + sdf.format(new Date(start)));
 			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs);
 		}

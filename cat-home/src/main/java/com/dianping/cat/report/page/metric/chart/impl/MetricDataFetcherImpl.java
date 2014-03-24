@@ -8,7 +8,7 @@ import java.util.Map;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.report.page.metric.chart.MetricDataFetcher;
 import com.dianping.cat.report.task.metric.MetricType;
@@ -93,12 +93,12 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 			double[] count = findOrCreateStatistic(m_currentComputeType, m_metricKey, COUNT);
 			double[] avg = findOrCreateStatistic(m_currentComputeType, m_metricKey, AVG);
 
-			for (Point point : metricItem.getPoints().values()) {
-				int index = point.getId();
+			for (Segment seg : metricItem.getSegments().values()) {
+				int index = seg.getId();
 
-				sum[index] = point.getSum();
-				avg[index] = point.getAvg();
-				count[index] = point.getCount();
+				sum[index] = seg.getSum();
+				avg[index] = seg.getAvg();
+				count[index] = seg.getCount();
 			}
 		}
 

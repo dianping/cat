@@ -10,9 +10,10 @@
     <attribute name="id" value-type="String" />
     <attribute name="type" value-type="String" />
     <element name="domain" value-type="String" type="list" names="domains" />
-    <entity-ref name="point" type="list" names="points"/>
+    <entity-ref name="abtest" type="map" names="abtests" method-find-or-create="true" />
+    <entity-ref name="segment" type="list" names="segments"/>
   </entity>
-  <entity name="point">
+  <entity name="segment">
     <attribute name="id" value-type="int" />
     <attribute name="count" value-type="int" />
     <attribute name="sum" value-type="double" />

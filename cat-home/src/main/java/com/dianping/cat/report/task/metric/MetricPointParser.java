@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
-import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 
 public class MetricPointParser {
 
@@ -13,18 +13,18 @@ public class MetricPointParser {
 
 	public double[] buildHourlyData(MetricItem item, MetricType type) {
 		double[] result = new double[POINT_NUMBER];
-		Map<Integer, Point> map = item.getPoints();
+		Map<Integer, Segment> map = item.getSegments();
 
-		for (Entry<Integer, Point> entry : map.entrySet()) {
+		for (Entry<Integer, Segment> entry : map.entrySet()) {
 			Integer minute = entry.getKey();
-			Point point = entry.getValue();
+			Segment seg = entry.getValue();
 
 			if (type == MetricType.AVG) {
-				result[minute] = point.getAvg();
+				result[minute] = seg.getAvg();
 			} else if (type == MetricType.COUNT) {
-				result[minute] = (double) point.getCount();
+				result[minute] = (double) seg.getCount();
 			} else if (type == MetricType.SUM) {
-				result[minute] = point.getSum();
+				result[minute] = seg.getSum();
 			}
 		}
 		return result;
