@@ -19,10 +19,8 @@
 		</c:forEach>
 		
 		var product = '${payload.product}';
-		var test = '${payload.test}';
 		
 		$('#'+product).addClass('active');
-		$('#'+test).addClass('active');
 		$('i[tips]').popover();
 	});
 </script>
@@ -32,7 +30,7 @@
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&test=${payload.test}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 			</td>
@@ -44,10 +42,10 @@
 				<c:forEach var="range" items="${model.allRange}">
 					<c:choose>
 						<c:when test="${payload.timeRange eq range.duration}">
-							&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+							&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
 						</c:when>
 						<c:otherwise>
-							&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&test=${payload.test}&timeRange=${range.duration}">${range.title}</a> ]
+							&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
 						</c:otherwise>
 						</c:choose>
 				</c:forEach>
@@ -66,14 +64,6 @@
 	             
 	             <c:forEach var="item" items="${model.productLines}" varStatus="status">
 	              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.title}</strong></a></li>
-	              <%-- <c:if test="${payload.product eq item.id }">
-		               <c:forEach var="test" items="${model.abtests}" varStatus="status">
-		               	   <c:if test="${test.value.id ne -1}">
-				              <li id="${test.key}"><a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${payload.timeRange}&test=${test.key}">${test.key}<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="right" data-content="${test.value.name}"></i></a>
-				              </li>
-		               	   </c:if>
-		       		  </c:forEach>
-	              </c:if> --%>
 	            </c:forEach>
               <li >&nbsp;</li>
             </ul>

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.metric.model.entity.Abtest;
-import com.dianping.cat.consumer.metric.model.entity.Group;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
@@ -24,9 +22,9 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	private final String AVG = MetricType.AVG.name();
 
 	@Override
-	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs,
-	      String abtestId) {
-		MetricDataBuilder builder = new MetricDataBuilder(abtestId);
+	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs
+	      ) {
+		MetricDataBuilder builder = new MetricDataBuilder();
 
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
@@ -63,14 +61,12 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	public class MetricDataBuilder extends BaseVisitor {
 		private Map<String, double[]> m_datas = new LinkedHashMap<String, double[]>();
 
-		private String m_abtestId;
 
 		private String m_metricKey;
 
 		private String m_currentComputeType;
 
-		public MetricDataBuilder(String abtest) {
-			m_abtestId = abtest;
+		public MetricDataBuilder() {
 		}
 
 		private double[] findOrCreateStatistic(String type, String metricKey, String computeType) {
@@ -89,33 +85,21 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		}
 
 		@Override
-		public void visitAbtest(Abtest abtest) {
-			String abtestId = abtest.getRunId();
-			if (abtestId.equals(m_abtestId)) {
-				super.visitAbtest(abtest);
-			}
-		}
-
-		@Override
-		public void visitGroup(Group group) {
+		public void visitMetricItem(MetricItem metricItem) {
+			m_metricKey = metricItem.getId();
+			m_currentComputeType = metricItem.getType();
+			
 			double[] sum = findOrCreateStatistic(m_currentComputeType, m_metricKey, SUM);
 			double[] count = findOrCreateStatistic(m_currentComputeType, m_metricKey, COUNT);
 			double[] avg = findOrCreateStatistic(m_currentComputeType, m_metricKey, AVG);
 
-			for (Point point : group.getPoints().values()) {
+			for (Point point : metricItem.getPoints().values()) {
 				int index = point.getId();
 
 				sum[index] = point.getSum();
 				avg[index] = point.getAvg();
 				count[index] = point.getCount();
 			}
-		}
-
-		@Override
-		public void visitMetricItem(MetricItem metricItem) {
-			m_metricKey = metricItem.getId();
-			m_currentComputeType = metricItem.getType();
-			super.visitMetricItem(metricItem);
 		}
 
 		public void visitMetricReport(int index, MetricReport report) {

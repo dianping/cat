@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -18,8 +17,6 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.metric.model.entity.Abtest;
-import com.dianping.cat.consumer.metric.model.entity.Group;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
@@ -52,8 +49,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	@Inject
 	private TaskManager m_taskManager;
-
-	private Map<String, String> m_abtests;
 
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
@@ -115,11 +110,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			m_reports.put(product, report);
 		}
 
-		if (m_abtests == null) {
-			m_abtests = new HashMap<String, String>();
-			m_abtests.put("-1", "");
-		}
-
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -151,7 +141,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			MetricItem metricItem = report.findOrCreateMetricItem(key);
 
 			metricItem.addDomain(domain).setType(status);
-			updateMetric(metricItem, m_abtests, min, config.getCount(), config.getValue());
+			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(name);
 			m_configManager.insertIfNotExist(domain, "Metric", name, config);
@@ -229,7 +219,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				MetricItem metricItem = report.findOrCreateMetricItem(key);
 
 				metricItem.addDomain(domain).setType("C");
-				updateMetric(metricItem, m_abtests, min, 1, sum);
+				updateMetric(metricItem, min, 1, sum);
 			}
 		}
 	}
@@ -294,16 +284,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void updateMetric(MetricItem metricItem, Map<String, String> abtests, int minute, int count, double sum) {
-		for (Entry<String, String> entry : abtests.entrySet()) {
-			Abtest abtest = metricItem.findOrCreateAbtest(entry.getKey());
-			Group group = abtest.findOrCreateGroup(entry.getValue());
-			Point point = group.findOrCreatePoint(minute);
+	private void updateMetric(MetricItem metricItem, int minute, int count, double sum) {
+		Point point = metricItem.findOrCreatePoint(minute);
 
-			point.setCount(point.getCount() + count);
-			point.setSum(point.getSum() + sum);
-			point.setAvg(point.getSum() / point.getCount());
-		}
+		point.setCount(point.getCount() + count);
+		point.setSum(point.getSum() + sum);
+		point.setAvg(point.getSum() / point.getCount());
 	}
 
 	public static class ConfigItem {

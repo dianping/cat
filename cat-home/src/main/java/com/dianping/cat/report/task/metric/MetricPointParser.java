@@ -13,7 +13,7 @@ public class MetricPointParser {
 
 	public double[] buildHourlyData(MetricItem item, MetricType type) {
 		double[] result = new double[POINT_NUMBER];
-		Map<Integer, Point> map = item.getAbtests().get("-1").getGroups().get("").getPoints();
+		Map<Integer, Point> map = item.getPoints();
 
 		for (Entry<Integer, Point> entry : map.entrySet()) {
 			Integer minute = entry.getKey();

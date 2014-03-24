@@ -121,22 +121,21 @@ public class GraphCreator implements LogEnabled {
 		return charts;
 	}
 
-	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate,
-	      String abtestId) {
-		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate, abtestId);
+	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
+		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
-	public Map<String, LineChart> buildDashboard(Date start, Date end, String abtestId) {
+	public Map<String, LineChart> buildDashboard(Date start, Date end) {
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
 		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
 
 		for (ProductLine productLine : productLines) {
 			if (showInDashboard(productLine.getId())) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
+				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
 			}
 		}
 		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
@@ -168,7 +167,7 @@ public class GraphCreator implements LogEnabled {
 		return result;
 	}
 
-	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String abtestId, String metricGroup) {
+	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		List<MetricKeyConfig> metricConfigs = m_metricGroupConfigManager.queryMetricGroupConfig(metricGroup);
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
@@ -176,7 +175,7 @@ public class GraphCreator implements LogEnabled {
 
 		for (ProductLine productLine : productLines) {
 			if (isProductLineInGroup(productLine.getId(), metricConfigs)) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end, abtestId));
+				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
 			}
 		}
 		for (MetricKeyConfig metric : metricConfigs) {
@@ -280,7 +279,7 @@ public class GraphCreator implements LogEnabled {
 		}
 	}
 
-	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate, String abtestId) {
+	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime();
 		long end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
@@ -291,7 +290,7 @@ public class GraphCreator implements LogEnabled {
 			List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
 			      domains));
-			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, abtestId, start, metricConfigs);
+			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start, metricConfigs);
 
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);
 			index++;
@@ -325,10 +324,10 @@ public class GraphCreator implements LogEnabled {
 		return result;
 	}
 
-	private Map<String, double[]> queryMetricValueByDate(String productLine, String abtestId, long start,
+	private Map<String, double[]> queryMetricValueByDate(String productLine, long start,
 	      List<MetricItemConfig> metricConfigs) {
 		MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
-		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs, abtestId);
+		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);
 		double sum = 0;
 
 		for (Entry<String, double[]> entry : currentValues.entrySet()) {
@@ -347,7 +346,7 @@ public class GraphCreator implements LogEnabled {
 
 			m_logger.error("Metric report is not exsit, productLine:" + productLine + " ,date:"
 			      + sdf.format(new Date(start)));
-			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs, abtestId);
+			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs);
 		}
 		return currentValues;
 	}

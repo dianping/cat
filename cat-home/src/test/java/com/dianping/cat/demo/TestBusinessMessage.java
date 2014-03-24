@@ -29,6 +29,8 @@ public class TestBusinessMessage {
 				Transaction t = Cat.newTransaction("URL", "/index");
 				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
 				t.addData("channel=channel" + i % 5);
+				
+				Cat.logMetricForCount("Receipt Verify Success");
 
 				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 				tree.setDomain(TuanGou);

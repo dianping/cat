@@ -168,7 +168,8 @@ public class MetricAlert implements Task, LogEnabled {
 		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
-			if (!config.getAlarm()) {
+			if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
+			      .isShowCountDashboard())) {
 				continue;
 			}
 
@@ -185,7 +186,7 @@ public class MetricAlert implements Task, LogEnabled {
 			if (alert != null && alert.getKey()) {
 				String content = "[ " + alert.getValue() + " ][ minute:" + (minute + 60) % 60 + " ][ time:"
 				      + m_sdf.format(new Date()) + "][ time:"
-				      + new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date()) + " ]";
+				      + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " ]";
 
 				sendAlertInfo(productLine, config, content);
 
@@ -205,8 +206,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
 		double[] all = new double[60];
-		Map<Integer, Point> map = report.findOrCreateMetricItem(metricKey).findOrCreateAbtest("-1").findOrCreateGroup("")
-		      .getPoints();
+		Map<Integer, Point> map = report.findOrCreateMetricItem(metricKey).getPoints();
 
 		for (Entry<Integer, Point> entry : map.entrySet()) {
 			Integer minute = entry.getKey();

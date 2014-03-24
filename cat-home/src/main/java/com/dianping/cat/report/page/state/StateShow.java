@@ -84,6 +84,8 @@ public class StateShow extends BaseVisitor {
 	}
 
 	public Map<String, ProcessDomain> getProcessDomainMap() {
+		m_processDomains.remove("PhoenixAgent");
+		
 		return m_processDomains;
 	}
 

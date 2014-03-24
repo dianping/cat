@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.model.metric;
 
-import com.dianping.cat.consumer.metric.model.entity.Group;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
@@ -10,11 +9,6 @@ public class MetricReportMerger extends DefaultMerger {
 
 	public MetricReportMerger(MetricReport metricReport) {
 		super(metricReport);
-	}
-
-	@Override
-	protected void mergeGroup(Group old, Group group) {
-		super.mergeGroup(old, group);
 	}
 
 	@Override
