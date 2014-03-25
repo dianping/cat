@@ -29,6 +29,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
@@ -54,6 +55,9 @@ public class GraphCreator implements LogEnabled {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
+
+	@Inject
+	private AlertInfo m_alertInfo;
 
 	private int m_lastMinute = 6;
 
@@ -95,13 +99,15 @@ public class GraphCreator implements LogEnabled {
 	      final Map<String, double[]> dataWithOutFutures) {
 		int step = m_dataExtractor.getStep();
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
+		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
+
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
-			lineChart.setTitle(findTitle(key));
+			buildLineChartTitle(alertItems, lineChart, key);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
@@ -144,8 +150,6 @@ public class GraphCreator implements LogEnabled {
 				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
 			}
 		});
-
-		System.out.println(configs);
 
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		for (MetricItemConfig config : configs) {
@@ -216,13 +220,14 @@ public class GraphCreator implements LogEnabled {
 		m_logger = logger;
 	}
 
-	private String findTitle(String key) {
+	private void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String id = key.substring(0, index);
 		String type = key.substring(index + 1);
 		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
 		String des = "";
 
+		config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
 		if (MetricType.AVG.name().equals(type)) {
 			des = Chinese.Suffix_AVG;
 		} else if (MetricType.SUM.name().equals(type)) {
@@ -230,7 +235,15 @@ public class GraphCreator implements LogEnabled {
 		} else if (MetricType.COUNT.name().equals(type)) {
 			des = Chinese.Suffix_COUNT;
 		}
-		return config.getTitle() + des;
+		String title = config.getTitle() + des;
+
+		chart.setTitle(title);
+
+		if (alertItems.contains(config)) {
+			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+		} else {
+			chart.setHtmlTitle(title);
+		}
 	}
 
 	private boolean isCurrentMode(Date date) {

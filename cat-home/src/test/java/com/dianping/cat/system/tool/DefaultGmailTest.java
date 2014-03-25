@@ -26,5 +26,15 @@ public class DefaultGmailTest extends ComponentTestCase {
 		
 		Thread.sleep(1000*5);
 	}
+	
+	@Test
+	public void testSendSms() throws Exception {
+		MailSMS mailsms = lookup(MailSMS.class);
+		List<String> phones =new ArrayList<String>();
 
+		phones.add("18721960052");
+		mailsms.sendSms("[MetricAlert] [业务告警] 产品线[团购] 业务指标[成功验券]", "sdf", phones);
+		Thread.sleep(1000*5);
+	}
+	
 }

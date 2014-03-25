@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.Security;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -106,6 +107,7 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	public boolean sendEmailInternal(String title, String content, List<String> emails) {
 		StringBuilder sb = new StringBuilder();
+
 		for (String email : emails) {
 			InputStream in = null;
 			OutputStreamWriter writer = null;
@@ -137,6 +139,38 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 					}
 					if (writer != null) {
 						writer.close();
+					}
+				} catch (IOException e) {
+				}
+			}
+		}
+		if (sb.indexOf("200") > -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean sendSms(String title, String content, List<String> phones) {
+		StringBuilder sb = new StringBuilder();
+
+		for (String phone : phones) {
+			InputStream in = null;
+			try {
+				String format = "http://10.1.1.84/sms/send/json?jsonm={type:808,mobile:\"%s\",pair:{body=\"%s\"}}";
+				String urlAddress = String.format(format, phone, URLEncoder.encode(title, "utf-8"));
+				URL url = new URL(urlAddress);
+				URLConnection conn = url.openConnection();
+
+				in = conn.getInputStream();
+				sb.append(Files.forIO().readFrom(in, "utf-8")).append("");
+			} catch (Exception e) {
+				m_logger.error(e.getMessage(), e);
+			} finally {
+				try {
+					if (in != null) {
+						in.close();
 					}
 				} catch (IOException e) {
 				}

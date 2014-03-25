@@ -32,7 +32,12 @@
 				</th>
 			</tr>
 		</table>
-		<%@ include file="detail.jsp" %>
+		<%@ include file="metricOpNav.jsp" %>
+      	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+   			<div style="float:left;">
+   				<div id="${item.title}" class="metricGraph"></div>
+   			</div>
+		</c:forEach>
 	</c:when>
 	<c:otherwise>
 	<a:body>

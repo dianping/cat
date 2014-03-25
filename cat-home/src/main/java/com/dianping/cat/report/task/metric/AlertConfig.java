@@ -1,7 +1,9 @@
 package com.dianping.cat.report.task.metric;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.unidal.tuple.Pair;
@@ -19,41 +21,61 @@ public class AlertConfig {
 		String emailList = productLine.getEmail();
 
 		emails.add("yong.you@dianping.com");
-		emails.add("he.huang@dianping.com");
 		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
 		return emails;
 	}
 
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
-		String title = "[业务告警] 产品线[" + productLine.getTitle() + "] 业务指标[" + config.getTitle() + "]";
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		return title;
+		sb.append("[业务告警] 产品线[").append(productLine.getTitle());
+		sb.append("] 业务指标[").append(config.getTitle()).append("]");
+		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+		return sb.toString();
 	}
 
-	public Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type) {
+	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
+		double decreasePercent = config.getDecreasePercentage();
+		double decreaseValue = config.getDecreaseValue();
+		double valueSum = 0;
+		double baselineSum = 0;
+
+		if (decreasePercent == 0) {
+			decreasePercent = 50;
+		}
+		if (decreaseValue == 0) {
+			decreaseValue = 50;
+		}
 
 		for (int i = 0; i < length; i++) {
-			baselines.append(m_df.format(baseline[i])).append(",");
-			values.append(m_df.format(value[i])).append(",");
+			baselines.append(m_df.format(baseline[i])).append(" ");
+			values.append(m_df.format(value[i])).append(" ");
+			valueSum = valueSum + value[i];
+			baselineSum = baselineSum + baseline[i];
 
 			if (baseline[i] <= 0) {
+				baseline[i] = 100;
 				return new Pair<Boolean, String>(false, "");
 			}
 			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (value[i] / baseline[i] > 0.5 || baseline[i] < 20) {
-					return new Pair<Boolean, String>(false, "");
-				}
-			} else if (type == MetricType.AVG) {
-				if (value[i] / baseline[i] < 2 || baseline[i] < 5) {
+				if (value[i] / baseline[i] > (1 - decreasePercent / 100) || (baseline[i] - value[i]) < decreaseValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
 		}
-		return new Pair<Boolean, String>(true, type + " baselines:" + baselines.toString() + " value:"
-		      + values.toString());
-	}
+		double percent = (1 - valueSum / baselineSum) * 100;
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+		sb.append("[告警类型:").append(type).append("] ");
+		sb.append("[基线值:").append(baselines.toString()).append("] ");
+		sb.append("[实际值:").append(values.toString()).append("] ");
+		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");
+		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+		return new Pair<Boolean, String>(true, sb.toString());
+	}
 }

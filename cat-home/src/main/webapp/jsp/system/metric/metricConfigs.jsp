@@ -71,7 +71,7 @@
 		</div>
 		<div class="span10">
 			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="myModal" class="modal hide fade" style="width:800px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->

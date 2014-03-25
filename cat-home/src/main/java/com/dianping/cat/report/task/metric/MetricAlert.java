@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.metric;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,13 +52,14 @@ public class MetricAlert implements Task, LogEnabled {
 	@Inject
 	private AlertConfig m_alertConfig;
 
+	@Inject
+	private AlertInfo m_alertInfo;
+
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
 	private static final int DATA_CHECK_MINUTE = 2;
 
 	private static final int DATA_AREADY_MINUTE = 1;
-
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
@@ -104,7 +104,7 @@ public class MetricAlert implements Task, LogEnabled {
 			value = mergerArray(lastValue, currentValue);
 			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
-		return m_alertConfig.checkData(value, baseline, type);
+		return m_alertConfig.checkData(config, value, baseline, type);
 	}
 
 	@Override
@@ -184,13 +184,11 @@ public class MetricAlert implements Task, LogEnabled {
 				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
 			}
 			if (alert != null && alert.getKey()) {
-				String content = "[ " + alert.getValue() + " ][ minute:" + (minute + 60) % 60 + " ][ time:"
-				      + m_sdf.format(new Date()) + "][ time:"
-				      + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " ]";
+				config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+				      config.getMetricKey()));
 
-				sendAlertInfo(productLine, config, content);
-
-				Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, content);
+				m_alertInfo.addMetric(config, new Date().getTime());
+				sendAlertInfo(productLine, config, alert.getValue());
 			}
 		}
 	}
@@ -275,6 +273,8 @@ public class MetricAlert implements Task, LogEnabled {
 
 		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);
+
+		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
 
 	@Override
