@@ -25,6 +25,14 @@ public class AlertConfig {
 		return emails;
 	}
 
+	public List<String> buildSMSReceivers(ProductLine productLine) {
+		List<String> phones = new ArrayList<String>();
+
+		phones.add("18616671676");
+		phones.add("13858086694");
+		return phones;
+	}
+
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
