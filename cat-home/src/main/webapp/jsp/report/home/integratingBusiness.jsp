@@ -7,10 +7,17 @@
 <h5>c).业务监控和业务分析有部分的交叉，业务监控数据可能是不准确的，比如销售额，他仅仅用于监控，用于发现业务是否正常。建议产品线的核心指标不超过6个。</h5>
 
 </br>
+<p>1.业务指标是反映业务运行状态，<span class="text-error">建议使用count作为业务指标</span>，比如订单次数，支付次数，count作为指标他的趋势比较固定，告警也相当准确。</p>
+<p>2.有些业务是用了失败作为一个指标，<span class="text-error">比如会员卡加卡失败，这个不应该作为业务指标，这个应该封装为一个Exception</span>。在监控大盘中可以针对一个类型的异常进行告警。</p>
+<p>3.有些使用使用了平均响应时间作为指标，<span class="text-error">这也不建议使用，因为这些指标其实是性能指标。</span>响应指标其实和count很相关，响应时间出了问题，访问量都会出问题，但是访问量出问题（比如CDN挂了），响应时间还是正常的。</p>
+<p>4.一个业务核心指标往往就那么非常关键的几个，请尽量使用count指标。比如团购业务中，重要三个指标，订单数，支付数，验券数</p>
+
+</br>
+</br>
 <h4 class="text-success">第一步:确定业务指标</h4>
-<h4 class="text-error">1).每个指标都有一个String作为它的唯一KEY，这个KEY在整个产品线中，不能重复。产品线的配置参考第三步。</h4>
-<p>比如团购业务中，有两个核心指标，一个订单数量，一个是销售总金额</p>
-<p>对这两个指标定义两个唯一的String，PayCount 和 PayAmount</p>
+<h5>1).每个指标都有一个String作为它的唯一KEY，这个KEY在整个产品线中，不能重复。产品线的配置参考第三步。</h5>
+<p>比如团购业务中，有两个核心指标，一个订单数量，一个是支付数量</p>
+<p>对这两个指标定义两个唯一的String，OrderCount 和 PayCount</p>
 </br>
 
 <h4 class="text-success">第二步:业务代码埋点</h4>
@@ -18,7 +25,7 @@
 <p> 1).logMetricForCount用于记录一个指标值出现的次数</p>
 <p> 2).logMetricForDuration用于记录一个指标出现的平均值</p>
 <p> 3).logMetricForSum用于记录一个指标出现的总和</p>
-<p class='text-error'> 4).PayCount记录次数选用logMetricForCount这个API，PayAmount记录总和选用logMetricForSum这个API</p>
+<p class='text-error'> 4).OrderCount，PayCount记录次数选用logMetricForCount这个API</p>
 <p> 5).集成代码可能是如下所示</p>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business04.png"/>
 
@@ -26,11 +33,13 @@
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
 <p>业务监控展示的是一个产品线下所有的业务指标信息，CAT提供了产品的配置信息</p>
-<p><span class='text-error'>必须把一个产品线下的所有项目加入到此产品线，这样这个产品线下所有指标才能正确展示</span></p>
+<p><span class='text-error'>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示</span></p>
+<p><span class='text-error'>2、告警邮件:当这个产品线下的业务指标出现异常时，会发送邮件到此邮箱</span></p>
+<p><span class='text-error'>3、告警短信:当这个产品线下的业务指标出现异常时，会发送邮件到此号码</span></p>
 <h4 class="text-error">url : <a href="" target="_blank">链接</a></h4>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business01.png"/>
 </br> 
-<h4 class="text-success">第四步:图形展示配置</h4>
+<h4 class="text-success">第四步:图形展示以及告警配置</h4>
 <p>当程序埋点好，后端的Metric指标的数据都是自动插入到CAT数据库中，不需要用户进行新建业务指标，用户直接修改即可。</p>
 <p>此时已经能展示基本的业务监控曲线，如果需要一些其他的配置，比如业务监控图形顺序，展示标题等。</p>
 <h4 class="text-error">url : <a href="/cat/s/config?op=metricConfigList" target="_blank">链接</a></h4>

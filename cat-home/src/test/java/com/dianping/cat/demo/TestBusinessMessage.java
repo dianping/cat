@@ -127,18 +127,17 @@ public class TestBusinessMessage {
 	public void sample() {
 		String pageName = "";
 		String serverIp = "";
-		double amount = 0;
 		
 		Transaction t = Cat.newTransaction("URL", pageName); //创建一个Transaction
 
 		try {
 			//记录一个事件
 			Cat.logEvent("URL.Server", serverIp, Event.SUCCESS, "ip=" + serverIp + "&...");
-			//记录一个业务指标，记录次数
+			//记录一个业务指标，记录订单次数
+			Cat.logMetricForCount("OrderCount");
+			//记录一个业务指标，记录支付次数
 			Cat.logMetricForCount("PayCount");
-			//记录一个业务指标，记录支付金额
-			Cat.logMetricForSum("PayAmount", amount);
-
+			
 			yourBusiness();//自己业务代码
 			
 			t.setStatus(Transaction.SUCCESS);//设置状态
