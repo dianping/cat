@@ -81,11 +81,11 @@
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"><a href="?op=dashboard&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>业务大盘</strong></a></li>
 			             <c:forEach var="item" items="${model.metricGroups}" varStatus="status">
-				              <li class='nav-header' id="${item}"><a href="?op=dashboard&group=${item}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item}</strong></a></li>
+				              <li class='nav-header' id="metric_${item}"><a href="?op=dashboard&group=${item}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item}</strong></a></li>
 			             </c:forEach>
 			             
 			             <c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.title}</strong></a></li>
+			              <li class='nav-header' id="metric_${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.title}</strong></a></li>
 			            </c:forEach>
 		              <li >&nbsp;</li>
 		            </ul>
@@ -102,18 +102,19 @@
 	</c:otherwise></c:choose>
 	
 	<script type="text/javascript">
-			$(document).ready(function() {
-				<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-					var data = ${item.jsonString};
-					graphMetricChart(document.getElementById('${item.id}'), data);
-				</c:forEach>
-				
-				var product = '${payload.product}';
-				
-				$('#'+product).addClass('active');
-				$('i[tips]').popover();
-			});
-		</script>
+		$(document).ready(function() {
+			var product = '${payload.product}';
+			$('#metric_'+product).addClass('active');
+			$('i[tips]').popover();
+			
+			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+				var data = ${item.jsonString};
+				graphMetricChart(document.getElementById('${item.id}'), data);
+			</c:forEach>
+			
+			
+		});
+	</script>
 <style type="text/css">
 .row-fluid .span2{
 	width:10%;
