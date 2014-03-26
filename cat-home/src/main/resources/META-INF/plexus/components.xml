@@ -1487,6 +1487,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>alteration</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>alteration</logical-table-name>
+				<physical-table-name>alteration</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>baseline</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1554,6 +1564,15 @@
 				<physical-table-name>weekly_report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlterationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.BaselineDao</role>
@@ -2819,6 +2838,36 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.alteration.Handler</role>
+			<implementation>com.dianping.cat.report.page.alteration.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.alteration.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.alteration.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.alteration.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlterationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
