@@ -7,13 +7,13 @@ import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 final class UserDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
-	@Override
-	public List<Component> defineComponents() {
-		List<Component> all = new ArrayList<Component>();
+   @Override
+   public List<Component> defineComponents() {
+      List<Component> all = new ArrayList<Component>();
 
-		defineSimpleTableProviderComponents(all, "user", com.dianping.cat.home.dal.user._INDEX.getEntityClasses());
-		defineDaoComponents(all, com.dianping.cat.home.dal.user._INDEX.getDaoClasses());
+      defineSimpleTableProviderComponents(all, "user", com.dianping.cat.home.dal.user._INDEX.getEntityClasses());
+      defineDaoComponents(all, com.dianping.cat.home.dal.user._INDEX.getDaoClasses());
 
-		return all;
-	}
+      return all;
+   }
 }
