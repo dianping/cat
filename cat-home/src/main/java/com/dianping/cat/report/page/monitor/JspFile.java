@@ -1,7 +1,7 @@
-package com.dianping.cat.report.page.systemMonitor;
+package com.dianping.cat.report.page.monitor;
 
 public enum JspFile {
-	VIEW("/jsp/report/systemMonitor.jsp"),
+	VIEW("/jsp/report/monitor.jsp"),
 
 	;
 

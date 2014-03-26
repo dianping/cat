@@ -41,7 +41,7 @@ public enum ReportPage implements Page {
 
    STATISTICS("statistics", "statistics", "Statistics", "Statistics", true),
 
-   SYSTEMMONITOR("systemMonitor", "systemMonitor", "SystemMonitor", "SystemMonitor", true);
+   MONITOR("monitor", "monitor", "Monitor", "Monitor", true);
 
    private String m_name;
 

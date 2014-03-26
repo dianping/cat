@@ -22,13 +22,48 @@
 
 <h4 class="text-success">第二步:业务代码埋点</h4>
 <h5 class='text-error'> Metric一共有三个API，分别用来记录次数、平均、总和，统一粒度为一分钟</h5>
+<h5>1.Java API调用方式</h5>
 <p> 1).logMetricForCount用于记录一个指标值出现的次数</p>
 <p> 2).logMetricForDuration用于记录一个指标出现的平均值</p>
 <p> 3).logMetricForSum用于记录一个指标出现的总和</p>
 <p class='text-error'> 4).OrderCount，PayCount记录次数选用logMetricForCount这个API</p>
 <p> 5).集成代码可能是如下所示</p>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business04.png"/>
+<h5>2.HTTP API调用方式</h5>
+<p>接口调用请求说明</p>
+<pre>
+	http请求方式: GET（请使用http协议）
+	http://cat.dianpingoa.com/cat/r/systemMonitor?
+</pre>
+<p>参数说明</p>
+<table style="width:50%" class="table table-striped table-bordered table-condensed">
+	<tr><th width="30%">参数</th><th>说明</th></tr>
+	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-error">必需</span></td></tr>
+	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-error">必需</span></td></tr>
+	<tr><td>key</td><td>监控业务唯一ID名称，<span class="text-error">必需</span></td></tr>
+	<tr><td>op</td><td>sum，avg，count[<span class="text-error">默认</span>]</td></tr>
+	<tr><td>count</td><td>op=count时所需，<span class="text-error">默认为1</span></td></tr>
+	<tr><td>sum</td><td>op=sum时所需，<span class="text-error">默认为0</span></td></tr>
+	<tr><td>avg</td><td>op=avg时所需，<span class="text-error">默认为0</span></td></tr>
+</table>
 
+<p> 1).op = count时，用于记录一个指标值出现的次数</p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=count
+</pre>
+<p> 2).op = avg时，用于记录一个指标出现的平均值</p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=avg&avg=500
+</pre>
+<p> 3).op = sum时，用于记录一个指标出现的总和</p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=sum&sum=500
+</pre>
+<p>返回说明</p>
+<pre>
+	<span class="text-error">{"statusCode":"-1","errorMsg":"Unknown [ domain,group,key ] name!"} ——> 失败 [必需参数缺失]</span>
+	<span class="text-success">{"statusCode":"0"} ——> 成功</span>
+</pre>
 </br>
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
