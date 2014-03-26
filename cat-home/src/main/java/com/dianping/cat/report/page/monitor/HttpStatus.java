@@ -3,7 +3,11 @@ package com.dianping.cat.report.page.monitor;
 import com.google.gson.annotations.SerializedName;
 
 public class HttpStatus {
-	
+
+	public static final int SUCCESS = 0;
+
+	public static final int FAIL = -1;
+
 	@SerializedName("statusCode")
 	private String m_statusCode;
 
