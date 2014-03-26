@@ -38,6 +38,7 @@
         void complete();<br/>
 	  </code>  
 	  <p><strong class="text-info">代码示例</strong></p>
+	  
 	  <xmp class="well">
      Transaction t = Cat.getProducer().newTransaction("your transaction type", "your transaction name");
      try {
@@ -48,6 +49,7 @@
             Cat.getProducer().logError(e);//用log4j记录系统异常，以便在Logview中看到此信息
             t.setStatus(e);
             throw e; 
+            	  (CAT所有的API都可以单独使用，也可以组合使用，比如Transaction中嵌套Event或者Metric。)
                   (注意如果这里希望异常继续向上抛，需要继续向上抛出，往往需要抛出异常，让上层应用知道。)
                   (如果认为这个异常在这边可以被吃掉，则不需要在抛出异常。)
      } finally {

@@ -39,8 +39,9 @@ public class UserReportSubState {
 
 			if (sub1 != sub2) {
 				return sub2 - sub1;
+			} else {
+				return -1;
 			}
-			return o1.getScheduledReport().getDomain().compareTo(o2.getScheduledReport().getDomain());
 		}
 	}
 

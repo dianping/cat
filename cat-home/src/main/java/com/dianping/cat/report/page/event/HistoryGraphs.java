@@ -178,7 +178,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	private List<Map<String, double[]>> buildLineChartData(Date start, Date end, String domain, String type,
 	      String name, String ip, String queryType) {
 		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
-		
+
 		if (queryType.equalsIgnoreCase("day")) {
 			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, domain, type, name, ip);
 			Map<String, double[]> lastDayGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_DAY),
@@ -240,11 +240,11 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			step = TimeUtil.ONE_DAY;
 		}
 
-		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, type, name, domain, ip, queryType);
+		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, domain, type, name, ip, queryType);
 
 		LineChart item = buildTotal(allDatas, start, size, step, display, queryType);
-		model.setHitTrend(item.getJsonString());
 
+		model.setHitTrend(item.getJsonString());
 		item = buildFail(allDatas, start, size, step, display, queryType);
 		model.setFailureTrend(item.getJsonString());
 	}

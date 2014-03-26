@@ -1,8 +1,10 @@
 package com.dianping.cat.consumer.metric;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -54,6 +56,25 @@ public class MetricConfigManagerTest {
 		Assert.assertEquals(1, sets.size());
 		manager.refreshMetricConfig();
 		Assert.assertEquals(1, manager.getMetricConfig().getMetricItemConfigs().size());
+
+		String id = manager.buildMetricKey(item.getDomain(), item.getType(), item.getMetricKey());
+		item.setId(id);
+		Map<MetricItemConfig, Long> configs = new HashMap<MetricItemConfig, Long>();
+
+		configs.put(item, 1L);
+		configs.put(item, 2L);
+		configs.put(item, 3L);
+		
+		Assert.assertEquals(3L, configs.get(item).longValue());
+		Assert.assertEquals(1, configs.size());
+		
+		item = new MetricItemConfig();
+		item.setId(id);
+		configs.put(item, 1L);
+		configs.put(item, 3L);
+		Assert.assertEquals(3L, configs.get(item).longValue());
+		Assert.assertEquals(1, configs.size());
+
 	}
 
 	@Test
@@ -74,7 +95,6 @@ public class MetricConfigManagerTest {
 		public void setConfigDao(ConfigDao configDao) {
 			m_configDao = configDao;
 		}
-
 	}
 
 	public static class MockConfigDao2 extends MockConfigDao1 {

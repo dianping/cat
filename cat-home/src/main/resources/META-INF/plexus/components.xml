@@ -220,6 +220,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1444,6 +1447,10 @@
 			<implementation>com.dianping.cat.report.task.metric.AlertConfig</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.metric.MetricAlert</role>
 			<implementation>com.dianping.cat.report.task.metric.MetricAlert</implementation>
 			<requirements>
@@ -1461,6 +1468,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2581,6 +2591,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2591,6 +2604,10 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.jsError.Handler</role>

@@ -12,6 +12,7 @@
     <attribute name="id" value-type="String" key="true"/>
 	<element name="domain" value-type="String" type="set" names="domains" />
     <entity-ref name="abtest" type="map" names="abtests" method-find-or-create="true" />
+    <entity-ref name="segment" type="map" names="segments" method-find-or-create="true"/>
   </entity>
   <entity name="abtest">
     <attribute name="run-id" value-type="String" key="true"/>
@@ -23,6 +24,12 @@
     <entity-ref name="point" type="map" names="points" method-find-or-create="true" />
   </entity>
   <entity name="point">
+    <attribute name="id" value-type="int" key="true"/>
+    <attribute name="count" value-type="int"  primitive="true"/>
+    <attribute name="sum" value-type="double" primitive="true"/>
+    <attribute name="avg" value-type="double" primitive="true"/>
+  </entity>
+  <entity name="segment">
     <attribute name="id" value-type="int" key="true"/>
     <attribute name="count" value-type="int"  primitive="true"/>
     <attribute name="sum" value-type="double" primitive="true"/>

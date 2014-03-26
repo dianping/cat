@@ -218,7 +218,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			step = TimeUtil.ONE_DAY;
 		}
 
-		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, queryType, domain, type, name, ip);
+		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, domain, type, name, ip, queryType);
 		LineChart item = buildFail(allDatas, start, step, size, queryType);
 		model.setErrorsTrend(item.getJsonString());
 	}

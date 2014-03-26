@@ -21,7 +21,7 @@
    			<div style="float:left;">
    				<div id="${item.title}" class="metricGraph"></div>
    			</div>
-	</c:forEach>
+		</c:forEach>
  </div></div>
  
 <script type="text/javascript">
