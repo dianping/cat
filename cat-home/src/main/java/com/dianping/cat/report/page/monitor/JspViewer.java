@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.systemMonitor;
+package com.dianping.cat.report.page.monitor;
 
 import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.view.BaseJspViewer;
@@ -9,8 +9,12 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case SYSTEM_API:
+		case COUNT_API:
+		case AVG_API:
+		case SUM_API:
 			return JspFile.VIEW.getPath();
+		default:
+			break;
 		}
 
 		throw new RuntimeException("Unknown action: " + action);
