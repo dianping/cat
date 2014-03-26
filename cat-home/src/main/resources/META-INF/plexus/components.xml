@@ -2873,17 +2873,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.systemMonitor.Handler</role>
-			<implementation>com.dianping.cat.report.page.systemMonitor.Handler</implementation>
+			<role>com.dianping.cat.report.page.monitor.Handler</role>
+			<implementation>com.dianping.cat.report.page.monitor.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.systemMonitor.JspViewer</role>
+					<role>com.dianping.cat.report.page.monitor.JspViewer</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.systemMonitor.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.systemMonitor.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.monitor.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.monitor.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>

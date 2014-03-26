@@ -1,7 +1,9 @@
-package com.dianping.cat.report.page.systemMonitor;
+package com.dianping.cat.report.page.monitor;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	SYSTEM_API("systemApi");
+	COUNT_API("count"),//default action
+	AVG_API("avg"),
+	SUM_API("sum");
 
 	private String m_name;
 
