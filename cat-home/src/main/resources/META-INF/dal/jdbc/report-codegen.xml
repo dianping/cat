@@ -9,6 +9,7 @@
     <member name="ip" field="ip" value-type="String" length="128" />
     <member name="date" field="date" value-type="Date" nullable="false" />
     <member name="user" field="user" value-type="String" length="45" nullable="false" />
+    <member name="alt-group" field="alt_group" value-type="String" length="45" />
     <member name="content" field="content" value-type="String" length="65535" nullable="false" />
     <member name="url" field="url" value-type="String" length="200" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />

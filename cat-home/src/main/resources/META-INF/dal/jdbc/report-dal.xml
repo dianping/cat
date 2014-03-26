@@ -27,7 +27,8 @@
 					</IF>
 					<IF type='NOT_NULL' field='hostname'>
 						AND <FIELD name='hostname'/> = ${hostname} 
-					</IF>				
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
 					]]></statement>
 			</query>
 		</query-defs>

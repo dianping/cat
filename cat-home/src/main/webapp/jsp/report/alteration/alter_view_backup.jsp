@@ -38,26 +38,73 @@
 			<td width="30%" class="puppet">
 				<table class="table table-striped table-bordered table-condensed table-hover"  border="0" cellpadding="0" cellspacing="0">
 					<tr class="text-success">
-						<th width="100%">标题</th>
+						<th width="20%">标题</th>
+						<th width="5%">类型</th>
+						<th width="5%">应用</th>
+						<th width="8%">主机名</th>
+						<th width="10%">变更时间</th>
+						<th width="5%">变更用户</th>
+						<th width="5%">详情</th>
 					</tr>
-					<c:forEach var="item" items="${barrel.alterationMap['puppet']}" varStatus="index" begin="0" end="${payload.rows-1}">
+					<c:forEach var="item" items="${barrel.alterationMap['puppet']}" varStatus="index" begin="0" end="9">
 						<tr>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
 							${item.title}
-						</td>					
+						</td>
+						<td class="alertation${item.type}">
+							${item.type}
+						</td>
+						<td >
+							${item.domain}
+						</td>
+						<td >
+							${item.hostname}
+						</td>
+						<td >
+							${item.date}
+						</td>
+						<td >
+							${item.user}
+						</td>
+						<td >
+							<c:if test=" ${empty item.url}">
+								<a href="${item.url}">link</a>
+							</c:if>
+						</td>						
 						</tr>
 					</c:forEach>
-					<c:if test="${fn:length(barrel.alterationMap['puppet'])>payload.rows}">
+					<c:if test="${fn:length(barrel.alterationMap['puppet'])>10}">
 						<tr class='showMenu' id='${barrel.key}_show' style="display:table-row;">
 							<td><a href='' onclick="return false">[:: show all ::]</a></td>
 						</tr>
-						<c:forEach var="item" items="${barrel.alterationMap['puppet']}" varStatus="index" begin="${payload.rows}">
+						<c:forEach var="item" items="${barrel.alterationMap['puppet']}" varStatus="index" begin="10">
 						<tr style="display:none;" class='${barrel.key}_content'>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
 							${item.title}
 						</td>
+						<td class="alertation${item.type}">
+							${item.type}
+						</td>
+						<td >
+							${item.domain}
+						</td>
+						<td >
+							${item.hostname}
+						</td>
+						<td >
+							${item.date}
+						</td>
+						<td >
+							${item.user}
+						</td>
+						<td >
+							<c:if test=" ${empty item.url}">
+								<a href="${item.url}">link</a>
+							</c:if>
+						</td>						
+						</tr>
 						</c:forEach>
 						<tr class='hideMenu' id='${barrel.key}_hide' style="display:none;">
 							<td><a href='' onclick="return false">[:: hide ::]</a></td>
@@ -68,26 +115,72 @@
 			<td width="30%" class="workflow">
 				<table class="table table-striped table-bordered table-condensed table-hover"  border="0" cellpadding="0" cellspacing="0">
 					<tr class="text-success">
-						<th width="100%">标题</th>
+						<th width="20%">标题</th>
+						<th width="5%">类型</th>
+						<th width="5%">应用</th>
+						<th width="8%">主机名</th>
+						<th width="10%">变更时间</th>
+						<th width="5%">变更用户</th>
+						<th width="5%">详情</th>
 					</tr>
-					<c:forEach var="item" items="${barrel.alterationMap['workflow']}" varStatus="index" begin="0" end="${payload.rows-1}">
+					<c:forEach var="item" items="${barrel.alterationMap['workflow']}" varStatus="index" begin="0" end="9">
 						<tr>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
 							${item.title}
-						</td>					
+						</td>
+						<td class="alertation${item.type}">
+							${item.type}
+						</td>
+						<td >
+							${item.domain}
+						</td>
+						<td >
+							${item.hostname}
+						</td>
+						<td >
+							${item.date}
+						</td>
+						<td >
+							${item.user}
+						</td>
+						<td >
+							<c:if test=" ${empty item.url}">
+								<a href="${item.url}">link</a>
+							</c:if>
+						</td>						
 						</tr>
 					</c:forEach>
-					<c:if test="${fn:length(barrel.alterationMap['workflow'])>payload.rows}">
+					<c:if test="${fn:length(barrel.alterationMap['workflow'])>10}">
 						<tr class='showMenu' id='${barrel.key}_show' style="display:table-row;">
 							<td><a href='' onclick="return false">[:: show all ::]</a></td>
 						</tr>
-						<c:forEach var="item" items="${barrel.alterationMap['workflow']}" varStatus="index" begin="${payload.rows}">
+						<c:forEach var="item" items="${barrel.alterationMap['workflow']}" varStatus="index" begin="10">
 						<tr style="display:none;" class='${barrel.key}_content'>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
 							${item.title}
-						</td>				
+						</td>
+						<td class="alertation${item.type}">
+							${item.type}
+						</td>
+						<td >
+							${item.domain}
+						</td>
+						<td >
+							${item.hostname}
+						</td>
+						<td >
+							${item.date}
+						</td>
+						<td >
+							${item.user}
+						</td>
+						<td >
+							<c:if test=" ${empty item.url}">
+								<a href="${item.url}">link</a>
+							</c:if>
+						</td>						
 						</tr>
 						</c:forEach>
 						<tr class='hideMenu' id='${barrel.key}_hide' style="display:none;">
@@ -99,26 +192,73 @@
 			<td width="30%" class="lazyman">
 				<table class="table table-striped table-bordered table-condensed table-hover"  border="0" cellpadding="0" cellspacing="0">
 					<tr class="text-success">
-						<th width="100%">标题</th>
+						<th width="20%">标题</th>
+						<th width="5%">类型</th>
+						<th width="5%">应用</th>
+						<th width="8%">主机名</th>
+						<th width="10%">变更时间</th>
+						<th width="5%">变更用户</th>
+						<th width="5%">详情</th>
 					</tr>
-					<c:forEach var="item" items="${barrel.alterationMap['lazyman']}" varStatus="index" begin="0" end="${payload.rows-1}">
+					<c:forEach var="item" items="${barrel.alterationMap['lazyman']}" varStatus="index" begin="0" end="9">
 						<tr>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
 							${item.title}
-						</td>					
+						</td>
+						<td class="alertation${item.type}">
+							${item.type}
+						</td>
+						<td >
+							${item.domain}
+						</td>
+						<td >
+							${item.hostname}
+						</td>
+						<td >
+							${item.date}
+						</td>
+						<td >
+							${item.user}
+						</td>
+						<td >
+							<c:if test=" ${empty item.url}">
+								<a href="${item.url}">link</a>
+							</c:if>
+						</td>						
 						</tr>
 					</c:forEach>
-					<c:if test="${fn:length(barrel.alterationMap['lazyman'])>payload.rows}">
+					<c:if test="${fn:length(barrel.alterationMap['lazyman'])>10}">
 						<tr class='showMenu' id='${barrel.key}_show' style="display:table-row;">
 							<td><a href='' onclick="return false">[:: show all ::]</a></td>
 						</tr>
-						<c:forEach var="item" items="${barrel.alterationMap['lazyman']}" varStatus="index" begin="${payload.rows}">
+						<c:forEach var="item" items="${barrel.alterationMap['lazyman']}" varStatus="index" begin="10">
 						<tr style="display:none;" class='${barrel.key}_content'>
 						<td class="text-info">
 							<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="top" data-content="${item.content}"></i>
 							${item.title}
 						</td>
+						<td class="alertation${item.type}">
+							${item.type}
+						</td>
+						<td >
+							${item.domain}
+						</td>
+						<td >
+							${item.hostname}
+						</td>
+						<td >
+							${item.date}
+						</td>
+						<td >
+							${item.user}
+						</td>
+						<td >
+							<c:if test=" ${empty item.url}">
+								<a href="${item.url}">link</a>
+							</c:if>
+						</td>						
+						</tr>
 						</c:forEach>
 						<tr class='hideMenu' id='${barrel.key}_hide' style="display:none;">
 							<td><a href='' onclick="return false">[:: hide ::]</a></td>
@@ -129,6 +269,16 @@
 		</tr>
 	</c:forEach>
 </table>
+
+<c:if test="${model.totalPages>1}">
+	<div class="pagination pagination-centered">
+	  <ul>
+	  <c:forEach varStatus="idx" begin="1" end="${model.totalPages}">
+	    <li id='page${idx.index}'><a href="?fullScreen=${payload.fullScreen}&refresh=true&frequency=30&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&granularity=${payload.granularity}&pages=${idx.index}">${idx.index}</a></li>
+	  </c:forEach>
+	  </ul>
+	</div>
+</c:if>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -146,15 +296,9 @@
 			$('.footer').show();
 		</c:if>
 		
-		$(".typeButton").click(function(){
-			var type = "."+this.id.replace("Button","");
-			$(this).toggleClass("btn-primary");
-			if($(type).css("display")=="block"){
-				$(type).css("display","none");
-			}else{
-				$(type).css("display","block");
-			}
-		})
+		<c:if test="${model.totalPages>1}">
+			$('#page'+${payload.pages}).addClass('active')
+		</c:if>
 		
 		$(".showMenu").click(function(){
 			var timeStamp = this.id.replace("_show","");
@@ -164,6 +308,7 @@
 			$(this).css("display","none");
 			$(content).css("display","table-row");
 			$(hide).css("display","table-row");
+			
 		})
 		
 		$(".hideMenu").click(function(){
@@ -174,6 +319,7 @@
 			$(this).css("display","none");
 			$(content).css("display","none");
 			$(show).css("display","table-row");
+			
 		})
 		
 		var refresh = ${payload.refresh};

@@ -4,25 +4,30 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
-
-import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.ActionPayload;
-import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
 
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
+	
+	@FieldMeta("rows")
+	private int m_rows = 10;
 
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
-	
+
 	@FieldMeta("fullScreen")
 	private boolean fullScreen = false;
+	
+	@FieldMeta("group")
+	private String m_group;
 
 	@FieldMeta("op")
 	private Action m_action;
@@ -38,7 +43,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("ip")
 	private String m_ip;
-
+	
 	@FieldMeta("alterationDate")
 	private String m_alterationDate;
 
@@ -118,6 +123,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_granularity;
 	}
 
+	public String getGroup() {
+		return m_group;
+	}
+
 	public String getHostname() {
 		if("".equals(m_hostname)){
 			return null;
@@ -132,6 +141,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	public int getRows() {
+		return m_rows;
 	}
 
 	public Date getStartTime() {
@@ -202,6 +215,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_granularity = granularity;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	public void setHostname(String hostname) {
 		m_hostname = hostname;
 	}
@@ -221,6 +238,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
+	}
+
+	public void setRows(int rows) {
+		m_rows = rows;
 	}
 
 	public void setStartTime(String startTime) {
