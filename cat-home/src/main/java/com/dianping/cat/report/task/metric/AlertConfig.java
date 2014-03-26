@@ -35,11 +35,9 @@ public class AlertConfig {
 
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
 		StringBuilder sb = new StringBuilder();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
 		sb.append("[业务指标 ").append(config.getTitle()).append("]");
-		sb.append("[告警时间 ").append(sdf.format(new Date()) + "]");
 		return sb.toString();
 	}
 

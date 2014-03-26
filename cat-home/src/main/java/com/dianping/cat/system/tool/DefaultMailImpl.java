@@ -154,7 +154,7 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 	@Override
 	public boolean sendSms(String title, String content, List<String> phones) {
 		StringBuilder sb = new StringBuilder();
-
+		
 		for (String phone : phones) {
 			InputStream in = null;
 			try {
@@ -232,6 +232,7 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 						boolean result = sendEmailInternal(title, content, emails);
 
 						if (!result) {
+							Cat.logEvent("InternalEmailSendError", title, Event.SUCCESS, content);
 							boolean gmail = sendEmailByGmail(title, content, emails);
 
 							if (gmail == false) {
