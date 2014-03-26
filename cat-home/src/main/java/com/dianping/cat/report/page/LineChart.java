@@ -22,6 +22,8 @@ public class LineChart {
 	private List<String> subTitles = new ArrayList<String>();
 
 	private String title;
+	
+	private String id;
 
 	private String htmlTitle;
 
@@ -157,4 +159,12 @@ public class LineChart {
 		this.htmlTitle = htmlTitle;
 	}
 
+	public String getId() {
+   	return id;
+   }
+
+	public void setId(String id) {
+   	this.id = id;
+   }
+	
 }

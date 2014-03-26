@@ -35,7 +35,7 @@
 		<%@ include file="metricOpNav.jsp" %>
       	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
    			<div style="float:left;">
-   				<div id="${item.title}" class="metricGraph"></div>
+   				<div id="${item.id}" class="metricGraph"></div>
    			</div>
 		</c:forEach>
 	</c:when>
@@ -49,9 +49,9 @@
 					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 					<td class="nav">
 						<c:forEach var="nav" items="${model.navs}">
-							&nbsp;[ <a href="${model.baseUri}?op=dashboard&date=${model.date}&domain=${model.domain}&step=${nav.hours}&timeRange=${payload.timeRange}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+							&nbsp;[ <a href="${model.baseUri}?op=dashboard&group=${payload.group}&date=${model.date}&domain=${model.domain}&step=${nav.hours}&timeRange=${payload.timeRange}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 						</c:forEach>
-						&nbsp;[ <a href="${model.baseUri}?op=dashboard&${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
+						&nbsp;[ <a href="${model.baseUri}?op=dashboard&group=${payload.group}&${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 					</td>
 				</tr>
 			</table>
@@ -61,10 +61,10 @@
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
 							<c:when test="${payload.timeRange eq range.duration}">
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&group=${payload.group}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
 							</c:when>
 							<c:otherwise>
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&group=${payload.group}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
 							</c:otherwise>
 							</c:choose>
 					</c:forEach>
@@ -86,7 +86,7 @@
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
-			graphMetricChart(document.getElementById('${item.title}'), data);
+			graphMetricChart(document.getElementById('${item.id}'), data);
 		</c:forEach>
 	});
 </script>

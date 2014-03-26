@@ -13,7 +13,7 @@
 			<a id="refresh10" class='btn btn-small btn-primary' href="?op=${payload.action.name}&fullScreen=${payload.fullScreen}&refresh=true&frequency=10&domain=${model.domain}">10秒定时刷新</a>
 			<a id="refresh20" class='btn btn-small btn-primary' href="?op=${payload.action.name}&fullScreen=${payload.fullScreen}&refresh=true&frequency=20&domain=${model.domain}">20秒定时刷新</a>
 			<a id="refresh30" class='btn btn-small btn-primary' href="?op=${payload.action.name}&fullScreen=${payload.fullScreen}&refresh=true&frequency=30&domain=${model.domain}">30秒定时刷新</a>
-			<a id="fullScreen"  class='btn btn-small btn-primary' href="?op=${payload.action.name}&fullScreen=true&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}">全屏幕</a>
+			<a id="fullScreen"  class='btn btn-small btn-primary' href="?op=${payload.action.name}&fullScreen=${!payload.fullScreen}&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}">全屏幕</a>
 		</div>
 	</div>
 </div>

@@ -225,9 +225,10 @@ public class GraphCreator implements LogEnabled {
 		String id = key.substring(0, index);
 		String type = key.substring(index + 1);
 		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
+		String metricId = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+		      config.getMetricKey());
 		String des = "";
-
-		config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
+		config.setId(metricId);
 		if (MetricType.AVG.name().equals(type)) {
 			des = Chinese.Suffix_AVG;
 		} else if (MetricType.SUM.name().equals(type)) {
@@ -238,6 +239,7 @@ public class GraphCreator implements LogEnabled {
 		String title = config.getTitle() + des;
 
 		chart.setTitle(title);
+		chart.setId(metricId + ":" + type);
 
 		if (alertItems.contains(config)) {
 			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
