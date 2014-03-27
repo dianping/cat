@@ -1,13 +1,8 @@
 package com.dianping.cat.report.page.alteration;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -30,33 +25,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AlterationDao m_alterationDao;
-
-	private long buildBarrelKey(long barTime, long endMill, long granularity) {
-		long key;
-		if (endMill == barTime) {
-			key = barTime - granularity;
-		} else if ((endMill - barTime) / granularity == 0) {
-			key = barTime;
-		} else {
-			key = endMill - ((endMill - barTime) / granularity + 1) * granularity;
-		}
-		return key;
-	}
-
-	private String buildType(String type) {
-		String str;
-		if (type != null) {
-			str = type.toLowerCase();
-		} else {
-			return "other";
-		}
-
-		if (!"puppet".equals(str) && !"workflow".equals(str) && !"lazyman".equals(str)) {
-			return "other";
-		} else {
-			return type;
-		}
-	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -94,7 +62,6 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case VIEW:
-			long granularity = payload.getGranularity();
 			List<Alteration> alts;
 			Date startTime = payload.getStartTime();
 			Date endTime = payload.getEndTime();
@@ -106,9 +73,8 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 				break;
 			}
-			Map<Long, AltBarrel> alterations = buildBarrelViewModel(alts, granularity, endTime.getTime());
 
-			model.setBarrels(alterations);
+			model.setAlterations(alts);
 			break;
 		}
 
@@ -118,28 +84,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private Map<Long, AltBarrel> buildBarrelViewModel(List<Alteration> alts, long granularity, long endMill) {
-		Map<Long, AltBarrel> alterations = new LinkedHashMap<Long, AltBarrel>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-		for (Alteration altGenBarrel : alts) {
-			long barTime = altGenBarrel.getDate().getTime();
-			long key = buildBarrelKey(barTime, endMill, granularity);
-			AltBarrel tmpBarrel = alterations.get(key);
-			List<Alteration> tmpAlterations;
-
-			if (tmpBarrel == null) {
-				alterations
-				      .put(key, new AltBarrel(sdf.format(new Date(key)), sdf.format(new Date(key + granularity)), key));
-				tmpBarrel = alterations.get(key);
-			}
-
-			tmpAlterations = tmpBarrel.getAlterationMap().get(buildType(altGenBarrel.getType()));
-			tmpAlterations.add(altGenBarrel);
-		}
-		return alterations;
 	}
 
 	private Alteration buildAlteration(Payload payload) {
@@ -208,55 +152,6 @@ public class Handler implements PageHandler<Context> {
 		} else if (status == 2) {
 			model.setInsertResult("{\"status\":200, \"errorMessage\":\"lack args\"}");
 		}
-
 	}
-
-	public class AltBarrel {
-		private Map<String, List<Alteration>> m_alterationMap;
-
-		private String m_startTime;
-
-		private String m_endTime;
-
-		private long m_key;
-
-		public AltBarrel(String startTime, String endTime, long key) {
-			m_startTime = startTime;
-			m_endTime = endTime;
-			m_key = key;
-			m_alterationMap = new HashMap<String, List<Alteration>>();
-			m_alterationMap.put("puppet", new ArrayList<Alteration>());
-			m_alterationMap.put("workflow", new ArrayList<Alteration>());
-			m_alterationMap.put("lazyman", new ArrayList<Alteration>());
-			m_alterationMap.put("other", new ArrayList<Alteration>());
-		}
-
-		public Map<String, List<Alteration>> getAlterationMap() {
-			return m_alterationMap;
-		}
-
-		public String getEndTime() {
-			return m_endTime;
-		}
-
-		public long getKey() {
-			return m_key;
-		}
-
-		public String getStartTime() {
-			return m_startTime;
-		}
-
-		public void setAlterationMap(Map<String, List<Alteration>> tmpAltMap) {
-			m_alterationMap = tmpAltMap;
-		}
-
-		public void setEndTime(String endTime) {
-			m_endTime = endTime;
-		}
-
-		public void setStartTime(String startTime) {
-			m_startTime = startTime;
-		}
-	}
+	
 }

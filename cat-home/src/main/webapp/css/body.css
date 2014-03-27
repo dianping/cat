@@ -261,3 +261,12 @@ ul, ol{
 #loginModal .form-horizontal .controls{
 	margin-left:70px;
 }
+.aleration_puppet{
+	background:#F0FFFF;
+}
+.aleration_lazyman{
+	background:#F5F5DC;
+}
+.aleration_workflow{
+	background:#87CEEB;
+}
