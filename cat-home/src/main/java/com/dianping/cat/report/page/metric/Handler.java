@@ -59,8 +59,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end,
-			      payload.getTest());
+			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
@@ -69,9 +68,9 @@ public class Handler implements PageHandler<Context> {
 			Map<String, LineChart> allCharts = null;
 
 			if (group == null || group.length() == 0) {
-				allCharts = m_graphCreator.buildDashboard(start, end, payload.getTest());
+				allCharts = m_graphCreator.buildDashboard(start, end);
 			} else {
-				allCharts = m_graphCreator.buildDashboardByGroup(start, end, payload.getTest(), group);
+				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
 			}
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;

@@ -10,10 +10,10 @@
 	</div>
 	<div class="span4 text-center">
 		<div class='text-center'>
-			<a id="refresh10" class='btn btn-small btn-primary' href="?op=${payload.action.name}&group=${payload.group}&fullScreen=${payload.fullScreen}&refresh=true&frequency=10&domain=${model.domain}">10秒定时刷新</a>
-			<a id="refresh20" class='btn btn-small btn-primary' href="?op=${payload.action.name}&group=${payload.group}&fullScreen=${payload.fullScreen}&refresh=true&frequency=20&domain=${model.domain}">20秒定时刷新</a>
-			<a id="refresh30" class='btn btn-small btn-primary' href="?op=${payload.action.name}&group=${payload.group}&fullScreen=${payload.fullScreen}&refresh=true&frequency=30&domain=${model.domain}">30秒定时刷新</a>
-			<a id="fullScreen"  class='btn btn-small btn-primary' href="?op=${payload.action.name}&group=${payload.group}&fullScreen=true&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}">全屏幕</a>
+			<a id="refresh10" class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&refresh=true&frequency=10&domain=${model.domain}&timeRange=${payload.timeRange}">10秒定时刷新</a>
+			<a id="refresh20" class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&refresh=true&frequency=20&domain=${model.domain}&timeRange=${payload.timeRange}">20秒定时刷新</a>
+			<a id="refresh30" class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&refresh=true&frequency=30&domain=${model.domain}&timeRange=${payload.timeRange}">30秒定时刷新</a>
+			<a id="fullScreen"  class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${!payload.fullScreen}&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}&timeRange=${payload.timeRange}">全屏幕</a>
 		</div>
 	</div>
 </div>
@@ -32,9 +32,5 @@ $(document).ready(function() {
 			location.reload();				
 		},frequency*1000);
 	};
-	
-	$('#fullScreen').click(function (e) {
-		fullScreen(e);
-	});
 });
 </script>

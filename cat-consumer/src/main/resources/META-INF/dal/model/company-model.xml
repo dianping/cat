@@ -7,9 +7,10 @@
   </entity>
   <entity name="product-line">
     <attribute name="id" value-type="String" key="true"/>
-    <attribute name="owner" value-type="String" />
-    <attribute name="email" value-type="String" />
-    <attribute name="title" value-type="String" />
+    <attribute name="owner" value-type="String"/>
+    <attribute name="email" value-type="String"/>
+    <attribute name="phone" value-type="String"/>
+    <attribute name="title" value-type="String"/>
     <attribute name="order" value-type="double"  primitive="true" />
     <attribute name="dashboard" value-type="boolean"  primitive="true" />
     <attribute name="metric-dashboard" value-type="boolean"  primitive="true" default-value="true"/>

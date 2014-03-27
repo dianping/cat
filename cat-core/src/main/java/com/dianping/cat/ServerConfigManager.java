@@ -17,6 +17,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
@@ -285,6 +286,21 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return m_config.isJobMachine();
 		} else {
 			return true;
+		}
+	}
+
+	public boolean isAlertMachine() {
+		if (m_config != null) {
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+			//TODO
+			if ("10.1.6.128".equals(ip)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
 	}
 

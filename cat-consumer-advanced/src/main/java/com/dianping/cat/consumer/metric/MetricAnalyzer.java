@@ -18,11 +18,10 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.metric.model.entity.Abtest;
-import com.dianping.cat.consumer.metric.model.entity.Group;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
@@ -53,8 +52,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Inject
 	private TaskManager m_taskManager;
 
-	private Map<String, String> m_abtests;
-
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
 
@@ -80,6 +77,31 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return report;
 	}
 
+	private MetricReport transform(MetricReport report) {
+		Map<String, MetricItem> items = report.getMetricItems();
+
+		for (Entry<String, MetricItem> item : items.entrySet()) {
+			MetricItem metricItem = item.getValue();
+			Map<Integer, Segment> segs = metricItem.getSegments();
+
+			if (segs.size() == 0) {
+				Map<Integer, Point> oldPoints = metricItem.findOrCreateAbtest("-1").findOrCreateGroup("").getPoints();
+
+				for (Point point : oldPoints.values()) {
+					Segment seg = new Segment();
+
+					seg.setId(point.getId());
+					seg.setCount(point.getCount());
+					seg.setAvg(point.getAvg());
+					seg.setSum(point.getSum());
+
+					segs.put(seg.getId(), seg);
+				}
+			}
+		}
+		return report;
+	}
+
 	protected void loadReports() {
 		Bucket<String> reportBucket = null;
 
@@ -90,7 +112,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				String xml = reportBucket.findById(id);
 				MetricReport report = DefaultSaxParser.parse(xml);
 
-				m_reports.put(report.getProduct(), report);
+				m_reports.put(report.getProduct(), transform(report));
 			}
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when loading metric reports of %s!", new Date(m_startTime)), e);
@@ -113,11 +135,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 
 			m_reports.put(product, report);
-		}
-
-		if (m_abtests == null) {
-			m_abtests = new HashMap<String, String>();
-			m_abtests.put("-1", "");
 		}
 
 		Message message = tree.getMessage();
@@ -151,7 +168,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			MetricItem metricItem = report.findOrCreateMetricItem(key);
 
 			metricItem.addDomain(domain).setType(status);
-			updateMetric(metricItem, m_abtests, min, config.getCount(), config.getValue());
+			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(name);
 			m_configManager.insertIfNotExist(domain, "Metric", name, config);
@@ -229,7 +246,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				MetricItem metricItem = report.findOrCreateMetricItem(key);
 
 				metricItem.addDomain(domain).setType("C");
-				updateMetric(metricItem, m_abtests, min, 1, sum);
+				updateMetric(metricItem, min, 1, sum);
 			}
 		}
 	}
@@ -294,16 +311,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void updateMetric(MetricItem metricItem, Map<String, String> abtests, int minute, int count, double sum) {
-		for (Entry<String, String> entry : abtests.entrySet()) {
-			Abtest abtest = metricItem.findOrCreateAbtest(entry.getKey());
-			Group group = abtest.findOrCreateGroup(entry.getValue());
-			Point point = group.findOrCreatePoint(minute);
+	private void updateMetric(MetricItem metricItem, int minute, int count, double sum) {
+		Segment seg = metricItem.findOrCreateSegment(minute);
 
-			point.setCount(point.getCount() + count);
-			point.setSum(point.getSum() + sum);
-			point.setAvg(point.getSum() / point.getCount());
-		}
+		seg.setCount(seg.getCount() + count);
+		seg.setSum(seg.getSum() + sum);
+		seg.setAvg(seg.getSum() / seg.getCount());
 	}
 
 	public static class ConfigItem {

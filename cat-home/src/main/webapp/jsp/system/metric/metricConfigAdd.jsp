@@ -9,14 +9,13 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <form name="metricConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSumbit">
-	
-	<h4 class="text-center text-error" id="state">&nbsp;</h4>
-	<h4 class="text-center text-error">修改业务监控节点配置信息</h4>
+	<span class="text-center text-error" id="state">&nbsp;</span>
+	<p class="text-center text-error"><strong>修改业务监控节点配置信息</strong></p>
 	<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
-			<td style="text-align:right" class="text-success">项目名称</td>
-			<td colspan='3'>
+			<td width="25%" style="text-align:right" class="text-success" width="50%">项目名称</td>
+			<td width="25%" >
 				<c:if test="${not empty model.metricItemConfig.domain}">
 					<input name="metricItemConfig.domain" value="${model.metricItemConfig.domain}" readonly required/>
 				</c:if>
@@ -28,12 +27,10 @@
                  	 </select>
 				</c:if>
 			</td>
-		</tr>
-		<tr>
-			<td style="text-align:right" class="text-success">类型</td>
-			<td colspan='3'>
+			<td width="25%"  style="text-align:right" class="text-success">类型</td>
+			<td width="25%"  >
 				<c:if test="${not empty model.metricItemConfig.domain}">
-					<input name="metricItemConfig.type" value="${model.metricItemConfig.type}" readonly required/>
+					<input name="metricItemConfig.type" value="${model.metricItemConfig.type}"  readonly required/>
 				</c:if>
 				<c:if test="${empty  model.metricItemConfig.type}">
 					<select name="metricItemConfig.type">
@@ -44,7 +41,7 @@
 		</tr>
 		<tr>
 			<td style="text-align:right" class="text-success">MetricKey</td>
-			<td colspan='3'>
+			<td >
 				<c:if test="${not empty model.metricItemConfig.domain}">
 					<input name="metricItemConfig.metricKey" value="${model.metricItemConfig.metricKey}" readonly required/>
 				</c:if>
@@ -52,18 +49,65 @@
 					<input name="metricItemConfig.metricKey" value="${model.metricItemConfig.metricKey}" required/>
 				</c:if>
 			</td>
+			<td  style="text-align:right" class="text-success">显示顺序（数字）</td>
+			<td ><input  name="metricItemConfig.viewOrder" value="${model.metricItemConfig.viewOrder}" required/></td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">显示顺序</td>
-			<td colspan='3'><input  name="metricItemConfig.viewOrder" value="${model.metricItemConfig.viewOrder}" required/></td>
+			<td colspan='4'>
+				<p class='text-error'>1、默认配置在业务大盘都进行告警。如果需要告警，请自行配置是否告警true。</p>
+				<p class='text-error'>2、目前告警仅仅在次数曲线上，平均和总和暂不支持告警，平均和总和波动较大，比如销售额。</p>
+				<p class='text-error'>3、有一些为Fail，比如加卡失败，建议抛出业务异常，这不作为一个业务指标，加卡成功已经能反映业务状态了。</p>
+				<p class='text-error'>4、告警阈值配置需满足基线下降百分比和阈值下降绝对值两个条件，两个条件都满足才发出告警。</p>
+			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">显示标题</td>
-			<td colspan='3'><input name="metricItemConfig.title" value="${model.metricItemConfig.title}" required/></td>
+			<td  style="text-align:right" class="text-success">显示标题</td>
+			<td ><input name="metricItemConfig.title" value="${model.metricItemConfig.title}" required/></td>
+			<td style="text-align:right" class="text-success">是否告警</td>
+			<td >
+				<c:choose>
+					<c:when test="${model.metricItemConfig.alarm}">
+						<input type="radio" name="metricItemConfig.alarm" value="true" checked />是	
+						<input type="radio" name="metricItemConfig.alarm" value="false" />否
+					</c:when>
+					<c:otherwise>
+				    	<input type="radio" name="metricItemConfig.alarm" value="true" />是
+						<input type="radio" name="metricItemConfig.alarm" value="false" checked />否
+					</c:otherwise>
+				</c:choose>
+			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">显示次数曲线</td>
-			<td>
+			<td colspan='2'  style="text-align:right" class="text-success">Count告警阈值
+				<span class="text-error">[和基线比下降百分比，50%填写50]</span></td>
+			<td colspan='2'>
+				<c:choose>
+					<c:when test="${model.metricItemConfig.decreasePercentage eq 0}">
+						<input name="metricItemConfig.decreasePercentage" value="50" required/>
+					</c:when>
+					<c:otherwise>
+						<input name="metricItemConfig.decreasePercentage" value="${model.metricItemConfig.decreasePercentage}" required/>
+					</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'  style="text-align:right" class="text-success">Count告警阈值<span class="text-error">[和基线比下降绝对值，比如100]</span></td>
+			<td colspan='2'>
+				
+				<c:choose>
+					<c:when test="${model.metricItemConfig.decreasePercentage eq 0}">
+						<input name="metricItemConfig.decreaseValue" value="100" required/>
+					</c:when>
+					<c:otherwise>
+						<input name="metricItemConfig.decreaseValue" value="${model.metricItemConfig.decreaseValue}" required/>
+					</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:right" class="text-success"  width="25%">显示次数曲线</td>
+			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showCount}">
 						<input type="radio" name="metricItemConfig.showCount" value="true" checked />是	
@@ -74,8 +118,8 @@
 						<input type="radio" name="metricItemConfig.showCount" value="false" checked />否
 					</c:otherwise>
 				</c:choose>
-			</td><td style="text-align:right" class="text-success">显示监控大盘</td>
-			<td>
+			</td><td  width="25%" style="text-align:right" class="text-success">显示业务监控大盘</td>
+			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showCountDashboard}">
 						<input type="radio" name="metricItemConfig.showCountDashboard" value="true" checked />是	
@@ -89,8 +133,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">显示平均曲线</td>
-			<td>
+			<td style="text-align:right" class="text-success"  width="25%">显示平均曲线</td>
+			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showAvg}">
 						<input type="radio" name="metricItemConfig.showAvg" value="true" checked />是	
@@ -101,8 +145,8 @@
 						<input type="radio" name="metricItemConfig.showAvg" value="false" checked />否
 					</c:otherwise>
 				</c:choose>
-			</td><td style="text-align:right" class="text-success">显示监控大盘</td>
-			<td>
+			</td><td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
+			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showAvgDashboard}">
 						<input type="radio" name="metricItemConfig.showAvgDashboard" value="true" checked />是	
@@ -116,8 +160,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">显示求和曲线</td>
-			<td>
+			<td style="text-align:right" class="text-success" width="25%">显示求和曲线</td>
+			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showSum}">
 						<input type="radio" name="metricItemConfig.showSum" value="true" checked />是	
@@ -128,8 +172,8 @@
 						<input type="radio" name="metricItemConfig.showSum" value="false" checked />否
 					</c:otherwise>
 				</c:choose>
-			</td><td style="text-align:right" class="text-success">显示监控大盘</td>
-			<td>
+			</td><td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
+			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showSumDashboard}">
 						<input type="radio" name="metricItemConfig.showSumDashboard" value="true" checked />是	
@@ -145,7 +189,7 @@
 		<tr>
 			<td></td>
 			<td></td>
-			<td style="text-align:right" class="text-success">监控大盘顺序</td>
+			<td style="text-align:right" class="text-success">业务监控大盘顺序</td>
 			<td><input class="input-mini" name="metricItemConfig.showDashboardOrder" value="${model.metricItemConfig.showDashboardOrder}" required/></td>
 		</tr>
 		<tr>
