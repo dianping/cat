@@ -2,11 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page contentType="text/html; charset=utf-8"%>
 	<div class="text-left"></div>
-	
-	<!-- <button class="btn typeButton btn-primary btn-small" id="puppetButton">puppet</button>
-	<button class="btn typeButton btn-primary btn-small" id="workflowButton">workflow</button>
-	<button class="btn typeButton btn-primary btn-small" id="lazymanButton">lazyman</button>
-	 -->开始
+	开始
 	<input type="text" name="startTime" id="startTime" value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="height:auto" class="input-medium" placeholder="格式如：2014-02-02 00:00:00">
 	结束
     <input type="text" name="endTime" id="endTime" value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="height:auto" class="input-medium" placeholder="格式如：2014-02-02 00:00:00">
@@ -14,8 +10,7 @@
 	<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
 	机器名
 	<input type="text" name="hostname" id="hostname" value="${payload.hostname}" style="height:auto" class="input-small"> 
-	<input class="btn btn-primary  btn-small"  value="查询"
-		onclick="queryNew()" type="submit">
+	<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
 		
 	<c:if test="${!payload.fullScreen}">
 			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(true)">全屏</a>
@@ -41,35 +36,14 @@
 		window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&hostname="+hostname;
 	}
 	function queryFullScreen(isFullScreen){
-		var typeParam = '';
-		if(!$('#puppetButton').hasClass('btn-primary')){
-			typeParam += "showPuppet=false&";
-		}
-		if(!$('#workflowButton').hasClass('btn-primary')){
-			typeParam += "showWorkflow=false&";
-		}
-		if(!$('#lazymanButton').hasClass('btn-primary')){
-			typeParam += "showLazyman=false&";
-		}
 		<c:if test="${payload.refresh}">
-			window.location.href="?"+typeParam+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}";
+			window.location.href="?domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}";
 		</c:if>
 		<c:if test="${!payload.refresh}">
-			window.location.href="?"+typeParam+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>";
+			window.location.href="?domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>";
 		</c:if>
 	}
 	function queryFrequency(frequency){
-		var typeParam = '';
-		if(!$('#puppetButton').hasClass('btn-primary')){
-			typeParam += "showPuppet=false&";
-		}
-		if(!$('#workflowButton').hasClass('btn-primary')){
-			typeParam += "showWorkflow=false&";
-		}
-		if(!$('#lazymanButton').hasClass('btn-primary')){
-			typeParam += "showLazyman=false&";
-		}
-		console.log(typeParam);
-		window.location.href="?"+typeParam+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency;
+		window.location.href="?domain=${payload.domain}&hostname=${payload.hostname}&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency;
 	}
 </script>

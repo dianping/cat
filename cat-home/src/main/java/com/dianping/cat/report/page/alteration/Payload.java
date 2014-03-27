@@ -61,15 +61,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("hostname")
 	private String m_hostname;
-	
-	@FieldMeta("showPuppet")
-	private boolean m_showPuppet = true;
-
-	@FieldMeta("showWorkflow")
-	private boolean m_showWorkflow = true;
-
-	@FieldMeta("showLazyman")
-	private boolean m_showLazyman = true;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -179,18 +170,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_refresh;
 	}
 
-	public boolean isShowLazyman() {
-		return m_showLazyman;
-	}
-
-	public boolean isShowPuppet() {
-		return m_showPuppet;
-	}
-
-	public boolean isShowWorkflow() {
-		return m_showWorkflow;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
@@ -242,18 +221,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
-	}
-
-	public void setShowLazyman(boolean showLazyman) {
-		m_showLazyman = showLazyman;
-	}
-
-	public void setShowPuppet(boolean showPuppet) {
-		m_showPuppet = showPuppet;
-	}
-
-	public void setShowWorkflow(boolean showWorkflow) {
-		m_showWorkflow = showWorkflow;
 	}
 
 	public void setStartTime(String startTime) {

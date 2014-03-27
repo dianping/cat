@@ -58,21 +58,6 @@
 			$('.footer').show();
 		</c:if>
 		
-		<c:if test="${!payload.showPuppet}">
-			$('#puppetButton').removeClass('btn-primary');
-			$('.puppet').css("display","none");
-		</c:if>
-		
-		<c:if test="${!payload.showWorkflow}">
-			$('#workflowButton').removeClass('btn-primary');
-			$('.workflow').css("display","none");
-		</c:if>
-	
-		<c:if test="${!payload.showLazyman}">
-			$('#lazymanButton').removeClass('btn-primary');
-			$('.lazyman').css("display","none");
-		</c:if>
-		
 		$(".typeButton").click(function(){
 			var type = "."+this.id.replace("Button","");
 			if($(type).css("display")=="table-cell"){
