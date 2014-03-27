@@ -230,6 +230,7 @@
 		</query-defs>
 	</entity>
 	<entity name="report-content" table="report_content" alias="rc" class-name="HourlyReportContent">
+	 <member name="creation-date" insert-expr="NOW()" />
      <query-defs>
      </query-defs>
     </entity>
