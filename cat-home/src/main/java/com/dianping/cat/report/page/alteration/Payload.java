@@ -17,9 +17,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
 	
-	@FieldMeta("rows")
-	private int m_rows = 10;
-
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
 
@@ -62,9 +59,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("endTime")
 	private String m_endTime;
 
-	@FieldMeta("granularity")
-	private long m_granularity;
-
 	@FieldMeta("hostname")
 	private String m_hostname;
 
@@ -90,18 +84,19 @@ public class Payload extends AbstractReportPayload<Action> {
       	return new Date();
       }
 	}
-
+	
 	public String getContent() {
 		return m_content;
 	}
-
+	
 	public String getDomain() {
-		if ("".equals(m_domain)) {
+		if (m_domain == null || "".equals(m_domain)) {
 			return null;
 		} else {
 			return m_domain;
 		}
 	}
+	
 
 	public Date getEndTime() {
 		if (m_endTime == null || m_endTime.length() == 0) {
@@ -119,16 +114,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_frequency;
 	}
 
-	public long getGranularity() {
-		return m_granularity;
-	}
-
 	public String getGroup() {
 		return m_group;
 	}
 
 	public String getHostname() {
-		if("".equals(m_hostname)){
+		if(m_hostname == null || "".equals(m_hostname)){
 			return null;
 		}else{
 			return m_hostname;
@@ -143,13 +134,9 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
-	public int getRows() {
-		return m_rows;
-	}
-
 	public Date getStartTime() {
 		if (m_startTime == null || m_startTime.length() == 0) {
-			return new Date(System.currentTimeMillis() - TimeUtil.ONE_HOUR);
+			return new Date(System.currentTimeMillis() - 2 * TimeUtil.ONE_HOUR);
 		} else {
 			try {
 				return m_sdf.parse(m_startTime);
@@ -211,10 +198,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		this.fullScreen = fullScreen;
 	}
 
-	public void setGranularity(long granularity) {
-		m_granularity = granularity;
-	}
-
 	public void setGroup(String group) {
 		m_group = group;
 	}
@@ -238,10 +221,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
-	}
-
-	public void setRows(int rows) {
-		m_rows = rows;
 	}
 
 	public void setStartTime(String startTime) {
