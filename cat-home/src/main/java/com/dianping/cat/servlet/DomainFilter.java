@@ -50,6 +50,9 @@ public class DomainFilter implements Filter {
 	      ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+		httpRequest.setCharacterEncoding("utf-8");
+
 		Cookie[] cookies = httpRequest.getCookies();
 		String domain = httpRequest.getParameter("domain");
 		boolean cookieExist = false;
