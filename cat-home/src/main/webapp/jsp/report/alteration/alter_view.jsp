@@ -18,9 +18,9 @@
 		<tr class="text-success">
 			<th width="15%">时间</th>
 			<th width="5%">类型</th>
-			<th width="60%">标题</th>
-			<th width="8%">项目名</th>
-			<th width="8%">机器名</th>
+			<th width="56%">标题</th>
+			<th width="12%">项目名</th>
+			<th width="12%">机器名</th>
 		</tr>
 		<c:forEach var="item" items="${model.alterations}" varStatus="status">
 			<tr class="aleration_${item.type}">

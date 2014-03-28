@@ -44,6 +44,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.AlertConfig;
 import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricAlert;
+import com.dianping.cat.report.task.metric.RemoteMetricReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -118,13 +119,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
+		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
+
 		all.add(C(AlertConfig.class));
 
 		all.add(C(AlertInfo.class));
 
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
-		      .req(ModelService.class, MetricAnalyzer.ID));
+		      .req(RemoteMetricReportService.class));
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
