@@ -304,8 +304,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				Period period = m_periods.get(i);
 
 				if (period.isIn(startTime)) {
-					m_periods.remove(i);
 					period.finish();
+					m_periods.remove(i);
 					break;
 				}
 			}
