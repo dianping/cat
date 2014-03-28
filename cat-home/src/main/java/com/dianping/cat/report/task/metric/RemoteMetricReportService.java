@@ -42,6 +42,10 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 
 	private String m_serviceUri = "/cat/r/model";
 
+	protected MetricReport buildModel(String xml) throws SAXException, IOException {
+		return DefaultSaxParser.parse(xml);
+	}
+
 	public URL buildUrl(ModelRequest request, Pair<String, Integer> hostPorts) throws MalformedURLException {
 		StringBuilder sb = new StringBuilder(64);
 
@@ -58,41 +62,6 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 		      request.getDomain(), request.getPeriod(), sb.toString());
 
 		return new URL(url);
-	}
-
-	protected MetricReport buildModel(String xml) throws SAXException, IOException {
-		return DefaultSaxParser.parse(xml);
-	}
-
-	public MetricReport invoke(ModelRequest request, Pair<String, Integer> hostPorts) {
-		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
-
-		try {
-			URL url = buildUrl(request, hostPorts);
-
-			t.addData(url.toString());
-
-			InputStream in = Urls.forIO().connectTimeout(300).readTimeout(3000).openStream(url.toExternalForm());
-			String xml = Files.forIO().readFrom(in, "utf-8");
-			int len = xml == null ? 0 : xml.length();
-
-			t.addData("length", len);
-
-			if (len > 0) {
-				MetricReport report = buildModel(xml);
-
-				t.setStatus(Message.SUCCESS);
-				return report;
-			} else {
-				t.setStatus("NoReport");
-			}
-		} catch (Exception e) {
-			logError(e);
-			t.setStatus(e);
-		} finally {
-			t.complete();
-		}
-		return null;
 	}
 
 	@Override
@@ -167,5 +136,36 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 			}
 			return merger.getMetricReport();
 		}
+	}
+
+	public MetricReport invoke(ModelRequest request, Pair<String, Integer> hostPorts) {
+		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
+
+		try {
+			URL url = buildUrl(request, hostPorts);
+
+			t.addData(url.toString());
+
+			InputStream in = Urls.forIO().connectTimeout(300).readTimeout(3000).openStream(url.toExternalForm());
+			String xml = Files.forIO().readFrom(in, "utf-8");
+			int len = xml == null ? 0 : xml.length();
+
+			t.addData("length", len);
+
+			if (len > 0) {
+				MetricReport report = buildModel(xml);
+
+				t.setStatus(Message.SUCCESS);
+				return report;
+			} else {
+				t.setStatus("NoReport");
+			}
+		} catch (Exception e) {
+			logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
+		return null;
 	}
 }
