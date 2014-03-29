@@ -12,10 +12,7 @@ public class BaselineConfigManager {
 		config.setDays(Arrays.asList(days));
 		config.setId(1);
 		config.setKey(key);
-		config.setLowerLimit(0.2);
-		config.setMinValue(100);
 		config.setTargetDate(7);
-		config.setUpperLimit(5);
 		config.setWeights(Arrays.asList(weights));
 		return config;
 	}

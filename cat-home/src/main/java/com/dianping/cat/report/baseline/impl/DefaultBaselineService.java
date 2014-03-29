@@ -36,6 +36,40 @@ public class DefaultBaselineService implements BaselineService {
 		}
 	};
 
+	private double[] decodeBaselines(byte[] datas) throws IOException {
+		double[] result;
+		ByteArrayInputStream input = new ByteArrayInputStream(datas);
+		DataInputStream dataInput = new DataInputStream(input);
+		int size = dataInput.readInt();
+
+		result = new double[size];
+		for (int i = 0; i < size; i++) {
+			result[i] = dataInput.readDouble();
+		}
+		return result;
+	}
+
+	private byte[] encodeBaselines(double[] dataInDoubleArray) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
+		DataOutputStream output = new DataOutputStream(out);
+
+		output.writeInt(dataInDoubleArray.length);
+		for (double dataItem : dataInDoubleArray) {
+			output.writeDouble(dataItem);
+		}
+		return out.toByteArray();
+	}
+
+	@Override
+	public void insertBaseline(Baseline baseline) {
+		try {
+			baseline.setData(encodeBaselines(baseline.getDataInDoubleArray()));
+			m_baselineDao.insert(baseline);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
 		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
@@ -56,7 +90,7 @@ public class DefaultBaselineService implements BaselineService {
 		}
 
 		try {
-			return parse(baseline.getData());
+			return decodeBaselines(baseline.getData());
 		} catch (Exception e) {
 			Cat.logError(e);
 			return null;
@@ -76,39 +110,5 @@ public class DefaultBaselineService implements BaselineService {
 			}
 		}
 		return result;
-	}
-
-	@Override
-	public void insertBaseline(Baseline baseline) {
-		try {
-			baseline.setData(build(baseline.getDataInDoubleArray()));
-			m_baselineDao.insert(baseline);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private double[] parse(byte[] datas) throws IOException {
-		double[] result;
-		ByteArrayInputStream input = new ByteArrayInputStream(datas);
-		DataInputStream dataInput = new DataInputStream(input);
-		int size = dataInput.readInt();
-
-		result = new double[size];
-		for (int i = 0; i < size; i++) {
-			result[i] = dataInput.readDouble();
-		}
-		return result;
-	}
-
-	private byte[] build(double[] dataInDoubleArray) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
-		DataOutputStream output = new DataOutputStream(out);
-
-		output.writeInt(dataInDoubleArray.length);
-		for (double dataItem : dataInDoubleArray) {
-			output.writeDouble(dataItem);
-		}
-		return out.toByteArray();
 	}
 }

@@ -8,6 +8,32 @@ import com.dianping.cat.report.baseline.BaselineCreator;
 
 public class DefaultBaselineCreator implements BaselineCreator {
 
+	public double computeAvg(List<Double> data) {
+		Collections.sort(data);
+		int length = data.size();
+		double value = 0;
+		int middle = length / 2;
+
+		if (length % 2 == 0) {
+			value = (data.get(middle - 1) + data.get(middle)) / 2;
+		} else {
+			value = data.get(middle);
+		}
+
+		int size = 0;
+		double sum = 0;
+
+		for (double d : data) {
+			if (d > value * 3 || d < value / 3) {
+				continue;
+			} else {
+				size++;
+				sum = sum + d;
+			}
+		}
+		return sum / size;
+	}
+
 	@Override
 	public double[] createBaseLine(List<double[]> valueList, List<Double> weights, int number) {
 		double[] result = new double[number];
@@ -75,32 +101,6 @@ public class DefaultBaselineCreator implements BaselineCreator {
 			}
 		}
 		return result;
-	}
-
-	public double computeAvg(List<Double> data) {
-		Collections.sort(data);
-		int length = data.size();
-		double value = 0;
-		int middle = length / 2;
-
-		if (length % 2 == 0) {
-			value = (data.get(middle - 1) + data.get(middle)) / 2;
-		} else {
-			value = data.get(middle);
-		}
-
-		int size = 0;
-		double sum = 0;
-
-		for (double d : data) {
-			if (d > value * 3 || d < value / 3) {
-				continue;
-			} else {
-				size++;
-				sum = sum + d;
-			}
-		}
-		return sum / size;
 	}
 
 }
