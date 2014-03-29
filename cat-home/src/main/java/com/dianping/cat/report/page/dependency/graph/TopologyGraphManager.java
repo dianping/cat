@@ -118,7 +118,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				TopologyNode node = topologyGraph.findTopologyNode(domain);
 
 				if (node != null) {
-					dashboard.addNode(m_graphBuilder.cloneNode(node));
+					dashboard.addPoint(m_graphBuilder.cloneNode(node));
 				}
 			}
 		}

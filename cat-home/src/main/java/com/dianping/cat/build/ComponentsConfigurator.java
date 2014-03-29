@@ -25,6 +25,7 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -62,6 +63,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+
+		all.add(C(JsonBuilder.class));
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //

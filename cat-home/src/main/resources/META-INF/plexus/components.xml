@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.report.page.JsonBuilder</role>
+			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.graph.ValueTranslater</role>
 			<implementation>com.dianping.cat.report.graph.DefaultValueTranslater</implementation>
 		</component>
@@ -1802,6 +1806,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.JsonBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1894,6 +1901,10 @@
 					<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.JsonBuilder</role>
+			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -2323,6 +2334,9 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_problemService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.JsonBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

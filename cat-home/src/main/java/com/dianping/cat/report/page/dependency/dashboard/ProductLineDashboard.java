@@ -4,79 +4,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
-import com.google.gson.Gson;
 
 public class ProductLineDashboard {
 
-	private String id;
+	private String m_id;
 
-	private String type = GraphConstrant.PROJECT;
+	private String m_type = GraphConstrant.PROJECT;
 
-	private int status;
+	private int m_status;
 
-	private String des;
+	private String m_des;
 
-	private List<TopologyNode> nodes = new ArrayList<TopologyNode>();
+	private List<TopologyNode> m_points = new ArrayList<TopologyNode>();
 
 	public ProductLineDashboard(String productLine) {
-		id = productLine;
+		m_id = productLine;
 	}
 
-	public ProductLineDashboard addNode(TopologyNode node) {
-		nodes.add(node);
+	public ProductLineDashboard addPoint(TopologyNode node) {
+		m_points.add(node);
 
 		return this;
 	}
 
-	public List<TopologyNode> getNodes() {
-		return nodes;
+	public List<TopologyNode> getPoints() {
+		return m_points;
 	}
 
 	public String getId() {
-		return id;
+		return m_id;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		m_id = id;
 	}
 
 	public int getStatus() {
-		return status;
+		return m_status;
 	}
 
 	public void setStatus(int status) {
-		this.status = status;
+		m_status = status;
 	}
 
 	public String getDes() {
-		return des;
+		return m_des;
 	}
 
 	public String getType() {
-		return type;
+		return m_type;
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		m_type = type;
 	}
 
 	public void setDes(String des) {
-		this.des = des;
-	}
-
-	public List<TopologyNode> getPoints() {
-		return nodes;
+		m_des = des;
 	}
 
 	public void setPoints(List<TopologyNode> points) {
-		this.nodes = points;
+		m_points = points;
 	}
 
 	public String toJson() {
-		String str = new Gson().toJson(this);
-		str = str.replaceAll("\"m_", "\"");
-		str = str.replaceAll("\"nodes\"", "\"points\"");
-		return str;
+		return new JsonBuilder().toJson(this);
 	}
 }

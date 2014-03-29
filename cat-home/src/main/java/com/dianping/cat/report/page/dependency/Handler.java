@@ -203,7 +203,7 @@ public class Handler implements PageHandler<Context> {
 			productLine = TUAN_TOU;
 		}
 		ProductLineDashboard productLineGraph = m_graphManager.buildProductLineGraph(productLine, reportTime.getTime());
-		List<TopologyNode> productLineNodes = productLineGraph.getNodes();
+		List<TopologyNode> productLineNodes = productLineGraph.getPoints();
 
 		for (TopologyNode node : productLineNodes) {
 			m_externalInfoBuilder.buildNodeZabbixInfo(node, model, payload);

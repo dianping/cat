@@ -5,20 +5,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.gson.Gson;
-
 public class PieChart {
 
-	private List<Item> items = new ArrayList<Item>();
+	private List<Item> m_items = new ArrayList<Item>();
 
 	private transient int MAX_SIZE = 10;
 
 	public List<Item> getItems() {
-		return items;
+		return m_items;
 	}
 
 	public String getJsonString() {
-		return new Gson().toJson(this);
+		return new JsonBuilder().toJson(this);
 	}
 
 	public void addItems(List<Item> temps) {
@@ -26,10 +24,10 @@ public class PieChart {
 		int size = temps.size();
 
 		if (size <= MAX_SIZE) {
-			this.items = temps;
+			m_items = temps;
 		} else {
 			for (int i = 0; i < MAX_SIZE; i++) {
-				this.items.add(temps.get(i));
+				m_items.add(temps.get(i));
 			}
 			Item item = new Item().setTitle("Other");
 
@@ -39,30 +37,30 @@ public class PieChart {
 
 				sum += temp.getNumber();
 			}
-			this.items.add(item.setNumber(sum));
+			m_items.add(item.setNumber(sum));
 		}
 	}
 
 	public static class Item {
-		private String title;
+		private String m_title;
 
-		private double number;
+		private double m_number;
 
 		public double getNumber() {
-			return number;
+			return m_number;
 		}
 
 		public String getTitle() {
-			return title;
+			return m_title;
 		}
 
 		public Item setNumber(double number) {
-			this.number = number;
+			m_number = number;
 			return this;
 		}
 
 		public Item setTitle(String title) {
-			this.title = title;
+			m_title = title;
 			return this;
 		}
 	}
