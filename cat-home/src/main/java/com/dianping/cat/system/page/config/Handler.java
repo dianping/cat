@@ -403,15 +403,15 @@ public class Handler implements PageHandler<Context> {
 		return project;
 	}
 
+	private void updateAggregationRule(Payload payload) {
+		AggregationRule proto = payload.getRule();
+		m_aggreationConfigManager.insertAggregationRule(proto);
+	}
+
 	private void updateExceptionLimit(Payload payload) {
 		ExceptionLimit limit = payload.getExceptionLimit();
 		m_exceptionConfigManager.insertExceptionLimit(limit);
 
-	}
-
-	private void updateAggregationRule(Payload payload) {
-		AggregationRule proto = payload.getRule();
-		m_aggreationConfigManager.insertAggregationRule(proto);
 	}
 
 	private void updateProject(Payload payload) {

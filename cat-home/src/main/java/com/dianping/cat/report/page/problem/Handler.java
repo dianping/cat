@@ -70,6 +70,28 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsonBuilder m_jsonBuilder;
 
+	private ProblemReport buildFrontEndByRule(ProblemReport report) {
+		report.accept(m_problemReportAggregation);
+		return m_problemReportAggregation.getReport();
+	}
+
+	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
+		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+		List<String> removes = new ArrayList<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			String ip = machine.getIp();
+
+			if (!ips.contains(ip)) {
+				removes.add(ip);
+			}
+		}
+		for (String ip : removes) {
+			report.getMachines().remove(ip);
+		}
+		return report;
+	}
+
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
@@ -83,11 +105,6 @@ public class Handler implements PageHandler<Context> {
 			report = buildFrontEndByRule(report);
 		}
 		return report;
-	}
-
-	private ProblemReport buildFrontEndByRule(ProblemReport report) {
-		report.accept(m_problemReportAggregation);
-		return m_problemReportAggregation.getReport();
 	}
 
 	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
@@ -257,23 +274,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
-		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-		List<String> removes = new ArrayList<String>();
-
-		for (Machine machine : report.getMachines().values()) {
-			String ip = machine.getIp();
-
-			if (!ips.contains(ip)) {
-				removes.add(ip);
-			}
-		}
-		for (String ip : removes) {
-			report.getMachines().remove(ip);
-		}
-		return report;
 	}
 
 	private void normalize(Model model, Payload payload) {

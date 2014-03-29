@@ -188,16 +188,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private TopologyGraph queryTopologyGraph(long time) {
-		ModelPeriod period = ModelPeriod.getByTime(time);
-
-		if (period.isHistorical()) {
-			return queryGraphFromDB(time);
-		} else {
-			return queryGraphFromMemory(time);
-		}
-	}
-
 	private TopologyGraph queryGraphFromDB(long time) {
 		try {
 			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao.findByPeriod(new Date(time),
@@ -226,6 +216,16 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			}
 		}
 		return graph;
+	}
+
+	private TopologyGraph queryTopologyGraph(long time) {
+		ModelPeriod period = ModelPeriod.getByTime(time);
+
+		if (period.isHistorical()) {
+			return queryGraphFromDB(time);
+		} else {
+			return queryGraphFromMemory(time);
+		}
 	}
 
 	private class DependencyReload implements Task {

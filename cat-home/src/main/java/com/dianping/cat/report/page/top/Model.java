@@ -40,6 +40,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new ArrayList<String>();
 	}
 
+	public TopMetric getTopMetric() {
+		return m_topMetric;
+	}
+
 	public TopReport getTopReport() {
 		return m_topReport;
 	}
@@ -48,16 +52,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_refresh;
 	}
 
-	public TopMetric getTopMetric() {
-		return m_topMetric;
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
 	}
 
 	public void setTopMetric(TopMetric topMetric) {
 		m_topMetric = topMetric;
-	}
-
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
 	}
 
 	public void setTopReport(TopReport topReport) {

@@ -106,6 +106,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_graph4;
 	}
 
+	public List<String> getGroupIps() {
+   	return m_groupIps;
+   }
+
+	public List<String> getGroups() {
+   	return m_groups;
+   }
+
 	public String getHitTrend() {
 		return m_hitTrend;
 	}
@@ -162,6 +170,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_graph4 = graph4;
 	}
 
+	public void setGroupIps(List<String> groupIps) {
+   	m_groupIps = groupIps;
+   }
+
+	public void setGroups(List<String> groups) {
+   	m_groups = groups;
+   }
+
 	public void setHitTrend(String hitTrend) {
 		m_hitTrend = hitTrend;
 	}
@@ -181,21 +197,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
-
-	public List<String> getGroups() {
-   	return m_groups;
-   }
-
-	public void setGroups(List<String> groups) {
-   	m_groups = groups;
-   }
-
-	public List<String> getGroupIps() {
-   	return m_groupIps;
-   }
-
-	public void setGroupIps(List<String> groupIps) {
-   	m_groupIps = groupIps;
-   }
 
 }

@@ -157,10 +157,6 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
-	private boolean validataService(String projectName) {
-		return projectName.equalsIgnoreCase(ProjectInfo.ALL_SERVER) || projectName.equalsIgnoreCase("UnknownProject");
-	}
-
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
@@ -217,6 +213,10 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		utilizationReport.setStartTime(start);
 		utilizationReport.setEndTime(end);
 		return utilizationReport;
+	}
+
+	private boolean validataService(String projectName) {
+		return projectName.equalsIgnoreCase(ProjectInfo.ALL_SERVER) || projectName.equalsIgnoreCase("UnknownProject");
 	}
 
 }

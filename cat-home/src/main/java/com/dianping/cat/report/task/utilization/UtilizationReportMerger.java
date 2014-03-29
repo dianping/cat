@@ -13,28 +13,6 @@ public class UtilizationReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	public void visitUtilizationReport(UtilizationReport utilizationReport) {
-		UtilizationReport oldReport = getUtilizationReport();
-
-		oldReport.setDomain(utilizationReport.getDomain());
-		oldReport.setStartTime(utilizationReport.getStartTime());
-		oldReport.setEndTime(utilizationReport.getEndTime());
-		super.visitUtilizationReport(utilizationReport);
-	}
-
-	@Override
-	protected void mergeUtilizationReport(UtilizationReport old, UtilizationReport bugReport) {
-		super.mergeUtilizationReport(old, bugReport);
-	}
-
-	@Override
-	protected void mergeDomain(Domain old, Domain domain) {
-		if (domain.getMachineNumber() > old.getMachineNumber()) {
-			old.setMachineNumber(domain.getMachineNumber());
-		}
-	}
-
-	@Override
 	protected void mergeApplicationState(ApplicationState to, ApplicationState from) {
 		to.setAvg95((to.getAvg95() * to.getCount() + from.getAvg95() * from.getCount())
 		      / (to.getCount() + from.getCount()));
@@ -49,6 +27,13 @@ public class UtilizationReportMerger extends DefaultMerger {
 	}
 
 	@Override
+	protected void mergeDomain(Domain old, Domain domain) {
+		if (domain.getMachineNumber() > old.getMachineNumber()) {
+			old.setMachineNumber(domain.getMachineNumber());
+		}
+	}
+
+	@Override
 	protected void mergeMachineState(MachineState to, MachineState from) {
 		if (from.getAvgMax() > to.getAvgMax()) {
 			to.setAvgMax(from.getAvgMax());
@@ -56,6 +41,21 @@ public class UtilizationReportMerger extends DefaultMerger {
 		to.setSum(to.getSum() + from.getSum());
 		to.setCount(to.getCount() + from.getCount());
 		to.setAvg(to.getSum() * 1.0 / to.getCount());
+	}
+
+	@Override
+	protected void mergeUtilizationReport(UtilizationReport old, UtilizationReport bugReport) {
+		super.mergeUtilizationReport(old, bugReport);
+	}
+
+	@Override
+	public void visitUtilizationReport(UtilizationReport utilizationReport) {
+		UtilizationReport oldReport = getUtilizationReport();
+
+		oldReport.setDomain(utilizationReport.getDomain());
+		oldReport.setStartTime(utilizationReport.getStartTime());
+		oldReport.setEndTime(utilizationReport.getEndTime());
+		super.visitUtilizationReport(utilizationReport);
 	}
 
 }

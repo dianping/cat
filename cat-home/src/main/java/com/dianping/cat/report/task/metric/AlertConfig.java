@@ -25,20 +25,20 @@ public class AlertConfig {
 		return emails;
 	}
 
-	public List<String> buildSMSReceivers(ProductLine productLine) {
-		List<String> phones = new ArrayList<String>();
-
-		phones.add("18616671676");
-		phones.add("13858086694");
-		return phones;
-	}
-
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
 		sb.append("[业务指标 ").append(config.getTitle()).append("]");
 		return sb.toString();
+	}
+
+	public List<String> buildSMSReceivers(ProductLine productLine) {
+		List<String> phones = new ArrayList<String>();
+
+		phones.add("18616671676");
+		phones.add("13858086694");
+		return phones;
 	}
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {

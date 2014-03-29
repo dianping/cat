@@ -39,84 +39,77 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.MONITOR);
 	}
 
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
-	}
-
-	public int getCount() {
-		return m_count;
-	}
-
-	public void setCount(int count) {
-		m_count = count;
+	@Override
+	public Action getAction() {
+		return m_action;
 	}
 
 	public double getAvg() {
 		return m_avg;
 	}
 
-	public void setAvg(double avg) {
-		m_avg = avg;
+	public int getCount() {
+		return m_count;
 	}
 
-	public double getSum() {
-		return m_sum;
+	public String getDomain() {
+		return m_domain;
 	}
 
-	public void setSum(double sum) {
-		m_sum = sum;
+	public String getGroup() {
+		return m_group;
 	}
 
 	public String getKey() {
 		return m_key;
 	}
 
-	public void setKey(String key) {
-		m_key = key;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setType(String type) {
-		m_type = type;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.COUNT_API);
-	}
-
-	@Override
-	public Action getAction() {
-		return m_action;
+	public double getSum() {
+		return m_sum;
 	}
 
 	public long getTimestamp() {
 		return m_timestamp;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.COUNT_API);
+	}
+
+	public void setAvg(double avg) {
+		m_avg = avg;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
+	public void setKey(String key) {
+		m_key = key;
+	}
+
+	public void setSum(double sum) {
+		m_sum = sum;
+	}
+
 	public void setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 	}
 
-	@Override
-	public void validate(ActionContext<?> ctx) {
-		if (m_action == null) {
-			m_action = Action.COUNT_API;
-		}
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override
@@ -124,5 +117,12 @@ public class Payload extends AbstractReportPayload<Action> {
 	   return "Payload [m_group=" + m_group + ", m_key=" + m_key + ", m_type=" + m_type + ", m_domain=" + m_domain
 	         + ", m_timestamp=" + m_timestamp + "]";
    }
+
+	@Override
+	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.COUNT_API;
+		}
+	}
 	
 }

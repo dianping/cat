@@ -34,15 +34,15 @@ public class LineChart {
 	public LineChart() {
 	}
 
-	public LineChart add(String title, Map<Long, Double> data) {
-		m_datas.add(data);
-		m_subTitles.add(title);
-		return this;
-	}
-
 	public LineChart add(String title, double[] value) {
 		m_subTitles.add(title);
 		m_values.add(value);
+		return this;
+	}
+
+	public LineChart add(String title, Map<Long, Double> data) {
+		m_datas.add(data);
+		m_subTitles.add(title);
 		return this;
 	}
 
@@ -56,6 +56,22 @@ public class LineChart {
 		return this;
 	}
 
+	public List<Map<Long, Double>> getDatas() {
+		return m_datas;
+	}
+
+	public String getHtmlTitle() {
+		if (m_htmlTitle == null) {
+			return m_title;
+		} else {
+			return m_htmlTitle;
+		}
+	}
+
+	public String getId() {
+   	return m_id;
+   }
+
 	public String getJsonString() {
 		return new JsonBuilder().toJson(this);
 	}
@@ -66,6 +82,10 @@ public class LineChart {
 
 	public String getStart() {
 		return m_start;
+	}
+
+	public long getStep() {
+		return m_step;
 	}
 
 	public List<String> getSubTitles() {
@@ -80,9 +100,31 @@ public class LineChart {
 		return m_values;
 	}
 
+	public double[] getValues(int index) {
+		int size = m_values.size();
+
+		if (index > size) {
+			return null;
+		} else {
+			return m_values.get(index);
+		}
+	}
+
 	public double[] getYlable() {
 		return m_ylable;
 	}
+
+	public void setDatas(List<Map<Long, Double>> datas) {
+		m_datas = datas;
+	}
+
+	public void setHtmlTitle(String htmlTitle) {
+		m_htmlTitle = htmlTitle;
+	}
+
+	public void setId(String id) {
+   	m_id = id;
+   }
 
 	public LineChart setSize(int size) {
 		m_size = size;
@@ -92,6 +134,10 @@ public class LineChart {
 	public LineChart setStart(Date start) {
 		m_start = m_sdf.format(start);
 		return this;
+	}
+
+	public void setStep(long step) {
+		m_step = step;
 	}
 
 	public LineChart setSubTitles(List<String> subTitles) {
@@ -117,51 +163,5 @@ public class LineChart {
 		}
 		return this;
 	}
-
-	public long getStep() {
-		return m_step;
-	}
-
-	public void setStep(long step) {
-		m_step = step;
-	}
-
-	public double[] getValues(int index) {
-		int size = m_values.size();
-
-		if (index > size) {
-			return null;
-		} else {
-			return m_values.get(index);
-		}
-	}
-
-	public List<Map<Long, Double>> getDatas() {
-		return m_datas;
-	}
-
-	public void setDatas(List<Map<Long, Double>> datas) {
-		m_datas = datas;
-	}
-
-	public String getHtmlTitle() {
-		if (m_htmlTitle == null) {
-			return m_title;
-		} else {
-			return m_htmlTitle;
-		}
-	}
-
-	public void setHtmlTitle(String htmlTitle) {
-		m_htmlTitle = htmlTitle;
-	}
-
-	public String getId() {
-   	return m_id;
-   }
-
-	public void setId(String id) {
-   	m_id = id;
-   }
 	
 }

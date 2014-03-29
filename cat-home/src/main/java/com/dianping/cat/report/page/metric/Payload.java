@@ -43,6 +43,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_frequency;
 	}
 
+	public String getGroup() {
+		return m_group;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -76,6 +80,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_fullScreen = fullScreen;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
@@ -87,14 +95,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
 	}
 
 	@Override

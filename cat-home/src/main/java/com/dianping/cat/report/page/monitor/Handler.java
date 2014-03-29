@@ -32,6 +32,36 @@ public class Handler implements PageHandler<Context> {
 
 	private Gson m_gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
 
+	public HttpStatus checkPars(Payload payload) {
+		StringBuilder sb = new StringBuilder();
+		String domain = payload.getDomain();
+		String group = payload.getGroup();
+		String key = payload.getKey();
+		HttpStatus httpStatus = new HttpStatus();
+		boolean error = false;
+
+		if (StringUtils.isEmpty(domain)) {
+			sb.append("domain ");
+			error = true;
+		}
+		if (StringUtils.isEmpty(group)) {
+			sb.append("group ");
+			error = true;
+		}
+		if (StringUtils.isEmpty(key)) {
+			sb.append("key ");
+			error = true;
+		}
+		if (error) {
+			httpStatus.setErrorMsg("invalid field: " + sb.toString());
+			httpStatus.setStatusCode(String.valueOf(HttpStatus.FAIL));
+		} else {
+			httpStatus.setStatusCode(String.valueOf(HttpStatus.SUCCESS));
+		}
+
+		return httpStatus;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "monitor")
@@ -96,36 +126,6 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		model.setPage(ReportPage.MONITOR);
 		m_jspViewer.view(ctx, model);
-	}
-
-	public HttpStatus checkPars(Payload payload) {
-		StringBuilder sb = new StringBuilder();
-		String domain = payload.getDomain();
-		String group = payload.getGroup();
-		String key = payload.getKey();
-		HttpStatus httpStatus = new HttpStatus();
-		boolean error = false;
-
-		if (StringUtils.isEmpty(domain)) {
-			sb.append("domain ");
-			error = true;
-		}
-		if (StringUtils.isEmpty(group)) {
-			sb.append("group ");
-			error = true;
-		}
-		if (StringUtils.isEmpty(key)) {
-			sb.append("key ");
-			error = true;
-		}
-		if (error) {
-			httpStatus.setErrorMsg("invalid field: " + sb.toString());
-			httpStatus.setStatusCode(String.valueOf(HttpStatus.FAIL));
-		} else {
-			httpStatus.setStatusCode(String.valueOf(HttpStatus.SUCCESS));
-		}
-
-		return httpStatus;
 	}
 
 }

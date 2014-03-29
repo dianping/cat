@@ -80,6 +80,18 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return m_dateFormat.format(new Date(m_date));
 	}
 
+	public String getDepartment() {
+		String domain = getDomain();
+
+		if (domain != null && m_manager != null) {
+			Project project = m_manager.getProjectByName(domain);
+			if (project != null) {
+				return project.getDepartment();
+			}
+		}
+		return "Default";
+	}
+
 	public String getDisplayDomain() {
 		return m_displayDomain;
 	}
@@ -98,36 +110,12 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	// required by report tag
 	public abstract String getDomain();
 
-	// required by report tag
-	public abstract Collection<String> getDomains();
-
-	public String getDepartment() {
-		String domain = getDomain();
-
-		if (domain != null && m_manager != null) {
-			Project project = m_manager.getProjectByName(domain);
-			if (project != null) {
-				return project.getDepartment();
-			}
-		}
-		return "Default";
-	}
-
-	public String getProjectLine() {
-		String domain = getDomain();
-
-		if (domain != null && m_manager != null) {
-			Project project = m_manager.getProjectByName(domain);
-			if (project != null) {
-				return project.getProjectLine();
-			}
-		}
-		return "Default";
-	}
-
 	public Map<String, Department> getDomainGroups() {
 		return m_manager.getDepartment(getDomains());
 	}
+
+	// required by report tag
+	public abstract Collection<String> getDomains();
 
 	public Throwable getException() {
 		return m_exception;
@@ -153,6 +141,18 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	// required by report tag
 	public UrlNav[] getNavs() {
 		return UrlNav.values();
+	}
+
+	public String getProjectLine() {
+		String domain = getDomain();
+
+		if (domain != null && m_manager != null) {
+			Project project = m_manager.getProjectByName(domain);
+			if (project != null) {
+				return project.getProjectLine();
+			}
+		}
+		return "Default";
 	}
 
 	public String getReportType() {

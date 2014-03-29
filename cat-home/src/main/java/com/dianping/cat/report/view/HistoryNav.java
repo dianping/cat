@@ -8,6 +8,12 @@ public enum HistoryNav {
 
 	DAY("day", "-1d", "+1d");
 
+	private String m_last;
+
+	private String m_next;
+
+	private String m_title;
+
 	public static HistoryNav getByName(String name) {
 		for (HistoryNav nav : HistoryNav.values()) {
 			if (nav.getTitle().equalsIgnoreCase(name)) {
@@ -16,12 +22,6 @@ public enum HistoryNav {
 		}
 		return HistoryNav.DAY;
 	}
-
-	private String m_last;
-
-	private String m_next;
-
-	private String m_title;
 
 	private HistoryNav(String name, String last, String next) {
 		m_title = name;

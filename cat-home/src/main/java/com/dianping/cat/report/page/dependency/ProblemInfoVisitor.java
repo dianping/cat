@@ -21,6 +21,31 @@ public class ProblemInfoVisitor extends BaseVisitor {
 
 	private Date m_start;
 
+	public String buildExceptionInfo() {
+		StringBuilder sb = new StringBuilder();
+		Comparator<java.util.Map.Entry<String, Integer>> compator = new Comparator<Map.Entry<String, Integer>>() {
+			@Override
+			public int compare(java.util.Map.Entry<String, Integer> arg0, java.util.Map.Entry<String, Integer> arg1) {
+				return arg1.getValue() - arg0.getValue();
+			}
+		};
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		if (m_errors.size() > 0) {
+			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
+			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");
+			sb.append(sdf.format(m_start)).append("-")
+			      .append(sdf.format(new Date(m_start.getTime() + TimeUtil.ONE_HOUR - 1))).append("）");
+			sb.append("</span>").append(GraphConstrant.ENTER);
+		}
+		m_errors = MapUtils.sortMap(m_errors, compator);
+		for (java.util.Map.Entry<String, Integer> error : m_errors.entrySet()) {
+			sb.append(error.getKey()).append(GraphConstrant.DELIMITER).append(error.getValue())
+			      .append(GraphConstrant.ENTER);
+		}
+		return sb.toString();
+	}
+
 	@Override
 	public void visitEntry(Entry entry) {
 		int count = 0;
@@ -46,31 +71,6 @@ public class ProblemInfoVisitor extends BaseVisitor {
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_start = problemReport.getStartTime();
 		super.visitProblemReport(problemReport);
-	}
-
-	public String buildExceptionInfo() {
-		StringBuilder sb = new StringBuilder();
-		Comparator<java.util.Map.Entry<String, Integer>> compator = new Comparator<Map.Entry<String, Integer>>() {
-			@Override
-			public int compare(java.util.Map.Entry<String, Integer> arg0, java.util.Map.Entry<String, Integer> arg1) {
-				return arg1.getValue() - arg0.getValue();
-			}
-		};
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-		if (m_errors.size() > 0) {
-			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
-			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");
-			sb.append(sdf.format(m_start)).append("-")
-			      .append(sdf.format(new Date(m_start.getTime() + TimeUtil.ONE_HOUR - 1))).append("）");
-			sb.append("</span>").append(GraphConstrant.ENTER);
-		}
-		m_errors = MapUtils.sortMap(m_errors, compator);
-		for (java.util.Map.Entry<String, Integer> error : m_errors.entrySet()) {
-			sb.append(error.getKey()).append(GraphConstrant.DELIMITER).append(error.getValue())
-			      .append(GraphConstrant.ENTER);
-		}
-		return sb.toString();
 	}
 
 }

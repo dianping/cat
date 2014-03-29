@@ -11,20 +11,20 @@ public class ServiceReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeServiceReport(ServiceReport old, ServiceReport bugReport) {
-		old.setStartTime(bugReport.getStartTime());
-		old.setEndTime(bugReport.getEndTime());
-		old.setDomain(bugReport.getDomain());
-		super.mergeServiceReport(old, bugReport);
-	}
-
-	@Override
 	protected void mergeDomain(Domain old, Domain domain) {
 		old.setTotalCount(old.getTotalCount() + domain.getTotalCount());
 		old.setFailureCount(old.getFailureCount() + domain.getFailureCount());
 		old.setFailurePercent(old.getFailureCount() * 1.0 / old.getTotalCount());
 		old.setSum(old.getSum() + domain.getSum());
 		old.setAvg(old.getSum() / old.getTotalCount());
+	}
+
+	@Override
+	protected void mergeServiceReport(ServiceReport old, ServiceReport bugReport) {
+		old.setStartTime(bugReport.getStartTime());
+		old.setEndTime(bugReport.getEndTime());
+		old.setDomain(bugReport.getDomain());
+		super.mergeServiceReport(old, bugReport);
 	}
 
 }

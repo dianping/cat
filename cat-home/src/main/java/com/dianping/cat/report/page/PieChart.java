@@ -11,14 +11,6 @@ public class PieChart {
 
 	private transient int MAX_SIZE = 10;
 
-	public List<Item> getItems() {
-		return m_items;
-	}
-
-	public String getJsonString() {
-		return new JsonBuilder().toJson(this);
-	}
-
 	public void addItems(List<Item> temps) {
 		Collections.sort(temps, new ItemCompartor());
 		int size = temps.size();
@@ -39,6 +31,14 @@ public class PieChart {
 			}
 			m_items.add(item.setNumber(sum));
 		}
+	}
+
+	public List<Item> getItems() {
+		return m_items;
+	}
+
+	public String getJsonString() {
+		return new JsonBuilder().toJson(this);
 	}
 
 	public static class Item {

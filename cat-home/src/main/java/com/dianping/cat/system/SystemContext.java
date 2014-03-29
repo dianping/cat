@@ -28,10 +28,6 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 		return m_signinMember;
 	}
 
-	public void setSigninMember(DpAdminLogin signinMember) {
-		m_signinMember = signinMember;
-	}
-
 	@Override
 	public void initialize(HttpServletRequest request, HttpServletResponse response) {
 		super.initialize(request, response);
@@ -60,6 +56,10 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 
 			ResourceRuntimeContext.setup(contextPath);
 		}
+	}
+
+	public void setSigninMember(DpAdminLogin signinMember) {
+		m_signinMember = signinMember;
 	}
 
 }
