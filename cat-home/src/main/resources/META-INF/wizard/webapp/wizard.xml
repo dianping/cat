@@ -56,7 +56,7 @@
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" template="default">
             <description>Statistics</description>
          </page>
-         <page name="alteration" title="Alteration" path="alteration" template="default">
+         <page name="alteration" title="Change" path="alteration" template="default">
             <description>Alteration</description>
          </page>
          <page name="monitor" title="Monitor" path="monitor" template="default">
