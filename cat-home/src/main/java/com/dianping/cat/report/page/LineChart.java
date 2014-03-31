@@ -22,6 +22,10 @@ public class LineChart {
 	private List<String> subTitles = new ArrayList<String>();
 
 	private String title;
+	
+	private String id;
+
+	private String htmlTitle;
 
 	private List<double[]> values = new ArrayList<double[]>();
 
@@ -136,11 +140,31 @@ public class LineChart {
 	}
 
 	public List<Map<Long, Double>> getDatas() {
-   	return datas;
-   }
+		return datas;
+	}
 
 	public void setDatas(List<Map<Long, Double>> datas) {
-   	this.datas = datas;
+		this.datas = datas;
+	}
+
+	public String getHtmlTitle() {
+		if (htmlTitle == null) {
+			return title;
+		} else {
+			return htmlTitle;
+		}
+	}
+
+	public void setHtmlTitle(String htmlTitle) {
+		this.htmlTitle = htmlTitle;
+	}
+
+	public String getId() {
+   	return id;
+   }
+
+	public void setId(String id) {
+   	this.id = id;
    }
 	
 }

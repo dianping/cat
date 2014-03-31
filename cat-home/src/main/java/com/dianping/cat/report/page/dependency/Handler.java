@@ -188,7 +188,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(date - payload.getRange() * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 
-		Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end, "-1");
+		Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end);
 
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));

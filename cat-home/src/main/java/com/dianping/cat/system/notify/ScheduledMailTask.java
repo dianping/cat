@@ -138,7 +138,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 							String content = renderContent(names, domain);
 							String title = renderTitle(names, domain);
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
-							boolean result = m_mailSms.sendEmail(title, content, emails);
+							boolean result = m_mailSms.sendEmailByGmail(title, content, emails);
 
 							insertMailLog(report.getId(), content, title, result, emails);
 							t.addData(emails.toString());

@@ -23,7 +23,7 @@
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<td style="width:20%" style="text-align: right" class="text-success">产品线名称（全英文）</td>
+						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
 							value="${model.productLine.id}" required /></td>
 					</tr>
@@ -33,7 +33,7 @@
 							value="${model.productLine.title}" required /></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">产品线顺序</td>
+						<td style="text-align: right" class="text-success">产品线顺序（数字）</td>
 						<td><input name="productLine.order"
 							value="${model.productLine.order}" required /></td>
 					</tr>
@@ -43,9 +43,14 @@
 							value="${model.productLine.owner}" required /></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">产品线邮件</td>
-						<td><input name="productLine.email"
+						<td style="text-align: right" class="text-success">通知邮件（逗号分隔）</td>
+						<td><input name="productLine.email" style="width:600px"
 							value="${model.productLine.email}" required /></td>
+					</tr>
+					<tr>
+						<td style="text-align: right" class="text-success">通知短信（逗号分隔）</td>
+						<td><input name="productLine.phone" style="width:600px"
+							value="${model.productLine.phone}" required /></td>
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>

@@ -81,7 +81,6 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}">Failure%</a></th>
 			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">QPS</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">Percent%</a></th>
-					
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -89,8 +88,15 @@
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 					<td style="text-align: left">
-					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
-					&nbsp;&nbsp;&nbsp;${e.id}</td>
+					<c:choose>
+					<c:when test="${status.index > 0}">
+						<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
+						&nbsp;&nbsp;&nbsp;${e.id}</td>
+					</c:when>
+					<c:otherwise>
+						${e.id}
+					</c:otherwise>
+					</c:choose>				
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>

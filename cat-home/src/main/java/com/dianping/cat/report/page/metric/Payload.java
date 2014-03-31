@@ -21,9 +21,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
 
-	@FieldMeta("test")
-	private String m_test = "-1";
-
 	@FieldMeta("timeRange")
 	private int m_timeRange = 24;
 
@@ -53,10 +50,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getProduct() {
 		return m_product;
-	}
-
-	public String getTest() {
-		return m_test;
 	}
 
 	public int getTimeRange() {
@@ -94,10 +87,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
-	}
-
-	public void setTest(String test) {
-		m_test = test;
 	}
 
 	public String getGroup() {

@@ -103,7 +103,8 @@ function graphMetricChart(container, data) {
 					type : 'spline'
 				},
 				title : {
-					text : data.title
+					text : data.htmlTitle,
+					useHTML: true
 				},
 				xAxis : {
 					type : 'datetime',
@@ -165,7 +166,8 @@ function graphLineChart(container, data) {
 					type : 'spline'
 				},
 				title : {
-					text : data.title
+					text : data.title,
+					useHTML: true
 				},
 				xAxis : {
 					type : 'datetime',

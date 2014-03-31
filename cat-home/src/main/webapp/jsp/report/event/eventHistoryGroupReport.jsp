@@ -103,8 +103,15 @@ $(document).ready(function() {
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
 					<td style="text-align: left">
-					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
-					&nbsp;&nbsp;&nbsp;${e.id}</td>
+					<c:choose>
+					<c:when test="${status.index > 0}">
+						<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
+						&nbsp;&nbsp;&nbsp;${e.id}</td>
+						</c:when>
+						<c:otherwise>
+							${e.id}
+						</c:otherwise>
+					</c:choose>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>

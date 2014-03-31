@@ -42,6 +42,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.AlertConfig;
+import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -108,7 +109,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class));
+		            MetricGroupConfigManager.class, AlertInfo.class));
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -119,8 +120,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertConfig.class));
 
+		all.add(C(AlertInfo.class));
+
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, AlertConfig.class)//
+		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
 		      .req(ModelService.class, MetricAnalyzer.ID));
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

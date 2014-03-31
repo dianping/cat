@@ -385,3 +385,20 @@ CREATE TABLE `user_agent` (
   UNIQUE KEY `userAgent` (`userAgent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `alteration` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `type` varchar(64) NOT NULL COMMENT '分类',
+  `title` varchar(128) NOT NULL COMMENT '变更标题',
+  `domain` varchar(128) NOT NULL COMMENT '变更项目',
+  `hostname` varchar(128) NOT NULL COMMENT '变更机器名',
+  `ip` varchar(128) DEFAULT NULL COMMENT '变更机器IP',
+  `date` datetime NOT NULL COMMENT '变更时间',
+  `user` varchar(45) NOT NULL COMMENT '变更用户’,
+  `alt_group` varchar(45) DEFAULT NULL COMMENT '变更组别’,
+  `content` text NOT NULL COMMENT '变更内容',
+  `url` varchar(200) DEFAULT NULL COMMENT '变更链接',
+  `creation_date` datetime NOT NULL COMMENT '数据库创建时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_date_domain_host` (`date`,`domain`,`hostname`)
+) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COMMENT='变更表’;
+
