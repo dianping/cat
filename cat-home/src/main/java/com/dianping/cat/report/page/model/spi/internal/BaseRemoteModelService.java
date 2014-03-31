@@ -83,7 +83,6 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			}
 
 		} catch (Exception e) {
-			logError(e);
 			t.setStatus(e);
 			response.setException(e);
 		} finally {
