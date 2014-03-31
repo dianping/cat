@@ -38,7 +38,6 @@ public class JsonBuilder {
 	private Gson m_gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampTypeAdapter())
 	      .setDateFormat("yyyy-MM-dd HH:mm:ss").setFieldNamingStrategy(m_fieldNamingStrategy).create();
 
-	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
    public Object parse(String json,Class clz){
 		return m_gson.fromJson(json, clz);
@@ -73,6 +72,6 @@ public class JsonBuilder {
 			String dateFormatAsString = format.format(new Date(src.getTime()));
 			return new JsonPrimitive(dateFormatAsString);
 		}
-
 	}
+	
 }
