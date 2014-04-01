@@ -2692,9 +2692,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>

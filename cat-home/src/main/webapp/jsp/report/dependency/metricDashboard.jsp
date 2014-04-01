@@ -37,7 +37,7 @@
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
-				<div class="row-fluid">
+				<%-- <div class="row-fluid">
 					<div class="span12">
 					   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			   				<div style="float:left;">
@@ -45,7 +45,7 @@
 					   			</div>
 						</c:forEach>
 					</div>
-				</div>
+				</div> --%>
 				<div class="row-fluid">
 					<div class="span12">
 						<%@ include file="../top/topMetric.jsp"%>
@@ -66,7 +66,7 @@
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 				</div>
 			</div>
-			<div class="row-fluid">
+			<%-- <div class="row-fluid">
 				<div class="span12">
 				   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 		   				<div style="float:left;">
@@ -74,7 +74,7 @@
 				   			</div>
 					</c:forEach>
 				</div>
-			</div>
+			</div> --%>
 			<div class="row-fluid">
 				<div class="span12">
 					<%@ include file="../top/topMetric.jsp"%>
@@ -93,14 +93,14 @@
 		$('.switch').hide();
 	});
 </script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
 			graphMetricChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 	});
-</script>
+</script> -->
 <style>
 .pagination{
 		margin:4px 0;

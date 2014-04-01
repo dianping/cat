@@ -39,7 +39,6 @@ import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.metric.chart.GraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -63,9 +62,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-
-	@Inject
-	private GraphCreator m_graphCreator;
 
 	public static final String TUAN_TOU = "TuanGou";
 
@@ -159,15 +155,7 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	private void buildMetricDashboard(Model model, Payload payload, long date) {
-		Date start = new Date(date - payload.getRange() * TimeUtil.ONE_HOUR);
-		Date end = new Date(date + TimeUtil.ONE_HOUR);
-
-		Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end);
-
-		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-		model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
+	private void buildExceptionDashboard(Model model, Payload payload, long date) {
 		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
@@ -241,7 +229,7 @@ public class Handler implements PageHandler<Context> {
 			buildProductLineChart(model, payload, reportTime);
 			break;
 		case METRIC_DASHBOARD:
-			buildMetricDashboard(model, payload, date);
+			buildExceptionDashboard(model, payload, date);
 			break;
 		}
 		m_jspViewer.view(ctx, model);

@@ -111,8 +111,6 @@
 				var data = ${item.jsonString};
 				graphMetricChart(document.getElementById('${item.id}'), data);
 			</c:forEach>
-			
-			
 		});
 	</script>
 <style type="text/css">
