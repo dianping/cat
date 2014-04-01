@@ -35,7 +35,6 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
@@ -106,23 +105,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			}
 		}
 		return dashboardGraph;
-	}
-
-	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
-		TopologyGraph topologyGraph = queryTopologyGraph(time);
-		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		List<String> domains = m_productLineConfigManger.queryDomainsByProductLine(productLine);
-
-		if (topologyGraph != null) {
-			for (String domain : domains) {
-				TopologyNode node = topologyGraph.findTopologyNode(domain);
-
-				if (node != null) {
-					dashboard.addPoint(m_graphBuilder.cloneNode(node));
-				}
-			}
-		}
-		return dashboard;
 	}
 
 	public TopologyGraph buildTopologyGraph(String domain, long time) {

@@ -26,6 +26,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
+	
+	@FieldMeta("hideNav")
+	private boolean m_hideNav = true;
 
 	@FieldMeta("group")
 	private String m_group;
@@ -96,6 +99,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
 	}
+	
+	public boolean isHideNav() {
+   	return m_hideNav;
+   }
+
+	public void setHideNav(boolean hideNav) {
+   	m_hideNav = hideNav;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

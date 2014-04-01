@@ -18,14 +18,12 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
@@ -35,7 +33,6 @@ import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
@@ -50,9 +47,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphManager m_graphManager;
-
-	@Inject
-	private ProductLineConfigManager m_productLineConfigManger;
 
 	@Inject
 	private ExternalInfoBuilder m_externalInfoBuilder;
@@ -96,7 +90,6 @@ public class Handler implements PageHandler<Context> {
 				m_externalInfoBuilder.buildNodeZabbixInfo(node, model, payload);
 			}
 		}
-		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
 		model.setDashboardGraph(dashboardGraph.toJson());
@@ -156,26 +149,9 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildExceptionDashboard(Model model, Payload payload, long date) {
-		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
-	}
-
-	private void buildProductLineChart(Model model, Payload payload, Date reportTime) {
-		String productLine = payload.getProductLine();
-		if (StringUtil.isEmpty(productLine)) {
-			payload.setProductLine(TUAN_TOU);
-			productLine = TUAN_TOU;
-		}
-		ProductLineDashboard productLineGraph = m_graphManager.buildProductLineGraph(productLine, reportTime.getTime());
-		List<TopologyNode> productLineNodes = productLineGraph.getPoints();
-
-		for (TopologyNode node : productLineNodes) {
-			m_externalInfoBuilder.buildNodeZabbixInfo(node, model, payload);
-			m_externalInfoBuilder.buildNodeExceptionInfo(node, model, payload);
-		}
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-		model.setProductLineGraph(productLineGraph.toJson());
-		model.setProductLines(new ArrayList<ProductLine>(m_productLineConfigManger.queryAllProductLines().values()));
+		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
 	private void buildProjectTopology(Model model, Payload payload, Date reportTime) {
@@ -224,9 +200,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DEPENDENCY_DASHBOARD:
 			buildDependencyDashboard(model, payload, reportTime);
-			break;
-		case PRODUCT_LINE:
-			buildProductLineChart(model, payload, reportTime);
 			break;
 		case METRIC_DASHBOARD:
 			buildExceptionDashboard(model, payload, date);

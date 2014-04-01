@@ -41,6 +41,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
+	
+	@FieldMeta("hideNav")
+	private boolean m_hideNav = true;
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -151,5 +154,13 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.LINE_CHART;
 		}
 	}
+
+	public boolean isHideNav() {
+   	return m_hideNav;
+   }
+
+	public void setHideNav(boolean hideNav) {
+   	m_hideNav = hideNav;
+   }
 
 }
