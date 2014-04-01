@@ -18,6 +18,7 @@
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
 		<div class="opNav">
+			<%@ include file="metricOpNav.jsp" %>
 			<table>
 				<tr style="text-align: left">
 					<th>&nbsp;&nbsp;时间段选择: 
@@ -34,7 +35,6 @@
 					</th>
 				</tr>
 			</table>
-			<%@ include file="metricOpNav.jsp" %>
 		</div>
       	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
    			<div style="float:left;">
@@ -58,8 +58,9 @@
 					</td>
 				</tr>
 			</table>
+			<%@ include file="metricOpNav.jsp" %>
 			<table>
-		<tr style="text-align: left">
+			<tr style="text-align: left">
 				<th>&nbsp;&nbsp;时间段选择: 
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
