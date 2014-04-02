@@ -1486,6 +1486,30 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
+			<role-hint>cat</role-hint>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<configuration>
+				<id>cat</id>
+				<maximum-pool-size>3</maximum-pool-size>
+				<connection-timeout>1s</connection-timeout>
+				<idle-timeout>10m</idle-timeout>
+				<statement-cache-size>1000</statement-cache-size>
+				<properties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
+					<user>root</user>
+					<password>root</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+				</properties>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>alteration</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
@@ -1522,6 +1546,16 @@
 			<configuration>
 				<logical-table-name>event</logical-table-name>
 				<physical-table-name>event</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>family</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>family</logical-table-name>
+				<physical-table-name>family</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1595,6 +1629,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.EventDao</role>
 			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.FamilyDao</role>
+			<implementation>com.dianping.cat.home.dal.report.FamilyDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1691,6 +1734,30 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
+			<role-hint>user</role-hint>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<configuration>
+				<id>user</id>
+				<maximum-pool-size>3</maximum-pool-size>
+				<connection-timeout>1s</connection-timeout>
+				<idle-timeout>10m</idle-timeout>
+				<statement-cache-size>1000</statement-cache-size>
+				<properties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://192.168.8.44:3306/hawk</url>
+					<user>hawk</user>
+					<password>hawk</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+				</properties>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2886,6 +2953,36 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.test.Handler</role>
+			<implementation>com.dianping.cat.report.page.test.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.test.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.FamilyDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.test.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.test.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.FamilyDao</role>
+			<implementation>com.dianping.cat.home.dal.report.FamilyDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

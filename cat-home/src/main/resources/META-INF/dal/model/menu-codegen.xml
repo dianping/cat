@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="menu" root="true">
+    <attribute name="desc" value-type="String" />
+    <entity-ref name="breakfast" />
+    <entity-ref name="lunch" />
+    <entity-ref name="supper" />
+  </entity>
+  <entity name="breakfast">
+    <attribute name="desc" value-type="String" />
+  </entity>
+  <entity name="lunch">
+    <attribute name="desc" value-type="String" />
+    <entity-ref name="dessert" />
+  </entity>
+  <entity name="dessert">
+    <attribute name="desc" value-type="String" />
+  </entity>
+  <entity name="supper">
+    <attribute name="desc" value-type="String" />
+    <entity-ref name="dessert" />
+  </entity>
+</model>
+
