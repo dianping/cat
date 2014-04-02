@@ -18,6 +18,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
+	public List<Alteration> getAlterations() {
+		return m_alterations;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -37,16 +41,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_insertResult;
 	}
 
-	public void setInsertResult(String insertResult) {
-		m_insertResult = insertResult;
-	}
-
-	public List<Alteration> getAlterations() {
-		return m_alterations;
-	}
-
 	public void setAlterations(List<Alteration> alterations) {
 		m_alterations = alterations;
+	}
+
+	public void setInsertResult(String insertResult) {
+		m_insertResult = insertResult;
 	}
 
 }

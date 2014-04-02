@@ -39,14 +39,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("link")
 	private String m_link;
 
-	public String getLink() {
-		return m_link;
-	}
-
-	public void setLink(String link) {
-		m_link = link;
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -62,6 +54,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public String getIp() {
 		return m_ip;
+	}
+
+	public String getLink() {
+		return m_link;
 	}
 
 	public String getName() {
@@ -103,6 +99,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setIp(String ip) {
 		m_ip = ip;
+	}
+
+	public void setLink(String link) {
+		m_link = link;
 	}
 
 	public void setName(String name) {

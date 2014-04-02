@@ -44,6 +44,8 @@ public interface ReportService {
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
 
+	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
+
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
 
 	public MetricReport queryMetricReport(String domain, Date start, Date end);
@@ -57,8 +59,6 @@ public interface ReportService {
 	public TopReport queryTopReport(String domain, Date start, Date end);
 
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
-
-	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
 
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end);
 

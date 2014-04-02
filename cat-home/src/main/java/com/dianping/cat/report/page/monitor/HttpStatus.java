@@ -14,20 +14,20 @@ public class HttpStatus {
 	@SerializedName("errorMsg")
 	private String m_errorMsg;
 
-	public String getStatusCode() {
-		return m_statusCode;
-	}
-
-	public void setStatusCode(String statusCode) {
-		m_statusCode = statusCode;
-	}
-
 	public String getErrorMsg() {
 		return m_errorMsg;
 	}
 
+	public String getStatusCode() {
+		return m_statusCode;
+	}
+
 	public void setErrorMsg(String errorMsg) {
 		m_errorMsg = errorMsg;
+	}
+
+	public void setStatusCode(String statusCode) {
+		m_statusCode = statusCode;
 	}
 
 }

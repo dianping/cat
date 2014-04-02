@@ -25,6 +25,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
@@ -38,7 +39,6 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 
@@ -69,6 +69,42 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
 
+	private void buildTransactionMetaInfo(Model model, Payload payload, TransactionReport report) {
+		String type = payload.getType();
+		String sorted = payload.getSortBy();
+		String queryName = payload.getQueryName();
+		String ip = payload.getIpAddress();
+
+		if (!StringUtils.isEmpty(type)) {
+			DisplayNames displayNames = new DisplayNames();
+
+			model.setDisplayNameReport(displayNames.display(sorted, type, ip, report, queryName));
+			buildTransactionNamePieChart(displayNames.getResults(), model);
+		} else {
+			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
+		}
+	}
+
+	private void buildTransactionNameGraph(Model model, TransactionReport report, String type, String name, String ip) {
+		TransactionType t = report.findOrCreateMachine(ip).findOrCreateType(type);
+		TransactionName transactionName = t.findOrCreateName(name);
+
+		if (transactionName != null) {
+			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count",
+			      transactionName));
+			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", transactionName));
+			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+			      "Average Duration (ms)", transactionName));
+			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count",
+			      transactionName));
+
+			model.setGraph1(graph1);
+			model.setGraph2(graph2);
+			model.setGraph3(graph3);
+			model.setGraph4(graph4);
+		}
+	}
+
 	private void buildTransactionNamePieChart(List<TransactionNameModel> names, Model model) {
 		PieChart chart = new PieChart();
 		List<Item> items = new ArrayList<Item>();
@@ -82,7 +118,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		chart.addItems(items);
-		model.setPieChart(new Gson().toJson(chart));
+		model.setPieChart(new JsonBuilder().toJson(chart));
 	}
 
 	private void calculateTps(Payload payload, TransactionReport report) {
@@ -105,6 +141,23 @@ public class Handler implements PageHandler<Context> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	private TransactionReport filterReportByGroup(TransactionReport report, String domain, String group) {
+		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+		List<String> removes = new ArrayList<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			String ip = machine.getIp();
+
+			if (!ips.contains(ip)) {
+				removes.add(ip);
+			}
+		}
+		for (String ip : removes) {
+			report.getMachines().remove(ip);
+		}
+		return report;
 	}
 
 	private TransactionReport getHourlyReport(Payload payload) {
@@ -263,59 +316,6 @@ public class Handler implements PageHandler<Context> {
 			m_xmlViewer.view(ctx, model);
 		} else {
 			m_jspViewer.view(ctx, model);
-		}
-	}
-
-	private void buildTransactionNameGraph(Model model, TransactionReport report, String type, String name, String ip) {
-		TransactionType t = report.findOrCreateMachine(ip).findOrCreateType(type);
-		TransactionName transactionName = t.findOrCreateName(name);
-
-		if (transactionName != null) {
-			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count",
-			      transactionName));
-			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", transactionName));
-			String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-			      "Average Duration (ms)", transactionName));
-			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count",
-			      transactionName));
-
-			model.setGraph1(graph1);
-			model.setGraph2(graph2);
-			model.setGraph3(graph3);
-			model.setGraph4(graph4);
-		}
-	}
-
-	private TransactionReport filterReportByGroup(TransactionReport report, String domain, String group) {
-		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-		List<String> removes = new ArrayList<String>();
-
-		for (Machine machine : report.getMachines().values()) {
-			String ip = machine.getIp();
-
-			if (!ips.contains(ip)) {
-				removes.add(ip);
-			}
-		}
-		for (String ip : removes) {
-			report.getMachines().remove(ip);
-		}
-		return report;
-	}
-
-	private void buildTransactionMetaInfo(Model model, Payload payload, TransactionReport report) {
-		String type = payload.getType();
-		String sorted = payload.getSortBy();
-		String queryName = payload.getQueryName();
-		String ip = payload.getIpAddress();
-
-		if (!StringUtils.isEmpty(type)) {
-			DisplayNames displayNames = new DisplayNames();
-
-			model.setDisplayNameReport(displayNames.display(sorted, type, ip, report, queryName));
-			buildTransactionNamePieChart(displayNames.getResults(), model);
-		} else {
-			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
 		}
 	}
 

@@ -33,45 +33,6 @@ public class MetricGroupConfigManager implements Initializable {
 		return m_config;
 	}
 
-	public List<MetricKeyConfig> queryMetricGroupConfig(String group) {
-		MetricGroup metricGroup = m_config.findMetricGroup(group);
-
-		if (metricGroup == null) {
-			return new ArrayList<MetricKeyConfig>();
-		} else {
-			return metricGroup.getMetricKeys();
-		}
-	}
-
-	public boolean insert(String xml) {
-		try {
-			m_config = DefaultSaxParser.parse(xml);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	private boolean storeConfig() {
-		synchronized (this) {
-			try {
-				Config config = m_configDao.createLocal();
-
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(m_config.toString());
-				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-		return true;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -101,5 +62,44 @@ public class MetricGroupConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new MetricGroupConfig();
 		}
+	}
+
+	public boolean insert(String xml) {
+		try {
+			m_config = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	public List<MetricKeyConfig> queryMetricGroupConfig(String group) {
+		MetricGroup metricGroup = m_config.findMetricGroup(group);
+
+		if (metricGroup == null) {
+			return new ArrayList<MetricKeyConfig>();
+		} else {
+			return metricGroup.getMetricKeys();
+		}
+	}
+
+	private boolean storeConfig() {
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
+
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_config.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+		return true;
 	}
 }

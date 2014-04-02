@@ -41,38 +41,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
-
-	public int getMinuteCounts() {
-		return m_minuteCounts;
-	}
-
-	public void setMinuteCounts(int minuteCounts) {
-		m_minuteCounts = minuteCounts;
-	}
-
-	public int getTopCounts() {
-		return m_topCounts;
-	}
-
-	public void setTopCounts(int topCounts) {
-		m_topCounts = topCounts;
-	}
-
-	public int getFrequency() {
-		return m_frequency;
-	}
-
-	public void setFrequency(int frequency) {
-		m_frequency = frequency;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
-	}
+	
+	@FieldMeta("hideNav")
+	private boolean m_hideNav = true;
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -83,8 +54,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public int getFrequency() {
+		return m_frequency;
+	}
+
 	public String getMinute() {
 		return m_minute;
+	}
+
+	public int getMinuteCounts() {
+		return m_minuteCounts;
 	}
 
 	@Override
@@ -92,17 +71,81 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
+	public String getProductLine() {
+		return productLine;
+	}
+
+	public int getRange() {
+		return m_range;
+	}
+
+	public String getTab() {
+		return m_tab;
+	}
+
+	public int getTopCounts() {
+		return m_topCounts;
+	}
+
+	public boolean isAll() {
+		return m_all;
+	}
+
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.LINE_CHART);
+	}
+
+	public void setAll(boolean all) {
+		this.m_all = all;
+	}
+
+	public void setFrequency(int frequency) {
+		m_frequency = frequency;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
 	}
 
 	public void setMinute(String minute) {
 		this.m_minute = minute;
 	}
 
+	public void setMinuteCounts(int minuteCounts) {
+		m_minuteCounts = minuteCounts;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.DEPENDENCY);
+	}
+
+	public void setProductLine(String productLine) {
+		this.productLine = productLine;
+	}
+
+	public void setRange(int range) {
+		m_range = range;
+	}
+
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
+	}
+
+	public void setTab(String tab) {
+		m_tab = tab;
+	}
+
+	public void setTopCounts(int topCounts) {
+		m_topCounts = topCounts;
 	}
 
 	@Override
@@ -112,44 +155,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 	}
 
-	public boolean isAll() {
-		return m_all;
-	}
+	public boolean isHideNav() {
+   	return m_hideNav;
+   }
 
-	public void setAll(boolean all) {
-		this.m_all = all;
-	}
-
-	public String getProductLine() {
-		return productLine;
-	}
-
-	public void setProductLine(String productLine) {
-		this.productLine = productLine;
-	}
-
-	public boolean isFullScreen() {
-		return m_fullScreen;
-	}
-
-	public void setFullScreen(boolean fullScreen) {
-		m_fullScreen = fullScreen;
-	}
-
-	public String getTab() {
-		return m_tab;
-	}
-
-	public void setTab(String tab) {
-		m_tab = tab;
-	}
-
-	public int getRange() {
-		return m_range;
-	}
-
-	public void setRange(int range) {
-		m_range = range;
-	}
+	public void setHideNav(boolean hideNav) {
+   	m_hideNav = hideNav;
+   }
 
 }

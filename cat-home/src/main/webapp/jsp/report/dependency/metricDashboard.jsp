@@ -31,13 +31,15 @@
 	<c:when test="${payload.fullScreen}">
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
-			<div class="row-fluid">
-				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
-			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-			</div></div>
-			<div id="fullScreenData">
+			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+			<div class="opNav">
 				<div class="row-fluid">
+					<div class="span12 text-center">
+						<%@ include file="dependencyOpNav.jsp"%>
+				 		<%@ include file="dependencyTimeNavTab1.jsp"%>
+				</div></div></div>
+			<div id="fullScreenData">
+				<%-- <div class="row-fluid">
 					<div class="span12">
 					   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			   				<div style="float:left;">
@@ -45,7 +47,7 @@
 					   			</div>
 						</c:forEach>
 					</div>
-				</div>
+				</div> --%>
 				<div class="row-fluid">
 					<div class="span12">
 						<%@ include file="../top/topMetric.jsp"%>
@@ -66,7 +68,7 @@
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 				</div>
 			</div>
-			<div class="row-fluid">
+			<%-- <div class="row-fluid">
 				<div class="span12">
 				   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 		   				<div style="float:left;">
@@ -74,7 +76,7 @@
 				   			</div>
 					</c:forEach>
 				</div>
-			</div>
+			</div> --%>
 			<div class="row-fluid">
 				<div class="span12">
 					<%@ include file="../top/topMetric.jsp"%>
@@ -86,21 +88,39 @@
 </c:choose>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#minute'+${model.minute}).addClass('disabled');
-		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
-		$('.position').hide();
-		$('.switch').hide();
-	});
+$(document).ready(function() {
+	$('#minute'+${model.minute}).addClass('disabled');
+	$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+	$('.position').hide();
+	$('.switch').hide();
+	
+	var hide =${payload.hideNav};
+	
+	if(hide){
+		$('.opNav').slideUp();
+		$('#switch').html("显示");
+	}	
+});
+
+function showOpNav() {
+	var b = $('#switch').html();
+	if (b == '隐藏') {
+		$('.opNav').slideUp();
+		$('#switch').html("显示");
+	} else {
+		$('.opNav').slideDown();
+		$('#switch').html("隐藏");
+	}
+}
 </script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
 			graphMetricChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 	});
-</script>
+</script> -->
 <style>
 .pagination{
 		margin:4px 0;

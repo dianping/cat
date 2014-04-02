@@ -62,64 +62,6 @@ public abstract class AbstractReportService<T> implements LogEnabled {
 
 	public static final int s_customer = 5;
 
-	public T queryReport(String domain, Date start, Date end) {
-		int type = computeQueryType(start, end);
-		T report = null;
-
-		if (type == s_hourly) {
-			report = queryHourlyReport(domain, start, end);
-		} else if (type == s_daily) {
-			report = queryDailyReport(domain, start, end);
-		} else if (type == s_weekly) {
-			report = queryWeeklyReport(domain, start);
-		} else if (type == s_monthly) {
-			report = queryMonthlyReport(domain, start);
-		} else {
-			report = queryDailyReport(domain, start, end);
-		}
-		if (report == null) {
-			report = makeReport(domain, start, end);
-		}
-		return report;
-	}
-
-	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
-		HashSet<String> domains = new HashSet<String>();
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			domains.addAll(queryAllDomains(new Date(startTime)));
-		}
-		return domains;
-	}
-
-	private Set<String> queryAllDomains(Date start) {
-		Set<String> domains = new HashSet<String>();
-		try {
-			List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriod(start, HourlyReportEntity.READSET_DOMAIN_NAME);
-
-			if (reports != null) {
-				for (HourlyReport report : reports) {
-					domains.add(report.getDomain());
-				}
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return domains;
-	}
-
-	public abstract T makeReport(String domain, Date start, Date end);
-
-	public abstract T queryHourlyReport(String domain, Date start, Date end);
-
-	public abstract T queryDailyReport(String domain, Date start, Date end);
-
-	public abstract T queryWeeklyReport(String domain, Date start);
-
-	public abstract T queryMonthlyReport(String domain, Date start);
-
 	public int computeQueryType(Date start, Date end) {
 		long duration = end.getTime() - start.getTime();
 
@@ -148,5 +90,63 @@ public abstract class AbstractReportService<T> implements LogEnabled {
    public void enableLogging(Logger logger) {
 		m_logger = logger;
    }
+
+	public abstract T makeReport(String domain, Date start, Date end);
+
+	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
+		HashSet<String> domains = new HashSet<String>();
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			domains.addAll(queryAllDomains(new Date(startTime)));
+		}
+		return domains;
+	}
+
+	private Set<String> queryAllDomains(Date start) {
+		Set<String> domains = new HashSet<String>();
+		try {
+			List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriod(start, HourlyReportEntity.READSET_DOMAIN_NAME);
+
+			if (reports != null) {
+				for (HourlyReport report : reports) {
+					domains.add(report.getDomain());
+				}
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return domains;
+	}
+
+	public abstract T queryDailyReport(String domain, Date start, Date end);
+
+	public abstract T queryHourlyReport(String domain, Date start, Date end);
+
+	public abstract T queryMonthlyReport(String domain, Date start);
+
+	public T queryReport(String domain, Date start, Date end) {
+		int type = computeQueryType(start, end);
+		T report = null;
+
+		if (type == s_hourly) {
+			report = queryHourlyReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = queryDailyReport(domain, start, end);
+		} else if (type == s_weekly) {
+			report = queryWeeklyReport(domain, start);
+		} else if (type == s_monthly) {
+			report = queryMonthlyReport(domain, start);
+		} else {
+			report = queryDailyReport(domain, start, end);
+		}
+		if (report == null) {
+			report = makeReport(domain, start, end);
+		}
+		return report;
+	}
+
+	public abstract T queryWeeklyReport(String domain, Date start);
 	
 }

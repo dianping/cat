@@ -33,62 +33,10 @@ public class ExceptionThresholdConfigManager implements Initializable {
 
 	private static String TOTAL_STRING = "Total";
 
-	public List<ExceptionLimit> queryAllExceptionLimits() {
-		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
-		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
-			result.addAll(domainConfig.getExceptionLimits().values());
-		}
-		return result;
-	}
-
-	public ExceptionLimit queryDomainTotalLimit(String domain) {
-		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
-		if (result == null) {
-			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
-		}
-		return result;
-	}
-
-	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
-		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
-		ExceptionLimit result = null;
-		if (domainConfig == null) {
-			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
-		}
-		if (domainConfig != null) {
-			result = domainConfig.getExceptionLimits().get(exceptionName);
-		}
-		return result;
-	}
-
-	public boolean insertExceptionLimit(ExceptionLimit limit) {
-		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
-		domainConfig.getExceptionLimits().put(limit.getId(), limit);
-		return storeConfig();
-	}
-
 	public boolean deleteExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
 		domainConfig.removeExceptionLimit(exceptionName);
 		return storeConfig();
-	}
-
-	private boolean storeConfig() {
-		synchronized (this) {
-			try {
-				Config config = m_configDao.createLocal();
-
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(m_exceptionConfig.toString());
-				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-		return true;
 	}
 
 	@Override
@@ -120,6 +68,58 @@ public class ExceptionThresholdConfigManager implements Initializable {
 		if (m_exceptionConfig == null) {
 			m_exceptionConfig = new ExceptionThresholdConfig();
 		}
+	}
+
+	public boolean insertExceptionLimit(ExceptionLimit limit) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
+		domainConfig.getExceptionLimits().put(limit.getId(), limit);
+		return storeConfig();
+	}
+
+	public List<ExceptionLimit> queryAllExceptionLimits() {
+		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
+		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
+			result.addAll(domainConfig.getExceptionLimits().values());
+		}
+		return result;
+	}
+
+	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
+		ExceptionLimit result = null;
+		if (domainConfig == null) {
+			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
+		}
+		if (domainConfig != null) {
+			result = domainConfig.getExceptionLimits().get(exceptionName);
+		}
+		return result;
+	}
+
+	public ExceptionLimit queryDomainTotalLimit(String domain) {
+		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
+		if (result == null) {
+			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
+		}
+		return result;
+	}
+
+	private boolean storeConfig() {
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
+
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_exceptionConfig.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

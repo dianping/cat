@@ -393,12 +393,12 @@ CREATE TABLE `alteration` (
   `hostname` varchar(128) NOT NULL COMMENT '变更机器名',
   `ip` varchar(128) DEFAULT NULL COMMENT '变更机器IP',
   `date` datetime NOT NULL COMMENT '变更时间',
-  `user` varchar(45) NOT NULL COMMENT '变更用户’,
-  `alt_group` varchar(45) DEFAULT NULL COMMENT '变更组别’,
+  `user` varchar(45) NOT NULL COMMENT '变更用户',
+  `alt_group` varchar(45) DEFAULT NULL COMMENT '变更组别',
   `content` text NOT NULL COMMENT '变更内容',
   `url` varchar(200) DEFAULT NULL COMMENT '变更链接',
   `creation_date` datetime NOT NULL COMMENT '数据库创建时间',
   PRIMARY KEY (`id`),
   KEY `ind_date_domain_host` (`date`,`domain`,`hostname`)
-) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COMMENT='变更表’;
+) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COMMENT='变更表';
 

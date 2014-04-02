@@ -1,10 +1,38 @@
 package com.dianping.cat.report.baseline.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.report.baseline.BaselineCreator;
 
 public class DefaultBaselineCreator implements BaselineCreator {
+
+	public double computeAvg(List<Double> data) {
+		Collections.sort(data);
+		int length = data.size();
+		double value = 0;
+		int middle = length / 2;
+
+		if (length % 2 == 0) {
+			value = (data.get(middle - 1) + data.get(middle)) / 2;
+		} else {
+			value = data.get(middle);
+		}
+
+		int size = 0;
+		double sum = 0;
+
+		for (double d : data) {
+			if (d > value * 3 || d < value / 3) {
+				continue;
+			} else {
+				size++;
+				sum = sum + d;
+			}
+		}
+		return sum / size;
+	}
 
 	@Override
 	public double[] createBaseLine(List<double[]> valueList, List<Double> weights, int number) {
@@ -17,7 +45,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 			for (int j = 0; j < weights.size(); j++) {
 				double[] values = valueList.get(j);
 				double weight = weights.get(j);
-				
+
 				if (values[i] > 0) {
 					totalValue += values[i] * weight;
 					totalWeight += weight;
@@ -33,7 +61,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 				result[i] = totalValue / totalWeight;
 			}
 		}
-		return denoise(result, 6);
+		return denoise(result, 30);
 	}
 
 	public double[] denoise(double[] data, int mixNumber) {
@@ -50,22 +78,13 @@ public class DefaultBaselineCreator implements BaselineCreator {
 				last = true;
 			}
 
-			double min = Double.MAX_VALUE;
-			double max = 0;
-			double sum = 0;
-
+			List<Double> mixNumbers = new ArrayList<Double>();
 			for (int j = 0; j < mixNumber; j++) {
 				int position = i + j;
 
-				if (data[position] > max) {
-					max = data[position];
-				}
-				if (data[position] < min) {
-					min = data[position];
-				}
-				sum = sum + data[position];
+				mixNumbers.add(data[position]);
 			}
-			double avg = (sum - max - min) / (mixNumber - 2);
+			double avg = computeAvg(mixNumbers);
 			result[i + mixNumber / 2] = avg;
 
 			if (first) {
@@ -81,7 +100,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 				}
 			}
 		}
-
 		return result;
 	}
+
 }

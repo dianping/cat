@@ -41,10 +41,10 @@ public enum ReportPage implements Page {
 
    STATISTICS("statistics", "statistics", "Statistics", "Statistics", true),
 
-   MONITOR("monitor", "monitor", "Monitor", "Monitor", true),
+   ALTERATION("alteration", "alteration", "Change", "Alteration", true),
 
-   ALTERATION("alteration", "alteration", "Alteration", "Alteration", true);
-   
+   MONITOR("monitor", "monitor", "Monitor", "Monitor", true);
+
    private String m_name;
 
    private String m_path;
@@ -55,14 +55,6 @@ public enum ReportPage implements Page {
 
    private boolean m_standalone;
 
-   private ReportPage(String name, String path, String title, String description, boolean standalone) {
-      m_name = name;
-      m_path = path;
-      m_title = title;
-      m_description = description;
-      m_standalone = standalone;
-   }
-
    public static ReportPage getByName(String name, ReportPage defaultPage) {
       for (ReportPage action : ReportPage.values()) {
          if (action.getName().equals(name)) {
@@ -71,6 +63,14 @@ public enum ReportPage implements Page {
       }
 
       return defaultPage;
+   }
+
+   private ReportPage(String name, String path, String title, String description, boolean standalone) {
+      m_name = name;
+      m_path = path;
+      m_title = title;
+      m_description = description;
+      m_standalone = standalone;
    }
 
    public String getDescription() {
@@ -101,11 +101,11 @@ public enum ReportPage implements Page {
       return m_title;
    }
 
-   public boolean isStandalone() {
-      return m_standalone;
-   }
-
    public ReportPage[] getValues() {
       return ReportPage.values();
+   }
+
+   public boolean isStandalone() {
+      return m_standalone;
    }
 }

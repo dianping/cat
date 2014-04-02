@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
@@ -68,7 +69,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	@Override
 	public ModelResponse<T> invoke(final ModelRequest request) {
 		int size = m_allServices.size();
-		final List<ModelResponse<T>> responses = new ArrayList<ModelResponse<T>>(size);
+		final List<ModelResponse<T>> responses = Collections.synchronizedList(new ArrayList<ModelResponse<T>>(size));
 		final Semaphore semaphore = new Semaphore(0);
 		final Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
 		int count = 0;

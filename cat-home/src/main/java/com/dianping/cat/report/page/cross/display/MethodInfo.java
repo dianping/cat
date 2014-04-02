@@ -119,6 +119,27 @@ public class MethodInfo extends BaseVisitor {
 		return false;
 	}
 
+	private boolean projectContains(String projectName, String ip, String role) {
+		if (m_remoteIp.startsWith("All")) {
+			if (m_remoteProject.startsWith("AllClient") && role.endsWith("Client")) {
+				return true;
+			} else if (m_remoteProject.startsWith("AllServer") && role.endsWith("Server")) {
+				return true;
+			}
+			if (ip.indexOf(':') > 0) {
+				ip = ip.substring(0, ip.indexOf(':'));
+			}
+			String domain = m_domainManager.queryDomainByIp(ip);
+
+			if (projectName.equalsIgnoreCase(domain)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
 	public MethodInfo setCallSortBy(String callSoryBy) {
 		m_callSortBy = callSoryBy;
 		return this;
@@ -129,6 +150,10 @@ public class MethodInfo extends BaseVisitor {
 		return this;
 	}
 
+	public void setDomainManager(DomainManager domainManager) {
+		m_domainManager = domainManager;
+	}
+
 	public MethodInfo setQuery(String query) {
 		m_query = query;
 		return this;
@@ -137,6 +162,10 @@ public class MethodInfo extends BaseVisitor {
 	public MethodInfo setRemoteIp(String remoteIp) {
 		m_remoteIp = remoteIp;
 		return this;
+	}
+
+	public void setRemoteProject(String remoteProject) {
+		m_remoteProject = remoteProject;
 	}
 
 	public MethodInfo setServiceSortBy(String serviceSortBy) {
@@ -178,35 +207,6 @@ public class MethodInfo extends BaseVisitor {
 	public void visitType(Type type) {
 		m_currentType = type.getId();
 		super.visitType(type);
-	}
-
-	public void setRemoteProject(String remoteProject) {
-		m_remoteProject = remoteProject;
-	}
-
-	private boolean projectContains(String projectName, String ip, String role) {
-		if (m_remoteIp.startsWith("All")) {
-			if (m_remoteProject.startsWith("AllClient") && role.endsWith("Client")) {
-				return true;
-			} else if (m_remoteProject.startsWith("AllServer") && role.endsWith("Server")) {
-				return true;
-			}
-			if (ip.indexOf(':') > 0) {
-				ip = ip.substring(0, ip.indexOf(':'));
-			}
-			String domain = m_domainManager.queryDomainByIp(ip);
-
-			if (projectName.equalsIgnoreCase(domain)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
-
-	public void setDomainManager(DomainManager domainManager) {
-		m_domainManager = domainManager;
 	}
 
 }

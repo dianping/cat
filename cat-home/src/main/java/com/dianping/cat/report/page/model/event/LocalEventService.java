@@ -1,10 +1,13 @@
 package com.dianping.cat.report.page.model.event;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -25,7 +28,14 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		EventReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			report = getReportFromLocalDisk(request.getStartTime(), domain);
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+			
+			if (report == null) {
+				report = new EventReport(domain);
+				report.setStartTime(new Date(startTime));
+				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+			}
 		}
 		return report;
 	}

@@ -33,8 +33,19 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
 
-	public TopologyNode createNode(String domain) {
-		return m_itemBuilder.createNode(domain);
+	public TopologyEdge cloneEdge(TopologyEdge edge) {
+		TopologyEdge result = new TopologyEdge();
+
+		result.setDes(edge.getDes());
+		result.setKey(edge.getKey());
+		result.setLink(edge.getLink());
+		result.setOpposite(edge.getOpposite());
+		result.setSelf(edge.getSelf());
+		result.setStatus(edge.getStatus());
+		result.setTarget(edge.getTarget());
+		result.setType(edge.getType());
+		result.setWeight(edge.getWeight());
+		return result;
 	}
 
 	public TopologyNode cloneNode(TopologyNode node) {
@@ -49,19 +60,8 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		return result;
 	}
 
-	public TopologyEdge cloneEdge(TopologyEdge edge) {
-		TopologyEdge result = new TopologyEdge();
-
-		result.setDes(edge.getDes());
-		result.setKey(edge.getKey());
-		result.setLink(edge.getLink());
-		result.setOpposite(edge.getOpposite());
-		result.setSelf(edge.getSelf());
-		result.setStatus(edge.getStatus());
-		result.setTarget(edge.getTarget());
-		result.setType(edge.getType());
-		result.setWeight(edge.getWeight());
-		return result;
+	public TopologyNode createNode(String domain) {
+		return m_itemBuilder.createNode(domain);
 	}
 
 	private TopologyGraph findOrCreateGraph() {

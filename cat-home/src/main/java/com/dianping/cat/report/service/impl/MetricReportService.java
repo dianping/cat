@@ -74,6 +74,16 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 		return transform(metricReport);
 	}
 
+	@Override
+	public MetricReport queryMonthlyReport(String domain, Date start) {
+		throw new RuntimeException("Metric report don't support monthly report");
+	}
+
+	@Override
+	public MetricReport queryWeeklyReport(String domain, Date start) {
+		throw new RuntimeException("Metric report don't support weekly report");
+	}
+
 	public MetricReport transform(MetricReport report) {
 		Map<String, MetricItem> items = report.getMetricItems();
 
@@ -97,16 +107,6 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 		}
 
 		return report;
-	}
-
-	@Override
-	public MetricReport queryMonthlyReport(String domain, Date start) {
-		throw new RuntimeException("Metric report don't support monthly report");
-	}
-
-	@Override
-	public MetricReport queryWeeklyReport(String domain, Date start) {
-		throw new RuntimeException("Metric report don't support weekly report");
 	}
 
 }

@@ -25,6 +25,7 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -44,6 +45,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.AlertConfig;
 import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricAlert;
+import com.dianping.cat.report.task.metric.RemoteMetricReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -61,6 +63,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+
+		all.add(C(JsonBuilder.class));
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
@@ -118,13 +122,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
+		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
+
 		all.add(C(AlertConfig.class));
 
 		all.add(C(AlertInfo.class));
 
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
-		      .req(ModelService.class, MetricAnalyzer.ID));
+		      .req(RemoteMetricReportService.class));
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

@@ -1,9 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 
-</br>
-<h4 class="text-error">CAT BA环境调整，一周内全部调整至生产环境CAT.</h4>
-</br>
-
 <h4 class="text-error">CAT QA环境机器调整通知</h4>
 1、线下的CAT的环境是一台虚拟机【ip:192.168.7.70】，无法满足线下的需求，目前已经正式替换为一台物理机【ip:192.168.213.115】。</br>
 

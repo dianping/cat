@@ -117,14 +117,6 @@ public class TopologyGraphConfigManager implements Initializable {
 		return sb.toString();
 	}
 
-	private String buildWarningDes(String... args) {
-		StringBuilder sb = new StringBuilder("<span style='color:#bfa22f'>");
-		String content = buildDes(args);
-
-		sb.append(content).append("</span>");
-		return sb.toString();
-	}
-
 	public Pair<Integer, String> buildNodeState(String domain, Index index) {
 		String type = index.getName();
 		String realType = formatType(type);
@@ -169,6 +161,14 @@ public class TopologyGraphConfigManager implements Initializable {
 		result.setKey(errorCode);
 		result.setValue(sb.toString());
 		return result;
+	}
+
+	private String buildWarningDes(String... args) {
+		StringBuilder sb = new StringBuilder("<span style='color:#bfa22f'>");
+		String content = buildDes(args);
+
+		sb.append(content).append("</span>");
+		return sb.toString();
 	}
 
 	private EdgeConfig convertNodeConfig(DomainConfig config) {

@@ -128,6 +128,10 @@ public class HostInfo extends BaseVisitor {
 		return this;
 	}
 
+	public void setDomainManager(DomainManager domainManager) {
+		m_domainManager = domainManager;
+	}
+
 	public HostInfo setProjectName(String projectName) {
 		this.m_projectName = projectName;
 		return this;
@@ -164,10 +168,6 @@ public class HostInfo extends BaseVisitor {
 				addCallProject(remoteIp, remote.getType());
 			}
 		}
-	}
-
-	public void setDomainManager(DomainManager domainManager) {
-		m_domainManager = domainManager;
 	}
 
 }

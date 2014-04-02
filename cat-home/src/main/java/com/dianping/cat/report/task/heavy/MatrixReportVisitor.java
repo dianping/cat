@@ -26,6 +26,24 @@ public class MatrixReportVisitor extends BaseVisitor {
 		return this;
 	}
 
+	private void updateService(Service service, String logview, long max) {
+		service.setDomain(m_currentDomain);
+		service.setName(m_currentName);
+		if (max > service.getCount()) {
+			service.setLogview(logview);
+			service.setCount(max);
+		}
+	}
+
+	private void updateUrl(Url url, String logview, long max) {
+		url.setDomain(m_currentDomain);
+		url.setName(m_currentName);
+		if (max > url.getCount()) {
+			url.setLogview(logview);
+			url.setCount(max);
+		}
+	}
+
 	@Override
 	public void visitMatrix(Matrix matrix) {
 		m_currentType = matrix.getType();
@@ -46,24 +64,6 @@ public class MatrixReportVisitor extends BaseVisitor {
 			m_report.setHeavySql(new HeavySql());
 		}
 		super.visitMatrixReport(matrixReport);
-	}
-
-	private void updateUrl(Url url, String logview, long max) {
-		url.setDomain(m_currentDomain);
-		url.setName(m_currentName);
-		if (max > url.getCount()) {
-			url.setLogview(logview);
-			url.setCount(max);
-		}
-	}
-
-	private void updateService(Service service, String logview, long max) {
-		service.setDomain(m_currentDomain);
-		service.setName(m_currentName);
-		if (max > service.getCount()) {
-			service.setLogview(logview);
-			service.setCount(max);
-		}
 	}
 
 	@Override

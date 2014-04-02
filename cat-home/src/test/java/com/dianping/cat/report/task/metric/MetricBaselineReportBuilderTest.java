@@ -35,10 +35,7 @@ public class MetricBaselineReportBuilderTest extends ComponentTestCase {
 			config.setDays(Arrays.asList(days));
 			config.setId(1);
 			config.setKey(key);
-			config.setLowerLimit(100);
-			config.setMinValue(0.2);
 			config.setTargetDate(1);
-			config.setUpperLimit(5);
 			config.setWeights(Arrays.asList(weights));
 			return config;
 		}

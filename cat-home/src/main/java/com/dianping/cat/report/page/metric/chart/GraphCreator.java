@@ -193,33 +193,6 @@ public class GraphCreator implements LogEnabled {
 		return result;
 	}
 
-	public double[] convert(double[] value, int removeLength) {
-		int length = value.length;
-		int newLength = length - removeLength;
-		double[] result = new double[newLength];
-
-		for (int i = 0; i < newLength; i++) {
-			result[i] = value[i];
-		}
-		return result;
-	}
-
-	private Map<Long, Double> convertToMap(double[] data, Date start, int step) {
-		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
-		int length = data.length;
-		long startTime = start.getTime();
-
-		for (int i = 0; i < length; i++) {
-			map.put(startTime + step * i * TimeUtil.ONE_MINUTE, data[i]);
-		}
-		return map;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
 	private void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String id = key.substring(0, index);
@@ -246,6 +219,33 @@ public class GraphCreator implements LogEnabled {
 		} else {
 			chart.setHtmlTitle(title);
 		}
+	}
+
+	public double[] convert(double[] value, int removeLength) {
+		int length = value.length;
+		int newLength = length - removeLength;
+		double[] result = new double[newLength];
+
+		for (int i = 0; i < newLength; i++) {
+			result[i] = value[i];
+		}
+		return result;
+	}
+
+	private Map<Long, Double> convertToMap(double[] data, Date start, int step) {
+		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
+		int length = data.length;
+		long startTime = start.getTime();
+
+		for (int i = 0; i < length; i++) {
+			map.put(startTime + step * i * TimeUtil.ONE_MINUTE, data[i]);
+		}
+		return map;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	private boolean isCurrentMode(Date date) {

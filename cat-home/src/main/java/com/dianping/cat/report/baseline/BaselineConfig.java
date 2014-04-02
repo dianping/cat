@@ -14,11 +14,10 @@ public class BaselineConfig {
 
 	private List<Integer> m_days;
 
-	private double m_upperLimit;
 
-	private double m_lowerLimit;
-
-	private double m_minValue;
+	public List<Integer> getDays() {
+		return m_days;
+	}
 
 	public int getId() {
 		return m_id;
@@ -36,20 +35,8 @@ public class BaselineConfig {
 		return m_weights;
 	}
 
-	public List<Integer> getDays() {
-		return m_days;
-	}
-
-	public double getUpperLimit() {
-		return m_upperLimit;
-	}
-
-	public double getLowerLimit() {
-		return m_lowerLimit;
-	}
-
-	public double getMinValue() {
-		return m_minValue;
+	public void setDays(List<Integer> days) {
+		m_days = days;
 	}
 
 	public void setId(int id) {
@@ -66,22 +53,6 @@ public class BaselineConfig {
 
 	public void setWeights(List<Double> weights) {
 		m_weights = weights;
-	}
-
-	public void setDays(List<Integer> days) {
-		m_days = days;
-	}
-
-	public void setUpperLimit(double upperLimit) {
-		m_upperLimit = upperLimit;
-	}
-
-	public void setLowerLimit(double lowerLimit) {
-		m_lowerLimit = lowerLimit;
-	}
-
-	public void setMinValue(double minValue) {
-		m_minValue = minValue;
 	}
 
 }

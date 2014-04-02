@@ -33,6 +33,48 @@ public class DomainGroupConfigManager implements Initializable {
 		return m_domainGroup;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		try {
+			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			String content = config.getContent();
+
+			m_domainGroup = DefaultSaxParser.parse(content);
+			m_configId = config.getId();
+		} catch (DalNotFoundException e) {
+			try {
+				String content = Files.forIO().readFrom(
+				      this.getClass().getResourceAsStream("/config/default-domain-group-config.xml"), "utf-8");
+				Config config = m_configDao.createLocal();
+
+				config.setName(CONFIG_NAME);
+				config.setContent(content);
+				m_configDao.insert(config);
+
+				m_domainGroup = DefaultSaxParser.parse(content);
+				m_configId = config.getId();
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		if (m_domainGroup == null) {
+			m_domainGroup = new DomainGroup();
+		}
+	}
+
+	public boolean insert(String xml) {
+		try {
+			m_domainGroup = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
 	public String queryDefaultGroup(String domain) {
 		List<String> groups = queryDomainGroup(domain);
 
@@ -66,17 +108,6 @@ public class DomainGroupConfigManager implements Initializable {
 		return new ArrayList<String>();
 	}
 
-	public boolean insert(String xml) {
-		try {
-			m_domainGroup = DefaultSaxParser.parse(xml);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -93,36 +124,5 @@ public class DomainGroupConfigManager implements Initializable {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		try {
-			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-			String content = config.getContent();
-
-			m_domainGroup = DefaultSaxParser.parse(content);
-			m_configId = config.getId();
-		} catch (DalNotFoundException e) {
-			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-domain-group-config.xml"), "utf-8");
-				Config config = m_configDao.createLocal();
-
-				config.setName(CONFIG_NAME);
-				config.setContent(content);
-				m_configDao.insert(config);
-
-				m_domainGroup = DefaultSaxParser.parse(content);
-				m_configId = config.getId();
-			} catch (Exception ex) {
-				Cat.logError(ex);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		if (m_domainGroup == null) {
-			m_domainGroup = new DomainGroup();
-		}
 	}
 }

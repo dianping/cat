@@ -50,16 +50,6 @@ public class TopMetric extends BaseVisitor {
 
 	private Date m_start;
 
-	public TopMetric setStart(Date start) {
-		m_start = start;
-		return this;
-	}
-
-	public TopMetric setEnd(Date end) {
-		m_end = end;
-		return this;
-	}
-
 	public TopMetric(int count, int tops, ExceptionThresholdConfigManager configManager) {
 		m_configManager = configManager;
 		m_error = new MetricItem(count, tops, m_configManager);
@@ -94,8 +84,18 @@ public class TopMetric extends BaseVisitor {
 		return m_url;
 	}
 
+	public TopMetric setEnd(Date end) {
+		m_end = end;
+		return this;
+	}
+
 	public void setError(MetricItem error) {
 		m_error = error;
+	}
+
+	public TopMetric setStart(Date start) {
+		m_start = start;
+		return this;
 	}
 
 	@Override
@@ -174,20 +174,20 @@ public class TopMetric extends BaseVisitor {
 			m_configManager = configManager;
 		}
 
-		public int getAlert() {
-			return m_alert;
-		}
-
-		public String getDomain() {
-			return m_domain;
-		}
-
 		private String buildErrorText(String str, String color) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("<span style='color:" + color + "'>").append("<strong>");
 			sb.append(str).append("</strong>").append("</span>");
 
 			return sb.toString();
+		}
+
+		public int getAlert() {
+			return m_alert;
+		}
+
+		public String getDomain() {
+			return m_domain;
 		}
 
 		public String getErrorInfo() {
@@ -271,37 +271,15 @@ public class TopMetric extends BaseVisitor {
 
 		private ExceptionThresholdConfigManager m_configManager;
 
-		public MetricItem(int minuteCount, int itemSize, ExceptionThresholdConfigManager configManager) {
-			m_minuteCount = minuteCount;
-			m_itemSize = itemSize;
-			m_configManager = configManager;
-		}
-
 		public MetricItem(int minuteCount, int itemSize) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
 		}
 
-		private Item findOrCreateItem(String minute, String domain) {
-			Map<String, Item> temp = m_items.get(minute);
-
-			if (temp == null) {
-				temp = new HashMap<String, Item>();
-				m_items.put(minute, temp);
-			}
-			Item item = temp.get(domain);
-
-			if (item == null) {
-				item = new Item(domain, 0, m_configManager);
-				temp.put(domain, item);
-			}
-
-			return item;
-		}
-
-		public void addIndex(String minute, String domain, double value) {
-			Item item = findOrCreateItem(minute, domain);
-			item.setValue(item.getValue() + value);
+		public MetricItem(int minuteCount, int itemSize, ExceptionThresholdConfigManager configManager) {
+			m_minuteCount = minuteCount;
+			m_itemSize = itemSize;
+			m_configManager = configManager;
 		}
 
 		public void addError(String minute, String domain, String exception, long count) {
@@ -316,8 +294,9 @@ public class TopMetric extends BaseVisitor {
 			item.getException().put(exception, d);
 		}
 
-		public Map<String, List<Item>> getResult() {
-			return m_result;
+		public void addIndex(String minute, String domain, double value) {
+			Item item = findOrCreateItem(minute, domain);
+			item.setValue(item.getValue() + value);
 		}
 
 		public void buildDisplayResult() {
@@ -343,6 +322,27 @@ public class TopMetric extends BaseVisitor {
 				}
 			}
 			m_result = temp;
+		}
+
+		private Item findOrCreateItem(String minute, String domain) {
+			Map<String, Item> temp = m_items.get(minute);
+
+			if (temp == null) {
+				temp = new HashMap<String, Item>();
+				m_items.put(minute, temp);
+			}
+			Item item = temp.get(domain);
+
+			if (item == null) {
+				item = new Item(domain, 0, m_configManager);
+				temp.put(domain, item);
+			}
+
+			return item;
+		}
+
+		public Map<String, List<Item>> getResult() {
+			return m_result;
 		}
 	}
 

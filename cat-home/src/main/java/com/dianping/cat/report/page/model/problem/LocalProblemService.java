@@ -1,10 +1,13 @@
 package com.dianping.cat.report.page.model.problem;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -25,7 +28,14 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 		ProblemReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			report = getReportFromLocalDisk(request.getStartTime(), domain);
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+		
+			if (report == null) {
+				report = new ProblemReport(domain);
+				report.setStartTime(new Date(startTime));
+				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+			}
 		}
 		return report;
 	}

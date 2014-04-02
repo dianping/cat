@@ -17,7 +17,10 @@
 		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<<table>
+		<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+		<div class="opNav">
+		<%@ include file="metricOpNav.jsp" %>
+		<table>
 			<tr style="text-align: left">
 				<th>&nbsp;&nbsp;时间段选择: 
 					<c:forEach var="range" items="${model.allRange}">
@@ -32,8 +35,7 @@
 					</c:forEach>
 				</th>
 			</tr>
-		</table>
-		<%@ include file="metricOpNav.jsp" %>
+		</table></div>
       	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
    			<div style="float:left;">
    				<div id="${item.id}" class="metricGraph"></div>
@@ -58,6 +60,7 @@
 					</td>
 				</tr>
 			</table>	
+				<%@ include file="metricOpNav.jsp" %>
 			<table>
 				<tr style="text-align: left">
 					<th>&nbsp;&nbsp;时间段选择: 
@@ -74,7 +77,6 @@
 					</th>
 				</tr>
 			</table>
-				<%@ include file="metricOpNav.jsp" %>
 		      <div class="row-fluid">
 		        <div class="span2">
 		          <div class="well sidebar-nav">
@@ -111,9 +113,25 @@
 				var data = ${item.jsonString};
 				graphMetricChart(document.getElementById('${item.id}'), data);
 			</c:forEach>
+
+			var hide =${payload.hideNav};
 			
-			
+			if(hide){
+				$('.opNav').slideUp();
+				$('#switch').html("显示");
+			}
 		});
+		
+		function showOpNav() {
+			var b = $('#switch').html();
+			if (b == '隐藏') {
+				$('.opNav').slideUp();
+				$('#switch').html("显示");
+			} else {
+				$('.opNav').slideDown();
+				$('#switch').html("隐藏");
+			}
+		}
 	</script>
 <style type="text/css">
 .row-fluid .span2{

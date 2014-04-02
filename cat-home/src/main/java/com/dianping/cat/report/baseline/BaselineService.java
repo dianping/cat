@@ -6,9 +6,9 @@ import com.dianping.cat.home.dal.report.Baseline;
 
 public interface BaselineService {
 
+	public void insertBaseline(Baseline baseline);
+
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod);
 
 	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod);
-
-	public void insertBaseline(Baseline baseline);
 }

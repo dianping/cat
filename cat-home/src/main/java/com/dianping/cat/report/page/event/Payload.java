@@ -34,6 +34,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getGroup() {
+   	return m_group;
+   }
+
 	public String getName() {
 		return m_name;
 	}
@@ -54,6 +58,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_action = Action.getByName(action, Action.HOURLY_REPORT);
 	}
 
+	public void setGroup(String group) {
+   	m_group = group;
+   }
+
 	public void setName(String name) {
 		m_name = name;
 	}
@@ -69,14 +77,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
-
-	public String getGroup() {
-   	return m_group;
-   }
-
-	public void setGroup(String group) {
-   	m_group = group;
-   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

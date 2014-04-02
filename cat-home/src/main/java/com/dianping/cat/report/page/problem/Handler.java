@@ -28,6 +28,7 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
@@ -35,7 +36,6 @@ import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 
@@ -67,7 +67,30 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProblemReportAggregation m_problemReportAggregation;
 
-	private Gson m_gson = new Gson();
+	@Inject
+	private JsonBuilder m_jsonBuilder;
+
+	private ProblemReport buildFrontEndByRule(ProblemReport report) {
+		report.accept(m_problemReportAggregation);
+		return m_problemReportAggregation.getReport();
+	}
+
+	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
+		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+		List<String> removes = new ArrayList<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			String ip = machine.getIp();
+
+			if (!ips.contains(ip)) {
+				removes.add(ip);
+			}
+		}
+		for (String ip : removes) {
+			report.getMachines().remove(ip);
+		}
+		return report;
+	}
 
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
@@ -82,11 +105,6 @@ public class Handler implements PageHandler<Context> {
 			report = buildFrontEndByRule(report);
 		}
 		return report;
-	}
-
-	private ProblemReport buildFrontEndByRule(ProblemReport report) {
-		report.accept(m_problemReportAggregation);
-		return m_problemReportAggregation.getReport();
 	}
 
 	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
@@ -201,7 +219,7 @@ public class Handler implements PageHandler<Context> {
 			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
 
 			vistor.visitProblemReport(report);
-			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
+			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
 			break;
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload, VIEW);
@@ -223,7 +241,7 @@ public class Handler implements PageHandler<Context> {
 			start = report.getStartTime();
 			vistor = new HourlyLineChartVisitor(ip, type, state, start);
 			vistor.visitProblemReport(report);
-			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
+			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
 			break;
 		case HISTORY_GROUP_REPORT:
 			report = showSummarizeReport(model, payload);
@@ -256,23 +274,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
-		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-		List<String> removes = new ArrayList<String>();
-
-		for (Machine machine : report.getMachines().values()) {
-			String ip = machine.getIp();
-
-			if (!ips.contains(ip)) {
-				removes.add(ip);
-			}
-		}
-		for (String ip : removes) {
-			report.getMachines().remove(ip);
-		}
-		return report;
 	}
 
 	private void normalize(Model model, Payload payload) {

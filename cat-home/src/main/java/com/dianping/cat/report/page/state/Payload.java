@@ -37,6 +37,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
+	public String getSort() {
+		return m_sort;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY);
 	}
@@ -48,10 +52,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STATE);
-	}
-
-	public String getSort() {
-		return m_sort;
 	}
 
 	public void setSort(String sort) {

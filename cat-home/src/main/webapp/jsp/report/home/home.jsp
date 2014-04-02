@@ -27,7 +27,6 @@
    			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>用户文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>常见问题</strong></a></li>
    			 	<li class="text-right"><a href="#tab7" data-toggle="tab"><strong>插件扩展</strong></a></li>
-   			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>变更文档</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab0"><%@ include file="dianping.jsp"%></div>

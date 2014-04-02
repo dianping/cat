@@ -29,7 +29,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 	@Inject
 	private String m_serviceUri = "/cat/r/model";
-
+	
 	public BaseRemoteModelService(String name) {
 		m_name = name;
 	}
@@ -83,7 +83,6 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			}
 
 		} catch (Exception e) {
-			logError(e);
 			t.setStatus(e);
 			response.setException(e);
 		} finally {

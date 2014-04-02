@@ -25,6 +25,7 @@ import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
@@ -34,7 +35,6 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 
@@ -103,7 +103,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		chart.addItems(items);
-		model.setPieChart(new Gson().toJson(chart));
+		model.setPieChart(new JsonBuilder().toJson(chart));
 	}
 
 	private void calculateTps(Payload payload, EventReport report) {
