@@ -8,19 +8,27 @@ import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
-	
+	private String m_xml;
 	private String m_name;
-	private Test m_testList;
+	private List<Test> m_testList;
 	
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
-	public Test getTestList() {
+	public String getXml() {
+		return m_xml;
+	}
+
+	public void setXml(String xml) {
+		this.m_xml = xml;
+	}
+
+	public List<Test> getTestList() {
 		return m_testList;
 	}
 
-	public void setTestList(Test testList) {
+	public void setTestList(List<Test> testList) {
 		m_testList = testList;
 	}
 

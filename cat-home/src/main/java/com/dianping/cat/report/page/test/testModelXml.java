@@ -29,15 +29,17 @@ import org.junit.Assert;
 */
 
 public class testModelXml {
+	
 	public static void main(String[] args){
-		
+		System.out.println(check());
+	}
+	
+	public static String check(){
 		DefaultXmlBuilder builder = new DefaultXmlBuilder();
-		DefaultSaxParser parser = new DefaultSaxParser();
 		Animal animal = getAnimal();
 		String xmlString = builder.buildXml(animal);
-		System.out.println(xmlString);
 		try {
-	      Animal generatedAnimal = parser.parse(xmlString);
+	      Animal generatedAnimal = DefaultSaxParser.parse(xmlString);
 	      Assert.assertEquals(animal, generatedAnimal);
       } catch (SAXException e) {
 	      // TODO Auto-generated catch block
@@ -45,8 +47,10 @@ public class testModelXml {
       } catch (IOException e) {
 	      // TODO Auto-generated catch block
 	      e.printStackTrace();
-      }	
+      }
+		return xmlString;
 	}
+
 	
 	public static Animal getAnimal(){
 		Animal animal = new Animal();

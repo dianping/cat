@@ -2,7 +2,8 @@ package com.dianping.cat.report.page.test;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	INSERT("insert"),
-	QUERY("query");
+	QUERY("query"),
+	XML("xml");
 
 	private String m_name;
 

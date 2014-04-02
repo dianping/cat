@@ -53,12 +53,16 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case QUERY:
 			try {
-	         Test result = m_testDao.queryAll(TestEntity.READSET_FULL);
+	         List<Test> result = m_testDao.queryAll(TestEntity.READSET_FULL);
 	         model.setTestList(result);
          } catch (DalException e) {
 	         // TODO Auto-generated catch block
 	         e.printStackTrace();
          }
+			break;
+		case XML:
+			String xml = testModelXml.check();
+			model.setXml(xml);
 			break;
 		default:
 			throw new RuntimeException("Unknown action: " + action);			
