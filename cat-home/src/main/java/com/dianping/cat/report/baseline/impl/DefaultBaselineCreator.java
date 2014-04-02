@@ -61,7 +61,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 				result[i] = totalValue / totalWeight;
 			}
 		}
-		return denoise(result, 10);
+		return denoise(result, 30);
 	}
 
 	public double[] denoise(double[] data, int mixNumber) {
