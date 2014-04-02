@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.alteration;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.List;
 
@@ -107,9 +109,15 @@ public class Handler implements PageHandler<Context> {
 		alt.setUser(user);
 		alt.setAltGroup(group);
 		alt.setContent(content);
-		alt.setUrl(url);
 		alt.setHostname(hostname);
 		alt.setDate(date);
+		try {
+			alt.setUrl(URLDecoder.decode(url, "UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+      	Cat.logError(e);
+	      alt.setUrl("");
+      }
+
 		return alt;
 	}
 
@@ -150,7 +158,7 @@ public class Handler implements PageHandler<Context> {
 		} else if (status == 1) {
 			model.setInsertResult("{\"status\":500}");
 		} else if (status == 2) {
-			model.setInsertResult("{\"status\":200, \"errorMessage\":\"lack args\"}");
+			model.setInsertResult("{\"status\":500, \"errorMessage\":\"lack args\"}");
 		}
 	}
 	

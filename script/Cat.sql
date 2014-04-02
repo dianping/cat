@@ -2,6 +2,14 @@ CREATE DATABASE cat;
 
 use cat;
 
+CREATE TABLE `family` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '人名',
+  `age` tinyint(4) NOT NULL COMMENT '年龄',
+  `creation_date` datetime NOT NULL COMMENT '人物创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用于熟悉cat开发的表';
+
 CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',

@@ -23,6 +23,15 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("fullScreen")
 	private boolean fullScreen = false;
 	
+	@FieldMeta("showPuppet")
+	private boolean m_isShowPuppet = true;
+	
+	@FieldMeta("showWorkflow")
+	private boolean m_isShowWorkflow = true;
+
+	@FieldMeta("showLazyman")
+	private boolean m_isShowLazyman = true;
+
 	@FieldMeta("group")
 	private String m_group;
 
@@ -37,7 +46,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
-
+	
 	@FieldMeta("ip")
 	private String m_ip;
 	
@@ -58,7 +67,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("endTime")
 	private String m_endTime;
-
+	
 	@FieldMeta("hostname")
 	private String m_hostname;
 
@@ -84,11 +93,11 @@ public class Payload extends AbstractReportPayload<Action> {
       	return new Date();
       }
 	}
-	
+
 	public String getContent() {
 		return m_content;
 	}
-	
+
 	public String getDomain() {
 		if (m_domain == null || "".equals(m_domain)) {
 			return null;
@@ -96,7 +105,6 @@ public class Payload extends AbstractReportPayload<Action> {
 			return m_domain;
 		}
 	}
-	
 
 	public Date getEndTime() {
 		if (m_endTime == null || m_endTime.length() == 0) {
@@ -125,14 +133,15 @@ public class Payload extends AbstractReportPayload<Action> {
 			return m_hostname;
 		}
 	}
-
+	
 	public String getIp() {
 		return m_ip;
 	}
-
+	
 	public ReportPage getPage() {
 		return m_page;
 	}
+	
 
 	public Date getStartTime() {
 		if (m_startTime == null || m_startTime.length() == 0) {
@@ -168,6 +177,18 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public boolean isRefresh() {
 		return m_refresh;
+	}
+
+	public boolean isShowLazyman() {
+		return m_isShowLazyman;
+	}
+
+	public boolean isShowPuppet() {
+		return m_isShowPuppet;
+	}
+
+	public boolean isShowWorkflow() {
+		return m_isShowWorkflow;
 	}
 
 	public void setAction(String action) {
@@ -221,6 +242,18 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
+	}
+
+	public void setShowLazyman(boolean isShowLazyman) {
+		m_isShowLazyman = isShowLazyman;
+	}
+
+	public void setShowPuppet(boolean isShowPuppet) {
+		m_isShowPuppet = isShowPuppet;
+	}
+
+	public void setShowWorkflow(boolean isShowWorkflow) {
+		m_isShowWorkflow = isShowWorkflow;
 	}
 
 	public void setStartTime(String startTime) {

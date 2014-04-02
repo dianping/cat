@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu desc="something for eat">
+	<breakfast desc="something for eat in morning">
+	</breakfast>
+	<lunch desc="something for eat at noon">
+		<dessert desc="something very little but very delicious"></dessert>
+	</lunch>
+	<supper desc="something for eat at night">
+		<dessert desc="something very little but very delicious"></dessert>
+	</supper>
+</menu>
