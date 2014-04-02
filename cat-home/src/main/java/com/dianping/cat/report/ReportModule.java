@@ -45,7 +45,9 @@ com.dianping.cat.report.page.statistics.Handler.class,
 
 com.dianping.cat.report.page.alteration.Handler.class,
 
-com.dianping.cat.report.page.monitor.Handler.class
+com.dianping.cat.report.page.monitor.Handler.class,
+
+com.dianping.cat.report.page.test.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

@@ -160,7 +160,9 @@
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/domainGroup-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/metric-group-config-manifest.xml,</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/metric-group-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/animal-manifest.xml,
+								</manifest>
 						</configuration>
 					</execution>
 					<execution>

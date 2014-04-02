@@ -36,4 +36,7 @@
    <model package="com.dianping.cat.home.metricGroup" name="metric-group-config">
       <sample-model>src/test/resources/com/dianping/cat/system/config/metricGroup.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.animal" name="animal">
+      <sample-model>test.xml</sample-model>
+   </model>
 </wizard>
