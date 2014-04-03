@@ -71,7 +71,7 @@ public class MetricAlert implements Task, LogEnabled {
 		String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 		      config.getMetricKey());
 
-		if (minute > DATA_CHECK_MINUTE) {
+		if (minute >= DATA_CHECK_MINUTE - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
 			if (report != null) {
