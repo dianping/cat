@@ -77,7 +77,6 @@ public class AlertConfig {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		sb.append("[告警类型:").append(type).append("] ");
 		sb.append("[基线值:").append(baselines.toString()).append("] ");
 		sb.append("[实际值:").append(values.toString()).append("] ");
 		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");
