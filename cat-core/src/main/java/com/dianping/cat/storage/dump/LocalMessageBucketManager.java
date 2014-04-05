@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +45,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private File m_baseDir;
 
-	private Map<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
+	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -65,7 +64,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Logger m_logger;
 
-	private int m_gzipThreads = 10;
+	private int m_gzipThreads = 13;
 
 	private int m_gzipMessageSize = 5000;
 
@@ -73,47 +72,41 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
 
-	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
-
-	private long[] m_processMessages;
+	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
 
-		synchronized (m_buckets) {
-			for (String key : m_buckets.keySet()) {
-				if (key.startsWith(path)) {
-					keys.add(key);
-				}
+		for (String key : m_buckets.keySet()) {
+			if (key.startsWith(path)) {
+				keys.add(key);
 			}
-			try {
-				for (String key : keys) {
-					LocalMessageBucket bucket = m_buckets.get(key);
+		}
+		try {
+			for (String key : keys) {
+				LocalMessageBucket bucket = m_buckets.get(key);
 
-					try {
-						MessageBlock block = bucket.flushBlock();
+				try {
+					MessageBlock block = bucket.flushBlock();
 
-						if (block != null) {
-							m_messageBlocks.add(block);
-						}
-					} catch (IOException e) {
-						Cat.logError(e);
+					if (block != null) {
+						m_messageBlocks.add(block);
 					}
+				} catch (IOException e) {
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
 	public void close() throws IOException {
-		synchronized (m_buckets) {
-			for (LocalMessageBucket bucket : m_buckets.values()) {
-				bucket.close();
-			}
-			m_buckets.clear();
+		for (LocalMessageBucket bucket : m_buckets.values()) {
+			bucket.close();
 		}
+		m_buckets.clear();
 	}
 
 	@Override
@@ -133,7 +126,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;
 		}
-		m_processMessages = new long[m_gzipThreads];
 
 		for (int i = 0; i < m_gzipThreads; i++) {
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
@@ -177,9 +169,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
-						synchronized (m_buckets) {
-							m_buckets.put(dataFile, bucket);
-						}
+						m_buckets.putIfAbsent(dataFile, bucket);
 					}
 				}
 				if (bucket != null) {
@@ -347,7 +337,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			abs = -abs;
 		}
 		int bucketIndex = abs % m_gzipThreads;
-		m_processMessages[bucketIndex]++;
 
 		logStorageState(tree);
 
@@ -442,9 +431,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 					bucket.setBaseDir(m_baseDir);
 					bucket.initialize(dataFile);
-					synchronized (m_buckets) {
-						m_buckets.put(dataFile, bucket);
-					}
+					m_buckets.putIfAbsent(dataFile, bucket);
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();

@@ -85,22 +85,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	protected void process(MessageTree tree) {
-		if (tree.getMessage() == null) {
-			return;
-		}
-
-		MessageId id = MessageId.parse(tree.getMessageId());
+		MessageId messageId = MessageId.parse(tree.getMessageId());
 		String domain = tree.getDomain();
 
-		if (id.getVersion() == 2) {
+		if (messageId.getVersion() == 2) {
 			try {
 				long time = tree.getMessage().getTimestamp();
 				long fixedTime = time - time % (60 * 60 * 1000);
-				long idTime = id.getTimestamp();
+				long idTime = messageId.getTimestamp();
 				long duration = fixedTime - idTime;
 
 				if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-					m_bucketManager.storeMessage(tree, id);
+					m_bucketManager.storeMessage(tree, messageId);
 				} else {
 					m_serverStateManager.addPigeonTimeError(1);
 

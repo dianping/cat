@@ -45,6 +45,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	@Override
+   public String getReportType() {
+	   return "day";
+   }
+
+	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
 			m_action = Action.VIEW;
