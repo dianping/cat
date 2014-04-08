@@ -35,15 +35,15 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
-	private Logger m_logger;
-
 	private PeriodManager m_periodManager;
 
 	private long m_networkError;
 
+	private Logger m_logger;
+
 	public static final long MINUTE = 60 * 1000L;
 
-	public static long DURATION = 60 * MINUTE;
+	public static final long DURATION = 60 * MINUTE;
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -128,9 +128,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	private void logErrorInfo(MessageTree tree) {
-		m_serverStateManager.addNetworkTimeError(1);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		String domain = tree.getDomain();
 		Integer size = m_errorTimeDomains.get(domain);
 
@@ -140,10 +137,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			size++;
 		}
 
+		m_serverStateManager.addNetworkTimeError(1);
 		m_errorTimeDomains.put(domain, size);
 		m_networkError++;
 
 		if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+
 			m_logger.error("Error network time:" + m_errorTimeDomains);
 			m_logger.error("The timestamp of message is out of range, IGNORED! "
 			      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "

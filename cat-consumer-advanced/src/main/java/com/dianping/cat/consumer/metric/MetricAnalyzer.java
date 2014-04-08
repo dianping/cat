@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -20,7 +19,6 @@ import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
@@ -77,31 +75,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return report;
 	}
 
-	private MetricReport transform(MetricReport report) {
-		Map<String, MetricItem> items = report.getMetricItems();
-
-		for (Entry<String, MetricItem> item : items.entrySet()) {
-			MetricItem metricItem = item.getValue();
-			Map<Integer, Segment> segs = metricItem.getSegments();
-
-			if (segs.size() == 0) {
-				Map<Integer, Point> oldPoints = metricItem.findOrCreateAbtest("-1").findOrCreateGroup("").getPoints();
-
-				for (Point point : oldPoints.values()) {
-					Segment seg = new Segment();
-
-					seg.setId(point.getId());
-					seg.setCount(point.getCount());
-					seg.setAvg(point.getAvg());
-					seg.setSum(point.getSum());
-
-					segs.put(seg.getId(), seg);
-				}
-			}
-		}
-		return report;
-	}
-
 	protected void loadReports() {
 		Bucket<String> reportBucket = null;
 
@@ -112,7 +85,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				String xml = reportBucket.findById(id);
 				MetricReport report = DefaultSaxParser.parse(xml);
 
-				m_reports.put(report.getProduct(), transform(report));
+				m_reports.put(report.getProduct(), report);
 			}
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when loading metric reports of %s!", new Date(m_startTime)), e);
