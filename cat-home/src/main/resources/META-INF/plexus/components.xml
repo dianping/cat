@@ -2102,9 +2102,6 @@
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event-local</role-hint>
 					<field-name>m_eventService</field-name>
@@ -2158,15 +2155,6 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>dependency-local</role-hint>
 					<field-name>m_dependencyService</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

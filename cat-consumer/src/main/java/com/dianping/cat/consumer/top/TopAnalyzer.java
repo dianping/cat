@@ -31,7 +31,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
-	
+
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
@@ -64,9 +64,9 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
-		
+
 		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
-		
+
 		for (String domainName : domains) {
 			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
@@ -76,7 +76,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		}
 
 		ProblemReportVisitor problemReportVisitor = new ProblemReportVisitor(topReport);
-		
+
 		for (String domainName : domains) {
 			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
 				ProblemReport report = m_problemAnalyzer.getReport(domainName);
@@ -89,7 +89,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	protected void process(MessageTree tree) {
-		// do nothing
 	}
 
 	public synchronized void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {

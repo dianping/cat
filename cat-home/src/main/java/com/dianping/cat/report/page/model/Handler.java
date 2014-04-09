@@ -1,9 +1,13 @@
 package com.dianping.cat.report.page.model;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.unidal.lookup.ContainerHolder;
@@ -58,8 +62,6 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
-	@Inject
-	private JspViewer m_jspViewer;
 
 	@Inject(type = ModelService.class, value = "event-local")
 	private LocalEventService m_eventService;
@@ -146,6 +148,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		HttpServletResponse httpResponse = ctx.getHttpServletResponse();
 
 		model.setAction(Action.XML);
 		model.setPage(ReportPage.MODEL);
@@ -200,15 +203,28 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			if (response != null) {
 				Object dataModel = response.getModel();
 
-				model.setModel(dataModel);
-				model.setModelInXml(dataModel == null ? "" : doFilter(payload, dataModel));
+				if (dataModel != null) {
+					ServletOutputStream outputStream = httpResponse.getOutputStream();
+					String xml = doFilter(payload, dataModel);
+					byte[] compress = compress(xml);
+
+					httpResponse.setContentType("application/xml;charset=UTF-8");
+					httpResponse.addHeader("Content-Encoding", "gzip");
+					outputStream.write(compress);
+					outputStream.close();
+				}
 			}
 		} catch (Throwable e) {
-			model.setException(e);
 			Cat.logError(e);
 		}
+	}
 
-		m_jspViewer.view(ctx, model);
+	private byte[] compress(String str) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		GZIPOutputStream gzip = new GZIPOutputStream(out);
+		gzip.write(str.getBytes());
+		gzip.close();
+		return out.toByteArray();
 	}
 
 	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
@@ -319,7 +335,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
-	public static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+	public static class TransactionReportFilter extends
+	      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
 		private String m_name;
