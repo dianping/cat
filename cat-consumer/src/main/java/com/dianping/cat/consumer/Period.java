@@ -146,7 +146,9 @@ public class Period {
 		      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 		for (PeriodTask task : m_tasks) {
-			Threads.forGroup("Cat-RealtimeConsumer").start(task);
+			if (task.getAnalyzer().isRawAnalyzer()) {
+				Threads.forGroup("Cat-RealtimeConsumer").start(task);
+			}
 		}
 	}
 }

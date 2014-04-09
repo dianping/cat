@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -57,12 +58,19 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		final long startTime = getStartTime();
+		Transaction t = Cat.newTransaction("Checkpoint", "dump");
 
-		checkpointAsyc(startTime);
+		try {
+			long startTime = getStartTime();
 
-		m_logger.info("Old version domains:" + m_oldVersionDomains);
-		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
+			checkpointAsyc(startTime);
+			m_logger.info("Old version domains:" + m_oldVersionDomains);
+			m_logger.info("Error timestamp:" + m_errorTimestampDomains);
+		} catch (Exception e) {
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override

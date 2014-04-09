@@ -3,6 +3,8 @@ package com.dianping.cat.analysis;
 import com.dianping.cat.message.spi.MessageQueue;
 
 public interface MessageAnalyzer {
+	public boolean isRawAnalyzer();
+	
 	public void analyze(MessageQueue queue);
 
 	public void destroy();

@@ -58,6 +58,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
+	public boolean isRawAnalyzer() {
+		return false;
+	}
+
+	@Override
 	public synchronized TopReport getReport(String domain) {
 		Set<String> domains = m_transactionAnalyzer.getDomains();
 		TopReport topReport = new TopReport(Constants.CAT);

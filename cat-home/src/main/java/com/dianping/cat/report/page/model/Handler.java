@@ -208,7 +208,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					String xml = doFilter(payload, dataModel);
 					byte[] compress = compress(xml);
 
-					httpResponse.setContentType("application/xml;charset=UTF-8");
+					httpResponse.setContentType("application/xml;charset=utf-8");
 					httpResponse.addHeader("Content-Encoding", "gzip");
 					outputStream.write(compress);
 					outputStream.close();
