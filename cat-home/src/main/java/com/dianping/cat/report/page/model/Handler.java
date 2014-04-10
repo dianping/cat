@@ -233,7 +233,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					httpResponse.setContentType("application/xml;charset=utf-8");
 					httpResponse.addHeader("Content-Encoding", "gzip");
 					outputStream.write(compress);
-					outputStream.close();
 				}
 			}
 		} catch (Throwable e) {

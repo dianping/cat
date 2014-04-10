@@ -175,7 +175,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setCount(Integer.parseInt(datas[0]));
 			config.setValue(Double.parseDouble(datas[1]));
-			config.setShowCount(true);
+			config.setShowCount(false);
 			config.setShowSum(true);
 		} else {
 			return null;
