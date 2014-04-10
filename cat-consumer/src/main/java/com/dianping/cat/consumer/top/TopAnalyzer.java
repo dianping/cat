@@ -63,7 +63,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
-	public synchronized TopReport getReport(String domain) {
+	public TopReport getReport(String domain) {
 		Set<String> domains = m_transactionAnalyzer.getDomains();
 		TopReport topReport = new TopReport(Constants.CAT);
 
@@ -96,11 +96,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	protected void process(MessageTree tree) {
 	}
 
-	public synchronized void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
+	public void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
 		m_problemAnalyzer = problemAnalyzer;
 	}
 
-	public synchronized void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
+	public void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
 		m_transactionAnalyzer = transactionAnalyzer;
 	}
 

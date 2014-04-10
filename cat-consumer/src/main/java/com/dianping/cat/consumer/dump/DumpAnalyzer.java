@@ -66,6 +66,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			checkpointAsyc(startTime);
 			m_logger.info("Old version domains:" + m_oldVersionDomains);
 			m_logger.info("Error timestamp:" + m_errorTimestampDomains);
+			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			t.setStatus(e);
 		} finally {

@@ -63,26 +63,29 @@ import com.dianping.cat.service.ModelResponse;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
 
+	@Inject(type = ModelService.class, value = "cross-local")
+	private LocalCrossService m_crossService;
+
+	@Inject(type = ModelService.class, value = "dependency-local")
+	private LocalDependencyService m_dependencyService;
+
 	@Inject(type = ModelService.class, value = "event-local")
 	private LocalEventService m_eventService;
 
 	@Inject(type = ModelService.class, value = "heartbeat-local")
 	private LocalHeartbeatService m_heartbeatService;
 
-	@Inject(type = ModelService.class, value = "message-local")
-	private LocalMessageService m_messageService;
-
 	@Inject(type = ModelService.class, value = "matrix-local")
 	private LocalMatrixService m_matrixService;
 
+	@Inject(type = ModelService.class, value = "message-local")
+	private LocalMessageService m_messageService;
+
+	@Inject(type = ModelService.class, value = "metric-local")
+	private LocalMetricService m_metricService;
+
 	@Inject(type = ModelService.class, value = "problem-local")
 	private LocalProblemService m_problemService;
-
-	@Inject(type = ModelService.class, value = "transaction-local")
-	private LocalTransactionService m_transactionService;
-
-	@Inject(type = ModelService.class, value = "cross-local")
-	private LocalCrossService m_crossService;
 
 	@Inject(type = ModelService.class, value = "state-local")
 	private LocalStateService m_stateService;
@@ -90,11 +93,18 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "top-local")
 	private LocalTopService m_topService;
 
-	@Inject(type = ModelService.class, value = "metric-local")
-	private LocalMetricService m_metricService;
+	@Inject(type = ModelService.class, value = "transaction-local")
+	private LocalTransactionService m_transactionService;
 
-	@Inject(type = ModelService.class, value = "dependency-local")
-	private LocalDependencyService m_dependencyService;
+	private static final int DEFAULT_SIZE = 32 * 1024;
+
+	private byte[] compress(String str) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 32);
+		GZIPOutputStream gzip = new GZIPOutputStream(out);
+		gzip.write(str.getBytes());
+		gzip.close();
+		return out.toByteArray();
+	}
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -111,7 +121,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 				return filter.buildXml((IEntity<?>) dataModel);
 			}
-
 		} else if (EventAnalyzer.ID.equals(report)) {
 			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName(), ipAddress);
 
@@ -131,6 +140,19 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
+		} else if (MatrixAnalyzer.ID.equals(report)) {
+			return new MatrixReportFilter().buildXml((com.dianping.cat.consumer.matrix.model.IEntity<?>) dataModel);
+		} else if (CrossAnalyzer.ID.equals(report)) {
+			return new CrossReportFilter().buildXml((com.dianping.cat.consumer.cross.model.IEntity<?>) dataModel);
+		} else if (StateAnalyzer.ID.equals(report)) {
+			return new StateReportFilter().buildXml((com.dianping.cat.consumer.state.model.IEntity<?>) dataModel);
+		} else if (TopAnalyzer.ID.equals(report)) {
+			return new TopReportFilter().buildXml((com.dianping.cat.consumer.top.model.IEntity<?>) dataModel);
+		} else if (MetricAnalyzer.ID.equals(report)) {
+			return new MetricReportFilter().buildXml((com.dianping.cat.consumer.metric.model.IEntity<?>) dataModel);
+		} else if (DependencyAnalyzer.ID.equals(report)) {
+			return new DependencyReportFilter()
+			      .buildXml((com.dianping.cat.consumer.dependency.model.IEntity<?>) dataModel);
 		} else {
 			return String.valueOf(dataModel);
 		}
@@ -219,12 +241,17 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
-	private byte[] compress(String str) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		GZIPOutputStream gzip = new GZIPOutputStream(out);
-		gzip.write(str.getBytes());
-		gzip.close();
-		return out.toByteArray();
+	public static class CrossReportFilter extends com.dianping.cat.consumer.cross.model.transform.DefaultXmlBuilder {
+		public CrossReportFilter() {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
+	}
+
+	public static class DependencyReportFilter extends
+	      com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder {
+		public DependencyReportFilter() {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
 	}
 
 	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
@@ -235,6 +262,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_type;
 
 		public EventReportFilter(String type, String name, String ip) {
+			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_type = type;
 			m_name = name;
 			m_ipAddress = ip;
@@ -280,6 +308,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_ip;
 
 		public HeartBeatReportFilter(String ip) {
+			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_ip = ip;
 		}
 
@@ -291,6 +320,18 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
+	public static class MatrixReportFilter extends com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder {
+		public MatrixReportFilter() {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
+	}
+
+	public static class MetricReportFilter extends com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder {
+		public MetricReportFilter() {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
+	}
+
 	public static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
@@ -298,6 +339,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_type;
 
 		public ProblemReportFilter(String ipAddress, String threadId, String type) {
+			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_ipAddress = ipAddress;
 			m_type = type;
 		}
@@ -335,6 +377,18 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
+	public static class StateReportFilter extends com.dianping.cat.consumer.state.model.transform.DefaultXmlBuilder {
+		public StateReportFilter() {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
+	}
+
+	public static class TopReportFilter extends com.dianping.cat.consumer.top.model.transform.DefaultXmlBuilder {
+		public TopReportFilter() {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
+	}
+
 	public static class TransactionReportFilter extends
 	      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
@@ -344,6 +398,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_type;
 
 		public TransactionReportFilter(String type, String name, String ip) {
+			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_type = type;
 			m_name = name;
 			m_ipAddress = ip;
