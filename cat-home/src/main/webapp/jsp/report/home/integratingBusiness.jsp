@@ -25,7 +25,7 @@
 <h5>1).每个指标都有一个String作为它的唯一KEY，这个KEY在整个产品线中，不能重复。产品线的配置参考第三步。</h5>
 <p>比如团购业务中，有两个核心指标，一个订单数量，一个是支付数量</p>
 <p>对这两个指标定义两个唯一的String，OrderCount 和 PayCount</p>
-<p class="text-error">KEY仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用PayCount这类命名方式。</p>
+<h5 class="text-error">KEY仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用PayCount这类命名方式。</h5>
 </br>
 
 <h4 class="text-success">第二步:业务代码埋点</h4>
@@ -46,7 +46,7 @@
 	http://cat.dianpingoa.com/cat/r/systemMonitor?
 </pre>
 <p>参数说明</p>
-<table style="width:50%" class="table table-striped table-bordered table-condensed">
+<table style="width:90%" class="table table-striped table-bordered table-condensed">
 	<tr><th width="30%">参数</th><th>说明</th></tr>
 	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</span></td></tr>
 	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用TuanGouWeb这类命名方式</span></td></tr>
