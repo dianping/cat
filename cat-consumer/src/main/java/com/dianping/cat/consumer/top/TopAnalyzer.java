@@ -9,6 +9,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -72,21 +73,29 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
 
-		for (String domainName : domains) {
-			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
-				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
+		for (String name : domains) {
+			try {
+				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
+					TransactionReport report = m_transactionAnalyzer.getReport(name);
 
-				transactionReportVisitor.visitTransactionReport(report);
+					transactionReportVisitor.visitTransactionReport(report);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 
 		ProblemReportVisitor problemReportVisitor = new ProblemReportVisitor(topReport);
 
-		for (String domainName : domains) {
-			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
-				ProblemReport report = m_problemAnalyzer.getReport(domainName);
+		for (String name : domains) {
+			try {
+				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
+					ProblemReport report = m_problemAnalyzer.getReport(name);
 
-				problemReportVisitor.visitProblemReport(report);
+					problemReportVisitor.visitProblemReport(report);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return topReport;
