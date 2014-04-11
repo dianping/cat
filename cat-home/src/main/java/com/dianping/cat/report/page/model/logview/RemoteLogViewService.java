@@ -71,8 +71,7 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 			}
 			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
-			t.setStatus(e);
-			response.setException(e);
+			t.setStatus(Message.SUCCESS);
 		} finally {
 			t.complete();
 		}
