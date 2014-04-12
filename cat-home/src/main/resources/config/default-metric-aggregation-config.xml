@@ -1,0 +1,16 @@
+<metric-aggregation-config>
+	<metric-aggregation-group id="f5-2400-1-dianping-com">
+		<metric-aggregation>
+			<metric-aggregation-item key="1/1-1-in" />
+			<metric-aggregation-item key="1/1-2-in" />
+			<metric-aggregation-item key="1/1-3-in" />
+			<metric-aggregation-item key="1/1-4-in" />
+		</metric-aggregation>
+		<metric-aggregation>
+			<metric-aggregation-item key="1/1-1-out" />
+			<metric-aggregation-item key="1/1-2-out" />
+			<metric-aggregation-item key="1/1-3-out" />
+			<metric-aggregation-item key="1/1-4-out" />
+		</metric-aggregation>
+	</metric-aggregation-group>
+</metric-aggregation-config>
