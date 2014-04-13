@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.home.metricAggregation"
-   enable-merger="true"  enable-sax-parser="true"
-	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true" enable-native-parser="true" 
-	enable-native-builder="true"
+<model model-package="com.dianping.cat.home.metricAggregation" enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true" enable-native-parser="true"  enable-native-builder="true"
 	enable-xml-parser="false"  enable-xml-builder="false">
   <entity name="metric-aggregation-config" root="true">
-    <entity-ref name="metric-aggregation-group" />
+    <entity-ref name="metric-aggregation-group" type="map" names="metric-aggregation-groups" />
   </entity>
-  <entity name="metric-aggregation-group">
+  <entity name="metric-aggregation-group" key="true">
     <attribute name="id" value-type="String" />
-    <entity-ref name="metric-aggregation-item" type="list" names="metric-aggregation" xml-indent="true" />
+    <entity-ref name="metric-aggregation" type="list" names="metric-aggregations" />
+  </entity>
+  <entity name="metric-aggregation">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="metric-aggregation-item" type="list" names="metric-aggregation-items" />
   </entity>
   <entity name="metric-aggregation-item">
     <attribute name="key" value-type="String" />
   </entity>
 </model>
+

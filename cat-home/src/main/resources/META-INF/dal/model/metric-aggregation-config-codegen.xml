@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="metric-aggregation-config" root="true">
-    <entity-ref name="metric-aggregation-group" />
+    <entity-ref name="metric-aggregation-group" type="map" names="metric-aggregation-groups" />
   </entity>
   <entity name="metric-aggregation-group">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="metric-aggregation" type="list" names="metric-aggregations" />
+  </entity>
+  <entity name="metric-aggregation">
     <attribute name="id" value-type="String" />
-    <entity-ref name="metric-aggregation-item" type="list" names="metric-aggregation" xml-indent="true" />
+    <entity-ref name="metric-aggregation-item" type="list" names="metric-aggregation-items" />
   </entity>
   <entity name="metric-aggregation-item">
     <attribute name="key" value-type="String" />
