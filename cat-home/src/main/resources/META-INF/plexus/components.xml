@@ -2102,7 +2102,14 @@
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.JspViewer</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>cross-local</role-hint>
+					<field-name>m_crossService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency-local</role-hint>
+					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2116,28 +2123,23 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>message-local</role-hint>
-					<field-name>m_messageService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>matrix-local</role-hint>
 					<field-name>m_matrixService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>message-local</role-hint>
+					<field-name>m_messageService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric-local</role-hint>
+					<field-name>m_metricService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem-local</role-hint>
 					<field-name>m_problemService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>transaction-local</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>cross-local</role-hint>
-					<field-name>m_crossService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2151,22 +2153,32 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>metric-local</role-hint>
-					<field-name>m_metricService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>dependency-local</role-hint>
-					<field-name>m_dependencyService</field-name>
+					<role-hint>transaction-local</role-hint>
+					<field-name>m_transactionService</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.model.cross.LocalCrossService</role>
+			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.dependency.LocalDependencyService</role>
+			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2195,6 +2207,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.matrix.LocalMatrixService</role>
+			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.logview.LocalMessageService</role>
 			<implementation>com.dianping.cat.report.page.model.logview.LocalMessageService</implementation>
 			<requirements>
@@ -2212,8 +2236,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.matrix.LocalMatrixService</role>
-			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<role>com.dianping.cat.report.page.model.metric.LocalMetricService</role>
+			<implementation>com.dianping.cat.report.page.model.metric.LocalMetricService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -2226,30 +2250,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.problem.LocalProblemService</role>
 			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
-			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.cross.LocalCrossService</role>
-			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -2284,20 +2284,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.metric.LocalMetricService</role>
-			<implementation>com.dianping.cat.report.page.model.metric.LocalMetricService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.dependency.LocalDependencyService</role>
-			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
+			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>

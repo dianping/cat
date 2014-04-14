@@ -25,6 +25,7 @@
 <h5>1).每个指标都有一个String作为它的唯一KEY，这个KEY在整个产品线中，不能重复。产品线的配置参考第三步。</h5>
 <p>比如团购业务中，有两个核心指标，一个订单数量，一个是支付数量</p>
 <p>对这两个指标定义两个唯一的String，OrderCount 和 PayCount</p>
+<h5 class="text-error">KEY仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用PayCount这类命名方式。</h5>
 </br>
 
 <h4 class="text-success">第二步:业务代码埋点</h4>
@@ -34,7 +35,9 @@
 <p> 2).logMetricForDuration用于记录一个指标出现的平均值</p>
 <p> 3).logMetricForSum用于记录一个指标出现的总和</p>
 <p class='text-error'> 4).OrderCount，PayCount记录次数选用logMetricForCount这个API</p>
-<p> 5).集成代码可能是如下所示</p>
+<p> 5).集成代码可能是如下所示，下面描述了综合使用transction，event，metric这几个API，但这些指标都是独立的，可以单独使用，主要看业务场景。
+	如果仅仅是记录一个业务指标，只需要单独使用一个metric即可。
+</p>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business04.png"/>
 <h5>2.HTTP API调用方式</h5>
 <p>接口调用请求说明</p>
@@ -43,11 +46,11 @@
 	http://cat.dianpingoa.com/cat/r/systemMonitor?
 </pre>
 <p>参数说明</p>
-<table style="width:50%" class="table table-striped table-bordered table-condensed">
+<table style="width:90%" class="table table-striped table-bordered table-condensed">
 	<tr><th width="30%">参数</th><th>说明</th></tr>
-	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-error">必需</span></td></tr>
-	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-error">必需</span></td></tr>
-	<tr><td>key</td><td>监控业务唯一ID名称，<span class="text-error">必需</span></td></tr>
+	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</span></td></tr>
+	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用TuanGouWeb这类命名方式</span></td></tr>
+	<tr><td>key</td><td>监控业务唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用PayCount这类命名方式</span></td></tr>
 	<tr><td>op</td><td>sum，avg，count[<span class="text-error">默认</span>]</td></tr>
 	<tr><td>count</td><td>op=count时所需，<span class="text-error">默认为1</span></td></tr>
 	<tr><td>sum</td><td>op=sum时所需，<span class="text-error">默认为0</span></td></tr>
@@ -78,7 +81,7 @@
 <p><span class='text-error'>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示</span></p>
 <p><span class='text-error'>2、告警邮件:当这个产品线下的业务指标出现异常时，会发送邮件到此邮箱</span></p>
 <p><span class='text-error'>3、告警短信:当这个产品线下的业务指标出现异常时，会发送邮件到此号码</span></p>
-<h4 class="text-error">url : <a href="" target="_blank">链接</a></h4>
+<h4 class="text-error">url : <a href="" target="/cat/s/config?op=topologyProductLines">链接</a></h4>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business01.png"/>
 </br> 
 <h4 class="text-success">第四步:图形展示以及告警配置</h4>

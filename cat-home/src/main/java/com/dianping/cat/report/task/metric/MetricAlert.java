@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.metric;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,7 +71,7 @@ public class MetricAlert implements Task, LogEnabled {
 		String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 		      config.getMetricKey());
 
-		if (minute > DATA_CHECK_MINUTE) {
+		if (minute >= DATA_CHECK_MINUTE - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
 			if (report != null) {
@@ -296,11 +295,10 @@ public class MetricAlert implements Task, LogEnabled {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
 		String title = m_alertConfig.buildMailTitle(productLine, config);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);
-		m_mailSms.sendSms(title + " " + sdf.format(new Date()), content, phones);
+		m_mailSms.sendSms(title + " " + content, content, phones);
 
 		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}

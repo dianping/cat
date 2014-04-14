@@ -48,7 +48,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
 			if (bucket != null) {
-				bucket.close();
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

@@ -65,6 +65,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 			m_tagToIds.clear();
 			m_writeDataFile.close();
 			m_writeIndexFile.close();
+			m_readDataFile.close();
 		} finally {
 			m_writeLock.unlock();
 		}

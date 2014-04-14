@@ -5,7 +5,6 @@ import static com.dianping.cat.Constants.HOUR;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -93,13 +92,13 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				reports = m_reports.get(startTime);
 
 				if (reports == null) {
-					reports = new HashMap<String, T>();
+					reports = new ConcurrentHashMap<String, T>();
 					m_reports.put(startTime, reports);
 				}
 			}
 		}
 
-		T report = reports == null ? null : reports.get(domain);
+		T report = reports.get(domain);
 
 		if (report == null && createIfNotExist) {
 			synchronized (reports) {
@@ -111,7 +110,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		if (report == null) {
 			report = m_reportDelegate.makeReport(domain, startTime, HOUR);
 		}
-		
+
 		return report;
 	}
 
@@ -140,7 +139,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		Bucket<String> bucket = null;
 
 		if (reports == null) {
-			reports = new HashMap<String, T>();
+			reports = new ConcurrentHashMap<String, T>();
 			m_reports.put(startTime, reports);
 		}
 

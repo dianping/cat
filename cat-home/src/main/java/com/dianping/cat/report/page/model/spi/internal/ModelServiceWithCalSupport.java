@@ -6,8 +6,8 @@ import java.io.StringWriter;
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
 
 public abstract class ModelServiceWithCalSupport extends ContainerHolder {
@@ -28,13 +28,13 @@ public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 	}
 
 	protected void logEvent(String type, String name, String status, String nameValuePairs) {
-		DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
-		Event event = cat.newEvent(m_current, type, name);
+		DefaultEvent event = new DefaultEvent(type, name);
+
+		m_current.addChild(event);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
 			event.addData(nameValuePairs);
 		}
-
 		event.setStatus(status);
 		event.complete();
 	}
