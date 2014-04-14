@@ -22,7 +22,7 @@ public class AlertConfigTest {
 		double[] baseline2 = { 100, 100 };
 		double[] value2 = { 49, 49 };
 		result = alertConfig.checkData(config, value2, baseline2, MetricType.COUNT);
-		Assert.assertEquals(result.getKey().booleanValue(), true);
+		Assert.assertEquals(result.getKey().booleanValue(), false);
 
 		double[] baseline3 = { 100, 100 };
 		double[] value3 = { 51, 49 };
@@ -64,6 +64,6 @@ public class AlertConfigTest {
 		config.setDecreasePercentage(50);
 		config.setDecreasePercentage(50);
 		result = alertConfig.checkData(config, value5, baseline5, MetricType.COUNT);
-		Assert.assertEquals(result.getKey().booleanValue(), false);
+		Assert.assertEquals(result.getKey().booleanValue(), true);
 	}
 }
