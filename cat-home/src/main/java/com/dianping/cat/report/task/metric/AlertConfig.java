@@ -54,7 +54,7 @@ public class AlertConfig {
 			decreasePercent = 50;
 		}
 		if (decreaseValue == 0) {
-			decreaseValue = 50;
+			decreaseValue = 100;
 		}
 
 		for (int i = 0; i < length; i++) {

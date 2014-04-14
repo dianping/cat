@@ -224,16 +224,18 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 			if (response != null) {
 				Object dataModel = response.getModel();
+				String xml = "";
 
 				if (dataModel != null) {
-					ServletOutputStream outputStream = httpResponse.getOutputStream();
-					String xml = doFilter(payload, dataModel);
-					byte[] compress = compress(xml);
-
-					httpResponse.setContentType("application/xml;charset=utf-8");
-					httpResponse.addHeader("Content-Encoding", "gzip");
-					outputStream.write(compress);
+					xml = doFilter(payload, dataModel);
 				}
+
+				ServletOutputStream outputStream = httpResponse.getOutputStream();
+				byte[] compress = compress(xml);
+
+				httpResponse.setContentType("application/xml;charset=utf-8");
+				httpResponse.addHeader("Content-Encoding", "gzip");
+				outputStream.write(compress);
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);
