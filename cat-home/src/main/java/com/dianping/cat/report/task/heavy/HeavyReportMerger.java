@@ -58,18 +58,18 @@ public class HeavyReportMerger extends DefaultMerger {
 		old.setName(url.getName());
 	}
 
-	public static class UrlComparator implements Comparator<Url> {
-
-		@Override
-		public int compare(Url o1, Url o2) {
-			return (int) (o2.getCount() - o1.getCount());
-		}
-	}
-
 	public static class ServiceComparator implements Comparator<Service> {
 
 		@Override
 		public int compare(Service o1, Service o2) {
+			return (int) (o2.getCount() - o1.getCount());
+		}
+	}
+
+	public static class UrlComparator implements Comparator<Url> {
+
+		@Override
+		public int compare(Url o1, Url o2) {
 			return (int) (o2.getCount() - o1.getCount());
 		}
 	}

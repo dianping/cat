@@ -18,9 +18,9 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.GraphEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
-import com.google.gson.Gson;
 
 public class HistoryGraphs extends BaseHistoryGraphs {
 
@@ -244,7 +244,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			List<LineChart> diskInfo = getDiskInfo(graphData, start, size);
 
 			model.setDisks(diskInfo.size());
-			model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
+			model.setDiskHistoryGraph(new JsonBuilder().toJson(diskInfo));
 		} else if (queryType.equalsIgnoreCase("cat")) {
 			model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced",
 			      start, size, graphData).getJsonString());

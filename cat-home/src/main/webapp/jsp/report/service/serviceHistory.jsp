@@ -10,6 +10,7 @@
 <a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
+
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#service').addClass('active');
@@ -52,6 +53,7 @@
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=total&reportType=${payload.reportType}">Total</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failure&reportType=${payload.reportType}">Failure</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">Failure%</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=availability&reportType=${payload.reportType}">Availability%</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=avg&reportType=${payload.reportType}">Avg(ms)</th>
 				</tr>
 				
@@ -60,8 +62,15 @@
 						<td>${item.id}</td>
 						<td style="text-align:right">${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 						<td style="text-align:right">${w:format(item.failureCount,'#,###,###,###,##0')}</td>
-						<td style="text-align:right">${w:format(item.failurePercent,'0.00%')}</td>
-						<td style="text-align:right">${w:format(item.avg,'0.00')}</td>
+						<c:if test="${item.failurePercent > 0.0001}">
+							<td style="text-align:right;color:red">${w:format(item.failurePercent,'0.00000%')}</td>
+							<td style="text-align:right;color:red">${w:format(1-item.failurePercent,'0.00000%')}</td>
+						</c:if>
+						<c:if test="${item.failurePercent <= 0.0001}">
+							<td style="text-align:right">${w:format(item.failurePercent,'0.00000%')}</td>
+							<td style="text-align:right">${w:format(1-item.failurePercent,'0.00000%')}</td>
+						</c:if>
+							<td style="text-align:right">${w:format(item.avg,'0.00')}</td>
 					</tr>
 				</c:forEach>
 			</table> 

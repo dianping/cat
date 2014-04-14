@@ -89,21 +89,6 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
-	public void merge(Domain domain, TypeDetailInfo info) {
-		domain.setTotalCount(domain.getTotalCount() + info.getTotalCount());
-		domain.setFailureCount(domain.getFailureCount() + info.getFailureCount());
-		domain.setSum(domain.getSum() + info.getSum());
-		if (domain.getTotalCount() > 0) {
-			domain.setAvg(domain.getSum() / domain.getTotalCount());
-			domain.setFailurePercent((double) domain.getFailureCount() / domain.getTotalCount());
-		}
-	}
-
-	private boolean validataService(TypeDetailInfo typeInfo) {
-		return typeInfo.getProjectName().equalsIgnoreCase(ProjectInfo.ALL_SERVER)
-		      || typeInfo.getProjectName().equalsIgnoreCase("UnknownProject");
-	}
-
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
@@ -135,6 +120,16 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(serviceReport);
 		return m_reportService.insertWeeklyReport(report, binaryContent);
+	}
+
+	public void merge(Domain domain, TypeDetailInfo info) {
+		domain.setTotalCount(domain.getTotalCount() + info.getTotalCount());
+		domain.setFailureCount(domain.getFailureCount() + info.getFailureCount());
+		domain.setSum(domain.getSum() + info.getSum());
+		if (domain.getTotalCount() > 0) {
+			domain.setAvg(domain.getSum() / domain.getTotalCount());
+			domain.setFailurePercent((double) domain.getFailureCount() / domain.getTotalCount());
+		}
 	}
 
 	private ServiceReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -176,6 +171,11 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		serviceReport.setStartTime(start);
 		serviceReport.setEndTime(end);
 		return serviceReport;
+	}
+
+	private boolean validataService(TypeDetailInfo typeInfo) {
+		return typeInfo.getProjectName().equalsIgnoreCase(ProjectInfo.ALL_SERVER)
+		      || typeInfo.getProjectName().equalsIgnoreCase("UnknownProject");
 	}
 
 }

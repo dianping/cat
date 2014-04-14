@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -22,7 +24,7 @@ import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 
-public abstract class AbstractReportService<T> {
+public abstract class AbstractReportService<T> implements LogEnabled {
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
@@ -48,6 +50,8 @@ public abstract class AbstractReportService<T> {
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
 
+	protected Logger m_logger;
+
 	public static final int s_hourly = 1;
 
 	public static final int s_daily = 2;
@@ -58,26 +62,36 @@ public abstract class AbstractReportService<T> {
 
 	public static final int s_customer = 5;
 
-	public T queryReport(String domain, Date start, Date end) {
-		int type = computeQueryType(start, end);
-		T report = null;
+	public int computeQueryType(Date start, Date end) {
+		long duration = end.getTime() - start.getTime();
 
-		if (type == s_hourly) {
-			report = queryHourlyReport(domain, start, end);
-		} else if (type == s_daily) {
-			report = queryDailyReport(domain, start, end);
-		} else if (type == s_weekly) {
-			report = queryWeeklyReport(domain, start);
-		} else if (type == s_monthly) {
-			report = queryMonthlyReport(domain, start);
-		} else {
-			report = queryDailyReport(domain, start, end);
+		if (duration == TimeUtil.ONE_HOUR) {
+			return s_hourly;
 		}
-		if (report == null) {
-			report = makeReport(domain, start, end);
+		if (duration == TimeUtil.ONE_DAY) {
+			return s_daily;
 		}
-		return report;
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+
+		if (duration == TimeUtil.ONE_WEEK && startCal.get(Calendar.DAY_OF_WEEK) == 7) {
+			return s_weekly;
+		}
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(end);
+
+		if (startCal.get(Calendar.DAY_OF_MONTH) == 1 && endCal.get(Calendar.DAY_OF_MONTH) == 1) {
+			return s_monthly;
+		}
+		return s_customer;
 	}
+
+	@Override
+   public void enableLogging(Logger logger) {
+		m_logger = logger;
+   }
+
+	public abstract T makeReport(String domain, Date start, Date end);
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
 		HashSet<String> domains = new HashSet<String>();
@@ -106,37 +120,33 @@ public abstract class AbstractReportService<T> {
 		return domains;
 	}
 
-	public abstract T makeReport(String domain, Date start, Date end);
+	public abstract T queryDailyReport(String domain, Date start, Date end);
 
 	public abstract T queryHourlyReport(String domain, Date start, Date end);
 
-	public abstract T queryDailyReport(String domain, Date start, Date end);
-
-	public abstract T queryWeeklyReport(String domain, Date start);
-
 	public abstract T queryMonthlyReport(String domain, Date start);
 
-	public int computeQueryType(Date start, Date end) {
-		long duration = end.getTime() - start.getTime();
+	public T queryReport(String domain, Date start, Date end) {
+		int type = computeQueryType(start, end);
+		T report = null;
 
-		if (duration == TimeUtil.ONE_HOUR) {
-			return s_hourly;
+		if (type == s_hourly) {
+			report = queryHourlyReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = queryDailyReport(domain, start, end);
+		} else if (type == s_weekly) {
+			report = queryWeeklyReport(domain, start);
+		} else if (type == s_monthly) {
+			report = queryMonthlyReport(domain, start);
+		} else {
+			report = queryDailyReport(domain, start, end);
 		}
-		if (duration == TimeUtil.ONE_DAY) {
-			return s_daily;
+		if (report == null) {
+			report = makeReport(domain, start, end);
 		}
-		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(start);
-
-		if (duration == TimeUtil.ONE_WEEK && startCal.get(Calendar.DAY_OF_WEEK) == 7) {
-			return s_weekly;
-		}
-		Calendar endCal = Calendar.getInstance();
-		endCal.setTime(end);
-
-		if (startCal.get(Calendar.DAY_OF_MONTH) == 1 && endCal.get(Calendar.DAY_OF_MONTH) == 1) {
-			return s_monthly;
-		}
-		return s_customer;
+		return report;
 	}
+
+	public abstract T queryWeeklyReport(String domain, Date start);
+	
 }

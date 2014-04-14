@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.statistics;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -47,7 +48,6 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.system.config.BugConfigManager;
-import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -61,9 +61,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
-
-	@Inject
-	private UtilizationConfigManager m_configManager;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -133,20 +130,17 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildUtilizationInfo(Model model, Payload payload) {
 		UtilizationReport utilizationReport = queryUtilizationReport(payload);
-		List<com.dianping.cat.home.utilization.entity.Domain> dUList = sort(utilizationReport, payload.getSortBy());
+		Collection<com.dianping.cat.home.utilization.entity.Domain> dUList = utilizationReport.getDomains().values();
 		List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 		List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 		for (com.dianping.cat.home.utilization.entity.Domain d : dUList) {
-			if (d.getUrlCount() > 0) {
+			if (d.findApplicationState("URL") != null) {
 				dUWebList.add(d);
 			}
-			if (d.getServiceCount() > 0) {
+			if (d.findApplicationState("PigeonService") != null) {
 				dUServiceList.add(d);
 			}
 		}
-		resetWebScore(dUWebList, findMaxWebScore(dUWebList));
-		resetServiceScore(dUServiceList, findMaxServiceScore(dUServiceList));
-		model.setUtilizationList(dUList);
 		model.setUtilizationWebList(dUWebList);
 		model.setUtilizationServiceList(dUServiceList);
 		model.setUtilizationReport(utilizationReport);
@@ -159,26 +153,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return null;
-	}
-
-	private double findMaxServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
-		double maxScore = 0;
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			if (d.getServiceScore() > maxScore) {
-				maxScore = d.getServiceScore();
-			}
-		}
-		return maxScore;
-	}
-
-	private double findMaxWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l) {
-		double maxScore = 0;
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			if (d.getWebScore() > maxScore) {
-				maxScore = d.getWebScore();
-			}
-		}
-		return maxScore;
 	}
 
 	@Override
@@ -266,20 +240,8 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		UtilizationReport report = m_reportService.queryUtilizationReport(Constants.CAT, pair.getKey(), pair.getValue());
-		new UtilizationReportScore().setConfigManager(m_configManager).visitUtilizationReport(report);
+
 		return report;
-	}
-
-	private void resetServiceScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore) {
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			d.setServiceScore(d.getServiceScore() * 100.0 / maxScore);
-		}
-	}
-
-	private void resetWebScore(List<com.dianping.cat.home.utilization.entity.Domain> l, double maxScore) {
-		for (com.dianping.cat.home.utilization.entity.Domain d : l) {
-			d.setWebScore(d.getWebScore() * 100.0 / maxScore);
-		}
 	}
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
@@ -291,46 +253,19 @@ public class Handler implements PageHandler<Context> {
 				if (sortBy.equals("failure")) {
 					return (int) (d2.getFailureCount() - d1.getFailureCount());
 				} else if (sortBy.equals("total")) {
-					return (int) (d2.getTotalCount() - d1.getTotalCount());
+					long value = d2.getTotalCount() - d1.getTotalCount();
+
+					if (value > 0) {
+						return 1;
+					} else {
+						return -1;
+					}
 				} else if (sortBy.equals("failurePercent")) {
+					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
+				} else if (sortBy.equals("availability")) {
 					return (int) (100000 * d2.getFailurePercent() - 100000 * d1.getFailurePercent());
 				} else {
 					return (int) (d2.getAvg() - d1.getAvg());
-				}
-			}
-		});
-		return result;
-	}
-
-	private List<com.dianping.cat.home.utilization.entity.Domain> sort(UtilizationReport utilizationReport,
-	      final String sortBy) {
-		List<com.dianping.cat.home.utilization.entity.Domain> result = new ArrayList<com.dianping.cat.home.utilization.entity.Domain>(
-		      utilizationReport.getDomains().values());
-		Collections.sort(result, new Comparator<com.dianping.cat.home.utilization.entity.Domain>() {
-			public int compare(com.dianping.cat.home.utilization.entity.Domain d1,
-			      com.dianping.cat.home.utilization.entity.Domain d2) {
-				if (sortBy.equals("urlCount")) {
-					return (int) (d2.getUrlCount() - d1.getUrlCount());
-				} else if (sortBy.equals("urlResponse")) {
-					return (int) (100 * d2.getUrlResponseTime() - 100 * d1.getUrlResponseTime());
-				} else if (sortBy.equals("serviceCount")) {
-					return (int) (d2.getServiceCount() - d1.getServiceCount());
-				} else if (sortBy.equals("serviceResponse")) {
-					return (int) (100 * d2.getServiceResponseTime() - 100 * d1.getServiceResponseTime());
-				} else if (sortBy.equals("sqlCount")) {
-					return (int) (d2.getSqlCount() - d1.getSqlCount());
-				} else if (sortBy.equals("pigeonCallCount")) {
-					return (int) (d2.getPigeonCallCount() - d1.getPigeonCallCount());
-				} else if (sortBy.equals("swallowCallCount")) {
-					return (int) (d2.getSwallowCallCount() - d1.getSwallowCallCount());
-				} else if (sortBy.equals("memcacheCount")) {
-					return (int) (d2.getMemcacheCount() - d1.getMemcacheCount());
-				} else if (sortBy.equals("webScore")) {
-					return (int) (d2.getWebScore() - d1.getWebScore());
-				} else if (sortBy.equals("serviceScore")) {
-					return (int) (d2.getServiceScore() - d1.getServiceScore());
-				} else {
-					return (int) (d2.getWebScore() - d1.getWebScore());
 				}
 			}
 		});
@@ -433,23 +368,12 @@ public class Handler implements PageHandler<Context> {
 					items.put(exception, item);
 				} else {
 					List<String> messages = item.getMessages();
-
 					item.setCount(item.getCount() + count);
-					mergeList(messages, exceptionItem.getMessages(), 10);
-				}
-			}
-		}
+					messages.addAll(exceptionItem.getMessages());
 
-		protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
-			int originalSize = oldMessages.size();
-
-			if (originalSize < size) {
-				int remainingSize = size - originalSize;
-
-				if (remainingSize >= newMessages.size()) {
-					oldMessages.addAll(newMessages);
-				} else {
-					oldMessages.addAll(newMessages.subList(0, remainingSize));
+					if (messages.size() > 10) {
+						messages = messages.subList(0, 10);
+					}
 				}
 			}
 		}

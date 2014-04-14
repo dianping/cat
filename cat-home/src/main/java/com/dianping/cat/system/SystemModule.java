@@ -13,9 +13,8 @@ com.dianping.cat.system.page.login.Handler.class,
 
 com.dianping.cat.system.page.config.Handler.class,
 
-com.dianping.cat.system.page.abtest.Handler.class,
-
-com.dianping.cat.system.page.plugin.Handler.class })
+com.dianping.cat.system.page.plugin.Handler.class
+})
 public class SystemModule extends AbstractModule {
 
 }

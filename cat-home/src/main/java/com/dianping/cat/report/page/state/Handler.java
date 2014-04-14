@@ -16,13 +16,13 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -109,8 +109,7 @@ public class Handler implements PageHandler<Context> {
 			model.setState(show);
 			model.setReport(report);
 		} else {
-			Gson gson = new Gson();
-			model.setGraph(gson.toJson(item));
+			model.setGraph(new JsonBuilder().toJson(item));
 		}
 		m_jspViewer.view(ctx, model);
 	}

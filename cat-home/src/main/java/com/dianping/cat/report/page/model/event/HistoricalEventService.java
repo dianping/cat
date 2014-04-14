@@ -54,7 +54,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
 			if (bucket != null) {
-				bucket.close();
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

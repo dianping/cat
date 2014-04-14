@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.metric.chart.impl;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,6 +19,10 @@ public class DataExtractorImpl implements DataExtractor {
 		int length = values.length;
 		m_step = intervalCalculate(length);
 		int size = length / m_step;
+
+		if (size * m_step < length) {
+			size++;
+		}
 		double[] result = new double[size];
 
 		for (int i = 0; i < length; i = i + m_step) {
@@ -35,7 +39,7 @@ public class DataExtractorImpl implements DataExtractor {
 
 	@Override
 	public Map<String, double[]> extract(Map<String, double[]> values) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
+		Map<String, double[]> result = new LinkedHashMap<String, double[]>();
 
 		for (Entry<String, double[]> entry : values.entrySet()) {
 			result.put(entry.getKey(), extract(entry.getValue()));

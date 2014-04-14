@@ -1,7 +1,12 @@
 function show(anchor, id) {
 	var cell = document.getElementById(id);
 	var text = anchor.innerHTML;
-	if (text == '[:: show ::]') {
+	
+	if (!anchor.originalHTML) {
+		anchor.originalHTML = anchor.innerHTML;
+	}
+	
+	if (text != '[:: hide ::]') {
 		anchor.innerHTML = '[:: hide ::]';
 
 		$.ajax({
@@ -14,7 +19,7 @@ function show(anchor, id) {
 
 		cell.style.display = 'block';
 	} else {
-		anchor.innerHTML = '[:: show ::]';
+		anchor.innerHTML = anchor.originalHTML;
 		cell.style.display = 'none';
 	}
 

@@ -1,68 +1,8 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-			<implementation>com.dianping.cat.consumer.sql.SqlParseManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.advanced.dal.SqltableDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.sql.DatabaseParser</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.consumer.sql.SqlAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
-					<role-hint>sql</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
-			<configuration>
-				<name>sql</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
-					<role-hint>sql</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
-			<role-hint>sql</role-hint>
-			<implementation>com.dianping.cat.consumer.sql.SqlDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-			</requirements>
+			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
+			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
@@ -76,6 +16,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -161,6 +104,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.dependency.DatabaseParser</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.consumer.dependency.DependencyAnalyzer</implementation>
@@ -177,7 +124,7 @@
 					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.sql.DatabaseParser</role>
+					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -251,9 +198,6 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.abtest.spi.internal.ABTestCodec</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 			</requirements>
@@ -284,6 +228,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>user-agent</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>user-agent</logical-table-name>
+				<physical-table-name>user_agent</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
 			<implementation>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</implementation>
 			<requirements>
@@ -295,6 +249,15 @@
 		<component>
 			<role>com.dianping.cat.consumer.advanced.dal.SqltableDao</role>
 			<implementation>com.dianping.cat.consumer.advanced.dal.SqltableDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.dal.UserAgentDao</role>
+			<implementation>com.dianping.cat.consumer.advanced.dal.UserAgentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

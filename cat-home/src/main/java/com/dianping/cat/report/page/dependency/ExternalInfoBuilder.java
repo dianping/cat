@@ -71,48 +71,6 @@ public class ExternalInfoBuilder {
 		}
 	}
 
-	public void buildZabbixErrorOnGraph(TopologyGraph graph, String zabbixHeader, Map<String, List<Event>> events) {
-		Set<String> nodes = new HashSet<String>();
-		for (Entry<String, List<Event>> entry : events.entrySet()) {
-			List<Event> eventList = entry.getValue();
-
-			for (Event event : eventList) {
-				TopologyNode node = graph.findTopologyNode(event.getDomain());
-
-				if (node != null) {
-					if (!nodes.contains(node.getId())) {
-						node.setDes(node.getDes() + zabbixHeader);
-						nodes.add(node.getId());
-					}
-					if (node.getStatus() == GraphConstrant.OK) {
-						node.setStatus(GraphConstrant.OP_ERROR);
-					}
-					String des = node.getDes();
-
-					des = des + m_sdf.format(event.getDate()) + " " + event.getSubject() + GraphConstrant.ENTER;
-					node.setDes(des);
-				} else if (event.getDomain().equals(graph.getId())) {
-					if (!nodes.contains(graph.getId())) {
-						graph.setDes(graph.getDes() + zabbixHeader);
-						nodes.add(graph.getId());
-					}
-					if (graph.getStatus() == GraphConstrant.OK) {
-						graph.setStatus(GraphConstrant.OP_ERROR);
-					}
-					String des = graph.getDes();
-
-					des = des + m_sdf.format(event.getDate()) + " " + event.getSubject() + GraphConstrant.ENTER;
-					graph.setDes(des);
-				}
-			}
-		}
-	}
-
-	private String buildTopologyNodeLink(Payload payload, Model model, String domain) {
-		return String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
-		      m_dateFormat.format(new Date(payload.getDate())));
-	}
-
 	public void buildNodeExceptionInfo(TopologyNode node, Model model, Payload payload) {
 		String domain = node.getId();
 		if (node.getStatus() != GraphConstrant.OK) {
@@ -171,6 +129,48 @@ public class ExternalInfoBuilder {
 		topMetric.visitTopReport(report);
 		model.setTopReport(report);
 		model.setTopMetric(topMetric);
+	}
+
+	private String buildTopologyNodeLink(Payload payload, Model model, String domain) {
+		return String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
+		      m_dateFormat.format(new Date(payload.getDate())));
+	}
+
+	public void buildZabbixErrorOnGraph(TopologyGraph graph, String zabbixHeader, Map<String, List<Event>> events) {
+		Set<String> nodes = new HashSet<String>();
+		for (Entry<String, List<Event>> entry : events.entrySet()) {
+			List<Event> eventList = entry.getValue();
+
+			for (Event event : eventList) {
+				TopologyNode node = graph.findTopologyNode(event.getDomain());
+
+				if (node != null) {
+					if (!nodes.contains(node.getId())) {
+						node.setDes(node.getDes() + zabbixHeader);
+						nodes.add(node.getId());
+					}
+					if (node.getStatus() == GraphConstrant.OK) {
+						node.setStatus(GraphConstrant.OP_ERROR);
+					}
+					String des = node.getDes();
+
+					des = des + m_sdf.format(event.getDate()) + " " + event.getSubject() + GraphConstrant.ENTER;
+					node.setDes(des);
+				} else if (event.getDomain().equals(graph.getId())) {
+					if (!nodes.contains(graph.getId())) {
+						graph.setDes(graph.getDes() + zabbixHeader);
+						nodes.add(graph.getId());
+					}
+					if (graph.getStatus() == GraphConstrant.OK) {
+						graph.setStatus(GraphConstrant.OP_ERROR);
+					}
+					String des = graph.getDes();
+
+					des = des + m_sdf.format(event.getDate()) + " " + event.getSubject() + GraphConstrant.ENTER;
+					graph.setDes(des);
+				}
+			}
+		}
 	}
 
 	public String buildZabbixHeader(Payload payload, Model model) {

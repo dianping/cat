@@ -14,12 +14,23 @@ public class TestBusinessMessage {
 	private static final String PayOrder = "PayOrder";
 
 	@Test
+	public void testEvent() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			Cat.logError(new NullPointerException());
+		}
+		
+		Thread.sleep(10000);
+	}
+	
+	@Test
 	public void test() throws Exception {
 		while (true) {
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "/index");
 				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
 				t.addData("channel=channel" + i % 5);
+				
+				Cat.logMetricForCount("Receipt Verify Success");
 
 				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 				tree.setDomain(TuanGou);
@@ -116,18 +127,17 @@ public class TestBusinessMessage {
 	public void sample() {
 		String pageName = "";
 		String serverIp = "";
-		double amount = 0;
 		
 		Transaction t = Cat.newTransaction("URL", pageName); //创建一个Transaction
 
 		try {
 			//记录一个事件
 			Cat.logEvent("URL.Server", serverIp, Event.SUCCESS, "ip=" + serverIp + "&...");
-			//记录一个业务指标，记录次数
+			//记录一个业务指标，记录订单次数
+			Cat.logMetricForCount("OrderCount");
+			//记录一个业务指标，记录支付次数
 			Cat.logMetricForCount("PayCount");
-			//记录一个业务指标，记录支付金额
-			Cat.logMetricForSum("PayAmount", amount);
-
+			
 			yourBusiness();//自己业务代码
 			
 			t.setStatus(Transaction.SUCCESS);//设置状态

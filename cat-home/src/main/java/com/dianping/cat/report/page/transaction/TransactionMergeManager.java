@@ -5,12 +5,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public class TransactionMergeManager {
 
-	public TransactionReport mergerAll(TransactionReport report, String ipAddress, String allName) {
-		TransactionReport temp = mergerAllIp(report, ipAddress);
-
-		return mergerAllName(temp, allName);
-	}
-
 	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
@@ -29,6 +23,12 @@ public class TransactionMergeManager {
 			report = all.getReport();
 		}
 		return report;
+	}
+
+	public TransactionReport mergerAllName(TransactionReport report, String ipAddress, String allName) {
+		TransactionReport temp = mergerAllIp(report, ipAddress);
+
+		return mergerAllName(temp, allName);
 	}
 
 }

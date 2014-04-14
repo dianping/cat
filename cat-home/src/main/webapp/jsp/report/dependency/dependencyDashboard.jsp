@@ -32,15 +32,16 @@
  <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<div class="report">
-			<div class="row-fluid">
-				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
-			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-			</div></div>
+			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+				<div class="opNav">
+				<div class="row-fluid">
+					<div class="span12 text-center">
+						<%@ include file="dependencyOpNav.jsp"%>
+				 		<%@ include file="dependencyTimeNavTab1.jsp"%>
+				</div></div></div>
 			<div id="fullScreenData">
 				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
 				<br/>
-				<%@ include file="../top/topMetric.jsp"%>
 			</div>
 	    </div>
 	</c:when>
@@ -58,7 +59,6 @@
 			<div id="fullScreenData">
 				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
 				<br/>
-				<%@ include file="../top/topMetric.jsp"%>
 			</div>
 	    </div>
 	</jsp:body>
@@ -103,7 +103,7 @@
 	            },商户: {
 	                "colInside": '4'
 	            },广告: {
-	                "colInside": '4'
+	                "colInside": '5'
 	            },用户中心: {
 	                "colInside": '4'
 	            },移动: {
@@ -126,7 +126,24 @@
 			showLeft: true,
 			showUp: false
 		});
+
+		var hide =${payload.hideNav};
+		if(hide){
+			$('.opNav').slideUp();
+			$('#switch').html("显示");
+		}	
 	});
+
+	function showOpNav() {
+		var b = $('#switch').html();
+		if (b == '隐藏') {
+			$('.opNav').slideUp();
+			$('#switch').html("显示");
+		} else {
+			$('.opNav').slideDown();
+			$('#switch').html("隐藏");
+		}
+	}
 </script>
 <style>
 .pagination{

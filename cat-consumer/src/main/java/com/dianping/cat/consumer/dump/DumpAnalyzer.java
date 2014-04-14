@@ -11,7 +11,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
@@ -34,13 +33,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	private Logger m_logger;
 
-	@Override
-	public void doCheckpoint(boolean atEnd) {
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
-		t.setStatus(Message.SUCCESS);
-		final long startTime = getStartTime();
-
+	private void checkpointAsyc(final long startTime) {
 		Threads.forGroup("Cat").start(new Threads.Task() {
+			@Override
+			public String getName() {
+				return "DumpAnalyzer-Checkpoint";
+			}
+
 			@Override
 			public void run() {
 				try {
@@ -54,22 +53,38 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			@Override
 			public void shutdown() {
 			}
-
-			@Override
-			public String getName() {
-				return "DumpAnalyzer-Checkpoint";
-			}
 		});
+	}
 
-		// wait the block dump complete
-		m_logger.info("Old version domains:" + m_oldVersionDomains);
-		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
-		t.complete();
+	@Override
+	public void doCheckpoint(boolean atEnd) {
+		Transaction t = Cat.newTransaction("Checkpoint", "dump");
+
+		try {
+			long startTime = getStartTime();
+
+			checkpointAsyc(startTime);
+			m_logger.info("Old version domains:" + m_oldVersionDomains);
+			m_logger.info("Error timestamp:" + m_errorTimestampDomains);
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public Map<String, Integer> getErrorTimestampDomains() {
+		return m_errorTimestampDomains;
+	}
+
+	public Map<String, Integer> getOldVersionDomains() {
+		return m_oldVersionDomains;
 	}
 
 	@Override
@@ -79,22 +94,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	protected void process(MessageTree tree) {
-		if (tree.getMessage() == null) {
-			return;
-		}
-
-		MessageId id = MessageId.parse(tree.getMessageId());
+		MessageId messageId = MessageId.parse(tree.getMessageId());
 		String domain = tree.getDomain();
 
-		if (id.getVersion() == 2) {
+		if (messageId.getVersion() == 2) {
 			try {
 				long time = tree.getMessage().getTimestamp();
 				long fixedTime = time - time % (60 * 60 * 1000);
-				long idTime = id.getTimestamp();
+				long idTime = messageId.getTimestamp();
 				long duration = fixedTime - idTime;
 
 				if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-					m_bucketManager.storeMessage(tree, id);
+					m_bucketManager.storeMessage(tree, messageId);
 				} else {
 					m_serverStateManager.addPigeonTimeError(1);
 
@@ -120,20 +131,12 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		}
 	}
 
-	public Map<String, Integer> getOldVersionDomains() {
-		return m_oldVersionDomains;
+	public void setBucketManager(LocalMessageBucketManager bucketManager) {
+		m_bucketManager = bucketManager;
 	}
 
 	public void setServerStateManager(ServerStatisticManager serverStateManager) {
 		m_serverStateManager = serverStateManager;
 	}
 
-	public void setBucketManager(LocalMessageBucketManager bucketManager) {
-   	m_bucketManager = bucketManager;
-   }
-
-	public Map<String, Integer> getErrorTimestampDomains() {
-   	return m_errorTimestampDomains;
-   }
-	
 }

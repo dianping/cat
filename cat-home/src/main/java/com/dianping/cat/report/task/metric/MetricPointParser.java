@@ -5,30 +5,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
-import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 
 public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;
-
-	public double[] buildHourlyData(MetricItem item, MetricType type) {
-		double[] result = new double[POINT_NUMBER];
-		Map<Integer, Point> map = item.getAbtests().get("-1").getGroups().get("").getPoints();
-
-		for (Entry<Integer, Point> entry : map.entrySet()) {
-			Integer minute = entry.getKey();
-			Point point = entry.getValue();
-
-			if (type == MetricType.AVG) {
-				result[minute] = point.getAvg();
-			} else if (type == MetricType.COUNT) {
-				result[minute] = (double) point.getCount();
-			} else if (type == MetricType.SUM) {
-				result[minute] = point.getSum();
-			}
-		}
-		return result;
-	}
 
 	public double[] buildDailyData(List<MetricItem> items, MetricType type) {
 		int size = items.size();
@@ -51,6 +32,25 @@ public class MetricPointParser {
 			}
 		}
 		return values;
+	}
+
+	public double[] buildHourlyData(MetricItem item, MetricType type) {
+		double[] result = new double[POINT_NUMBER];
+		Map<Integer, Segment> map = item.getSegments();
+
+		for (Entry<Integer, Segment> entry : map.entrySet()) {
+			Integer minute = entry.getKey();
+			Segment seg = entry.getValue();
+
+			if (type == MetricType.AVG) {
+				result[minute] = seg.getAvg();
+			} else if (type == MetricType.COUNT) {
+				result[minute] = (double) seg.getCount();
+			} else if (type == MetricType.SUM) {
+				result[minute] = seg.getSum();
+			}
+		}
+		return result;
 	}
 
 }

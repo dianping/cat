@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 
 import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
@@ -66,9 +67,10 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 			t.addData(url.toString());
 
-			InputStream in = Urls.forIO().connectTimeout(100).readTimeout(2000).openStream(url.toExternalForm());
+			InputStream in = Urls.forIO().connectTimeout(1000).readTimeout(5000).openStream(url.toExternalForm());
+			GZIPInputStream gzip = new GZIPInputStream(in);
+			String xml = Files.forIO().readFrom(gzip, "utf-8");
 
-			String xml = Files.forIO().readFrom(in, "utf-8");
 			int len = xml == null ? 0 : xml.length();
 
 			t.addData("length", len);
@@ -81,11 +83,9 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			} else {
 				t.setStatus("NoReport");
 			}
-
 		} catch (Exception e) {
-			logError(e);
 			t.setStatus(e);
-			response.setException(e);
+			logError(e);
 		} finally {
 			t.complete();
 		}

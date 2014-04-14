@@ -31,7 +31,7 @@ public class StateReportMerger extends DefaultMerger {
 		old.setTotal(old.getTotal() + machine.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + machine.getTotalLoss());
 		old.setSize(old.getSize() + machine.getSize());
-		
+
 		old.setDump(old.getDump() + machine.getDump());
 		old.setDumpLoss(old.getDumpLoss() + machine.getDumpLoss());
 		old.setDelaySum(old.getDelaySum() + machine.getDelaySum());
@@ -56,36 +56,36 @@ public class StateReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeMessage(Message old, Message message) {
-		old.setTotal(message.getTotal());
-		old.setTotalLoss(message.getTotalLoss());
 		old.setTime(message.getTime());
-		old.setSize(message.getSize());
-		old.setDumpLoss(message.getDumpLoss());
-		old.setDump(message.getDump());
-		old.setDelayCount(message.getDelayCount());
-		old.setDelaySum(message.getDelaySum());
-		old.setBlockTotal(message.getBlockTotal());
-		old.setBlockLoss(message.getBlockLoss());
-		old.setBlockTime(message.getBlockTime());
-		old.setPigeonTimeError(message.getPigeonTimeError());
-		old.setNetworkTimeError(message.getNetworkTimeError());
+		old.setId(message.getId());
+		old.setTotal(old.getTotal() + message.getTotal());
+		old.setTotalLoss(old.getTotalLoss() + message.getTotalLoss());
+		old.setSize(old.getSize() + message.getSize());
+		old.setDumpLoss(old.getDumpLoss() + message.getDumpLoss());
+		old.setDump(old.getDump() + message.getDump());
+		old.setDelayCount(old.getDelayCount() + message.getDelayCount());
+		old.setDelaySum(old.getDelaySum() + message.getDelaySum());
+		old.setBlockTotal(old.getBlockTotal() + message.getBlockTotal());
+		old.setBlockLoss(old.getBlockLoss() + message.getBlockLoss());
+		old.setBlockTime(old.getBlockTime() + message.getBlockTime());
+		old.setPigeonTimeError(old.getPigeonTimeError() + message.getPigeonTimeError());
+		old.setNetworkTimeError(old.getNetworkTimeError() + message.getNetworkTimeError());
 	}
 
 	@Override
 	protected void mergeProcessDomain(ProcessDomain old, ProcessDomain processDomain) {
 		old.getIps().addAll(processDomain.getIps());
-		old.setSize(old.getSize()+processDomain.getSize());
-		old.setTotal(old.getTotal()+processDomain.getTotal());
-		old.setTotalLoss(old.getTotalLoss()+processDomain.getTotalLoss());
-
+		old.setSize(old.getSize() + processDomain.getSize());
+		old.setTotal(old.getTotal() + processDomain.getTotal());
+		old.setTotalLoss(old.getTotalLoss() + processDomain.getTotalLoss());
 	}
-	
+
 	@Override
 	protected void mergeDetail(Detail old, Detail detail) {
-      old.setSize(detail.getSize() + old.getSize());
-      old.setTotal(detail.getTotal() + old.getTotal());
-      old.setTotalLoss(detail.getTotalLoss() + old.getTotalLoss());
-   }
+		old.setSize(detail.getSize() + old.getSize());
+		old.setTotal(detail.getTotal() + old.getTotal());
+		old.setTotalLoss(detail.getTotalLoss() + old.getTotalLoss());
+	}
 
 	@Override
 	public void visitStateReport(StateReport stateReport) {

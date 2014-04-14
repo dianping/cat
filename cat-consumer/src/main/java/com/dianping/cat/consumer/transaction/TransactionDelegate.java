@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeParser;
@@ -23,6 +24,11 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	@Inject
 	private TaskManager m_taskManager;
 
+	@Inject
+	private ServerConfigManager m_manager;
+
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -50,7 +56,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public String buildXml(TransactionReport report) {
-		report.accept(new TransactionStatisticsComputer());
+		report.accept(m_computer);
 
 		String xml = new TransactionReportUrlFilter().buildXml(report);
 
@@ -79,8 +85,17 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public boolean createHourlyTask(TransactionReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
-		      TaskProlicy.ALL);
+		String domain = report.getDomain();
+
+		if (domain.equals(Constants.ALL)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, TransactionAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		}
+		if (m_manager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
+			      TaskProlicy.ALL);
+		} else {
+			return true;
+		}
 	}
 
 	@Override

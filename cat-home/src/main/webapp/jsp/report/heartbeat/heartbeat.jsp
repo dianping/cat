@@ -143,5 +143,11 @@
 	</c:forEach>
 </table>
 
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$($('.text-error')[3]).hide();
+	});
+</script>
 </jsp:body>
 </a:report>

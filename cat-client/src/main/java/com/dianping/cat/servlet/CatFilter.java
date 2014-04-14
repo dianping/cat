@@ -19,7 +19,6 @@ import org.unidal.helper.Joiners.IBuilder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.abtest.ABTestManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Message;
@@ -50,7 +49,6 @@ public class CatFilter implements Filter {
 		m_handlers.add(CatHandler.ID_SETUP);
 		m_handlers.add(CatHandler.LOG_SPAN);
 		m_handlers.add(CatHandler.LOG_CLIENT_PAYLOAD);
-		m_handlers.add(CatHandler.LOG_ABTEST_METRIC);
 	}
 
 	static enum CatHandler implements Handler {
@@ -85,7 +83,6 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
-				HttpServletResponse res = ctx.getResponse();
 				boolean top = !Cat.getManager().hasContext();
 
 				ctx.setTop(top);
@@ -95,7 +92,6 @@ public class CatFilter implements Filter {
 					ctx.setType(CatConstants.TYPE_URL);
 
 					Cat.setup(getCookie(req, "JSESSIONID"));
-					ABTestManager.onRequestBegin(req, res);
 
 					setTraceMode(req);
 				} else {
@@ -107,19 +103,14 @@ public class CatFilter implements Filter {
 				} finally {
 					if (top) {
 						Cat.reset();
-						ABTestManager.onRequestEnd();
 					}
 				}
 			}
 
 			protected void setTraceMode(HttpServletRequest req) {
 				String traceMode = "X-CAT-TRACE-MODE";
-				String paraMode = req.getParameter(traceMode);
 				String headMode = req.getHeader(traceMode);
 
-				if ("true".equals(paraMode)) {
-					Cat.getManager().setTraceMode(true);
-				}
 				if ("true".equals(headMode)) {
 					Cat.getManager().setTraceMode(true);
 				}
@@ -257,34 +248,6 @@ public class CatFilter implements Filter {
 			}
 		},
 
-		LOG_ABTEST_METRIC {
-			@Override
-			public void handle(Context ctx) throws IOException, ServletException {
-				if (ctx.isTop()) {
-
-					HttpServletRequest req = ctx.getRequest();
-					HttpServletResponse res = ctx.getResponse();
-
-					ABTestManager.onRequestBegin(req, res);
-
-					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-					String metricType = manager.getMetricType();
-
-					if (metricType != null && metricType.length() > 0) {
-						Cat.logEvent(ctx.getType(), "ABTest", Message.SUCCESS, metricType);
-					}
-
-					try {
-						ctx.handle();
-					} finally {
-						ABTestManager.onRequestEnd();
-					}
-				} else {
-					ctx.handle();
-				}
-			}
-		},
-
 		LOG_SPAN {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
@@ -334,19 +297,19 @@ public class CatFilter implements Filter {
 
 		private List<Handler> m_handlers;
 
-		private String m_id;
-
 		private int m_index;
 
 		private int m_mode;
 
+		private String m_rootId;
+
 		private String m_parentId;
+
+		private String m_id;
 
 		private HttpServletRequest m_request;
 
 		private HttpServletResponse m_response;
-
-		private String m_rootId;
 
 		private boolean m_top;
 

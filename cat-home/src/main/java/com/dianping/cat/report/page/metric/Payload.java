@@ -21,14 +21,17 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
 
-	@FieldMeta("test")
-	private String m_test = "-1";
-
 	@FieldMeta("timeRange")
-	private int m_timeRange = 2;
+	private int m_timeRange = 24;
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
+	
+	@FieldMeta("hideNav")
+	private boolean m_hideNav = true;
+
+	@FieldMeta("group")
+	private String m_group;
 
 	public Payload() {
 		super(ReportPage.METRIC);
@@ -43,6 +46,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_frequency;
 	}
 
+	public String getGroup() {
+		return m_group;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -50,10 +57,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getProduct() {
 		return m_product;
-	}
-
-	public String getTest() {
-		return m_test;
 	}
 
 	public int getTimeRange() {
@@ -80,6 +83,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_fullScreen = fullScreen;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
@@ -92,10 +99,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
 	}
+	
+	public boolean isHideNav() {
+   	return m_hideNav;
+   }
 
-	public void setTest(String test) {
-		m_test = test;
-	}
+	public void setHideNav(boolean hideNav) {
+   	m_hideNav = hideNav;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

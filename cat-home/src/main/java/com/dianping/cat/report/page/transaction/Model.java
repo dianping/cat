@@ -19,6 +19,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
+	
+	private List<String> m_groups;
+	
+	private List<String> m_groupIps;
 
 	private String m_errorTrend;
 
@@ -106,6 +110,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_graph4;
 	}
 
+	public List<String> getGroupIps() {
+   	return m_groupIps;
+   }
+
+	public List<String> getGroups() {
+   	return m_groups;
+   }
+
 	public String getHitTrend() {
 		return m_hitTrend;
 	}
@@ -170,6 +182,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_graph4 = graph4;
 	}
 
+	public void setGroupIps(List<String> groupIps) {
+   	m_groupIps = groupIps;
+   }
+
+	public void setGroups(List<String> groups) {
+   	m_groups = groups;
+   }
+
 	public void setHitTrend(String hitTrend) {
 		m_hitTrend = hitTrend;
 	}
@@ -197,5 +217,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
-
+	
 }

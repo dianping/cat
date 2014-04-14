@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
@@ -18,11 +20,21 @@ import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
+	private String m_browserChart;
+
+	private String m_osChart;
+
+	@EntityMeta
 	private BugReport m_bugReport;
 
+	@EntityMeta
 	private ServiceReport m_serviceReport;
 
+	@EntityMeta
 	private HeavyReport m_heavyReport;
+
+	@EntityMeta
+	private UtilizationReport m_utilizationReport;
 
 	private List<Domain> m_serviceList;
 
@@ -40,28 +52,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, ErrorStatis> m_errorStatis;
 
-	private UtilizationReport m_utilizationReport;
-
-	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationList;
-
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
 
-	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
-		return m_utilizationWebList;
-	}
-
-	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationServiceList() {
-		return m_utilizationServiceList;
-	}
-
-	public void setUtilizationServiceList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
-		m_utilizationServiceList = utilizationServiceList;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public String getBrowserChart() {
+		return m_browserChart;
 	}
 
 	public BugReport getBugReport() {
@@ -111,6 +111,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_heavyReport;
 	}
 
+	public String getOsChart() {
+		return m_osChart;
+	}
+
 	public List<com.dianping.cat.home.service.entity.Domain> getServiceList() {
 		return m_serviceList;
 	}
@@ -127,12 +131,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_sqlUrls;
 	}
 
-	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationList() {
-		return m_utilizationList;
-	}
-
 	public UtilizationReport getUtilizationReport() {
 		return m_utilizationReport;
+	}
+
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationServiceList() {
+		return m_utilizationServiceList;
+	}
+
+	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
+		return m_utilizationWebList;
+	}
+
+	public void setBrowserChart(String browserChart) {
+		m_browserChart = browserChart;
 	}
 
 	public void setBugReport(BugReport bugReport) {
@@ -163,6 +175,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_heavyReport = heavyReport;
 	}
 
+	public void setOsChart(String osChart) {
+		m_osChart = osChart;
+	}
+
 	public void setServiceList(List<com.dianping.cat.home.service.entity.Domain> serviceList) {
 		this.m_serviceList = serviceList;
 	}
@@ -179,12 +195,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_sqlUrls = sqlUrls;
 	}
 
-	public void setUtilizationList(List<com.dianping.cat.home.utilization.entity.Domain> dUList) {
-		m_utilizationList = dUList;
-	}
-
 	public void setUtilizationReport(UtilizationReport utilizationReport) {
 		m_utilizationReport = utilizationReport;
+	}
+
+	public void setUtilizationServiceList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationServiceList) {
+		m_utilizationServiceList = utilizationServiceList;
 	}
 
 	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {

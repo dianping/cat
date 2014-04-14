@@ -114,6 +114,10 @@ public class TypeDetailInfo {
 		m_ip = ip;
 	}
 
+	public void setProjectName(String projectName) {
+		m_projectName = projectName;
+	}
+
 	public void setSum(double sum) {
 		m_sum = sum;
 	}
@@ -124,10 +128,6 @@ public class TypeDetailInfo {
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public void setProjectName(String projectName) {
-		m_projectName = projectName;
 	}
 
 }

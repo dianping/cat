@@ -13,8 +13,6 @@ import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
-import com.dianping.cat.abtest.ABTestManager;
-import com.dianping.cat.agent.MmapConsumerTask;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ClientConfigReloader;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -36,7 +34,7 @@ public class CatClientModule extends AbstractModule {
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 
 		// tracking thread start/stop
-		Threads.addListener(new CatThreadListener(ctx));
+		// Threads.addListener(new CatThreadListener(ctx));
 
 		File clientConfigFile = ctx.getAttribute("cat-client-config-file");
 		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
@@ -62,10 +60,8 @@ public class CatClientModule extends AbstractModule {
 				Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
 			}
 
-			MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
-			Threads.forGroup("Cat").start(mmapReaderTask);
-
-			ABTestManager.initialize();
+			// MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
+			// Threads.forGroup("Cat").start(mmapReaderTask);
 		}
 	}
 

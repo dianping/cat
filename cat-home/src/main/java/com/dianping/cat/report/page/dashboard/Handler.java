@@ -30,6 +30,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
@@ -39,7 +40,6 @@ import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -60,6 +60,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_problemService;
 
+	@Inject
+	private JsonBuilder m_builder;
+	
 	private NumberFormat m_format = new DecimalFormat("#0.00");
 
 	private static final String COUNT = "Count";
@@ -239,7 +242,7 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", type);
 		}
 
-		if (m_transactionService.isEligable(request)) {
+		if (m_eventService.isEligable(request)) {
 			ModelResponse<EventReport> response = m_eventService.invoke(request);
 			EventReport report = response.getModel();
 
@@ -330,7 +333,7 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 
-		model.setData(new Gson().toJson(data));
+		model.setData(m_builder.toJson(data));
 		m_jspViewer.view(ctx, model);
 	}
 

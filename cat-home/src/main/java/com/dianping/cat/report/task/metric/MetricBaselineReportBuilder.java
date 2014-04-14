@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.metric;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -52,19 +51,6 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 
 	private static final int POINT_NUMBER = 60 * 24;
 
-	@Override
-	public boolean buildDailyTask(String reportName, String domain, Date reportPeriod) {
-		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
-		for (String metricID : m_configManager.getMetricConfig().getMetricItemConfigs().keySet()) {
-			try {
-				buildDailyReportInternal(reports, reportName, metricID, reportPeriod);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		return true;
-	}
-
 	protected void buildDailyReportInternal(Map<String, MetricReport> reports, String reportName, String metricId,
 	      Date reportPeriod) {
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricId);
@@ -102,7 +88,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 				values.add(oneDayValue);
 			}
 
-			double[] result = m_baselineCreator.createBaseLine(values, weights, new HashSet<Integer>(), POINT_NUMBER);
+			double[] result = m_baselineCreator.createBaseLine(values, weights, POINT_NUMBER);
 			Baseline baseline = new Baseline();
 			baseline.setDataInDoubleArray(result);
 			baseline.setIndexKey(key);
@@ -110,6 +96,19 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 			baseline.setReportPeriod(targetDate);
 			m_baselineService.insertBaseline(baseline);
 		}
+	}
+
+	@Override
+	public boolean buildDailyTask(String reportName, String domain, Date reportPeriod) {
+		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
+		for (String metricID : m_configManager.getMetricConfig().getMetricItemConfigs().keySet()) {
+			try {
+				buildDailyReportInternal(reports, reportName, metricID, reportPeriod);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return true;
 	}
 
 	@Override

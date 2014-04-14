@@ -26,3 +26,11 @@ function selectByName(date, domain, ip, type) {
 			+ date + "&queryname=" + queryname + "&ip=" + ip;
 }
 
+function selectGroupByName(date, domain, ip, type) {
+	var queryname = $("#queryname").val();
+	window.location.href = "?op=groupReport&domain=" + domain + "&type=" + type + "&date="
+			+ date + "&queryname=" + queryname + "&ip=" + ip;
+}
+
+
+

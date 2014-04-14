@@ -35,7 +35,6 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLineDashboard;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
@@ -75,7 +74,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		Set<String> allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, ProductLine> groups = m_productLineConfigManger.queryProductLines();
+			Map<String, ProductLine> groups = m_productLineConfigManger.queryAllProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String realName = entry.getValue().getTitle();
@@ -106,23 +105,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			}
 		}
 		return dashboardGraph;
-	}
-
-	public ProductLineDashboard buildProductLineGraph(String productLine, long time) {
-		TopologyGraph topologyGraph = queryTopologyGraph(time);
-		ProductLineDashboard dashboard = new ProductLineDashboard(productLine);
-		List<String> domains = m_productLineConfigManger.queryProductLineDomains(productLine);
-
-		if (topologyGraph != null) {
-			for (String domain : domains) {
-				TopologyNode node = topologyGraph.findTopologyNode(domain);
-
-				if (node != null) {
-					dashboard.addNode(m_graphBuilder.cloneNode(node));
-				}
-			}
-		}
-		return dashboard;
 	}
 
 	public TopologyGraph buildTopologyGraph(String domain, long time) {
@@ -188,16 +170,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private TopologyGraph queryTopologyGraph(long time) {
-		ModelPeriod period = ModelPeriod.getByTime(time);
-
-		if (period.isHistorical()) {
-			return queryGraphFromDB(time);
-		} else {
-			return queryGraphFromMemory(time);
-		}
-	}
-
 	private TopologyGraph queryGraphFromDB(long time) {
 		try {
 			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao.findByPeriod(new Date(time),
@@ -226,6 +198,16 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			}
 		}
 		return graph;
+	}
+
+	private TopologyGraph queryTopologyGraph(long time) {
+		ModelPeriod period = ModelPeriod.getByTime(time);
+
+		if (period.isHistorical()) {
+			return queryGraphFromDB(time);
+		} else {
+			return queryGraphFromMemory(time);
+		}
 	}
 
 	private class DependencyReload implements Task {

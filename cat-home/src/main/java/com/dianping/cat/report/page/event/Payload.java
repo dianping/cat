@@ -21,6 +21,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+	
+	@FieldMeta("group")
+	private String m_group;
 
 	public Payload() {
 		super(ReportPage.EVENT);
@@ -30,6 +33,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	public Action getAction() {
 		return m_action;
 	}
+
+	public String getGroup() {
+   	return m_group;
+   }
 
 	public String getName() {
 		return m_name;
@@ -50,6 +57,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY_REPORT);
 	}
+
+	public void setGroup(String group) {
+   	m_group = group;
+   }
 
 	public void setName(String name) {
 		m_name = name;

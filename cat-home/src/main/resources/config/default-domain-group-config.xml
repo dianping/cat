@@ -1,0 +1,7 @@
+<domain-group>
+	<domain id="Cat">
+		<group id="info">
+			<ip>10.1.6.128</ip>
+		</group>
+	</domain>
+</domain-group>

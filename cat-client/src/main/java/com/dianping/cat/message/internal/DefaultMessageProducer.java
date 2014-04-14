@@ -7,10 +7,12 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -29,29 +31,31 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public boolean isEnabled() {
-		return m_manager.isCatEnabled();
+		return m_manager.isMessageEnabled();
 	}
 
 	@Override
 	public void logError(String message, Throwable cause) {
-		if (Cat.isEnabled()) {
-			StringWriter writer = new StringWriter(2048);
-			String detailMessage;
+		if (Cat.getManager().isCatEnabled()) {
+			if (shouldLog(cause)) {
+				StringWriter writer = new StringWriter(2048);
 
-			cause.printStackTrace(new PrintWriter(writer));
+				if (message != null) {
+					writer.write(message);
+					writer.write(' ');
+				}
 
-			if (message != null) {
-				detailMessage = message + " " + writer.toString();
-			} else {
-				detailMessage = writer.toString();
-			}
+				cause.printStackTrace(new PrintWriter(writer));
 
-			if (cause instanceof Error) {
-				logEvent("Error", cause.getClass().getName(), "ERROR", detailMessage);
-			} else if (cause instanceof RuntimeException) {
-				logEvent("RuntimeException", cause.getClass().getName(), "ERROR", detailMessage);
-			} else {
-				logEvent("Exception", cause.getClass().getName(), "ERROR", detailMessage);
+				String detailMessage = writer.toString();
+
+				if (cause instanceof Error) {
+					logEvent("Error", cause.getClass().getName(), "ERROR", detailMessage);
+				} else if (cause instanceof RuntimeException) {
+					logEvent("RuntimeException", cause.getClass().getName(), "ERROR", detailMessage);
+				} else {
+					logEvent("Exception", cause.getClass().getName(), "ERROR", detailMessage);
+				}
 			}
 		} else {
 			cause.printStackTrace();
@@ -91,7 +95,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logMetric(String name, String status, String nameValuePairs) {
-		String type = ((DefaultMessageManager) m_manager).getMetricType();
+		String type = "";
 		Metric metric = newMetric(type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
@@ -127,7 +131,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
 			m_manager.add(event);
@@ -142,7 +146,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled() && parent != null) {
+		if (m_manager.isMessageEnabled() && parent != null) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
 			parent.addChild(event);
@@ -153,12 +157,29 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public ForkedTransaction newForkedTransaction(String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isMessageEnabled()) {
+			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
+
+			m_manager.start(transaction, true);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
 			m_manager.add(heartbeat);
@@ -173,7 +194,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled() && parent != null) {
+		if (m_manager.isMessageEnabled() && parent != null) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
 			parent.addChild(heartbeat);
@@ -189,7 +210,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name);
 
 			m_manager.add(metric);
@@ -200,12 +221,29 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
+		if (m_manager.isMessageEnabled()) {
+			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
+
+			m_manager.start(transaction, true);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	@Override
 	public Trace newTrace(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultTrace trace = new DefaultTrace(type, name);
 
 			m_manager.add(trace);
@@ -222,10 +260,10 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled()) {
+		if (m_manager.isMessageEnabled()) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
-			m_manager.start(transaction);
+			m_manager.start(transaction, false);
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;
@@ -238,7 +276,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isCatEnabled() && parent != null) {
+		if (m_manager.isMessageEnabled() && parent != null) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
 			parent.addChild(transaction);
@@ -246,6 +284,14 @@ public class DefaultMessageProducer implements MessageProducer {
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;
+		}
+	}
+
+	private boolean shouldLog(Throwable e) {
+		if (m_manager instanceof DefaultMessageManager) {
+			return ((DefaultMessageManager) m_manager).shouldLog(e);
+		} else {
+			return true;
 		}
 	}
 }

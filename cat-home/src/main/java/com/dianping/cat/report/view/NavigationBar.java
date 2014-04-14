@@ -9,8 +9,6 @@ public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
 
-		SystemPage.ABTEST,
-
 		SystemPage.ALARM,
 
 		SystemPage.CONFIG,
@@ -39,8 +37,6 @@ public class NavigationBar {
 
 		ReportPage.CACHE,
 
-		ReportPage.SQL,
-
 		ReportPage.MATRIX,
 
 		ReportPage.DEPENDENCY,
@@ -50,6 +46,8 @@ public class NavigationBar {
 		ReportPage.STATISTICS,
 
 		ReportPage.LOGVIEW,
+		
+		ReportPage.ALTERATION,
 
 		};
 	}

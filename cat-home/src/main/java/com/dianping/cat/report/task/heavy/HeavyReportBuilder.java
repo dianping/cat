@@ -42,10 +42,6 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
-	private boolean validateDomain(String domain) {
-		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
-	}
-
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		HeavyReport heavyReport = new HeavyReport(Constants.CAT);
@@ -144,6 +140,10 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 		com.dianping.cat.home.heavy.entity.HeavyReport heavyReport = merger.getHeavyReport();
 
 		return heavyReport;
+	}
+
+	private boolean validateDomain(String domain) {
+		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
 	}
 
 }

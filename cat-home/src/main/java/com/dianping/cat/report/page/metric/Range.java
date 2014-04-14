@@ -5,7 +5,9 @@ public enum Range {
 
 	TWO("2小时", 2),
 
-	SIX("8小时", 8),
+	SIX("6小时", 6),
+	
+	EIGHT("8小时", 8),
 
 	ONE_DAY("24小时", 24),
 
@@ -15,11 +17,6 @@ public enum Range {
 
 	private int m_duration;
 
-	private Range(String title, int duration) {
-		m_title = title;
-		m_duration = duration;
-	}
-
 	public static Range getByTitle(String title, Range defaultRange) {
 		for (Range range : Range.values()) {
 			if (range.getTitle().equals(title)) {
@@ -27,6 +24,11 @@ public enum Range {
 			}
 		}
 		return defaultRange;
+	}
+
+	private Range(String title, int duration) {
+		m_title = title;
+		m_duration = duration;
 	}
 
 	public int getDuration() {

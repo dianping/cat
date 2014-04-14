@@ -8,36 +8,29 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.abtest.MetricReportForABTestVisitorTest;
-import com.dianping.cat.abtest.conditions.TrafficFilterCodeGenerationTest;
-import com.dianping.cat.abtest.conditions.TrafficFilterTest;
-import com.dianping.cat.abtest.groupstrategy.GroupStrategyParserTest;
-import com.dianping.cat.abtest.groupstrategy.GsonBuilderManagerTest;
-import com.dianping.cat.report.baseline.BaselineCreatorTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
-import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
+import com.dianping.cat.report.page.event.EventReportFilterTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.jsError.ParseTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
-import com.dianping.cat.report.page.model.EventReportFilterTest;
-import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
-import com.dianping.cat.report.page.sql.SqlReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
+import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
+import com.dianping.cat.report.task.metric.AlertConfigTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
@@ -76,9 +69,6 @@ HeartbeatGraphDataTest.class,
 ProblemGraphDataTest.class, 
 
 TransactionGraphDataTest.class,
-
-/* sql test */
-SqlReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, 
@@ -123,12 +113,6 @@ DependencyReportMergerTest.class,
 
 GraphConfigManagerTest.class,
 
-/* CMDB */
-CMDBTest.class,
-
-/* BaseLine */
-BaselineCreatorTest.class,
-
 MetricReportParseTest.class,
 
 /* jsError */
@@ -137,16 +121,7 @@ ParseTest.class,
 /* service */
 ServiceReportMergerTest.class,
 
-/* abtest */
-GsonBuilderManagerTest.class,
-
-GroupStrategyParserTest.class,
-
-TrafficFilterTest.class,
-
-TrafficFilterCodeGenerationTest.class,
-
-MetricReportForABTestVisitorTest.class,
+AlertConfigTest.class,
 
 HeavyReportBuilderTest.class })
 public class AllTests {

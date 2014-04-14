@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.6.2</version>
-	<name>CAT</name>
+	<version>1.0.5</version>
+	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
 	<modules>
@@ -16,7 +16,6 @@
 		<module>cat-consumer-advanced</module>
 		<module>cat-home</module>
 		<module>cat-maven-plugin</module>
-		<module>abtest-sample</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -178,7 +177,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			<plugin>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-maven-plugin</artifactId>
-				<version>0.6.2</version>
+				<version>1.0.5</version>
 			</plugin>
 		</plugins>
 	</build>

@@ -41,7 +41,7 @@
 				}
 				//var cell = document.getElementById('');
 				$.ajax({
-					type: "get",
+					type: "post",
 					url: anchor.href,
 					success : function(response, textStatus) {
 						$('#myModal').html(response);
@@ -71,11 +71,11 @@
 		</div>
 		<div class="span10">
 			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="myModal" class="modal hide fade" style="width:800px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-			  <ul class="nav nav-tabs">
+			  <ul class="nav nav-tabs span2">
 			  	<c:forEach var="item" items="${model.productMetricConfigs}" varStatus="status">
 			  		<c:set var="product" value="${item.key}"/>
 				     <c:set var="key" value="${product.id}"/>
@@ -91,23 +91,32 @@
 					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>表示放入总的业务监控大盘</h4>
 				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
-				     			<th><h5 class='text-center'>项目</h5></th>
-				     			<th><h5 class='text-center'>类型</h5></th>
-				     			<th><h5 class='text-center'>显示顺序</h5></th>
-				     			<th><h5 class='text-center'>MetricKey</h5></th>
-				     			<th><h5 class='text-center'>标题</h5></th>
-				     			<th><h5 class='text-center'>显示次数</h5></th>
-				     			<th><h5 class='text-center'>显示平均值</h5></th>
-				     			<th><h5 class='text-center'>显示总和</h5></th>
-				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a></h5></th>
+				     			<th width="10%"><h5 class='text-center'>项目</h5></th>
+				     			<th width="5%"><h5 class='text-center'>类型</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示顺序</h5></th>
+				     			<th width="8%"><h5 class='text-center'>是否告警</h5></th>
+				     			<th width="16%"><h5 class='text-center'>MetricKey</h5></th>
+				     			<th width="16%"><h5 class='text-center'>标题</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示次数</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示平均值</h5></th>
+				     			<th width="8%"><h5 class='text-center'>显示总和</h5></th>
+				     			<th width="13%"><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a></h5></th>
 				     		</tr>
 					     	<c:forEach var="config" items="${value}">
 				     			<tr>
 				     			<td>${config.domain}</td>
 				     			<td>${config.type}</td>
 				     			<td>${config.viewOrder}</td>
-				     			<td>${config.metricKey}</td>
-				     			<td>${config.title}</td>
+				     			<td>
+				     				<c:if test="${config.alarm}">
+				     					<span class="text-error">是</span>
+				     				</c:if>
+				     				<c:if test="${config.alarm == false}">
+				     					<span>否</span>
+				     				</c:if>
+				     			</td>
+				     			<td style="word-wrap:break-word;word-break:break-all;">${config.metricKey}</td>
+				     			<td style="word-wrap:break-word;word-break:break-all;">${config.title}</td>
 				     			<td>${config.showCount}
 				     				<c:if test="${config.showCountDashboard}">
 				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>

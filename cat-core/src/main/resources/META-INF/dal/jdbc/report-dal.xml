@@ -230,6 +230,7 @@
 		</query-defs>
 	</entity>
 	<entity name="report-content" table="report_content" alias="rc" class-name="HourlyReportContent">
+	 <member name="creation-date" insert-expr="NOW()" />
      <query-defs>
      </query-defs>
     </entity>
@@ -295,7 +296,7 @@
 		<query-defs>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
-					INSERT IGNORE INTO <TABLE/>
+					INSERT INTO <TABLE/>
 						(<FIELDS/>) 
 					VALUES
 						(<VALUES/>)
@@ -329,7 +330,7 @@
 		<query-defs>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
-					INSERT IGNORE INTO <TABLE/>
+					INSERT INTO <TABLE/>
 						(<FIELDS/>) 
 					VALUES
 						(<VALUES/>) 
@@ -439,7 +440,7 @@
 		<query-defs>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
-					INSERT IGNORE INTO <TABLE/>
+					INSERT INTO <TABLE/>
 						(<FIELDS/>) 
 					VALUES
 						(<VALUES/>) 

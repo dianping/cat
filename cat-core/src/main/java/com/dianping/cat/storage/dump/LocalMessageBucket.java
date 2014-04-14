@@ -7,11 +7,8 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.internal.MessageId;
@@ -19,7 +16,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class LocalMessageBucket implements MessageBucket, LogEnabled {
+public class LocalMessageBucket implements MessageBucket {
 	public static final String ID = "local";
 
 	private static final int MAX_BLOCK_SIZE = 1 << 16; // 64K
@@ -48,31 +45,18 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	private int m_blockSize;
 
-	private Logger m_logger;
-
 	public void archive() throws IOException {
 		File from = new File(m_baseDir, m_dataFile);
-
 		File outbox = new File(m_baseDir, "outbox");
 		File to = new File(outbox, m_dataFile);
 		File fromIndex = new File(m_baseDir, m_dataFile + ".idx");
 		File toIndex = new File(outbox, m_dataFile + ".idx");
+		File parentFile = from.getParentFile();
 
 		to.getParentFile().mkdirs();
-		Files.forDir().copyFile(from, to);
-		Files.forDir().copyFile(fromIndex, toIndex);
-
-		boolean flag = Files.forDir().delete(from);
-		boolean indexFlag = Files.forDir().delete(fromIndex);
-
-		if (flag == false) {
-			m_logger.error("delete data file error " + from);
-		}
-		if (indexFlag == false) {
-			m_logger.error("delete index file error " + fromIndex);
-		}
-
-		File parentFile = from.getParentFile();
+		toIndex.getParentFile().mkdirs();
+		from.renameTo(to);
+		fromIndex.renameTo(toIndex);
 
 		parentFile.delete(); // delete it if empty
 		parentFile.getParentFile().delete(); // delete it if empty
@@ -108,6 +92,7 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 			m_codec.decode(buf, tree);
 			return tree;
 		} catch (EOFException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -179,11 +164,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 		} else {
 			return null;
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

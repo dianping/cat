@@ -4,6 +4,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
@@ -69,7 +70,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
+		Transaction t = Cat.newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			ModelPeriod period = request.getPeriod();
@@ -86,13 +87,12 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 				t.setStatus("NoReportFound");
 			}
 		} catch (Exception e) {
-			logError(e);
+			Cat.logError(e);
 			t.setStatus(e);
 			response.setException(e);
 		} finally {
 			t.complete();
 		}
-
 		return response;
 	}
 

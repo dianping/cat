@@ -39,27 +39,29 @@ public class PeriodTask implements Task, LogEnabled {
 	}
 
 	public boolean enqueue(MessageTree tree) {
-		boolean result = m_queue.offer(tree);
+		if (m_analyzer.isRawAnalyzer()) {
+			boolean result = m_queue.offer(tree);
 
-		if (!result) { // trace queue overflow
-			m_queueOverflow++;
-			m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
-			m_serverStateManager.addMessageTotalLoss(1);
+			if (!result) { // trace queue overflow
+				m_queueOverflow++;
+				m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
 
-			if (m_queueOverflow % CatConstants.ERROR_COUNT == 0) {
-				m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
+				if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
+					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
+				}
 			}
+			return result;
+		} else {
+			return true;
 		}
-		return result;
 	}
 
 	public void finish() {
 		try {
 			m_analyzer.doCheckpoint(true);
+			m_analyzer.destroy();
 		} catch (Exception e) {
 			Cat.logError(e);
-		} finally {
-			m_analyzer.destroy();
 		}
 	}
 

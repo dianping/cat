@@ -44,104 +44,91 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-	private void buildStateInfo(Machine machine) {
+	private Machine buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
 		long start = m_startTime;
 		long end = m_startTime + minute * 60;
-		int size = 0;
 		double maxTps = 0;
+		long current = System.currentTimeMillis();
+		int size = 0;
 
-		if (end > System.currentTimeMillis()) {
-			end = System.currentTimeMillis();
+		if (end > current) {
+			end = current;
 		}
 		for (; start < end; start += minute) {
-			Statistic state = m_serverStateManager.findState(start);
+			Statistic state = m_serverStateManager.findOrCreateState(start);
 			Message temp = machine.findOrCreateMessage(start);
 			Map<String, AtomicLong> totals = state.getMessageTotals();
-			long messageTotal = state.getMessageTotal();
-			temp.setTotal(messageTotal);
-
 			Map<String, AtomicLong> totalLosses = state.getMessageTotalLosses();
-			long messageTotalLoss = state.getMessageTotalLoss();
-			temp.setTotalLoss(messageTotalLoss);
-
-			Map<String, Double> sizes = state.getMessageSizes();
-			double messageSize = state.getMessageSize();
-			temp.setSize(messageSize);
-
-			machine.setTotal(messageTotal + machine.getTotal());
-			machine.setTotalLoss(messageTotalLoss + machine.getTotalLoss());
-			machine.setSize(messageSize + machine.getSize());
+			Map<String, AtomicLong> sizes = state.getMessageSizes();
 
 			for (Entry<String, AtomicLong> entry : totals.entrySet()) {
-				String key = entry.getKey();
+				String domain = entry.getKey();
 				long value = entry.getValue().get();
-				ProcessDomain domain = machine.findOrCreateProcessDomain(key);
-				Detail detail = domain.findOrCreateDetail(start);
+				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
+				Detail detail = processDomain.findOrCreateDetail(start);
 
-				if (totals.containsKey(key)) {
-					domain.setTotal(value + domain.getTotal());
-					detail.setTotal(value);
-				}
-				if (totalLosses.containsKey(key)) {
-					domain.setTotalLoss(totalLosses.get(key).get() + domain.getTotalLoss());
-					detail.setTotalLoss(totalLosses.get(key).get());
-				}
-				if (sizes.containsKey(key)) {
-					domain.setSize(sizes.get(key) + domain.getSize());
-					detail.setSize(sizes.get(key));
-				}
+				processDomain.setTotal(value + processDomain.getTotal());
+				detail.setTotal(value + detail.getTotal());
+			}
+			for (Entry<String, AtomicLong> entry : totalLosses.entrySet()) {
+				String domain = entry.getKey();
+				long value = entry.getValue().get();
+				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
+				Detail detail = processDomain.findOrCreateDetail(start);
+
+				processDomain.setTotalLoss(value + processDomain.getTotalLoss());
+				detail.setTotalLoss(value + detail.getTotalLoss());
+			}
+			for (Entry<String, AtomicLong> entry : sizes.entrySet()) {
+				String domain = entry.getKey();
+				long value = entry.getValue().get();
+				ProcessDomain processDomain = machine.findOrCreateProcessDomain(domain);
+				Detail detail = processDomain.findOrCreateDetail(start);
+
+				processDomain.setSize(value + processDomain.getSize());
+				detail.setSize(value + detail.getSize());
 			}
 
+			long messageTotal = state.getMessageTotal();
+			long messageTotalLoss = state.getMessageTotalLoss();
+			long messageSize = state.getMessageSize();
+			long blockTotal = state.getBlockTotal();
+			long blockLoss = state.getBlockLoss();
+			long blockTime = state.getBlockTime();
+			long pigeonTimeError = state.getPigeonTimeError();
+			long networkTimeError = state.getNetworkTimeError();
+			long messageDump = state.getMessageDump();
+			long messageDumpLoss = state.getMessageDumpLoss();
+			int processDelayCount = state.getProcessDelayCount();
+			double processDelaySum = state.getProcessDelaySum();
+
+			temp.setTotal(messageTotal).setTotalLoss(messageTotalLoss).setSize(messageSize);
+			temp.setBlockTotal(blockTotal).setBlockLoss(blockLoss).setBlockTime(blockTime);
+			temp.setPigeonTimeError(pigeonTimeError).setNetworkTimeError(networkTimeError).setDump(messageDump);
+			temp.setDumpLoss(messageDumpLoss).setDelayCount(processDelayCount).setDelaySum(processDelaySum);
+
+			machine.setTotal(messageTotal + machine.getTotal()).setTotalLoss(messageTotalLoss + machine.getTotalLoss())
+			      .setSize(messageSize + machine.getSize());
+			machine.setBlockTotal(machine.getBlockTotal() + blockTotal).setBlockLoss(machine.getBlockLoss() + blockLoss)
+			      .setBlockTime(machine.getBlockTime() + blockTime);
+			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError)
+			      .setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError)
+			      .setDump(machine.getDump() + messageDump);
+			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss)
+			      .setDelayCount(machine.getDelayCount() + processDelayCount)
+			      .setDelaySum(machine.getDelaySum() + processDelaySum);
+
+			double avg = 0;
+			long count = machine.getDelayCount();
+
+			if (count > 0) {
+				avg = machine.getDelaySum() / count;
+				machine.setDelayAvg(avg);
+			}
 			if (messageTotal > maxTps) {
 				maxTps = messageTotal;
 			}
-
-			long blockTotal = state.getBlockTotal();
-			temp.setBlockTotal(blockTotal);
-			machine.setBlockTotal(machine.getBlockTotal() + blockTotal);
-
-			long blockLoss = state.getBlockLoss();
-			temp.setBlockLoss(blockLoss);
-			machine.setBlockLoss(machine.getBlockLoss() + blockLoss);
-
-			long blockTime = state.getBlockTime();
-			temp.setBlockTime(blockTime);
-			machine.setBlockTime(machine.getBlockTime() + blockTime);
-
-			long pigeonTimeError = state.getPigeonTimeError();
-			temp.setPigeonTimeError(pigeonTimeError);
-			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError);
-
-			long networkTimeError = state.getNetworkTimeError();
-			temp.setNetworkTimeError(networkTimeError);
-			machine.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError);
-
-			long messageDump = state.getMessageDump();
-			temp.setDump(messageDump);
-			machine.setDump(machine.getDump() + messageDump);
-
-			long messageDumpLoss = state.getMessageDumpLoss();
-			temp.setDumpLoss(messageDumpLoss);
-			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss);
-
-			int processDelayCount = state.getProcessDelayCount();
-			temp.setDelayCount(processDelayCount);
-			machine.setDelayCount(machine.getDelayCount() + processDelayCount);
-
-			double processDelaySum = state.getProcessDelaySum();
-			temp.setDelaySum(processDelaySum);
-			machine.setDelaySum(machine.getDelaySum() + processDelaySum);
-
-			double sum = machine.getDelaySum();
-			long count = machine.getDelayCount();
-			double avg = 0;
-
-			if (count > 0) {
-				avg = sum / count;
-				machine.setDelayAvg(avg);
-			}
-
 			temp.setTime(new Date(start));
 			size++;
 		}
@@ -152,15 +139,16 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		}
 		machine.setAvgTps(avgTps);
 		machine.setMaxTps(maxTps);
+		return machine;
 	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
+		long startTime = getStartTime();
 		StateReport stateReport = getReport(Constants.CAT);
-		Map<String, StateReport> reports = m_reportManager.getHourlyReports(getStartTime());
+		Map<String, StateReport> reports = m_reportManager.getHourlyReports(startTime);
 
 		reports.put(Constants.CAT, stateReport);
-		long startTime = getStartTime();
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
 		} else {
@@ -188,13 +176,11 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		report.setStartTime(new Date(m_startTime));
 		report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-		report.getMachines().clear();
 
-		Machine machine = report.findOrCreateMachine(m_ip);
-
-		buildStateInfo(machine);
+		Machine machine = buildStateInfo(report.findOrCreateMachine(m_ip));
 		StateReport stateReport = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 		Map<String, ProcessDomain> processDomains = stateReport.findOrCreateMachine(m_ip).getProcessDomains();
+
 		for (Map.Entry<String, ProcessDomain> entry : machine.getProcessDomains().entrySet()) {
 			ProcessDomain processDomain = processDomains.get(entry.getKey());
 
@@ -224,9 +210,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			} else if (!info.getDomain().equals(domain)) {
 				// only work on online environment
 				long current = System.currentTimeMillis();
-				long lastModifyTime = info.getLastModifiedDate().getTime();
+				Date lastModifiedDate = info.getLastModifiedDate();
 
-				if (current - lastModifyTime > ONE_HOUR) {
+				if (lastModifiedDate != null && (current - lastModifiedDate.getTime()) > ONE_HOUR) {
 					m_domainManager.update(info.getId(), domain, ip);
 					m_logger.info(String.format("old domain is %s , change ip %s to %s", info.getDomain(), ip, domain));
 				}

@@ -8,9 +8,10 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -23,6 +24,9 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+
+	@Inject
+	private ServerConfigManager m_manager;
 
 	@Override
 	public void afterLoad(Map<String, ProblemReport> reports) {
@@ -57,17 +61,13 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		return m_problemReportAggregation.getReport();
 	}
 
-	private boolean validateDomain(String domain) {
-		return !domain.equals(Constants.FRONT_END);
-	}
-
 	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
 		ProblemReport report = new ProblemReport(Constants.ALL);
 		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
 
 		try {
 			for (ProblemReport temp : reports.values()) {
-				if (validateDomain(temp.getDomain())) {
+				if (m_manager.validateDomain(temp.getDomain())) {
 					report.getIps().add(temp.getDomain());
 					report.getDomainNames().add(temp.getDomain());
 					visitor.visitProblemReport(temp);
@@ -86,7 +86,16 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 	@Override
 	public boolean createHourlyTask(ProblemReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), ProblemAnalyzer.ID, TaskProlicy.ALL);
+		String domain = report.getDomain();
+
+		if (domain.equals(Constants.ALL)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		}
+		if (m_manager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
+		} else {
+			return true;
+		}
 	}
 
 	@Override

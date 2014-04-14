@@ -142,6 +142,70 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		return result;
 	}
 
+	public void buildGroupTrendGraph(Model model, Payload payload, List<String> ips) {
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+		String type = payload.getType();
+		String name = payload.getName();
+		String display = name != null ? name : type;
+		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		long step = TimeUtil.ONE_MINUTE * 5;
+		String queryType = payload.getReportType();
+
+		if (queryType.equalsIgnoreCase("month")) {
+			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
+			step = TimeUtil.ONE_DAY;
+		}
+
+		List<Map<String, double[]>> allDatas = null;
+		for (String ip : ips) {
+			List<Map<String, double[]>> datas = buildLineChartData(start, end, domain, type, name, ip, queryType);
+
+			if (allDatas == null) {
+				allDatas = datas;
+			} else {
+				mergerList(allDatas, datas);
+			}
+		}
+		LineChart item = buildTotal(allDatas, start, size, step, display, queryType);
+		model.setHitTrend(item.getJsonString());
+
+		item = buildFail(allDatas, start, size, step, display, queryType);
+		model.setFailureTrend(item.getJsonString());
+	}
+
+	private List<Map<String, double[]>> buildLineChartData(Date start, Date end, String domain, String type,
+	      String name, String ip, String queryType) {
+		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
+
+		if (queryType.equalsIgnoreCase("day")) {
+			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, domain, type, name, ip);
+			Map<String, double[]> lastDayGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_DAY),
+			      new Date(end.getTime() - TimeUtil.ONE_DAY), domain, type, name, ip);
+			Map<String, double[]> lastWeekGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			      new Date(end.getTime() - TimeUtil.ONE_WEEK), domain, type, name, ip);
+
+			allDatas.add(currentGraph);
+			allDatas.add(lastDayGraph);
+			allDatas.add(lastWeekGraph);
+		} else if (queryType.equalsIgnoreCase("week")) {
+			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, domain, type, name, ip);
+			Map<String, double[]> lastWeek = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
+			      end.getTime() - TimeUtil.ONE_WEEK), domain, type, name, ip);
+
+			allDatas.add(currentGraph);
+			allDatas.add(lastWeek);
+		} else if (queryType.equalsIgnoreCase("month")) {
+			Map<String, double[]> graphData = getGraphDatasFromDaily(start, end, domain, type, name, ip);
+
+			allDatas.add(graphData);
+		} else {
+			throw new RuntimeException("Error graph query type");
+		}
+		return allDatas;
+	}
+
 	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name,
 	      String queryType) {
 		LineChart item = new LineChart();
@@ -164,51 +228,29 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		Date end = payload.getHistoryEndDate();
 		String type = payload.getType();
 		String name = payload.getName();
+		String domain = model.getDomain();
+		String ip = model.getIpAddress();
 		String display = name != null ? name : type;
 		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
 		String queryType = payload.getReportType();
-		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
 		long step = TimeUtil.ONE_MINUTE * 5;
 
-		if (queryType.equalsIgnoreCase("day")) {
-			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, model, payload);
-			Map<String, double[]> lastDayGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_DAY),
-			      new Date(end.getTime() - TimeUtil.ONE_DAY), model, payload);
-			Map<String, double[]> lastWeekGraph = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
-			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
-
-			allDatas.add(currentGraph);
-			allDatas.add(lastDayGraph);
-			allDatas.add(lastWeekGraph);
-		} else if (queryType.equalsIgnoreCase("week")) {
-			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, model, payload);
-			Map<String, double[]> lastWeek = getGraphDatasForHour(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
-			      end.getTime() - TimeUtil.ONE_WEEK), model, payload);
-
-			allDatas.add(currentGraph);
-			allDatas.add(lastWeek);
-		} else if (queryType.equalsIgnoreCase("month")) {
+		if (queryType.equalsIgnoreCase("month")) {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
-			Map<String, double[]> graphData = getGraphDatasFromDaily(start, end, model, payload);
-
-			allDatas.add(graphData);
-		} else {
-			throw new RuntimeException("Error graph query type");
 		}
 
-		LineChart item = buildTotal(allDatas, start, size, step, display, queryType);
-		model.setHitTrend(item.getJsonString());
+		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, domain, type, name, ip, queryType);
 
+		LineChart item = buildTotal(allDatas, start, size, step, display, queryType);
+
+		model.setHitTrend(item.getJsonString());
 		item = buildFail(allDatas, start, size, step, display, queryType);
 		model.setFailureTrend(item.getJsonString());
 	}
 
-	public Map<String, double[]> getGraphDatasForHour(Date start, Date end, Model model, Payload payload) {
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = model.getIpAddress();
+	public Map<String, double[]> getGraphDatasForHour(Date start, Date end, String domain, String type, String name,
+	      String ip) {
 		String queryIP = "All".equals(ip) == true ? "all" : ip;
 		List<Graph> events = new ArrayList<Graph>();
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
@@ -224,11 +266,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		return buildGraphDatasForHour(start, end, type, name, events);
 	}
 
-	private Map<String, double[]> getGraphDatasFromDaily(Date start, Date end, Model model, Payload payload) {
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = model.getIpAddress();
+	private Map<String, double[]> getGraphDatasFromDaily(Date start, Date end, String domain, String type, String name,
+	      String ip) {
 		String queryIp = "All".equalsIgnoreCase(ip) == true ? "All" : ip;
 		List<DailyGraph> graphs = new ArrayList<DailyGraph>();
 

@@ -5,11 +5,11 @@ package com.dianping.cat.report.task.transaction;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -99,8 +99,8 @@ public class TransactionGraphCreator {
 		Set<String> ips = report.getIps();
 		// all and every minute
 		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1);
-		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
-		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
+		Map<String, GraphLine> allDetailCache = new LinkedHashMap<String, GraphLine>();
+		Map<String, GraphLine> allSummaryCache = new LinkedHashMap<String, GraphLine>();
 
 		Date creationDate = new Date();
 		for (String ip : ips) {

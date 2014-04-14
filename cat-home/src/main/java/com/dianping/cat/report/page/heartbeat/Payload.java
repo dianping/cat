@@ -19,30 +19,35 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.HEARTBEAT);
 	}
 
-	public String getRealIp() {
-		return m_realIp;
-	}
-
-	public void setRealIp(String realIp) {
-		m_realIp = realIp;
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+	public String getRealIp() {
+		return m_realIp;
 	}
 
 	public String getType() {
 		return m_type;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setRealIp(String realIp) {
+		m_realIp = realIp;
+	}
+
 	public void setType(String type) {
 		m_type = type;
 	}
+
+	@Override
+   public String getReportType() {
+	   return "day";
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

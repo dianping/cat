@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -20,6 +21,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.metric.chart.GraphCreator;
+import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -30,6 +32,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
+
+	@Inject
+	private MetricGroupConfigManager m_metricGroupConfigManager;
 
 	@Inject
 	private GraphCreator m_graphCreator;
@@ -54,18 +59,26 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end,
-			      payload.getTest());
+			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		case DASHBOARD:
-			Map<String, LineChart> allCharts = m_graphCreator.buildDashboard(start, end, payload.getTest());
+			String group = payload.getGroup();
+			Map<String, LineChart> allCharts = null;
 
+			if (group == null || group.length() == 0) {
+				allCharts = m_graphCreator.buildDashboard(start, end);
+			} else {
+				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
+			}
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
 		}
-		model.setProductLines(m_productLineConfigManager.queryProductLines().values());
+		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
+
+		model.setMetricGroups(new ArrayList<String>(groups));
+		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
 		m_jspViewer.view(ctx, model);
 	}
 

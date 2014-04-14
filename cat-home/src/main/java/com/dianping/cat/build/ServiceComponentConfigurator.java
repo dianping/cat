@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -46,9 +45,6 @@ import com.dianping.cat.report.page.model.problem.CompositeProblemService;
 import com.dianping.cat.report.page.model.problem.HistoricalProblemService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.model.sql.CompositeSqlService;
-import com.dianping.cat.report.page.model.sql.HistoricalSqlService;
-import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.state.CompositeStateService;
 import com.dianping.cat.report.page.model.state.HistoricalStateService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
@@ -131,15 +127,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, CrossAnalyzer.ID, CompositeCrossService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
-
-		all.add(C(ModelService.class, "sql-local", LocalSqlService.class) //
-		      .req(BucketManager.class) //
-		      .req(MessageConsumer.class));
-		all.add(C(ModelService.class, "sql-historical", HistoricalSqlService.class) //
-		      .req(BucketManager.class, ReportService.class));
-		all.add(C(ModelService.class, SqlAnalyzer.ID, CompositeSqlService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "sql-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "top-local", LocalTopService.class) //
 		      .req(BucketManager.class) //

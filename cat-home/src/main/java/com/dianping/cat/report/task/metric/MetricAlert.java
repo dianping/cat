@@ -1,90 +1,281 @@
 package com.dianping.cat.report.task.metric;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.baseline.BaselineConfig;
-import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineService;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.tool.MailSMS;
 
 public class MetricAlert implements Task, LogEnabled {
 
 	@Inject
-	protected MetricConfigManager m_metricConfigManager;
+	private MetricConfigManager m_metricConfigManager;
 
 	@Inject
-	protected ProductLineConfigManager m_productLineConfigManager;
+	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	protected BaselineService m_baselineService;
+	private BaselineService m_baselineService;
 
 	@Inject
-	protected BaselineConfigManager m_baselineConfigManager;
+	private MailSMS m_mailSms;
 
 	@Inject
-	protected ServerConfigManager m_manager;
+	private RemoteMetricReportService m_service;
 
 	@Inject
-	protected ReportService m_reportService;
-
-	@Inject(type = ModelService.class, value = MetricAnalyzer.ID)
-	protected ModelService<MetricReport> m_service;
+	private AlertConfig m_alertConfig;
 
 	@Inject
-	protected MetricPointParser m_parser;
+	private AlertInfo m_alertInfo;
+
+	private static final long DURATION = TimeUtil.ONE_MINUTE;
+
+	private static final int DATA_CHECK_MINUTE = 2;
+
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
+
+	private Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
 	private Logger m_logger;
 
-	private static final String METRIC = MetricAnalyzer.ID;
+	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
+		double[] value = null;
+		double[] baseline = null;
+		String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+		      config.getMetricKey());
 
-	private static final long TEN_SECONDS = 10 * 1000;
+		if (minute >= DATA_CHECK_MINUTE - 1) {
+			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
-	private static final long DURATION = 1 * TimeUtil.ONE_MINUTE;
+			if (report != null) {
+				int start = minute + 1 - DATA_CHECK_MINUTE;
+				int end = minute;
 
-	private Set<AlertInfo> alertInfoSet = new HashSet<AlertInfo>();
+				value = queryRealData(start, end, metricKey, report, type);
+				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
+
+				return m_alertConfig.checkData(config, value, baseline, type);
+			}
+		} else if (minute < 0) {
+			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (lastReport != null) {
+				int start = 60 + minute + 1 - (DATA_CHECK_MINUTE);
+				int end = 60 + minute;
+
+				value = queryRealData(start, end, metricKey, lastReport, type);
+				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
+				return m_alertConfig.checkData(config, value, baseline, type);
+			}
+		} else {
+			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
+			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (currentReport != null && lastReport != null) {
+				int currentStart = 0, currentEnd = minute;
+				double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
+				double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
+				      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+
+				int lastStart = 60 + 1 - (DATA_CHECK_MINUTE - minute);
+				int lastEnd = 59;
+				double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
+				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
+				      new Date(ModelPeriod.LAST.getStartTime()), type);
+
+				value = mergerArray(lastValue, currentValue);
+				baseline = mergerArray(lastBaseline, currentBaseline);
+				return m_alertConfig.checkData(config, value, baseline, type);
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
+	private MetricReport fetchMetricReport(String product, ModelPeriod period) {
+		if (period == ModelPeriod.CURRENT) {
+			MetricReport report = m_currentReports.get(product);
+
+			if (report != null) {
+				return report;
+			} else {
+				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
+
+				report = m_service.invoke(request);
+				if (report != null) {
+					m_currentReports.put(product, report);
+				}
+				return report;
+			}
+		} else if (period == ModelPeriod.LAST) {
+			MetricReport report = m_lastReports.get(product);
+
+			if (report != null) {
+				return report;
+			} else {
+				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime());
+
+				report = m_service.invoke(request);
+				if (report != null) {
+					m_lastReports.put(product, report);
+				}
+				return report;
+			}
+		} else {
+			throw new RuntimeException("internal error, this can't be reached.");
+		}
+	}
+
+	@Override
+	public String getName() {
+		return "metric-alert";
+	}
+
+	private double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
+
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
+		}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
+		}
+		return result;
+	}
+
+	private void processProductLine(ProductLine productLine) {
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
+		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		String product = productLine.getId();
+
+		for (MetricItemConfig config : configs) {
+			if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
+			      .isShowCountDashboard())) {
+				continue;
+			}
+
+			Pair<Boolean, String> alert = null;
+			if (config.isShowAvg()) {
+				alert = computeAlertInfo(minute, product, config, MetricType.AVG);
+			}
+			if (config.isShowCount()) {
+				alert = computeAlertInfo(minute, product, config, MetricType.COUNT);
+			}
+			if (config.isShowSum()) {
+				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
+			}
+			if (alert != null && alert.getKey()) {
+				config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+				      config.getMetricKey()));
+
+				m_alertInfo.addMetric(config, new Date().getTime());
+				sendAlertInfo(productLine, config, alert.getValue());
+			}
+		}
+	}
+
+	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
+		double[] baseline = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
+		int length = end - start + 1;
+		double[] result = new double[length];
+		System.arraycopy(baseline, start, result, 0, length);
+
+		return result;
+	}
+
+	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
+		double[] all = new double[60];
+		Map<Integer, Segment> map = report.findOrCreateMetricItem(metricKey).getSegments();
+
+		for (Entry<Integer, Segment> entry : map.entrySet()) {
+			Integer minute = entry.getKey();
+			Segment seg = entry.getValue();
+
+			if (type == MetricType.AVG) {
+				all[minute] = seg.getAvg();
+			} else if (type == MetricType.COUNT) {
+				all[minute] = (double) seg.getCount();
+			} else if (type == MetricType.SUM) {
+				all[minute] = seg.getSum();
+			}
+		}
+		int length = end - start + 1;
+		double[] result = new double[length];
+		System.arraycopy(all, start, result, 0, length);
+
+		return result;
+	}
+
 	@Override
 	public void run() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		boolean active = true;
 		while (active) {
-			Transaction t = Cat.newTransaction("MetricAlert", "Redo");
-			long current = System.currentTimeMillis();
-			try {
-				Date date = new Date(System.currentTimeMillis() - DURATION - TEN_SECONDS);
+			int minute = Calendar.getInstance().get(Calendar.MINUTE);
+			String minuteStr = String.valueOf(minute);
 
-				metricAlert(date);
+			if (minute < 10) {
+				minuteStr = '0' + minuteStr;
+			}
+			Transaction t = Cat.newTransaction("MetricAlert", "M" + minuteStr);
+			long current = System.currentTimeMillis();
+
+			m_currentReports.clear();
+			m_lastReports.clear();
+			try {
+				Map<String, ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines();
+
+				for (ProductLine productLine : productLines.values()) {
+					try {
+						processProductLine(productLine);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
-
 			} finally {
 				t.complete();
 			}
@@ -100,138 +291,20 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected List<AlertInfo> metricAlert(Date date) {
-		long current = date.getTime() / 1000 / 60;
-		int minute = (int) (current % (60));
-		if (minute == 0) {
-			alertInfoSet = new HashSet<AlertInfo>();
-		}
-		Set<String> productLines = m_productLineConfigManager.queryProductLines().keySet();
-		List<AlertInfo> alerts = new ArrayList<AlertInfo>();
+	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
+		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
+		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+		String title = m_alertConfig.buildMailTitle(productLine, config);
 
-		for (String productLine : productLines) {
-			MetricReport report = queryMetricReport(productLine);
-			if (report == null) {
-				continue;
-			}
-			for (MetricItem item : report.getMetricItems().values()) {
-				MetricItemConfig metricConfig = m_metricConfigManager.queryMetricItemConfig(item.getId());
-				if (metricConfig == null) {
-					continue;
-				}
-				if (metricConfig.isShowCount()) {
-					alerts.addAll(buildAlertInfo(date, productLine, MetricType.COUNT, item, minute));
-				}
-				if (metricConfig.isShowAvg()) {
-					alerts.addAll(buildAlertInfo(date, productLine, MetricType.AVG, item, minute));
-				}
-				if (metricConfig.isShowSum()) {
-					alerts.addAll(buildAlertInfo(date, productLine, MetricType.SUM, item, minute));
-				}
-			}
-		}
-		List<AlertInfo> result = new ArrayList<AlertInfo>();
-		if (alerts.size() > 0) {
-			for (AlertInfo alert : alerts) {
-				if (!alertInfoSet.contains(alert)) {
-					m_logger.info(alert.toString());
-					result.add(alert);
-					alertInfoSet.add(alert);
-				}
-			}
-		}
-		return result;
-	}
+		m_logger.info(title + " " + content + " " + emails);
+		m_mailSms.sendEmail(title, content, emails);
+		m_mailSms.sendSms(title + " " + content, content, phones);
 
-	protected class AlertInfo {
-		Date date;
-
-		MetricType metricType;
-
-		String productLine;
-
-		String metricId;
-
-		public AlertInfo(Date date, MetricType metricType, String productLine, String metricId) {
-			super();
-			this.date = date;
-			this.metricType = metricType;
-			this.productLine = productLine;
-			this.metricId = metricId;
-		}
-
-		@Override
-		public String toString() {
-			return "AlertInfo [date=" + date + ", metricType=" + metricType + ", productLine=" + productLine
-			      + ", metricId=" + metricId + "]";
-		}
-
-	}
-
-	private List<AlertInfo> buildAlertInfo(Date date, String productLine, MetricType type, MetricItem item, int minute) {
-		List<AlertInfo> result = new ArrayList<AlertInfo>();
-		String id = item.getId();
-		String baseLineKey = id + ":" + type;
-		double[] baseline = m_baselineService.queryHourlyBaseline(METRIC, baseLineKey, date);
-		if (baseline != null) {
-			double[] realDatas = m_parser.buildHourlyData(item, type);
-			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(baseLineKey);
-			List<Integer> minutes = checkData(baseline, realDatas, minute, baselineConfig);
-			for (int resultMinuteInHour : minutes) {
-				long current = date.getTime() / TimeUtil.ONE_MINUTE;
-				long resultMinute = current - minute + resultMinuteInHour;
-				Date resultDate = new Date(resultMinute * TimeUtil.ONE_MINUTE);
-				AlertInfo info = new AlertInfo(resultDate, type, productLine, item.getId());
-				result.add(info);
-			}
-		}
-		return result;
-	}
-
-	private MetricReport queryMetricReport(String product) {
-		ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
-		if (m_service.isEligable(request)) {
-			ModelResponse<MetricReport> response = m_service.invoke(request);
-			if (response == null) {
-				return null;
-			}
-
-			return response.getModel();
-		} else {
-			throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
-		}
-	}
-
-	private List<Integer> checkData(double[] baseline, double[] datas, int minute, BaselineConfig config) {
-		List<Integer> result = new ArrayList<Integer>();
-		double minValue = config.getMinValue();
-		double lowerLimit = config.getLowerLimit();
-		double upperLimit = config.getUpperLimit();
-		for (int i = 0; i <= minute; i++) {
-			if (baseline[i] < 0) {
-				continue;
-			} else if (baseline[i] == 0) {
-				if (datas[i] >= minValue) {
-					result.add(i);
-				}
-			} else {
-				double percent = datas[i] / baseline[i];
-				if (datas[i] >= minValue && (percent < lowerLimit || percent > upperLimit)) {
-					result.add(i);
-				}
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public String getName() {
-		return "MetricAlertRedo";
+		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
 
 	@Override
 	public void shutdown() {
-
 	}
 
 }

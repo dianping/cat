@@ -4,7 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -174,31 +176,80 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	protected int encodeLogViewLink(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
+		Map<String, String> links = parseLinks(message.getData().toString());
 		int count = 0;
 
-		if (counter != null) {
-			counter.inc();
+		for (Map.Entry<String, String> e : links.entrySet()) {
+			String link = e.getKey();
+			String title = e.getValue();
 
-			count += helper.tr1(buf, "link");
-		} else {
-			count += helper.tr1(buf, null);
+			if (title.length() == 0) {
+				title = "show";
+			}
+			if (counter != null) {
+				counter.inc();
+
+				count += helper.tr1(buf, "link");
+			} else {
+				count += helper.tr1(buf, null);
+			}
+
+			count += helper.td1(buf);
+			count += helper.nbsp(buf, level * 2); // 2 spaces per level
+			count += helper.write(buf,
+			      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
+			            m_logViewPrefix, link, link, title));
+			count += helper.td2(buf);
+			count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
+
+			count += helper.tr2(buf);
+			count += helper.crlf(buf);
 		}
 
-		String link = message.getData().toString();
-
-		count += helper.td1(buf);
-
-		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>",
-		      m_logViewPrefix, link, link));
-		count += helper.td2(buf);
-
-		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
-
-		count += helper.tr2(buf);
-		count += helper.crlf(buf);
-
 		return count;
+	}
+
+	protected Map<String, String> parseLinks(String str) {
+		Map<String, String> links = new LinkedHashMap<String, String>();
+		int len = str.length();
+		StringBuilder name = new StringBuilder();
+		StringBuilder value = new StringBuilder();
+		boolean inName = true;
+
+		for (int i = 0; i < len; i++) {
+			char ch = str.charAt(i);
+
+			switch (ch) {
+			case '&':
+				links.put(name.toString(), value.toString());
+				name.setLength(0);
+				value.setLength(0);
+				inName = true;
+
+				break;
+			case '=':
+				if (inName) {
+					inName = false;
+					break;
+				}
+
+				// fall through
+			default:
+				if (inName) {
+					name.append(ch);
+				} else {
+					value.append(ch);
+				}
+
+				break;
+			}
+		}
+
+		if (name.length() > 0) {
+			links.put(name.toString(), value.toString());
+		}
+
+		return links;
 	}
 
 	protected int encodeRemoteLink(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
@@ -217,7 +268,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		String name = message.getName();
 
 		count += helper.td1(buf);
-
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
 		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">[:: %s ::]</a>", link, name));
 		count += helper.td2(buf);

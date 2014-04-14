@@ -4,29 +4,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.abtest.spi.internal.ABTestCodec;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.metric.model.entity.Abtest;
-import com.dianping.cat.consumer.metric.model.entity.Group;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -50,9 +46,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
-	private ABTestCodec m_codec;
 
 	@Inject
 	private TaskManager m_taskManager;
@@ -103,36 +96,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private Map<String, String> parseABtests(Transaction transaction) {
-		String abtest = queryAbTest(transaction);
-
-		return parseABTests(abtest);
-	}
-
-	private String queryAbTest(Transaction transaction) {
-		List<Message> messages = transaction.getChildren();
-
-		for (Message message : messages) {
-			if (message instanceof Event) {
-				if ("URL".equals(message.getType()) && "ABTest".equals(message.getName())) {
-					String data = (String) message.getData();
-
-					return data;
-				}
-			}
-		}
-		return "";
-	}
-
-	public Map<String, String> parseABTests(String str) {
-		// -1 is the all metric,design for default
-		Map<String, String> abtests = new HashMap<String, String>();
-		abtests.put("-1", "");
-
-		abtests.putAll(m_codec.decode(str));
-		return abtests;
-	}
-
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -167,15 +130,18 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		String status = metric.getStatus();
 		ConfigItem config = parseValue(status, data);
 
+		if (!StringUtils.isEmpty(type)) {
+			group = type;
+			m_productLineConfigManager.insertIfNotExsit(group, domain);
+		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			String key = m_configManager.buildMetricKey(domain, "Metric", name);
 			MetricItem metricItem = report.findOrCreateMetricItem(key);
-			Map<String, String> abtests = parseABTests(type);
 
 			metricItem.addDomain(domain).setType(status);
-			updateMetric(metricItem, abtests, min, config.getCount(), config.getValue());
+			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(name);
 			m_configManager.insertIfNotExist(domain, "Metric", name, config);
@@ -209,7 +175,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setCount(Integer.parseInt(datas[0]));
 			config.setValue(Double.parseDouble(datas[1]));
-			config.setShowCount(true);
+			config.setShowCount(false);
 			config.setShowSum(true);
 		} else {
 			return null;
@@ -251,10 +217,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				int min = (int) (current % (60));
 				double sum = transaction.getDurationInMicros();
 				MetricItem metricItem = report.findOrCreateMetricItem(key);
-				Map<String, String> abtests = parseABtests(transaction);
 
 				metricItem.addDomain(domain).setType("C");
-				updateMetric(metricItem, abtests, min, 1, sum);
+				updateMetric(metricItem, min, 1, sum);
 			}
 		}
 	}
@@ -319,16 +284,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 	}
 
-	private void updateMetric(MetricItem metricItem, Map<String, String> abtests, int minute, int count, double sum) {
-		for (Entry<String, String> entry : abtests.entrySet()) {
-			Abtest abtest = metricItem.findOrCreateAbtest(entry.getKey());
-			Group group = abtest.findOrCreateGroup(entry.getValue());
-			Point point = group.findOrCreatePoint(minute);
+	private void updateMetric(MetricItem metricItem, int minute, int count, double sum) {
+		Segment seg = metricItem.findOrCreateSegment(minute);
 
-			point.setCount(point.getCount() + count);
-			point.setSum(point.getSum() + sum);
-			point.setAvg(point.getSum() / point.getCount());
-		}
+		seg.setCount(seg.getCount() + count);
+		seg.setSum(seg.getSum() + sum);
+		seg.setAvg(seg.getSum() / seg.getCount());
 	}
 
 	public static class ConfigItem {
@@ -399,27 +360,23 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	public void setBucketManager(BucketManager bucketManager) {
-   	m_bucketManager = bucketManager;
-   }
+		m_bucketManager = bucketManager;
+	}
 
 	public void setBusinessReportDao(BusinessReportDao businessReportDao) {
-   	m_businessReportDao = businessReportDao;
-   }
+		m_businessReportDao = businessReportDao;
+	}
 
 	public void setConfigManager(MetricConfigManager configManager) {
-   	m_configManager = configManager;
-   }
+		m_configManager = configManager;
+	}
 
 	public void setProductLineConfigManager(ProductLineConfigManager productLineConfigManager) {
-   	m_productLineConfigManager = productLineConfigManager;
-   }
-
-	public void setCodec(ABTestCodec codec) {
-   	m_codec = codec;
-   }
+		m_productLineConfigManager = productLineConfigManager;
+	}
 
 	public void setTaskManager(TaskManager taskManager) {
-   	m_taskManager = taskManager;
-   }
-	
+		m_taskManager = taskManager;
+	}
+
 }

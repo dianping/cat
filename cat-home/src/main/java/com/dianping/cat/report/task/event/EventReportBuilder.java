@@ -82,15 +82,11 @@ public class EventReportBuilder implements ReportTaskBuilder {
 	}
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		List<EventReport> reports = new ArrayList<EventReport>();
 		long startTime = period.getTime();
 		EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
 		      + TimeUtil.ONE_HOUR));
 
-		reports.add(report);
-		EventReport eventReport = m_eventMerger.mergeForGraph(domain, reports);
-
-		return m_eventGraphCreator.splitReportToGraphs(period, domain, name, eventReport);
+		return m_eventGraphCreator.splitReportToGraphs(period, domain, EventAnalyzer.ID, report);
 	}
 
 	@Override

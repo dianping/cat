@@ -5,125 +5,163 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import com.google.gson.Gson;
+import java.util.Map;
 
 public class LineChart {
 
-	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	private transient SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
-	private int size;
+	private int m_size;
 
-	private long step;
+	private long m_step;
 
-	private String start;
+	private String m_start;
 
-	private List<String> subTitles = new ArrayList<String>();
+	private List<String> m_subTitles = new ArrayList<String>();
 
-	private String title;
+	private String m_title;
+	
+	private String m_id;
 
-	private List<double[]> values = new ArrayList<double[]>();
+	private String m_htmlTitle;
 
-	private double[] ylable;
+	private List<double[]> m_values = new ArrayList<double[]>();
+
+	private List<Map<Long, Double>> m_datas = new ArrayList<Map<Long, Double>>();
+
+	private double[] m_ylable;
 
 	public LineChart() {
 	}
 
 	public LineChart add(String title, double[] value) {
-		this.subTitles.add(title);
-		this.values.add(value);
+		m_subTitles.add(title);
+		m_values.add(value);
+		return this;
+	}
+
+	public LineChart add(String title, Map<Long, Double> data) {
+		m_datas.add(data);
+		m_subTitles.add(title);
 		return this;
 	}
 
 	public LineChart addSubTitle(String title) {
-		this.subTitles.add(title);
+		m_subTitles.add(title);
 		return this;
 	}
 
 	public LineChart addValue(double[] value) {
-		this.values.add(value);
+		m_values.add(value);
 		return this;
 	}
 
+	public List<Map<Long, Double>> getDatas() {
+		return m_datas;
+	}
+
+	public String getHtmlTitle() {
+		if (m_htmlTitle == null) {
+			return m_title;
+		} else {
+			return m_htmlTitle;
+		}
+	}
+
+	public String getId() {
+   	return m_id;
+   }
+
 	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
+		return new JsonBuilder().toJson(this);
 	}
 
 	public int getSize() {
-		return this.size;
+		return m_size;
 	}
 
 	public String getStart() {
-		return this.start;
+		return m_start;
+	}
+
+	public long getStep() {
+		return m_step;
 	}
 
 	public List<String> getSubTitles() {
-		return this.subTitles;
+		return m_subTitles;
 	}
 
 	public String getTitle() {
-		return this.title;
+		return m_title;
 	}
 
 	public List<double[]> getValues() {
-		return this.values;
+		return m_values;
+	}
+
+	public double[] getValues(int index) {
+		int size = m_values.size();
+
+		if (index > size) {
+			return null;
+		} else {
+			return m_values.get(index);
+		}
 	}
 
 	public double[] getYlable() {
-		return this.ylable;
+		return m_ylable;
 	}
 
+	public void setDatas(List<Map<Long, Double>> datas) {
+		m_datas = datas;
+	}
+
+	public void setHtmlTitle(String htmlTitle) {
+		m_htmlTitle = htmlTitle;
+	}
+
+	public void setId(String id) {
+   	m_id = id;
+   }
+
 	public LineChart setSize(int size) {
-		this.size = size;
+		m_size = size;
 		return this;
 	}
 
 	public LineChart setStart(Date start) {
-		this.start = sdf.format(start);
+		m_start = m_sdf.format(start);
 		return this;
 	}
 
+	public void setStep(long step) {
+		m_step = step;
+	}
+
 	public LineChart setSubTitles(List<String> subTitles) {
-		this.subTitles = subTitles;
+		m_subTitles = subTitles;
 		return this;
 	}
 
 	public LineChart setTitle(String title) {
-		this.title = title;
+		m_title = title;
 		return this;
 	}
 
 	public LineChart setValues(List<double[]> values) {
-		this.values = values;
+		m_values = values;
 		return this;
 	}
 
 	public LineChart setYlable(double[] ylable) {
 		if (ylable == null) {
-			this.ylable = new double[0];
+			m_ylable = new double[0];
 		} else {
-			this.ylable = Arrays.copyOf(ylable, ylable.length);
+			m_ylable = Arrays.copyOf(ylable, ylable.length);
 		}
 		return this;
 	}
-
-	public long getStep() {
-		return step;
-	}
-
-	public void setStep(long step) {
-		this.step = step;
-	}
-
-	public double[] getValues(int index) {
-		int size = values.size();
-
-		if (index > size) {
-			return null;
-		} else {
-			return values.get(index);
-		}
-	}
-
+	
 }

@@ -92,14 +92,12 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
-					String expect = null;
 					try {
 						id = "" + serial.incrementAndGet();
 						String value = "value:" + id;
 						String target = bucket.findById(id);
 						Assert.assertEquals(value, target);
 					} catch (Throwable e) {
-						System.out.println(Thread.currentThread().getName() + ":" + id + ":" + expect);
 						e.printStackTrace();
 						fail.incrementAndGet();
 					}
@@ -122,7 +120,6 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
-					String expect = null;
 					try {
 						id = "" + serial.incrementAndGet();
 						String value = "value:" + id;
@@ -130,7 +127,6 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 						String target = bucket.findById(id);
 						Assert.assertEquals(value, target);
 					} catch (Throwable e) {
-						System.out.println(Thread.currentThread().getName() + ":" + id + ":" + expect);
 						e.printStackTrace();
 						fail.incrementAndGet();
 					}

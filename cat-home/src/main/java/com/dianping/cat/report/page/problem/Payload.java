@@ -10,7 +10,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("group")
+	@FieldMeta("groupName")
 	private String m_groupName;
 
 	@FieldMeta("linkCount")
@@ -42,9 +42,44 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+	
+	@FieldMeta("group")
+	private String m_group;
 
 	public Payload() {
 		super(ReportPage.PROBLEM);
+	}
+
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public int getCacheThreshold() {
+		return m_cacheThreshold;
+	}
+
+	public int getCallThreshold() {
+		return m_callThreshold;
+	}
+
+	public String getGroup() {
+   	return m_group;
+   }
+
+	public String getGroupName() {
+		return m_groupName;
+	}
+
+	public int getLinkCount() {
+		if (m_linkCount < 40) {
+			m_linkCount = 40;
+		}
+		return m_linkCount;
+	}
+
+	public int getMinute() {
+		return m_minute;
 	}
 
 	public String getQueryString() {
@@ -58,60 +93,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		return sb.toString();
 	}
 
-	@Override
-	public Action getAction() {
-		return m_action;
-	}
-
-	public String getGroupName() {
-		return m_groupName;
-	}
-
-	public int getLinkCount() {
-		if (m_linkCount < 40) {
-			m_linkCount = 40;
-		}
-		return m_linkCount;
-	}
-
-	public int getSqlThreshold() {
-		return m_sqlThreshold;
-	}
-
-	public void setSqlThreshold(int sqlThreshold) {
-		m_sqlThreshold = sqlThreshold;
-	}
-
 	public int getServiceThreshold() {
 		return m_serviceThreshold;
 	}
 
-	public void setServiceThreshold(int serviceThreshold) {
-		m_serviceThreshold = serviceThreshold;
-	}
-
-	public int getCacheThreshold() {
-		return m_cacheThreshold;
-	}
-
-	public void setCacheThreshold(int cacheThreshold) {
-		m_cacheThreshold = cacheThreshold;
-	}
-
-	public int getCallThreshold() {
-		return m_callThreshold;
-	}
-
-	public void setCallThreshold(int callThreshold) {
-		m_callThreshold = callThreshold;
-	}
-
-	public int getUrlThreshold() {
-		return m_urlThreshold;
-	}
-
-	public int getMinute() {
-		return m_minute;
+	public int getSqlThreshold() {
+		return m_sqlThreshold;
 	}
 
 	public String getStatus() {
@@ -126,9 +113,25 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_type;
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+	public int getUrlThreshold() {
+		return m_urlThreshold;
 	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOULY_REPORT);
+	}
+
+	public void setCacheThreshold(int cacheThreshold) {
+		m_cacheThreshold = cacheThreshold;
+	}
+
+	public void setCallThreshold(int callThreshold) {
+		m_callThreshold = callThreshold;
+	}
+
+	public void setGroup(String group) {
+   	m_group = group;
+   }
 
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
@@ -138,12 +141,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_linkCount = linkSize;
 	}
 
-	public void setUrlThreshold(int longTime) {
-		m_urlThreshold = longTime;
-	}
-
 	public void setMinute(int minute) {
 		m_minute = minute;
+	}
+
+	public void setServiceThreshold(int serviceThreshold) {
+		m_serviceThreshold = serviceThreshold;
+	}
+
+	public void setSqlThreshold(int sqlThreshold) {
+		m_sqlThreshold = sqlThreshold;
 	}
 
 	public void setStatus(String status) {
@@ -153,15 +160,19 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
 	}
-
+	
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public void setUrlThreshold(int longTime) {
+		m_urlThreshold = longTime;
 	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.HOULY_REPORT;
 		}
 	}
 }

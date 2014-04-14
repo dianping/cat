@@ -38,12 +38,17 @@ public class CatAppender extends AppenderSkeleton {
 		if (info != null) {
 			MessageProducer cat = Cat.getProducer();
 			Throwable exception = info.getThrowable();
+			Object message = event.getMessage();
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 			if (tree == null) {
 				Transaction t = cat.newTransaction("System", "Log4jException");
 
-				cat.logError(exception);
+				if (message != null) {
+					cat.logError(String.valueOf(message), exception);
+				} else {
+					cat.logError(exception);
+				}
 				t.setStatus(Message.SUCCESS);
 				t.complete();
 			} else {

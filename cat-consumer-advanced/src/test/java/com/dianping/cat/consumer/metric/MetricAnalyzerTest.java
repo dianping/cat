@@ -22,14 +22,10 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.abtest.spi.internal.DefaultABTestCodec;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.message.internal.DefaultEvent;
@@ -68,7 +64,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		m_analyzer.setTaskManager(new MockTaskManager());
 		m_analyzer.setBusinessReportDao(m_businessReportDao);
 		m_analyzer.setProductLineConfigManager(new MockProductLineManager());
-		m_analyzer.setCodec(new DefaultABTestCodec());
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
@@ -110,8 +105,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			t.setTimestamp(m_timestamp + i * MINITE);
 			DefaultEvent event = new DefaultEvent("URL", "ABTest");
 
-			event.addData("1=ab:A");
-
 			DefaultMetric metric = new DefaultMetric("City", "/beijing");
 
 			metric.setTimestamp(m_timestamp + i * MINITE);
@@ -124,8 +117,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			t = new DefaultTransaction("Service", "TuanGouWeb", null);
 			t.setTimestamp(m_timestamp + i * MINITE);
 			DefaultEvent event = new DefaultEvent("URL", "ABTest");
-
-			event.addData("1=ab:A");
 
 			DefaultMetric metric = new DefaultMetric("City", "/nanjing");
 
@@ -284,12 +275,12 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public List<String> queryProductLineDomains(String productLine) {
+		public List<String> queryDomainsByProductLine(String productLine) {
 			return new ArrayList<String>();
 		}
 
 		@Override
-		public Map<String, ProductLine> queryProductLines() {
+		public Map<String, ProductLine> queryAllProductLines() {
 			return new HashMap<String, ProductLine>();
 		}
 	}

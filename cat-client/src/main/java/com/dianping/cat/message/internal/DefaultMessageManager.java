@@ -1,7 +1,12 @@
 package com.dianping.cat.message.internal;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Stack;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -16,6 +21,7 @@ import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
@@ -34,10 +40,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Inject
 	private MessageStatistics m_statistics;
 
-	// we don't use static modifier since MessageManager is a singleton actually
+	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
-
-	private InheritableThreadLocal<String> m_inheritableContext = new InheritableThreadLocal<String>();
 
 	private MessageIdFactory m_factory;
 
@@ -47,16 +51,34 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private String m_hostName;
 
-	private Logger m_logger;
-
 	private boolean m_firstMessage = true;
+
+	private TransactionHelper m_validator = new TransactionHelper();
+
+	private Map<String, TaggedTransaction> m_taggedTransactions;
+
+	private Logger m_logger;
 
 	@Override
 	public void add(Message message) {
 		Context ctx = getContext();
 
 		if (ctx != null) {
-			ctx.add(this, message);
+			ctx.add(message);
+		}
+	}
+
+	@Override
+	public void bind(String tag, String title) {
+		TaggedTransaction t = m_taggedTransactions.get(tag);
+
+		if (t != null) {
+			MessageTree tree = getThreadLocalMessageTree();
+
+			if (tree != null) {
+				t.start();
+				t.bind(tag, tree.getMessageId(), title);
+			}
 		}
 	}
 
@@ -79,7 +101,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public void flush(MessageTree tree) {
 		MessageSender sender = m_transportManager.getSender();
 
-		if (sender != null && !shouldThrottle(tree)) {
+		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
 			if (m_statistics != null) {
@@ -98,7 +120,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_configManager;
 	}
 
-	private Context getContext() {
+	Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
 
@@ -108,10 +130,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		return null;
-	}
-
-	public String getMetricType() {
-		return m_inheritableContext.get();
 	}
 
 	@Override
@@ -157,10 +175,27 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} catch (IOException e) {
 			throw new InitializationException("Error while initializing MessageIdFactory!", e);
 		}
+
+		// initialize the tagged transaction cache
+		final int size = m_configManager.getTaggedTransactionCacheSize();
+
+		m_taggedTransactions = new LinkedHashMap<String, TaggedTransaction>(size * 4 / 3 + 1, 0.75f, true) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected boolean removeEldestEntry(Entry<String, TaggedTransaction> eldest) {
+				return size() >= size;
+			}
+		};
 	}
 
 	@Override
 	public boolean isCatEnabled() {
+		return m_domain != null && m_domain.isEnabled() && m_configManager.isCatEnabled();
+	}
+
+	@Override
+	public boolean isMessageEnabled() {
 		return m_domain != null && m_domain.isEnabled() && m_context.get() != null && m_configManager.isCatEnabled();
 	}
 
@@ -190,10 +225,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_context.remove();
 	}
 
-	public void setMetricType(String metricType) {
-		m_inheritableContext.set(metricType);
-	}
-
 	public void setTraceMode(boolean traceMode) {
 		Context content = getContext();
 
@@ -207,48 +238,56 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx;
 
 		if (m_domain != null) {
-			ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp(), m_configManager);
+			ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
 		} else {
-			ctx = new Context("Unknown", m_hostName, "", m_configManager);
+			ctx = new Context("Unknown", m_hostName, "");
 		}
 
 		m_context.set(ctx);
 	}
 
-	private boolean shouldThrottle(MessageTree tree) {
-		if (!isCatEnabled()) {
+	boolean shouldLog(Throwable e) {
+		Context ctx = m_context.get();
+
+		if (ctx != null) {
+			return ctx.shouldLog(e);
+		} else {
 			return true;
 		}
-
-		return false;
 	}
 
 	@Override
-	public void start(Transaction transaction) {
+	public void start(Transaction transaction, boolean forked) {
 		Context ctx = getContext();
 
 		if (ctx != null) {
-			ctx.start(this, transaction);
+			ctx.start(transaction, forked);
+
+			if (transaction instanceof TaggedTransaction) {
+				TaggedTransaction tt = (TaggedTransaction) transaction;
+
+				m_taggedTransactions.put(tt.getTag(), tt);
+			}
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
 		}
 	}
 
-	static class Context {
+	class Context {
 		private MessageTree m_tree;
 
 		private Stack<Transaction> m_stack;
 
-		private ClientConfigManager m_configManager;
-
 		private int m_length;
+
+		private boolean m_traceMode;
 
 		private long m_totalDurationInMicros; // for truncate message
 
-		private boolean m_traceMode = false;
+		private Set<Throwable> m_knownExceptions;
 
-		public Context(String domain, String hostName, String ipAddress, ClientConfigManager configManager) {
+		public Context(String domain, String hostName, String ipAddress) {
 			m_tree = new DefaultMessageTree();
 			m_stack = new Stack<Transaction>();
 
@@ -262,33 +301,32 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setDomain(domain);
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
-			m_configManager = configManager;
 			m_length = 1;
 		}
 
-		public void add(DefaultMessageManager manager, Message message) {
+		public void add(Message message) {
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
 				if (tree.getMessageId() == null) {
-					tree.setMessageId(manager.nextMessageId());
+					tree.setMessageId(nextMessageId());
 				}
 
 				tree.setMessage(message);
-				manager.flush(tree);
+				flush(tree);
 			} else {
 				Transaction parent = m_stack.peek();
 
-				addTransactionChild(manager, message, parent);
+				addTransactionChild(message, parent);
 			}
 		}
 
-		private void addTransactionChild(DefaultMessageManager manager, Message message, Transaction transaction) {
+		private void addTransactionChild(Message message, Transaction transaction) {
 			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
 			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
 
 			if (treePeriod < messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
-				truncateAndFlushMessage(manager, message.getTimestamp());
+				m_validator.truncateAndFlush(this, message.getTimestamp());
 			}
 
 			transaction.addChild(message);
@@ -318,10 +356,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				Transaction current = m_stack.pop();
 
 				if (transaction == current) {
-					validateTransaction(current);
+					m_validator.validate(m_stack.isEmpty() ? null : m_stack.peek(), current);
 				} else {
 					while (transaction != current && !m_stack.empty()) {
-						validateTransaction(current);
+						m_validator.validate(m_stack.peek(), current);
 
 						current = m_stack.pop();
 					}
@@ -349,34 +387,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
-		private void migrateMessage(DefaultMessageManager manager, Transaction source, Transaction target, int level) {
-			Transaction current = level < m_stack.size() ? m_stack.get(level) : null;
-			boolean shouldKeep = false;
-
-			for (Message child : source.getChildren()) {
-				if (child != current) {
-					target.addChild(child);
-				} else {
-					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(), manager);
-
-					cloned.setTimestamp(current.getTimestamp());
-					cloned.setDurationInMicros(current.getDurationInMicros());
-					cloned.addData(current.getData().toString());
-					cloned.setStatus(Message.SUCCESS);
-
-					target.addChild(cloned);
-					migrateMessage(manager, current, cloned, level + 1);
-					shouldKeep = true;
-				}
-			}
-
-			source.getChildren().clear();
-
-			if (shouldKeep) { // add it back
-				source.addChild(current);
-			}
-		}
-
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
@@ -389,44 +399,129 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_traceMode = traceMode;
 		}
 
-		public void start(DefaultMessageManager manager, Transaction transaction) {
+		public boolean shouldLog(Throwable e) {
+			if (m_knownExceptions == null) {
+				m_knownExceptions = new HashSet<Throwable>();
+			}
+
+			if (m_knownExceptions.contains(e)) {
+				return false;
+			} else {
+				m_knownExceptions.add(e);
+				return true;
+			}
+		}
+
+		public void start(Transaction transaction, boolean forked) {
 			if (!m_stack.isEmpty()) {
 				Transaction parent = m_stack.peek();
 
-				addTransactionChild(manager, transaction, parent);
+				addTransactionChild(transaction, parent);
 			} else {
 				if (m_tree.getMessageId() == null) {
-					m_tree.setMessageId(manager.nextMessageId());
+					m_tree.setMessageId(nextMessageId());
 				}
 
 				m_tree.setMessage(transaction);
 			}
-			m_stack.push(transaction);
+
+			if (!forked) {
+				m_stack.push(transaction);
+			}
 		}
 
 		private long trimToHour(long timestamp) {
 			return timestamp - timestamp % (3600 * 1000L);
 		}
+	}
 
-		private void truncateAndFlushMessage(DefaultMessageManager manager, long timestamp) {
-			Message message = m_tree.getMessage();
+	class TransactionHelper {
+		private void linkAsRunAway(Transaction parent, DefaultForkedTransaction transaction) {
+			DefaultEvent event = new DefaultEvent("RemoteCall", "RunAway");
+
+			event.addData(transaction.getForkedMessageId(), transaction.getType() + ":" + transaction.getName());
+			event.setTimestamp(transaction.getTimestamp());
+			event.setStatus(Message.SUCCESS);
+			event.setCompleted(true);
+			transaction.setStandalone(true);
+
+			if (parent instanceof DefaultTransaction) {
+				((DefaultTransaction) parent).replaceChild(transaction, event);
+			} else {
+				add(event);
+			}
+		}
+
+		private void markAsNotCompleted(DefaultTransaction transaction) {
+			DefaultEvent event = new DefaultEvent("CAT", "BadInstrument");
+
+			event.setStatus("TransactionNotCompleted");
+			event.setCompleted(true);
+			transaction.addChild(event);
+			transaction.setCompleted(true);
+		}
+
+		private void markAsRunAway(Transaction parent, DefaultTaggedTransaction transaction) {
+			if (!transaction.hasChildren()) {
+				transaction.addData("RunAway");
+			}
+
+			transaction.setStatus(Message.SUCCESS);
+			transaction.setStandalone(true);
+			transaction.complete();
+		}
+
+		private void migrateMessage(Stack<Transaction> stack, Transaction source, Transaction target, int level) {
+			Transaction current = level < stack.size() ? stack.get(level) : null;
+			boolean shouldKeep = false;
+
+			for (Message child : source.getChildren()) {
+				if (child != current) {
+					target.addChild(child);
+				} else {
+					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(),
+					      DefaultMessageManager.this);
+
+					cloned.setTimestamp(current.getTimestamp());
+					cloned.setDurationInMicros(current.getDurationInMicros());
+					cloned.addData(current.getData().toString());
+					cloned.setStatus(Message.SUCCESS);
+
+					target.addChild(cloned);
+					migrateMessage(stack, current, cloned, level + 1);
+					shouldKeep = true;
+				}
+			}
+
+			source.getChildren().clear();
+
+			if (shouldKeep) { // add it back
+				source.addChild(current);
+			}
+		}
+
+		public void truncateAndFlush(Context ctx, long timestamp) {
+			MessageTree tree = ctx.m_tree;
+			Stack<Transaction> stack = ctx.m_stack;
+			Message message = tree.getMessage();
 
 			if (message instanceof DefaultTransaction) {
-				String id = m_tree.getMessageId();
-				String rootId = m_tree.getRootMessageId();
-				String childId = manager.nextMessageId();
+				String id = tree.getMessageId();
+				String rootId = tree.getRootMessageId();
+				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
-				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), manager);
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
+				      DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());
 				target.addData(source.getData().toString());
 				target.setStatus(Message.SUCCESS);
 
-				migrateMessage(manager, source, target, 1);
+				migrateMessage(stack, source, target, 1);
 
-				for (int i = m_stack.size() - 1; i >= 0; i--) {
-					DefaultTransaction t = (DefaultTransaction) m_stack.get(i);
+				for (int i = stack.size() - 1; i >= 0; i--) {
+					DefaultTransaction t = (DefaultTransaction) stack.get(i);
 
 					t.setTimestamp(timestamp);
 				}
@@ -438,46 +533,46 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				target.addChild(next);
 
 				// tree is the parent, and m_tree is the child.
-				MessageTree tree = m_tree.copy();
+				MessageTree t = tree.copy();
 
-				tree.setMessage(target);
+				t.setMessage(target);
 
-				manager.flush(tree);
-				m_tree.setMessageId(childId);
-				m_tree.setParentMessageId(id);
-				m_tree.setRootMessageId(rootId != null ? rootId : id);
-				m_length = m_stack.size();
-				m_totalDurationInMicros = m_totalDurationInMicros + target.getDurationInMicros();
+				flush(t);
+				t.setMessageId(childId);
+				t.setParentMessageId(id);
+				t.setRootMessageId(rootId != null ? rootId : id);
+				ctx.m_length = stack.size();
+				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
 			}
 		}
 
-		void validateTransaction(Transaction transaction) {
-			if (!transaction.isStandalone()) {
-				return;
-			}
+		public void validate(Transaction parent, Transaction transaction) {
+			if (transaction.isStandalone()) {
+				List<Message> children = transaction.getChildren();
+				int len = children.size();
 
-			List<Message> children = transaction.getChildren();
-			int len = children.size();
+				for (int i = 0; i < len; i++) {
+					Message message = children.get(i);
 
-			for (int i = 0; i < len; i++) {
-				Message message = children.get(i);
-
-				if (message instanceof Transaction) {
-					validateTransaction((Transaction) message);
+					if (message instanceof Transaction) {
+						validate(transaction, (Transaction) message);
+					}
 				}
-			}
 
-			if (!transaction.isCompleted() && transaction.isStandalone() && transaction instanceof DefaultTransaction) {
-				// missing transaction end, log a BadInstrument event so that
-				// developer can fix the code
-				DefaultEvent notCompleteEvent = new DefaultEvent("CAT", "BadInstrument");
-
-				notCompleteEvent.setStatus("TransactionNotCompleted");
-				notCompleteEvent.setCompleted(true);
-				transaction.addChild(notCompleteEvent);
-				((DefaultTransaction) transaction).setCompleted(true);
+				if (!transaction.isCompleted() && transaction instanceof DefaultTransaction) {
+					// missing transaction end, log a BadInstrument event so that
+					// developer can fix the code
+					markAsNotCompleted((DefaultTransaction) transaction);
+				}
+			} else if (!transaction.isCompleted()) {
+				if (transaction instanceof DefaultForkedTransaction) {
+					// link it as run away message since the forked transaction is not completed yet
+					linkAsRunAway(parent, (DefaultForkedTransaction) transaction);
+				} else if (transaction instanceof DefaultTaggedTransaction) {
+					// link it as run away message since the forked transaction is not completed yet
+					markAsRunAway(parent, (DefaultTaggedTransaction) transaction);
+				}
 			}
 		}
 	}
-
 }

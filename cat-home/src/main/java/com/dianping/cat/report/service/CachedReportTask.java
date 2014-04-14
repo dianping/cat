@@ -19,8 +19,6 @@ import com.dianping.cat.consumer.matrix.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -40,22 +38,45 @@ public class CachedReportTask implements Task {
 	@Inject
 	private ReportService m_reportService;
 
-	@Override
-	public String getName() {
-		return "Cached-Report-Task";
-	}
+	private void buildCacheReportByDuration(Date start, Date end, Set<String> domains) {
+		for (String domain : domains) {
+			TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
+			new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 
-	private WeeklyReport buildWeeklyReport(String domain, Date period, String name) {
-		WeeklyReport report = new WeeklyReport();
+			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, TransactionAnalyzer.ID),
+			      com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder.build(transactionReport));
 
-		report.setContent("");
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-		return report;
+			EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
+			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, EventAnalyzer.ID),
+			      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
+			
+			ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
+			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, ProblemAnalyzer.ID),
+			      com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder.build(problemReport));
+			
+			CrossReport crossReport = m_reportService.queryCrossReport(domain, start, end);
+			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, CrossAnalyzer.ID),
+			      com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder.build(crossReport));
+			
+			MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
+			new MatrixReportFilter().visitMatrixReport(matrixReport);
+			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, MatrixAnalyzer.ID),
+			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
+			
+		}
+		String domain = "Cat";
+
+		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID),
+		      com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder.build(stateReport));
+
+		BugReport bugReport = m_reportService.queryBugReport(domain, start, end);
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_BUG),
+		      com.dianping.cat.home.bug.transform.DefaultNativeBuilder.build(bugReport));
+
+		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
+		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_SERVICE),
+		      com.dianping.cat.home.service.transform.DefaultNativeBuilder.build(serviceReport));
 	}
 
 	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
@@ -71,52 +92,30 @@ public class CachedReportTask implements Task {
 		return report;
 	}
 
+	private WeeklyReport buildWeeklyReport(String domain, Date period, String name) {
+		WeeklyReport report = new WeeklyReport();
+
+		report.setContent("");
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return report;
+	}
+
+	@Override
+	public String getName() {
+		return "Cached-Report-Task";
+	}
+
 	private void reloadCurrentMonthly() {
 		Date start = TimeUtil.getCurrentMonth();
 		Date end = TimeUtil.getCurrentDay();
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		buildCacheReportByDuration(start, end, domains);
-	}
-
-	private void buildCacheReportByDuration(Date start, Date end, Set<String> domains) {
-		for (String domain : domains) {
-			TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
-			new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
-
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, TransactionAnalyzer.ID),
-			      com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder.build(transactionReport));
-
-			EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, EventAnalyzer.ID),
-			      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
-			ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, ProblemAnalyzer.ID),
-			      com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder.build(problemReport));
-			CrossReport crossReport = m_reportService.queryCrossReport(domain, start, end);
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, CrossAnalyzer.ID),
-			      com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder.build(crossReport));
-			MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
-			new MatrixReportFilter().visitMatrixReport(matrixReport);
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, MatrixAnalyzer.ID),
-			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
-			SqlReport sqlReport = m_reportService.querySqlReport(domain, start, end);
-			m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, SqlAnalyzer.ID),
-			      com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder.build(sqlReport));
-		}
-		String domain = "Cat";
-
-		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID),
-		      com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder.build(stateReport));
-
-		BugReport bugReport = m_reportService.queryBugReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_BUG),
-		      com.dianping.cat.home.bug.transform.DefaultNativeBuilder.build(bugReport));
-
-		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_SERVICE),
-		      com.dianping.cat.home.service.transform.DefaultNativeBuilder.build(serviceReport));
 	}
 
 	private void reloadCurrentWeekly() {
@@ -134,19 +133,20 @@ public class CachedReportTask implements Task {
 			EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, EventAnalyzer.ID),
 			      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
+			
 			ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, ProblemAnalyzer.ID),
 			      com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder.build(problemReport));
+			
 			CrossReport crossReport = m_reportService.queryCrossReport(domain, start, end);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, CrossAnalyzer.ID),
 			      com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder.build(crossReport));
+			
 			MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
 			new MatrixReportFilter().visitMatrixReport(matrixReport);
 			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, MatrixAnalyzer.ID),
 			      com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder.build(matrixReport));
-			SqlReport sqlReport = m_reportService.querySqlReport(domain, start, end);
-			m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, SqlAnalyzer.ID),
-			      com.dianping.cat.consumer.sql.model.transform.DefaultNativeBuilder.build(sqlReport));
+			
 		}
 		String domain = "Cat";
 
@@ -161,7 +161,6 @@ public class CachedReportTask implements Task {
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
 		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, Constants.REPORT_SERVICE),
 		      com.dianping.cat.home.service.transform.DefaultNativeBuilder.build(serviceReport));
-
 	}
 
 	@Override

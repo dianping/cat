@@ -35,14 +35,6 @@ public class CatPerformanceTest {
 
 	}
 
-	@Test
-	public void tes1t() {
-		if (Cat.getProducer().isEnabled()) {
-			String id = Cat.getProducer().createMessageId();
-			System.out.println(id);
-		}
-	}
-
 	private void creatInternal() {
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL2", "WebPage");

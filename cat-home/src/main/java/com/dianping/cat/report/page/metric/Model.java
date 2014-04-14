@@ -4,14 +4,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 
@@ -22,19 +20,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<LineChart> m_lineCharts;
 
 	private Collection<ProductLine> m_productLines;
+	
+	private List<String> m_metricGroups;
 
 	private Date m_startTime;
 
 	private Date m_endTime;
 
-	private Map<Integer, Abtest> m_abtests;
-
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public Map<Integer, Abtest> getAbtests() {
-		return m_abtests;
 	}
 
 	public Range[] getAllRange() {
@@ -64,16 +58,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_lineCharts;
 	}
 
+	public List<String> getMetricGroups() {
+   	return m_metricGroups;
+   }
+
 	public Collection<ProductLine> getProductLines() {
 		return m_productLines;
 	}
 
 	public Date getStartTime() {
 		return m_startTime;
-	}
-
-	public void setAbtests(Map<Integer, Abtest> abtests) {
-		m_abtests = abtests;
 	}
 
 	public void setEndTime(Date endTime) {
@@ -84,6 +78,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_lineCharts = lineCharts;
 	}
 
+	public void setMetricGroups(List<String> metricGroups) {
+   	m_metricGroups = metricGroups;
+   }
+
 	public void setProductLines(Collection<ProductLine> productLines) {
 		m_productLines = productLines;
 	}
@@ -91,5 +89,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setStartTime(Date startTime) {
 		m_startTime = startTime;
 	}
-
+	
 }

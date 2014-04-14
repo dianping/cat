@@ -165,7 +165,7 @@
 			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:total" data-status="${item.name}:total" class="state_graph_link">[:: show ::]</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td style="text-align:right;">${w:format(item.totalLoss,'#,###,###,###,##0.#')}</td>
 			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:totalLoss" data-status="${item.name}:totalLoss" class="state_graph_link">[:: show ::]</a></td>
-			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'0.00#')}</td>
+			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'#,###,##0.000')}</td>
 			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:size" data-status="${item.name}:size" class="state_graph_link">[:: show ::]</a></td>
 			<td style="text-align:center;">${w:size(item.ips)}</td>
 			<td style="white-space:normal">${item.ips}</td>

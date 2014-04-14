@@ -1,8 +1,6 @@
 package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +25,6 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
@@ -36,13 +33,15 @@ import com.dianping.cat.message.spi.MessageTree;
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public static final String ID = "tcp-socket-sender";
 
+	public static final int SIZE = 10000;
+
 	@Inject
 	private MessageCodec m_codec;
 
 	@Inject
 	private MessageStatistics m_statistics;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(20000);
+	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -52,11 +51,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private transient boolean m_active;
 
+	private volatile int m_error = -1;
+
 	private AtomicInteger m_errors = new AtomicInteger();
 
 	private AtomicInteger m_attempts = new AtomicInteger();
 
-	boolean checkWritable(ChannelFuture future) {
+	private boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
 
 		if (future != null && future.getChannel().isOpen()) {
@@ -119,8 +120,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				}
 			}
 		}
-
-		m_manager.releaseAll();
 	}
 
 	@Override
@@ -169,16 +168,12 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_manager.shutdown();
 	}
 
-	static class ChannelManager implements Task {
+	public class ChannelManager implements Task {
 		private List<InetSocketAddress> m_serverAddresses;
-
-		private List<ChannelFuture> m_futures;
 
 		private ClientBootstrap m_bootstrap;
 
 		private ChannelFuture m_activeFuture;
-
-		private int m_activeIndex;
 
 		private Logger m_logger;
 
@@ -186,14 +181,17 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		private boolean m_active = true;
 
-		private AtomicInteger m_reconnects = new AtomicInteger(999);
+		private int m_activeIndex = -1;
+
+		private int m_retriedTimes = 0;
+
+		private AtomicInteger m_reconnects = new AtomicInteger(99);
 
 		public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses) {
 			int len = serverAddresses.size();
 
 			m_logger = logger;
 			m_serverAddresses = serverAddresses;
-			m_futures = new ArrayList<ChannelFuture>(Collections.<ChannelFuture> nCopies(len, null));
 
 			ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Boss", 10);
 			ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);
@@ -203,7 +201,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 				@Override
 				public ChannelPipeline getPipeline() {
-					return Channels.pipeline(new ExceptionHandler(m_logger));
+					return Channels.pipeline(new ExceptionHandler());
 				}
 			});
 
@@ -223,78 +221,108 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			}
 		}
 
-		ChannelFuture createChannel(int index) {
+		private ChannelFuture createChannel(int index) {
 			InetSocketAddress address = m_serverAddresses.get(index);
-			ChannelFuture future = m_bootstrap.connect(address);
+			ChannelFuture future = null;
 
-			future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
+			try {
+				future = m_bootstrap.connect(address);
+				future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
-			if (!future.isSuccess()) {
-				future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
-				int count = m_reconnects.incrementAndGet();
+				if (!future.isSuccess()) {
+					int count = m_reconnects.incrementAndGet();
 
-				if (count % 1000 == 0) {
-					m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
+					if (count % 100 == 0) {
+						m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
+					}
+					future.getChannel().close();
+				} else {
+					m_logger.info("Connected to CAT server at " + address);
+					return future;
 				}
-				return null;
-			} else {
-				m_logger.info("Connected to CAT server at " + address);
-				return future;
+			} catch (Throwable e) {
+				m_logger.error("Error when connect server " + address.getAddress(), e);
+
+				if (future != null) {
+					future.getChannel().close();
+				}
 			}
+			return null;
 		}
 
 		public ChannelFuture getChannel() {
-			if (m_lastFuture != null && m_lastFuture != m_activeFuture) {
-				m_lastFuture.getChannel().close();
-				m_lastFuture = null;
-			}
-
 			return m_activeFuture;
 		}
 
 		@Override
 		public String getName() {
-			return "TcpSocketHierarchySender-ChannelManager";
+			return "TcpSocketSender-ChannelManager";
 		}
 
-		public void releaseAll() {
-			for (ChannelFuture future : m_futures) {
-				if (future != null) {
-					future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
-				}
-			}
+		private boolean isChannelStalled() {
+			m_retriedTimes++;
+			int size = m_queue.size();
+			boolean stalled = m_activeFuture != null && size >= SIZE - 1;
 
-			m_bootstrap.getFactory().releaseExternalResources();
-			m_futures = null;
+			if (stalled) {
+				if (m_retriedTimes >= 5) {
+					m_retriedTimes = 0;
+					m_logger.info("need to set active future to null. queue size:" + size + ",activeIndex:" + m_activeIndex);
+					return true;
+				} else {
+					m_logger.info("no need set active future to null due to retry time is not enough. queue size:" + size
+					      + ",retriedTimes:" + m_retriedTimes + ",activeIndex:" + m_activeIndex);
+					return false;
+				}
+			} else {
+				return false;
+			}
 		}
 
 		@Override
 		public void run() {
-			try {
-				while (m_active) {
-					try {
-						if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
-							m_activeIndex = m_serverAddresses.size();
-						}
-
-						for (int i = 0; i < m_activeIndex; i++) {
-							ChannelFuture future = createChannel(i);
-
-							if (future != null) {
-								m_lastFuture = m_activeFuture;
-								m_activeFuture = future;
-								m_activeIndex = i;
-								break;
-							}
-						}
-					} catch (Throwable e) {
-						Cat.logError(e);
+			while (m_active) {
+				try {
+					if (isChannelStalled()) {
+						m_activeFuture.getChannel().close();
+						m_activeFuture = null;
+						m_activeIndex = -1;
 					}
-
-					Thread.sleep(2 * 1000L); // check every 2 seconds
+					if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
+						m_activeFuture.getChannel().close();
+						m_activeFuture = null;
+						m_activeIndex = m_serverAddresses.size();
+					}
+					if (m_activeIndex == -1) {
+						m_activeIndex = m_serverAddresses.size();
+					}
+					if (m_lastFuture != null && m_lastFuture != m_activeFuture) {
+						m_lastFuture.getChannel().close();
+						m_lastFuture = null;
+					}
+				} catch (Throwable e) {
+					m_logger.error(e.getMessage(), e);
 				}
-			} catch (InterruptedException e) {
-				// ignore
+				try {
+					for (int i = 0; i < m_activeIndex; i++) {
+						ChannelFuture future = createChannel(i);
+
+						if (future != null) {
+							m_lastFuture = m_activeFuture;
+							m_activeFuture = future;
+							m_activeIndex = i;
+							break;
+						}
+					}
+				} catch (Throwable e) {
+					m_logger.error(e.getMessage(), e);
+				}
+
+				try {
+					Thread.sleep(2 * 1000L); // check every 2 seconds
+				} catch (InterruptedException e) {
+					// ignore
+				}
 			}
 		}
 
@@ -304,21 +332,22 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	static class ExceptionHandler extends SimpleChannelHandler {
-		private Logger m_logger;
-
-		public ExceptionHandler(Logger logger) {
-			m_logger = logger;
-		}
+	private class ExceptionHandler extends SimpleChannelHandler {
 
 		@Override
 		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-			m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
+			m_error++;
+			if (m_error % 1000 == 0) {
+				m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
+			}
 		}
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
-			e.getChannel().close();
+			m_error++;
+			if (m_error % 1000 == 0) {
+				m_logger.warn("Channel disconnected due to " + e.getCause());
+			}
 		}
 	}
 }

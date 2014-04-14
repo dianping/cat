@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +17,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.util.internal.ConcurrentHashMap;
-import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
@@ -48,7 +45,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private File m_baseDir;
 
-	private Map<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
+	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -65,63 +62,51 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private long m_total;
 
-	private Map<String, Long> m_totals = new HashMap<String, Long>();
-
-	private long m_totalSize;
-
-	private Map<String, Long> m_totalSizes = new HashMap<String, Long>();
-
-	private Map<String, Long> m_lastTotalSizes = new HashMap<String, Long>();
-
 	private Logger m_logger;
 
-	private int m_gzipThreads = 10;
+	private int m_gzipThreads = 13;
 
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(100000);
+	private int m_gzipMessageSize = 10000;
 
-	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+	private int m_messageBlockSize = 10000;
 
-	private long[] m_processMessages;
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
+
+	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
 
-		synchronized (m_buckets) {
-			for (String key : m_buckets.keySet()) {
-				if (key.startsWith(path)) {
-					keys.add(key);
-				}
+		for (String key : m_buckets.keySet()) {
+			if (key.startsWith(path)) {
+				keys.add(key);
 			}
+		}
+		try {
+			for (String key : keys) {
+				LocalMessageBucket bucket = m_buckets.get(key);
 
-			try {
-				for (String key : keys) {
-					LocalMessageBucket bucket = m_buckets.get(key);
+				try {
+					MessageBlock block = bucket.flushBlock();
 
-					try {
-						MessageBlock block = bucket.flushBlock();
-
-						if (block != null) {
-							m_messageBlocks.add(block);
-						}
-					} catch (IOException e) {
-						Cat.logError(e);
+					if (block != null) {
+						m_messageBlocks.add(block);
 					}
+				} catch (IOException e) {
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
 	public void close() throws IOException {
-		synchronized (m_buckets) {
-			for (LocalMessageBucket bucket : m_buckets.values()) {
-				bucket.close();
-			}
-
-			m_buckets.clear();
+		for (LocalMessageBucket bucket : m_buckets.values()) {
+			bucket.close();
 		}
+		m_buckets.clear();
 	}
 
 	@Override
@@ -141,10 +126,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;
 		}
-		m_processMessages = new long[m_gzipThreads];
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(500000);
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
 
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
@@ -171,7 +155,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (name.contains(key) && !name.endsWith(".idx")) {
 						paths.add(path + name);
 					}
-
 					return Direction.NEXT;
 				}
 			});
@@ -186,12 +169,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
-						synchronized (m_buckets) {
-							m_buckets.put(dataFile, bucket);
-						}
+						m_buckets.putIfAbsent(dataFile, bucket);
 					}
 				}
-
 				if (bucket != null) {
 					// flush the buffer if have data
 					MessageBlock block = bucket.flushBlock();
@@ -199,7 +179,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (block != null) {
 						m_messageBlocks.offer(block);
 
-						LockSupport.parkNanos(50 * 1000 * 1000L); // wait 50 ms
+						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 50 ms
 					}
 					MessageTree tree = bucket.findByIndex(id.getIndex());
 
@@ -228,42 +208,36 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	private void logState(final MessageTree tree) {
-		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-		Message message = tree.getMessage();
-		if (message instanceof Transaction) {
-			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
-			      - ((Transaction) message).getDurationInMillis();
-			int fiveMinute = 1000 * 60 * 5;
+	private void logStorageState(final MessageTree tree) {
+		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
+		String domain = tree.getDomain();
 
-			if (delay < fiveMinute && delay > -fiveMinute) {
+		m_serverStateManager.addMessageSize(domain, size);
+		m_total++;
+		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
+			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
+
+			Message message = tree.getMessage();
+
+			if (message instanceof Transaction) {
+				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
+				      - ((Transaction) message).getDurationInMillis();
+
 				m_serverStateManager.addProcessDelay(delay);
 			}
-		}
-		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
-			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
-
-			StringBuilder sb = new StringBuilder("gzip thread process message number :");
-			for (int i = 0; i < m_gzipThreads; i++) {
-				sb.append(m_processMessages[i] + "\t");
-			}
-			m_logger.info(sb.toString());
 		}
 	}
 
 	private void moveFile(String path) throws IOException {
 		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, path);
+		File parent = from.getParentFile();
 		File to = new File(outbox, path);
 
 		to.getParentFile().mkdirs();
-		Files.forDir().copyFile(from, to);
-		Files.forDir().delete(from);
-
-		File parentFile = from.getParentFile();
-
-		parentFile.delete(); // delete it if empty
-		parentFile.getParentFile().delete(); // delete it if empty
+		from.renameTo(to);
+		parent.delete(); // delete it if empty
+		parent.getParentFile().delete(); // delete it if empty
 	}
 
 	private void moveOldMessages() {
@@ -316,12 +290,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error(e.getMessage(), e);
 					}
 				}
-
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					break;
-				}
 			}
 			t.complete();
 		}
@@ -332,19 +300,17 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	public void setLocalIp(String localIp) {
-   	m_localIp = localIp;
-   }
+		m_localIp = localIp;
+	}
 
 	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}
-
 		long current = System.currentTimeMillis();
 		long currentHour = current - current % ONE_HOUR;
 		long lastHour = currentHour - ONE_HOUR;
 		long nextHour = currentHour + ONE_HOUR;
-
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
 		String currentHourStr = sdf.format(new Date(currentHour));
 		String lastHourStr = sdf.format(new Date(lastHour));
@@ -371,7 +337,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			abs = -abs;
 		}
 		int bucketIndex = abs % m_gzipThreads;
-		m_processMessages[bucketIndex]++;
+
+		logStorageState(tree);
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 		boolean result = items.offer(new MessageItem(tree, id));
@@ -384,33 +351,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
-		m_total++;
-		Long value = m_totals.get(domain);
-		if (value == null) {
-			m_totals.put(domain, 1L);
-		} else {
-			m_totals.put(domain, value + 1);
-		}
-		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
-			logState(tree);
-		}
-		if (value != null && value % CatConstants.SUCCESS_COUNT == 0) {
-			Long lastTotalSize = m_lastTotalSizes.get(domain);
-			Long totalSize = m_totalSizes.get(domain);
-			if (lastTotalSize == null) {
-				lastTotalSize = 0L;
-			}
-			double amount = totalSize - lastTotalSize;
-			m_lastTotalSizes.put(domain, totalSize);
-			m_serverStateManager.addMessageSize(domain, amount);
-			m_serverStateManager.addMessageSize(amount);
-		}
 	}
 
-	class BlockDumper implements Task {
+	private class BlockDumper implements Task {
 		private int m_errors;
-
-		private int m_success;
 
 		@Override
 		public String getName() {
@@ -439,13 +383,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_serverStateManager.addBlockTotal(1);
-						if ((++m_success) % 10000 == 0) {
-							int size = m_messageBlocks.size();
-
-							if (size > 0) {
-								m_logger.info("block queue size " + size);
-							}
-						}
 						long duration = System.currentTimeMillis() - time;
 						m_serverStateManager.addBlockTime(duration);
 					}
@@ -460,7 +397,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class MessageGzip implements Task {
+	private class MessageGzip implements Task {
 
 		private int m_index;
 
@@ -471,10 +408,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
 			m_messageQueue = messageQueue;
 			m_index = index;
-		}
-
-		public int getIndex() {
-			return m_index;
 		}
 
 		@Override
@@ -498,9 +431,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 					bucket.setBaseDir(m_baseDir);
 					bucket.initialize(dataFile);
-					synchronized (m_buckets) {
-						m_buckets.put(dataFile, bucket);
-					}
+					m_buckets.putIfAbsent(dataFile, bucket);
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
@@ -513,15 +444,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error("Error when offer the block to the dump!");
 					}
 				}
-				String domain = id.getDomain();
-				m_totalSize += buf.readableBytes();
-				Long lastTotalSize = m_totalSizes.get(domain);
-				if (lastTotalSize == null) {
-					m_totalSizes.put(domain, (long) buf.readableBytes());
-				} else {
-					m_totalSizes.put(domain, lastTotalSize + buf.readableBytes());
-				}
-
 				if (t != null) {
 					t.setStatus(Message.SUCCESS);
 				}

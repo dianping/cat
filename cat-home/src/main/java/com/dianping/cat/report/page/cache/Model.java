@@ -55,6 +55,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public String getPieChart() {
+		return m_pieChart;
+	}
+
 	public String getQueryName() {
 		return m_queryName;
 	}
@@ -63,20 +67,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_report;
 	}
 
+	public void setPieChart(String pieChart) {
+		m_pieChart = pieChart;
+	}
+
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
 	}
 
 	public void setReport(CacheReport report) {
 		m_report = report;
-	}
-
-	public String getPieChart() {
-		return m_pieChart;
-	}
-
-	public void setPieChart(String pieChart) {
-		m_pieChart = pieChart;
 	}
 
 }

@@ -21,8 +21,6 @@ com.dianping.cat.report.page.logview.Handler.class,
 
 com.dianping.cat.report.page.model.Handler.class,
 
-com.dianping.cat.report.page.sql.Handler.class,
-
 com.dianping.cat.report.page.dashboard.Handler.class,
 
 com.dianping.cat.report.page.matrix.Handler.class,
@@ -43,7 +41,12 @@ com.dianping.cat.report.page.dependency.Handler.class,
 
 com.dianping.cat.report.page.externalError.Handler.class,
 
-com.dianping.cat.report.page.statistics.Handler.class })
+com.dianping.cat.report.page.statistics.Handler.class,
+
+com.dianping.cat.report.page.alteration.Handler.class,
+
+com.dianping.cat.report.page.monitor.Handler.class
+})
 public class ReportModule extends AbstractModule {
 
 }

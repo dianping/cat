@@ -45,6 +45,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private ThreadLevelInfo m_threadLevelInfo;
+	
+	private List<String> m_groups;
+	
+	private List<String> m_groupIps;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -102,6 +106,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_errorsTrend;
 	}
 
+	public List<String> getGroupIps() {
+   	return m_groupIps;
+   }
+
 	public GroupLevelInfo getGroupLevelInfo() {
 		return m_groupLevelInfo;
 	}
@@ -109,6 +117,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String getGroupName() {
 		return m_groupName;
 	}
+
+	public List<String> getGroups() {
+   	return m_groups;
+   }
 
 	public int getHour() {
 		return m_hour;
@@ -176,6 +188,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_errorsTrend = errorsTrend;
 	}
 
+	public void setGroupIps(List<String> groupIps) {
+   	m_groupIps = groupIps;
+   }
+
 	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
 		m_groupLevelInfo = groupLevelInfo;
 	}
@@ -183,6 +199,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
 	}
+
+	public void setGroups(List<String> groups) {
+   	m_groups = groups;
+   }
 
 	public void setHour(int hour) {
 		m_hour = hour;
@@ -203,5 +223,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
 		m_threadLevelInfo = threadLevelInfo;
 	}
-
+	
 }

@@ -72,6 +72,22 @@ public class Handler implements PageHandler<Context> {
 		return vistor.getCacheReport();
 	}
 
+	private String buildPieChart(CacheReport report) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+		List<CacheNameItem> nameItems = report.getNameItems();
+
+		for (CacheNameItem cacheItem : nameItems) {
+			String name = cacheItem.getName().getId();
+
+			if (name.endsWith(":get") || name.endsWith(":mGet")) {
+				items.add(new Item().setTitle(name).setNumber(cacheItem.getName().getTotalCount()));
+			}
+		}
+		chart.addItems(items);
+		return chart.getJsonString();
+	}
+
 	private void calculateEventTps(Payload payload, EventReport report) {
 		try {
 			if (report != null) {
@@ -230,22 +246,6 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private String buildPieChart(CacheReport report) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
-		List<CacheNameItem> nameItems = report.getNameItems();
-
-		for (CacheNameItem cacheItem : nameItems) {
-			String name = cacheItem.getName().getId();
-
-			if (name.endsWith(":get") || name.endsWith(":mGet")) {
-				items.add(new Item().setTitle(name).setNumber(cacheItem.getName().getTotalCount()));
-			}
-		}
-		chart.addItems(items);
-		return chart.getJsonString();
-	}
-
 	private void normalize(Model model, Payload payload) {
 		m_normalizePayload.normalize(model, payload);
 		model.setPage(ReportPage.CACHE);
@@ -256,6 +256,10 @@ public class Handler implements PageHandler<Context> {
 
 		private Set<String> m_cacheTypes = new HashSet<String>();
 
+		public Set<String> getCacheTypes() {
+			return m_cacheTypes;
+		}
+
 		@Override
 		public void visitType(TransactionType type) {
 			String typeName = type.getId();
@@ -263,10 +267,6 @@ public class Handler implements PageHandler<Context> {
 			if (typeName.startsWith("Cache.")) {
 				m_cacheTypes.add(typeName);
 			}
-		}
-
-		public Set<String> getCacheTypes() {
-			return m_cacheTypes;
 		}
 	}
 

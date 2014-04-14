@@ -8,13 +8,13 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
+	public static final int STATUS_TODO = 1;
+
 	public static final int STATUS_DOING = 2;
 
 	public static final int STATUS_DONE = 3;
 
 	public static final int STATUS_FAIL = 4;
-
-	public static final int STATUS_TODO = 1;
 
 	private long m_nanos = 2L * 1000 * 1000 * 1000;
 
@@ -79,7 +79,6 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 			} catch (Throwable e) {
 				Cat.logError(e);
 			}
-
 		}
 		this.stopped = true;
 	}

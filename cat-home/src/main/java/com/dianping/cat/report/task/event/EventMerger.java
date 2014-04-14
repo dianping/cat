@@ -45,15 +45,4 @@ public class EventMerger {
 		return eventReport;
 	}
 
-	public EventReport mergeForGraph(String reportDomain, List<EventReport> reports) {
-		EventReport eventReport = merge(reportDomain, reports, false);
-		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
-		EventReport eventReport2 = merge(reportDomain, reports, false);
-
-		Machine allMachines = merger.mergesForAllMachine(eventReport2);
-		eventReport.addMachine(allMachines);
-		eventReport.getIps().add("All");
-		return eventReport;
-	}
-
 }

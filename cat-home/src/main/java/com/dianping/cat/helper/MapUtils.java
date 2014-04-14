@@ -13,10 +13,10 @@ public class MapUtils {
 		Map<K, V> result = new LinkedHashMap<K, V>();
 		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
 		Collections.sort(entries, compator);
+
 		for (Entry<K, V> entry : entries) {
 			result.put(entry.getKey(), entry.getValue());
 		}
-
 		return result;
 	}
 }

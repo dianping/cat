@@ -10,7 +10,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -45,6 +44,8 @@ public interface ReportService {
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
 
+	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
+
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
 
 	public MetricReport queryMetricReport(String domain, Date start, Date end);
@@ -53,15 +54,12 @@ public interface ReportService {
 
 	public ServiceReport queryServiceReport(String domain, Date start, Date end);
 
-	public SqlReport querySqlReport(String domain, Date start, Date end);
-
 	public StateReport queryStateReport(String domain, Date start, Date end);
 
 	public TopReport queryTopReport(String domain, Date start, Date end);
 
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
-	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
-
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end);
+
 }

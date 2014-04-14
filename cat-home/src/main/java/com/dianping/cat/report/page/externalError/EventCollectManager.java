@@ -48,22 +48,18 @@ public class EventCollectManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	public List<Event> findOrCreateEvents(long date, String domain) {
-		Map<String, List<Event>> domainEvent = m_events.get(date);
-
-		if (domainEvent == null) {
-			domainEvent = new HashMap<String, List<Event>>();
-			m_events.put(date, domainEvent);
+	public boolean addEvent(Event error) {
+		try {
+			return m_errors.offer(error, 10, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			Cat.logError(e);
 		}
+		return false;
+	}
 
-		List<Event> result = domainEvent.get(domain);
-
-		if (result == null) {
-			result = new ArrayList<Event>();
-			domainEvent.put(domain, result);
-		}
-
-		return result;
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	public List<Event> findEvents(long date, String domain) {
@@ -82,17 +78,39 @@ public class EventCollectManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private List<Event> queryEventsByMemory(String domain, Date date, int minute) {
-		List<Event> result = new ArrayList<Event>();
-		long time = date.getTime() + TimeUtil.ONE_MINUTE - date.getTime() % TimeUtil.ONE_MINUTE;
+	public List<Event> findOrCreateEvents(long date, String domain) {
+		Map<String, List<Event>> domainEvent = m_events.get(date);
 
-		for (int i = 0; i < minute; i++) {
-			List<Event> events = findEvents(time - i * TimeUtil.ONE_MINUTE, domain);
-			if (events != null) {
-				result.addAll(events);
-			}
+		if (domainEvent == null) {
+			domainEvent = new HashMap<String, List<Event>>();
+			m_events.put(date, domainEvent);
 		}
+
+		List<Event> result = domainEvent.get(domain);
+
+		if (result == null) {
+			result = new ArrayList<Event>();
+			domainEvent.put(domain, result);
+		}
+
 		return result;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		if (!m_manager.isLocalMode()) {
+			Threads.forGroup("Cat").start(new Job());
+		}
+	}
+
+	public List<Event> queryEvents(String domain, Date date) {
+		long current = System.currentTimeMillis();
+
+		if (current - date.getTime() < TimeUtil.ONE_HOUR * 2) {
+			return queryEventsByMemory(domain, date, 10);
+		} else {
+			return queryEventsByDB(domain, date, 10);
+		}
 	}
 
 	private List<Event> queryEventsByDB(String domain, Date date, int minute) {
@@ -107,35 +125,17 @@ public class EventCollectManager implements Initializable, LogEnabled {
 		return new ArrayList<Event>();
 	}
 
-	public List<Event> queryEvents(String domain, Date date) {
-		long current = System.currentTimeMillis();
+	private List<Event> queryEventsByMemory(String domain, Date date, int minute) {
+		List<Event> result = new ArrayList<Event>();
+		long time = date.getTime() + TimeUtil.ONE_MINUTE - date.getTime() % TimeUtil.ONE_MINUTE;
 
-		if (current - date.getTime() < TimeUtil.ONE_HOUR * 2) {
-			return queryEventsByMemory(domain, date, 10);
-		} else {
-			return queryEventsByDB(domain, date, 10);
+		for (int i = 0; i < minute; i++) {
+			List<Event> events = findEvents(time - i * TimeUtil.ONE_MINUTE, domain);
+			if (events != null) {
+				result.addAll(events);
+			}
 		}
-	}
-
-	public boolean addEvent(Event error) {
-		try {
-			return m_errors.offer(error, 10, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			Cat.logError(e);
-		}
-		return false;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		if (!m_manager.isLocalMode()) {
-			Threads.forGroup("Cat").start(new Job());
-		}
+		return result;
 	}
 
 	public class Job implements Task {

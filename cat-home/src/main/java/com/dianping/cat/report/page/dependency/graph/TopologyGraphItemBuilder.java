@@ -21,24 +21,6 @@ public class TopologyGraphItemBuilder {
 
 	private static final String CACHE = GraphConstrant.CACHE;
 
-	public TopologyNode createDatabaseNode(String database) {
-		TopologyNode node = new TopologyNode(database);
-
-		node.setStatus(OK);
-		node.setType(DATABASE);
-		node.setWeight(1);
-		return node;
-	}
-
-	public TopologyNode createCacheNode(String cache) {
-		TopologyNode node = new TopologyNode(cache);
-
-		node.setStatus(OK);
-		node.setType(CACHE);
-		node.setWeight(1);
-		return node;
-	}
-
 	public TopologyEdge buildEdge(String domain, Dependency dependency) {
 		TopologyEdge edge = new TopologyEdge();
 
@@ -56,15 +38,6 @@ public class TopologyGraphItemBuilder {
 		return edge;
 	}
 
-	public TopologyNode createNode(String domain) {
-		TopologyNode node = new TopologyNode(domain);
-
-		node.setStatus(OK);
-		node.setType(PROJECT);
-		node.setWeight(1);
-		return node;
-	}
-
 	public TopologyNode buildNode(String domain, Index index) {
 		TopologyNode node = new TopologyNode(domain);
 
@@ -75,6 +48,33 @@ public class TopologyGraphItemBuilder {
 
 		node.setStatus(state.getKey());
 		node.setDes(state.getValue());
+		return node;
+	}
+
+	public TopologyNode createCacheNode(String cache) {
+		TopologyNode node = new TopologyNode(cache);
+
+		node.setStatus(OK);
+		node.setType(CACHE);
+		node.setWeight(1);
+		return node;
+	}
+
+	public TopologyNode createDatabaseNode(String database) {
+		TopologyNode node = new TopologyNode(database);
+
+		node.setStatus(OK);
+		node.setType(DATABASE);
+		node.setWeight(1);
+		return node;
+	}
+
+	public TopologyNode createNode(String domain) {
+		TopologyNode node = new TopologyNode(domain);
+
+		node.setStatus(OK);
+		node.setType(PROJECT);
+		node.setWeight(1);
 		return node;
 	}
 

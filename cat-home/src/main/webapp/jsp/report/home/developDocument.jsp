@@ -38,6 +38,7 @@
         void complete();<br/>
 	  </code>  
 	  <p><strong class="text-info">代码示例</strong></p>
+	  
 	  <xmp class="well">
      Transaction t = Cat.getProducer().newTransaction("your transaction type", "your transaction name");
      try {
@@ -48,6 +49,7 @@
             Cat.getProducer().logError(e);//用log4j记录系统异常，以便在Logview中看到此信息
             t.setStatus(e);
             throw e; 
+            	  (CAT所有的API都可以单独使用，也可以组合使用，比如Transaction中嵌套Event或者Metric。)
                   (注意如果这里希望异常继续向上抛，需要继续向上抛出，往往需要抛出异常，让上层应用知道。)
                   (如果认为这个异常在这边可以被吃掉，则不需要在抛出异常。)
      } finally {
@@ -59,9 +61,19 @@
   <dt><h5 class="text-success">3.Event</h5></dt>
   <dd>Event用来记录次数，表名单位时间内消息发生次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小</dd>
   <dt><h5 class="text-success">4.Metric</h5></dt>
-  <dd>用于业务监控埋点的API（正在开发中）</dd>
+  <h5 class='text-error'> Metric一共有三个API，分别用来记录次数、平均、总和，统一粒度为一分钟</h5>
+  <p>1).logMetricForCount用于记录一个指标值出现的次数</p>
+  <p>2).logMetricForDuration用于记录一个指标出现的平均值</p>
+  <p>3).logMetricForSum用于记录一个指标出现的总和</p>
+  <p>4).修改指标一些图形描述信息，请到<a href="/cat/s/config?op=metricConfigList">Config进行配置</a></p>
   <dt><h5 class="text-success">5.Heartbeat<span class="text-error"><strong>  这个是系统CAT客户端使用，应用程序不使用此API.</strong></span></h5></dt>
   <dd>Heartbeta表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。</dd>
   <dt><h5 class="text-success">6.一份埋点的样例</strong></span></h5></dt>
+  
+    <h5>Transaction用来记录一段程序响应时间</h5>
+    <h5>Event用来记录一行code的执行次数</h5>
+    <h5>Metric用来记录一个业务指标</h5>
+    <h5 class="text-error">这些指标都是独立的，可以单独使用，主要看业务场景。</h5>
+    <h5 class="text-success">下面的埋点代码里面表示需要记录一个页面的响应时间，并且记录一个代码执行次数，以及记录两个业务指标,所有用了一个Transaction，一个Event，两个Metric</strong></span></h5>
 	<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/develop05.png"/>
 </dl>
