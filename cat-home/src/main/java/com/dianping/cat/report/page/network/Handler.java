@@ -20,7 +20,6 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.metric.chart.AggregationGraphCreator;
-import com.dianping.cat.report.page.metric.chart.GraphCreator;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
@@ -41,7 +40,7 @@ public class Handler implements PageHandler<Context> {
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;
 
 	@Inject
-	private GraphCreator m_graphCreator;
+	private AggregationGraphCreator m_aggregationGraphCreator;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -61,23 +60,16 @@ public class Handler implements PageHandler<Context> {
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
-
+		
+		//add default productline
+		
 		switch (payload.getAction()) {
 		case NETWORK:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
+			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
-		case DASHBOARD:
-			String group = payload.getGroup();
-			Map<String, LineChart> allCharts = null;
-
-			if (group == null || group.length() == 0) {
-				allCharts = m_graphCreator.buildNetworkDashboard(start, end);
-			} else {
-				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
-			}
-			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
-			break;
+		default:
+			throw new RuntimeException("Unknown action: " + payload.getAction());
 		}
 		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
 
