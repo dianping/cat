@@ -1,26 +1,26 @@
 <metric-aggregation-config>
-	<metric-aggregation-group id="f5-2400-1-dianping-com">
-		<metric-aggregation id="f5-2400-1-dianping-com-in">
-			<metric-aggregation-item key="1/1-1-in" />
-			<metric-aggregation-item key="1/1-2-in" />
-			<metric-aggregation-item key="1/1-3-in" />
-			<metric-aggregation-item key="1/1-4-in" />
+	<metric-aggregation-group id="f5-2400-1-dianping-com" type="Metric">
+		<metric-aggregation id="f5-2400-1-dianping-com-in" display-type="count" base-line="false" operation="{data}*60+100">
+			<metric-aggregation-item domain="Test" key="1/1-1-in" operation="{data}*60/100+100-50" />
+			<metric-aggregation-item domain="Test" key="1/1-2-in" />
+			<metric-aggregation-item domain="Test" key="1/1-3-in" />
+			<metric-aggregation-item domain="Test" key="1/1-4-in" />
 		</metric-aggregation>
-		<metric-aggregation id="f5-2400-1-dianping-com-out">
-			<metric-aggregation-item key="1/1-1-out" />
-			<metric-aggregation-item key="1/1-2-out" />
-			<metric-aggregation-item key="1/1-3-out" />
-			<metric-aggregation-item key="1/1-4-out" />
+		<metric-aggregation id="f5-2400-1-dianping-com-out" domain="Test" base-line="false">
+			<metric-aggregation-item domain="Test" key="1/1-1-out" display-type="count" base-line="true"/>
+			<metric-aggregation-item key="1/1-2-out" display-type="count"/>
+			<metric-aggregation-item key="1/1-3-out" display-type="count"/>
+			<metric-aggregation-item key="1/1-4-out" display-type="count"/>
 		</metric-aggregation>
 	</metric-aggregation-group>
-	<metric-aggregation-group id="f5-2500-1-dianping-com">
-		<metric-aggregation id="f5-2500-1-dianping-com-in">
+	<metric-aggregation-group id="f5-2500-1-dianping-com" type="Metric">
+		<metric-aggregation id="f5-2500-1-dianping-com-in" display-type="sum">
 			<metric-aggregation-item key="1/1-1-in" />
 			<metric-aggregation-item key="1/1-2-in" />
 			<metric-aggregation-item key="1/1-3-in" />
 			<metric-aggregation-item key="1/1-4-in" />
 		</metric-aggregation>
-		<metric-aggregation id="f5-2500-1-dianping-com-out">
+		<metric-aggregation id="f5-2500-1-dianping-com-out" display-type="sum">
 			<metric-aggregation-item key="1/1-1-out" />
 			<metric-aggregation-item key="1/1-2-out" />
 			<metric-aggregation-item key="1/1-3-out" />

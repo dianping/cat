@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.metric.chart;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +37,7 @@ import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.tool.Operation;
 
-public class GraphCreator implements LogEnabled {
+public class AggregationGraphCreator implements LogEnabled {
 
 	@Inject
 	private BaselineService m_baselineService;
@@ -189,6 +188,7 @@ public class GraphCreator implements LogEnabled {
 				int size = 0;
 				
 				for (MetricAggregationItem metricAggregationItem : metricAggregation.getMetricAggregationItems()) {
+					
 					String myDomain = metricAggregationItem.getDomain();
 					String domain = myDomain == null ? metricAggregationDomain : myDomain;
 					String myDisplayType = metricAggregationItem.getDisplayType();
@@ -218,11 +218,11 @@ public class GraphCreator implements LogEnabled {
 					lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.CURRENT_VALUE, current);
 					if (baseLine) {
 						double[] baselines = queryBaseline(itemKey, startDate, endDate);
+						Map<Long, Double> baselinesData = convertToMap(m_dataExtractor.extract(baselines), startDate, step);
 						if(operation != null) {
-							//
+							operateData(baselinesData, operation);
 						}
-						lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.BASELINE_VALUE,
-						      convertToMap(m_dataExtractor.extract(baselines), startDate, step));
+						lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.BASELINE_VALUE, baselinesData);
 					}
 				}
 				lineChart.setSize(size);
@@ -236,60 +236,60 @@ public class GraphCreator implements LogEnabled {
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(productLine);
 		if (metricAggregationGroup != null) {
-			setAggregation(true);
-		}else{
-			setAggregation(false);
+			Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
+			Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
+			Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+			return buildChartData(productLine, oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		} else {
+			return null;
 		}
-		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
-		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
-		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
-		return buildChartData(productLine, oldCurrentValues, startDate, endDate, dataWithOutFutures);
+
 	}
 
+//	public Map<String, LineChart> buildDashboard(Date start, Date end) {
+//		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
+//		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
+//
+//		for (ProductLine productLine : productLines) {
+//			if (showInDashboard(productLine.getId())) {
+//				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
+//			}
+//		}
+//		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
+//		      .getMetricItemConfigs().values());
+//
+//		Collections.sort(configs, new Comparator<MetricItemConfig>() {
+//			@Override
+//			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
+//				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
+//			}
+//		});
+//
+//		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
+//		for (MetricItemConfig config : configs) {
+//			String key = config.getId();
+//			if (config.getShowAvg() && config.getShowAvgDashboard()) {
+//				String avgKey = key + ":" + MetricType.AVG.name();
+//				put(allCharts, result, avgKey);
+//			}
+//			if (config.getShowCount() && config.getShowCountDashboard()) {
+//				String countKey = key + ":" + MetricType.COUNT.name();
+//				put(allCharts, result, countKey);
+//			}
+//			if (config.getShowSum() && config.getShowSumDashboard()) {
+//				String sumKey = key + ":" + MetricType.SUM.name();
+//				put(allCharts, result, sumKey);
+//			}
+//		}
+//		return result;
+//	}
+	
 	public Map<String, LineChart> buildDashboard(Date start, Date end) {
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
 		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
 
 		for (ProductLine productLine : productLines) {
 			if (showInDashboard(productLine.getId())) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
-			}
-		}
-		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
-		      .getMetricItemConfigs().values());
-
-		Collections.sort(configs, new Comparator<MetricItemConfig>() {
-			@Override
-			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
-				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
-			}
-		});
-
-		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
-		for (MetricItemConfig config : configs) {
-			String key = config.getId();
-			if (config.getShowAvg() && config.getShowAvgDashboard()) {
-				String avgKey = key + ":" + MetricType.AVG.name();
-				put(allCharts, result, avgKey);
-			}
-			if (config.getShowCount() && config.getShowCountDashboard()) {
-				String countKey = key + ":" + MetricType.COUNT.name();
-				put(allCharts, result, countKey);
-			}
-			if (config.getShowSum() && config.getShowSumDashboard()) {
-				String sumKey = key + ":" + MetricType.SUM.name();
-				put(allCharts, result, sumKey);
-			}
-		}
-		return result;
-	}
-	
-	public Map<String, LineChart> buildNetworkDashboard(Date start, Date end) {
-		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
-		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
-
-		for (ProductLine productLine : productLines) {
-			if (showInNetworkDashboard(productLine.getId())) {
 				allCharts = buildChartsByProductLine(productLine.getId(), start, end);
 			}
 		}
@@ -518,18 +518,6 @@ public class GraphCreator implements LogEnabled {
 
 	private boolean showInDashboard(String productline) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productline);
-
-		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
-		for (MetricItemConfig config : configs) {
-			if (config.isShowAvgDashboard() || config.isShowCountDashboard() || config.isShowSumDashboard()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean showInNetworkDashboard(String productline){
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productline);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 		for (MetricItemConfig config : configs) {
 			if (config.isShowAvg() || config.isShowCount() || config.isShowSum()) {
@@ -538,5 +526,4 @@ public class GraphCreator implements LogEnabled {
 		}
 		return false;
 	}
-
 }

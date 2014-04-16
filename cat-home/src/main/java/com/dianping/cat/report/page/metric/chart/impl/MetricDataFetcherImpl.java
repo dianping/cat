@@ -21,27 +21,38 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	private final String AVG = MetricType.AVG.name();
 
 	@Override
-	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
+	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs, boolean isAggregation) {
 		MetricDataBuilder builder = new MetricDataBuilder();
 
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-
-		for (MetricItemConfig config : metricConfigs) {
-			String key = config.getId();
-
-			if (config.getShowAvg()) {
+		if(isAggregation) {
+			for (MetricItemConfig config : metricConfigs) {
+				String key = config.getId();
 				String avgKey = key + ":" + AVG;
 				putKey(datas, values, avgKey);
-			}
-			if (config.getShowCount()) {
 				String countKey = key + ":" + COUNT;
 				putKey(datas, values, countKey);
-			}
-			if (config.getShowSum()) {
 				String sumKey = key + ":" + SUM;
 				putKey(datas, values, sumKey);
+			}
+		} else {
+			for (MetricItemConfig config : metricConfigs) {
+				String key = config.getId();
+
+				if (config.getShowAvg()) {
+					String avgKey = key + ":" + AVG;
+					putKey(datas, values, avgKey);
+				}
+				if (config.getShowCount()) {
+					String countKey = key + ":" + COUNT;
+					putKey(datas, values, countKey);
+				}
+				if (config.getShowSum()) {
+					String sumKey = key + ":" + SUM;
+					putKey(datas, values, sumKey);
+				}
 			}
 		}
 		return values;

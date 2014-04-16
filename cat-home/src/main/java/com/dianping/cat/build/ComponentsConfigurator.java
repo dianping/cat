@@ -51,6 +51,7 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
@@ -93,6 +94,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UtilizationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
+		
+		all.add(C(MetricAggregationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -113,7 +116,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class, AlertInfo.class));
+		            MetricGroupConfigManager.class, MetricAggregationConfigManager.class, AlertInfo.class));
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task

@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="metric-aggregation-config" root="true">
-    <entity-ref name="metric-aggregation-group" type="map" names="metric-aggregation-groups" />
+    <entity-ref name="metric-aggregation-group" type="list" names="metric-aggregation-groups" />
   </entity>
   <entity name="metric-aggregation-group">
-    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="id" value-type="String" />
+    <attribute name="type" value-type="String" />
     <entity-ref name="metric-aggregation" type="list" names="metric-aggregations" />
   </entity>
   <entity name="metric-aggregation">
     <attribute name="id" value-type="String" />
+    <attribute name="display-type" value-type="String" />
+    <attribute name="base-line" value-type="boolean" />
+    <attribute name="operation" value-type="String" />
+    <attribute name="domain" value-type="String" />
     <entity-ref name="metric-aggregation-item" type="list" names="metric-aggregation-items" />
   </entity>
   <entity name="metric-aggregation-item">
+    <attribute name="domain" value-type="String" />
     <attribute name="key" value-type="String" />
+    <attribute name="operation" value-type="String" />
+    <attribute name="display-type" value-type="String" />
+    <attribute name="base-line" value-type="boolean" />
   </entity>
 </model>
 

@@ -19,7 +19,9 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.metric.chart.AggregationGraphCreator;
 import com.dianping.cat.report.page.metric.chart.GraphCreator;
+import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -34,6 +36,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
+	
+	@Inject
+	private MetricAggregationConfigManager m_metricAggregationConfigManager;
 
 	@Inject
 	private GraphCreator m_graphCreator;
@@ -56,11 +61,10 @@ public class Handler implements PageHandler<Context> {
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
-
+		
 		switch (payload.getAction()) {
 		case NETWORK:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
-
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		case DASHBOARD:
@@ -68,7 +72,7 @@ public class Handler implements PageHandler<Context> {
 			Map<String, LineChart> allCharts = null;
 
 			if (group == null || group.length() == 0) {
-				allCharts = m_graphCreator.buildDashboard(start, end);
+				allCharts = m_graphCreator.buildNetworkDashboard(start, end);
 			} else {
 				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
 			}
@@ -78,7 +82,7 @@ public class Handler implements PageHandler<Context> {
 		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
 
 		model.setMetricGroups(new ArrayList<String>(groups));
-		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
+		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
 		m_jspViewer.view(ctx, model);
 		}
 
