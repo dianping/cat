@@ -2988,7 +2988,6 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.report.page.network.Handler</role>
 			<implementation>com.dianping.cat.report.page.network.Handler</implementation>
 			<requirements>
@@ -3009,42 +3008,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
-=======
-			<role>com.dianping.cat.report.page.test.Handler</role>
-			<implementation>com.dianping.cat.report.page.test.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.test.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.TestDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.test.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.test.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
->>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.report.page.network.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.network.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-=======
-			<role>com.dianping.cat.home.dal.report.TestDao</role>
-			<implementation>com.dianping.cat.home.dal.report.TestDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
->>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
 				</requirement>
 			</requirements>
 		</component>

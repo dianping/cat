@@ -36,12 +36,8 @@
    <model package="com.dianping.cat.home.metricGroup" name="metric-group-config">
       <sample-model>src/test/resources/com/dianping/cat/system/config/metricGroup.xml</sample-model>
    </model>
-<<<<<<< HEAD
    <model package="com.dianping.cat.home.metricAggregation" name="metric-aggregation-config">
       <sample-model>src/main/resources/config/default-metric-aggregation-config.xml</sample-model>
-=======
-   <model package="com.dianping.cat.home.animal" name="animal">
-      <sample-model>test.xml</sample-model>
->>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
+
    </model>
 </wizard>
