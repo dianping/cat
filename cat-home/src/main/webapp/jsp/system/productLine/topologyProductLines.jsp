@@ -66,7 +66,6 @@
 					<td>${item.order}</td>
 					<td><c:if test="${item.dashboard}"><span class="text-error"><strong>是</strong></span></c:if>
 						<c:if test="${!item.dashboard}"><span><strong>否</strong></span></c:if>  </td>
-						
 					<td><c:if test="${item.metricDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
 						<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
 					<td><c:if test="${item.networkDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
