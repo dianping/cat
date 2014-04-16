@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.animal" enable-sax-parser="true">
+  <entity name="animal" root="true">
+    <entity-ref name="dog" />
+    <entity-ref name="cat" />
+    <entity-ref name="mouse" />
+  </entity>
+  <entity name="dog">
+    <attribute name="name" value-type="String" />
+    <attribute name="size" value-type="String" />
+    <entity-ref name="food" type="list" names="foods" />
+  </entity>
+  <entity name="food">
+    <attribute name="name" value-type="String" />
+    <attribute name="time" value-type="String" />
+  </entity>
+  <entity name="cat">
+    <attribute name="name" value-type="String" />
+    <attribute name="size" value-type="String" />
+    <entity-ref name="food" type="list" names="foods" />
+  </entity>
+  <entity name="mouse">
+    <attribute name="name" value-type="String" />
+    <attribute name="size" value-type="String" />
+    <entity-ref name="food" type="list" names="foods" />
+  </entity>
+</model>
+

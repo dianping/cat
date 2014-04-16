@@ -11,6 +11,8 @@ final class UserDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
    public List<Component> defineComponents() {
       List<Component> all = new ArrayList<Component>();
 
+      all.add(defineJdbcDataSourceComponent("user", "com.mysql.jdbc.Driver", "jdbc:mysql://192.168.8.44:3306/hawk", "hawk", "hawk", "<![CDATA[useUnicode=true&autoReconnect=true]]>"));
+
       defineSimpleTableProviderComponents(all, "user", com.dianping.cat.home.dal.user._INDEX.getEntityClasses());
       defineDaoComponents(all, com.dianping.cat.home.dal.user._INDEX.getDaoClasses());
 
