@@ -41,11 +41,19 @@ public enum ReportPage implements Page {
 
    STATISTICS("statistics", "statistics", "Statistics", "Statistics", true),
 
+<<<<<<< HEAD
    ALTERATION("alteration", "alteration", "Change", "Alteration", true),
 
    MONITOR("monitor", "monitor", "Monitor", "Monitor", true),
 
    NETWORK("network", "network", "Network", "Network", true);
+=======
+   ALTERATION("alteration", "alteration", "Alteration", "Alteration", true),
+
+   MONITOR("monitor", "monitor", "Monitor", "Monitor", true),
+
+   TEST("test", "test", "Test", "Test", true);
+>>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
 
    private String m_name;
 

@@ -42,7 +42,7 @@ public class Period {
 	@Inject
 	private Logger m_logger;
 
-	private static int QUEUE_SIZE = 200000;
+	private static int QUEUE_SIZE = 60000;
 
 	public Period(long startTime, long endTime, MessageAnalyzerManager analyzerManager,
 	      ServerStatisticManager serverStateManager, Logger logger) {
@@ -146,7 +146,9 @@ public class Period {
 		      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 		for (PeriodTask task : m_tasks) {
-			Threads.forGroup("Cat-RealtimeConsumer").start(task);
+			if (task.getAnalyzer().isRawAnalyzer()) {
+				Threads.forGroup("Cat-RealtimeConsumer").start(task);
+			}
 		}
 	}
 }

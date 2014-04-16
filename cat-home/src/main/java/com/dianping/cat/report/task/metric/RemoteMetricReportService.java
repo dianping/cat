@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -108,7 +109,6 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 						t.setStatus(e);
 					} finally {
 						semaphore.release();
-						Cat.reset();
 					}
 				}
 			});
@@ -147,7 +147,8 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 			t.addData(url.toString());
 
 			InputStream in = Urls.forIO().connectTimeout(300).readTimeout(3000).openStream(url.toExternalForm());
-			String xml = Files.forIO().readFrom(in, "utf-8");
+			GZIPInputStream gzip = new GZIPInputStream(in);
+			String xml = Files.forIO().readFrom(gzip, "utf-8");
 			int len = xml == null ? 0 : xml.length();
 
 			t.addData("length", len);

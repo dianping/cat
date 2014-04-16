@@ -9,6 +9,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -31,7 +32,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
-	
+
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
@@ -58,30 +59,43 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
-	public synchronized TopReport getReport(String domain) {
+	public boolean isRawAnalyzer() {
+		return false;
+	}
+
+	@Override
+	public TopReport getReport(String domain) {
 		Set<String> domains = m_transactionAnalyzer.getDomains();
 		TopReport topReport = new TopReport(Constants.CAT);
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
-		
-		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
-		
-		for (String domainName : domains) {
-			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
-				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
-				transactionReportVisitor.visitTransactionReport(report);
+		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
+
+		for (String name : domains) {
+			try {
+				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
+					TransactionReport report = m_transactionAnalyzer.getReport(name);
+
+					transactionReportVisitor.visitTransactionReport(report);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 
 		ProblemReportVisitor problemReportVisitor = new ProblemReportVisitor(topReport);
-		
-		for (String domainName : domains) {
-			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
-				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
-				problemReportVisitor.visitProblemReport(report);
+		for (String name : domains) {
+			try {
+				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
+					ProblemReport report = m_problemAnalyzer.getReport(name);
+
+					problemReportVisitor.visitProblemReport(report);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return topReport;
@@ -89,14 +103,13 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	protected void process(MessageTree tree) {
-		// do nothing
 	}
 
-	public synchronized void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
+	public void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
 		m_problemAnalyzer = problemAnalyzer;
 	}
 
-	public synchronized void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
+	public void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
 		m_transactionAnalyzer = transactionAnalyzer;
 	}
 

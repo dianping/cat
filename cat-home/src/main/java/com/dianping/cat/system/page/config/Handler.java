@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -365,7 +365,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void metricConfigList(Payload payload, Model model) {
 		Map<String, ProductLine> productLines = m_productLineConfigManger.queryAllProductLines();
-		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new HashMap<ProductLine, List<MetricItemConfig>>();
+		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new LinkedHashMap<ProductLine, List<MetricItemConfig>>();
 		Set<String> exists = new HashSet<String>();
 
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {

@@ -27,7 +27,7 @@ import com.dianping.cat.system.config.MetricGroupConfigManager;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
@@ -36,7 +36,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-	
+
 	@Inject
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;
 
@@ -61,7 +61,7 @@ public class Handler implements PageHandler<Context> {
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
-		
+
 		switch (payload.getAction()) {
 		case NETWORK:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
@@ -84,21 +84,21 @@ public class Handler implements PageHandler<Context> {
 		model.setMetricGroups(new ArrayList<String>(groups));
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
 		m_jspViewer.view(ctx, model);
-		}
+	}
 
-		private void normalize(Model model, Payload payload) {
-			model.setPage(ReportPage.NETWORK);
-			String poduct = payload.getProduct();
-		
-			if (poduct == null || poduct.length() == 0) {
-				payload.setAction(Action.DASHBOARD.getName());
-			}
-			m_normalizePayload.normalize(model, payload);
-			int timeRange = payload.getTimeRange();
-			Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
-			Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
-		
-			model.setStartTime(startTime);
-			model.setEndTime(endTime);
+	private void normalize(Model model, Payload payload) {
+		model.setPage(ReportPage.NETWORK);
+		String poduct = payload.getProduct();
+
+		if (poduct == null || poduct.length() == 0) {
+			payload.setAction(Action.DASHBOARD.getName());
 		}
+		m_normalizePayload.normalize(model, payload);
+		int timeRange = payload.getTimeRange();
+		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
+		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
+
+		model.setStartTime(startTime);
+		model.setEndTime(endTime);
+	}
 }

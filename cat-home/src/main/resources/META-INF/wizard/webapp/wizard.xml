@@ -56,14 +56,23 @@
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" template="default">
             <description>Statistics</description>
          </page>
+<<<<<<< HEAD
          <page name="alteration" title="Change" path="alteration" template="default">
+=======
+         <page name="alteration" title="Alteration" path="alteration" template="default">
+>>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
             <description>Alteration</description>
          </page>
          <page name="monitor" title="Monitor" path="monitor" template="default">
             <description>Monitor</description>
          </page>
+<<<<<<< HEAD
          <page name="network" title="Network" path="network" template="default">
             <description>Network</description>
+=======
+         <page name="test" title="Test" path="test" template="default">
+            <description>Test</description>
+>>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
          </page>
       </module>
       <module name="system" path="s" default="false">

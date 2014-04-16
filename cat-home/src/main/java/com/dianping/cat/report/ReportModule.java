@@ -47,7 +47,11 @@ com.dianping.cat.report.page.alteration.Handler.class,
 
 com.dianping.cat.report.page.monitor.Handler.class,
 
+<<<<<<< HEAD
 com.dianping.cat.report.page.network.Handler.class
+=======
+com.dianping.cat.report.page.test.Handler.class
+>>>>>>> 65dfb24e8f3027c61ba99820be56417598f23917
 })
 public class ReportModule extends AbstractModule {
 
