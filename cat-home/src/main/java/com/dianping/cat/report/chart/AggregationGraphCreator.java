@@ -17,7 +17,6 @@ import com.dianping.cat.home.metricAggregation.entity.MetricAggregationItem;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
-import com.dianping.cat.system.tool.Operation;
 
 public class AggregationGraphCreator extends GraphCreatorBase{
 	
