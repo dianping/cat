@@ -254,7 +254,7 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="topology-graph" table="topologyGraph" alias="t2">
+  <entity name="topology-graph" table="topologyGraph" alias="t">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="ip" field="ip" value-type="String" length="20" />
     <member name="period" field="period" value-type="Date" nullable="false" />
