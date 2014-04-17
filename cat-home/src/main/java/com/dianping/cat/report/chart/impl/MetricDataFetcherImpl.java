@@ -21,26 +21,16 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	private final String AVG = MetricType.AVG.name();
 
 	@Override
-	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs, boolean isAggregation) {
+	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
 		MetricDataBuilder builder = new MetricDataBuilder();
-
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-		if(isAggregation) {
-			for (MetricItemConfig config : metricConfigs) {
-				String key = config.getId();
-				String avgKey = key + ":" + AVG;
-				putKey(datas, values, avgKey);
-				String countKey = key + ":" + COUNT;
-				putKey(datas, values, countKey);
-				String sumKey = key + ":" + SUM;
-				putKey(datas, values, sumKey);
-			}
+		if (metricConfigs == null) {
+			return datas;
 		} else {
+			Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 			for (MetricItemConfig config : metricConfigs) {
 				String key = config.getId();
-
 				if (config.getShowAvg()) {
 					String avgKey = key + ":" + AVG;
 					putKey(datas, values, avgKey);
@@ -54,8 +44,8 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 					putKey(datas, values, sumKey);
 				}
 			}
+			return values;
 		}
-		return values;
 	}
 
 	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {

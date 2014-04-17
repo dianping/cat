@@ -188,8 +188,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.impl.CachedMetricReportServiceImpl</implementation>
+			<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+			<implementation>com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -201,25 +201,25 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.impl.DataExtractorImpl</implementation>
+			<role>com.dianping.cat.report.chart.DataExtractor</role>
+			<implementation>com.dianping.cat.report.chart.impl.DataExtractorImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.impl.MetricDataFetcherImpl</implementation>
+			<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+			<implementation>com.dianping.cat.report.chart.impl.MetricDataFetcherImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.GraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -239,17 +239,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.AggregationGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.AggregationGraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.AggregationGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -2609,7 +2609,7 @@
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+					<role>com.dianping.cat.report.chart.GraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2650,20 +2650,20 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.GraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -2967,7 +2967,7 @@
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.AggregationGraphCreator</role>
+					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2981,8 +2981,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.AggregationGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.AggregationGraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.AggregationGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
@@ -2991,13 +2991,13 @@
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>

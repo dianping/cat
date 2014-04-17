@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregation;
@@ -150,5 +151,11 @@ public class AggregationGraphCreator extends GraphCreatorBase{
 			return null;
 		}
 	}
+
+	@Override
+   protected Map<String, double[]> buildGraphData(String productLine, MetricReport metricReport) {
+		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, null); 
+		return currentValues;
+   }
 }
 

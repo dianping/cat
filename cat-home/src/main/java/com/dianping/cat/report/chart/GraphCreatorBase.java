@@ -2,8 +2,6 @@ package com.dianping.cat.report.chart;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -30,7 +28,7 @@ import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
-public class GraphCreatorBase  implements LogEnabled {
+public abstract class GraphCreatorBase  implements LogEnabled {
 	@Inject
 	protected BaselineService m_baselineService;
 
@@ -198,18 +196,7 @@ public class GraphCreatorBase  implements LogEnabled {
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-			List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
-			      domains));
-			Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
-				@Override
-				public int compare(MetricItemConfig o1, MetricItemConfig o2) {
-					return (int) (o1.getViewOrder() * 100 - o2.getViewOrder() * 100);
-				}
-			});
-
-			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start, metricConfigs);
-
+			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);
 			index++;
 		}
@@ -235,10 +222,11 @@ public class GraphCreatorBase  implements LogEnabled {
 		return result;
 	}
 
-	private Map<String, double[]> queryMetricValueByDate(String productLine, long start,
-	      List<MetricItemConfig> metricConfigs) {
+	protected abstract Map<String, double[]> buildGraphData(String productLine, MetricReport metricReport);
+	
+	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
-		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs, true);
+		Map<String, double[]> currentValues = buildGraphData(productLine, metricReport);
 		double sum = 0;
 
 		for (Entry<String, double[]> entry : currentValues.entrySet()) {
@@ -249,7 +237,6 @@ public class GraphCreatorBase  implements LogEnabled {
 				sum = sum + value[i];
 			}
 		}
-
 		// if current report is not exist, use last day value replace it.
 		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
 			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
@@ -257,7 +244,7 @@ public class GraphCreatorBase  implements LogEnabled {
 
 			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
 			      + sdf.format(new Date(start)));
-			return m_pruductDataFetcher.buildGraphData(lastMetricReport, metricConfigs, true);
+			return buildGraphData(productLine, lastMetricReport);
 		}
 		return currentValues;
 	}
