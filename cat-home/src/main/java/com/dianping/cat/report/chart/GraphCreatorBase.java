@@ -21,7 +21,6 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.AlertInfo;
@@ -60,6 +59,9 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 	protected Logger m_logger;
 	
 	protected void addLastMinuteData(Map<Long, Double> current, Map<Long, Double> all, int minute, Date end) {
+		int step = m_dataExtractor.getStep();
+		if(step == 1) 
+			return;
 		long endTime = 0;
 		long currentTime = System.currentTimeMillis();
 		if (end.getTime() > currentTime) {
@@ -148,25 +150,6 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 		Date current = TimeUtil.getCurrentHour();
 
 		return current.getTime() == date.getTime() - TimeUtil.ONE_HOUR;
-	}
-
-	protected boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
-
-		for (MetricKeyConfig metric : configs) {
-			String domain = metric.getMetricDomain();
-			String type = metric.getMetricType();
-			String key = metric.getMetricKey();
-
-			for (MetricItemConfig item : metricConfig) {
-				if (item.getDomain().equalsIgnoreCase(domain) && item.getType().equalsIgnoreCase(type)
-				      && item.getMetricKey().equalsIgnoreCase(key)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {

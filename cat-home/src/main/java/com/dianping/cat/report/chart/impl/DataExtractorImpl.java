@@ -54,7 +54,6 @@ public class DataExtractorImpl implements DataExtractor {
 
 	private int intervalCalculate(int length) {
 		int[] values = { 1, 2, 3, 6, 10, 20, 30, 60 };
-
 		for (int value : values) {
 			int pm = length / value;
 			if (pm >= MIN_POINT_NUMBER && pm < MAX_POINT_NUMBER) {
