@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
@@ -61,8 +63,11 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 		
-		//add default productline
-		
+		if(payload.getProduct() == null) {
+			Collection<ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines().values();
+			String productLine = ((ProductLine)productLines.toArray()[0]).getId();
+			payload.setProduct(productLine);
+		}
 		switch (payload.getAction()) {
 		case NETWORK:
 			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
@@ -83,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 		String poduct = payload.getProduct();
 
 		if (poduct == null || poduct.length() == 0) {
-			payload.setAction(Action.DASHBOARD.getName());
+			payload.setAction(Action.NETWORK.getName());
 		}
 		m_normalizePayload.normalize(model, payload);
 		int timeRange = payload.getTimeRange();

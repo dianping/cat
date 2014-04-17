@@ -9,13 +9,6 @@ import java.util.Map;
 
 public class LineChart {
 
-	@Override
-   public String toString() {
-	   return "LineChart [m_size=" + m_size + ", m_step=" + m_step + ", m_start=" + m_start + ", m_subTitles="
-	         + m_subTitles + ", m_title=" + m_title + ", m_id=" + m_id + ", m_htmlTitle=" + m_htmlTitle + ", m_values="
-	         + m_values + ", m_datas=" + m_datas + ", m_ylable=" + Arrays.toString(m_ylable) + "]";
-   }
-
 	private transient SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
 	private int m_size;

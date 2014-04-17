@@ -1,9 +1,7 @@
 package com.dianping.cat.report.page.network;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	NETWORK("view"),
-
-	DASHBOARD("dashboard");
+	NETWORK("view");
 
 	private String m_name;
 

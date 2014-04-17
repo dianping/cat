@@ -10,4 +10,3 @@ public interface DataExtractor {
 
 	public int getStep();
 }
-
