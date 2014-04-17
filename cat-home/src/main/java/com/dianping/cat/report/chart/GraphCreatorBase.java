@@ -237,6 +237,8 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 			// remove the minute of future
 			Map<String, double[]> newCurrentValues = new LinkedHashMap<String, double[]>();
 			int step = m_dataExtractor.getStep();
+			if(step <= 0) 
+				return allCurrentValues;
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
 			int removeLength = 60 / step - (minute / step);
 

@@ -81,32 +81,33 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 				
 				String itemKey = domain + ":" + type + ":" + metricAggregationItem.getKey() + ":"
 				      + displayType.toUpperCase();
-				size += dataWithOutFutures.get(itemKey).length;
-				Map<Long, Double> all = convertToMap(datas.get(itemKey), startDate, 1);
-				Map<Long, Double> current = convertToMap(dataWithOutFutures.get(itemKey), startDate, step);
-				addLastMinuteData(current, all, m_lastMinute, endDate);
-				if (operation != null) {
-					operateData(current, operation);
-				}
-				String suffix = null;
-				if (MetricType.AVG.name().equals(displayType.toUpperCase())) {
-					suffix = Chinese.Suffix_AVG;
-				} else if (MetricType.SUM.name().equals(displayType.toUpperCase())) {
-					suffix = Chinese.Suffix_SUM;
-				} else if (MetricType.COUNT.name().equals(displayType.toUpperCase())) {
-					suffix = Chinese.Suffix_COUNT;
-				}
-				lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.CURRENT_VALUE, current);
-				if (baseLine) {
-					double[] baselines = queryBaseline(itemKey, startDate, endDate);
-					Map<Long, Double> baselinesData = convertToMap(m_dataExtractor.extract(baselines), startDate, step);
+				if (dataWithOutFutures.containsKey(itemKey)) {
+					Map<Long, Double> all = convertToMap(datas.get(itemKey), startDate, 1);
+					Map<Long, Double> current = convertToMap(dataWithOutFutures.get(itemKey), startDate, step);
+					addLastMinuteData(current, all, m_lastMinute, endDate);
 					if (operation != null) {
-						operateData(baselinesData, operation);
+						operateData(current, operation);
 					}
-					lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.BASELINE_VALUE, baselinesData);
+					String suffix = null;
+					if (MetricType.AVG.name().equals(displayType.toUpperCase())) {
+						suffix = Chinese.Suffix_AVG;
+					} else if (MetricType.SUM.name().equals(displayType.toUpperCase())) {
+						suffix = Chinese.Suffix_SUM;
+					} else if (MetricType.COUNT.name().equals(displayType.toUpperCase())) {
+						suffix = Chinese.Suffix_COUNT;
+					}
+					lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.CURRENT_VALUE, current);
+					if (baseLine) {
+						double[] baselines = queryBaseline(itemKey, startDate, endDate);
+						Map<Long, Double> baselinesData = convertToMap(m_dataExtractor.extract(baselines), startDate, step);
+						if (operation != null) {
+							operateData(baselinesData, operation);
+						}
+						lineChart.add(metricAggregationItem.getKey() + suffix + Chinese.BASELINE_VALUE, baselinesData);
+					}
+					lineChart.setSize(size);
 				}
 			}
-			lineChart.setSize(size);
 			charts.put(title, lineChart);
 		}
 		return charts;

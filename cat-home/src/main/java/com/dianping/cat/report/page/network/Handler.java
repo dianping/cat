@@ -2,8 +2,10 @@ package com.dianping.cat.report.page.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,11 +65,19 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 		
+		List<ProductLine> productLines = new ArrayList<ProductLine>(m_productLineConfigManager.getCompany()
+		      .getProductLines().values());
+		Collections.sort(productLines, new Comparator<ProductLine>() {
+			@Override
+			public int compare(ProductLine o1, ProductLine o2) {
+				return o1.getId().compareTo(o2.getId());
+			}
+		});
 		if(payload.getProduct() == null) {
-			Collection<ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines().values();
-			String productLine = ((ProductLine)productLines.toArray()[0]).getId();
-			payload.setProduct(productLine);
+			String product = ((ProductLine)productLines.toArray()[0]).getId();
+			payload.setProduct(product);
 		}
+		
 		switch (payload.getAction()) {
 		case NETWORK:
 			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
@@ -79,7 +89,7 @@ public class Handler implements PageHandler<Context> {
 		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
 
 		model.setMetricGroups(new ArrayList<String>(groups));
-		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
+		model.setProductLines(productLines);
 		m_jspViewer.view(ctx, model);
 	}
 
