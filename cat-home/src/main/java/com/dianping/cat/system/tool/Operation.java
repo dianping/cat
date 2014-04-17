@@ -14,7 +14,6 @@ public class Operation {
 	public double getResult() {
 		String postfix = getPostfix();
 		Stack<String> stk = new Stack<String>();
-		// System.out.println(postfix);
 		String parts[] = postfix.split(" +");
 		double result = 0;
 		for (int i = 0; i < parts.length; i++) {
@@ -31,28 +30,10 @@ public class Operation {
 		return result;
 	}
 
-	/**
-	 * test if the character is an operator,such +,-,*,/
-	 * 
-	 * @param op
-	 *           the character to test
-	 * @return true if op is an operator otherwise false
-	 */
 	private boolean isOperator(char op) {
 		return (op == '+' || op == '-' || op == '*' || op == '/');
 	}
 
-	/**
-	 * calculate an expression such (a op b)
-	 * 
-	 * @param a
-	 *           number 1
-	 * @param b
-	 *           number 2
-	 * @param op
-	 *           the operator
-	 * @return (double)(a op b)
-	 */
 	public double calculate(double a, double b, char op) {
 		switch (op) {
 		case '+':
@@ -67,11 +48,6 @@ public class Operation {
 		return -1;
 	}
 
-	/**
-	 * convert the suffix to postfix
-	 * 
-	 * @return the postfix as a string
-	 */
 	private String getPostfix() {
 		Stack<String> stk = new Stack<String>();
 		String postfix = new String();
@@ -120,15 +96,5 @@ public class Operation {
 		while (it.hasPrevious())
 			postfix += it.previous() + " ";
 		return postfix.trim().replaceAll(" +\\.", ".");
-	}
-
-	/**
-	 * main function
-	 * 
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		 System.out.println(new Operation("((1.5+6.000)*9+9.36)*(8-8*8+8*7)").getResult());
-		System.out.println(new Operation("(2.5+(3.1*2)/0.5)").getResult());
 	}
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.metric.Range;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;

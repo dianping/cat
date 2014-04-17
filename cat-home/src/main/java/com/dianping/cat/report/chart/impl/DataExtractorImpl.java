@@ -1,10 +1,10 @@
-package com.dianping.cat.report.page.metric.chart.impl;
+package com.dianping.cat.report.chart.impl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.report.page.metric.chart.DataExtractor;
+import com.dianping.cat.report.chart.DataExtractor;
 
 public class DataExtractorImpl implements DataExtractor {
 
