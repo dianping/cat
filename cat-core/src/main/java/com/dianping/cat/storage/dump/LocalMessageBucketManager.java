@@ -401,8 +401,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
-		private long m_count;
-
 		public BlockingQueue<MessageItem> m_messageQueue;
 
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
@@ -415,12 +413,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			return "Message-Gzip-" + m_index;
 		}
 
-		private void gzipMessage(MessageItem item, boolean monitor) {
-			Transaction t = null;
-
-			if (monitor) {
-				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
-			}
+		private void gzipMessage(MessageItem item) {
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
@@ -444,18 +437,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error("Error when offer the block to the dump!");
 					}
 				}
-				if (t != null) {
-					t.setStatus(Message.SUCCESS);
-				}
 			} catch (Throwable e) {
 				Cat.logError(e);
-				if (t != null) {
-					t.setStatus(e);
-				}
-			} finally {
-				if (t != null) {
-					t.complete();
-				}
 			}
 		}
 
@@ -466,12 +449,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
-						m_count++;
-						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
-							gzipMessage(item, true);
-						} else {
-							gzipMessage(item, false);
-						}
+						gzipMessage(item);
 					}
 				}
 			} catch (InterruptedException e) {

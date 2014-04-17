@@ -76,7 +76,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		for (String name : domains) {
 			try {
 				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
-					TransactionReport report = m_transactionAnalyzer.getReport(name);
+					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
 
 					transactionReportVisitor.visitTransactionReport(report);
 				}

@@ -59,7 +59,10 @@ public class StateShow extends BaseVisitor {
 	}
 
 	public List<ProcessDomain> getProcessDomains() {
-		m_processDomains.remove("PhoenixAgent");
+		ProcessDomain domain = m_processDomains.get("PhoenixAgent");
+
+		domain.getIps().clear();
+
 		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
 		if (m_sortType == null) {
 			Collections.sort(temp, new DomainCompartor());
