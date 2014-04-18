@@ -98,13 +98,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent, Stack<DefaultTransaction> stack,
-	      MessageTree tree) {
+	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent, Stack<DefaultTransaction> stack, MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = buf.readByte();
 		String timestamp = helper.read(buf, TAB);
-		String type = helper.readRaw(buf, TAB);
-		String name = helper.readRaw(buf, TAB);
+		String type = helper.read(buf, TAB);
+		String name = helper.read(buf, TAB);
 
 		switch (identifier) {
 		case 't':
@@ -121,9 +120,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return transaction;
 		case 'A':
 			DefaultTransaction tran = new DefaultTransaction(type, name, null);
-			String status = helper.readRaw(buf, TAB);
+			String status = helper.read(buf, TAB);
 			String duration = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
+			String data = helper.read(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			tran.setTimestamp(m_dateHelper.parse(timestamp));
@@ -140,9 +139,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return tran;
 			}
 		case 'T':
-			String transactionStatus = helper.readRaw(buf, TAB);
+			String transactionStatus = helper.read(buf, TAB);
 			String transactionDuration = helper.read(buf, TAB);
-			String transactionData = helper.readRaw(buf, TAB);
+			String transactionData = helper.read(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			parent.setStatus(transactionStatus);
@@ -155,8 +154,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return stack.pop();
 		case 'E':
 			DefaultEvent event = new DefaultEvent(type, name);
-			String eventStatus = helper.readRaw(buf, TAB);
-			String eventData = helper.readRaw(buf, TAB);
+			String eventStatus = helper.read(buf, TAB);
+			String eventData = helper.read(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			event.setTimestamp(m_dateHelper.parse(timestamp));
@@ -171,8 +170,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
-			String metricStatus = helper.readRaw(buf, TAB);
-			String metricData = helper.readRaw(buf, TAB);
+			String metricStatus = helper.read(buf, TAB);
+			String metricData = helper.read(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			metric.setTimestamp(m_dateHelper.parse(timestamp));
@@ -187,8 +186,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'L':
 			DefaultTrace trace = new DefaultTrace(type, name);
-			String traceStatus = helper.readRaw(buf, TAB);
-			String traceData = helper.readRaw(buf, TAB);
+			String traceStatus = helper.read(buf, TAB);
+			String traceData = helper.read(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			trace.setTimestamp(m_dateHelper.parse(timestamp));
@@ -203,8 +202,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String heartbeatStatus = helper.readRaw(buf, TAB);
-			String heartbeatData = helper.readRaw(buf, TAB);
+			String heartbeatStatus = helper.read(buf, TAB);
+			String heartbeatData = helper.read(buf, TAB);
 
 			helper.read(buf, LF); // get rid of line feed
 			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
@@ -218,8 +217,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return heartbeat;
 			}
 		default:
-			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
-			      + buf.toString(Charset.forName("utf-8")));
+			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: " + buf.toString(Charset.forName("utf-8")));
 			throw new RuntimeException("Unknown identifier int name");
 		}
 	}
@@ -376,77 +374,91 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	protected static class BufferHelper {
-
 		private BufferWriter m_writer;
+
+		private BlockingQueue<char[]> m_buffers = new ArrayBlockingQueue<char[]>(20);
 
 		public BufferHelper(BufferWriter writer) {
 			m_writer = writer;
 		}
 
 		public String read(ChannelBuffer buf, byte separator) {
-			int count = buf.bytesBefore(separator);
+			char[] data = m_buffers.poll();
 
-			if (count < 0) {
-				return null;
-			} else {
-				byte[] data = new byte[count];
-
-				buf.readBytes(data);
-				buf.readByte(); // get rid of separator
-				return new String(data);
+			if (data == null) {
+				data = new char[4096];
 			}
-		}
 
-		public String readRaw(ChannelBuffer buf, byte separator) {
+			int from = buf.readerIndex();
+			int to = buf.writerIndex();
+			int index = 0;
+			boolean flag = false;
+
+			for (int i = from; i < to; i++) {
+				byte b = buf.readByte();
+
+				if (b == separator) {
+					break;
+				}
+
+				if (index > data.length) {
+					char[] data2 = new char[to - from];
+
+					System.arraycopy(data, 0, data2, 0, index);
+					data = data2;
+				}
+
+				char c = (char) (b & 0xFF);
+
+				if (c > 127) {
+					flag = true;
+				}
+
+				if (c == '\\' && i + 1 < to) {
+					byte b2 = buf.readByte();
+
+					if (b2 == 't') {
+						c = '\t';
+						i++;
+					} else if (b2 == 'r') {
+						c = '\r';
+						i++;
+					} else if (b2 == 'n') {
+						c = '\n';
+						i++;
+					} else if (b2 == '\\') {
+						c = '\\';
+						i++;
+					} else {
+						// move back
+						buf.readerIndex(i + 1);
+					}
+				}
+
+				data[index] = c;
+				index++;
+			}
+
 			try {
-				int count = buf.bytesBefore(separator);
-
-				if (count < 0) {
-					return null;
+				if (!flag) {
+					return new String(data, 0, index);
 				} else {
-					byte[] data = new byte[count];
-					String str;
+					byte[] ba = new byte[index];
 
-					buf.readBytes(data);
-					buf.readByte(); // get rid of separator
-
-					int length = data.length;
-					int writeIndex = 0;
-
-					for (int i = 0; i < length; i++) {
-						if (data[i] == '\\') {
-							if (i + 1 < length) {
-								byte b = data[i + 1];
-
-								if (b == 't') {
-									data[writeIndex] = '\t';
-									i++;
-								} else if (b == 'r') {
-									data[writeIndex] = '\r';
-									i++;
-								} else if (b == 'n') {
-									data[writeIndex] = '\n';
-									i++;
-								} else {
-									data[writeIndex] = '\\';
-								}
-							} else {
-								data[writeIndex] = '\\';
-							}
-						} else {
-							data[writeIndex] = data[i];
-						}
-						writeIndex++;
+					for (int i = 0; i < index; i++) {
+						ba[i] = (byte) (data[i] & 0xFF);
 					}
 
 					try {
-						str = new String(data, 0, writeIndex, "utf-8");
+						return new String(ba, 0, index, "utf-8");
 					} catch (UnsupportedEncodingException e) {
-						str = new String(data, 0, length);
+						return new String(ba, 0, index);
 					}
-					return str;
 				}
 			} finally {
+				if (m_buffers.remainingCapacity() > 0) {
+					m_buffers.offer(data);
+				}
 			}
 		}
 
