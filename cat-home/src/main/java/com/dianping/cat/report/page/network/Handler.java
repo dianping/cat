@@ -2,12 +2,10 @@ package com.dianping.cat.report.page.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -20,6 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.page.LineChart;
@@ -65,31 +64,36 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 		
-		List<ProductLine> productLines = new ArrayList<ProductLine>(m_productLineConfigManager.getCompany()
-		      .getProductLines().values());
-		Collections.sort(productLines, new Comparator<ProductLine>() {
-			@Override
-			public int compare(ProductLine o1, ProductLine o2) {
-				return o1.getId().compareTo(o2.getId());
+		Map<String, ProductLine> productLines = m_productLineConfigManager.queryNetworkProductLines();
+		Map<String, MetricAggregationGroup> metricAggregationGroups = m_metricAggregationConfigManager
+		      .getMetricAggregationConfig().getMetricAggregationGroups();
+		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
+		
+		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
+	      if(productLines.containsKey(entry.getKey())) {
+	      	metricAggregationGroupList.add(entry.getValue());
+	      }
+      }
+		
+		if (payload.getProduct() == null) {
+			if (!metricAggregationGroupList.isEmpty()) {
+				String metricAggregationGroup = ((MetricAggregationGroup) metricAggregationGroupList.get(0)).getId();
+
+				payload.setProduct(metricAggregationGroup);
 			}
-		});
-		if(payload.getProduct() == null) {
-			String product = ((ProductLine)productLines.toArray()[0]).getId();
-			payload.setProduct(product);
 		}
 		
 		switch (payload.getAction()) {
 		case NETWORK:
-			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
+			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(),
+			      start, end);
+			
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
+			model.setMetricAggregationGroup(metricAggregationGroupList);
 			break;
 		default:
 			throw new RuntimeException("Unknown action: " + payload.getAction());
 		}
-		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
-
-		model.setMetricGroups(new ArrayList<String>(groups));
-		model.setProductLines(productLines);
 		m_jspViewer.view(ctx, model);
 	}
 

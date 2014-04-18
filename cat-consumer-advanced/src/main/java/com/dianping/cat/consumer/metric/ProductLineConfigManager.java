@@ -187,7 +187,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 	
 	public Map<String, ProductLine> queryNetworkProductLines() {
-		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
+		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
 
 		for (ProductLine line : getCompany().getProductLines().values()) {
 			String id = line.getId();
@@ -195,7 +195,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				productLines.put(id, line);
 			}
 		}
-		return sortProductLineByOrder(productLines);
+		return productLines;
 	}
 
 	public String queryProductLineByDomain(String domain) {

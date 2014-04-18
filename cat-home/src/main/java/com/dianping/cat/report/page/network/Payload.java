@@ -31,9 +31,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
 
-	@FieldMeta("group")
-	private String m_group;
-
 	public Payload() {
 		super(ReportPage.NETWORK);
 	}
@@ -45,10 +42,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public int getFrequency() {
 		return m_frequency;
-	}
-
-	public String getGroup() {
-		return m_group;
 	}
 
 	@Override
@@ -82,10 +75,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setFullScreen(boolean fullScreen) {
 		m_fullScreen = fullScreen;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
 	}
 
 	@Override

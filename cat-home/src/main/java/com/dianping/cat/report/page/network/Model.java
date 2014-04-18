@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.metric.Range;
-
-import org.unidal.web.mvc.view.annotation.EntityMeta;
-import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 @ModelMeta("network")
 public class Model extends AbstractReportModel<Action, Context> {
@@ -19,9 +19,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
 
-	private Collection<ProductLine> m_productLines;
-	
-	private List<String> m_metricGroups;
+	private Collection<MetricAggregationGroup> m_metricAggregationGroup;
 
 	private Date m_startTime;
 
@@ -58,12 +56,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_lineCharts;
 	}
 
-	public List<String> getMetricGroups() {
-   	return m_metricGroups;
-   }
-
-	public Collection<ProductLine> getProductLines() {
-		return m_productLines;
+	public Collection<MetricAggregationGroup> getProductLines() {
+		return m_metricAggregationGroup;
 	}
 
 	public Date getStartTime() {
@@ -78,15 +72,19 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_lineCharts = lineCharts;
 	}
 
-	public void setMetricGroups(List<String> metricGroups) {
-   	m_metricGroups = metricGroups;
-   }
-
-	public void setProductLines(Collection<ProductLine> productLines) {
-		m_productLines = productLines;
+	public void setProductLines(Collection<MetricAggregationGroup> metricAggregationGroup) {
+		m_metricAggregationGroup = metricAggregationGroup;
 	}
 
 	public void setStartTime(Date startTime) {
 		m_startTime = startTime;
+	}
+	
+	public Collection<MetricAggregationGroup> getMetricAggregationGroup() {
+		return m_metricAggregationGroup;
+	}
+
+	public void setMetricAggregationGroup(Collection<MetricAggregationGroup> metricAggregationGroup) {
+		m_metricAggregationGroup = metricAggregationGroup;
 	}
 }

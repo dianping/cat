@@ -16,6 +16,7 @@
     <attribute name="base-line" value-type="boolean" default-value="false"/>
     <attribute name="operation" value-type="String" />
     <attribute name="domain" value-type="String" />
+    <attribute name="title" value-type="String" />
     <entity-ref name="metric-aggregation-item" type="list" names="metric-aggregation-items" />
   </entity>
   <entity name="metric-aggregation-item">
