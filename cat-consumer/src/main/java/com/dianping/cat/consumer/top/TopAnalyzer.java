@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.top;
 
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
@@ -80,6 +82,9 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 					transactionReportVisitor.visitTransactionReport(report);
 				}
+			} catch (ConcurrentModificationException e) {
+				Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
+				Cat.logError(e);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -94,6 +99,9 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 					problemReportVisitor.visitProblemReport(report);
 				}
+			} catch (ConcurrentModificationException e) {
+				Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
+				Cat.logError(e);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
