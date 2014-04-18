@@ -30,6 +30,17 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
+	
+	@FieldMeta("group")
+	private String m_group;
+
+	public String getGroup() {
+		return m_group;
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
+	}
 
 	public Payload() {
 		super(ReportPage.NETWORK);
