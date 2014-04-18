@@ -1491,6 +1491,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.NetGraphFillData</role>
+			<implementation>com.dianping.cat.report.task.metric.NetGraphFillData</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
@@ -2893,6 +2911,24 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+ +			<role>com.dianping.cat.report.page.nettopo.Handler</role>
+ +			<implementation>com.dianping.cat.report.page.nettopo.Handler</implementation>
+ +			<requirements>
+ +				<requirement>
+ +					<role>com.dianping.cat.report.page.nettopo.JspViewer</role>
+ +				</requirement>
+ +			</requirements>
+ +		</component>
+ +		<component>
+ +			<role>com.dianping.cat.report.page.nettopo.JspViewer</role>
+ +			<implementation>com.dianping.cat.report.page.nettopo.JspViewer</implementation>
+ +			<requirements>
+ +				<requirement>
+ +					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+ +				</requirement>
+ +			</requirements>
+ +		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
