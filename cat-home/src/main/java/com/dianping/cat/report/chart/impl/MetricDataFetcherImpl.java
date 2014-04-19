@@ -26,44 +26,7 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-
-		for (MetricItemConfig config : metricConfigs) {
-			String key = config.getId();
-
-			if (config.getShowAvg()) {
-				String avgKey = key + ":" + AVG;
-				putKey(datas, values, avgKey);
-			}
-			if (config.getShowCount()) {
-				String countKey = key + ":" + COUNT;
-				putKey(datas, values, countKey);
-			}
-			if (config.getShowSum()) {
-				String sumKey = key + ":" + SUM;
-				putKey(datas, values, sumKey);
-			}
-		}
-		return values;
-	}
-	
-	@Override
-	public Map<String, double[]> buildAllData(MetricReport metricReport) {
-		MetricDataBuilder builder = new MetricDataBuilder();
-
-		builder.visitMetricReport(metricReport);
-		Map<String, double[]> datas = builder.getDatas();
-		
 		return datas;
-	}
-
-	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
-		double[] value = datas.get(key);
-
-		if (value == null) {
-			value = new double[60];
-		}
-		values.put(key, value);
 	}
 
 	public class MetricDataBuilder extends BaseVisitor {

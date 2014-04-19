@@ -55,6 +55,14 @@ public class GraphCreator extends GraphCreatorBase{
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
+	
+	private void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
+		LineChart value = charts.get(key);
+
+		if (value != null) {
+			result.put(key, charts.get(key));
+		}
+	}
 
 	public Map<String, LineChart> buildDashboard(Date start, Date end) {
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
@@ -147,19 +155,29 @@ public class GraphCreator extends GraphCreatorBase{
 		return false;
 	}
 
+
 	@Override
-   protected Map<String, double[]> buildGraphData(String productLine, MetricReport metricReport) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(
-		      domains));
-		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
-			@Override
-			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
-				return (int) (o1.getViewOrder() * 100 - o2.getViewOrder() * 100);
+   protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
+		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);  
+		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
+
+		for (MetricItemConfig config : metricConfigs) {
+			String key = config.getId();
+
+			if (config.getShowAvg()) {
+				String avgKey = key + ":" + MetricType.AVG.name();
+				putKey(datas, values, avgKey);
 			}
-		});
-		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);   
-		return currentValues;
+			if (config.getShowCount()) {
+				String countKey = key + ":" + MetricType.COUNT.name();
+				putKey(datas, values, countKey);
+			}
+			if (config.getShowSum()) {
+				String sumKey = key + ":" + MetricType.SUM.name();
+				putKey(datas, values, sumKey);
+			}
+		}
+		return values;
    }
 	
 }

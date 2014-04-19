@@ -2,6 +2,8 @@ package com.dianping.cat.report.chart;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -27,7 +29,7 @@ import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
-public abstract class GraphCreatorBase  implements LogEnabled {
+public abstract class GraphCreatorBase implements LogEnabled {
 	@Inject
 	protected BaselineService m_baselineService;
 
@@ -55,12 +57,12 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 	protected int m_lastMinute = 6;
 
 	protected int m_extraTime = 1;
-	
+
 	protected Logger m_logger;
-	
+
 	protected void addLastMinuteData(Map<Long, Double> current, Map<Long, Double> all, int minute, Date end) {
 		int step = m_dataExtractor.getStep();
-		if(step == 1) 
+		if (step == 1)
 			return;
 		long endTime = 0;
 		long currentTime = System.currentTimeMillis();
@@ -90,7 +92,7 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 			}
 		}
 	}
-	
+
 	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String id = key.substring(0, index);
@@ -99,6 +101,7 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 		String metricId = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 		      config.getMetricKey());
 		String des = "";
+		
 		config.setId(metricId);
 		if (MetricType.AVG.name().equals(type)) {
 			des = Chinese.Suffix_AVG;
@@ -180,12 +183,12 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
+			
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);
 			index++;
 		}
 		return oldCurrentValues;
 	}
-
 
 	protected double[] queryBaseline(String key, Date start, Date end) {
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_MINUTE);
@@ -205,11 +208,21 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 		return result;
 	}
 
-	protected abstract Map<String, double[]> buildGraphData(String productLine, MetricReport metricReport);
-	
+	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
+	      List<MetricItemConfig> metricConfigs);
+
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
-		Map<String, double[]> currentValues = buildGraphData(productLine, metricReport);
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		
+		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
+			@Override
+			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
+				return (int) (o1.getViewOrder() * 100 - o2.getViewOrder() * 100);
+			}
+		});
+		Map<String, double[]> currentValues = buildGraphData(metricReport, metricConfigs);
 		double sum = 0;
 
 		for (Entry<String, double[]> entry : currentValues.entrySet()) {
@@ -227,7 +240,7 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 
 			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
 			      + sdf.format(new Date(start)));
-			return buildGraphData(productLine, lastMetricReport);
+			return buildGraphData(lastMetricReport, metricConfigs);
 		}
 		return currentValues;
 	}
@@ -237,7 +250,8 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 			// remove the minute of future
 			Map<String, double[]> newCurrentValues = new LinkedHashMap<String, double[]>();
 			int step = m_dataExtractor.getStep();
-			if(step <= 0) 
+			
+			if (step <= 0)
 				return allCurrentValues;
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
 			int removeLength = 60 / step - (minute / step);
@@ -252,14 +266,13 @@ public abstract class GraphCreatorBase  implements LogEnabled {
 		}
 		return allCurrentValues;
 	}
-	
 
-	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
-		LineChart value = charts.get(key);
+	protected void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
+		double[] value = datas.get(key);
 
-		if (value != null) {
-			result.put(key, charts.get(key));
+		if (value == null) {
+			value = new double[60];
 		}
+		values.put(key, value);
 	}
-	
 }

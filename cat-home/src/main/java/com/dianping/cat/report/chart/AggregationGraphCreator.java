@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
@@ -74,12 +75,13 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 		lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
 		for (MetricAggregationItem metricAggregationItem : metricAggregation.getMetricAggregationItems()) {
+			
 			String domain = getAttribute(metricAggregation.getDomain(), metricAggregationItem.getDomain());
 			String displayType = getAttribute(metricAggregation.getDisplayType(), metricAggregationItem.getDisplayType());
 			boolean baseLine = getAttribute(metricAggregation.getBaseLine(), metricAggregationItem.getBaseLine());
 			String operation = getAttribute(metricAggregation.getOperation(), metricAggregationItem.getOperation());
 			String itemKey = domain + ":" + type + ":" + metricAggregationItem.getKey() + ":" + displayType.toUpperCase();
-
+			
 			if (dataWithOutFutures.containsKey(itemKey)) {
 				Map<Long, Double> all = convertToMap(datas.get(itemKey), startDate, 1);
 				Map<Long, Double> current = convertToMap(dataWithOutFutures.get(itemKey), startDate, step);
@@ -89,6 +91,7 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 					rebuildData(current, operation);
 				}
 				String suffix = null;
+				
 				if (MetricType.AVG.name().equalsIgnoreCase(displayType)) {
 					suffix = Chinese.Suffix_AVG;
 				} else if (MetricType.SUM.name().equalsIgnoreCase(displayType)) {
@@ -97,11 +100,13 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 					suffix = Chinese.Suffix_COUNT;
 				}
 				String key = metricAggregationItem.getKey() + suffix + Chinese.CURRENT_VALUE;
+				
 				lineChart.add(key, current);
 
 				if (baseLine) {
 					double[] baselines = queryBaseline(itemKey, startDate, endDate);
 					Map<Long, Double> baselinesData = convertToMap(m_dataExtractor.extract(baselines), startDate, step);
+					
 					if (operation != null) {
 						rebuildData(baselinesData, operation);
 					}
@@ -112,6 +117,7 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 			}
 		}
 		Pair<String, LineChart> chart = new Pair<String, LineChart>(id, lineChart);
+		
 		return chart;
 	}
 
@@ -124,7 +130,7 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 			Map<String, double[]> oldCurrentValues = prepareAllData(m_productLine, startDate, endDate);
 			Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 			Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
-		
+
 			return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 		} else {
 			return new LinkedHashMap<String, LineChart>();
@@ -132,9 +138,23 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 	}
 
 	@Override
-	protected Map<String, double[]> buildGraphData(String productLine, MetricReport metricReport) {
-		Map<String, double[]> currentValues = m_pruductDataFetcher.buildAllData(metricReport);
-		
-		return currentValues;
+	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
+
+		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);
+		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
+
+		for (MetricItemConfig config : metricConfigs) {
+			String key = config.getId();
+			
+			String avgKey = key + ":" + MetricType.AVG.name();
+			putKey(datas, values, avgKey);
+			
+			String countKey = key + ":" + MetricType.COUNT.name();
+			putKey(datas, values, countKey);
+			
+			String sumKey = key + ":" + MetricType.SUM.name();
+			putKey(datas, values, sumKey);
+		}
+		return values;
 	}
 }
