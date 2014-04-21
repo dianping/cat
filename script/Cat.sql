@@ -5,7 +5,7 @@ use cat;
 CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
+  `ip` varchar(50) NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
@@ -19,7 +19,7 @@ CREATE TABLE `dailygraph` (
 CREATE TABLE `dailyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
-  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+  `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
@@ -32,7 +32,7 @@ CREATE TABLE `dailyreport` (
 CREATE TABLE `weeklyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
-  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+  `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
@@ -45,7 +45,7 @@ CREATE TABLE `weeklyreport` (
 CREATE TABLE `monthreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
-  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+  `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
@@ -58,7 +58,7 @@ CREATE TABLE `monthreport` (
 CREATE TABLE `graph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip, NULL表示合并同domain所有ip',
+  `ip` varchar(50) NULL COMMENT '报表来自于哪台cat-client机器ip, NULL表示合并同domain所有ip',
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
@@ -94,7 +94,7 @@ CREATE TABLE `report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型, 1/xml, 9/binary 默认1',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台机器',
+  `ip` varchar(50) DEFAULT NULL COMMENT '报表来自于哪台机器',
   `domain` varchar(50) NOT NULL  COMMENT '报表项目',
   `period` timestamp NOT NULL COMMENT '报表时间段',
   `content` longtext NULL,
@@ -137,7 +137,7 @@ CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型 报表数据格式, 1/Binary, 2/xml , 3/json',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台机器',
+  `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台机器',
   `productLine` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
   `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
   `content` longblob COMMENT '用于存放报表的具体内容',
@@ -279,7 +279,7 @@ CREATE TABLE `project` (
 
 CREATE TABLE `topologyGraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-client机器ip',
+  `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-client机器ip',
   `period` datetime NOT NULL  COMMENT '报表时间段,精确到分钟',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/binary',
   `content` longblob COMMENT '用于存放报表的具体内容',
