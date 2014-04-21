@@ -40,6 +40,7 @@ import com.dianping.cat.report.page.metric.chart.impl.CachedMetricReportServiceI
 import com.dianping.cat.report.page.metric.chart.impl.DataExtractorImpl;
 import com.dianping.cat.report.page.metric.chart.impl.MetricDataFetcherImpl;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.nettopo.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.AlertConfig;
@@ -101,7 +102,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class) //
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
 		      .req(ModelService.class, DependencyAnalyzer.ID));
-
+		
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
 		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class).req(ModelService.class,
@@ -131,6 +132,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class));
+		
+		all.add(C(NetGraphManager.class).req(RemoteMetricReportService.class));
+		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

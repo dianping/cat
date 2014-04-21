@@ -1491,24 +1491,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.NetGraphFillData</role>
-			<implementation>com.dianping.cat.report.task.metric.NetGraphFillData</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.tool.MailSMS</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
@@ -2728,6 +2710,15 @@
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.nettopo.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.nettopo.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
 			<requirements>
@@ -2917,6 +2908,9 @@
  +			<requirements>
  +				<requirement>
  +					<role>com.dianping.cat.report.page.nettopo.JspViewer</role>
+ +				</requirement>
+ 				<requirement>
+ +					<role>com.dianping.cat.report.page.nettopo.NetGraphManager</role>
  +				</requirement>
  +			</requirements>
  +		</component>

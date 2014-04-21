@@ -15,7 +15,6 @@ import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.metric.MetricAlert;
-import com.dianping.cat.report.task.metric.NetGraphFillData;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.notify.ScheduledMailTask;
@@ -51,9 +50,6 @@ public class CatHomeModule extends AbstractModule {
 
 			Threads.forGroup("Cat").start(metricAlert);
 		}
-		
-		NetGraphFillData netGraphFillData = ctx.lookup(NetGraphFillData.class);
-		Threads.forGroup("Cat").start(netGraphFillData);
 		
 		executeAlarmModule(ctx);
 	}

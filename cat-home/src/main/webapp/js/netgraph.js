@@ -31,10 +31,7 @@ var $_netgraph = {
 
         'focus_scale':2,
 
-        'threshold':{
-            'inbound':[200*1024*1024,1024*1024*1024],
-            'outbound':[200*1024*1024,1024*1024*1024],
-        },
+        'tooltip_width':220,
     },
 
     topos: {
@@ -68,61 +65,7 @@ var $_netgraph = {
         topo.svg.appendChild(topo.tooltip);
 
         this.render(wrapper);
-
-        for (var id in topo.data['conn']) {
-            var conn = topo.data['conn'][id];
-            if (conn['data'][1] != 0 || conn['data'][2]) {
-                this.setData(wrapper, id, conn['data']);
-            }
-        }
 	},
-
-    setData: function(wrapper, id, data) {
-        var topo = this.topos[wrapper];
-        if(!topo.data['conn'].hasOwnProperty(id)){
-            return;
-        }
-        var inbound = data[0];
-        var outbound = data[1];
-        var from = id.split('=>')[0];
-        var to = id.split('=>')[1];
-        var d = topo.data['conn'][id];
-        d.data[0] = inbound;
-        d.data[1] = outbound;
-
-        var in_thresh = this.setting.threshold.inbound;
-        var out_thresh = this.setting.threshold.outbound;
-
-        var conn = document.getElementById(wrapper+'-'+id);
-        var sw_rect = document.getElementById(wrapper+'-'+from).children[0];
-        var level = 1;
-        if(inbound > in_thresh[0] || outbound > out_thresh[0]) {
-            level = 2;
-        }
-        if(inbound > in_thresh[1] || outbound > out_thresh[1]) {
-            level = 3;
-        }
-        var conn_color;
-        var sw_color;
-        if(level == 1) {
-            conn_color = this.setting.conn_color.normal;
-            sw_color = this.setting.sw_bgcolor.normal;
-        }
-        else if(level == 2) {
-            conn_color = this.setting.conn_color.warnning;
-            sw_color = this.setting.sw_bgcolor.warnning;
-        }
-        else {
-            conn_color = this.setting.conn_color.serious;
-            sw_color = this.setting.sw_bgcolor.serious;
-        }
-        this.setAttrValues(conn, {
-            'stroke':conn_color
-        });
-        this.setAttrValues(sw_rect, {
-            'fill':sw_color
-        });
-    },
 
     builddata: function(wrapper) {
         var topo = this.topos[wrapper];
@@ -136,31 +79,22 @@ var $_netgraph = {
 
         for(var k in sw) {
             topo.data['sw'][k]['conn'] = [];
+            if (topo.data['sw'][k]['state'] == 3) {
+                topo.data['sw'][k]['fill'] = this.setting.sw_bgcolor.serious;
+            }
+            else if (topo.data['sw'][k]['state'] == 2) {
+                topo.data['sw'][k]['fill'] = this.setting.sw_bgcolor.warnning;
+            }
+            else {
+                topo.data['sw'][k]['fill'] = this.setting.sw_bgcolor.normal;
+            }
         }
 
         for(var i in topo.data.conn) {
             var cn = topo.data.conn[i];
-            var firstname = cn[0][0];
-            var firstin, firstout;
-            if(cn[0].length == 3) {
-                firstin = cn[0][1];
-                firstout = cn[0][2];
-            }
-            else {
-                firstin = 0;
-                firstout = 0;
-            }
-            var secondname = cn[1][0];
-            var secondin, secondout;
-            if(cn[1].length == 3) {
-                secondin = cn[1][1];
-                secondout = cn[1][2];
-            }
-            else {
-                secondin = 0;
-                secondout = 0;
-            }
 
+            var firstname = cn[0][0];
+            var secondname = cn[1][0];
             if ((!sw[firstname] && !anchor[firstname]) || 
                     (!sw[secondname] && !anchor[secondname])) {
                 continue;
@@ -170,6 +104,46 @@ var $_netgraph = {
             var verseid = secondname + '=>' + firstname;
             if(id in conn) {
                 continue;
+            }
+
+            var firstin, firstout, firststate, firstfill;
+            firstin = cn[0][1];
+            firstout = cn[0][2];
+            firststate = cn[0][3];
+            if (firstin == undefined) {
+                firstin = 0;
+            }
+            if (firstout == undefined) {
+                firstout = 0;
+            }
+            if (firststate == 3) {
+                firstfill = this.setting.conn_color.serious;
+            }
+            else if (firststate == 2) {
+                firstfill = this.setting.conn_color.warnning;
+            }
+            else {
+                firstfill = this.setting.conn_color.normal;
+            }
+
+            var secondin, secondout, secondstate, secondfill;
+            secondin = cn[1][1];
+            secondout = cn[1][2];
+            secondstate = cn[1][3];
+            if (secondin == undefined) {
+                secondin = 0;
+            }
+            if (secondout == undefined) {
+                secondout = 0;
+            }
+            if (secondstate == 3) {
+                secondfill = this.setting.conn_color.serious;
+            }
+            else if (secondstate == 2) {
+                secondfill = this.setting.conn_color.warnning;
+            }
+            else {
+                secondfill = this.setting.conn_color.normal;
             }
 
             var f_anchor = 0;
@@ -194,20 +168,20 @@ var $_netgraph = {
                 t_anchor = 1;
             }
 
-            var name = 'to '+id.split('=>')[1];
-            var versename = 'to '+verseid.split('=>')[1];
+            var name = id.split('=>')[1];
+            var versename = verseid.split('=>')[1];
             if(!f_anchor && !t_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[firstin,firstout],'name':name};
-                conn[verseid] = {'x1':(x1+x2)/2,'y1':(y1+y2)/2,'x2':x2,'y2':y2,'data':[secondin,secondout],'name':versename};
+                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[firstin,firstout],'name':name,'fill':firstfill};
+                conn[verseid] = {'x1':(x1+x2)/2,'y1':(y1+y2)/2,'x2':x2,'y2':y2,'data':[secondin,secondout],'name':versename,'fill':secondfill};
                 topo.data.sw[firstname]['conn'].push(id);
                 topo.data.sw[secondname]['conn'].push(verseid);
             }
             else if(!f_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[firstin,firstout],'name':name};
+                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[firstin,firstout],'name':name,'fill':firstfill};
                 topo.data.sw[firstname]['conn'].push(id);
             }
             else if(!t_anchor) {
-                conn[verseid] = {'x1':(x1*2+x2)/3,'y1':(y1*2+y2)/3,'x2':x2,'y2':y2,'data':[secondin,secondout],'name':versename};
+                conn[verseid] = {'x1':(x1*2+x2)/3,'y1':(y1*2+y2)/3,'x2':x2,'y2':y2,'data':[secondin,secondout],'name':versename,'fill':secondfill};
                 topo.data.sw[secondname]['conn'].push(verseid);
             }
         }
@@ -218,12 +192,18 @@ var $_netgraph = {
 	conn_mousein: function(wrapper, id) {
         var topo = this.topos[wrapper];
 		var d = topo.data['conn'][id];
-		var x = (d.x1+d.x2)/2 + this.setting.conn_tooltip_offset;
-		var y = (d.y1+d.y2)/2 + this.setting.conn_tooltip_offset;
+        var mx = (d.x1 + d.x2) / 2;
+        var my = (d.y1 + d.y2) / 2;
+        var x, y;
+        if (mx <= 300)
+            x = mx + this.setting.conn_tooltip_offset;
+        else
+            x = mx - this.setting.tooltip_width - this.setting.conn_tooltip_offset;
+        y = my + this.setting.conn_tooltip_offset;
         var tip = [];
-        tip.push('['+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]));
-        tip.push('['+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][1]));
-		this.show_tooltip(wrapper,x,y,200,100,tip);
+        tip.push('[from '+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]));
+        tip.push('[to '+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][1]));
+		this.show_tooltip(wrapper,x,y,tip);
 
         var conn = document.getElementById(wrapper+'-'+id);
         var w = Math.round(conn.getAttribute('stroke-width'))+this.setting.focus_scale;
@@ -232,16 +212,21 @@ var $_netgraph = {
 
 	sw_mousein: function(wrapper, id) {
         var topo = this.topos[wrapper];
-		var x = topo.data['sw'][id].x+this.setting.sw_width/2+this.setting.sw_border_width;
-		var y = topo.data['sw'][id].y-this.setting.sw_height/2-this.setting.sw_border_width;
+		var x = topo.data['sw'][id].x;
+		var y = topo.data['sw'][id].y;
+        if (x <= 300)
+            x = x + this.setting.sw_width/2 + this.setting.sw_border_width;
+        else
+            x = x - this.setting.sw_width/2 - this.setting.sw_border_width - this.setting.tooltip_width - 4;
+        y = y - this.setting.sw_height/2-this.setting.sw_border_width;
         var conn;
         var tip = [];
         for(var i in topo.data['sw'][id].conn) {
             conn = topo.data['conn'][topo.data['sw'][id].conn[i]];
-            tip.push('['+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]));
-            tip.push('['+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][1]));
+            tip.push('[from '+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]));
+            tip.push('[to '+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][1]));
         }
-		this.show_tooltip(wrapper,x,y,200,100,tip);
+		this.show_tooltip(wrapper,x,y,tip);
 
         var sw = document.getElementById(wrapper+'-'+id).firstChild;
         var w = Math.round(sw.getAttribute('stroke-width'))+this.setting.focus_scale;
@@ -269,7 +254,7 @@ var $_netgraph = {
         this.setAttrValues(g, {'visibility':'hidden','opacity':0,'data-cur':''});
 	},
 
-	show_tooltip: function(wrapper,x,y,w,h,text) {
+	show_tooltip: function(wrapper,x,y,text) {
 		var g = document.getElementById(wrapper+"-svg-tooltip");
 		var childs = g.childNodes;
 		for(var i = childs.length-1; i >= 0; i--) {
@@ -287,7 +272,7 @@ var $_netgraph = {
 					'fill':'none',
 					'x':0.5,
 					'y':0.5,
-					'width':200,
+					'width':this.setting.tooltip_width,
 					'height':height,
 					'fill-opacity':0.85,
 					'isShadow':'true',
@@ -328,11 +313,11 @@ var $_netgraph = {
         var topo = this.topos[wrapper];
 		for (var id in topo.data['conn']) {
 			var d = topo.data['conn'][id];
-			this.draw_conn(wrapper, d.x1, d.y1, d.x2, d.y2, id);
+			this.draw_conn(wrapper, d.x1, d.y1, d.x2, d.y2, id, d.fill);
 		}
 
 		for (var id in topo.data['sw']) {
-			this.draw_sw(wrapper, topo.data['sw'][id].x, topo.data['sw'][id].y, id);
+			this.draw_sw(wrapper, topo.data['sw'][id].x, topo.data['sw'][id].y, id, topo.data['sw'][id].fill);
 		}
 
 		for (var id in topo.data['anchor']) {
@@ -356,7 +341,7 @@ var $_netgraph = {
 		topo.content.appendChild(text);
 	},
 
-	draw_sw: function(wrapper, x,y,id) {
+	draw_sw: function(wrapper, x,y,id,fill) {
         var topo = this.topos[wrapper];
 		var g = document.createElementNS(this.NS, "g");
 		topo.content.appendChild(g);
@@ -369,7 +354,7 @@ var $_netgraph = {
             'ry':this.setting.sw_corner,
             'width':this.setting.sw_width,
             'height':this.setting.sw_height,
-            'fill':this.setting.sw_bgcolor.normal,
+            'fill':fill,
             'stroke':this.setting.sw_border_color,
             'stroke-width':this.setting.sw_border_width,
         });
@@ -395,7 +380,7 @@ var $_netgraph = {
         });
 	},
 
-	draw_conn: function(wrapper, x1, y1, x2, y2, id) {
+	draw_conn: function(wrapper, x1, y1, x2, y2, id, fill) {
         var topo = this.topos[wrapper];
 
 		var line = document.createElementNS(this.NS, "line");
@@ -405,7 +390,7 @@ var $_netgraph = {
 					'y1':y1,
 					'x2':x2,
 					'y2':y2,
-					'stroke':this.setting.conn_color.normal,
+					'stroke':fill,
 					'stroke-width':this.setting.conn_width,
                     'onmouseover':'$_netgraph.conn_mousein("'+wrapper+'","'+id+'");',
                     'onmouseout':'$_netgraph.conn_mouseout("'+wrapper+'","'+id+'");',
