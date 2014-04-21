@@ -403,7 +403,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 					break;
 				}
 
-				if (index > data.length - 1) {
+				if (index >= data.length) {
 					char[] data2 = new char[to - from];
 
 					System.arraycopy(data, 0, data2, 0, index);
