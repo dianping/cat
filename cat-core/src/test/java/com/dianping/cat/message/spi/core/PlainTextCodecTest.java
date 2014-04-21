@@ -13,7 +13,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.OldPlainTextMessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
@@ -61,7 +61,7 @@ public class PlainTextCodecTest {
 
 	public void testManyOld() throws InterruptedException {
 		MessageTree tree = buildMessages();
-		OldPlainTextMessageCodec codec = new OldPlainTextMessageCodec();
+		PlainTextMessageCodec codec = new PlainTextMessageCodec();
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 		codec.encode(tree, buf);
