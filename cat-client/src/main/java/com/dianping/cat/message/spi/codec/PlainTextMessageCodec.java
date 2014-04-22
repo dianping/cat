@@ -49,6 +49,13 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
+	private ThreadLocal<Context> m_ctx = new ThreadLocal<Context>() {
+		@Override
+		protected Context initialValue() {
+			return new Context();
+		}
+	};
+
 	private Logger m_logger;
 
 	@Override
@@ -61,26 +68,28 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
-		decodeHeader(buf, tree);
+		Context ctx = m_ctx.get().setBuffer(buf);
+
+		decodeHeader(ctx, tree);
 
 		if (buf.readableBytes() > 0) {
-			decodeMessage(buf, tree);
+			decodeMessage(ctx, tree);
 		}
 	}
 
-	protected void decodeHeader(ChannelBuffer buf, MessageTree tree) {
+	protected void decodeHeader(Context ctx, MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
-		String id = helper.read(buf, TAB);
-		String domain = helper.read(buf, TAB);
-		String hostName = helper.read(buf, TAB);
-		String ipAddress = helper.read(buf, TAB);
-		String threadGroupName = helper.read(buf, TAB);
-		String threadId = helper.read(buf, TAB);
-		String threadName = helper.read(buf, TAB);
-		String messageId = helper.read(buf, TAB);
-		String parentMessageId = helper.read(buf, TAB);
-		String rootMessageId = helper.read(buf, TAB);
-		String sessionToken = helper.read(buf, LF);
+		String id = helper.read(ctx, TAB);
+		String domain = helper.read(ctx, TAB);
+		String hostName = helper.read(ctx, TAB);
+		String ipAddress = helper.read(ctx, TAB);
+		String threadGroupName = helper.read(ctx, TAB);
+		String threadId = helper.read(ctx, TAB);
+		String threadName = helper.read(ctx, TAB);
+		String messageId = helper.read(ctx, TAB);
+		String parentMessageId = helper.read(ctx, TAB);
+		String rootMessageId = helper.read(ctx, TAB);
+		String sessionToken = helper.read(ctx, LF);
 
 		if (VERSION.equals(id)) {
 			tree.setDomain(domain);
@@ -98,18 +107,18 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent, Stack<DefaultTransaction> stack, MessageTree tree) {
+	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack, MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
-		byte identifier = buf.readByte();
-		String timestamp = helper.read(buf, TAB);
-		String type = helper.read(buf, TAB);
-		String name = helper.read(buf, TAB);
+		byte identifier = ctx.getBuffer().readByte();
+		String timestamp = helper.read(ctx, TAB);
+		String type = helper.read(ctx, TAB);
+		String name = helper.read(ctx, TAB);
 
 		switch (identifier) {
 		case 't':
 			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
 
 			if (parent != null) {
@@ -120,11 +129,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return transaction;
 		case 'A':
 			DefaultTransaction tran = new DefaultTransaction(type, name, null);
-			String status = helper.read(buf, TAB);
-			String duration = helper.read(buf, TAB);
-			String data = helper.read(buf, TAB);
+			String status = helper.read(ctx, TAB);
+			String duration = helper.read(ctx, TAB);
+			String data = helper.read(ctx, TAB);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			tran.setTimestamp(m_dateHelper.parse(timestamp));
 			tran.setStatus(status);
 			tran.addData(data);
@@ -139,11 +148,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return tran;
 			}
 		case 'T':
-			String transactionStatus = helper.read(buf, TAB);
-			String transactionDuration = helper.read(buf, TAB);
-			String transactionData = helper.read(buf, TAB);
+			String transactionStatus = helper.read(ctx, TAB);
+			String transactionDuration = helper.read(ctx, TAB);
+			String transactionData = helper.read(ctx, TAB);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			parent.setStatus(transactionStatus);
 			parent.addData(transactionData);
 
@@ -154,10 +163,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return stack.pop();
 		case 'E':
 			DefaultEvent event = new DefaultEvent(type, name);
-			String eventStatus = helper.read(buf, TAB);
-			String eventData = helper.read(buf, TAB);
+			String eventStatus = helper.read(ctx, TAB);
+			String eventData = helper.read(ctx, TAB);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			event.setTimestamp(m_dateHelper.parse(timestamp));
 			event.setStatus(eventStatus);
 			event.addData(eventData);
@@ -170,10 +179,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
-			String metricStatus = helper.read(buf, TAB);
-			String metricData = helper.read(buf, TAB);
+			String metricStatus = helper.read(ctx, TAB);
+			String metricData = helper.read(ctx, TAB);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			metric.setTimestamp(m_dateHelper.parse(timestamp));
 			metric.setStatus(metricStatus);
 			metric.addData(metricData);
@@ -186,10 +195,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'L':
 			DefaultTrace trace = new DefaultTrace(type, name);
-			String traceStatus = helper.read(buf, TAB);
-			String traceData = helper.read(buf, TAB);
+			String traceStatus = helper.read(ctx, TAB);
+			String traceData = helper.read(ctx, TAB);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			trace.setTimestamp(m_dateHelper.parse(timestamp));
 			trace.setStatus(traceStatus);
 			trace.addData(traceData);
@@ -202,10 +211,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String heartbeatStatus = helper.read(buf, TAB);
-			String heartbeatData = helper.read(buf, TAB);
+			String heartbeatStatus = helper.read(ctx, TAB);
+			String heartbeatData = helper.read(ctx, TAB);
 
-			helper.read(buf, LF); // get rid of line feed
+			helper.read(ctx, LF); // get rid of line feed
 			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
 			heartbeat.setStatus(heartbeatStatus);
 			heartbeat.addData(heartbeatData);
@@ -217,19 +226,20 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return heartbeat;
 			}
 		default:
-			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: " + buf.toString(Charset.forName("utf-8")));
+			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
+			      + ctx.getBuffer().toString(Charset.forName("utf-8")));
 			throw new RuntimeException("Unknown identifier int name");
 		}
 	}
 
-	protected void decodeMessage(ChannelBuffer buf, MessageTree tree) {
+	protected void decodeMessage(Context ctx, MessageTree tree) {
 		Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
-		Message parent = decodeLine(buf, null, stack, tree);
+		Message parent = decodeLine(ctx, null, stack, tree);
 
 		tree.setMessage(parent);
 
-		while (buf.readableBytes() > 0) {
-			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
+		while (ctx.getBuffer().readableBytes() > 0) {
+			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack, tree);
 
 			if (message instanceof DefaultTransaction) {
 				parent = message;
@@ -368,7 +378,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	public void setBufferWriter(BufferWriter writer) {
+	void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
@@ -376,19 +386,13 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	protected static class BufferHelper {
 		private BufferWriter m_writer;
 
-		private BlockingQueue<char[]> m_buffers = new ArrayBlockingQueue<char[]>(20);
-
 		public BufferHelper(BufferWriter writer) {
 			m_writer = writer;
 		}
 
-		public String read(ChannelBuffer buf, byte separator) {
-			char[] data = m_buffers.poll();
-
-			if (data == null) {
-				data = new char[4096];
-			}
-
+		public String read(Context ctx, byte separator) {
+			ChannelBuffer buf = ctx.getBuffer();
+			char[] data = ctx.getData();
 			int from = buf.readerIndex();
 			int to = buf.writerIndex();
 			int index = 0;
@@ -406,6 +410,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 					System.arraycopy(data, 0, data2, 0, index);
 					data = data2;
+					ctx.setData(data2);
 				}
 
 				char c = (char) (b & 0xFF);
@@ -439,25 +444,19 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				index++;
 			}
 
-			try {
-				if (!flag) {
-					return new String(data, 0, index);
-				} else {
-					byte[] ba = new byte[index];
+			if (!flag) {
+				return new String(data, 0, index);
+			} else {
+				byte[] ba = new byte[index];
 
-					for (int i = 0; i < index; i++) {
-						ba[i] = (byte) (data[i] & 0xFF);
-					}
-
-					try {
-						return new String(ba, 0, index, "utf-8");
-					} catch (UnsupportedEncodingException e) {
-						return new String(ba, 0, index);
-					}
+				for (int i = 0; i < index; i++) {
+					ba[i] = (byte) (data[i] & 0xFF);
 				}
-			} finally {
-				if (m_buffers.remainingCapacity() > 0) {
-					m_buffers.offer(data);
+
+				try {
+					return new String(ba, 0, index, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					return new String(ba, 0, index);
 				}
 			}
 		}
@@ -492,6 +491,33 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 
 			return m_writer.writeTo(buf, data);
+		}
+	}
+
+	static class Context {
+		private ChannelBuffer m_buffer;
+
+		private char[] m_data;
+
+		public Context() {
+			m_data = new char[16384];
+		}
+
+		public ChannelBuffer getBuffer() {
+			return m_buffer;
+		}
+
+		public char[] getData() {
+			return m_data;
+		}
+
+		public Context setBuffer(ChannelBuffer buffer) {
+			m_buffer = buffer;
+			return this;
+		}
+
+		public void setData(char[] data) {
+			m_data = data;
 		}
 	}
 
