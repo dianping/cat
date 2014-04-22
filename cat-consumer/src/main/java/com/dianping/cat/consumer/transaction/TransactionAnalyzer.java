@@ -87,6 +87,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return m_reportManager.getDomains(getStartTime());
 	}
 
+	public TransactionReport getRawReport(String domain) {
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+		return report;
+	}
+
 	@Override
 	public TransactionReport getReport(String domain) {
 		if (!Constants.ALL.equals(domain)) {
@@ -101,15 +107,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			return m_delegate.createAggregatedReport(reports);
 		}
-	}
-
-	private TransactionReport queryReport(String domain) {
-		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		report.accept(m_computer);
-
-		return report;
 	}
 
 	@Override
@@ -237,5 +234,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		range.incCount();
 		range.setSum(range.getSum() + d);
+	}
+
+	private TransactionReport queryReport(String domain) {
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		report.accept(m_computer);
+
+		return report;
 	}
 }

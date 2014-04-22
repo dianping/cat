@@ -49,7 +49,7 @@ public class NavigationBar {
 		
 		ReportPage.ALTERATION,
 		
-		ReportPage.NETTOPO,
+		ReportPage.NETWORK,
 
 		};
 	}

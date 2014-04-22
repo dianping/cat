@@ -45,7 +45,7 @@ public enum ReportPage implements Page {
 
    MONITOR("monitor", "monitor", "Monitor", "Monitor", true),
 
-   NETTOPO("nettopo", "nettopo", "NetTopo", "NetTopo", true);
+   NETWORK("network", "network", "Network", "Network", true);
 
    private String m_name;
 

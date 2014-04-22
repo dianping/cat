@@ -62,8 +62,8 @@
          <page name="monitor" title="Monitor" path="monitor" template="default">
             <description>Monitor</description>
          </page>
-         <page name="nettopo" title="NetTopo" path="nettopo" template="default">
-            <description>NetTopo</description>
+         <page name="network" title="Network" path="network" template="default">
+            <description>Network</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

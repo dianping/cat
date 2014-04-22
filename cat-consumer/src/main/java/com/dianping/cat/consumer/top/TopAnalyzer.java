@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.top;
 
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
@@ -76,9 +78,18 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		for (String name : domains) {
 			try {
 				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
-					TransactionReport report = m_transactionAnalyzer.getReport(name);
+					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
 
 					transactionReportVisitor.visitTransactionReport(report);
+				}
+			} catch (ConcurrentModificationException e) {
+				try {
+					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
+
+					transactionReportVisitor.visitTransactionReport(report);
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
+					Cat.logError(ce);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -93,6 +104,15 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 					ProblemReport report = m_problemAnalyzer.getReport(name);
 
 					problemReportVisitor.visitProblemReport(report);
+				}
+			} catch (ConcurrentModificationException e) {
+				try {
+					ProblemReport report = m_problemAnalyzer.getReport(name);
+
+					problemReportVisitor.visitProblemReport(report);
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
+					Cat.logError(e);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat.home">
+   <model package="com.dianping.cat.home.topology-graph" name="topology-graph">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/topology-graph.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.topology-graph-config" name="topology-graph-config">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/topology-graph-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.info" name="info">
+      <sample-model>src/test/resources/com/dianping/cat/system/config/info.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.exception-threshold" name="exception-threshold-config">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/exception-threshold-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.bug" name="bug">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/bug/bug.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.bug.config" name="bug-config">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/bug/bug-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.service" name="service-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/service/service.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.heavy-report" name="heavy-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/task/heavy/heavy-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.utilization-report" name="utilization-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/task/utilization/utilization-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.utilization-config" name="utilization-config">
+      <sample-model>src/test/resources/com/dianping/cat/system/config/utilizationConfig.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.domainGroup" name="domainGroup">
+      <sample-model>src/test/resources/com/dianping/cat/system/config/domainGroup.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.metricGroup" name="metric-group-config">
+      <sample-model>src/test/resources/com/dianping/cat/system/config/metricGroup.xml</sample-model>
+   </model>
+</wizard>
