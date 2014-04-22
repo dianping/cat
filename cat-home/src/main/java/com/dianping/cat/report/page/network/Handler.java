@@ -64,32 +64,33 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 		
-		Map<String, ProductLine> productLines = m_productLineConfigManager.queryNetworkProductLines();
+//		Map<String, ProductLine> productLines = m_productLineConfigManager.queryNetworkProductLines();
 		Map<String, MetricAggregationGroup> metricAggregationGroups = m_metricAggregationConfigManager
 		      .getMetricAggregationConfig().getMetricAggregationGroups();
-		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
+//		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
+//		
+//		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
+//	      if(productLines.containsKey(entry.getKey())) {
+//	      	metricAggregationGroupList.add(entry.getValue());
+//	      }
+//      }
 		
-		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
-	      if(productLines.containsKey(entry.getKey())) {
-	      	metricAggregationGroupList.add(entry.getValue());
-	      }
-      }
-		
-		if (payload.getProduct() == null) {
-			if (!metricAggregationGroupList.isEmpty()) {
-				String metricAggregationGroup = ((MetricAggregationGroup) metricAggregationGroupList.get(0)).getId();
-
-				payload.setProduct(metricAggregationGroup);
-			}
-		}
+//		if (payload.getGroup() == null) {
+//			if (!metricAggregationGroupList.isEmpty()) {
+//				String metricAggregationGroup = ((MetricAggregationGroup) metricAggregationGroupList.get(0)).getId();
+//
+//				payload.setGroup(metricAggregationGroup);
+//			}
+//		}
+//		System.out.println(metricAggregationGroupList);
 		
 		switch (payload.getAction()) {
 		case NETWORK:
-			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(),
-			      start, end);
+			Map<String, LineChart> charts = m_aggregationGraphCreator
+			      .buildDashboardByGroup(start, end, payload.getGroup());
 			
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
-			model.setMetricAggregationGroup(metricAggregationGroupList);
+			model.setMetricAggregationGroup(metricAggregationGroups.values());
 			break;
 		default:
 			throw new RuntimeException("Unknown action: " + payload.getAction());

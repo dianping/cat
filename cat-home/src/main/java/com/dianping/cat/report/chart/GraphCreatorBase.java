@@ -23,6 +23,7 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.AlertInfo;
@@ -274,5 +275,32 @@ public abstract class GraphCreatorBase implements LogEnabled {
 			value = new double[60];
 		}
 		values.put(key, value);
+	}
+	
+	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
+		LineChart value = charts.get(key);
+
+		if (value != null) {
+			result.put(key, charts.get(key));
+		}
+	}
+
+	protected boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+
+		for (MetricKeyConfig metric : configs) {
+			String domain = metric.getMetricDomain();
+			String type = metric.getMetricType();
+			String key = metric.getMetricKey();
+
+			for (MetricItemConfig item : metricConfig) {
+				if (item.getDomain().equalsIgnoreCase(domain) && item.getType().equalsIgnoreCase(type)
+				      && item.getMetricKey().equalsIgnoreCase(key)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -1,6 +1,8 @@
 package com.dianping.cat.report.chart;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +12,14 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregation;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregationItem;
+import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
@@ -120,7 +124,51 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 		
 		return chart;
 	}
+	
+//	protected boolean isProductLineInGroup(String productLine, MetricAggregationGroup m) {
+//		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+//		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+//
+//		for (MetricKeyConfig metric : configs) {
+//			String domain = metric.getMetricDomain();
+//			String type = metric.getMetricType();
+//			String key = metric.getMetricKey();
+//
+//			for (MetricItemConfig item : metricConfig) {
+//				if (item.getDomain().equalsIgnoreCase(domain) && item.getType().equalsIgnoreCase(type)
+//				      && item.getMetricKey().equalsIgnoreCase(key)) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
+	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
+		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
+		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig().findMetricAggregationGroup(metricGroup);
+		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
+		System.out.println(productLines);
+		System.out.println(metricAggregationGroup);
+		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
+
+		for (ProductLine productLine : productLines) {
+			if (isProductLineInGroup(productLine.getId(), metricAggregationGroup)) {
+				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
+				System.out.println(productLine);
+			}
+		}
+		for (MetricKeyConfig metric : metricConfigs) {
+			String domain = metric.getMetricDomain();
+			String type = metric.getMetricType().equalsIgnoreCase("metric") ? "Metric" : metric.getMetricType();
+			String key = metric.getMetricKey();
+			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":"
+			      + metric.getDisplayType().toUpperCase();
+			put(allCharts, result, id);
+		}
+		return result;
+	}
+	
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
 		m_productLine = productLine;
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
