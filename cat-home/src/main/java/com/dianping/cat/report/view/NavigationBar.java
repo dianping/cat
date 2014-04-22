@@ -48,6 +48,8 @@ public class NavigationBar {
 		ReportPage.LOGVIEW,
 		
 		ReportPage.ALTERATION,
+		
+		ReportPage.NETWORK,
 
 		};
 	}

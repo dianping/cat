@@ -1,10 +1,11 @@
-package com.dianping.cat.report.page.metric;
+package com.dianping.cat.report.page.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -14,11 +15,12 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.chart.GraphCreator;
+import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
@@ -36,21 +38,22 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-	
+
 	@Inject
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;
 
 	@Inject
-	private GraphCreator m_graphCreator;
+	private AggregationGraphCreator m_aggregationGraphCreator;
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = MetricAnalyzer.ID)
+	@InboundActionMeta(name = "network")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = MetricAnalyzer.ID)
+	@OutboundActionMeta(name = "network")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -60,38 +63,46 @@ public class Handler implements PageHandler<Context> {
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
+		
+		Map<String, ProductLine> productLines = m_productLineConfigManager.queryNetworkProductLines();
+		Map<String, MetricAggregationGroup> metricAggregationGroups = m_metricAggregationConfigManager
+		      .getMetricAggregationConfig().getMetricAggregationGroups();
+		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
+		
+		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
+	      if(productLines.containsKey(entry.getKey())) {
+	      	metricAggregationGroupList.add(entry.getValue());
+	      }
+      }
+		
+		if (payload.getProduct() == null) {
+			if (!metricAggregationGroupList.isEmpty()) {
+				String metricAggregationGroup = ((MetricAggregationGroup) metricAggregationGroupList.get(0)).getId();
 
-		switch (payload.getAction()) {
-		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
-
-			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
-			break;
-		case DASHBOARD:
-			String group = payload.getGroup();
-			Map<String, LineChart> allCharts = null;
-
-			if (group == null || group.length() == 0) {
-				allCharts = m_graphCreator.buildDashboard(start, end);
-			} else {
-				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
+				payload.setProduct(metricAggregationGroup);
 			}
-			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
-			break;
 		}
-		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
-
-		model.setMetricGroups(new ArrayList<String>(groups));
-		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
+		
+		switch (payload.getAction()) {
+		case NETWORK:
+			Map<String, LineChart> charts = m_aggregationGraphCreator.buildChartsByProductLine(payload.getProduct(),
+			      start, end);
+			
+			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
+			model.setMetricAggregationGroup(metricAggregationGroupList);
+			break;
+		default:
+			throw new RuntimeException("Unknown action: " + payload.getAction());
+		}
 		m_jspViewer.view(ctx, model);
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setPage(ReportPage.METRIC);
+		model.setPage(ReportPage.NETWORK);
 		String poduct = payload.getProduct();
 
 		if (poduct == null || poduct.length() == 0) {
-			payload.setAction(Action.DASHBOARD.getName());
+			payload.setAction(Action.NETWORK.getName());
 		}
 		m_normalizePayload.normalize(model, payload);
 		int timeRange = payload.getTimeRange();
@@ -101,5 +112,4 @@ public class Handler implements PageHandler<Context> {
 		model.setStartTime(startTime);
 		model.setEndTime(endTime);
 	}
-
 }
