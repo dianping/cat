@@ -133,8 +133,9 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 			String domain = metricConfig.getDomain();
 			String type = metricConfig.getType();
 			String key = metricConfig.getMetricKey();
-			if(!type.equalsIgnoreCase("Metric"))
+			if(!type.equalsIgnoreCase("Metric")) {
 				return false;
+			}
 			for (MetricAggregation metricAggregation : metricAggregations) {
 				for (MetricAggregationItem item : metricAggregation.getMetricAggregationItems()) {
 					String myDomain = getAttribute(metricAggregation.getDomain(), item.getDomain());
@@ -162,14 +163,6 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 				allCharts.putAll(result);
 			}
 		}
-//		for (MetricAggregation metric : metricAggregationGroup.getMetricAggregations()) {
-//			String domain = metric.getMetricDomain();
-//			String type = metric.getMetricType().equalsIgnoreCase("metric") ? "Metric" : metric.getMetricType();
-//			String key = metric.getMetricKey();
-//			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":"
-//			      + metric.getDisplayType().toUpperCase();
-//			put(allCharts, result, id);
-//		}
 		return allCharts;
 	}
 
