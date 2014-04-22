@@ -56,6 +56,7 @@
 					<th width="8%">顺序</th>
 					<th width="5%">监控大盘</th>
 					<th width="5%">业务大盘</th>
+					<th width="10%">网络大盘</th>
 					<th width="40%">项目列表</th>
 					<th width="10%">操作 <a href="?op=topologyProductLineAdd" class='update btn btn-primary btn-small'>新增</a></th>
 				</tr>
@@ -65,9 +66,10 @@
 					<td>${item.order}</td>
 					<td><c:if test="${item.dashboard}"><span class="text-error"><strong>是</strong></span></c:if>
 						<c:if test="${!item.dashboard}"><span><strong>否</strong></span></c:if>  </td>
-						
 					<td><c:if test="${item.metricDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
 						<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
+					<td><c:if test="${item.networkDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<c:if test="${!item.networkDashboard}"><span><strong>否</strong></span></c:if>  </td>
 					<td>
 						<c:forEach var="domain" items="${item.domains}"> 
 							${domain.key},

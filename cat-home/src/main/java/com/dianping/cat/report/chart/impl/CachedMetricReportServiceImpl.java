@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.metric.chart.impl;
+package com.dianping.cat.report.chart.impl;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.metric.chart.CachedMetricReportService;
+import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
