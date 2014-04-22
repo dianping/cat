@@ -24,7 +24,6 @@ import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
-import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -35,9 +34,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
-	private MetricGroupConfigManager m_metricGroupConfigManager;
 
 	@Inject
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;

@@ -2606,9 +2606,6 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.chart.GraphCreator</role>
 				</requirement>
 			</requirements>
@@ -2634,15 +2631,6 @@
 		<component>
 			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-			<implementation>com.dianping.cat.system.config.MetricAggregationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -2961,9 +2949,6 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
@@ -2977,6 +2962,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricAggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
