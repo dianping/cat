@@ -83,8 +83,14 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 					transactionReportVisitor.visitTransactionReport(report);
 				}
 			} catch (ConcurrentModificationException e) {
-				Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
-				Cat.logError(e);
+				try {
+					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
+
+					transactionReportVisitor.visitTransactionReport(report);
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
+					Cat.logError(ce);
+				}
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -100,8 +106,14 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 					problemReportVisitor.visitProblemReport(report);
 				}
 			} catch (ConcurrentModificationException e) {
-				Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
-				Cat.logError(e);
+				try {
+					ProblemReport report = m_problemAnalyzer.getReport(name);
+
+					problemReportVisitor.visitProblemReport(report);
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
+					Cat.logError(e);
+				}
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

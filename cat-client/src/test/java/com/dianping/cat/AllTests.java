@@ -5,7 +5,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.configuration.ConfigTest;
-import com.dianping.cat.log4j.CatAppenderTest;
 import com.dianping.cat.message.EventTest;
 import com.dianping.cat.message.HeartbeatTest;
 import com.dianping.cat.message.MessageTest;
@@ -17,9 +16,6 @@ import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-
-/* .log4j */
-CatAppenderTest.class,
 
 /* .message */
 MessageTest.class,
