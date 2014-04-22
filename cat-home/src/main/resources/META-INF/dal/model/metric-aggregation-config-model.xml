@@ -8,6 +8,7 @@
   <entity name="metric-aggregation-group">
     <attribute name="id" value-type="String" key="true" />
     <attribute name="type" value-type="String" default-value="Metric"/>
+    <attribute name="display" value-type="String" default-value="network"/>
     <entity-ref name="metric-aggregation" type="list" names="metric-aggregations" />
   </entity>
   <entity name="metric-aggregation">

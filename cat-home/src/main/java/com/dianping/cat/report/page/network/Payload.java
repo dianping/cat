@@ -77,7 +77,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.NETWORK);
+		m_action = Action.getByName(action, Action.DASHBOARD);
 	}
 
 	public void setFrequency(int frequency) {

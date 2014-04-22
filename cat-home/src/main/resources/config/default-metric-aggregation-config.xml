@@ -1,5 +1,5 @@
 <metric-aggregation-config>
-	<metric-aggregation-group id="f5-2400-1-dianping-com" type="Metric">
+	<metric-aggregation-group id="f5-2400-1-dianping-com" type="Metric" display="network">
 		<metric-aggregation id="f5-2400-1-dianping-com-in" display-type="count" base-line="false" operation="{data}*60+100">
 			<metric-aggregation-item domain="Test" key="1/1-1-in" operation="{data}*60/100+100-50" />
 			<metric-aggregation-item domain="Test" key="1/1-2-in" />
@@ -13,7 +13,7 @@
 			<metric-aggregation-item key="1/1-4-out" display-type="count"/>
 		</metric-aggregation>
 	</metric-aggregation-group>
-	<metric-aggregation-group id="f5-2500-1-dianping-com" type="Metric" >
+	<metric-aggregation-group id="f5-2500-1-dianping-com" type="Metric" display="network">
 		<metric-aggregation id="f5-2500-1-dianping-com-in" display-type="sum" title="switch">
 			<metric-aggregation-item key="1/1-1-in" />
 			<metric-aggregation-item key="1/1-2-in" />

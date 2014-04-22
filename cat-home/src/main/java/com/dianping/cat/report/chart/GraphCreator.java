@@ -94,6 +94,24 @@ public class GraphCreator extends GraphCreatorBase{
 		return result;
 	}
 
+	protected boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+
+		for (MetricKeyConfig metric : configs) {
+			String domain = metric.getMetricDomain();
+			String type = metric.getMetricType();
+			String key = metric.getMetricKey();
+
+			for (MetricItemConfig item : metricConfig) {
+				if (item.getDomain().equalsIgnoreCase(domain) && item.getType().equalsIgnoreCase(type)
+				      && item.getMetricKey().equalsIgnoreCase(key)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
