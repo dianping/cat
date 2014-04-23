@@ -117,7 +117,7 @@
 			<connection first="C3750-CNC" second="F5v2400-2">
 				<firstdata>
 					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
-						key="GigabitEthernet1/0/7" inwarnning="300M" inserious="500M"
+						key="GigabitEthernet2/0/7" inwarnning="300M" inserious="500M"
 						outwarnning="100M" outserious="200M" />
 				</firstdata>
 				<seconddata>
@@ -154,7 +154,7 @@
 			<connection first="C3750-CNC" second="F5v2400-1">
 				<firstdata>
 					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
-						key="GigabitEthernet2/0/7" inwarnning="300M" inserious="500M"
+						key="GigabitEthernet1/0/7" inwarnning="300M" inserious="500M"
 						outwarnning="100M" outserious="200M" />
 				</firstdata>
 				<seconddata>
@@ -372,7 +372,7 @@
 				</firstdata>
 				<seconddata>
 					<interface group="switch-S5830_irf" domain="S5830_irf"
-						key="Ten-GigabitEthernet3/0/52" />
+						key="Ten-GigabitEthernet4/0/52" />
 				</seconddata>
 			</connection>
 			<connection first="H12508-2" second="Hadoop2">
@@ -396,17 +396,21 @@
 				</firstdata>
 				<seconddata>
 					<interface group="switch-S5830_irf" domain="S5830_irf"
-						key="Ten-GigabitEthernet4/0/52" />
+						key="Ten-GigabitEthernet3/0/52" />
 				</seconddata>
 			</connection>
-			<connection first="H12508-2" second="Hadoop1">
+			<connection first="H12508-1" second="Hadoop2">
 				<firstdata>
 					<interface group="switch-S12508-1" domain="S12508-1"
-						key="Ten-GigabitEthernet2/2/0/32" />
+						key="Ten-GigabitEthernet1/2/0/3" />
+						<interface group="switch-S12508-1" domain="S12508-1"
+						key="Ten-GigabitEthernet1/2/0/4" />
 				</firstdata>
 				<seconddata>
 					<interface group="switch-S5830-IRF_2" domain="S5830-IRF_2"
-						key="Ten-GigabitEthernet4/0/51" />
+						key="Ten-GigabitEthernet1/0/51" />
+					<interface group="switch-S5830-IRF_2" domain="S5830-IRF_2"
+						key="Ten-GigabitEthernet2/0/51" />
 				</seconddata>
 			</connection>
 		</connections>
