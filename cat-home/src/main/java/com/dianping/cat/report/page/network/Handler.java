@@ -64,18 +64,6 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 
-		Map<String, MetricAggregationGroup> metricAggregationGroups = m_metricAggregationConfigManager
-		      .getMetricAggregationConfig().getMetricAggregationGroups();
-		
-		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
-
-		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
-			if ("network".equalsIgnoreCase(entry.getValue().getDisplay())) {
-				metricAggregationGroupList.add(entry.getValue());
-			}
-		}
-
-
 		switch (payload.getAction()) {
 		case NETWORK:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
