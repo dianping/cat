@@ -70,7 +70,7 @@ public class Handler implements PageHandler<Context> {
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
-		case DASHBOARD:
+		case AGGREGATION:
 			Map<String, LineChart> allCharts = m_aggregationGraphCreator.buildDashboardByGroup(start, end,
 			      payload.getGroup());
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
