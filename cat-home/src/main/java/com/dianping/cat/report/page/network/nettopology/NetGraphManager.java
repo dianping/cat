@@ -9,6 +9,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -25,17 +26,22 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	@Inject
 	private RemoteMetricReportService m_service;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	@Inject
+	private ServerConfigManager m_manager;
 
 	private int DATA_DELAY_TIME = 1;
 
 	private NetGraph m_netGraph;
 
-	private Logger m_logger;
+	protected Logger m_logger;
+
+	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new NetGraphBuilder());
+		if (m_manager.isJobMachine()) {
+			Threads.forGroup("Cat").start(new NetGraphBuilder());
+		}
 	}
 
 	private class NetGraphBuilder implements Task {
@@ -101,8 +107,8 @@ public class NetGraphManager implements Initializable, LogEnabled {
 			String group = inter.getGroup();
 			String domain = inter.getDomain();
 			String key = inter.getKey();
-
 			long period;
+
 			minute -= DATA_DELAY_TIME;
 			if (minute >= 0) {
 				period = ModelPeriod.CURRENT.getStartTime();

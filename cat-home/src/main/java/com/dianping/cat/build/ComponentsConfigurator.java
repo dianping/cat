@@ -41,6 +41,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.AlertConfig;
@@ -95,7 +96,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UtilizationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
-		
+
 		all.add(C(MetricAggregationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
@@ -118,9 +119,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
 		            MetricGroupConfigManager.class, AlertInfo.class));
-		all.add(C(AggregationGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
-		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class, MetricAggregationConfigManager.class, AlertInfo.class));
+		all.add(C(AggregationGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, MetricAggregationConfigManager.class,
+		      AlertInfo.class));
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -138,6 +140,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class));
+
+		all.add(C(NetGraphManager.class).req(ServerConfigManager.class).req(RemoteMetricReportService.class));
+		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
