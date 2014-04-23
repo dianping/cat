@@ -25,10 +25,10 @@
 						<c:forEach var="range" items="${model.allRange}">
 							<c:choose>
 								<c:when test="${payload.timeRange eq range.duration}">
-									&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+									&nbsp;&nbsp;&nbsp;[ <a href="?op=aggregation&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
 								</c:when>
 								<c:otherwise>
-									&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+									&nbsp;&nbsp;&nbsp;[ <a href="?op=aggregation&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
 								</c:otherwise>
 								</c:choose>
 						</c:forEach>
@@ -52,9 +52,9 @@
 					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 					<td class="nav">
 						<c:forEach var="nav" items="${model.navs}">
-							&nbsp;[ <a href="${model.baseUri}?op=dashboard&group=${payload.group}&date=${model.date}&domain=${model.domain}&step=${nav.hours}&timeRange=${payload.timeRange}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+							&nbsp;[ <a href="${model.baseUri}?op=aggregation&group=${payload.group}&date=${model.date}&domain=${model.domain}&step=${nav.hours}&timeRange=${payload.timeRange}&product=${payload.product}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 						</c:forEach>
-						&nbsp;[ <a href="${model.baseUri}?op=dashboard&group=${payload.group}&${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
+						&nbsp;[ <a href="${model.baseUri}?op=aggregation&group=${payload.group}&${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 					</td>
 				</tr>
 			</table>
@@ -65,10 +65,10 @@
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
 							<c:when test="${payload.timeRange eq range.duration}">
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&group=${payload.group}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=aggregation&group=${payload.group}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
 							</c:when>
 							<c:otherwise>
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=dashboard&group=${payload.group}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=aggregation&group=${payload.group}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
 							</c:otherwise>
 							</c:choose>
 					</c:forEach>

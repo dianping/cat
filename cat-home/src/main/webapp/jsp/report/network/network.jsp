@@ -83,7 +83,7 @@
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"></li>
 		            	 <c:forEach var="item" items="${model.metricAggregationGroup}" varStatus="status">
-				              <li class='nav-header' id="metric_${item.id}"><a href="?op=dashboard&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
+				              <li class='nav-header' id="metric_${item.id}"><a href="?op=aggregation&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
 			             </c:forEach>
 			             
 			             <c:forEach var="item" items="${model.productLines}" varStatus="status">
