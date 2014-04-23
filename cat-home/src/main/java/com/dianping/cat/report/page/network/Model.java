@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.network;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
@@ -19,7 +21,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
-	
+
 	private Collection<ProductLine> m_productLines;
 
 	private Collection<MetricAggregationGroup> m_metricAggregationGroup;
@@ -27,6 +29,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private Date m_startTime;
 
 	private Date m_endTime;
+
+	private ArrayList<Pair<String, String>> m_topoData;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -38,7 +42,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.NETWORK;
+		return Action.NETTOPOLOGY;
 	}
 
 	@Override
@@ -74,7 +78,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setStartTime(Date startTime) {
 		m_startTime = startTime;
 	}
-	
+
 	public Collection<MetricAggregationGroup> getMetricAggregationGroup() {
 		return m_metricAggregationGroup;
 	}
@@ -82,7 +86,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setMetricAggregationGroup(Collection<MetricAggregationGroup> metricAggregationGroup) {
 		m_metricAggregationGroup = metricAggregationGroup;
 	}
-	
+
 	public Collection<ProductLine> getProductLines() {
 		return m_productLines;
 	}
@@ -90,4 +94,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setProductLines(Collection<ProductLine> productLines) {
 		m_productLines = productLines;
 	}
+
+	public ArrayList<Pair<String, String>> getTopoData() {
+		return m_topoData;
+	}
+
+	public void setTopoData(ArrayList<Pair<String, String>> topoData) {
+		m_topoData = topoData;
+	}
+
 }
