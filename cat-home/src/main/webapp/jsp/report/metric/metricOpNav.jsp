@@ -6,6 +6,7 @@
 		<a id="navmetricDashboard" class="btn btn-small btn-primary" href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}&date=${model.date}">系统报错大盘</a>
 		<a id="navdashboard" class="btn btn-small btn-primary" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">应用监控盘</a>
 		<a id="navbussiness" class="btn btn-small btn-primary btn-danger" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控大盘</a>
+		<a id="navbussiness" class="btn btn-small btn-primary" href="/cat/r/network?op=dashboard&domain=${model.domain}&date=${model.date}">网络监控大盘</a>
 	</div>
 	<div class="span4 text-center">
 		<div class='text-center'>

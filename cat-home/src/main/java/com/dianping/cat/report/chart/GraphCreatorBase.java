@@ -275,4 +275,12 @@ public abstract class GraphCreatorBase implements LogEnabled {
 		}
 		values.put(key, value);
 	}
+	
+	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
+		LineChart value = charts.get(key);
+
+		if (value != null) {
+			result.put(key, charts.get(key));
+		}
+	}
 }

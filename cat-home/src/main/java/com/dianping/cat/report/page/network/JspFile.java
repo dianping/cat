@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.network;
 
 public enum JspFile {
-	NETWORK("/jsp/report/network/network.jsp");
+	NETWORK("/jsp/report/network/network.jsp"),
+	DASHBOARD("/jsp/report/network/dashboard.jsp");
 	
 	private String m_path;
 

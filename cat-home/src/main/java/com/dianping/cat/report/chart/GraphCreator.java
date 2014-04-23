@@ -55,14 +55,6 @@ public class GraphCreator extends GraphCreatorBase{
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
-	
-	private void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
-		LineChart value = charts.get(key);
-
-		if (value != null) {
-			result.put(key, charts.get(key));
-		}
-	}
 
 	public Map<String, LineChart> buildDashboard(Date start, Date end) {
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
@@ -102,7 +94,7 @@ public class GraphCreator extends GraphCreatorBase{
 		return result;
 	}
 
-	private boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
+	protected boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 

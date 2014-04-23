@@ -82,6 +82,10 @@
 		          <div class="well sidebar-nav">
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"></li>
+		            	 <c:forEach var="item" items="${model.metricAggregationGroup}" varStatus="status">
+				              <li class='nav-header' id="metric_${item.id}"><a href="?op=dashboard&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
+			             </c:forEach>
+			             
 			             <c:forEach var="item" items="${model.productLines}" varStatus="status">
 			              <li class='nav-header' id="metric_${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
 			            </c:forEach>
@@ -104,6 +108,7 @@
 			var product = '${payload.product}';
 			$('#metric_'+product).addClass('active');
 			$('i[tips]').popover();
+
 			
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};
