@@ -11,6 +11,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		switch (action) {
 		case NETWORK:
 			return JspFile.NETWORK.getPath();
+		case AGGREGATION:
+			return JspFile.DASHBOARD.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

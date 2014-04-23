@@ -2954,6 +2954,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.GraphCreator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
