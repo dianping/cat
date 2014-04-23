@@ -23,7 +23,6 @@ import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.GraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.metric.Action;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -96,7 +95,7 @@ public class Handler implements PageHandler<Context> {
 		String poduct = payload.getProduct();
 		
 		if (poduct == null || poduct.length() == 0) {
-			payload.setAction(Action.DASHBOARD.getName());
+			payload.setAction(Action.AGGREGATION.getName());
 
 			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
 				String metricAggregationGroupId = metricAggregationGroupList.get(0).getId();
