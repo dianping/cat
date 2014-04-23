@@ -1533,22 +1533,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alertStat.ExceptionAlert</role>
-			<implementation>com.dianping.cat.report.task.alertStat.ExceptionAlert</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>top</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
