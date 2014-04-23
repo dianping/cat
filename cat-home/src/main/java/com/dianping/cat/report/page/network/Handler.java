@@ -23,6 +23,8 @@ import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.GraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
+import com.dianping.cat.report.page.network.nettopology.model.NetGraph;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -43,6 +45,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphCreator m_graphCreator;
+
+	@Inject
+	private NetGraphManager m_netGraphManager = new NetGraphManager();
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -74,6 +79,12 @@ public class Handler implements PageHandler<Context> {
 			      payload.getGroup());
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
+		case NETTOPOLOGY:
+			NetGraph netGraph = m_netGraphManager.getNetGraph();
+			if (netGraph != null) {
+				model.setTopoData(netGraph.getJsonData());
+			}
+			break;
 		}
 
 		m_jspViewer.view(ctx, model);
@@ -81,32 +92,31 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.NETWORK);
-		
+
 		Map<String, MetricAggregationGroup> metricAggregationGroups = m_metricAggregationConfigManager
 		      .getMetricAggregationConfig().getMetricAggregationGroups();
 		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
-		
+
 		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
 			if ("network".equalsIgnoreCase(entry.getValue().getDisplay())) {
 				metricAggregationGroupList.add(entry.getValue());
 			}
 		}
-		
 		String poduct = payload.getProduct();
-		
+
 		if (poduct == null || poduct.length() == 0) {
-			payload.setAction(Action.AGGREGATION.getName());
 
 			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
-				String metricAggregationGroupId = metricAggregationGroupList.get(0).getId();
-
-				payload.setGroup(metricAggregationGroupId);
+				payload.setAction(Action.NETTOPOLOGY.getName());
+			} else {
+				payload.setAction(Action.AGGREGATION.getName());
 			}
+
 		}
 
 		model.setMetricAggregationGroup(metricAggregationGroupList);
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
-		
+
 		m_normalizePayload.normalize(model, payload);
 		int timeRange = payload.getTimeRange();
 		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
@@ -114,7 +124,5 @@ public class Handler implements PageHandler<Context> {
 
 		model.setStartTime(startTime);
 		model.setEndTime(endTime);
-		
-
 	}
 }
