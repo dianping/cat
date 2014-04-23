@@ -2,7 +2,8 @@ package com.dianping.cat.report.page.network;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	NETWORK("view"),
-	AGGREGATION("aggregation");
+	AGGREGATION("aggregation"),
+	NETTOPOLOGY("topo");
 
 	private String m_name;
 
