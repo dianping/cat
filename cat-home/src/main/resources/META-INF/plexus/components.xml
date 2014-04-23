@@ -2957,6 +2957,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.chart.GraphCreator</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3007,6 +3010,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+			<implementation>com.dianping.cat.report.task.metric.RemoteMetricReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
