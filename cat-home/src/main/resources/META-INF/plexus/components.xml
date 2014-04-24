@@ -1545,6 +1545,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
@@ -3031,6 +3043,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
