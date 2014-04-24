@@ -77,7 +77,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.NETTOPOLOGY);
+		m_action = Action.getByName(action, Action.NETWORK);
 	}
 
 	public void setFrequency(int frequency) {
@@ -112,7 +112,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.NETTOPOLOGY;
+			m_action = Action.NETWORK;
 		}
 	}
 }
