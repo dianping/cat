@@ -39,9 +39,6 @@ p {
 	font-weight: bold;
 }
 </style>
-
-
-
 			<div class="row-fluid">
 
 				<div class="span2">

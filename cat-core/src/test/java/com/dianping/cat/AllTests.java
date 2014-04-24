@@ -16,7 +16,6 @@ import com.dianping.cat.service.ModelPeriodTest;
 import com.dianping.cat.service.ModelRequestTest;
 import com.dianping.cat.service.ModelResponseTest;
 import com.dianping.cat.statistic.ServerStatisticManagerTest;
-import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
 import com.dianping.cat.storage.dump.LocalMessageBucketTest;
 import com.dianping.cat.storage.dump.MessageBlockTest;
 import com.dianping.cat.task.TaskManagerTest;
@@ -30,8 +29,6 @@ WaterfallMessageCodecTest.class,
 
 /* .storage.dump */
 LocalMessageBucketTest.class,
-
-LocalMessageBucketManagerTest.class,
 
 MessageBlockTest.class,
 
