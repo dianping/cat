@@ -4,6 +4,8 @@
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
            <li class='nav-header' id="all">
+            <li class='nav-header' id="metric_nettopology"><a href="?op=topo"><strong>核心拓扑</strong></a></li>
+							
             <c:forEach var="item" items="${model.metricAggregationGroup}" varStatus="status">
 				              <li class='nav-header' id="metric_${item.id}"><a href="?op=aggregation&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
 			</c:forEach>
