@@ -47,7 +47,7 @@ public class Handler implements PageHandler<Context> {
 	private GraphCreator m_graphCreator;
 
 	@Inject
-	private NetGraphManager m_netGraphManager = new NetGraphManager();
+	private NetGraphManager m_netGraphManager;
 
 	@Override
 	@PayloadMeta(Payload.class)

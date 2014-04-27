@@ -31,7 +31,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 	private NetGraph m_netGraph;
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	@Override
 	public void initialize() throws InitializationException {
