@@ -83,7 +83,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		try {
 			out = fs.create(file);
 		} catch (AlreadyBeingCreatedException e) {
-			fs.deleteOnExit(file);
+			fs.delete(file, false);
 
 			out = fs.create(file);
 		}
