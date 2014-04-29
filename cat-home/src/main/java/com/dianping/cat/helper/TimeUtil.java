@@ -13,9 +13,10 @@ public class TimeUtil {
 
 	public static final long ONE_WEEK = 7 * ONE_DAY;
 
-	public static Date getCurrentHour() {
+	public static Date getCurrentDay() {
 		Calendar cal = Calendar.getInstance();
 
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -23,10 +24,9 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 	
-	public static Date getCurrentDay() {
+	public static Date getCurrentHour() {
 		Calendar cal = Calendar.getInstance();
 
-		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);

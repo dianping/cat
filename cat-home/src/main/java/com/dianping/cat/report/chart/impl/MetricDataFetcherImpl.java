@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.metric.chart.impl;
+package com.dianping.cat.report.chart.impl;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
-import com.dianping.cat.report.page.metric.chart.MetricDataFetcher;
+import com.dianping.cat.report.chart.MetricDataFetcher;
 import com.dianping.cat.report.task.metric.MetricType;
 
 public class MetricDataFetcherImpl implements MetricDataFetcher {
@@ -26,34 +26,7 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 
 		builder.visitMetricReport(metricReport);
 		Map<String, double[]> datas = builder.getDatas();
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-
-		for (MetricItemConfig config : metricConfigs) {
-			String key = config.getId();
-
-			if (config.getShowAvg()) {
-				String avgKey = key + ":" + AVG;
-				putKey(datas, values, avgKey);
-			}
-			if (config.getShowCount()) {
-				String countKey = key + ":" + COUNT;
-				putKey(datas, values, countKey);
-			}
-			if (config.getShowSum()) {
-				String sumKey = key + ":" + SUM;
-				putKey(datas, values, sumKey);
-			}
-		}
-		return values;
-	}
-
-	private void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
-		double[] value = datas.get(key);
-
-		if (value == null) {
-			value = new double[60];
-		}
-		values.put(key, value);
+		return datas;
 	}
 
 	public class MetricDataBuilder extends BaseVisitor {

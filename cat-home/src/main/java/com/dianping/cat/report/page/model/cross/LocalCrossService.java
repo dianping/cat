@@ -1,10 +1,13 @@
 package com.dianping.cat.report.page.model.cross;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -25,7 +28,14 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 		CrossReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			report = getReportFromLocalDisk(request.getStartTime(), domain);
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+			
+			if (report == null) {
+				report = new CrossReport(domain);
+				report.setStartTime(new Date(startTime));
+				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+			}
 		}
 		return report;
 	}
@@ -39,7 +49,7 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
 			if (bucket != null) {
-				bucket.close();
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.metric.chart;
+package com.dianping.cat.report.chart;
 
 import java.util.Date;
 

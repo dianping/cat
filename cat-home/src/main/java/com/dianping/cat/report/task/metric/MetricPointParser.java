@@ -11,25 +11,6 @@ public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;
 
-	public double[] buildHourlyData(MetricItem item, MetricType type) {
-		double[] result = new double[POINT_NUMBER];
-		Map<Integer, Segment> map = item.getSegments();
-
-		for (Entry<Integer, Segment> entry : map.entrySet()) {
-			Integer minute = entry.getKey();
-			Segment seg = entry.getValue();
-
-			if (type == MetricType.AVG) {
-				result[minute] = seg.getAvg();
-			} else if (type == MetricType.COUNT) {
-				result[minute] = (double) seg.getCount();
-			} else if (type == MetricType.SUM) {
-				result[minute] = seg.getSum();
-			}
-		}
-		return result;
-	}
-
 	public double[] buildDailyData(List<MetricItem> items, MetricType type) {
 		int size = items.size();
 		double[] values = new double[24 * POINT_NUMBER];
@@ -51,6 +32,25 @@ public class MetricPointParser {
 			}
 		}
 		return values;
+	}
+
+	public double[] buildHourlyData(MetricItem item, MetricType type) {
+		double[] result = new double[POINT_NUMBER];
+		Map<Integer, Segment> map = item.getSegments();
+
+		for (Entry<Integer, Segment> entry : map.entrySet()) {
+			Integer minute = entry.getKey();
+			Segment seg = entry.getValue();
+
+			if (type == MetricType.AVG) {
+				result[minute] = seg.getAvg();
+			} else if (type == MetricType.COUNT) {
+				result[minute] = (double) seg.getCount();
+			} else if (type == MetricType.SUM) {
+				result[minute] = seg.getSum();
+			}
+		}
+		return result;
 	}
 
 }

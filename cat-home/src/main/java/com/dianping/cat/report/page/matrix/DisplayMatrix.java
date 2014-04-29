@@ -122,6 +122,10 @@ public class DisplayMatrix {
 			return m_cacheTimePercent;
 		}
 
+		public String getCacheUrl() {
+			return m_cacheUrl;
+		}
+
 		public double getCallAvg() {
 			return m_callAvg;
 		}
@@ -140,6 +144,10 @@ public class DisplayMatrix {
 
 		public double getCallTimePercent() {
 			return m_callTimePercent;
+		}
+
+		public String getCallUrl() {
+			return m_callUrl;
 		}
 
 		public int getCount() {
@@ -170,24 +178,16 @@ public class DisplayMatrix {
 			return m_sqlTimePercent;
 		}
 
+		public String getSqlUrl() {
+			return m_sqlUrl;
+		}
+
 		public String getType() {
 			return String.valueOf(m_type);
 		}
 
 		public String getUrl() {
 			return m_url;
-		}
-
-		public String getCallUrl() {
-			return m_callUrl;
-		}
-
-		public String getSqlUrl() {
-			return m_sqlUrl;
-		}
-
-		public String getCacheUrl() {
-			return m_cacheUrl;
 		}
 
 		public void setBaseInfo(Matrix matrix) {

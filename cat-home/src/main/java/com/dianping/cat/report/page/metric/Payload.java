@@ -26,6 +26,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
+	
+	@FieldMeta("hideNav")
+	private boolean m_hideNav = true;
 
 	@FieldMeta("group")
 	private String m_group;
@@ -41,6 +44,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public int getFrequency() {
 		return m_frequency;
+	}
+
+	public String getGroup() {
+		return m_group;
 	}
 
 	@Override
@@ -76,6 +83,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_fullScreen = fullScreen;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
@@ -88,14 +99,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
 	}
+	
+	public boolean isHideNav() {
+   	return m_hideNav;
+   }
 
-	public String getGroup() {
-		return m_group;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
-	}
+	public void setHideNav(boolean hideNav) {
+   	m_hideNav = hideNav;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

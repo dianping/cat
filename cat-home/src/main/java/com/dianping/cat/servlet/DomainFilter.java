@@ -22,9 +22,6 @@ public class DomainFilter implements Filter {
 
 	private static int EXPIRY = 60 * 24 * 365;
 
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
-
 	private String buildNewCookie(String domain, String value) {
 		String[] domains = value.split("\\" + SEPARATOR);
 		int length = domains.length;
@@ -43,6 +40,10 @@ public class DomainFilter implements Filter {
 		} else {
 			return domain + SEPARATOR + value;
 		}
+	}
+
+	@Override
+	public void destroy() {
 	}
 
 	@Override
@@ -82,8 +83,7 @@ public class DomainFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
-	@Override
-	public void destroy() {
+	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
 }

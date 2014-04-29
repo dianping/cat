@@ -89,6 +89,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
+	public String getBug() {
+		return m_bug;
+	}
+
+	public String getContent() {
+		return m_content;
+	}
+
 	public String getDomain() {
 		return m_domain;
 	}
@@ -105,12 +113,31 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_edgeConfig;
 	}
 
+	public String getException() {
+		return m_exception;
+	}
+
+	public ExceptionLimit getExceptionLimit() {
+		return m_exceptionLimit;
+	}
+
 	public String getFrom() {
 		return m_from;
 	}
 
 	public int getId() {
 		return m_id;
+	}
+
+	public MetricItemConfig getMetricItemConfig() {
+		return m_metricItemConfig;
+	}
+
+	public String getMetricKey() {
+		if (m_metricKey != null) {
+			m_metricKey = m_metricKey.trim();
+		}
+		return m_metricKey;
 	}
 
 	@Override
@@ -158,6 +185,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
 	}
 
+	public void setBug(String bug) {
+		m_bug = bug;
+	}
+
+	public void setContent(String content) {
+		m_content = content;
+	}
+
 	public void setDomain(String domain) {
 		m_domain = domain;
 	}
@@ -174,12 +209,28 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_edgeConfig = edgeConfig;
 	}
 
+	public void setException(String exception) {
+		m_exception = exception;
+	}
+
+	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
+		m_exceptionLimit = exceptionLimit;
+	}
+
 	public void setFrom(String from) {
 		m_from = from;
 	}
 
 	public void setId(int id) {
 		m_id = id;
+	}
+
+	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
+		m_metricItemConfig = metricItemConfig;
+	}
+
+	public void setMetricKey(String metricKey) {
+		m_metricKey = metricKey;
 	}
 
 	@Override
@@ -230,57 +281,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
-	}
-
-	public MetricItemConfig getMetricItemConfig() {
-		return m_metricItemConfig;
-	}
-
-	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
-		m_metricItemConfig = metricItemConfig;
-	}
-
-	public String getMetricKey() {
-		if (m_metricKey != null) {
-			m_metricKey = m_metricKey.trim();
-		}
-		return m_metricKey;
-	}
-
-	public void setMetricKey(String metricKey) {
-		m_metricKey = metricKey;
-	}
-
-	public String getException() {
-		return m_exception;
-	}
-
-	public void setException(String exception) {
-		m_exception = exception;
-	}
-
-	public ExceptionLimit getExceptionLimit() {
-		return m_exceptionLimit;
-	}
-
-	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
-		m_exceptionLimit = exceptionLimit;
-	}
-
-	public String getBug() {
-		return m_bug;
-	}
-
-	public void setBug(String bug) {
-		m_bug = bug;
-	}
-
-	public String getContent() {
-		return m_content;
-	}
-
-	public void setContent(String content) {
-		m_content = content;
 	}
 
 }

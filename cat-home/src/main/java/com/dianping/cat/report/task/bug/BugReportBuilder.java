@@ -53,10 +53,6 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertDailyReport(report, binaryContent);
 	}
 
-	private boolean validateDomain(String domain) {
-		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
-	}
-
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		BugReport bugReport = new BugReport(Constants.CAT);
@@ -130,6 +126,12 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
+	private String getDomainName() {
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		return ip + ":8080";
+	}
+
 	private BugReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -167,9 +169,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		return bugReport;
 	}
 
-	private String getDomainName() {
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		return ip + ":8080";
+	private boolean validateDomain(String domain) {
+		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
 	}
 }

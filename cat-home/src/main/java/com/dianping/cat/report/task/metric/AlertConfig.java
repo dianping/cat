@@ -25,20 +25,20 @@ public class AlertConfig {
 		return emails;
 	}
 
-	public List<String> buildSMSReceivers(ProductLine productLine) {
-		List<String> phones = new ArrayList<String>();
-
-		phones.add("18616671676");
-		phones.add("13858086694");
-		return phones;
-	}
-
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
 		sb.append("[业务指标 ").append(config.getTitle()).append("]");
 		return sb.toString();
+	}
+
+	public List<String> buildSMSReceivers(ProductLine productLine) {
+		List<String> phones = new ArrayList<String>();
+
+		phones.add("18616671676");
+		phones.add("13858086694");
+		return phones;
 	}
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
@@ -54,7 +54,7 @@ public class AlertConfig {
 			decreasePercent = 50;
 		}
 		if (decreaseValue == 0) {
-			decreaseValue = 50;
+			decreaseValue = 100;
 		}
 
 		for (int i = 0; i < length; i++) {
@@ -77,7 +77,6 @@ public class AlertConfig {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		sb.append("[告警类型:").append(type).append("] ");
 		sb.append("[基线值:").append(baselines.toString()).append("] ");
 		sb.append("[实际值:").append(values.toString()).append("] ");
 		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");

@@ -21,6 +21,10 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	private int SIZE = 10;
 
+	public BugReport getReport() {
+		return m_report;
+	}
+
 	protected void mergeList(List<String> oldMessages, List<String> newMessages, int size) {
 		int originalSize = oldMessages.size();
 
@@ -33,6 +37,11 @@ public class ProblemReportVisitor extends BaseVisitor {
 				oldMessages.addAll(newMessages.subList(0, remainingSize));
 			}
 		}
+	}
+
+	public ProblemReportVisitor setReport(BugReport report) {
+		m_report = report;
+		return this;
 	}
 
 	@Override
@@ -61,15 +70,6 @@ public class ProblemReportVisitor extends BaseVisitor {
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_currentDomain = problemReport.getDomain();
 		super.visitProblemReport(problemReport);
-	}
-
-	public BugReport getReport() {
-		return m_report;
-	}
-
-	public ProblemReportVisitor setReport(BugReport report) {
-		m_report = report;
-		return this;
 	}
 
 }

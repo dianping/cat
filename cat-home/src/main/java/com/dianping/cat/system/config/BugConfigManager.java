@@ -36,43 +36,13 @@ public class BugConfigManager implements Initializable, LogEnabled {
 
 	private Map<String, Set<String>> m_configs = new HashMap<String, Set<String>>();
 
-	public Set<String> queryBugConfigsByDomain(String domain) {
-		Set<String> result = m_configs.get(domain);
-
-		if (result == null) {
-			result = new HashSet<String>();
-			Domain config = m_bugConfig.findDomain(domain);
-
-			if (config == null) {
-				result = new HashSet<String>(m_bugConfig.getExceptions());
-			} else {
-				if (config.getAdditivity() == true) {
-					result.addAll(m_bugConfig.getExceptions());
-					result.addAll(config.getExceptions());
-				} else {
-					result = new HashSet<String>(config.getExceptions());
-				}
-			}
-			m_configs.put(domain, result);
-		}
-		return result;
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	public BugConfig getBugConfig() {
 		return m_bugConfig;
-	}
-
-	public boolean insert(String xml) {
-		try {
-			m_bugConfig = DefaultSaxParser.parse(xml);
-			boolean result = storeConfig();
-			m_configs.clear();
-			return result;
-		} catch (Exception e) {
-			Cat.logError(e);
-			m_logger.error(e.getMessage(), e);
-			return false;
-		}
 	}
 
 	@Override
@@ -106,6 +76,41 @@ public class BugConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public boolean insert(String xml) {
+		try {
+			m_bugConfig = DefaultSaxParser.parse(xml);
+			boolean result = storeConfig();
+			m_configs.clear();
+			return result;
+		} catch (Exception e) {
+			Cat.logError(e);
+			m_logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	public Set<String> queryBugConfigsByDomain(String domain) {
+		Set<String> result = m_configs.get(domain);
+
+		if (result == null) {
+			result = new HashSet<String>();
+			Domain config = m_bugConfig.findDomain(domain);
+
+			if (config == null) {
+				result = new HashSet<String>(m_bugConfig.getExceptions());
+			} else {
+				if (config.getAdditivity() == true) {
+					result.addAll(m_bugConfig.getExceptions());
+					result.addAll(config.getExceptions());
+				} else {
+					result = new HashSet<String>(config.getExceptions());
+				}
+			}
+			m_configs.put(domain, result);
+		}
+		return result;
+	}
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -122,11 +127,6 @@ public class BugConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.report.page.JsonBuilder</role>
+			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.graph.ValueTranslater</role>
 			<implementation>com.dianping.cat.report.graph.DefaultValueTranslater</implementation>
 		</component>
@@ -119,6 +123,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricAggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -175,8 +188,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.impl.CachedMetricReportServiceImpl</implementation>
+			<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+			<implementation>com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -188,25 +201,25 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.impl.DataExtractorImpl</implementation>
+			<role>com.dianping.cat.report.chart.DataExtractor</role>
+			<implementation>com.dianping.cat.report.chart.impl.DataExtractorImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.impl.MetricDataFetcherImpl</implementation>
+			<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+			<implementation>com.dianping.cat.report.chart.impl.MetricDataFetcherImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.GraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -219,6 +232,39 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.AggregationGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
@@ -1443,6 +1489,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+			<implementation>com.dianping.cat.report.task.metric.RemoteMetricReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.metric.AlertConfig</role>
 			<implementation>com.dianping.cat.report.task.metric.AlertConfig</implementation>
 		</component>
@@ -1473,8 +1528,19 @@
 					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>metric</role-hint>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1794,6 +1860,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.JsonBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1886,6 +1955,10 @@
 					<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.JsonBuilder</role>
+			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -2083,7 +2156,14 @@
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.JspViewer</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>cross-local</role-hint>
+					<field-name>m_crossService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency-local</role-hint>
+					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2097,28 +2177,23 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>message-local</role-hint>
-					<field-name>m_messageService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>matrix-local</role-hint>
 					<field-name>m_matrixService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>message-local</role-hint>
+					<field-name>m_messageService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric-local</role-hint>
+					<field-name>m_metricService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem-local</role-hint>
 					<field-name>m_problemService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>transaction-local</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>cross-local</role-hint>
-					<field-name>m_crossService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2132,22 +2207,32 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>metric-local</role-hint>
-					<field-name>m_metricService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>dependency-local</role-hint>
-					<field-name>m_dependencyService</field-name>
+					<role-hint>transaction-local</role-hint>
+					<field-name>m_transactionService</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.model.cross.LocalCrossService</role>
+			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.dependency.LocalDependencyService</role>
+			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2176,6 +2261,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.matrix.LocalMatrixService</role>
+			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.logview.LocalMessageService</role>
 			<implementation>com.dianping.cat.report.page.model.logview.LocalMessageService</implementation>
 			<requirements>
@@ -2193,8 +2290,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.matrix.LocalMatrixService</role>
-			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<role>com.dianping.cat.report.page.model.metric.LocalMetricService</role>
+			<implementation>com.dianping.cat.report.page.model.metric.LocalMetricService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -2207,30 +2304,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.problem.LocalProblemService</role>
 			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
-			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.cross.LocalCrossService</role>
-			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -2265,20 +2338,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.metric.LocalMetricService</role>
-			<implementation>com.dianping.cat.report.page.model.metric.LocalMetricService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.dependency.LocalDependencyService</role>
-			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
+			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -2315,6 +2376,9 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_problemService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.JsonBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2554,7 +2618,7 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
+					<role>com.dianping.cat.report.chart.GraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2586,20 +2650,20 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.page.metric.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.GraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.DataExtractor</role>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.MetricDataFetcher</role>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.CachedMetricReportService</role>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -2659,9 +2723,6 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
@@ -2669,9 +2730,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.metric.chart.GraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2890,6 +2948,105 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.network.Handler</role>
+			<implementation>com.dianping.cat.report.page.network.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.GraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.network.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricAggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.AggregationGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+			<implementation>com.dianping.cat.report.task.metric.RemoteMetricReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -3078,6 +3235,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>

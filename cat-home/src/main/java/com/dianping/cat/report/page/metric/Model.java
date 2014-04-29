@@ -58,6 +58,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_lineCharts;
 	}
 
+	public List<String> getMetricGroups() {
+   	return m_metricGroups;
+   }
+
 	public Collection<ProductLine> getProductLines() {
 		return m_productLines;
 	}
@@ -74,6 +78,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_lineCharts = lineCharts;
 	}
 
+	public void setMetricGroups(List<String> metricGroups) {
+   	m_metricGroups = metricGroups;
+   }
+
 	public void setProductLines(Collection<ProductLine> productLines) {
 		m_productLines = productLines;
 	}
@@ -81,13 +89,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setStartTime(Date startTime) {
 		m_startTime = startTime;
 	}
-
-	public List<String> getMetricGroups() {
-   	return m_metricGroups;
-   }
-
-	public void setMetricGroups(List<String> metricGroups) {
-   	m_metricGroups = metricGroups;
-   }
 	
 }

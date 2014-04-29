@@ -38,45 +38,6 @@ public class CachedReportTask implements Task {
 	@Inject
 	private ReportService m_reportService;
 
-	@Override
-	public String getName() {
-		return "Cached-Report-Task";
-	}
-
-	private WeeklyReport buildWeeklyReport(String domain, Date period, String name) {
-		WeeklyReport report = new WeeklyReport();
-
-		report.setContent("");
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-		return report;
-	}
-
-	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
-		MonthlyReport report = new MonthlyReport();
-
-		report.setContent("");
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-		return report;
-	}
-
-	private void reloadCurrentMonthly() {
-		Date start = TimeUtil.getCurrentMonth();
-		Date end = TimeUtil.getCurrentDay();
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-
-		buildCacheReportByDuration(start, end, domains);
-	}
-
 	private void buildCacheReportByDuration(Date start, Date end, Set<String> domains) {
 		for (String domain : domains) {
 			TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
@@ -116,6 +77,45 @@ public class CachedReportTask implements Task {
 		ServiceReport serviceReport = m_reportService.queryServiceReport(domain, start, end);
 		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, Constants.REPORT_SERVICE),
 		      com.dianping.cat.home.service.transform.DefaultNativeBuilder.build(serviceReport));
+	}
+
+	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
+		MonthlyReport report = new MonthlyReport();
+
+		report.setContent("");
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return report;
+	}
+
+	private WeeklyReport buildWeeklyReport(String domain, Date period, String name) {
+		WeeklyReport report = new WeeklyReport();
+
+		report.setContent("");
+		report.setCreationDate(new Date());
+		report.setDomain(domain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(name);
+		report.setPeriod(period);
+		report.setType(1);
+		return report;
+	}
+
+	@Override
+	public String getName() {
+		return "Cached-Report-Task";
+	}
+
+	private void reloadCurrentMonthly() {
+		Date start = TimeUtil.getCurrentMonth();
+		Date end = TimeUtil.getCurrentDay();
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
+
+		buildCacheReportByDuration(start, end, domains);
 	}
 
 	private void reloadCurrentWeekly() {

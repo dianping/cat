@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +45,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private File m_baseDir;
 
-	private Map<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
+	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -65,51 +64,49 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Logger m_logger;
 
-	private int m_gzipThreads = 10;
+	private int m_gzipThreads = 13;
 
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(100000);
+	private int m_gzipMessageSize = 10000;
 
-	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+	private int m_messageBlockSize = 10000;
 
-	private long[] m_processMessages;
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
+
+	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
 
-		synchronized (m_buckets) {
-			for (String key : m_buckets.keySet()) {
-				if (key.startsWith(path)) {
-					keys.add(key);
-				}
+		for (String key : m_buckets.keySet()) {
+			if (key.startsWith(path)) {
+				keys.add(key);
 			}
-			try {
-				for (String key : keys) {
-					LocalMessageBucket bucket = m_buckets.get(key);
+		}
+		try {
+			for (String key : keys) {
+				LocalMessageBucket bucket = m_buckets.get(key);
 
-					try {
-						MessageBlock block = bucket.flushBlock();
+				try {
+					MessageBlock block = bucket.flushBlock();
 
-						if (block != null) {
-							m_messageBlocks.add(block);
-						}
-					} catch (IOException e) {
-						Cat.logError(e);
+					if (block != null) {
+						m_messageBlocks.add(block);
 					}
+				} catch (IOException e) {
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
 	public void close() throws IOException {
-		synchronized (m_buckets) {
-			for (LocalMessageBucket bucket : m_buckets.values()) {
-				bucket.close();
-			}
-			m_buckets.clear();
+		for (LocalMessageBucket bucket : m_buckets.values()) {
+			bucket.close();
 		}
+		m_buckets.clear();
 	}
 
 	@Override
@@ -129,10 +126,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;
 		}
-		m_processMessages = new long[m_gzipThreads];
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(100000);
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
 
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
@@ -173,9 +169,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
-						synchronized (m_buckets) {
-							m_buckets.put(dataFile, bucket);
-						}
+						m_buckets.putIfAbsent(dataFile, bucket);
 					}
 				}
 				if (bucket != null) {
@@ -343,7 +337,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			abs = -abs;
 		}
 		int bucketIndex = abs % m_gzipThreads;
-		m_processMessages[bucketIndex]++;
 
 		logStorageState(tree);
 
@@ -408,8 +401,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
-		private long m_count;
-
 		public BlockingQueue<MessageItem> m_messageQueue;
 
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
@@ -422,12 +413,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			return "Message-Gzip-" + m_index;
 		}
 
-		private void gzipMessage(MessageItem item, boolean monitor) {
-			Transaction t = null;
-
-			if (monitor) {
-				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
-			}
+		private void gzipMessage(MessageItem item) {
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
@@ -438,9 +424,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 					bucket.setBaseDir(m_baseDir);
 					bucket.initialize(dataFile);
-					synchronized (m_buckets) {
-						m_buckets.put(dataFile, bucket);
-					}
+					m_buckets.putIfAbsent(dataFile, bucket);
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
@@ -453,18 +437,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error("Error when offer the block to the dump!");
 					}
 				}
-				if (t != null) {
-					t.setStatus(Message.SUCCESS);
-				}
 			} catch (Throwable e) {
 				Cat.logError(e);
-				if (t != null) {
-					t.setStatus(e);
-				}
-			} finally {
-				if (t != null) {
-					t.complete();
-				}
 			}
 		}
 
@@ -475,12 +449,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
-						m_count++;
-						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
-							gzipMessage(item, true);
-						} else {
-							gzipMessage(item, false);
-						}
+						gzipMessage(item);
 					}
 				}
 			} catch (InterruptedException e) {

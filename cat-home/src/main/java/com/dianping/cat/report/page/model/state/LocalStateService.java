@@ -1,10 +1,13 @@
 package com.dianping.cat.report.page.model.state;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -24,7 +27,14 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 		StateReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			report = getReportFromLocalDisk(request.getStartTime(), domain);
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+		
+			if (report == null) {
+				report = new StateReport(domain);
+				report.setStartTime(new Date(startTime));
+				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+			}
 		}
 		return report;
 	}
@@ -38,7 +48,7 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
 			if (bucket != null) {
-				bucket.close();
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

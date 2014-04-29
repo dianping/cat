@@ -5,12 +5,6 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 
 public class EventMergeManager {
 
-	public EventReport mergerAllName(EventReport report, String ipAddress, String allName) {
-		EventReport temp = mergerAllIp(report, ipAddress);
-
-		return mergerAllName(temp, allName);
-	}
-
 	public EventReport mergerAllIp(EventReport report, String ipAddress) {
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
@@ -29,6 +23,12 @@ public class EventMergeManager {
 			report = all.getReport();
 		}
 		return report;
+	}
+
+	public EventReport mergerAllName(EventReport report, String ipAddress, String allName) {
+		EventReport temp = mergerAllIp(report, ipAddress);
+
+		return mergerAllName(temp, allName);
 	}
 
 }

@@ -1,10 +1,13 @@
 package com.dianping.cat.report.page.model.transaction;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -24,7 +27,14 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 		TransactionReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			report = getReportFromLocalDisk(request.getStartTime(), domain);
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+			
+			if (report == null) {
+				report = new TransactionReport(domain);
+				report.setStartTime(new Date(startTime));
+				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+			}
 		}
 		return report;
 	}
@@ -38,7 +48,7 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 			return xml == null ? null : DefaultSaxParser.parse(xml);
 		} finally {
 			if (bucket != null) {
-				bucket.close();
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

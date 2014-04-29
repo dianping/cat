@@ -36,7 +36,7 @@ public class MetricReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeSegment(Segment old, Segment point) {
+	protected void mergePoint(Point old, Point point) {
 		old.setCount(old.getCount() + point.getCount());
 		old.setSum(old.getSum() + point.getSum());
 		if (old.getCount() > 0) {
@@ -45,7 +45,7 @@ public class MetricReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergePoint(Point old, Point point) {
+	protected void mergeSegment(Segment old, Segment point) {
 		old.setCount(old.getCount() + point.getCount());
 		old.setSum(old.getSum() + point.getSum());
 		if (old.getCount() > 0) {

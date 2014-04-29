@@ -1,10 +1,10 @@
-package com.dianping.cat.report.page.metric.chart.impl;
+package com.dianping.cat.report.chart.impl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.report.page.metric.chart.DataExtractor;
+import com.dianping.cat.report.chart.DataExtractor;
 
 public class DataExtractorImpl implements DataExtractor {
 
@@ -54,7 +54,6 @@ public class DataExtractorImpl implements DataExtractor {
 
 	private int intervalCalculate(int length) {
 		int[] values = { 1, 2, 3, 6, 10, 20, 30, 60 };
-
 		for (int value : values) {
 			int pm = length / value;
 			if (pm >= MIN_POINT_NUMBER && pm < MAX_POINT_NUMBER) {

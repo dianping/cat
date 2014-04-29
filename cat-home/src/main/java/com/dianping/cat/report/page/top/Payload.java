@@ -24,24 +24,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("refresh")
 	private boolean m_refresh;
 
-	public int getFrequency() {
-		return m_frequency;
-	}
-
-	public void setFrequency(int frequency) {
-		m_frequency = frequency;
-	}
-
 	public Payload() {
 		super(ReportPage.TOP);
-	}
-
-	public boolean getRefresh() {
-		return m_refresh;
-	}
-
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
 	}
 
 	@Override
@@ -49,17 +33,33 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public int getFrequency() {
+		return m_frequency;
+	}
+
+	public int getMinuteCounts() {
+		return m_minuteCounts;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	public boolean getRefresh() {
+		return m_refresh;
+	}
+
+	public int getTopCounts() {
+		return m_topCounts;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public int getMinuteCounts() {
-		return m_minuteCounts;
+	public void setFrequency(int frequency) {
+		m_frequency = frequency;
 	}
 
 	public void setMinuteCounts(int minuteCount) {
@@ -71,8 +71,8 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_page = ReportPage.getByName(page, ReportPage.TOP);
 	}
 
-	public int getTopCounts() {
-		return m_topCounts;
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
 	}
 
 	public void setTopCounts(int tops) {

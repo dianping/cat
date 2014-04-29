@@ -106,6 +106,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_errorsTrend;
 	}
 
+	public List<String> getGroupIps() {
+   	return m_groupIps;
+   }
+
 	public GroupLevelInfo getGroupLevelInfo() {
 		return m_groupLevelInfo;
 	}
@@ -184,6 +188,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_errorsTrend = errorsTrend;
 	}
 
+	public void setGroupIps(List<String> groupIps) {
+   	m_groupIps = groupIps;
+   }
+
 	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
 		m_groupLevelInfo = groupLevelInfo;
 	}
@@ -215,13 +223,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
 		m_threadLevelInfo = threadLevelInfo;
 	}
-
-	public List<String> getGroupIps() {
-   	return m_groupIps;
-   }
-
-	public void setGroupIps(List<String> groupIps) {
-   	m_groupIps = groupIps;
-   }
 	
 }

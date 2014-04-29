@@ -28,35 +28,6 @@ public class UtilizationConfigManager implements Initializable {
 		return m_utilizationConfig;
 	}
 
-	public boolean insert(String xml) {
-		try {
-			m_utilizationConfig = DefaultSaxParser.parse(xml);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	private boolean storeConfig() {
-		synchronized (this) {
-			try {
-				Config config = m_configDao.createLocal();
-
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(m_utilizationConfig.toString());
-				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-		return true;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -86,6 +57,35 @@ public class UtilizationConfigManager implements Initializable {
 		if (m_utilizationConfig == null) {
 			m_utilizationConfig = new UtilizationConfig();
 		}
+	}
+
+	public boolean insert(String xml) {
+		try {
+			m_utilizationConfig = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	private boolean storeConfig() {
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
+
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_utilizationConfig.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

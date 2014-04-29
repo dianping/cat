@@ -54,8 +54,17 @@ public class StateShow extends BaseVisitor {
 		return m_messages;
 	}
 
+	public Map<String, ProcessDomain> getProcessDomainMap() {
+		return m_processDomains;
+	}
+
 	public List<ProcessDomain> getProcessDomains() {
-		m_processDomains.remove("PhoenixAgent");
+		ProcessDomain domain = m_processDomains.get("PhoenixAgent");
+
+		if (domain != null) {
+			domain.getIps().clear();
+		}
+
 		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
 		if (m_sortType == null) {
 			Collections.sort(temp, new DomainCompartor());
@@ -73,29 +82,8 @@ public class StateShow extends BaseVisitor {
 		return temp;
 	}
 
-	private ProcessDomain mergeAll(List<ProcessDomain> domains) {
-		ProcessDomain all = new ProcessDomain("ALL");
-
-		for (ProcessDomain temp : domains) {
-			all.setSize(all.getSize() + temp.getSize());
-			all.setTotal(all.getTotal() + temp.getTotal());
-			all.setTotalLoss(all.getTotalLoss() + temp.getTotalLoss());
-		}
-		return all;
-	}
-
-	public Map<String, ProcessDomain> getProcessDomainMap() {
-		return m_processDomains;
-	}
-
 	public Machine getTotal() {
 		return m_total;
-	}
-
-	public boolean validateIp(String str) {
-		Pattern pattern = Pattern
-		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
-		return pattern.matcher(str).matches();
 	}
 
 	public int getTotalSize() {
@@ -111,6 +99,17 @@ public class StateShow extends BaseVisitor {
 			}
 		}
 		return ips.size();
+	}
+
+	private ProcessDomain mergeAll(List<ProcessDomain> domains) {
+		ProcessDomain all = new ProcessDomain("ALL");
+
+		for (ProcessDomain temp : domains) {
+			all.setSize(all.getSize() + temp.getSize());
+			all.setTotal(all.getTotal() + temp.getTotal());
+			all.setTotalLoss(all.getTotalLoss() + temp.getTotalLoss());
+		}
+		return all;
 	}
 
 	private Machine mergerMachine(Machine total, Machine machine) {
@@ -156,6 +155,30 @@ public class StateShow extends BaseVisitor {
 		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
 	}
 
+	public void setSortType(String sort) {
+		m_sortType = sort;
+	}
+
+	public boolean validateIp(String str) {
+		Pattern pattern = Pattern
+		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		return pattern.matcher(str).matches();
+	}
+
+	@Override
+	public void visitDetail(Detail detail) {
+		Map<Long, Detail> details = m_processDomain.getDetails();
+		Long id = detail.getId();
+		Detail temp = details.get(id);
+		if (temp == null) {
+			details.put(id, detail);
+		} else {
+			temp.setSize(temp.getSize() + detail.getSize());
+			temp.setTotal(temp.getTotal() + detail.getTotal());
+			temp.setTotalLoss(temp.getTotalLoss() + detail.getTotalLoss());
+		}
+	}
+
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
@@ -197,33 +220,11 @@ public class StateShow extends BaseVisitor {
 		}
 	}
 
-	@Override
-	public void visitDetail(Detail detail) {
-		Map<Long, Detail> details = m_processDomain.getDetails();
-		Long id = detail.getId();
-		Detail temp = details.get(id);
-		if (temp == null) {
-			details.put(id, detail);
-		} else {
-			temp.setSize(temp.getSize() + detail.getSize());
-			temp.setTotal(temp.getTotal() + detail.getTotal());
-			temp.setTotalLoss(temp.getTotalLoss() + detail.getTotalLoss());
-		}
-	}
-
 	public static class DomainCompartor implements Comparator<ProcessDomain> {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return o1.getName().compareTo(o2.getName());
-		}
-	}
-
-	public static class TotalCompartor implements Comparator<ProcessDomain> {
-
-		@Override
-		public int compare(ProcessDomain o1, ProcessDomain o2) {
-			return (int) (o2.getTotal() - o1.getTotal());
 		}
 	}
 
@@ -243,7 +244,11 @@ public class StateShow extends BaseVisitor {
 		}
 	}
 
-	public void setSortType(String sort) {
-		m_sortType = sort;
+	public static class TotalCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return (int) (o2.getTotal() - o1.getTotal());
+		}
 	}
 }

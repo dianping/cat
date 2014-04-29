@@ -28,6 +28,39 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlterationDao m_alterationDao;
 
+	private Alteration buildAlteration(Payload payload) {
+		String type = payload.getType();
+		String domain = payload.getDomain();
+		String hostname = payload.getHostname();
+		String title = payload.getTitle();
+		String ip = payload.getIp();
+		String user = payload.getUser();
+		String group = payload.getGroup();
+		String content = payload.getContent();
+		String url = payload.getUrl();
+
+		Date date = payload.getAlterationDate();
+		Alteration alt = new Alteration();
+
+		alt.setType(type);
+		alt.setDomain(domain);
+		alt.setTitle(title);
+		alt.setIp(ip);
+		alt.setUser(user);
+		alt.setAltGroup(group);
+		alt.setContent(content);
+		alt.setHostname(hostname);
+		alt.setDate(date);
+		try {
+			alt.setUrl(URLDecoder.decode(url, "UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+      	Cat.logError(e);
+	      alt.setUrl("");
+      }
+
+		return alt;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "alteration")
@@ -88,38 +121,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private Alteration buildAlteration(Payload payload) {
-		String type = payload.getType();
-		String domain = payload.getDomain();
-		String hostname = payload.getHostname();
-		String title = payload.getTitle();
-		String ip = payload.getIp();
-		String user = payload.getUser();
-		String group = payload.getGroup();
-		String content = payload.getContent();
-		String url = payload.getUrl();
-
-		Date date = payload.getAlterationDate();
-		Alteration alt = new Alteration();
-
-		alt.setType(type);
-		alt.setDomain(domain);
-		alt.setTitle(title);
-		alt.setIp(ip);
-		alt.setUser(user);
-		alt.setAltGroup(group);
-		alt.setContent(content);
-		alt.setHostname(hostname);
-		alt.setDate(date);
-		try {
-			alt.setUrl(URLDecoder.decode(url, "UTF-8"));
-      } catch (UnsupportedEncodingException e) {
-      	Cat.logError(e);
-	      alt.setUrl("");
-      }
-
-		return alt;
-	}
 
 	public boolean isArguComplete(Payload payload) {
 		if (StringUtils.isEmpty(payload.getType())) {

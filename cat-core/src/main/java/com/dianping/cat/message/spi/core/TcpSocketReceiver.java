@@ -32,10 +32,8 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -63,7 +61,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
-	private int m_queueSize = 300000;
+	private int m_queueSize = 100000;
 
 	private volatile int m_errorCount;
 
@@ -125,8 +123,6 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		private int m_index;
 
-		private int m_count;
-
 		private BlockingQueue<ChannelBuffer> m_queue;
 
 		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue, MessageCodec codec, MessageHandler handler) {
@@ -171,21 +167,11 @@ public class TcpSocketReceiver implements LogEnabled {
 			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
 			if (buf != null) {
-				m_count++;
-				if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
-					decodeMessage(buf, true);
-				} else {
-					decodeMessage(buf, false);
-				}
+				decodeMessage(buf);
 			}
 		}
 
-		private void decodeMessage(ChannelBuffer buf, boolean monitor) {
-			Transaction t = null;
-
-			if (monitor) {
-				t = Cat.newTransaction("Decode", "Thread-" + m_index);
-			}
+		private void decodeMessage(ChannelBuffer buf) {
 			try {
 				buf.markReaderIndex();
 
@@ -195,23 +181,11 @@ public class TcpSocketReceiver implements LogEnabled {
 				buf.resetReaderIndex();
 				tree.setBuffer(buf);
 				m_handler.handle(tree);
-
-				if (t != null) {
-					t.setStatus(Transaction.SUCCESS);
-				}
 			} catch (Throwable e) {
 				buf.resetReaderIndex();
 
 				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
 				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
-
-				if (t != null) {
-					t.setStatus(e);
-				}
-			} finally {
-				if (t != null) {
-					t.complete();
-				}
 			}
 		}
 

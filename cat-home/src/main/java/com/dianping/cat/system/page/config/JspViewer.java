@@ -78,6 +78,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
 		case METRIC_GROUP_CONFIG_UPDATE:
 			return JspFile.METRIC_GROUP_CONFIG_UPDATE.getPath();
+		case METRIC_AGGREGATION_CONFIG_UPDATE:
+			return JspFile.METRIC_AGGREGATION_CONFIG_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

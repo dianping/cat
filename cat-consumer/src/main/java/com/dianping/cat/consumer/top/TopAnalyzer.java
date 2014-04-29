@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.top;
 
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -22,6 +24,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
@@ -31,7 +34,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
-	
+
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
@@ -58,30 +61,61 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
-	public synchronized TopReport getReport(String domain) {
+	public boolean isRawAnalyzer() {
+		return false;
+	}
+
+	@Override
+	public TopReport getReport(String domain) {
 		Set<String> domains = m_transactionAnalyzer.getDomains();
 		TopReport topReport = new TopReport(Constants.CAT);
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
-		
-		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
-		
-		for (String domainName : domains) {
-			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
-				TransactionReport report = m_transactionAnalyzer.getReport(domainName);
 
-				transactionReportVisitor.visitTransactionReport(report);
+		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
+
+		for (String name : domains) {
+			try {
+				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
+					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
+
+					transactionReportVisitor.visitTransactionReport(report);
+				}
+			} catch (ConcurrentModificationException e) {
+				try {
+					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
+
+					transactionReportVisitor.visitTransactionReport(report);
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
+					Cat.logError(ce);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 
 		ProblemReportVisitor problemReportVisitor = new ProblemReportVisitor(topReport);
-		
-		for (String domainName : domains) {
-			if (m_serverConfigManager.validateDomain(domainName) && !domainName.equals(Constants.ALL)) {
-				ProblemReport report = m_problemAnalyzer.getReport(domainName);
 
-				problemReportVisitor.visitProblemReport(report);
+		for (String name : domains) {
+			try {
+				if (m_serverConfigManager.validateDomain(name) && !name.equals(Constants.ALL)) {
+					ProblemReport report = m_problemAnalyzer.getReport(name);
+
+					problemReportVisitor.visitProblemReport(report);
+				}
+			} catch (ConcurrentModificationException e) {
+				try {
+					ProblemReport report = m_problemAnalyzer.getReport(name);
+
+					problemReportVisitor.visitProblemReport(report);
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
+					Cat.logError(e);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return topReport;
@@ -89,14 +123,13 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	protected void process(MessageTree tree) {
-		// do nothing
 	}
 
-	public synchronized void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
+	public void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
 		m_problemAnalyzer = problemAnalyzer;
 	}
 
-	public synchronized void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
+	public void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
 		m_transactionAnalyzer = transactionAnalyzer;
 	}
 

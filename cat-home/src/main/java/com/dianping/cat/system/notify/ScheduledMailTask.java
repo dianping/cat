@@ -134,7 +134,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 						Transaction t = Cat.newTransaction("ScheduledReport", domain);
 
 						try {
-							String names = report.getNames();
+							String names = String.valueOf(report.getNames());
 							String content = renderContent(names, domain);
 							String title = renderTitle(names, domain);
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());

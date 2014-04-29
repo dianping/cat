@@ -38,6 +38,22 @@ public class TransactionReportVisitor extends BaseVisitor {
 		m_types.add(MEMCACHED);
 	}
 
+	private void copyAttribute(TransactionType type, ApplicationState state) {
+		long newTotal = state.getCount() + type.getTotalCount();
+
+		if (newTotal > 0) {
+			state.setAvg95((state.getCount() * state.getAvg95() + type.getTotalCount() * type.getLine95Value()) / newTotal);
+		}
+		state.setSum(state.getSum() + type.getSum());
+		state.setFailureCount(state.getFailureCount() + type.getFailCount());
+		state.setCount(newTotal);
+
+		if (state.getCount() > 0) {
+			state.setFailurePercent(state.getFailureCount() * 1.0 / state.getCount());
+			state.setAvg(state.getSum() * 1.0 / state.getCount());
+		}
+	}
+
 	public TransactionReportVisitor setUtilizationReport(UtilizationReport report) {
 		m_report = report;
 		return this;
@@ -49,6 +65,19 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 		if (Constants.ALL.equals(ip)) {
 			super.visitMachine(machine);
+		}
+	}
+
+	@Override
+	public void visitRange(Range range) {
+		long count = range.getCount();
+		int value = range.getValue();
+		Long old = m_counts.get(value);
+
+		if (old == null) {
+			m_counts.put(value, count);
+		} else {
+			m_counts.put(value, count + old);
 		}
 	}
 
@@ -92,35 +121,6 @@ public class TransactionReportVisitor extends BaseVisitor {
 		}
 
 		m_counts.clear();
-	}
-
-	@Override
-	public void visitRange(Range range) {
-		long count = range.getCount();
-		int value = range.getValue();
-		Long old = m_counts.get(value);
-
-		if (old == null) {
-			m_counts.put(value, count);
-		} else {
-			m_counts.put(value, count + old);
-		}
-	}
-
-	private void copyAttribute(TransactionType type, ApplicationState state) {
-		long newTotal = state.getCount() + type.getTotalCount();
-
-		if (newTotal > 0) {
-			state.setAvg95((state.getCount() * state.getAvg95() + type.getTotalCount() * type.getLine95Value()) / newTotal);
-		}
-		state.setSum(state.getSum() + type.getSum());
-		state.setFailureCount(state.getFailureCount() + type.getFailCount());
-		state.setCount(newTotal);
-
-		if (state.getCount() > 0) {
-			state.setFailurePercent(state.getFailureCount() * 1.0 / state.getCount());
-			state.setAvg(state.getSum() * 1.0 / state.getCount());
-		}
 	}
 
 }

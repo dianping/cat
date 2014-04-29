@@ -18,14 +18,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("tab")
 	private String m_tab = "tab1";
 
-	public String getTab() {
-		return m_tab;
-	}
-
-	public void setTab(String tab) {
-		m_tab = tab;
-	}
-
 	public Payload() {
 		super(ReportPage.STATISTICS);
 	}
@@ -44,6 +36,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_sortBy;
 	}
 
+	public String getTab() {
+		return m_tab;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.BUG_REPORT);
 	}
@@ -55,6 +51,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setSortBy(String sortBy) {
 		m_sortBy = sortBy;
+	}
+
+	public void setTab(String tab) {
+		m_tab = tab;
 	}
 
 	@Override

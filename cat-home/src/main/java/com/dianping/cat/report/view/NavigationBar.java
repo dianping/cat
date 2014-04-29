@@ -41,13 +41,15 @@ public class NavigationBar {
 
 		ReportPage.DEPENDENCY,
 
+		ReportPage.NETWORK,
+
+		ReportPage.ALTERATION,
+
 		ReportPage.STATE,
 
 		ReportPage.STATISTICS,
-
-		ReportPage.LOGVIEW,
 		
-		ReportPage.ALTERATION,
+		ReportPage.LOGVIEW,
 
 		};
 	}

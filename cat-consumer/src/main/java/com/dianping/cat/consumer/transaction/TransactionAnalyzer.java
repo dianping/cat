@@ -39,7 +39,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private ServerConfigManager m_serverConfigManager;
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
-	
+
 	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
 		List<Message> children = t.getChildren();
@@ -87,15 +87,21 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return m_reportManager.getDomains(getStartTime());
 	}
 
+	public TransactionReport getRawReport(String domain) {
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+		return report;
+	}
+
 	@Override
 	public TransactionReport getReport(String domain) {
 		if (!Constants.ALL.equals(domain)) {
-			TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-			report.accept(m_computer);
-
-			return report;
+			try {
+				return queryReport(domain);
+			} catch (Exception e) {
+				// for concurrent modify exception
+				return queryReport(domain);
+			}
 		} else {
 			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());
 
@@ -147,7 +153,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		if (m_serverConfigManager.discardTransaction(t)) {
 			return;
-		//TODO remove me
+			// TODO remove me
 		} else if ("ABTest".equals(t.getType())) {
 			return;
 		} else {
@@ -228,5 +234,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		range.incCount();
 		range.setSum(range.getSum() + d);
+	}
+
+	private TransactionReport queryReport(String domain) {
+		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		report.accept(m_computer);
+
+		return report;
 	}
 }
