@@ -81,10 +81,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Override
 	public T getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
-		if (createIfNotExist) {
-			cleanup();
-		}
-
 		Map<String, T> reports = m_reports.get(startTime);
 
 		if (reports == null && createIfNotExist) {
@@ -244,6 +240,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing %s reports of %s!", m_name, new Date(startTime)), e);
 		} finally {
+			cleanup();
 			t.complete();
 
 			if (bucket != null) {

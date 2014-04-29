@@ -425,6 +425,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket.setBaseDir(m_baseDir);
 					bucket.initialize(dataFile);
 					m_buckets.putIfAbsent(dataFile, bucket);
+					bucket = m_buckets.get(dataFile);
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();

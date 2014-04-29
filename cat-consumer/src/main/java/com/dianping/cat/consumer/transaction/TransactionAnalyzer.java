@@ -177,6 +177,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
+	protected TransactionName findOrCreate(TransactionType type, String name) {
+		if ("URL".equals(type.getId())) {
+			Map<String, TransactionName> names = type.getNames();
+
+			if (names.size() >= 1000) {
+				return type.findOrCreateName("Others");
+			} else {
+				return type.findOrCreateName(name);
+			}
+		} else {
+			return type.findOrCreateName(name);
+		}
+	}
+
 	protected void processTypeAndName(Transaction t, TransactionType type, TransactionName name, String messageId,
 	      double duration) {
 		type.incTotalCount();
@@ -203,8 +217,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			}
 		}
 
-		// update statistics
-		Integer allDuration = (int) duration;
+		Integer allDuration = ((int) duration) - ((int) duration) % 10 + 10;
 
 		name.setMax(Math.max(name.getMax(), duration));
 		name.setMin(Math.min(name.getMin(), duration));
