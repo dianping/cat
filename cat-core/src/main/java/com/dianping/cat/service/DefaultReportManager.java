@@ -58,7 +58,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 		for (long startTime : startTimes) {
 			if (startTime <= threshold) {
-				m_reports.remove(startTime); // too old to stay in memory
+				m_reports.remove(startTime); 
 			}
 		}
 	}
