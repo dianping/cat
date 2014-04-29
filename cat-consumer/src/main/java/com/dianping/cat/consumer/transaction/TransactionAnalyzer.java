@@ -177,20 +177,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	protected TransactionName findOrCreate(TransactionType type, String name) {
-		if ("URL".equals(type.getId())) {
-			Map<String, TransactionName> names = type.getNames();
-
-			if (names.size() >= 1000) {
-				return type.findOrCreateName("Others");
-			} else {
-				return type.findOrCreateName(name);
-			}
-		} else {
-			return type.findOrCreateName(name);
-		}
-	}
-
 	protected void processTypeAndName(Transaction t, TransactionType type, TransactionName name, String messageId,
 	      double duration) {
 		type.incTotalCount();
