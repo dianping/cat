@@ -74,8 +74,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
-	private long[] m_counts = new long[m_gzipThreads];
-
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
@@ -215,7 +213,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		String domain = tree.getDomain();
 
 		m_serverStateManager.addMessageSize(domain, size);
-		m_total++;
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
 
@@ -226,16 +223,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				      - ((Transaction) message).getDurationInMillis();
 
 				m_serverStateManager.addProcessDelay(delay);
-			}
-
-			if (m_total % (CatConstants.SUCCESS_COUNT * 100) == 0) {
-				StringBuffer sb = new StringBuffer();
-				int length = m_counts.length;
-
-				for (int i = 0; i < length; i++) {
-					sb.append(m_counts[i]).append(" ");
-				}
-				m_logger.info("Gzip count:" + sb.toString());
 			}
 		}
 	}
@@ -341,18 +328,15 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		// the message tree of one ip in the same hour should be put in one gzip thread
-		String domain = id.getDomain();
-		String key = domain + id.getIpAddress() + id.getTimestamp();
-		int abs = key.hashCode();
-
-		if (abs < 0) {
-			abs = -abs;
-		}
-		int bucketIndex = abs % m_gzipThreads;
-
-		m_counts[bucketIndex]++;
-		logStorageState(tree);
-
+		// String domain = id.getDomain();
+		// String key = domain + id.getIpAddress() + id.getTimestamp();
+		// int abs = key.hashCode();
+		//
+		// if (abs < 0) {
+		// abs = -abs;
+		// }
+		m_total++;
+		int bucketIndex = (int) (m_total % m_gzipThreads);
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 		boolean result = items.offer(new MessageItem(tree, id));
 
@@ -364,6 +348,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
+		logStorageState(tree);
 	}
 
 	private class BlockDumper implements Task {

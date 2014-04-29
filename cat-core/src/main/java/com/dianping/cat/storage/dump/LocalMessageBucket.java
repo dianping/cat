@@ -150,7 +150,7 @@ public class LocalMessageBucket implements MessageBucket {
 		m_codec = codec;
 	}
 
-	protected MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {
+	protected synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {
 		int size = buf.readableBytes();
 
 		m_dirty.set(true);
