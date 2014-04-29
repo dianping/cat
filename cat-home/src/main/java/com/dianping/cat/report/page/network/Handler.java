@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -18,13 +19,17 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
+import com.dianping.cat.home.nettopo.entity.NetGraph;
+import com.dianping.cat.home.nettopo.entity.NetGraphSet;
+import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.GraphCreator;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
-import com.dianping.cat.report.page.network.nettopology.model.NetGraph;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -48,6 +53,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private NetGraphManager m_netGraphManager;
+
+	@Inject
+	private ReportService m_reportService;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -80,9 +88,12 @@ public class Handler implements PageHandler<Context> {
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
 		case NETTOPOLOGY:
-			NetGraph netGraph = m_netGraphManager.getNetGraph();
-			if (netGraph != null) {
-				model.setTopoData(netGraph.getJsonData());
+			long curDate = System.currentTimeMillis() / 3600000 * 3600000;
+			if (model.getStartTime().equals(new Date(curDate))) {
+				model.setNetGraphData(m_netGraphManager.getNetGraphData(model.getMinute()));
+			} else {
+				model.setMaxMinute(59);
+				model.setNetGraphData(queryHistoryNetTopologyData(model));
 			}
 			break;
 		}
@@ -106,7 +117,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (poduct == null || poduct.length() == 0) {
 
-			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
+			if ((payload.getGroup() == null || payload.getGroup() == "") && !metricAggregationGroups.isEmpty()) {
 				payload.setAction(Action.NETTOPOLOGY.getName());
 			} else {
 				payload.setAction(Action.AGGREGATION.getName());
@@ -118,11 +129,67 @@ public class Handler implements PageHandler<Context> {
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
 
 		m_normalizePayload.normalize(model, payload);
-		int timeRange = payload.getTimeRange();
-		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
-		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
 
-		model.setStartTime(startTime);
-		model.setEndTime(endTime);
+		if (payload.getAction().equals(Action.NETTOPOLOGY)) {
+			payload.setReportType("hour");
+			int minute = payload.getMinute();
+			Date startTime = null, endTime = null;
+			int curMinute = (int) (System.currentTimeMillis() / 60000 % 60) - 1;
+			if (minute == -1) {
+				if (curMinute == -1) {
+					curMinute = 59;
+					startTime = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
+					endTime = new Date(payload.getDate() - 1);
+				}
+				minute = curMinute;
+			}
+			if (startTime == null) {
+				startTime = new Date(payload.getDate());
+				endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
+			}
+			List<Integer> minutes = new ArrayList<Integer>();
+			for (int i = 0; i < 60; i++) {
+				minutes.add(i);
+			}
+			model.setMinutes(minutes);
+			model.setMinute(minute);
+			model.setMaxMinute(curMinute);
+			model.setStartTime(startTime);
+			model.setEndTime(endTime);
+			model.setIpAddress(payload.getIpAddress());
+			model.setAction(payload.getAction());
+			model.setDisplayDomain(payload.getDomain());
+		} else {
+			int timeRange = payload.getTimeRange();
+			Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
+			Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
+
+			model.setStartTime(startTime);
+			model.setEndTime(endTime);
+		}
 	}
+
+	private ArrayList<Pair<String, String>> queryHistoryNetTopologyData(Model model) {
+		String domain = "Cat";
+		Date startTime = model.getStartTime();
+		int minute = model.getMinute();
+		JsonBuilder jb = new JsonBuilder();
+		ArrayList<Pair<String, String>> netGraphData = new ArrayList<Pair<String, String>>();
+		NetGraphSet netGraphSet = m_reportService.queryNetTopologyReport(domain, startTime, null);
+
+		if (netGraphSet != null) {
+			NetGraph netGraph = netGraphSet.getNetGraphs().get(minute);
+
+			if (netGraph != null) {
+				for (NetTopology netTopology : netGraph.getNetTopologies()) {
+					String topoName = netTopology.getName();
+					String data = jb.toJson(netTopology);
+					netGraphData.add(new Pair<String, String>(topoName, data));
+				}
+			}
+		}
+
+		return netGraphData;
+	}
+
 }

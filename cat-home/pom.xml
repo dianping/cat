@@ -162,6 +162,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/domainGroup-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-aggregation-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/netgraph-manifest.xml,
 								</manifest>
 						</configuration>
 					</execution>

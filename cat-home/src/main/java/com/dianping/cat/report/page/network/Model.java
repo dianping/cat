@@ -30,7 +30,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Date m_endTime;
 
-	private ArrayList<Pair<String, String>> m_topoData;
+	private int m_minute;
+
+	private int m_maxMinute;
+
+	private List<Integer> m_minutes;
+
+	private ArrayList<Pair<String, String>> m_netGraphData;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -95,12 +101,36 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_productLines = productLines;
 	}
 
-	public ArrayList<Pair<String, String>> getTopoData() {
-		return m_topoData;
+	public ArrayList<Pair<String, String>> getNetGraphData() {
+		return m_netGraphData;
 	}
 
-	public void setTopoData(ArrayList<Pair<String, String>> topoData) {
-		m_topoData = topoData;
+	public void setNetGraphData(ArrayList<Pair<String, String>> netGraphData) {
+		m_netGraphData = netGraphData;
+	}
+
+	public int getMinute() {
+		return m_minute;
+	}
+
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+
+	public int getMaxMinute() {
+		return m_maxMinute;
+	}
+
+	public void setMaxMinute(int maxMinute) {
+		m_maxMinute = maxMinute;
+	}
+
+	public List<Integer> getMinutes() {
+		return m_minutes;
+	}
+
+	public void setMinutes(List<Integer> minutes) {
+		m_minutes = minutes;
 	}
 
 }
