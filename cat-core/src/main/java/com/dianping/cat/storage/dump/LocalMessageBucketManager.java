@@ -74,6 +74,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
+	private long[] m_counts = new long[m_gzipThreads];
+
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
@@ -225,6 +227,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 				m_serverStateManager.addProcessDelay(delay);
 			}
+
+			if (m_total % (CatConstants.SUCCESS_COUNT * 100) == 0) {
+				StringBuffer sb = new StringBuffer();
+				int length = m_counts.length;
+
+				for (int i = 0; i < length; i++) {
+					sb.append(m_counts[i]).append(" ");
+				}
+				m_logger.info("Gzip count:" + sb.toString());
+			}
 		}
 	}
 
@@ -338,6 +350,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		int bucketIndex = abs % m_gzipThreads;
 
+		m_counts[bucketIndex]++;
 		logStorageState(tree);
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
