@@ -107,7 +107,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack, MessageTree tree) {
+	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack,
+	      MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = ctx.getBuffer().readByte();
 		String timestamp = helper.read(ctx, TAB);
@@ -494,10 +495,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	static class Context {
+	public static class Context {
 		private ChannelBuffer m_buffer;
 
 		private char[] m_data;
+
+		private int max = 16384 * 1024;
 
 		public Context() {
 			m_data = new char[16384];
@@ -517,7 +520,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public void setData(char[] data) {
-			m_data = data;
+			if (data.length > max) {
+				m_data = new char[max];
+			} else {
+				m_data = data;
+			}
 		}
 	}
 

@@ -43,6 +43,7 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 		if (reports != null && reports.size() > 0) {
 			String xml = reports.get(0).getContent();
 
+			//TODO
 			if (xml != null && xml.length() > 0) {
 				try {
 					netGraphSet = com.dianping.cat.home.nettopo.transform.DefaultSaxParser.parse(xml);

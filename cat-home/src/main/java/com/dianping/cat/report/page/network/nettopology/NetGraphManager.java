@@ -169,11 +169,14 @@ public class NetGraphManager implements Initializable, LogEnabled {
 			try {
 				ModelRequest request = new ModelRequest(group, period);
 				MetricReport report = m_service.invoke(request);
-				MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + inter.getKey() + "-in");
-				MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-out");
 
-				inter.setIn(inItem.findOrCreateSegment(minute).getSum() / 60 * 8);
-				inter.setOut(outItem.findOrCreateSegment(minute).getSum() / 60 * 8);
+				if (report != null) {
+					MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-in");
+					MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-out");
+
+					inter.setIn(inItem.findOrCreateSegment(minute).getSum() / 60 * 8);
+					inter.setOut(outItem.findOrCreateSegment(minute).getSum() / 60 * 8);
+				}
 			} catch (Exception e) {
 				inter.setIn(0.0);
 				inter.setOut(0.0);

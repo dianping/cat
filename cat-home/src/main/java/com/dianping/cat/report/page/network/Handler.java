@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.net.Networks;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -30,6 +32,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -101,6 +104,17 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private Object querySet(Date date){
+		
+		if(date.getTime()>ModelPeriod.LAST.getStartTime()){
+			//query from netManger;
+		}
+		else{
+			//query from db;
+		}
+		return null;
+	}
+	
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.NETWORK);
 
@@ -134,7 +148,18 @@ public class Handler implements PageHandler<Context> {
 			payload.setReportType("hour");
 			int minute = payload.getMinute();
 			Date startTime = null, endTime = null;
-			int curMinute = (int) (System.currentTimeMillis() / 60000 % 60) - 1;
+			
+			long current = System.currentTimeMillis();
+			long currentTime = current - current % TimeUtil.ONE_MINUTE - TimeUtil.ONE_MINUTE;
+			int curMinute = currentTime ;
+			
+			Date start =new Date(current - TimeUtil.ONE_MINUTE*5);
+			Date end = new Date(start.getTime()+TimeUtil.ONE_HOUR-1);
+			
+			
+			model.setStartTime(cal.getTime());
+			
+			int curMinute = (int) (current / 60000 % 60) - 1;
 			if (minute == -1) {
 				if (curMinute == -1) {
 					curMinute = 59;
