@@ -30,7 +30,7 @@ public class BugReportMerger extends DefaultMerger {
 	@Override
 	protected void mergeExceptionItem(ExceptionItem old, ExceptionItem exceptionItem) {
 		old.setCount(old.getCount() + exceptionItem.getCount());
-		old.getMessages().addAll(exceptionItem.getMessages());
+//		old.getMessages().addAll(exceptionItem.getMessages());
 
 		List<String> oldMessages = old.getMessages();
 		List<String> newMessages = exceptionItem.getMessages();

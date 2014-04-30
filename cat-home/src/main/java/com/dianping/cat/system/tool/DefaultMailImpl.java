@@ -116,7 +116,8 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 				content = content.replaceAll(",", " ");
 
 				String value = title + "," + content;
-				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
+//				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
+				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=jialin.sun@dianping.com&to=" + email);
 				URLConnection conn = url.openConnection();
 
 				conn.setDoOutput(true);

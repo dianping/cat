@@ -16,6 +16,7 @@ import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.impl.AlertReportService;
 import com.dianping.cat.report.service.impl.BugReportService;
 import com.dianping.cat.report.service.impl.CrossReportService;
 import com.dianping.cat.report.service.impl.DefaultReportService;
@@ -68,6 +69,9 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		all.add(C(HeavyReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(C(AlertReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
+		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
+		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 
 		all.add(C(TopReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class));
 		all.add(C(DependencyReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class));
@@ -82,7 +86,7 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      .req(MatrixReportService.class,  DependencyReportService.class)
 		      .req(TopReportService.class, StateReportService.class, CrossReportService.class)
 		      .req(HeartbeatReportService.class, MetricReportService.class, BugReportService.class)
-		      .req(HeavyReportService.class, ServiceReportService.class, UtilizationReportService.class));
+		      .req(HeavyReportService.class, AlertReportService.class, ServiceReportService.class, UtilizationReportService.class));
 
 		return all;
 	}

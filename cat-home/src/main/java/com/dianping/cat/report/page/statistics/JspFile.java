@@ -21,7 +21,11 @@ public enum JspFile {
 	
 	BROWSER_HISTORY_REPORT("/jsp/report/browser/browserHistory.jsp"),
 
-	BROWSER_REPORT("/jsp/report/browser/browser.jsp");
+	BROWSER_REPORT("/jsp/report/browser/browser.jsp"),
+	
+	ALERT_HISTORY_REPORT("/jsp/report/exceptionAlert/alertHistory.jsp"),
+	
+	ALERT_REPORT("/jsp/report/exceptionAlert/alert.jsp");
 	
 	private String m_path;
 

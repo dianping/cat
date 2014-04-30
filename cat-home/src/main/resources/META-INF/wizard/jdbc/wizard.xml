@@ -2,11 +2,16 @@
 <wizard package="com.dianping.cat">
    <jdbc package="com.dianping.cat.home.dal" name="cat">
       <datasource>
-         <driver>com.mysql.jdbc.Driver</driver>
+<!--          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://127.0.0.1:3306/cat</url>
          <user>test</user>
          <password>123</password>
-         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties> -->
+         <driver>com.mysql.jdbc.Driver</driver>
+			<url><![CDATA[jdbc:mysql://192.168.8.44:3306/cat]]></url>
+			<user>cat</user>
+			<password>dp!@ZUFMehRDV</password>
+			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
       </datasource>
       <group name="report" package="com.dianping.cat.home.dal.report">
          <table name="event"/>
