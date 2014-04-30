@@ -66,9 +66,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 13;
 
-	private int m_gzipMessageSize = 10000;
+	private int m_gzipMessageSize = 5000;
 
-	private int m_messageBlockSize = 10000;
+	private int m_messageBlockSize = 5000;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
 
@@ -213,7 +213,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		String domain = tree.getDomain();
 
 		m_serverStateManager.addMessageSize(domain, size);
-		m_total++;
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
 
@@ -329,17 +328,15 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		// the message tree of one ip in the same hour should be put in one gzip thread
-		String domain = id.getDomain();
-		String key = domain + id.getIpAddress() + id.getTimestamp();
-		int abs = key.hashCode();
-
-		if (abs < 0) {
-			abs = -abs;
-		}
-		int bucketIndex = abs % m_gzipThreads;
-
-		logStorageState(tree);
-
+		// String domain = id.getDomain();
+		// String key = domain + id.getIpAddress() + id.getTimestamp();
+		// int abs = key.hashCode();
+		//
+		// if (abs < 0) {
+		// abs = -abs;
+		// }
+		m_total++;
+		int bucketIndex = (int) (m_total % m_gzipThreads);
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 		boolean result = items.offer(new MessageItem(tree, id));
 
@@ -351,6 +348,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
+		logStorageState(tree);
 	}
 
 	private class BlockDumper implements Task {
@@ -403,6 +401,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		public BlockingQueue<MessageItem> m_messageQueue;
 
+		private int m_count = -1;
+
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
 			m_messageQueue = messageQueue;
 			m_index = index;
@@ -413,7 +413,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			return "Message-Gzip-" + m_index;
 		}
 
-		private void gzipMessage(MessageItem item) {
+		private void gzipMessage(MessageItem item, boolean monitor) {
+			Transaction t = null;
+
+			if (monitor) {
+				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+				t.setStatus(Transaction.SUCCESS);
+			}
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
@@ -425,6 +431,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket.setBaseDir(m_baseDir);
 					bucket.initialize(dataFile);
 					m_buckets.putIfAbsent(dataFile, bucket);
+					bucket = m_buckets.get(dataFile);
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
@@ -439,6 +446,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 			} catch (Throwable e) {
 				Cat.logError(e);
+			} finally {
+				if (monitor) {
+					t.complete();
+				}
 			}
 		}
 
@@ -449,7 +460,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
-						gzipMessage(item);
+						m_count++;
+						if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
+							gzipMessage(item, true);
+						} else {
+							gzipMessage(item, false);
+						}
 					}
 				}
 			} catch (InterruptedException e) {
