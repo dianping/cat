@@ -26,10 +26,10 @@
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
 							<c:when test="${payload.timeRange eq range.duration}">
-								&nbsp;&nbsp;&nbsp;[ <a href="?${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
 							</c:when>
 							<c:otherwise>
-								&nbsp;&nbsp;&nbsp;[ <a href="?${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
 							</c:otherwise>
 							</c:choose>
 					</c:forEach>
@@ -54,9 +54,9 @@
 					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 					<td class="nav">
 						<c:forEach var="nav" items="${model.navs}">
-							&nbsp;[ <a href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+							&nbsp;[ <a href="${model.baseUri}?op=view&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 						</c:forEach>
-						&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
+						&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=view&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 					</td>
 				</tr>
 			</table>	
@@ -67,10 +67,10 @@
 						<c:forEach var="range" items="${model.allRange}">
 							<c:choose>
 								<c:when test="${payload.timeRange eq range.duration}">
-									&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+									&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
 								</c:when>
 								<c:otherwise>
-									&nbsp;&nbsp;&nbsp;[ <a href="?date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+									&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
 								</c:otherwise>
 								</c:choose>
 						</c:forEach>
@@ -88,7 +88,7 @@
 			             </c:forEach>
 			             
 			             <c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="metric_${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
+			              <li class='nav-header' id="metric_${item.id}"><a href="?op=view&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
 			            </c:forEach>
 		              <li >&nbsp;</li>
 		            </ul>

@@ -102,9 +102,9 @@ public class Handler implements PageHandler<Context> {
 				metricAggregationGroupList.add(entry.getValue());
 			}
 		}
-		String poduct = payload.getProduct();
-
-		if (poduct == null || poduct.length() == 0) {
+		String product = payload.getProduct();
+System.out.println(product);
+		if (product == null || product.length() == 0) {
 
 			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
 				payload.setAction(Action.NETTOPOLOGY.getName());
@@ -113,6 +113,7 @@ public class Handler implements PageHandler<Context> {
 			}
 
 		}
+		System.out.println(payload.getAction());
 
 		model.setMetricAggregationGroup(metricAggregationGroupList);
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
