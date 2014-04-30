@@ -417,7 +417,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			Transaction t = null;
 
 			if (monitor) {
-				t = Cat.newTransaction("Gzip", String.valueOf(m_index));
+				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
 				t.setStatus(Transaction.SUCCESS);
 			}
 			try {
