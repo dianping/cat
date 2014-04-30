@@ -78,8 +78,15 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		StringBuilder baseDir = new StringBuilder(32);
 		FileSystem fs = m_fileSystemManager.getFileSystem("dump", baseDir);
 		Path file = new Path(baseDir.toString(), path);
-		FSDataOutputStream out = fs.create(file);
+		FSDataOutputStream out;
 
+		try {
+			out = fs.create(file);
+		} catch (AlreadyBeingCreatedException e) {
+			fs.delete(file, false);
+
+			out = fs.create(file);
+		}
 		return out;
 	}
 
@@ -247,6 +254,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 				} catch (AlreadyBeingCreatedException e) {
 					Cat.logError(e);
 					t.setStatus(e);
+
 					m_logger.error(String.format("Already being created (%s)!", path), e);
 				} catch (AccessControlException e) {
 					cat.logError(e);

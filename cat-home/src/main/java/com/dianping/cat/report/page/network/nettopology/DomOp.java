@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import com.dianping.cat.Cat;
 
 public class DomOp {
+	
 	private Node node;
 	
 	public DomOp(Node node) {
