@@ -103,7 +103,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		String product = payload.getProduct();
-System.out.println(product);
 		if (product == null || product.length() == 0) {
 
 			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
@@ -113,7 +112,6 @@ System.out.println(product);
 			}
 
 		}
-		System.out.println(payload.getAction());
 
 		model.setMetricAggregationGroup(metricAggregationGroupList);
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
