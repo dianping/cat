@@ -107,7 +107,6 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		return id;
 	}
 
-	@Test
 	public void testManyReadWrite() throws Exception {
 		setup();
 

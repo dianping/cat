@@ -146,6 +146,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getTitle() {
+		if (m_title != null && m_title.length() > 128) {
+			m_title = m_title.substring(0, 128);
+		}
+
 		return m_title;
 	}
 
