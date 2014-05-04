@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -42,7 +41,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	private static final byte LF = '\n'; // line feed character
 
-	@Inject
 	private BufferWriter m_writer = new EscapingBufferWriter();
 
 	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
@@ -379,7 +377,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	void setBufferWriter(BufferWriter writer) {
+	public void reset() {
+		m_ctx.remove();
+	}
+
+	protected void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
