@@ -500,7 +500,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		private char[] m_data;
 
-		private int max = 16384 * 1024;
+		private int max = 16384 * 512;
 
 		public Context() {
 			m_data = new char[16384];
