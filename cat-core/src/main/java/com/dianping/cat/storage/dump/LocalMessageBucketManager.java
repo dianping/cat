@@ -275,8 +275,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						t.setStatus(e);
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
+					} finally {
+						m_buckets.remove(path);
 					}
-					m_buckets.remove(path);
 				} else {
 					try {
 						moveFile(path);

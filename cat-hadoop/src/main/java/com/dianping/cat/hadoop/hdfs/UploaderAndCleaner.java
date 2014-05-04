@@ -14,6 +14,7 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException;
+import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.security.AccessControlException;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -81,6 +82,10 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		FSDataOutputStream out;
 
 		try {
+			out = fs.create(file);
+		} catch (RemoteException re) {
+			fs.delete(file, false);
+
 			out = fs.create(file);
 		} catch (AlreadyBeingCreatedException e) {
 			fs.delete(file, false);
