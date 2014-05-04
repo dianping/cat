@@ -27,18 +27,18 @@ import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
-	public static final String ID = "transaction";
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+
+	@Inject
+	private TransactionDelegate m_delegate;
 
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
 
 	@Inject
-	private TransactionDelegate m_delegate;
-
-	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+	public static final String ID = "transaction";
 
 	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
@@ -67,6 +67,18 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return pair;
+	}
+
+	private double computeDuration(double duration) {
+		if (duration < 20) {
+			return duration;
+		} else if (duration < 200) {
+			return duration - duration % 5;
+		} else if (duration < 2000) {
+			return duration - duration % 50;
+		} else {
+			return duration - duration % 500;
+		}
 	}
 
 	@Override
@@ -203,8 +215,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			}
 		}
 
-		// update statistics
-		Integer allDuration = (int) duration;
+		int allDuration = ((int) computeDuration(duration));
 
 		name.setMax(Math.max(name.getMax(), duration));
 		name.setMin(Math.min(name.getMin(), duration));

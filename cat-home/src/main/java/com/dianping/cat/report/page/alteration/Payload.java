@@ -16,7 +16,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
-	
+
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
 
@@ -49,7 +49,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("ip")
 	private String m_ip;
-	
+
 	@FieldMeta("alterationDate")
 	private String m_alterationDate;
 
@@ -81,17 +81,17 @@ public class Payload extends AbstractReportPayload<Action> {
 	public Action getAction() {
 		if (m_action == null) {
 			return Action.VIEW;
-		}else{
+		} else {
 			return m_action;
 		}
 	}
 
 	public Date getAlterationDate() {
 		try {
-	      return m_sdf.parse(m_alterationDate);
-      } catch (ParseException e) {
-      	return new Date();
-      }
+			return m_sdf.parse(m_alterationDate);
+		} catch (ParseException e) {
+			return new Date();
+		}
 	}
 
 	public String getContent() {
@@ -127,9 +127,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getHostname() {
-		if(m_hostname == null || "".equals(m_hostname)){
+		if (m_hostname == null || "".equals(m_hostname)) {
 			return null;
-		}else{
+		} else {
 			return m_hostname;
 		}
 	}
@@ -145,7 +145,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public Date getStartTime() {
 		if (m_startTime == null || m_startTime.length() == 0) {
-			return new Date(System.currentTimeMillis() - 2 * TimeUtil.ONE_HOUR);
+			return new Date(System.currentTimeMillis() - TimeUtil.ONE_HOUR / 2);
 		} else {
 			try {
 				return m_sdf.parse(m_startTime);
