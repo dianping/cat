@@ -23,6 +23,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	ALERT_REPORT(Constants.REPORT_ALERT),
 	
+	ALERT_REPORT_DETAIL("alertDetail"),
+	
 	ALERT_HISTORY_REPORT("historyAlert");
 
 	private String m_name;

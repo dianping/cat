@@ -25,6 +25,8 @@ public enum JspFile {
 	
 	ALERT_HISTORY_REPORT("/jsp/report/exceptionAlert/alertHistory.jsp"),
 	
+	ALERT_REPORT_DETAIL("/jsp/report/exceptionAlert/exceptionDetail.jsp"),
+	
 	ALERT_REPORT("/jsp/report/exceptionAlert/alert.jsp");
 	
 	private String m_path;

@@ -10,14 +10,14 @@
   </entity>
   <entity name="domain">
     <attribute name="name" value-type="String" key="true" />
-    <attribute name="warn-number" value-type="int" primitive="true" />
-    <attribute name="error-number" value-type="int" primitive="true" />
+    <attribute name="warn-number" value-type="int" primitive="true" method-inc="true"/>
+    <attribute name="error-number" value-type="int" primitive="true" method-inc="true"/>
     <entity-ref name="exception" type="map" names="exceptions" method-find-or-create="true"/>
   </entity>
   <entity name="exception">
     <attribute name="id" value-type="String" key="true" />
-    <attribute name="warn-number" value-type="int" primitive="true" />
-    <attribute name="error-number" value-type="int" primitive="true" />
+    <attribute name="warn-number" value-type="int" primitive="true" method-inc="true"/>
+    <attribute name="error-number" value-type="int" primitive="true" method-inc="true"/>
   </entity>
 </model>
 

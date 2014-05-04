@@ -60,7 +60,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
 	
-	private Map<String, List<com.dianping.cat.home.alertReport.entity.Exception>> m_exceptions;
+	private List<com.dianping.cat.home.alertReport.entity.Domain> m_alertDomains;
+	
+	private List<com.dianping.cat.home.alertReport.entity.Exception> m_alertExceptions;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -220,12 +222,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
 		m_utilizationWebList = utilizationWebList;
 	}
-	
-	public Map<String, List<com.dianping.cat.home.alertReport.entity.Exception>> getExceptions() {
-		return m_exceptions;
+
+	public List<com.dianping.cat.home.alertReport.entity.Domain> getAlertDomains() {
+		return m_alertDomains;
 	}
 
-	public void setExceptions(Map<String, List<com.dianping.cat.home.alertReport.entity.Exception>> exceptions) {
-		m_exceptions = exceptions;
+	public void setAlertDomains(List<com.dianping.cat.home.alertReport.entity.Domain> alertDomains) {
+		m_alertDomains = alertDomains;
 	}
+
+	public List<com.dianping.cat.home.alertReport.entity.Exception> getAlertExceptions() {
+		return m_alertExceptions;
+	}
+
+	public void setAlertExceptions(List<com.dianping.cat.home.alertReport.entity.Exception> alertExceptions) {
+		m_alertExceptions = alertExceptions;
+	}
+
 }

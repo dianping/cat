@@ -1,47 +1,29 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.statistics.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<form name="exceptionConfig" id="form" method="post"
-	action="${model.pageUri}?op=exceptionThresholdUpdateSubmit">
-	<h4 class="text-center text-error" id="state">&nbsp;</h4>
-	<h4 class="text-center text-error">修改异常报警配置信息</h4>
-	<table class="table table-striped table-bordered table-condensed table-hover">
-		<tr>
-			<td width="40%" style="text-align: right" class="text-success">域名</td>
-			<td> <input id="domain" name="exceptionLimit.domain"
-				value="${model.exceptionLimit.domain}" required 
-				<c:if test="${model.exceptionLimit!= null}">
-   					readonly
-				</c:if>
-				/></td>
+
+<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+	<thead>
+		<tr class="odd">
+			<th width="60%">异常</th>
+			<th width="20%">Warning警告</th>
+			<th width="20%">Error警告</th>
 		</tr>
+	</thead>
 	
+	<tbody>
+	<c:forEach var="exception" items="${model.alertExceptions}">	
 		<tr>
-			<td style="text-align: right" class="text-success">异常名称</td>
-			<td><input id="exceptionName" name="exceptionLimit.id"
-				value="${model.exceptionLimit.id}" required 
-				<c:if test="${model.exceptionLimit!= null}">
-   					readonly
-				</c:if>
-				/></td>
+			<td>${exception.id}</td>
+			<td>${exception.warnNumber}</td>
+			<td>${exception.errorNumber}</td>
 		</tr>
-		
-		<tr>
-			<td style="text-align: right" class="text-success">warning阈值</td>
-			<td><input id="warningThreshold" name="exceptionLimit.warning"
-				value="${model.exceptionLimit.warning}" required /></td>
-		</tr>
-		
-		<tr>
-			<td style="text-align: right" class="text-success">error阈值</td>
-			<td><input id="errorThreshold" name="exceptionLimit.error"
-				value="${model.exceptionLimit.error}" required /></td>
-		</tr>
-
-		<tr>
-			<td colspan='2'  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
-				name="submit" value="提交"/></td>
-		</tr>
-	</table>
-</form>
+	</c:forEach>
+	</tbody>
+</table>

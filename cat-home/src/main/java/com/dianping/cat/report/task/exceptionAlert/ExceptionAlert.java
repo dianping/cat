@@ -1,111 +1,88 @@
 package com.dianping.cat.report.task.exceptionAlert;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.hsqldb.lib.StringUtil;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.Context;
-import com.dianping.cat.report.page.dependency.ExternalInfoBuilder;
-import com.dianping.cat.report.page.dependency.Model;
-import com.dianping.cat.report.page.dependency.Payload;
+import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
-import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.AlertConfig;
+import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
-import com.dianping.cat.system.tool.DefaultMailImpl;
+import com.dianping.cat.system.tool.MailSMS;
 
 public class ExceptionAlert implements Task, LogEnabled {
-
-	@Inject
-	private PayloadNormalizer m_normalizePayload;
-
-	@Inject
-	private ExternalInfoBuilder m_externalInfoBuilder;
 
 	@Inject
 	private AlertConfig m_alertConfig;
 
 	@Inject
-	private DefaultMailImpl m_mailSms;
+	private MailSMS m_mailSms;
 
 	@Inject
 	protected ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	private MetricConfigManager m_metricConfigManager;
-
-	@Inject
-	protected ReportService m_reportService;
-
-	@Inject
 	private ExceptionThresholdConfigManager m_configManager;
+
+	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
+	private ModelService<TopReport> m_topService;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
+	private static final int ALERT_PERIOD = 1;
+
+	private static final int WARN_FLAG = 1;
+
+	private static final int ERROR_FLAG = 2;
+
 	private Logger m_logger;
 
-	private void buildAllErrorInfo(Payload payload, Model model) {
-		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
+	private TopMetric buildTopMetric(Date date) {
+		TopReport topReport = queryTopReport(date);
+		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_configManager);
+
+		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
+		topMetric.visitTopReport(topReport);
+		return topMetric;
 	}
 
-	private void normalize(Model model, Payload payload) {
+	private TopReport queryTopReport(Date start) {
+		String domain = Constants.CAT;
+		String date = String.valueOf(start.getTime());
+		ModelRequest request = new ModelRequest(domain, start.getTime()).setProperty("date", date);
 
-		m_normalizePayload.normalize(model, payload);
+		if (m_topService.isEligable(request)) {
+			ModelResponse<TopReport> response = m_topService.invoke(request);
+			TopReport report = response.getModel();
 
-		Integer minute = parseQueryMinute(payload);
-		int maxMinute = 60;
-		List<Integer> minutes = new ArrayList<Integer>();
-
-		if (payload.getPeriod().isCurrent()) {
-			long current = System.currentTimeMillis() / 1000 / 60;
-			maxMinute = (int) (current % (60));
-		}
-		for (int i = 0; i < 60; i++) {
-			minutes.add(i);
-		}
-		model.setMinute(minute);
-		model.setMaxMinute(maxMinute);
-		model.setMinutes(minutes);
-	}
-
-	private int parseQueryMinute(Payload payload) {
-		int minute = 0;
-		String min = payload.getMinute();
-
-		if (StringUtil.isEmpty(min)) {
-			long current = System.currentTimeMillis() / 1000 / 60;
-			minute = (int) (current % (60));
+			return report;
 		} else {
-			minute = Integer.parseInt(min);
+			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
 		}
-
-		return minute;
 	}
 
 	@Override
@@ -127,24 +104,12 @@ public class ExceptionAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				Payload payload = new Payload();
-				payload.setMinuteCounts(5);
-				payload.setTopCounts(Integer.MAX_VALUE);
-				payload.setAction("exceptionAlert");
-				Context ctx = new Context();
-				Model model = new Model(ctx);
-				normalize(model, payload);
-				buildAllErrorInfo(payload, model);
-//				test();
-//				System.out.println(model.getTopMetric().getError().getResult().values());
-				for (Entry<String, List<Item>> item : model.getTopMetric().getError().getResult().entrySet()) {
-					for (Item i : item.getValue()) {
-						if (i.getAlert() > 0) {
-//							sendAlertInfo(i.getDomain(), "Exception Alert !"+ "[" +i.getDomain() + "] : [" + i.getException() , i.getAlert());
-							 System.out.println("alertErrors:" + item.getKey() + ":" + i.getDomain() + ":" +i.getException() + "["+
-							 i.getAlert()+"]");
-						}
-					}
+				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE));
+				Collection<List<Item>> items = topMetric.getError().getResult().values();
+				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
+
+				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
+					sendAlertForDomain(entry.getKey(), entry.getValue());
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
@@ -162,14 +127,46 @@ public class ExceptionAlert implements Task, LogEnabled {
 				active = false;
 			}
 		}
-
 	}
 
-	private void test() throws ParseException {
-		AlertReportBuilder builder = new AlertReportBuilder(m_reportService, m_configManager);
-		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-29 20:00");
-		builder.buildHourlyTask("alert", "Cat", date);
-		
+	private List<AlertException> findOrCreateDomain(Map<String, List<AlertException>> exceptions, String domain) {
+		if (exceptions.get(domain) == null) {
+			List<AlertException> exception = new ArrayList<AlertException>();
+
+			exceptions.put(domain, exception);
+			return exception;
+		}
+		return exceptions.get(domain);
+	}
+
+	private Map<String, List<AlertException>> getAlertExceptions(Collection<List<Item>> items) {
+		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
+
+		for (List<Item> item : items) {
+			for (Item i : item) {
+				String domain = i.getDomain();
+
+				for (Entry<String, Double> entry : i.getException().entrySet()) {
+					double value = entry.getValue().doubleValue();
+					double warnLimit = -1;
+					double errorLimit = -1;
+
+					if (m_configManager != null) {
+						ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(domain, entry.getKey());
+						if (exceptionLimit != null) {
+							warnLimit = exceptionLimit.getWarning();
+							errorLimit = exceptionLimit.getError();
+						}
+					}
+					if (errorLimit > 0 && value > errorLimit) {
+						findOrCreateDomain(alertExceptions, domain).add(new AlertException(domain, ERROR_FLAG, value));
+					} else if (warnLimit > 0 && value > warnLimit) {
+						findOrCreateDomain(alertExceptions, domain).add(new AlertException(domain, WARN_FLAG, value));
+					}
+				}
+			}
+		}
+		return alertExceptions;
 	}
 
 	private ProductLine getProductLineByDomain(String domain) {
@@ -183,20 +180,32 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return null;
 	}
 
-	private void sendAlertInfo(String domain, String content, int alert) {
-		ProductLine productLine = getProductLineByDomain(domain);
+	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
 
+		ProductLine productLine = getProductLineByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-		String title = productLine + ":" + domain + "exception alert !";
+		String title = "[ " + productLine.getId() + ":" + domain + " ] " + "exception alert !";
+		List<String> errorExceptions = new ArrayList<String>();
+		List<String> warnExceptions = new ArrayList<String>();
 
-		m_logger.info(title + " " + content + " " + emails);
-		m_mailSms.sendEmail(title, content, emails);
-		if (alert == 2) {
-			m_mailSms.sendSms(title + " " + content, content, phones);
+		for (AlertException exception : exceptions) {
+			if (exception.getAlertFlag() == WARN_FLAG) {
+				warnExceptions.add(exception.getName());
+			} else if (exception.getAlertFlag() == ERROR_FLAG) {
+				errorExceptions.add(exception.getName());
+			}
 		}
 
-		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
+		String mailContent = "Exception Alert! [" + domain + "] : " + exceptions.toString();
+
+		m_logger.info(title + " " + mailContent + " " + emails);
+		m_mailSms.sendEmail(title, mailContent, emails);
+
+		String smsContent = "Exception Alert! [" + domain + "] : " + errorExceptions.toString();
+
+		m_mailSms.sendSms(title + " " + smsContent, smsContent, phones);
+		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + mailContent);
 	}
 
 	@Override
@@ -211,5 +220,33 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	@Override
 	public void shutdown() {
+	}
+
+	public class AlertException {
+
+		private String m_name;
+
+		private int m_alertFlag;
+
+		private double m_count;
+
+		public AlertException(String name, int alertFlag, double count) {
+			m_name = name;
+			m_alertFlag = alertFlag;
+			m_count = count;
+		}
+
+		@Override
+		public String toString() {
+			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
+		}
+
+		public int getAlertFlag() {
+			return m_alertFlag;
+		}
+
+		public String getName() {
+			return m_name;
+		}
 	}
 }

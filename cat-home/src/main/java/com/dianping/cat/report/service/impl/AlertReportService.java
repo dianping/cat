@@ -1,7 +1,5 @@
 package com.dianping.cat.report.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -79,14 +77,6 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 	@Override
 	public AlertReport queryHourlyReport(String domain, Date start, Date end) {
 		AlertReportMerger merger = new AlertReportMerger(new AlertReport(domain));
-		try {
-	      Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-29 20:00");
-	      start = date;
-	      end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-      } catch (ParseException e1) {
-	      // TODO Auto-generated catch block
-	      e1.printStackTrace();
-      }
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		String name = Constants.REPORT_ALERT;

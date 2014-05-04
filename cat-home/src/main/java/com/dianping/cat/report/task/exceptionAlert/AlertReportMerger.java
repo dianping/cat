@@ -13,14 +13,14 @@ public class AlertReportMerger extends DefaultMerger {
 	
 	@Override
    public void mergeException(Exception old, Exception from) {
-		old.setWarnNumber(old.getWarnNumber() + from.getWarnNumber());
-		old.setErrorNumber(old.getErrorNumber() + from.getErrorNumber());
+		old.incErrorNumber(from.getErrorNumber());
+		old.incWarnNumber(from.getWarnNumber());
 	}
 	
 	@Override
    public void mergeDomain(Domain old, Domain from) {
-		old.setWarnNumber(old.getWarnNumber() + from.getWarnNumber());
-		old.setErrorNumber(old.getErrorNumber() + from.getErrorNumber());
+		old.incErrorNumber(from.getErrorNumber());
+		old.incWarnNumber(from.getWarnNumber());
 	}
 	
 	@Override
