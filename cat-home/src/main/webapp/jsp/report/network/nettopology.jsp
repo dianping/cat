@@ -45,6 +45,9 @@
 		.topology {
 	width: 600px;
 	}
+	.row-fluid {
+	min-width: 1200px;
+}	
 	</style>
 	</c:when>
 	<c:otherwise>
@@ -115,13 +118,13 @@
 .topology {
 	width: 520px;
 	}
+	.row-fluid {
+	min-width: 1300px;
+}	
 	</style>
 				</c:otherwise>
 </c:choose>
 			<style type="text/css">
-.row-fluid {
-	min-width: 1200px;
-}			
 
 .topology {
 	text-align: center;
