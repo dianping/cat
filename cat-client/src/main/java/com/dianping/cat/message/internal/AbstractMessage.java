@@ -131,6 +131,7 @@ public abstract class AbstractMessage implements Message {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.encodeMessage(this, buf);
+		codec.reset();
 		return buf.toString(Charset.forName("utf-8"));
 	}
 }
