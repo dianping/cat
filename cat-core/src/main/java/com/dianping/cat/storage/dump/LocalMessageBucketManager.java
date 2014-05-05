@@ -102,13 +102,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	public void close() throws IOException {
-		for (LocalMessageBucket bucket : m_buckets.values()) {
-			bucket.close();
-		}
-		m_buckets.clear();
-	}
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -275,8 +268,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						t.setStatus(e);
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
+					} finally {
+						m_buckets.remove(path);
 					}
-					m_buckets.remove(path);
 				} else {
 					try {
 						moveFile(path);
@@ -327,14 +321,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		// the message tree of one ip in the same hour should be put in one gzip thread
-		// String domain = id.getDomain();
-		// String key = domain + id.getIpAddress() + id.getTimestamp();
-		// int abs = key.hashCode();
-		//
-		// if (abs < 0) {
-		// abs = -abs;
-		// }
 		m_total++;
 		int bucketIndex = (int) (m_total % m_gzipThreads);
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
@@ -427,11 +413,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				LocalMessageBucket bucket = m_buckets.get(dataFile);
 
 				if (bucket == null) {
-					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-					bucket.setBaseDir(m_baseDir);
-					bucket.initialize(dataFile);
-					m_buckets.putIfAbsent(dataFile, bucket);
-					bucket = m_buckets.get(dataFile);
+					synchronized (m_buckets) {
+						bucket = m_buckets.get(dataFile);
+						if (bucket == null) {
+							bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+							bucket.setBaseDir(m_baseDir);
+							bucket.initialize(dataFile);
+							m_buckets.putIfAbsent(dataFile, bucket);
+							bucket = m_buckets.get(dataFile);
+						}
+					}
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
