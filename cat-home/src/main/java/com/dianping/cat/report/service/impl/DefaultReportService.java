@@ -38,6 +38,7 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
+import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.service.ReportService;
@@ -112,6 +113,9 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private UtilizationReportService m_utilizationReportService;
+	
+	@Inject
+	private NetTopologyReportService m_netTopologyReportService;
 
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
@@ -270,6 +274,11 @@ public class DefaultReportService implements ReportService {
 	@Override
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
 		return m_utilizationReportService.queryReport(domain, start, end);
+	}
+	
+	@Override
+	public NetGraphSet queryNetTopologyReport(String domain, Date start, Date end) {
+		return m_netTopologyReportService.queryHourlyReport(domain, start, end);
 	}
 
 	@Override

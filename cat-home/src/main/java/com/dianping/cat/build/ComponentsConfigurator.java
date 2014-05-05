@@ -145,11 +145,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class));		
+		all.add(C(NetGraphManager.class).req(ServerConfigManager.class).req(RemoteMetricReportService.class)
+		      .req(ReportService.class));
 		
 		all.add(C(ExceptionAlert.class).req(AlertConfig.class,MailSMS.class, ProductLineConfigManager.class,
 				ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
-		
-		all.add(C(NetGraphManager.class).req(ServerConfigManager.class).req(RemoteMetricReportService.class));
 		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

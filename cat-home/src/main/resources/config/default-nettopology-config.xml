@@ -1,51 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nettopogys>
-	<nettopogy name="南汇机房">
-		<anchors>
-			<anchor name="CTC" x="320" y="20" />
-			<anchor name="CNC" x="130" y="20" />
-			<anchor name="HM" x="460" y="400" />
-		</anchors>
-		<switchs>
-			<switch name="QW-E8030" x="320" y="100" />
-			<switch name="ADS-1600" x="130" y="100" />
-			<switch name="C3750-CTC" x="320" y="200" />
-			<switch name="C3750-CNC" x="130" y="200" />
-			<switch name="F5v2400-1" x="320" y="300" />
-			<switch name="F5v2400-2" x="130" y="300" />
-			<switch name="N7K-1" x="320" y="400" />
-			<switch name="N7K-2" x="130" y="400" />
-			<switch name="N5K-1" x="320" y="500" />
-			<switch name="N5K-2" x="130" y="500" />
-		</switchs>
-		<connections>
-			<connection first="CTC" second="QW-E8030">
-				<seconddata>
+<netGraphSet>
+	<netGraph>
+		<netTopology name="南汇机房">
+			<anchors>
+				<anchor name="CTC" x="320" y="20" />
+				<anchor name="CNC" x="130" y="20" />
+				<anchor name="HM" x="460" y="400" />
+			</anchors>
+			<switchs>
+				<switch name="QW-E8030" x="320" y="100" state="1" />
+				<switch name="ADS-1600" x="130" y="100" />
+				<switch name="C3750-CTC" x="320" y="200" />
+				<switch name="C3750-CNC" x="130" y="200" />
+				<switch name="F5v2400-1" x="320" y="300" />
+				<switch name="F5v2400-2" x="130" y="300" />
+				<switch name="N7K-1" x="320" y="400" />
+				<switch name="N7K-2" x="130" y="400" />
+				<switch name="N5K-1" x="320" y="500" />
+				<switch name="N5K-2" x="130" y="500" />
+			</switchs>
+			<connections>
+				<connection from="QW-E8030" to="CTC" state="1">
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
-						key="GigabitEthernet1/0/0" inwarnning="200M" inserious="400M"
-						outwarnning="300M" outserious="600M" />
+						key="GigabitEthernet1/0/0" state="1" />
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
-						key="GigabitEthernet1/0/2" inwarnning="200M" inserious="400M"
-						outwarnning="300M" outserious="600M" />
+						key="GigabitEthernet1/0/2" />
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
-						key="GigabitEthernet1/0/4" inwarnning="200M" inserious="400M"
-						outwarnning="300M" outserious="600M" />
+						key="GigabitEthernet1/0/4" />
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
-						key="GigabitEthernet1/0/6" inwarnning="200M" inserious="400M"
-						outwarnning="300M" outserious="600M" />
-				</seconddata>
-			</connection>
-			<connection first="CNC" second="ADS-1600">
-			</connection>
-			<connection first="HM" second="N7K-1">
-				<seconddata>
+						key="GigabitEthernet1/0/6" />
+				</connection>
+				<connection from="ADS-1600" to="CNC">
+				</connection>
+				<connection from="ADS-1600" to="C3750-CNC">
+				</connection>
+				<connection from="C3750-CNC" to="ADS-1600">
+				</connection>
+				<connection from="N7K-1" to="HM">
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
-						key="Ethernet3/16" inwarnning="1.6G" inserious="1.8G" outwarnning="1.6G"
-						outserious="1.8G" />
-				</seconddata>
-			</connection>
-			<connection first="QW-E8030" second="C3750-CTC">
-				<firstdata>
+						key="Ethernet3/16" />
+				</connection>
+				<connection from="QW-E8030" to="C3750-CTC">
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/1" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
@@ -58,8 +53,8 @@
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/7" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="C3750-CTC" to="QW-E8030">
 					<interface group="switch-3750G-CTC" domain="3750G-CTC"
 						key="GigabitEthernet1/0/1" inwarnning="200M" inserious="400M"
 						outwarnning="300M" outserious="600M" />
@@ -72,20 +67,16 @@
 					<interface group="switch-3750G-CTC" domain="3750G-CTC"
 						key="GigabitEthernet2/0/2" inwarnning="200M" inserious="400M"
 						outwarnning="300M" outserious="600M" />
-				</seconddata>
-			</connection>
-			<connection first="ADS-1600" second="C3750-CNC">
-				<seconddata>
+				</connection>
+				<connection from="ADS-1600C3750-CNC" to="ADS-1600">
 					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
 						key="GigabitEthernet1/0/1" inwarnning="100M" inserious="200M"
 						outwarnning="300M" outserious="500M" />
 					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
 						key="GigabitEthernet1/0/2" inwarnning="100M" inserious="200M"
 						outwarnning="300M" outserious="500M" />
-				</seconddata>
-			</connection>
-			<connection first="C3750-CTC" second="F5v2400-1">
-				<firstdata>
+				</connection>
+				<connection from="C3750-CTC" to="F5v2400-1">
 					<interface group="switch-3750G-CTC" domain="3750G-CTC"
 						key="GigabitEthernet1/0/5" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
@@ -98,8 +89,8 @@
 					<interface group="switch-3750G-CTC" domain="3750G-CTC"
 						key="GigabitEthernet2/0/8" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="F5v2400-1" to="C3750-CTC">
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-1" inwarnning="200M" inserious="400M" outwarnning="300M"
 						outserious="600M" />
@@ -112,21 +103,17 @@
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-8" inwarnning="200M" inserious="400M" outwarnning="300M"
 						outserious="600M" />
-				</seconddata>
-			</connection>
-			<connection first="C3750-CNC" second="F5v2400-2">
-				<firstdata>
+				</connection>
+				<connection from="C3750-CNC" to="F5v2400-2">
 					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
-						key="GigabitEthernet1/0/7" inwarnning="300M" inserious="500M"
+						key="GigabitEthernet2/0/7" inwarnning="300M" inserious="500M"
 						outwarnning="100M" outserious="200M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="F5v2400-2" to="C3750-CNC">
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-7" />
-				</seconddata>
-			</connection>
-			<connection first="C3750-CTC" second="F5v2400-2">
-				<firstdata>
+				</connection>
+				<connection from="C3750-CTC" to="F5v2400-2">
 					<interface group="switch-3750G-CTC" domain="3750G-CTC"
 						key="GigabitEthernet1/0/8" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
@@ -139,8 +126,8 @@
 					<interface group="switch-3750G-CTC" domain="3750G-CTC"
 						key="GigabitEthernet2/0/9" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="F5v2400-2" to="C3750-CTC">
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-1" />
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
@@ -149,54 +136,46 @@
 						key="1/1-6" />
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-8" />
-				</seconddata>
-			</connection>
-			<connection first="C3750-CNC" second="F5v2400-1">
-				<firstdata>
+				</connection>
+				<connection from="C3750-CNC" to="F5v2400-1">
 					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
-						key="GigabitEthernet2/0/7" inwarnning="300M" inserious="500M"
+						key="GigabitEthernet1/0/7" inwarnning="300M" inserious="500M"
 						outwarnning="100M" outserious="200M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="F5v2400-1" to="C3750-CNC">
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-7" inwarnning="200M" inserious="400M" outwarnning="300M"
 						outserious="600M" />
-				</seconddata>
-			</connection>
-			<connection first="F5v2400-1" second="N7K-1">
-				<firstdata>
+				</connection>
+				<connection from="F5v2400-1" to="N7K-1">
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-3" inwarnning="300M" inserious="600M" outwarnning="200M"
 						outserious="400M" />
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-4" inwarnning="300M" inserious="600M" outwarnning="200M"
 						outserious="400M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="N7K-1" to="F5v2400-1">
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
 						key="Ethernet3/25" inwarnning="1.6G" inserious="1.8G" outwarnning="1.6G"
 						outserious="1.8G" />
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
 						key="Ethernet3/26" inwarnning="1.6G" inserious="1.8G" outwarnning="1.6G"
 						outserious="1.8G" />
-				</seconddata>
-			</connection>
-			<connection first="F5v2400-2" second="N7K-2">
-				<firstdata>
+				</connection>
+				<connection from="F5v2400-2" to="N7K-2">
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-3" />
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-4" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="N7K-2" to="F5v2400-2">
 					<interface group="switch-SH-N7010-B" domain="SH-N7010-B"
 						key="Ethernet3/25" />
 					<interface group="switch-SH-N7010-B" domain="SH-N7010-B"
 						key="Ethernet3/26" />
-				</seconddata>
-			</connection>
-			<connection first="N7K-1" second="N7K-2">
-				<firstdata>
+				</connection>
+				<connection from="N7K-1" to="N7K-2">
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
 						key="Ethernet3/1" inwarnning="2G" inserious="4G" outwarnning="100M"
 						outserious="200M" />
@@ -209,8 +188,8 @@
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
 						key="Ethernet3/4" inwarnning="2G" inserious="4G" outwarnning="100M"
 						outserious="200M" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="N7K-2" to="N7K-1">
 					<interface group="switch-SH-N7010-B" domain="SH-N7010-B"
 						key="Ethernet3/1" inwarnning="100M" inserious="200M" outwarnning="2G"
 						outserious="4G" />
@@ -223,34 +202,28 @@
 					<interface group="switch-SH-N7010-B" domain="SH-N7010-B"
 						key="Ethernet3/4" inwarnning="100M" inserious="200M" outwarnning="2G"
 						outserious="4G" />
-				</seconddata>
-			</connection>
-			<connection first="N7K-1" second="N5K-1">
-				<firstdata>
+				</connection>
+				<connection from="N7K-1" to="N5K-1">
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
 						key="Ethernet3/32" inwarnning="4G" inserious="5G" outwarnning="4G"
 						outserious="5G" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="N5K-1" to="N7K-1">
 					<interface group="switch-SH-N5596UP-1" domain="SH-N5596UP-1"
 						key="Ethernet1/43" inwarnning="4G" inserious="5G" outwarnning="4G"
 						outserious="5G" />
-				</seconddata>
-			</connection>
-			<connection first="N7K-2" second="N5K-2">
-				<firstdata>
+				</connection>
+				<connection from="N7K-2" to="N5K-2">
 					<interface group="switch-SH-N7010-B" domain="SH-N7010-B"
 						key="Ethernet3/32" inwarnning="4G" inserious="5G" outwarnning="4G"
 						outserious="5G" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="N5K-2" to="N7K-2">
 					<interface group="switch-SH-N5596UP-2-B03" domain="SH-N5596UP-2-B03"
 						key="Ethernet1/43" inwarnning="4G" inserious="5G" outwarnning="4G"
 						outserious="5G" />
-				</seconddata>
-			</connection>
-			<connection first="N5K-1" second="N5K-2">
-				<firstdata>
+				</connection>
+				<connection from="N5K-1" to="N5K-2">
 					<interface group="switch-SH-N5596UP-1" domain="SH-N5596UP-1"
 						key="Ethernet1/45" />
 					<interface group="switch-SH-N5596UP-1" domain="SH-N5596UP-1"
@@ -259,8 +232,8 @@
 						key="Ethernet1/47" />
 					<interface group="switch-SH-N5596UP-1" domain="SH-N5596UP-1"
 						key="Ethernet1/48" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="N5K-2" to="N5K-1">
 					<interface group="switch-SH-N5596UP-2-B03" domain="SH-N5596UP-2-B03"
 						key="Ethernet1/45" />
 					<interface group="switch-SH-N5596UP-2-B03" domain="SH-N5596UP-2-B03"
@@ -269,146 +242,120 @@
 						key="Ethernet1/47" />
 					<interface group="switch-SH-N5596UP-2-B03" domain="SH-N5596UP-2-B03"
 						key="Ethernet1/48" />
-				</seconddata>
-			</connection>
-		</connections>
-	</nettopogy>
-	<nettopogy name="宝山机房">
-		<anchors>
-			<anchor name="CTC" x="160" y="70" />
-			<anchor name="NH1" x="20" y="350" />
-			<anchor name="NH2" x="490" y="350" />
-		</anchors>
-		<switchs>
-			<switch name="C3750G" x="160" y="150" />
-			<switch name="F5S3600-1" x="160" y="250" />
-			<switch name="F5S3600-2" x="350" y="250" />
-			<switch name="H12508-1" x="160" y="350" />
-			<switch name="H12508-2" x="350" y="350" />
-			<switch name="Hadoop1" x="160" y="450" />
-			<switch name="Hadoop2" x="350" y="450" />
-		</switchs>
-		<connections>
-			<connection first="CTC" second="C3750G">
-				<firstdata>
-				</firstdata>
-				<seconddata>
+				</connection>
+			</connections>
+		</netTopology>
+		<netTopology name="宝山机房">
+			<anchors>
+				<anchor name="CTC" x="160" y="70" />
+				<anchor name="NH1" x="20" y="350" />
+				<anchor name="NH2" x="490" y="350" />
+			</anchors>
+			<switchs>
+				<switch name="C3750G" x="160" y="150" />
+				<switch name="F5S3600-1" x="160" y="250" />
+				<switch name="F5S3600-2" x="350" y="250" />
+				<switch name="H12508-1" x="160" y="350" />
+				<switch name="H12508-2" x="350" y="350" />
+				<switch name="Hadoop1" x="160" y="450" />
+				<switch name="Hadoop2" x="350" y="450" />
+			</switchs>
+			<connections>
+				<connection from="C3750G" to="CTC">
 					<interface group="switch-SH-HM-C3750G" domain="SH-HM-C3750G"
 						key="GigabitEthernet1/0/11" />
 					<interface group="switch-SH-HM-C3750G" domain="SH-HM-C3750G"
 						key="GigabitEthernet2/0/11" />
-				</seconddata>
-			</connection>
-			<connection first="NH1" second="H12508-1">
-				<firstdata>
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="H12508-1" to="NH1">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="GigabitEthernet1/4/0/47" />
-				</seconddata>
-			</connection>
-			<connection first="NH2" second="H12508-2">
-				<firstdata>
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="H12508-2" to="NH2">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="GigabitEthernet2/4/0/47" />
-				</seconddata>
-			</connection>
-			<connection first="C3750G" second="F5S3600-1">
-				<firstdata>
+				</connection>
+				<connection from="C3750G" to="F5S3600-1">
 					<interface group="switch-SH-HM-C3750G" domain="SH-HM-C3750G"
 						key="GigabitEthernet1/0/2" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="F5S3600-1" to="C3750G">
 					<interface group="f5-3600-1-dianping-com" domain="3600-1-dianping-com"
 						key="1-1" />
-				</seconddata>
-			</connection>
-			<connection first="C3750G" second="F5S3600-2">
-				<firstdata>
+				</connection>
+				<connection from="C3750G" to="F5S3600-2">
 					<interface group="switch-SH-HM-C3750G" domain="SH-HM-C3750G"
 						key="GigabitEthernet2/0/2" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="F5S3600-2" to="C3750G">
 					<interface group="f5-3600-2-dianping-com" domain="3600-2-dianping-com"
 						key="1-1" />
-				</seconddata>
-			</connection>
-			<connection first="F5S3600-1" second="H12508-1">
-				<firstdata>
+				</connection>
+				<connection from="F5S3600-1" to="H12508-1">
 					<interface group="f5-3600-1-dianping-com" domain="3600-1-dianping-com"
 						key="1-3" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="H12508-1" to="F5S3600-1">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="GigabitEthernet1/4/0/45" />
-				</seconddata>
-			</connection>
-			<connection first="F5S3600-2" second="H12508-2">
-				<firstdata>
+				</connection>
+				<connection from="F5S3600-2" to="H12508-2">
 					<interface group="f5-3600-2-dianping-com" domain="3600-2-dianping-com"
 						key="1-3" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="H12508-2" to="F5S3600-2">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="GigabitEthernet2/4/0/45" />
-				</seconddata>
-			</connection>
-			<connection first="H12508-1" second="H12508-2">
-				<firstdata>
+				</connection>
+				<connection from="H12508-1" to="H12508-2">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="GigabitEthernet1/4/0/48" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="H12508-2" to="H12508-1">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="GigabitEthernet2/4/0/48" />
-				</seconddata>
-			</connection>
-			<connection first="H12508-1" second="Hadoop1">
-				<firstdata>
+				</connection>
+				<connection from="H12508-1" to="Hadoop1">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="Ten-GigabitEthernet1/2/0/32" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="Hadoop1" to="H12508-1">
 					<interface group="switch-S5830_irf" domain="S5830_irf"
-						key="Ten-GigabitEthernet3/0/52" />
-				</seconddata>
-			</connection>
-			<connection first="H12508-2" second="Hadoop2">
-				<firstdata>
+						key="Ten-GigabitEthernet4/0/52" />
+				</connection>
+				<connection from="H12508-2" to="Hadoop2">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="Ten-GigabitEthernet2/2/0/3" />
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="Ten-GigabitEthernet2/2/0/4" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="Hadoop2" to="H12508-2">
 					<interface group="switch-S5830-IRF_2" domain="S5830-IRF_2"
 						key="Ten-GigabitEthernet3/0/51" />
 					<interface group="switch-S5830-IRF_2" domain="S5830-IRF_2"
 						key="Ten-GigabitEthernet4/0/51" />
-				</seconddata>
-			</connection>
-			<connection first="H12508-2" second="Hadoop1">
-				<firstdata>
+				</connection>
+				<connection from="H12508-2" to="Hadoop1">
 					<interface group="switch-S12508-1" domain="S12508-1"
 						key="Ten-GigabitEthernet2/2/0/32" />
-				</firstdata>
-				<seconddata>
+				</connection>
+				<connection from="Hadoop1" to="H12508-2">
 					<interface group="switch-S5830_irf" domain="S5830_irf"
-						key="Ten-GigabitEthernet4/0/52" />
-				</seconddata>
-			</connection>
-			<connection first="H12508-2" second="Hadoop1">
-				<firstdata>
+						key="Ten-GigabitEthernet3/0/52" />
+				</connection>
+				<connection from="H12508-1" to="Hadoop2">
 					<interface group="switch-S12508-1" domain="S12508-1"
-						key="Ten-GigabitEthernet2/2/0/32" />
-				</firstdata>
-				<seconddata>
+						key="Ten-GigabitEthernet1/2/0/3" />
+					<interface group="switch-S12508-1" domain="S12508-1"
+						key="Ten-GigabitEthernet1/2/0/4" />
+				</connection>
+				<connection from="Hadoop2" to="H12508-1">
 					<interface group="switch-S5830-IRF_2" domain="S5830-IRF_2"
-						key="Ten-GigabitEthernet4/0/51" />
-				</seconddata>
-			</connection>
-		</connections>
-	</nettopogy>
-</nettopogys>
+						key="Ten-GigabitEthernet1/0/51" />
+					<interface group="switch-S5830-IRF_2" domain="S5830-IRF_2"
+						key="Ten-GigabitEthernet2/0/51" />
+				</connection>
+			</connections>
+		</netTopology>
+	</netGraph>
+</netGraphSet>
