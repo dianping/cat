@@ -156,7 +156,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				LocalMessageBucket bucket = m_buckets.get(dataFile);
 
 				if (bucket != null) {
-					// flush the buffer if have data
 					MessageBlock block = bucket.flushBlock();
 
 					if (block != null) {
@@ -282,6 +281,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_logger.error(e.getMessage(), e);
 					} finally {
 						m_buckets.remove(path);
+						release(bucket);
 					}
 				} else {
 					try {

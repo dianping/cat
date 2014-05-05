@@ -44,7 +44,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	private Map<String, HdfsMessageBucket> m_buckets = new ConcurrentHashMap<String, HdfsMessageBucket>();
 
-	void closeIdleBuckets() throws IOException {
+	private void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
 		long hour = 3600 * 1000L;
 		Set<String> closed = new HashSet<String>();
@@ -62,7 +62,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			}
 		}
 		for (String close : closed) {
-			m_buckets.remove(close);
+			HdfsMessageBucket bucket = m_buckets.remove(close);
+
+			release(bucket);
 		}
 	}
 
