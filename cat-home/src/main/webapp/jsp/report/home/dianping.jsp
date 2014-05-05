@@ -4,12 +4,20 @@
 </br>
 <h4 class="text-error">【2014-04-10】</h4>
 
+<img  class="img-polaroid"  width='80%' src="${model.webapp}/images/projectUpdate.png"/>
+
+</br>
+<a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/s/config">修改项目分组【修改连接】</a>
+
+</br>
+</br>
 </br>
 <h4 class="text-error">CAT监控内部</h4>
 <div>
-	<a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/s/config">修改项目分组</a>
-	<a id="navdashboard" class="btn  btn-small btn-primary" href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">应用监控仪表盘</a>
-	<a id="navbussiness" class="btn  btn-small btn-primary" href="/cat/r/metric?op=dashboard&domain=${model.domain}&date=${model.date}">业务监控仪表盘</a>
+	<a id="navmetricDashboard" class="btn btn-small btn-primary" href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">系统报错大盘</a>
+	<a id="navdashboard" class="btn btn-small btn-primary" href="/cat/r/dependency?op=dashboard&domain=${model.domain}">应用监控盘</a>
+	<a id="navbussiness" class="btn btn-small btn-primary" href="/cat/r/metric?op=dashboard&domain=${model.domain}">业务监控大盘</a>
+	<a id="navbussiness" class="btn btn-small btn-primary" href="/cat/r/network?op=dashboard&domain=${model.domain}">网络监控大盘</a>
 </div>
 </br>
 <h4 class="text-error">CAT其他环境</h4>
