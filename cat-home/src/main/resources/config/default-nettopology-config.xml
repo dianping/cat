@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <netGraphSet>
-	<netGraph>
+	<netGraph minute="0">
 		<netTopology name="南汇机房">
 			<anchors>
 				<anchor name="CTC" x="320" y="20" />

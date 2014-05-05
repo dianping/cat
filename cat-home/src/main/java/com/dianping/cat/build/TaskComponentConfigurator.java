@@ -21,6 +21,8 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
+import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
+import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
@@ -37,6 +39,8 @@ import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.metric.MetricPointParser;
+import com.dianping.cat.report.task.metric.RemoteMetricReportService;
+import com.dianping.cat.report.task.network.NetTopologyReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -102,8 +106,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
 
 		all.add(C(AlertReportBuilder.class).req(ReportService.class, ExceptionThresholdConfigManager.class));
-		
+
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
+
+		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetGraphManager.class));
 
 		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class,
 		      ServerConfigManager.class, DomainManager.class));
@@ -111,12 +117,19 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DependencyReportBuilder.class).req(ReportService.class, TopologyGraphBuilder.class,
 		      TopologyGraphDao.class));
 
+		all.add(C(NetGraphBuilder.class));
+
+		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
+		      ReportService.class, NetGraphBuilder.class));
+
+		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetTopologyReportBuilder.class));
+
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
 		            StateReportBuilder.class, DependencyReportBuilder.class, BugReportBuilder.class,
 		            ServiceReportBuilder.class, MetricBaselineReportBuilder.class, HeavyReportBuilder.class,
-		            AlertReportBuilder.class, UtilizationReportBuilder.class));
+		            AlertReportBuilder.class, UtilizationReportBuilder.class, NetTopologyReportBuilder.class));
 
 		return all;
 	}
