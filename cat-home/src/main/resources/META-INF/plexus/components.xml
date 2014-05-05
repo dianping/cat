@@ -1576,7 +1576,7 @@
 					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3075,9 +3075,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3142,7 +3139,7 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3152,15 +3149,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.HourlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

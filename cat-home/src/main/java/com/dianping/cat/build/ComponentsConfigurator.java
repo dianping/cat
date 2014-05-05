@@ -17,7 +17,6 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -143,7 +142,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(RemoteMetricReportService.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class).req(RemoteMetricReportService.class)
-		      .req(HourlyReportDao.class));
+		      .req(ReportService.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

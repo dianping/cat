@@ -47,7 +47,7 @@
 				</div>
 			<style type="text/css">
 .topology {
-	width: 620px;
+	width: 600px;
 	}
 	</style>
 	</c:when>
@@ -131,6 +131,10 @@
 				</c:otherwise>
 </c:choose>
 			<style type="text/css">
+.row-fluid {
+	min-width: 1200px;
+}			
+
 .row-fluid .span2 {
 	width: 10%;
 }
