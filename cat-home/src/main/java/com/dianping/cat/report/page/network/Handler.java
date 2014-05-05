@@ -102,16 +102,15 @@ public class Handler implements PageHandler<Context> {
 				metricAggregationGroupList.add(entry.getValue());
 			}
 		}
-		String poduct = payload.getProduct();
-
-		if (poduct == null || poduct.length() == 0) {
-
+		String product = payload.getProduct();
+		
+		if (product == null || product.length() == 0) {
+			
 			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
 				payload.setAction(Action.NETTOPOLOGY.getName());
 			} else {
 				payload.setAction(Action.AGGREGATION.getName());
 			}
-
 		}
 
 		model.setMetricAggregationGroup(metricAggregationGroupList);
