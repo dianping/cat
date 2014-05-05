@@ -109,8 +109,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
 
-		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetGraphManager.class));
-
 		all.add(C(UtilizationReportBuilder.class).req(ReportService.class, TransactionMergeManager.class,
 		      ServerConfigManager.class, DomainManager.class));
 
@@ -122,7 +120,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportService.class, NetGraphBuilder.class));
 
-		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetTopologyReportBuilder.class));
+		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetGraphBuilder.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
