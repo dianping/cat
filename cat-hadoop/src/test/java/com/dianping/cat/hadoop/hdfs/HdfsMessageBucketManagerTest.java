@@ -69,8 +69,6 @@ public class HdfsMessageBucketManagerTest extends ComponentTestCase {
 			localManager.storeMessage(tree,id);
 		}
 
-		localManager.close();
-
 		for (int i = 0; i < num; i++) {
 			String messageId = "source-7f000001-373203-" + i;
 			MessageTree tree = hdfsManager.loadMessage(messageId);

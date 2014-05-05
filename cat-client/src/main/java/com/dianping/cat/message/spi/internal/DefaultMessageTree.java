@@ -33,7 +33,7 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadId;
 
 	private String m_threadName;
-	
+
 	@Override
 	public MessageTree copy() {
 		MessageTree tree = new DefaultMessageTree();
@@ -184,6 +184,7 @@ public class DefaultMessageTree implements MessageTree {
 
 		codec.encode(this, buf);
 		buf.readInt(); // get rid of length
+		codec.reset();
 		return buf.toString(Charset.forName("utf-8"));
 	}
 }
