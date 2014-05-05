@@ -574,6 +574,10 @@
 		<component>
 			<role>com.dianping.cat.report.service.impl.NetTopologyReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.NetTopologyReportService</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.AlertReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.AlertReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -712,6 +716,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.HeavyReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.AlertReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.ServiceReportService</role>
@@ -939,6 +946,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.exceptionAlert.AlertReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.exceptionAlert.AlertReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
@@ -1019,6 +1038,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.exceptionAlert.AlertReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
@@ -1539,6 +1561,15 @@
 			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.tool.DefaultMailImpl</role>
+			<implementation>com.dianping.cat.system.tool.DefaultMailImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.metric.MetricAlert</role>
 			<implementation>com.dianping.cat.report.task.metric.MetricAlert</implementation>
 			<requirements>
@@ -1562,6 +1593,28 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.exceptionAlert.ExceptionAlert</role>
+			<implementation>com.dianping.cat.report.task.exceptionAlert.ExceptionAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>top</role-hint>
 				</requirement>
 			</requirements>
 		</component>

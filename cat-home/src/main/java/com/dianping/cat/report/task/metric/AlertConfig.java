@@ -19,8 +19,9 @@ public class AlertConfig {
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> emails = new ArrayList<String>();
 		String emailList = productLine.getEmail();
-
+		
 		emails.add("yong.you@dianping.com");
+		emails.add("jialin.sun@dianping.com");
 		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
 		return emails;
 	}
@@ -38,6 +39,7 @@ public class AlertConfig {
 
 		phones.add("18616671676");
 		phones.add("13858086694");
+		phones.add("15201789489");
 		return phones;
 	}
 

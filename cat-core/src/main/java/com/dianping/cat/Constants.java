@@ -25,4 +25,6 @@ public class Constants {
 	
 	public static final String REPORT_NET_TOPOLOGY = "NetTopology";
 
+	public static final String REPORT_ALERT = "alert";
+
 }

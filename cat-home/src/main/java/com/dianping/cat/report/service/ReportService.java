@@ -17,6 +17,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.home.alertReport.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
@@ -46,6 +47,8 @@ public interface ReportService {
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
 
 	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
+	
+	public AlertReport queryAlertReport(String domain, Date start, Date end);
 
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
 

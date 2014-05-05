@@ -42,4 +42,7 @@
    <model package="com.dianping.cat.home.netgraph" name="netgraph">
       <sample-model>src/main/resources/config/default-nettopology-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.alertReport" name="alert-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/task/exceptionAlert/alert-report.xml</sample-model>
+   </model>
 </wizard>

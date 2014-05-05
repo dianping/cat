@@ -29,6 +29,7 @@ import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
+import com.dianping.cat.report.task.exceptionAlert.AlertReportBuilderTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
@@ -123,7 +124,10 @@ ServiceReportMergerTest.class,
 
 AlertConfigTest.class,
 
-HeavyReportBuilderTest.class })
+HeavyReportBuilderTest.class,
+
+AlertReportBuilderTest.class})
+
 public class AllTests {
 	
 	@BeforeClass
