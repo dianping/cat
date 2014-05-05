@@ -103,7 +103,6 @@ public class Handler implements PageHandler<Context> {
 		String product = payload.getProduct();
 
 		if (product == null || product.length() == 0) {
-
 			if ((payload.getGroup() == null || payload.getGroup() == "") && !metricAggregationGroups.isEmpty()) {
 				payload.setAction(Action.NETTOPOLOGY.getName());
 			} else {
