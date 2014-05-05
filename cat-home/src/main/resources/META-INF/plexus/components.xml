@@ -574,6 +574,32 @@
 		<component>
 			<role>com.dianping.cat.report.service.impl.NetTopologyReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.NetTopologyReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.impl.AlertReportService</role>
@@ -718,9 +744,6 @@
 					<role>com.dianping.cat.report.service.impl.HeavyReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.impl.AlertReportService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.service.impl.ServiceReportService</role>
 				</requirement>
 				<requirement>
@@ -728,6 +751,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.NetTopologyReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.AlertReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1000,6 +1026,40 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.network.NetTopologyReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.network.NetTopologyReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
 			<requirements>
@@ -1044,6 +1104,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.network.NetTopologyReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1615,21 +1678,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
-			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3194,6 +3242,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3204,6 +3255,10 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

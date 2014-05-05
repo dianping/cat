@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.network;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -36,7 +35,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<Integer> m_minutes;
 
-	private ArrayList<Pair<String, String>> m_netGraphData;
+	private List<Pair<String, String>> m_netGraphData;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -101,11 +100,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_productLines = productLines;
 	}
 
-	public ArrayList<Pair<String, String>> getNetGraphData() {
+	public List<Pair<String, String>> getNetGraphData() {
 		return m_netGraphData;
 	}
 
-	public void setNetGraphData(ArrayList<Pair<String, String>> netGraphData) {
+	public void setNetGraphData(List<Pair<String, String>> netGraphData) {
 		m_netGraphData = netGraphData;
 	}
 

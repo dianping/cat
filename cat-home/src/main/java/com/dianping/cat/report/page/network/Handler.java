@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private NetGraphManager m_netGraphManager;
-	
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "network")
@@ -117,24 +117,22 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 
 		if (payload.getAction().equals(Action.NETTOPOLOGY)) {
-			long current = System.currentTimeMillis() - TimeUtil.ONE_MINUTE;
+			long current = System.currentTimeMillis();
 			int curMinute = (int) ((current - current % TimeUtil.ONE_MINUTE) % TimeUtil.ONE_HOUR / TimeUtil.ONE_MINUTE);
 			Date start = new Date(payload.getDate());
 			Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR - 1);
-
 			int minute = payload.getMinute();
+
 			if (minute == -1) {
 				minute = curMinute;
 			}
 
-			int maxMinute;
-			if (start.getTime() > ModelPeriod.LAST.getStartTime()) {
+			int maxMinute = 59;
+			if (start.getTime() == ModelPeriod.CURRENT.getStartTime()) {
 				maxMinute = curMinute;
-			} else {
-				maxMinute = 59;
 			}
-
 			List<Integer> minutes = new ArrayList<Integer>();
+
 			for (int i = 0; i < 60; i++) {
 				minutes.add(i);
 			}

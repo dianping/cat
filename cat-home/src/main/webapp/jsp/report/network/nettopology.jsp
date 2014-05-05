@@ -9,10 +9,6 @@
 	type="com.dianping.cat.report.page.network.Payload" scope="request" />
 <jsp:useBean id="model"
 	type="com.dianping.cat.report.page.network.Model" scope="request" />
-
-
-
-
 <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
@@ -46,7 +42,7 @@
 				</div>
 				</div>
 			<style type="text/css">
-.topology {
+		.topology {
 	width: 600px;
 	}
 	</style>
@@ -74,14 +70,7 @@
 			</table>
 			<%@ include file="metricOpNav.jsp"%>
 			<%@ include file="TimeNavTab.jsp"%>
-			
-		
-
 			</div>
-
-
-		
-
 			<div class="row-fluid">
 
 				<div class="span2">
@@ -133,14 +122,6 @@
 .row-fluid {
 	min-width: 1200px;
 }			
-
-.row-fluid .span2 {
-	width: 10%;
-}
-
-.row-fluid .span10 {
-	width: 87%;
-}
 
 .topology {
 	text-align: center;

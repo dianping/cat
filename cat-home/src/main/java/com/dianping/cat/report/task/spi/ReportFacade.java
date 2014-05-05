@@ -32,7 +32,7 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
-import com.dianping.cat.report.task.network.NetTopologyHistoryReportBuilder;
+import com.dianping.cat.report.task.network.NetTopologyReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
@@ -84,7 +84,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private UtilizationReportBuilder m_utilizationReportBuilder;
 	
 	@Inject
-	private NetTopologyHistoryReportBuilder m_netTopologyHistoryReportBuilder;
+	private NetTopologyReportBuilder m_netTopologyHistoryReportBuilder;
 	
 	private Logger m_logger;
 
