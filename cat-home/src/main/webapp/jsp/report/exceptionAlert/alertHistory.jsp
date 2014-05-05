@@ -13,6 +13,25 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#alert').addClass('active');
+		
+		$(document).delegate('.detail', 'click', function(e){
+			var anchor = this,
+				el = $(anchor);
+			
+			if(e.ctrlKey || e.metaKey){
+				return true;
+			}else{
+				e.preventDefault();
+			}
+			$.ajax({
+				type: "get",
+				url: anchor.href,
+				success : function(response, textStatus) {
+					$('#myModal .modal-body').html(response);
+					$('#myModal').modal();
+				}
+			});
+		});
 	});
 </script>
 <div class="report">
