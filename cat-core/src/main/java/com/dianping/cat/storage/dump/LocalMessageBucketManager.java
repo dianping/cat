@@ -155,16 +155,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (String dataFile : paths) {
 				LocalMessageBucket bucket = m_buckets.get(dataFile);
 
-				if (bucket == null) {
-					File file = new File(m_baseDir, dataFile);
-
-					if (file.exists()) {
-						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-						bucket.setBaseDir(m_baseDir);
-						bucket.initialize(dataFile);
-						m_buckets.putIfAbsent(dataFile, bucket);
-					}
-				}
 				if (bucket != null) {
 					// flush the buffer if have data
 					MessageBlock block = bucket.flushBlock();
@@ -179,6 +169,28 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (tree != null && tree.getMessageId().equals(messageId)) {
 						t.addData("path", dataFile);
 						return tree;
+					}
+				} else {
+					File file = new File(m_baseDir, dataFile);
+
+					if (file.exists()) {
+						try {
+							bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+							bucket.setBaseDir(m_baseDir);
+							bucket.initialize(dataFile);
+
+							MessageTree tree = bucket.findByIndex(id.getIndex());
+
+							if (tree != null && tree.getMessageId().equals(messageId)) {
+								t.addData("path", dataFile);
+								return tree;
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
+						} finally {
+							bucket.close();
+							release(bucket);
+						}
 					}
 				}
 			}

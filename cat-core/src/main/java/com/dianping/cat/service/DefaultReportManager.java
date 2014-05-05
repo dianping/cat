@@ -58,7 +58,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 		for (long startTime : startTimes) {
 			if (startTime <= threshold) {
-				m_reports.remove(startTime); 
+				m_reports.remove(startTime);
 			}
 		}
 	}
@@ -197,7 +197,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 							}
 						}
 					} finally {
-						bucket.close();
+						m_bucketManager.closeBucket(bucket);
 					}
 				}
 

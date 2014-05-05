@@ -24,7 +24,6 @@ public class LocalMessageBucket implements MessageBucket {
 	@Inject
 	private MessageCodec m_codec;
 
-	@Inject
 	private File m_baseDir = new File(".");
 
 	private MessageBlockReader m_reader;
