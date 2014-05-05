@@ -153,6 +153,10 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 					if (m_configManager != null) {
 						ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(domain, entry.getKey());
+						
+						if (exceptionLimit == null) {
+							exceptionLimit = m_configManager.queryDomainTotalLimit(domain);
+						}
 						if (exceptionLimit != null) {
 							warnLimit = exceptionLimit.getWarning();
 							errorLimit = exceptionLimit.getError();

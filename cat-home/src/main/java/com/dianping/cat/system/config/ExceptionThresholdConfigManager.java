@@ -92,9 +92,6 @@ public class ExceptionThresholdConfigManager implements Initializable {
 		}
 		if (domainConfig != null) {
 			result = domainConfig.getExceptionLimits().get(exceptionName);
-			if(result == null) {
-				result = domainConfig.getExceptionLimits().get(TOTAL_STRING);
-			}
 		}
 		return result;
 	}
