@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -44,6 +45,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
 import com.dianping.cat.report.task.metric.AlertConfig;
 import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricAlert;
@@ -56,6 +58,7 @@ import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
+import com.dianping.cat.system.tool.DefaultMailImpl;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -136,11 +139,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertConfig.class));
 
 		all.add(C(AlertInfo.class));
+		
+		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class));
-
+		      .req(RemoteMetricReportService.class));		
+		
+		all.add(C(ExceptionAlert.class).req(AlertConfig.class,MailSMS.class, ProductLineConfigManager.class,
+				ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
+		
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class).req(RemoteMetricReportService.class));
 		
 		// database

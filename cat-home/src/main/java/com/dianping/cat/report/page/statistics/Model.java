@@ -8,6 +8,7 @@ import java.util.Map;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.home.alertReport.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -32,6 +33,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private HeavyReport m_heavyReport;
+	
+	@EntityMeta
+	private AlertReport m_alertReport;
 
 	@EntityMeta
 	private UtilizationReport m_utilizationReport;
@@ -55,6 +59,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
+	
+	private List<com.dianping.cat.home.alertReport.entity.Domain> m_alertDomains;
+	
+	private List<com.dianping.cat.home.alertReport.entity.Exception> m_alertExceptions;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -106,9 +114,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Map<String, ErrorStatis> getErrorStatis() {
 		return m_errorStatis;
 	}
-
+	
 	public HeavyReport getHeavyReport() {
 		return m_heavyReport;
+	}
+	
+	public AlertReport getAlertReport() {
+		return m_alertReport;
 	}
 
 	public String getOsChart() {
@@ -174,6 +186,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setHeavyReport(HeavyReport heavyReport) {
 		m_heavyReport = heavyReport;
 	}
+	
+	public void setAlertReport(AlertReport alertReport) {
+		m_alertReport = alertReport;
+	}
 
 	public void setOsChart(String osChart) {
 		m_osChart = osChart;
@@ -205,6 +221,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
 		m_utilizationWebList = utilizationWebList;
+	}
+
+	public List<com.dianping.cat.home.alertReport.entity.Domain> getAlertDomains() {
+		return m_alertDomains;
+	}
+
+	public void setAlertDomains(List<com.dianping.cat.home.alertReport.entity.Domain> alertDomains) {
+		m_alertDomains = alertDomains;
+	}
+
+	public List<com.dianping.cat.home.alertReport.entity.Exception> getAlertExceptions() {
+		return m_alertExceptions;
+	}
+
+	public void setAlertExceptions(List<com.dianping.cat.home.alertReport.entity.Exception> alertExceptions) {
+		m_alertExceptions = alertExceptions;
 	}
 
 }

@@ -29,6 +29,7 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
+import com.dianping.cat.home.alertReport.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
@@ -96,6 +97,9 @@ public class DefaultReportService implements ReportService {
 
 	@Inject
 	private HeavyReportService m_heavyReportService;
+	
+	@Inject 
+	private AlertReportService m_alertReportService;
 
 	@Inject
 	private ServiceReportService m_serviceReportService;
@@ -267,5 +271,10 @@ public class DefaultReportService implements ReportService {
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
 		return m_utilizationReportService.queryReport(domain, start, end);
 	}
+
+	@Override
+   public AlertReport queryAlertReport(String domain, Date start, Date end) {
+	   return m_alertReportService.queryReport(domain, start, end);
+   }
 
 }
