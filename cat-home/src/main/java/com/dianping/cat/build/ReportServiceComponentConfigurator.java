@@ -90,12 +90,8 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      .req(MatrixReportService.class,  DependencyReportService.class)
 		      .req(TopReportService.class, StateReportService.class, CrossReportService.class)
 		      .req(HeartbeatReportService.class, MetricReportService.class, BugReportService.class)
-<<<<<<< HEAD
 		      .req(HeavyReportService.class, ServiceReportService.class, UtilizationReportService.class)
-		      .req(NetTopologyReportService.class));
-=======
-		      .req(HeavyReportService.class, AlertReportService.class, ServiceReportService.class, UtilizationReportService.class));
->>>>>>> 31b668ab4e852554aad399a0f47b575036be6b57
+		      .req(NetTopologyReportService.class, AlertReportService.class));
 
 		return all;
 	}
