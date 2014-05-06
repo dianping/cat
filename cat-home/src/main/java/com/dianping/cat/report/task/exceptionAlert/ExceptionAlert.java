@@ -194,7 +194,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 		if (productLine != null) {
 			List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-			List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+			List<String> phones = m_alertConfig.buildExceptionSMSReceivers(productLine);
 			String title = "[ " + productLine.getId() + ":" + domain + " ] " + "exception alert !";
 			List<String> errorExceptions = new ArrayList<String>();
 			List<String> warnExceptions = new ArrayList<String>();
