@@ -413,7 +413,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 					System.arraycopy(data, 0, data2, 0, index);
 					data = data2;
-					ctx.setData(data2);
 				}
 
 				char c = (char) (b & 0xFF);
@@ -502,10 +501,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		private char[] m_data;
 
-		private int max = 16384 * 512;
-
 		public Context() {
-			m_data = new char[16384];
+			m_data = new char[4 * 1024 * 1024];
 		}
 
 		public ChannelBuffer getBuffer() {
@@ -519,14 +516,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		public Context setBuffer(ChannelBuffer buffer) {
 			m_buffer = buffer;
 			return this;
-		}
-
-		public void setData(char[] data) {
-			if (data.length > max) {
-				m_data = new char[max];
-			} else {
-				m_data = data;
-			}
 		}
 	}
 

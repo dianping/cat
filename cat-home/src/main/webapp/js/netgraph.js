@@ -71,11 +71,26 @@ var $_netgraph = {
         var topo = this.topos[wrapper];
         var conn = {};
         var id;
-        var verseid;
-        var sw = topo.data['switchs'];
-        var anchor = topo.data['anchors'];
         var x1, y1, x2, y2;
         var f_anchor, t_anchor;
+        var switchs = topo.data['switchs'];
+        var anchors = topo.data['anchors'];
+
+        sw = {};
+        for(var i in switchs) {
+            if (switchs[i].name != undefined) {
+                sw[switchs[i].name] = switchs[i];
+            }
+        }
+        topo.data['switchs'] = sw;
+
+        an = {};
+        for(var i in anchors) {
+            if (anchors[i].name != undefined) {
+                an[anchors[i].name] = anchors[i];
+            }
+        }
+        topo.data['anchors'] = an;
 
         for(var k in sw) {
             sw[k]['conn'] = [];
@@ -94,96 +109,67 @@ var $_netgraph = {
         for(var i in conns) {
             var cn = conns[i];
 
-            var firstname = cn['firstName'];
-            var secondname = cn['secondName'];
-            if ((!sw[firstname] && !anchor[firstname]) || 
-                    (!sw[secondname] && !anchor[secondname])) {
+            var from = cn['from'];
+            var to = cn['to'];
+            if (!sw[from] || 
+                    (!sw[to] && !an[to])) {
                 continue;
             }
 
-            var id = firstname + '=>' + secondname;
-            var verseid = secondname + '=>' + firstname;
+            var id = from + '=>' + to;
             if(id in conn) {
                 continue;
             }
 
-            var firstin, firstout, firststate, firstfill;
-            firstin = cn['firstInSum'];
-            firstout = cn['firstOutSum'];
-            firststate = cn['firstState'];
-            if (firstin == undefined) {
-                firstin = 0;
+            var inData, outData, state, fill;
+            inData = cn['insum'];
+            outData = cn['outsum'];
+            state = cn['state'];
+            if (inData == undefined) {
+                inData = 0;
             }
-            if (firstout == undefined) {
-                firstout = 0;
+            if (outData == undefined) {
+                outData = 0;
             }
-            if (firststate == 3) {
-                firstfill = this.setting.conn_color.serious;
+            if (state == 3) {
+                fill = this.setting.conn_color.serious;
             }
-            else if (firststate == 2) {
-                firstfill = this.setting.conn_color.warnning;
-            }
-            else {
-                firstfill = this.setting.conn_color.normal;
-            }
-
-            var secondin, secondout, secondstate, secondfill;
-            secondin = cn['secondInSum'];
-            secondout = cn['secondOutSum'];
-            secondstate = cn['secondState'];
-            if (secondin == undefined) {
-                secondin = 0;
-            }
-            if (secondout == undefined) {
-                secondout = 0;
-            }
-            if (secondstate == 3) {
-                secondfill = this.setting.conn_color.serious;
-            }
-            else if (secondstate == 2) {
-                secondfill = this.setting.conn_color.warnning;
+            else if (state == 2) {
+                fill = this.setting.conn_color.warnning;
             }
             else {
-                secondfill = this.setting.conn_color.normal;
+                fill = this.setting.conn_color.normal;
             }
 
             var f_anchor = 0;
             var t_anchor = 0;
             var x1, y1, x2, y2;
-            if(firstname in sw) {
-                x1 = sw[firstname].x;
-                y1 = sw[firstname].y;
+            if(from in sw) {
+                x1 = sw[from].x;
+                y1 = sw[from].y;
             }
             else {
-                x1 = anchor[firstname].x;
-                y1 = anchor[firstname].y;
+                x1 = an[from].x;
+                y1 = an[from].y;
                 f_anchor = 1;
             }
-            if(secondname in sw) {
-                x2 = sw[secondname].x;
-                y2 = sw[secondname].y;
+            if(to in sw) {
+                x2 = sw[to].x;
+                y2 = sw[to].y;
             }
             else {
-                x2 = anchor[secondname].x;
-                y2 = anchor[secondname].y;
+                x2 = an[to].x;
+                y2 = an[to].y;
                 t_anchor = 1;
             }
 
-            var name = id.split('=>')[1];
-            var versename = verseid.split('=>')[1];
             if(!f_anchor && !t_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[firstin,firstout],'name':name,'fill':firstfill};
-                conn[verseid] = {'x1':(x1+x2)/2,'y1':(y1+y2)/2,'x2':x2,'y2':y2,'data':[secondin,secondout],'name':versename,'fill':secondfill};
-                sw[firstname]['conn'].push(id);
-                sw[secondname]['conn'].push(verseid);
+                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[inData,outData],'name':to,'fill':fill};
+                sw[from]['conn'].push(id);
             }
             else if(!f_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[firstin,firstout],'name':name,'fill':firstfill};
-                sw[firstname]['conn'].push(id);
-            }
-            else if(!t_anchor) {
-                conn[verseid] = {'x1':(x1*2+x2)/3,'y1':(y1*2+y2)/3,'x2':x2,'y2':y2,'data':[secondin,secondout],'name':versename,'fill':secondfill};
-                sw[secondname]['conn'].push(verseid);
+                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[inData,outData],'name':to,'fill':fill};
+                sw[from]['conn'].push(id);
             }
         }
 
@@ -263,6 +249,9 @@ var $_netgraph = {
 		}
 
         var height = text.length * 20 + 10;
+        if (height < 30) {
+            height = 30;
+        }
 		var rect1 = document.createElementNS(this.NS, "rect");
 		var rect2 = document.createElementNS(this.NS, "rect");
 		var rect3 = document.createElementNS(this.NS, "rect");

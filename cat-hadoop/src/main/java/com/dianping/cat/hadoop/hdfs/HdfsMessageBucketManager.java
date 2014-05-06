@@ -7,13 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.jboss.netty.util.internal.ConcurrentHashMap;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
@@ -44,7 +44,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	private Map<String, HdfsMessageBucket> m_buckets = new ConcurrentHashMap<String, HdfsMessageBucket>();
 
-	void closeIdleBuckets() throws IOException {
+	private void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
 		long hour = 3600 * 1000L;
 		Set<String> closed = new HashSet<String>();
@@ -62,7 +62,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			}
 		}
 		for (String close : closed) {
-			m_buckets.remove(close);
+			HdfsMessageBucket bucket = m_buckets.remove(close);
+
+			release(bucket);
 		}
 	}
 

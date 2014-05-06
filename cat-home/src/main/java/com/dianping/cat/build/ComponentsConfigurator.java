@@ -42,7 +42,6 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
@@ -148,8 +147,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		
 		all.add(C(ExceptionAlert.class).req(AlertConfig.class,MailSMS.class, ProductLineConfigManager.class,
 				ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
-		
-		all.add(C(NetGraphManager.class).req(ServerConfigManager.class).req(RemoteMetricReportService.class));
 		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

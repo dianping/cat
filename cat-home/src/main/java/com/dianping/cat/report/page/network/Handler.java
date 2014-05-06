@@ -24,7 +24,7 @@ import com.dianping.cat.report.chart.GraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
-import com.dianping.cat.report.page.network.nettopology.model.NetGraph;
+import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -80,10 +80,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
 		case NETTOPOLOGY:
-			NetGraph netGraph = m_netGraphManager.getNetGraph();
-			if (netGraph != null) {
-				model.setTopoData(netGraph.getJsonData());
-			}
+			model.setNetGraphData(m_netGraphManager.getNetGraphData(model.getStartTime(), model.getMinute()));
 			break;
 		}
 
@@ -102,11 +99,12 @@ public class Handler implements PageHandler<Context> {
 				metricAggregationGroupList.add(entry.getValue());
 			}
 		}
+
 		String product = payload.getProduct();
-		
+
 		if (product == null || product.length() == 0) {
-			
-			if (payload.getGroup() == null & !metricAggregationGroups.isEmpty()) {
+
+			if ((payload.getGroup() == null || payload.getGroup() == "") && !metricAggregationGroups.isEmpty()) {
 				payload.setAction(Action.NETTOPOLOGY.getName());
 			} else {
 				payload.setAction(Action.AGGREGATION.getName());
@@ -117,11 +115,49 @@ public class Handler implements PageHandler<Context> {
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
 
 		m_normalizePayload.normalize(model, payload);
-		int timeRange = payload.getTimeRange();
-		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
-		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
 
-		model.setStartTime(startTime);
-		model.setEndTime(endTime);
+		if (payload.getAction().equals(Action.NETTOPOLOGY)) {
+			long current = System.currentTimeMillis() - TimeUtil.ONE_MINUTE;
+			int curMinute = (int) ((current - current % TimeUtil.ONE_MINUTE) % TimeUtil.ONE_HOUR / TimeUtil.ONE_MINUTE);
+			long startTime = payload.getDate();
+			int minute = payload.getMinute();
+
+			if (minute == -1) {
+				minute = curMinute;
+				if (curMinute == 59) {
+					startTime -= TimeUtil.ONE_HOUR;
+				}
+			}
+
+			int maxMinute = 59;
+			if (startTime == ModelPeriod.CURRENT.getStartTime()) {
+				maxMinute = curMinute;
+			}
+			
+			Date start = new Date(startTime);
+			Date end = new Date(startTime + TimeUtil.ONE_HOUR - 1);
+			List<Integer> minutes = new ArrayList<Integer>();
+
+			for (int i = 0; i < 60; i++) {
+				minutes.add(i);
+			}
+
+			model.setMinutes(minutes);
+			model.setMinute(minute);
+			model.setMaxMinute(maxMinute);
+			model.setStartTime(start);
+			model.setEndTime(end);
+			model.setIpAddress(payload.getIpAddress());
+			model.setAction(payload.getAction());
+			model.setDisplayDomain(payload.getDomain());
+		} else {
+			int timeRange = payload.getTimeRange();
+			Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
+			Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
+
+			model.setStartTime(startTime);
+			model.setEndTime(endTime);
+		}
 	}
+
 }
