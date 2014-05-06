@@ -84,14 +84,15 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildAlertInfo(Model model, Payload payload) {
 		AlertReport alertReport = queryAlertReport(payload);
+		System.out.println("1"+alertReport);
 		model.setAlertReport(alertReport);
-		
 		List<com.dianping.cat.home.alertReport.entity.Domain> sortedDoamins = buildSortedAlertInfo(alertReport, model);
 		model.setAlertDomains(sortedDoamins);
 	}
 	
 	private void builAlertDetails(Model model, Payload payload) {
 		AlertReport alertReport = queryAlertReport(payload);
+		System.out.println("2"+alertReport);
 		List<com.dianping.cat.home.alertReport.entity.Exception> sortedExceptions = buildSortedAlertDetails(alertReport,
 		      payload.getDomain());
 
@@ -274,6 +275,7 @@ public class Handler implements PageHandler<Context> {
 	
 	private AlertReport queryAlertReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
+		System.out.println(pair);
 		
 		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}

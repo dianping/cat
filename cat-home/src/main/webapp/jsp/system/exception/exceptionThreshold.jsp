@@ -11,14 +11,25 @@
 <a:body>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+		 <res:useCss value="${res.css.local['jqx.base.css']}" target="head-css" />
+	    <res:useJs value="${res.js.local['jqxcore.js']}" target="head-js" />
+	    <res:useJs value="${res.js.local['jqxbuttons.js']}" target="head-js" />
+	    <res:useJs value="${res.js.local['jqxscrollbar.js']}" target="head-js" />
+	    <res:useJs value="${res.js.local['jqxlistbox.js']}" target="head-js" />
+    <res:useJs value="${res.js.local['jqxcombobox.js']}" target="head-js" />
+
+    
+    
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#exceptionConfigList').addClass('active');
 			$(".delete").bind("click", function() {
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});
-			
-			
+
+	                  
 			$(document).delegate('.update,.create', 'click', function(e){
 				var anchor = this,
 					el = $(anchor);
@@ -35,10 +46,32 @@
 					success : function(response, textStatus) {
 						$('#myModal').html(response);
 						$('#myModal').modal();
-						exceptionValidate();
+ 						$("#domainId").select2();
+					$("#exceptionId").select2();
+					$("#hello").select2();
+ 						exceptionValidate();
+ 
+	var source = [
+	               "Affogato",
+	               "Americano",
+	               "Bicerin",
+	               "Breve",
+	               "Café Bombón",
+	               "Café au lait",
+	               "Caffé Corretto",
+	               "Café Crema",
+	               "Caffé Latte",
+		        ];
+	           // Create a jqxComboBox
+	           $("#jqxcombobox").jqxComboBox({ source: source, selectedIndex: 0, width: '200px', height: '25px' });
+	           // disable the sixth item.
+	           $("#jqxcombobox").jqxComboBox('disableAt', 5); 
+ 
 					}
 				});
 			});
+			
+	
 			
 			var action = '${payload.action.name}';
 			if(action=='exceptionThresholdDelete'||action=='exceptionThresholdUpdateSubmit'){
@@ -54,8 +87,10 @@
 			}
 		});
 	</script>
-	
-	
+
+
+
+
 	<div>
 		<div class="row-fluid">
         <div class="span2">

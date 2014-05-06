@@ -112,7 +112,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 		AlertReport alertReport = merger.getAlertReport();
 
 		alertReport.setStartTime(start);
-		alertReport.setEndTime(new Date(end.getTime() - 1));
+		alertReport.setEndTime(end);
 
 		return alertReport;
 	}
