@@ -16,6 +16,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -94,7 +95,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isJobMachine()) {
-		    Threads.forGroup("Cat").start(new NetGraphReloader());
+			Threads.forGroup("Cat").start(new NetGraphReloader());
 		}
 	}
 
@@ -128,17 +129,22 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 			while (active) {
 				long current = System.currentTimeMillis();
-				Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
+				try {
+					Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
 
-				m_currentNetGraphSet = m_netGraphBuilder.buildSet(currentMetricReports);
+					m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(currentMetricReports);
 
-				Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
-				Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
+					Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
+					Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
 
-				m_lastNetGraphSet = m_netGraphBuilder.buildSet(lastHourReports);
-				long duration = System.currentTimeMillis() - current;
+					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(lastHourReports);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 
 				try {
+					long duration = System.currentTimeMillis() - current;
+					
 					if (duration < DURATION) {
 						Thread.sleep(DURATION - duration);
 					}

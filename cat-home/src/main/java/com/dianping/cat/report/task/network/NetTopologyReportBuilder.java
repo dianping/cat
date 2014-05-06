@@ -41,7 +41,7 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 			reports.put(group, report);
 		}
-		NetGraphSet netGraphSet = m_netGraphBuilder.buildSet(reports);
+		NetGraphSet netGraphSet = m_netGraphBuilder.buildGraphSet(reports);
 		HourlyReport hourlyReport = new HourlyReport();
 
 		hourlyReport.setType(1);
