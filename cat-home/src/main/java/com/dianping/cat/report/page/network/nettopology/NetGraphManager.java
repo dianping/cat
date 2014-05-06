@@ -71,14 +71,16 @@ public class NetGraphManager implements Initializable, LogEnabled {
 			netGraphSet = m_reportService.queryNetTopologyReport(Constants.CAT, start, null);
 		}
 
-		NetGraph netGraph = netGraphSet.findNetGraph(minute);
+		if (netGraphSet != null) {
+			NetGraph netGraph = netGraphSet.findNetGraph(minute);
 
-		if (netGraph != null) {
-			for (NetTopology netTopology : netGraph.getNetTopologies()) {
-				String topoName = netTopology.getName();
-				String data = jb.toJson(netTopology);
+			if (netGraph != null) {
+				for (NetTopology netTopology : netGraph.getNetTopologies()) {
+					String topoName = netTopology.getName();
+					String data = jb.toJson(netTopology);
 
-				netGraphData.add(new Pair<String, String>(topoName, data));
+					netGraphData.add(new Pair<String, String>(topoName, data));
+				}
 			}
 		}
 
@@ -92,7 +94,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isJobMachine()) {
-			Threads.forGroup("Cat").start(new NetGraphReloader());
+		    Threads.forGroup("Cat").start(new NetGraphReloader());
 		}
 	}
 
@@ -128,12 +130,12 @@ public class NetGraphManager implements Initializable, LogEnabled {
 				long current = System.currentTimeMillis();
 				Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
 
-				m_lastNetGraphSet = m_netGraphBuilder.buildSet(currentMetricReports);
+				m_currentNetGraphSet = m_netGraphBuilder.buildSet(currentMetricReports);
 
 				Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
 				Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
 
-				m_currentNetGraphSet = m_netGraphBuilder.buildSet(lastHourReports);
+				m_lastNetGraphSet = m_netGraphBuilder.buildSet(lastHourReports);
 				long duration = System.currentTimeMillis() - current;
 
 				try {
