@@ -117,20 +117,25 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 
 		if (payload.getAction().equals(Action.NETTOPOLOGY)) {
-			long current = System.currentTimeMillis();
+			long current = System.currentTimeMillis() - TimeUtil.ONE_MINUTE;
 			int curMinute = (int) ((current - current % TimeUtil.ONE_MINUTE) % TimeUtil.ONE_HOUR / TimeUtil.ONE_MINUTE);
-			Date start = new Date(payload.getDate());
-			Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR - 1);
+			long startTime = payload.getDate();
 			int minute = payload.getMinute();
 
 			if (minute == -1) {
 				minute = curMinute;
+				if (curMinute == 59) {
+					startTime -= TimeUtil.ONE_HOUR;
+				}
 			}
 
 			int maxMinute = 59;
-			if (start.getTime() == ModelPeriod.CURRENT.getStartTime()) {
+			if (startTime == ModelPeriod.CURRENT.getStartTime()) {
 				maxMinute = curMinute;
 			}
+			
+			Date start = new Date(startTime);
+			Date end = new Date(startTime + TimeUtil.ONE_HOUR - 1);
 			List<Integer> minutes = new ArrayList<Integer>();
 
 			for (int i = 0; i < 60; i++) {
