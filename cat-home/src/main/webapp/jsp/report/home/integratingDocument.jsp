@@ -19,6 +19,10 @@
     </filter-mapping>
 	</xmp>
   </dd>
+	  <h5 class="text-error">stucts会吃掉URL中的ERROR信息，请在配置中加
+	  	<xmp class="well"> <constant name="struts.handle.exception" value="false" /> 
+	  	</xmp>
+	  </h5>
 	
   <dt><h5 class="text-success">2.Pom.xml中更新jar包(或者更新platform包)</h5></dt>
   <dd>

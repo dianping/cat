@@ -1689,30 +1689,6 @@
 			</configuration>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
-			<role-hint>cat</role-hint>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
-			<configuration>
-				<id>cat</id>
-				<maximum-pool-size>3</maximum-pool-size>
-				<connection-timeout>1s</connection-timeout>
-				<idle-timeout>10m</idle-timeout>
-				<statement-cache-size>1000</statement-cache-size>
-				<properties>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
-					<user>test</user>
-					<password>123</password>
-					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-				</properties>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>alteration</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
@@ -1764,10 +1740,10 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>net-topology-report</role-hint>
+			<role-hint>report</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>net-topology-report</logical-table-name>
+				<logical-table-name>report</logical-table-name>
 				<physical-table-name>report</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -1848,8 +1824,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.NetTopologyReportDao</role>
-			<implementation>com.dianping.cat.home.dal.report.NetTopologyReportDao</implementation>
+			<role>com.dianping.cat.home.dal.report.ReportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.ReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
