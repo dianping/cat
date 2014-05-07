@@ -1,9 +1,0 @@
-<alert-report domain="Cat" start-time="2014-04-25 20:00:00" end-time="2014-04-25 20:59:59" >
-	<domain name="CAT" warn-number="10" error-number="20">
-		<exception id="NPE" warn-number="5" error-number="10"></exception>
-		<exception id="NPE" warn-number="5" error-number="10"></exception>
-	</domain>
-	<domain name="CAT1" warn-number="5" error-number="10">
-		<exception id="NPE" warn-number="5" error-number="10"></exception>
-	</domain>
-</alert-report>
