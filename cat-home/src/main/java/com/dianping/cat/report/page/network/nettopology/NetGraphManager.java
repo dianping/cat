@@ -90,10 +90,6 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		return netGraphData;
 	}
 
-	public NetGraphSet getNetGraphSet() {
-		return m_currentNetGraphSet;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isJobMachine()) {
@@ -103,19 +99,15 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 	private Map<String, MetricReport> queryMetricReports(Date date) {
 		Set<String> groupSet = m_netGraphBuilder.buildRequireGroups();
-		Map<String, MetricReport> reportSet = new HashMap<String, MetricReport>();
+		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groupSet) {
 			ModelRequest request = new ModelRequest(group, date.getTime());
 			MetricReport report = m_service.invoke(request);
 
-			reportSet.put(group, report);
+			reports.put(group, report);
 		}
-		return reportSet;
-	}
-
-	public void setNetGraphSet(NetGraphSet netGraphSet) {
-		m_currentNetGraphSet = netGraphSet;
+		return reports;
 	}
 
 	private class NetGraphReloader implements Task {

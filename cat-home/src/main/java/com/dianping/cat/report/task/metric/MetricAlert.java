@@ -130,7 +130,8 @@ public class MetricAlert implements Task, LogEnabled {
 			if (report != null) {
 				return report;
 			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime());
+				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime()).setProperty(
+				      "requireAll", "ture");
 
 				report = m_service.invoke(request);
 				if (report != null) {
@@ -144,7 +145,8 @@ public class MetricAlert implements Task, LogEnabled {
 			if (report != null) {
 				return report;
 			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime());
+				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime()).setProperty("requireAll",
+				      "ture");
 
 				report = m_service.invoke(request);
 				if (report != null) {
