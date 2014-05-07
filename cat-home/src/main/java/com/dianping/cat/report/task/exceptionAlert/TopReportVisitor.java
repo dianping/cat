@@ -16,7 +16,9 @@ public class TopReportVisitor extends BaseVisitor {
 	private AlertReport m_report;
 
 	private String m_currentDomain;
-	
+
+	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
+
 	public TopReportVisitor(ExceptionThresholdConfigManager configManager) {
 		m_configManager = configManager;
 	}
@@ -34,53 +36,59 @@ public class TopReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitError(Error error) {
-		int warnLimit = 0;
-		int errorLimit = 0;
+		int warnLimit = -1;
+		int errorLimit = -1;
 
 		ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_currentDomain, error.getId());
 
-		if (exceptionLimit == null) {
-			exceptionLimit = m_configManager.queryDomainTotalLimit(m_currentDomain);
-		}
 		if (exceptionLimit != null) {
 			warnLimit = exceptionLimit.getWarning();
 			errorLimit = exceptionLimit.getError();
 		}
 		int count = error.getCount();
-		
-		if (errorLimit > 0 & warnLimit > 0 & count < Math.min(warnLimit, errorLimit)) {
-			return;
-		}
-		
-		com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
-		domain.setName(m_currentDomain);
 
-		com.dianping.cat.home.alertReport.entity.Exception exception = domain.findOrCreateException(error.getId());
+		if (errorLimit > 0 & warnLimit > 0 & count >= Math.min(warnLimit, errorLimit)) {
 
-		if (errorLimit > 0 && count >= errorLimit) {
-			exception.incErrorNumber();
-			domain.incErrorNumber();
-		} else if (warnLimit > 0 && count >= warnLimit) {
-			exception.incWarnNumber();
-			domain.incWarnNumber();
+			com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
+			domain.setName(m_currentDomain);
+
+			com.dianping.cat.home.alertReport.entity.Exception exception = domain.findOrCreateException(error.getId());
+
+			if (errorLimit > 0 && count >= errorLimit) {
+				exception.incErrorNumber();
+				domain.incErrorNumber();
+			} else if (warnLimit > 0 && count >= warnLimit) {
+				exception.incWarnNumber();
+				domain.incWarnNumber();
+			}
 		}
 	}
 
 	@Override
 	public void visitSegment(Segment segment) {
-		long totalSegmentException =  segment.getError();
+		long totalSegmentException = segment.getError();
 		ExceptionLimit exceptionLimit = m_configManager.queryDomainTotalLimit(m_currentDomain);
 		int warnLimit = -1;
 		int errorLimit = -1;
-		if(exceptionLimit != null) {
+		
+		if (exceptionLimit != null) {
 			warnLimit = exceptionLimit.getWarning();
 			errorLimit = exceptionLimit.getError();
 		}
-		com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
-		if (errorLimit > 0 && totalSegmentException >= errorLimit) {
-			domain.incErrorNumber();
-		} else if (warnLimit > 0 && totalSegmentException >= warnLimit) {
-			domain.incWarnNumber();
+
+		if (errorLimit > 0 & warnLimit > 0 & totalSegmentException >= Math.min(warnLimit, errorLimit)) {
+			com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
+			com.dianping.cat.home.alertReport.entity.Exception exception = domain
+			      .findOrCreateException(TOTAL_EXCEPTION_ALERT);
+
+			if (totalSegmentException >= errorLimit) {
+				domain.incErrorNumber();
+				exception.incErrorNumber();
+			} else if (totalSegmentException >= warnLimit) {
+				domain.incWarnNumber();
+				exception.incWarnNumber();
+			}
+
 		}
 		super.visitSegment(segment);
 	}
