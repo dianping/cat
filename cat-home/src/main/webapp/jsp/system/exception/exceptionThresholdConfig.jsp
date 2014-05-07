@@ -6,10 +6,11 @@
 		$(document).ready(function() {
 
 		var source = new Array();  
-		source = "${model.exceptionList}".replace('[','').replace(']','').split(',');  
+		source = "${model.exceptionList}".replace(/[\[\]]/g,'').split(', ');  
 
 		if(document.getElementById("jqxcombobox")) {
        		$("#jqxcombobox").jqxComboBox({ source: source, selectedIndex: 0, width: '200px', height: '25px' });
+
 		}
 		});
 	</script>

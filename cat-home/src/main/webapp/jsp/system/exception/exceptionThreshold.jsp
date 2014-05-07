@@ -50,7 +50,6 @@
 				}else{
 					e.preventDefault();
 				}
-				//var cell = document.getElementById('');
 				$.ajax({
 					type: "get",
 					url: anchor.href,
@@ -64,7 +63,7 @@
 			});
 		});
 	</script>
-
+	
 	<div>
 		<div class="row-fluid">
         <div class="span2">
