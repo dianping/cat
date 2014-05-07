@@ -28,7 +28,12 @@
 				url: anchor.href,
 				success : function(response, textStatus) {
 					$('#myModal .modal-body').html(response);
-					$('#myModal').modal();
+					$('#myModal').modal().css({
+					    width: 'auto',
+					    'margin-left': function () {
+					        return -($(this).width() / 2);
+					    }
+					});
 				}
 			});
 		});
