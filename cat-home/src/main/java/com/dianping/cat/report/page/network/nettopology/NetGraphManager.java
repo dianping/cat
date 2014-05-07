@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.network.nettopology;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.entity.NetTopology;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.RemoteMetricReportService;
@@ -129,6 +131,14 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 			while (active) {
 				long current = System.currentTimeMillis();
+				int minute = Calendar.getInstance().get(Calendar.MINUTE);
+				String minuteStr = String.valueOf(minute);
+
+				if (minute < 10) {
+					minuteStr = '0' + minuteStr;
+				}
+				Transaction t = Cat.newTransaction("NetGraph", "M" + minuteStr);
+
 				try {
 					Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
 
@@ -138,13 +148,17 @@ public class NetGraphManager implements Initializable, LogEnabled {
 					Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
 
 					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(lastHourReports);
+					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
+					t.setStatus(e);
 					Cat.logError(e);
+				} finally {
+					t.complete();
 				}
 
 				try {
 					long duration = System.currentTimeMillis() - current;
-					
+
 					if (duration < DURATION) {
 						Thread.sleep(DURATION - duration);
 					}

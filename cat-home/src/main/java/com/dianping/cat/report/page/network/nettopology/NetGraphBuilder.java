@@ -37,19 +37,23 @@ public class NetGraphBuilder implements Initializable {
 			NetGraph netGraph = copyBaseInfoFromTemplate(m_netGraphTemplate);
 			for (NetTopology netTopology : netGraph.getNetTopologies()) {
 				for (Connection connection : netTopology.getConnections()) {
-					double insum = 0;
-					double outsum = 0;
+					try {
+						double insum = 0;
+						double outsum = 0;
 
-					for (Interface inter : connection.getInterfaces()) {
-						String group = inter.getGroup();
-						MetricReport report = reports.get(group);
+						for (Interface inter : connection.getInterfaces()) {
+							String group = inter.getGroup();
+							MetricReport report = reports.get(group);
 
-						updateInterface(inter, report, i);
-						insum += inter.getIn();
-						outsum += inter.getOut();
+							updateInterface(inter, report, i);
+							insum += inter.getIn();
+							outsum += inter.getOut();
+						}
+						connection.setInsum(insum);
+						connection.setOutsum(outsum);
+					} catch (Exception e) {
+						Cat.logError(e);
 					}
-					connection.setInsum(insum);
-					connection.setOutsum(outsum);
 				}
 			}
 			netGraph.setMinute(i);
