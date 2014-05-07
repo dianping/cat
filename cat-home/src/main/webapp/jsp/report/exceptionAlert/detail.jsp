@@ -27,7 +27,7 @@
 					<td>${domain.name}</td>
 					<td>${domain.warnNumber}</td>
 					<td>${domain.errorNumber}</td>
-					<td><a class='detail btn btn-primary btn-small' href="?op=alertDetail&domain=${domain.name}&startDate=${payload.historyStartDate}&endDate=${payload.historyEndDate}&date=${model.date}">Detail</a></td>
+					<td><a class='detail btn btn-primary btn-small' href="?op=alertDetail&domain=${domain.name}&date=${model.date}">Detail</a></td>
 				</tr>
 			</c:forEach>
 			</tbody>

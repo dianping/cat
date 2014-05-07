@@ -285,7 +285,6 @@ public class Handler implements PageHandler<Context> {
 			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
 			break;
-
 		case EXCEPTION_THRESHOLDS:
 			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
 			break;
@@ -294,13 +293,12 @@ public class Handler implements PageHandler<Context> {
 			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE:
-			if (StringUtils.isEmpty(payload.getDomain()) && StringUtils.isEmpty(payload.getException())) {
-				model.setExceptionList(getExceptionList());
-				model.setDomainList(getDoaminList());
-			} else {
-				model.setExceptionLimit(m_exceptionConfigManager.queryDomainExceptionLimit(payload.getDomain(),
-				      payload.getException()));
-			}
+			model.setExceptionLimit(m_exceptionConfigManager.queryDomainExceptionLimit(payload.getDomain(),
+			      payload.getException()));
+			break;
+		case EXCEPTION_THRESHOLD_ADD:
+			model.setExceptionList(getExceptionList());
+			model.setDomainList(getDoaminList());
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
 			updateExceptionLimit(payload);

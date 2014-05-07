@@ -33,6 +33,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case ALERT_REPORT:
 			return JspFile.ALERT_REPORT.getPath();
 		case ALERT_REPORT_DETAIL:
+		case ALERT_HISTORY_REPORT_DETAIL:
 			return JspFile.ALERT_REPORT_DETAIL.getPath();
 		}
 

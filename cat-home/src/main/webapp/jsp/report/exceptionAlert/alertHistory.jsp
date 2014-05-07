@@ -62,7 +62,7 @@
 	</div>
 	<div class="span10">
 		<div class="report">
-			<%@ include file="detail.jsp"%>
+			<%@ include file="detailHistory.jsp"%>
 		</div>
 	</div>
 </div>
