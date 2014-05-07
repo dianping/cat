@@ -57,6 +57,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_content;
 
 	private Map<String, Domain> m_productLineToDomains;
+	
+	private List<String> domainList;
+	
+	private List<String> exceptionList;
 
 	public static final String SUCCESS = "Success";
 
@@ -161,6 +165,22 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<String, Domain> getProductLineToDomains() {
 		return m_productLineToDomains;
+	}
+
+	public List<String> getDomainList() {
+		return domainList;
+	}
+
+	public void setDomainList(List<String> domainList) {
+		this.domainList = domainList;
+	}
+
+	public List<String> getExceptionList() {
+		return exceptionList;
+	}
+
+	public void setExceptionList(List<String> exceptionList) {
+		this.exceptionList = exceptionList;
 	}
 
 	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {

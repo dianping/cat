@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
 
 		switch (payload.getAction()) {
-		case NETWORK:
+		case METRIC:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
@@ -97,17 +97,6 @@ public class Handler implements PageHandler<Context> {
 		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
 			if ("network".equalsIgnoreCase(entry.getValue().getDisplay())) {
 				metricAggregationGroupList.add(entry.getValue());
-			}
-		}
-
-		String product = payload.getProduct();
-
-		if (product == null || product.length() == 0) {
-
-			if ((payload.getGroup() == null || payload.getGroup() == "") && !metricAggregationGroups.isEmpty()) {
-				payload.setAction(Action.NETTOPOLOGY.getName());
-			} else {
-				payload.setAction(Action.AGGREGATION.getName());
 			}
 		}
 
