@@ -17,6 +17,8 @@ public class TopReportVisitor extends BaseVisitor {
 
 	private String m_currentDomain;
 	
+	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
+	
 	public TopReportVisitor(ExceptionThresholdConfigManager configManager) {
 		m_configManager = configManager;
 	}
@@ -77,10 +79,14 @@ public class TopReportVisitor extends BaseVisitor {
 			errorLimit = exceptionLimit.getError();
 		}
 		com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
+		com.dianping.cat.home.alertReport.entity.Exception exception = domain.findOrCreateException(TOTAL_EXCEPTION_ALERT);
+		
 		if (errorLimit > 0 && totalSegmentException >= errorLimit) {
 			domain.incErrorNumber();
+			exception.incErrorNumber();
 		} else if (warnLimit > 0 && totalSegmentException >= warnLimit) {
 			domain.incWarnNumber();
+			exception.incWarnNumber();
 		}
 		super.visitSegment(segment);
 	}
