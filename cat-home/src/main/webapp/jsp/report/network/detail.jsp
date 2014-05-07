@@ -10,7 +10,7 @@
 				              <li class='nav-header' id="metric_${item.id}"><a href="?op=aggregation&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
 			</c:forEach>
 			<c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="metric_${item.id}"><a href="?op=view&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
+			              <li class='nav-header' id="metric_${item.id}"><a href="?op=metric&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
 			</c:forEach>
             <li >&nbsp;</li>
           </ul>

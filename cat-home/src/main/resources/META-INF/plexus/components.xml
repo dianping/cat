@@ -3432,6 +3432,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

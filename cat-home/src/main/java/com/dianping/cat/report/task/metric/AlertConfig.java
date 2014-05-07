@@ -14,8 +14,6 @@ import com.site.helper.Splitters;
 
 public class AlertConfig {
 
-	private DecimalFormat m_df = new DecimalFormat("0.0");
-
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> emails = new ArrayList<String>();
 		String emailList = productLine.getEmail();
@@ -57,6 +55,7 @@ public class AlertConfig {
 		double decreaseValue = config.getDecreaseValue();
 		double valueSum = 0;
 		double baselineSum = 0;
+		DecimalFormat df = new DecimalFormat("0.0");
 
 		if (decreasePercent == 0) {
 			decreasePercent = 50;
@@ -66,8 +65,8 @@ public class AlertConfig {
 		}
 
 		for (int i = 0; i < length; i++) {
-			baselines.append(m_df.format(baseline[i])).append(" ");
-			values.append(m_df.format(value[i])).append(" ");
+			baselines.append(df.format(baseline[i])).append(" ");
+			values.append(df.format(value[i])).append(" ");
 			valueSum = valueSum + value[i];
 			baselineSum = baselineSum + baseline[i];
 
@@ -87,7 +86,7 @@ public class AlertConfig {
 
 		sb.append("[基线值:").append(baselines.toString()).append("] ");
 		sb.append("[实际值:").append(values.toString()).append("] ");
-		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");
+		sb.append("[下降:").append(df.format(percent)).append("%").append("]");
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
 	}

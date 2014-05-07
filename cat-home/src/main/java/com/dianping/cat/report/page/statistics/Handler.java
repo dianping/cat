@@ -85,7 +85,6 @@ public class Handler implements PageHandler<Context> {
 	private void buildAlertInfo(Model model, Payload payload) {
 		AlertReport alertReport = queryAlertReport(payload);
 		model.setAlertReport(alertReport);
-		
 		List<com.dianping.cat.home.alertReport.entity.Domain> sortedDoamins = buildSortedAlertInfo(alertReport, model);
 		model.setAlertDomains(sortedDoamins);
 	}
@@ -247,6 +246,7 @@ public class Handler implements PageHandler<Context> {
 			buildAlertInfo(model, payload);
 			break;
 		case ALERT_REPORT_DETAIL:
+		case ALERT_HISTORY_REPORT_DETAIL:
 			builAlertDetails(model, payload);
 			break;
 		}
