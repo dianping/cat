@@ -66,10 +66,15 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 13;
 
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
+	private int m_gzipMessageSize = 5000;
 
-	private BlockingQueue<MessageItem> m_messageItems = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(
-	      10000 * 20);
+	private int m_messageBlockSize = 5000;
+
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
+
+	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+
+	private BlockingQueue<MessageItem> m_retryItems = new LinkedBlockingQueue<MessageItem>();
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -118,8 +123,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			Threads.forGroup("Cat").start(new MessageGzip(i));
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
+
+			m_messageQueues.put(i, messageQueue);
+			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
 		}
+		Threads.forGroup("Cat").start(new MessageGzip(m_retryItems, -1));
 	}
 
 	@Override
@@ -329,15 +338,21 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		m_total++;
 		int bucketIndex = (int) (m_total % m_gzipThreads);
-		boolean result = m_messageItems.offer(new MessageItem(tree, id));
+		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
+		MessageItem messageItem = new MessageItem(tree, id);
+		boolean result = items.offer(messageItem);
 
 		if (!result) {
-			m_error++;
-			if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
-				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
-				      + bucketIndex);
+			boolean retry = m_retryItems.offer(messageItem);
+
+			if (!retry) {
+				m_error++;
+				if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
+					m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
+					      + bucketIndex);
+				}
+				m_serverStateManager.addMessageDumpLoss(1);
 			}
-			m_serverStateManager.addMessageDumpLoss(1);
 		}
 		logStorageState(tree);
 	}
@@ -390,9 +405,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
+		public BlockingQueue<MessageItem> m_messageQueue;
+
 		private int m_count = -1;
 
-		public MessageGzip(int index) {
+		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
+			m_messageQueue = messageQueue;
 			m_index = index;
 		}
 
@@ -450,7 +468,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public void run() {
 			try {
 				while (true) {
-					MessageItem item = m_messageItems.poll(5, TimeUnit.MILLISECONDS);
+					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
 						m_count++;
