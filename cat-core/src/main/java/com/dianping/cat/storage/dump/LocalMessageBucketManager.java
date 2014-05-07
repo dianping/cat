@@ -66,13 +66,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 13;
 
-	private int m_gzipMessageSize = 10000;
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
 
-	private int m_messageBlockSize = 10000;
-
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
-
-	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+	private BlockingQueue<MessageItem> m_messageItems = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(
+	      10000 * 20);
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -121,10 +118,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
-
-			m_messageQueues.put(i, messageQueue);
-			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
+			Threads.forGroup("Cat").start(new MessageGzip(i));
 		}
 	}
 
@@ -335,8 +329,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		m_total++;
 		int bucketIndex = (int) (m_total % m_gzipThreads);
-		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
-		boolean result = items.offer(new MessageItem(tree, id));
+		boolean result = m_messageItems.offer(new MessageItem(tree, id));
 
 		if (!result) {
 			m_error++;
@@ -397,12 +390,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
-		public BlockingQueue<MessageItem> m_messageQueue;
-
 		private int m_count = -1;
 
-		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
-			m_messageQueue = messageQueue;
+		public MessageGzip(int index) {
 			m_index = index;
 		}
 
@@ -460,7 +450,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public void run() {
 			try {
 				while (true) {
-					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
+					MessageItem item = m_messageItems.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
 						m_count++;
