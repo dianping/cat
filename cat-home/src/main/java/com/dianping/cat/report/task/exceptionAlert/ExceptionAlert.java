@@ -223,14 +223,14 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 		}
 
-		String mailContent = "Exception Alert! [" + domain + "] : " + exceptions.toString();
+		String mailContent = "异常警告! [" + domain + "] : " + exceptions.toString();
 
 		m_logger.info(title + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(title, mailContent, emails);
 
-		String smsContent = "Exception Alert! [" + domain + "] : " + errorExceptions.toString();
+		String smsContent = "异常警告! [" + domain + "] : " + errorExceptions.toString();
 
-		m_mailSms.sendSms(title + " " + smsContent, smsContent, phones);
+		m_mailSms.sendSms(title, smsContent, phones);
 		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + mailContent);
 	}
 
