@@ -419,14 +419,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			return "Message-Gzip-" + m_index;
 		}
 
-		private void gzipMessageWithMonitor(MessageItem item) {
-			Transaction t = Cat.newTransaction("Gzip", "Thread-" + m_index);
-			t.setStatus(Transaction.SUCCESS);
-
-			gzipMessage(item);
-			t.complete();
-		}
-
 		private void gzipMessage(MessageItem item) {
 			try {
 				MessageId id = item.getMessageId();
@@ -460,6 +452,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			} catch (Throwable e) {
 				Cat.logError(e);
 			}
+		}
+
+		private void gzipMessageWithMonitor(MessageItem item) {
+			Transaction t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+			t.setStatus(Transaction.SUCCESS);
+
+			gzipMessage(item);
+			t.complete();
 		}
 
 		@Override

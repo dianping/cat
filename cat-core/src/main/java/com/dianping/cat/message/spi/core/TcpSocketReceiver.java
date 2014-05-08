@@ -124,8 +124,24 @@ public class TcpSocketReceiver implements LogEnabled {
 		m_active = true;
 	}
 
+	public boolean isActive() {
+		return m_active;
+	}
+
 	public void setQueueSize(int queueSize) {
 		m_queueSize = queueSize;
+	}
+
+	public void startEncoderThreads(int threadSize) {
+		m_decodeThreads = threadSize;
+
+		for (int i = 0; i < threadSize; i++) {
+			LinkedBlockingQueue<ChannelBuffer> queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
+			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, queue, m_codec, m_handler);
+			Threads.forGroup("Cat").start(messageDecoder);
+
+			m_queues.put(i, queue);
+		}
 	}
 
 	public class DecodeMessageTask implements Task {
@@ -143,9 +159,50 @@ public class TcpSocketReceiver implements LogEnabled {
 			m_handler = handler;
 		}
 
+		private void decodeMessage(ChannelBuffer buf) {
+			try {
+				buf.markReaderIndex();
+
+				// read the size of the message
+				buf.readInt();
+				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
+				buf.resetReaderIndex();
+				tree.setBuffer(buf);
+				m_handler.handle(tree);
+			} catch (Throwable e) {
+				buf.resetReaderIndex();
+
+				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
+				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+			}
+		}
+
+		private void decodeMessageWithMonitor(ChannelBuffer buf) {
+			Transaction t = Cat.newTransaction("Decode", "Thread-" + m_index);
+
+			decodeMessage(buf);
+
+			t.setStatus(Transaction.SUCCESS);
+			t.complete();
+		}
+
 		@Override
 		public String getName() {
 			return "Message-Decode-" + m_index;
+		}
+
+		public void handleMessage() throws InterruptedException {
+			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
+
+			if (buf != null) {
+				m_count++;
+
+				if (m_count % 10000 == 0) {
+					decodeMessageWithMonitor(buf);
+				} else {
+					decodeMessage(buf);
+				}
+			}
 		}
 
 		@Override
@@ -171,47 +228,6 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
-			}
-		}
-
-		public void handleMessage() throws InterruptedException {
-			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
-
-			if (buf != null) {
-				m_count++;
-
-				if (m_count % 10000 == 0) {
-					decodeMessageWithMonitor(buf);
-				} else {
-					decodeMessage(buf);
-				}
-			}
-		}
-
-		private void decodeMessageWithMonitor(ChannelBuffer buf) {
-			Transaction t = Cat.newTransaction("Decode", "Thread-" + m_index);
-
-			decodeMessage(buf);
-
-			t.setStatus(Transaction.SUCCESS);
-			t.complete();
-		}
-
-		private void decodeMessage(ChannelBuffer buf) {
-			try {
-				buf.markReaderIndex();
-
-				// read the size of the message
-				buf.readInt();
-				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
-				buf.resetReaderIndex();
-				tree.setBuffer(buf);
-				m_handler.handle(tree);
-			} catch (Throwable e) {
-				buf.resetReaderIndex();
-
-				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
-				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
 			}
 		}
 
@@ -293,22 +309,6 @@ public class TcpSocketReceiver implements LogEnabled {
 				m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
 			}
 		}
-	}
-
-	public void startEncoderThreads(int threadSize) {
-		m_decodeThreads = threadSize;
-
-		for (int i = 0; i < threadSize; i++) {
-			LinkedBlockingQueue<ChannelBuffer> queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
-			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, queue, m_codec, m_handler);
-			Threads.forGroup("Cat").start(messageDecoder);
-
-			m_queues.put(i, queue);
-		}
-	}
-
-	public boolean isActive() {
-		return m_active;
 	}
 
 }
