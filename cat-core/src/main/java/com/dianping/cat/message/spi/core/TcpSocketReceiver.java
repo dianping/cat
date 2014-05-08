@@ -67,13 +67,13 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
 
-	private int m_queueSize = 15000;
+	private int m_queueSize = 8000;
 
 	private volatile int m_errorCount;
 
 	private volatile long m_processCount;
 
-	private volatile int m_decodeThreads;
+	private volatile int m_decodeThreads =12;
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>> m_queues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>>();
 
@@ -83,12 +83,10 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public void init() {
-		int encodeThreadNumber = 12;
-
 		if (m_serverConfigManager.isLocalMode()) {
-			encodeThreadNumber = 1;
+			m_decodeThreads = 1;
 		}
-		startEncoderThreads(encodeThreadNumber);
+		startEncoderThreads(m_decodeThreads);
 
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 
@@ -133,8 +131,6 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public void startEncoderThreads(int threadSize) {
-		m_decodeThreads = threadSize;
-
 		for (int i = 0; i < threadSize; i++) {
 			LinkedBlockingQueue<ChannelBuffer> queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
 			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, queue, m_codec, m_handler);
@@ -150,7 +146,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		private BlockingQueue<ChannelBuffer> m_queue;
 
-		private int m_count = -1;
+		private long m_count = -1;
 
 		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue, MessageCodec codec, MessageHandler handler) {
 			m_index = index;
