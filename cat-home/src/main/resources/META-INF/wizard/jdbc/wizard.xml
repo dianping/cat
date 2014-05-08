@@ -12,7 +12,6 @@
          <table name="event"/>
          <table name="topologyGraph"/>
          <table name="baseline"/>
-         <table name="sqlreport"/>
          <table name="alteration"/>
          <table name="daily_report_content"/>
          <table name="monthly_report_content"/>
