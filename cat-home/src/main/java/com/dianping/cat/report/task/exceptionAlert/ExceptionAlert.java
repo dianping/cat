@@ -53,6 +53,8 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
+	private static final String TOTAL_EXCEPTION_NAME = "TotalException";
+
 	private static final int ALERT_PERIOD = 1;
 
 	private static final int WARN_FLAG = 1;
@@ -104,12 +106,16 @@ public class ExceptionAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE));
+				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
 				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
-
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
-					sendAlertForDomain(entry.getKey(), entry.getValue());
+					try {
+						sendAlertForDomain(entry.getKey(), entry.getValue());
+					} catch (Exception e) {
+						e.printStackTrace();
+						m_logger.error(e.getMessage());
+					}
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
@@ -141,32 +147,48 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private Map<String, List<AlertException>> getAlertExceptions(Collection<List<Item>> items) {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
-
 		for (List<Item> item : items) {
 			for (Item i : item) {
 				String domain = i.getDomain();
+				ExceptionLimit totalExceptionLimit = m_configManager.queryDomainTotalLimit(domain);
+				int totalWarnLimit = -1;
+				int totalErrorLimit = -1;
+				int totalException = 0;
+
+				if (totalExceptionLimit != null) {
+					totalWarnLimit = totalExceptionLimit.getWarning();
+					totalErrorLimit = totalExceptionLimit.getError();
+				}
 
 				for (Entry<String, Double> entry : i.getException().entrySet()) {
+					String exceptionName = entry.getKey();
 					double value = entry.getValue().doubleValue();
 					double warnLimit = -1;
 					double errorLimit = -1;
+					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(domain, entry.getKey());
 
-					if (m_configManager != null) {
-						ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(domain, entry.getKey());
-						
-						if (exceptionLimit == null) {
-							exceptionLimit = m_configManager.queryDomainTotalLimit(domain);
-						}
-						if (exceptionLimit != null) {
-							warnLimit = exceptionLimit.getWarning();
-							errorLimit = exceptionLimit.getError();
+					if (exceptionLimit != null) {
+						warnLimit = exceptionLimit.getWarning();
+						errorLimit = exceptionLimit.getError();
+
+						if (errorLimit > 0 && value > errorLimit) {
+							findOrCreateDomain(alertExceptions, domain).add(
+							      new AlertException(exceptionName, ERROR_FLAG, value));
+							totalException++;
+						} else if (warnLimit > 0 && value > warnLimit) {
+							findOrCreateDomain(alertExceptions, domain).add(
+							      new AlertException(exceptionName, WARN_FLAG, value));
+							totalException++;
 						}
 					}
-					if (errorLimit > 0 && value > errorLimit) {
-						findOrCreateDomain(alertExceptions, domain).add(new AlertException(domain, ERROR_FLAG, value));
-					} else if (warnLimit > 0 && value > warnLimit) {
-						findOrCreateDomain(alertExceptions, domain).add(new AlertException(domain, WARN_FLAG, value));
-					}
+				}
+
+				if (totalErrorLimit > 0 && totalException > totalErrorLimit) {
+					findOrCreateDomain(alertExceptions, domain).add(
+					      new AlertException(TOTAL_EXCEPTION_NAME, ERROR_FLAG, totalException));
+				} else if (totalWarnLimit > 0 && totalException > totalWarnLimit) {
+					findOrCreateDomain(alertExceptions, domain).add(
+					      new AlertException(TOTAL_EXCEPTION_NAME, WARN_FLAG, totalException));
 				}
 			}
 		}
@@ -189,7 +211,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		ProductLine productLine = getProductLineByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-		String title = "[ " + productLine.getId() + ":" + domain + " ] " + "exception alert !";
+		String title = "[ " + productLine.getId() + ":" + domain + " ] " + "异常警告! [ " + new Date() + " ]";
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();
 
@@ -201,14 +223,14 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 		}
 
-		String mailContent = "Exception Alert! [" + domain + "] : " + exceptions.toString();
+		String mailContent = "异常警告! [" + domain + "] : " + exceptions.toString();
 
 		m_logger.info(title + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(title, mailContent, emails);
 
-		String smsContent = "Exception Alert! [" + domain + "] : " + errorExceptions.toString();
+		String smsContent = "异常警告! [" + domain + "] : " + errorExceptions.toString();
 
-		m_mailSms.sendSms(title + " " + smsContent, smsContent, phones);
+		m_mailSms.sendSms(title, smsContent, phones);
 		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + mailContent);
 	}
 

@@ -9,7 +9,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case NETWORK:
+		case METRIC:
 			return JspFile.NETWORK.getPath();
 		case AGGREGATION:
 			return JspFile.AGGREGATION.getPath();

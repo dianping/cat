@@ -78,24 +78,19 @@
 
 				<div class="span2">
 					<div class="well sidebar-nav">
-						<ul class="nav nav-list">
-							<li class='nav-header active' id="metric_nettopology"><a
-								href="?op=topo"><strong>核心拓扑</strong></a></li>
-							<c:forEach var="item" items="${model.metricAggregationGroup}"
-								varStatus="status">
-								<li class='nav-header' id="metric_${item.id}"><a
-									href="?op=dashboard&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
-							</c:forEach>
-
-							<c:forEach var="item" items="${model.productLines}"
-								varStatus="status">
-								<li class='nav-header' id="metric_${item.id}"><a
-									href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
-							</c:forEach>
-							<li>&nbsp;</li>
-						</ul>
-					</div>
-					<!--/.well -->
+		            <ul class="nav nav-list">
+		            	 <li class='nav-header' id="${item.id}"></li>
+		            	<li class='nav-header active' id="metric_nettopology"><a href="?op=view"><strong>核心拓扑</strong></a></li>
+		            	 <c:forEach var="item" items="${model.metricAggregationGroup}" varStatus="status">
+				              <li class='nav-header' id="metric_${item.id}"><a href="?op=aggregation&group=${item.id}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item.id}</strong></a></li>
+			             </c:forEach>
+			             
+			             <c:forEach var="item" items="${model.productLines}" varStatus="status">
+			              <li class='nav-header' id="metric_${item.id}"><a href="?op=metric&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
+			            </c:forEach>
+		              <li >&nbsp;</li>
+		            </ul>
+		          </div><!--/.well -->
 				</div>
 				<!--/span-->
 				

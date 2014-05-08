@@ -113,7 +113,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(new Date(end.getTime() - 1));
-
+		
 		return alertReport;
 	}
 
