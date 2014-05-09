@@ -38,6 +38,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 	      final Map<String, double[]> dataWithOutFutures) {
 
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
+		System.out.println(aggregationKeys);
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
 		int step = m_dataExtractor.getStep();
@@ -49,7 +50,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
 
-					buildLineChartTitle(alertItems, lineChart, key);
+					buildLineChartTitle(alertItems, lineChart, key, keyTitle);
 					lineChart.setTitle(buildChartTitle(keyTitle));
 					lineChart.setId(buildChartTitle(keyTitle));
 					lineChart.setStart(startDate);
