@@ -9,7 +9,6 @@
 			</anchors>
 			<switchs>
 				<switch name="QW-E8030" x="320" y="100" state="1" />
-				<switch name="ADS-1600" x="130" y="100" />
 				<switch name="C3750-CTC" x="320" y="200" />
 				<switch name="C3750-CNC" x="130" y="200" />
 				<switch name="F5v2400-1" x="320" y="300" />
@@ -30,11 +29,9 @@
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/6" />
 				</connection>
-				<connection from="ADS-1600" to="CNC">
-				</connection>
-				<connection from="ADS-1600" to="C3750-CNC">
-				</connection>
-				<connection from="C3750-CNC" to="ADS-1600">
+				<connection from="C3750-CNC" to="CNC">
+					<interface group="switch-SH-NH-CNC-C3750G" domain="SH-NH-CNC-C3750G"
+						key="GigabitEthernet1/0/1" />
 				</connection>
 				<connection from="N7K-1" to="HM">
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
