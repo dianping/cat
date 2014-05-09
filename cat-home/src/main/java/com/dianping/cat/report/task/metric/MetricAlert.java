@@ -70,7 +70,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	private boolean isMonitorRuleAlert = true;
+	private boolean isMonitorRuleAlert = false;
 
 	private Pair<Boolean, String> checkDataByJudge(MetricItemConfig config, double[] value, double[] baseline, MetricType type, List<Config> configs) {
 		if (isMonitorRuleAlert) {
