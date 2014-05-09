@@ -76,7 +76,7 @@ public class StateShow extends BaseVisitor {
 			}
 		}
 		if (m_sortType == null) {
-			Collections.sort(domains, new DomainCompartor());
+			Collections.sort(domains, new SizeCompartor());
 		} else if (m_sortType.equals("total")) {
 			Collections.sort(domains, new TotalCompartor());
 		} else if (m_sortType.equals("loss")) {
