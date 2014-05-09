@@ -28,11 +28,6 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	@Inject
 	private ExceptionThresholdConfigManager m_configManager;
 
-	public AlertReportBuilder(ReportService reportService, ExceptionThresholdConfigManager configManager) {
-		m_reportService = reportService;
-		m_configManager = configManager;
-	}
-
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		AlertReport alertReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
@@ -54,10 +49,10 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		AlertReport alertReport = new AlertReport(Constants.CAT);
 		TopReportVisitor visitor = new TopReportVisitor(m_configManager).setReport(alertReport);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		
+
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(end);
-		
+
 		TopReport topReport = m_reportService.queryTopReport("Cat", start, end);
 		visitor.visitTopReport(topReport);
 
@@ -69,9 +64,9 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(start);
 		report.setType(1);
-		
+
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
-		
+
 		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
@@ -87,9 +82,9 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		
+
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
-		
+
 		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
@@ -106,9 +101,9 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		
+
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
-		
+
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 

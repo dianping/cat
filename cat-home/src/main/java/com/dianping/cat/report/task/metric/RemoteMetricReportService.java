@@ -27,6 +27,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
@@ -123,10 +124,11 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 		} finally {
 			t.complete();
 		}
+		String require = request.getProperty("requireAll");
 
-		if (reports.size() != count) {
-			Cat.logError(new FetchMetricReportException("Error when request metric http api, servers:" + ips.size() + " "
-			      + ips.toString()));
+		if (reports.size() != count && require != null) {
+			Cat.logEvent("FetchMetricReportError", request.getDomain(), Event.SUCCESS, null);
+
 			return null;
 		} else {
 			MetricReportMerger merger = new MetricReportMerger(new MetricReport(request.getDomain()));
@@ -162,7 +164,6 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 				t.setStatus("NoReport");
 			}
 		} catch (Exception e) {
-			logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();

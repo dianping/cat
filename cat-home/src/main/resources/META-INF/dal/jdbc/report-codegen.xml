@@ -6,18 +6,16 @@
     <member name="title" field="title" value-type="String" length="128" nullable="false" />
     <member name="domain" field="domain" value-type="String" length="128" nullable="false" />
     <member name="hostname" field="hostname" value-type="String" length="128" nullable="false" />
-    <member name="ip" field="ip" value-type="String" length="128" nullable="false" />
+    <member name="ip" field="ip" value-type="String" length="128" />
     <member name="date" field="date" value-type="Date" nullable="false" />
     <member name="user" field="user" value-type="String" length="45" nullable="false" />
-    <member name="alt-group" field="alt-group" value-type="String" length="45" />
-    <member name="content" field="content" value-type="String" length="16777215" nullable="false" />
+    <member name="alt-group" field="alt_group" value-type="String" length="45" />
+    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
     <member name="url" field="url" value-type="String" length="200" />
-    <member name="creation-date" field="creation-date" value-type="Date" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="IX_Domain_Name_Period" members="domain ASC, title ASC, ip ASC" />
-    <index name="IX_Name_Period" members="title ASC, ip ASC" />
-    <index name="IX_Period" members="ip ASC" />
+    <index name="ind_date_domain_host" members="date ASC, domain ASC, hostname ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -51,14 +49,12 @@
   <entity name="baseline" table="baseline" alias="b">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-name" field="report_name" value-type="String" length="100" />
-    <member name="index-key" field="index_key" value-type="String" length="100" />
+    <member name="index-key" field="index_key" value-type="String" length="256" nullable="false" />
     <member name="report-period" field="report_period" value-type="Date" />
     <member name="data" field="data" value-type="byte[]" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="ix_indexkey_reportperiod" members="index_key ASC, report_period ASC" />
-    <index name="ix_reportperiod" members="report_period ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -137,7 +133,6 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="ix_date_domain" members="date ASC, domain ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -201,58 +196,6 @@
         <param name="key-report-id" />
         <statement><![CDATA[DELETE FROM <TABLE/>
         WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
-  <entity name="net-topology-report" table="report" alias="r">
-    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="type" field="type" value-type="int" length="3" nullable="false" />
-    <member name="name" field="name" value-type="String" length="20" nullable="false" />
-    <member name="ip" field="ip" value-type="String" length="20" />
-    <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
-    <member name="period" field="period" value-type="Date" nullable="false" />
-    <member name="content" field="content" value-type="String" length="2147483647" />
-    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <var name="key-id" value-type="int" key-member="id" />
-    <primary-key name="PRIMARY" members="id" />
-    <index name="IX_Domain_Name_Period" members="domain ASC, name ASC, period ASC" />
-    <index name="IX_Name_Period" members="name ASC, period ASC" />
-    <index name="IX_Period" members="period ASC" />
-    <readsets>
-      <readset name="FULL" all="true" />
-    </readsets>
-    <updatesets>
-      <updateset name="FULL" all="true" />
-    </updatesets>
-    <query-defs>
-      <query name="find-by-PK" type="SELECT">
-        <param name="key-id" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-<!--       <query name="find-by-name-period" type="SELECT">
-        <param name="name" />
-        <param name="period" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='name'/> = ${name}
-        AND <FIELD name='period'/> = ${period}]]></statement>
-      </query> -->
-      <query name="insert" type="INSERT">
-        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-      </query>
-      <query name="update-by-PK" type="UPDATE">
-        <param name="key-id" />
-        <statement><![CDATA[UPDATE <TABLE/>
-        SET <FIELDS/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-      <query name="delete-by-PK" type="DELETE">
-        <param name="key-id" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
       </query>
     </query-defs>
   </entity>

@@ -30,25 +30,30 @@ public class NetGraphBuilder implements Initializable {
 		return m_requireGroups;
 	}
 
-	public NetGraphSet buildSet(Map<String, MetricReport> reportSet) {
+	public NetGraphSet buildGraphSet(Map<String, MetricReport> reports) {
 		NetGraphSet netGraphSet = new NetGraphSet();
 
 		for (int i = 0; i <= 59; i++) {
 			NetGraph netGraph = copyBaseInfoFromTemplate(m_netGraphTemplate);
 			for (NetTopology netTopology : netGraph.getNetTopologies()) {
 				for (Connection connection : netTopology.getConnections()) {
-					double insum = 0;
-					double outsum = 0;
-					
-					for (Interface inter : connection.getInterfaces()) {
-						String group = inter.getGroup();
+					try {
+						double insum = 0;
+						double outsum = 0;
 
-						updateInterface(inter, reportSet.get(group), i);
-						insum += inter.getIn();
-						outsum += inter.getOut();
+						for (Interface inter : connection.getInterfaces()) {
+							String group = inter.getGroup();
+							MetricReport report = reports.get(group);
+
+							updateInterface(inter, report, i);
+							insum += inter.getIn();
+							outsum += inter.getOut();
+						}
+						connection.setInsum(insum);
+						connection.setOutsum(outsum);
+					} catch (Exception e) {
+						Cat.logError(e);
 					}
-					connection.setInsum(insum);
-					connection.setOutsum(outsum);
 				}
 			}
 			netGraph.setMinute(i);
@@ -110,7 +115,7 @@ public class NetGraphBuilder implements Initializable {
 		String key = inter.getKey();
 
 		try {
-			MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + inter.getKey() + "-in");
+			MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-in");
 			MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-out");
 
 			inter.setIn(inItem.findOrCreateSegment(minute).getSum() / 60 * 8);

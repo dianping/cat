@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -215,7 +214,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 		StringBuilder title = new StringBuilder();
 
 		title.append("[异常告警] [项目组: ").append(domain).append("] [时间: ").append(new Date()).append("]");
-
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();
 

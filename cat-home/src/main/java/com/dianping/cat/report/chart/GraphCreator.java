@@ -26,7 +26,9 @@ public class GraphCreator extends GraphCreatorBase{
 			final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
+		
 		int step = m_dataExtractor.getStep();
+		
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();

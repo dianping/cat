@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.network.nettopology;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -23,6 +25,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.entity.NetTopology;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.metric.RemoteMetricReportService;
@@ -87,32 +90,24 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		return netGraphData;
 	}
 
-	public NetGraphSet getNetGraphSet() {
-		return m_currentNetGraphSet;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isJobMachine()) {
-		    Threads.forGroup("Cat").start(new NetGraphReloader());
+			Threads.forGroup("Cat").start(new NetGraphReloader());
 		}
 	}
 
 	private Map<String, MetricReport> queryMetricReports(Date date) {
 		Set<String> groupSet = m_netGraphBuilder.buildRequireGroups();
-		Map<String, MetricReport> reportSet = new HashMap<String, MetricReport>();
+		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groupSet) {
 			ModelRequest request = new ModelRequest(group, date.getTime());
 			MetricReport report = m_service.invoke(request);
 
-			reportSet.put(group, report);
+			reports.put(group, report);
 		}
-		return reportSet;
-	}
-
-	public void setNetGraphSet(NetGraphSet netGraphSet) {
-		m_currentNetGraphSet = netGraphSet;
+		return reports;
 	}
 
 	private class NetGraphReloader implements Task {
@@ -128,17 +123,34 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 			while (active) {
 				long current = System.currentTimeMillis();
-				Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
+				int minute = Calendar.getInstance().get(Calendar.MINUTE);
+				String minuteStr = String.valueOf(minute);
 
-				m_currentNetGraphSet = m_netGraphBuilder.buildSet(currentMetricReports);
-
-				Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
-				Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
-
-				m_lastNetGraphSet = m_netGraphBuilder.buildSet(lastHourReports);
-				long duration = System.currentTimeMillis() - current;
+				if (minute < 10) {
+					minuteStr = '0' + minuteStr;
+				}
+				Transaction t = Cat.newTransaction("NetGraph", "M" + minuteStr);
 
 				try {
+					Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
+
+					m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(currentMetricReports);
+
+					Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
+					Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
+
+					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(lastHourReports);
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
+				} finally {
+					t.complete();
+				}
+
+				try {
+					long duration = System.currentTimeMillis() - current;
+
 					if (duration < DURATION) {
 						Thread.sleep(DURATION - duration);
 					}
