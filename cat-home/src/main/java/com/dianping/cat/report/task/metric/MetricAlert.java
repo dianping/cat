@@ -60,7 +60,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
-	private static final int DATA_CHECK_MINUTE = 2;
+	private static final int DATA_CHECK_MINUTE = 3;
 
 	private static final int DATA_AREADY_MINUTE = 1;
 

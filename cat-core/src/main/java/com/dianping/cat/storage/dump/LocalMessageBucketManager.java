@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
@@ -16,7 +17,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.util.internal.ConcurrentHashMap;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
@@ -102,13 +102,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	public void close() throws IOException {
-		for (LocalMessageBucket bucket : m_buckets.values()) {
-			bucket.close();
-		}
-		m_buckets.clear();
-	}
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -162,18 +155,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (String dataFile : paths) {
 				LocalMessageBucket bucket = m_buckets.get(dataFile);
 
-				if (bucket == null) {
-					File file = new File(m_baseDir, dataFile);
-
-					if (file.exists()) {
-						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-						bucket.setBaseDir(m_baseDir);
-						bucket.initialize(dataFile);
-						m_buckets.putIfAbsent(dataFile, bucket);
-					}
-				}
 				if (bucket != null) {
-					// flush the buffer if have data
 					MessageBlock block = bucket.flushBlock();
 
 					if (block != null) {
@@ -186,6 +168,28 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					if (tree != null && tree.getMessageId().equals(messageId)) {
 						t.addData("path", dataFile);
 						return tree;
+					}
+				} else {
+					File file = new File(m_baseDir, dataFile);
+
+					if (file.exists()) {
+						try {
+							bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+							bucket.setBaseDir(m_baseDir);
+							bucket.initialize(dataFile);
+
+							MessageTree tree = bucket.findByIndex(id.getIndex());
+
+							if (tree != null && tree.getMessageId().equals(messageId)) {
+								t.addData("path", dataFile);
+								return tree;
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
+						} finally {
+							bucket.close();
+							release(bucket);
+						}
 					}
 				}
 			}
@@ -275,8 +279,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						t.setStatus(e);
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
+					} finally {
+						m_buckets.remove(path);
+						release(bucket);
 					}
-					m_buckets.remove(path);
 				} else {
 					try {
 						moveFile(path);
@@ -327,14 +333,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		// the message tree of one ip in the same hour should be put in one gzip thread
-		// String domain = id.getDomain();
-		// String key = domain + id.getIpAddress() + id.getTimestamp();
-		// int abs = key.hashCode();
-		//
-		// if (abs < 0) {
-		// abs = -abs;
-		// }
 		m_total++;
 		int bucketIndex = (int) (m_total % m_gzipThreads);
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
@@ -427,11 +425,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				LocalMessageBucket bucket = m_buckets.get(dataFile);
 
 				if (bucket == null) {
-					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-					bucket.setBaseDir(m_baseDir);
-					bucket.initialize(dataFile);
-					m_buckets.putIfAbsent(dataFile, bucket);
-					bucket = m_buckets.get(dataFile);
+					synchronized (m_buckets) {
+						bucket = m_buckets.get(dataFile);
+						if (bucket == null) {
+							bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+							bucket.setBaseDir(m_baseDir);
+							bucket.initialize(dataFile);
+							m_buckets.putIfAbsent(dataFile, bucket);
+							bucket = m_buckets.get(dataFile);
+						}
+					}
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();

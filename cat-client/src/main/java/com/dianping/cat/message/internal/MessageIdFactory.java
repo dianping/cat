@@ -100,7 +100,7 @@ public class MessageIdFactory {
 			long timestamp = m_byteBuffer.getLong();
 
 			if (timestamp == m_lastTimestamp) { // for same hour
-				m_index = index;
+				m_index = index + 10000;
 			} else {
 				m_index = 0;
 			}

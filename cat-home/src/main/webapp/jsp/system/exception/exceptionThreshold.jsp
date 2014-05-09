@@ -11,34 +11,22 @@
 <a:body>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+	<res:useCss value="${res.css.local['jqx.base.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['jqxcore.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jqxbuttons.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jqxscrollbar.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jqxlistbox.js']}" target="head-js" />
+    <res:useJs value="${res.js.local['jqxcombobox.js']}" target="head-js" />
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#exceptionConfigList').addClass('active');
 			$(".delete").bind("click", function() {
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});
-			
-			
-			$(document).delegate('.update,.create', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				//var cell = document.getElementById('');
-				$.ajax({
-					type: "get",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#myModal').html(response);
-						$('#myModal').modal();
-						exceptionValidate();
-					}
-				});
-			});
+
 			
 			var action = '${payload.action.name}';
 			if(action=='exceptionThresholdDelete'||action=='exceptionThresholdUpdateSubmit'){
@@ -52,9 +40,29 @@
 					$('#state').html('&nbsp;');
 				},3000);
 			}
+			
+			$(document).delegate('.update,.create', 'click', function(e){
+				var anchor = this,
+					el = $(anchor);
+				
+				if(e.ctrlKey || e.metaKey){
+					return true;
+				}else{
+					e.preventDefault();
+				}
+				$.ajax({
+					type: "get",
+					url: anchor.href,
+					success : function(response, textStatus) {
+						$('#myModal').html(response);
+						$('#myModal').modal();
+ 						$("#domainId").select2();
+ 						exceptionValidate();
+					}
+				});
+			});
 		});
 	</script>
-	
 	
 	<div>
 		<div class="row-fluid">
@@ -73,7 +81,7 @@
 					<th width="60%">异常名称</th>
 					<th width="10%">Warning阈值</th>
 					<th width="10%">Error阈值</th>
-					<th width="5%">操作&nbsp;&nbsp;  <a class='create btn btn-primary btn-small' href="?op=exceptionThresholdUpdate">新增</a></th>
+					<th width="5%">操作&nbsp;&nbsp;  <a class='create btn btn-primary btn-small' href="?op=exceptionThresholdAdd">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.exceptionLimits}" varStatus="status">

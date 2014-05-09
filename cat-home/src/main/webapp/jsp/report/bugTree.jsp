@@ -4,6 +4,7 @@
     <ul class="nav nav-list">
       <li class='nav-header text-center'><h4>报表中心</h4></li>
       <li id="bug" class="text-right" id="bug"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view"><strong>项目异常</strong></a></li>
+      <li id="alert" class="text-right" id="alert"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert"><strong>异常告警</strong></a></li>
   	  <li id="utilization" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization"><strong>容量规划</strong></a></li>
   	  <li id="service" class="text-right" id="service"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service"><strong>服务可用性</strong></a></li>
   	  <li id="heavy" class="text-right" id="heavy"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy"><strong>重量级访问</strong></a></li>

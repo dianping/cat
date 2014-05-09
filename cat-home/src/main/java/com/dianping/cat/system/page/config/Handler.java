@@ -2,8 +2,10 @@ package com.dianping.cat.system.page.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,10 +35,13 @@ import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
+import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -89,6 +94,9 @@ public class Handler implements PageHandler<Context> {
 	
 	@Inject
 	private DomainNavManager m_manager;
+	
+	@Inject
+	private ReportService m_reportService;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -301,6 +309,10 @@ public class Handler implements PageHandler<Context> {
 			model.setExceptionLimit(m_exceptionConfigManager.queryDomainExceptionLimit(payload.getDomain(),
 			      payload.getException()));
 			break;
+		case EXCEPTION_THRESHOLD_ADD:
+			model.setExceptionList(getExceptionList());
+			model.setDomainList(getDoaminList());
+			break;
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
 			updateExceptionLimit(payload);
 			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
@@ -354,7 +366,30 @@ public class Handler implements PageHandler<Context> {
 		}
 		m_jspViewer.view(ctx, model);
 	}
+	
+	private List<String> getDoaminList() {
+		Collection<ProductLine> productLines = m_productLineConfigManger.queryAllProductLines().values();
+		Set<String> domains = new HashSet<String>();
 
+		for (ProductLine line : productLines) {
+			domains.addAll(m_productLineConfigManger.queryDomainsByProductLine(line.getId()));
+		}
+		return new ArrayList<String>(domains);
+	}
+	
+	private List<String> getExceptionList() {
+		long current = System.currentTimeMillis();
+		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR -TimeUtil.ONE_DAY) ;
+		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
+		Set<String> exceptions = new HashSet<String>();
+		
+		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
+			exceptions.addAll(domain.getValue().getExceptionItems().keySet());
+		}
+		return new ArrayList<String>(exceptions);
+	}
+	
 	private void metricConfigAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 

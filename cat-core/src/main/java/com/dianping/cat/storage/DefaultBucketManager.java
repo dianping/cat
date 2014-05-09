@@ -13,11 +13,12 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			bucket.close();
 		} catch (Exception e) {
 			// ignore it
+		} finally {
+			release(bucket);
 		}
-		release(bucket);
 	}
 
-	protected Bucket<?> createBucket(Class<?> type, Date timestamp, String name, String namespace) throws IOException {
+	private Bucket<?> createBucket(Class<?> type, Date timestamp, String name, String namespace) throws IOException {
 		Bucket<?> bucket = lookup(Bucket.class, type.getName() + "-" + namespace);
 
 		bucket.initialize(type, name, timestamp);
@@ -25,7 +26,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> Bucket<T> getBucket(Class<T> type, long timestamp, String name, String namespace) throws IOException {
+	private <T> Bucket<T> getBucket(Class<T> type, long timestamp, String name, String namespace) throws IOException {
 		Date date = new Date(timestamp);
 		Bucket<?> bucket = createBucket(type, date, name, namespace);
 

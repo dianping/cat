@@ -52,6 +52,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	EXCEPTION_THRESHOLDS("exceptionThresholds"),
 
 	EXCEPTION_THRESHOLD_UPDATE("exceptionThresholdUpdate"),
+	
+	EXCEPTION_THRESHOLD_ADD("exceptionThresholdAdd"),
 
 	EXCEPTION_THRESHOLD_UPDATE_SUBMIT("exceptionThresholdUpdateSubmit"),
 

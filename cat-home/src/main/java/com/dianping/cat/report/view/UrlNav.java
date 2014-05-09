@@ -1,6 +1,8 @@
 package com.dianping.cat.report.view;
 
 public enum UrlNav {
+	SEVEN_DAY_BEFORE("-7d", -24 * 7),
+
 	ONE_DAY_BEFORE("-1d", -24),
 
 	TWO_HOURS_BEFORE("-2h", -2),
@@ -11,7 +13,9 @@ public enum UrlNav {
 
 	TWO_HOURS_LATER("+2h", 2),
 
-	ONE_DAY_LATER("+1d", 24);
+	ONE_DAY_LATER("+1d", 24),
+
+	SEVEN_DAY_LATER("+7d", 24 * 7);
 
 	private int m_hours;
 

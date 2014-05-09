@@ -24,7 +24,6 @@ public class LocalMessageBucket implements MessageBucket {
 	@Inject
 	private MessageCodec m_codec;
 
-	@Inject
 	private File m_baseDir = new File(".");
 
 	private MessageBlockReader m_reader;
@@ -67,6 +66,10 @@ public class LocalMessageBucket implements MessageBucket {
 		if (m_reader != null) {
 			m_reader.close();
 			m_writer.close();
+			m_out.close();
+			m_buf.close();
+			m_out = null;
+			m_buf = null;
 			m_reader = null;
 			m_writer = null;
 		}

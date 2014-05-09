@@ -7,8 +7,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
-   private ReportPage m_page;
-
+	private ReportPage m_page;
 
 	@FieldMeta("op")
 	private Action m_action;
@@ -27,12 +26,15 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
-	
+
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
-	
+
 	@FieldMeta("group")
 	private String m_group;
+
+	@FieldMeta("minute")
+	private int m_minute = -1;
 
 	public String getGroup() {
 		return m_group;
@@ -100,14 +102,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
 	}
-	
+
 	public boolean isHideNav() {
-   	return m_hideNav;
-   }
+		return m_hideNav;
+	}
 
 	public void setHideNav(boolean hideNav) {
-   	m_hideNav = hideNav;
-   }
+		m_hideNav = hideNav;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
@@ -115,4 +117,13 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.NETTOPOLOGY;
 		}
 	}
+
+	public int getMinute() {
+		return m_minute;
+	}
+
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+	
 }
