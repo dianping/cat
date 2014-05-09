@@ -44,6 +44,7 @@ import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
+import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -82,6 +83,9 @@ public class Handler implements PageHandler<Context> {
 	
 	@Inject
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;
+	
+	@Inject
+	private MetricRuleConfigManager m_metricRuleConfigManager;
 	
 	@Inject
 	private DomainNavManager m_manager;
@@ -277,7 +281,15 @@ public class Handler implements PageHandler<Context> {
 			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
 			break;
-
+		case METRIC_RULE_CONFIG_UPDATE:
+			String metricRuleConfig = payload.getContent();
+			if (!StringUtils.isEmpty(metricRuleConfig)) {
+				model.setOpState(m_metricRuleConfigManager.insert(metricRuleConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_metricRuleConfigManager.getMonitorRules().toString());
+			break;
 		case EXCEPTION_THRESHOLDS:
 			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
 			break;

@@ -10,11 +10,16 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.home.monitorrules.entity.Condition;
+import com.dianping.cat.home.monitorrules.entity.Config;
+import com.dianping.cat.home.monitorrules.entity.Subcondition;
 import com.site.helper.Splitters;
 
 public class AlertConfig {
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
+
+	private static final Long ONE_MINUTE_MILLSEC = 60000L;
 
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> emails = new ArrayList<String>();
@@ -83,4 +88,105 @@ public class AlertConfig {
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
+
+	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type,
+	      List<Config> configs) {
+		int length = value.length;
+		StringBuilder baselines = new StringBuilder();
+		StringBuilder values = new StringBuilder();
+		double valueSum = 0;
+		double baselineSum = 0;
+
+		for (int i = 0; i < length; i++) {
+			baselines.append(m_df.format(baseline[i])).append(" ");
+			values.append(m_df.format(value[i])).append(" ");
+			valueSum = valueSum + value[i];
+			baselineSum = baselineSum + baseline[i];
+
+			if (baseline[i] <= 0) {
+				baseline[i] = 100;
+				return new Pair<Boolean, String>(false, "");
+			}
+			if (type == MetricType.COUNT || type == MetricType.SUM) {
+				if (!judgeByRule(configs, value[i], baseline[i])) {
+					return new Pair<Boolean, String>(false, "");
+				}
+			}
+		}
+		double percent = (1 - valueSum / baselineSum) * 100;
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		sb.append("[基线值:").append(baselines.toString()).append("] ");
+		sb.append("[实际值:").append(values.toString()).append("] ");
+		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");
+		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+		return new Pair<Boolean, String>(true, sb.toString());
+	}
+
+	private Long getMillsByString(String time) throws Exception {
+		String[] times = time.split(":");
+		int hour = Integer.parseInt(times[0]);
+		int minute = Integer.parseInt(times[1]);
+		long result = hour * 60 * 60 * 1000 + minute * 60 * 1000;
+
+		return result;
+	}
+
+	private boolean judgeByRule(List<Config> configs, double value, double baseline) {
+		boolean isRuleTriggered = false;
+
+		for (Config ruleConfig : configs) {
+			if (isRuleTriggered) {
+				break;
+			}
+
+			long ruleStartTime;
+			long ruleEndTime;
+			long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+
+			try {
+				ruleStartTime = getMillsByString(ruleConfig.getStarttime());
+				ruleEndTime = getMillsByString(ruleConfig.getEndtime()) + ONE_MINUTE_MILLSEC;
+			} catch (Exception ex) {
+				ruleStartTime = 0L;
+				ruleEndTime = 86400000L;
+			}
+
+			if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+				continue;
+			}
+
+			for (Condition condition : ruleConfig.getConditions()) {
+				if (isRuleTriggered) {
+					break;
+				}
+
+				boolean isSubRuleTriggered = true;
+
+				for (Subcondition subCondition : condition.getSubconditions()) {
+					if (!isSubRuleTriggered) {
+						break;
+					}
+
+					int ruleType = subCondition.getType();
+					int ruleValue = Integer.parseInt(subCondition.getText());
+					RuleType rule = RuleType.getByTypeId(ruleType);
+
+					if (rule == null) {
+						continue;
+					} else {
+						isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
+					}
+				}
+
+				if (isSubRuleTriggered) {
+					isRuleTriggered = true;
+				}
+			}
+		}
+
+		return isRuleTriggered;
+	}
+
 }

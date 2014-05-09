@@ -23,11 +23,13 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.monitorrules.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class MetricAlert implements Task, LogEnabled {
@@ -37,6 +39,9 @@ public class MetricAlert implements Task, LogEnabled {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
+
+	@Inject
+	private MetricRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
 	private BaselineService m_baselineService;
@@ -65,11 +70,22 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
+	private boolean isMonitorRuleAlert = true;
+
+	private Pair<Boolean, String> checkDataByJudge(MetricItemConfig config, double[] value, double[] baseline, MetricType type, List<Config> configs) {
+		if (isMonitorRuleAlert) {
+			return m_alertConfig.checkData(config, value, baseline, type, configs);
+		}else{
+			return m_alertConfig.checkData(config, value, baseline, type);
+		}
+	}
+
 	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
 		String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 		      config.getMetricKey());
+		List<Config> configs = m_metricRuleConfigManager.getMetricIdRuleMap().get(metricKey);
 
 		if (minute >= DATA_CHECK_MINUTE - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -81,7 +97,7 @@ public class MetricAlert implements Task, LogEnabled {
 				value = queryRealData(start, end, metricKey, report, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				return m_alertConfig.checkData(config, value, baseline, type);
+				return checkDataByJudge(config, value, baseline, type, configs);
 			}
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
@@ -92,7 +108,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-				return m_alertConfig.checkData(config, value, baseline, type);
+				return checkDataByJudge(config, value, baseline, type, configs);
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -112,7 +128,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 				value = mergerArray(lastValue, currentValue);
 				baseline = mergerArray(lastBaseline, currentBaseline);
-				return m_alertConfig.checkData(config, value, baseline, type);
+				return checkDataByJudge(config, value, baseline, type, configs);
 			}
 		}
 		return null;
@@ -178,6 +194,31 @@ public class MetricAlert implements Task, LogEnabled {
 		return result;
 	}
 
+	private void processMetricItemConfig(MetricItemConfig config, int minute, String product, ProductLine productLine) {
+		if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
+		      .isShowCountDashboard())) {
+			return;
+		}
+
+		Pair<Boolean, String> alert = null;
+		if (config.isShowAvg()) {
+			alert = computeAlertInfo(minute, product, config, MetricType.AVG);
+		}
+		if (config.isShowCount()) {
+			alert = computeAlertInfo(minute, product, config, MetricType.COUNT);
+		}
+		if (config.isShowSum()) {
+			alert = computeAlertInfo(minute, product, config, MetricType.SUM);
+		}
+
+		if (alert != null && alert.getKey()) {
+			config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
+
+			m_alertInfo.addMetric(config, new Date().getTime());
+			sendAlertInfo(productLine, config, alert.getValue());
+		}
+	}
+
 	private void processProductLine(ProductLine productLine) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
@@ -186,28 +227,7 @@ public class MetricAlert implements Task, LogEnabled {
 		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
-			if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
-			      .isShowCountDashboard())) {
-				continue;
-			}
-
-			Pair<Boolean, String> alert = null;
-			if (config.isShowAvg()) {
-				alert = computeAlertInfo(minute, product, config, MetricType.AVG);
-			}
-			if (config.isShowCount()) {
-				alert = computeAlertInfo(minute, product, config, MetricType.COUNT);
-			}
-			if (config.isShowSum()) {
-				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
-			}
-			if (alert != null && alert.getKey()) {
-				config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-				      config.getMetricKey()));
-
-				m_alertInfo.addMetric(config, new Date().getTime());
-				sendAlertInfo(productLine, config, alert.getValue());
-			}
+			processMetricItemConfig(config, minute, product, productLine);
 		}
 	}
 
@@ -273,6 +293,7 @@ public class MetricAlert implements Task, LogEnabled {
 						Cat.logError(e);
 					}
 				}
+
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);

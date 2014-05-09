@@ -1,0 +1,47 @@
+<monitor-rules>
+	<rule id="decreasePercentage">
+		<metric-item type="id">domain:url:metric</metric-item>
+		<metric-item type="id">TuanGouWeb:URL:/index</metric-item>
+		
+		<config starttime="06:00" endtime="09:00">
+			<condition>
+					<subcondition type="1">40</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="2">200</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="conditionCombination">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="1">400</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="1">400</subcondition>
+					<subcondition type="2">900</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="1">40</subcondition>
+					<subcondition type="2">100</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="subconditionCombination">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="1">400</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="1">400</subcondition>
+					<subcondition type="2">900</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="1">40</subcondition>
+					<subcondition type="2">200</subcondition>
+					<subcondition type="6">10</subcondition>
+			</condition>
+		</config>
+	</rule>
+</monitor-rules>
+
