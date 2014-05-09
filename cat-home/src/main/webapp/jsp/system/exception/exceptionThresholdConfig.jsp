@@ -10,9 +10,13 @@
 
 		if(document.getElementById("jqxcombobox")) {
        		$("#jqxcombobox").jqxComboBox({ source: source, selectedIndex: 0, width: '200px', height: '25px' });
-
 		}
 		});
+		
+		function setWidth(){
+			var sel =  document.getElementById("domainId");
+			sel.style.width = ((sel.offsetWidth < 200) ? '200' : 'auto');
+		}
 	</script>
 
 <form name="exceptionConfig" id="form" method="post"
@@ -29,7 +33,7 @@
 				<input name="exceptionLimit.domain" value="${model.exceptionLimit.domain}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<select name="exceptionLimit.domain" id="domainId">
+				<select name="exceptionLimit.domain" id="domainId" style="width:200px;">
 					<c:forEach var="item" items="${model.domainList}">
                         <option value="${item}">${item}</option> 							
 					</c:forEach>
