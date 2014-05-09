@@ -11,16 +11,18 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.company.model.entity.Domain;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.message.Event;
@@ -35,6 +37,9 @@ import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class ExceptionAlert implements Task, LogEnabled {
+
+	@Inject
+	private ProjectDao m_projectDao;
 
 	@Inject
 	private AlertConfig m_alertConfig;
@@ -104,7 +109,12 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
-
+			try {
+	         System.out.println(m_projectDao.findAll(ProjectEntity.READSET_FULL));
+         } catch (DalException e1) {
+	         // TODO Auto-generated catch block
+	         e1.printStackTrace();
+         }
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
@@ -195,23 +205,23 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return alertExceptions;
 	}
 
-	private ProductLine getProductLineByDomain(String domain) {
-		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
-		for (ProductLine product : productLines) {
-			Map<String, Domain> domains = product.getDomains();
-			if (domains.containsKey(domain)) {
-				return product;
-			}
+	private Project queryProjectByDomain(String projectName) {
+		Project project = null;
+		try {
+			project = m_projectDao.findByDomain(projectName, ProjectEntity.READSET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		return null;
+		return project;
 	}
 
 	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
+		Project project = queryProjectByDomain(domain);
+		List<String> emails = m_alertConfig.buildMailReceivers(project);
+		StringBuilder title = new StringBuilder();
 
-		ProductLine productLine = getProductLineByDomain(domain);
-		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-		String title = "[ " + productLine.getId() + ":" + domain + " ] " + "异常警告! [ " + new Date() + " ]";
+		title.append("[异常告警] [项目组: ").append(domain).append("] [时间: ").append(new Date()).append("]");
+
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();
 
@@ -222,16 +232,12 @@ public class ExceptionAlert implements Task, LogEnabled {
 				errorExceptions.add(exception.getName());
 			}
 		}
-
-		String mailContent = "异常警告! [" + domain + "] : " + exceptions.toString();
+		String mailContent = "[异常警告] [" + domain + "] : ";
 
 		m_logger.info(title + " " + mailContent + " " + emails);
-		m_mailSms.sendEmail(title, mailContent, emails);
+		m_mailSms.sendEmail(title.toString(), mailContent, emails);
 
-		String smsContent = "异常警告! [" + domain + "] : " + errorExceptions.toString();
-
-		m_mailSms.sendSms(title, smsContent, phones);
-		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + mailContent);
+		Cat.logEvent("MetricAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
 	}
 
 	@Override
