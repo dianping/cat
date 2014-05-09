@@ -65,21 +65,32 @@ public class StateShow extends BaseVisitor {
 			domain.getIps().clear();
 		}
 
-		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
+		List<ProcessDomain> domains = new ArrayList<ProcessDomain>(m_processDomains.values());
+
+		for (ProcessDomain temp : domains) {
+			long total = temp.getTotal();
+			double size = temp.getSize();
+
+			if (total > 0) {
+				temp.setAvg(size / total);
+			}
+		}
 		if (m_sortType == null) {
-			Collections.sort(temp, new DomainCompartor());
+			Collections.sort(domains, new DomainCompartor());
 		} else if (m_sortType.equals("total")) {
-			Collections.sort(temp, new TotalCompartor());
+			Collections.sort(domains, new TotalCompartor());
 		} else if (m_sortType.equals("loss")) {
-			Collections.sort(temp, new LossCompartor());
+			Collections.sort(domains, new LossCompartor());
 		} else if (m_sortType.equals("size")) {
-			Collections.sort(temp, new SizeCompartor());
+			Collections.sort(domains, new SizeCompartor());
+		} else if (m_sortType.equals("avg")) {
+			Collections.sort(domains, new AvgCompartor());
 		} else {
-			Collections.sort(temp, new DomainCompartor());
+			Collections.sort(domains, new DomainCompartor());
 		}
 
-		temp.add(0, mergeAll(temp));
-		return temp;
+		domains.add(0, mergeAll(domains));
+		return domains;
 	}
 
 	public Machine getTotal() {
@@ -225,6 +236,14 @@ public class StateShow extends BaseVisitor {
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return o1.getName().compareTo(o2.getName());
+		}
+	}
+
+	public static class AvgCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return (int) (o1.getAvg() * 100 - o2.getAvg() * 100);
 		}
 	}
 

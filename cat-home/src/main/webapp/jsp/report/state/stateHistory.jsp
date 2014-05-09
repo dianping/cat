@@ -152,6 +152,7 @@
 		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
 		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss">Analyzer丢失消息总量</a></td>
 		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size">压缩前消息大小(GB)</a></td>
+		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg">平均消息大小(KB)</a></td>
 		<td width="5%">机器总数</td>
 		<td>项目对应机器列表</td>
 	</tr>
@@ -163,6 +164,7 @@
 			<td style="text-align:right;">${w:format(item.total,'#,###,###,###,##0.#')}</td>
 			<td style="text-align:right;">${w:format(item.totalLoss,'#,###,###,###,##0.#')}</td>
 			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'#,###,##0.000')}</td>
+			<td style="text-align:right;">${w:format(item.avg/1024,'#,###,##0.000')}</td>
 			<td style="text-align:center;">${w:size(item.ips)}</td>
 			<td style="white-space: normal">${item.ips}</td>
 		</tr>

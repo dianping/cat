@@ -42,6 +42,14 @@
 		</th>
 	</tr>
 </table>
+
+<c:if test="${not empty model.message}">
+	<h3 class="text-center text-error">出问题CAT的服务端:${model.message}</h3>
+</c:if>
+<c:if test="${ empty model.message}">
+	<h3 class="text-center text-success">CAT服务端正常</h3>
+</c:if>
+
 <table width="80%">
 	<tr>
 		<th width="35%" colspan=2>指标</th>
@@ -153,6 +161,7 @@
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss">Analyzer丢失消息总量</a></td>
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size">压缩前消息大小(GB)</a></td>
+		<td width="5%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg">平均消息大小(KB)</a></td>
 		<td width="5%">机器总数</td>
 		<td>项目对应机器列表</td>
 	</tr>
@@ -167,6 +176,7 @@
 			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:totalLoss" data-status="${item.name}:totalLoss" class="state_graph_link">[:: show ::]</a></td>
 			<td style="text-align:right;">${w:format(item.size/1024/1024/1024,'#,###,##0.000')}</td>
 			<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=${item.name}:size" data-status="${item.name}:size" class="state_graph_link">[:: show ::]</a></td>
+			<td style="text-align:right;">${w:format(item.avg/1024,'#,###,##0.000')}</td>
 			<td style="text-align:center;">${w:size(item.ips)}</td>
 			<td style="white-space:normal">${item.ips}</td>
 		</tr>
@@ -175,12 +185,13 @@
 		<tr class="graphs"><td colspan="7"><div id="${item.name}:size" style="display:none"></div></td></tr>
 	</c:forEach>
 	<tr style="color: white;">
-				<td>${lastIndex+1}</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td>${model.state.totalSize}</td>
-			</tr>
+		<td>${lastIndex+1}</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>${model.state.totalSize}</td>
+	</tr>
 </table>
 	<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
