@@ -20,6 +20,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	public StateShow m_state;
+	
+	public String m_message;
 
 	public String m_graph;
 
@@ -64,6 +66,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setGraph(String graph) {
 		m_graph = graph;
 	}
+	
+	public String getMessage() {
+   	return m_message;
+   }
+
+	public void setMessage(String message) {
+   	m_message = message;
+   }
 
 	public void setReport(StateReport reports) {
 		m_report = reports;

@@ -3,6 +3,7 @@ package com.dianping.cat.message.spi.core;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -32,8 +33,10 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -54,24 +57,25 @@ public class TcpSocketReceiver implements LogEnabled {
 	@Inject
 	private MessageHandler m_handler;
 
-	private Logger m_logger;
-
-	@Inject
-	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
-
-	private BlockingQueue<ChannelBuffer> m_queue;
-
-	private int m_queueSize = 100000;
-
-	private volatile int m_errorCount;
-
-	private volatile long m_processCount;
-
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
+
+	private Logger m_logger;
+
+	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
+
+	private int m_queueSize = 8000;
+
+	private volatile int m_errorCount;
+
+	private volatile long m_processCount;
+
+	private volatile int m_decodeThreads =12;
+
+	private ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>> m_queues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>>();
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -79,6 +83,11 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public void init() {
+		if (m_serverConfigManager.isLocalMode()) {
+			m_decodeThreads = 1;
+		}
+		startEncoderThreads(m_decodeThreads);
+
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 
 		InetSocketAddress address;
@@ -91,8 +100,6 @@ public class TcpSocketReceiver implements LogEnabled {
 		} else {
 			address = new InetSocketAddress(m_host, m_port);
 		}
-
-		m_queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
 
 		ExecutorService bossExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Boss-" + address);
 		ExecutorService workerExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Worker");
@@ -115,8 +122,22 @@ public class TcpSocketReceiver implements LogEnabled {
 		m_active = true;
 	}
 
+	public boolean isActive() {
+		return m_active;
+	}
+
 	public void setQueueSize(int queueSize) {
 		m_queueSize = queueSize;
+	}
+
+	public void startEncoderThreads(int threadSize) {
+		for (int i = 0; i < threadSize; i++) {
+			LinkedBlockingQueue<ChannelBuffer> queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
+			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, queue, m_codec, m_handler);
+			Threads.forGroup("Cat").start(messageDecoder);
+
+			m_queues.put(i, queue);
+		}
 	}
 
 	public class DecodeMessageTask implements Task {
@@ -125,6 +146,8 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		private BlockingQueue<ChannelBuffer> m_queue;
 
+		private long m_count = -1;
+
 		public DecodeMessageTask(int index, BlockingQueue<ChannelBuffer> queue, MessageCodec codec, MessageHandler handler) {
 			m_index = index;
 			m_queue = queue;
@@ -132,9 +155,50 @@ public class TcpSocketReceiver implements LogEnabled {
 			m_handler = handler;
 		}
 
+		private void decodeMessage(ChannelBuffer buf) {
+			try {
+				buf.markReaderIndex();
+
+				// read the size of the message
+				buf.readInt();
+				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
+				buf.resetReaderIndex();
+				tree.setBuffer(buf);
+				m_handler.handle(tree);
+			} catch (Throwable e) {
+				buf.resetReaderIndex();
+
+				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
+				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+			}
+		}
+
+		private void decodeMessageWithMonitor(ChannelBuffer buf) {
+			Transaction t = Cat.newTransaction("Decode", "Thread-" + m_index);
+
+			decodeMessage(buf);
+
+			t.setStatus(Transaction.SUCCESS);
+			t.complete();
+		}
+
 		@Override
 		public String getName() {
 			return "Message-Decode-" + m_index;
+		}
+
+		public void handleMessage() throws InterruptedException {
+			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
+
+			if (buf != null) {
+				m_count++;
+
+				if (m_count % 10000 == 0) {
+					decodeMessageWithMonitor(buf);
+				} else {
+					decodeMessage(buf);
+				}
+			}
 		}
 
 		@Override
@@ -160,32 +224,6 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
-			}
-		}
-
-		public void handleMessage() throws InterruptedException {
-			ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
-
-			if (buf != null) {
-				decodeMessage(buf);
-			}
-		}
-
-		private void decodeMessage(ChannelBuffer buf) {
-			try {
-				buf.markReaderIndex();
-
-				// read the size of the message
-				buf.readInt();
-				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
-				buf.resetReaderIndex();
-				tree.setBuffer(buf);
-				m_handler.handle(tree);
-			} catch (Throwable e) {
-				buf.resetReaderIndex();
-
-				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
-				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
 			}
 		}
 
@@ -235,40 +273,38 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
-			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
-			boolean result = m_queue.offer(buf);
+			m_processCount++;
 
-			if (result == false) {
+			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
+
+			int index = (int) (m_processCount % m_decodeThreads);
+			int retryTime = 0;
+			boolean errorFlag = true;
+
+			while (retryTime < m_decodeThreads) {
+				LinkedBlockingQueue<ChannelBuffer> queue = m_queues.get((index + retryTime) % m_decodeThreads);
+				boolean result = queue.offer(buf);
+
+				if (result) {
+					errorFlag = false;
+					break;
+				}
+				retryTime++;
+			}
+
+			if (errorFlag) {
 				m_errorCount++;
 				if (m_errorCount % CatConstants.ERROR_COUNT == 0) {
 					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
 
-					if (m_errorCount % (CatConstants.ERROR_COUNT * 100) == 0) {
-						m_logger.warn("The server can't process the tree! overflow : " + m_errorCount
-						      + ",current queue size:" + m_queue.size());
-					}
-				}
-			} else {
-				m_processCount++;
-				long flag = m_processCount % CatConstants.SUCCESS_COUNT;
-
-				if (flag == 0) {
-					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
 				}
 			}
+			long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+
+			if (flag == 0) {
+				m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+			}
 		}
-	}
-
-	public void startEncoderThreads(int threadSize) {
-		for (int i = 0; i < threadSize; i++) {
-			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, m_queue, m_codec, m_handler);
-
-			Threads.forGroup("Cat").start(messageDecoder);
-		}
-	}
-
-	public boolean isActive() {
-		return m_active;
 	}
 
 }

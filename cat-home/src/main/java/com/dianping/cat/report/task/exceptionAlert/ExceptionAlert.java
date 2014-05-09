@@ -210,7 +210,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 		ProductLine productLine = getProductLineByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+		List<String> phones = m_alertConfig.buildExceptionSMSReceivers(productLine);
 		String title = "[ " + productLine.getId() + ":" + domain + " ] " + "异常警告! [ " + new Date() + " ]";
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();

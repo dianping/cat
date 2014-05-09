@@ -1,8 +1,12 @@
 package com.dianping.cat.servlet;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -29,6 +33,8 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class CatFilter implements Filter {
+	private static Map<MessageFormat, String> s_patterns = new LinkedHashMap<MessageFormat, String>();
+
 	private List<Handler> m_handlers = new ArrayList<Handler>();
 
 	@Override
@@ -45,13 +51,29 @@ public class CatFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		String pattern = filterConfig.getInitParameter("pattern");
+
+		if (pattern != null) {
+			try {
+				String[] patterns = pattern.split(";");
+
+				for (String temp : patterns) {
+					String[] temps = temp.split(":");
+
+					s_patterns.put(new MessageFormat(temps[0].trim()), temps[1].trim());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		m_handlers.add(CatHandler.ENVIRONMENT);
 		m_handlers.add(CatHandler.ID_SETUP);
 		m_handlers.add(CatHandler.LOG_SPAN);
 		m_handlers.add(CatHandler.LOG_CLIENT_PAYLOAD);
 	}
 
-	static enum CatHandler implements Handler {
+	private static enum CatHandler implements Handler {
 		ENVIRONMENT {
 			protected int detectMode(HttpServletRequest req) {
 				String source = req.getHeader("X-CAT-SOURCE");
@@ -249,10 +271,32 @@ public class CatFilter implements Filter {
 		},
 
 		LOG_SPAN {
+
+			private String getRequestURI(HttpServletRequest req) {
+				String requestURI = req.getRequestURI();
+
+				if (s_patterns.size() == 0) {
+					return requestURI;
+				} else {
+					for (Entry<MessageFormat, String> entry : s_patterns.entrySet()) {
+						MessageFormat format = entry.getKey();
+
+						try {
+							format.parse(requestURI);
+
+							return entry.getValue();
+						} catch (Exception e) {
+							// ignore
+						}
+					}
+					return requestURI;
+				}
+			}
+
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
-				Transaction t = Cat.newTransaction(ctx.getType(), req.getRequestURI());
+				Transaction t = Cat.newTransaction(ctx.getType(), getRequestURI(req));
 
 				try {
 					ctx.handle();

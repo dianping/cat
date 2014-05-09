@@ -74,6 +74,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
+	private BlockingQueue<MessageItem> m_retryItems = new LinkedBlockingQueue<MessageItem>();
+
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
@@ -126,6 +128,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
 		}
+		Threads.forGroup("Cat").start(new MessageGzip(m_retryItems, -1));
 	}
 
 	@Override
@@ -336,15 +339,20 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_total++;
 		int bucketIndex = (int) (m_total % m_gzipThreads);
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
-		boolean result = items.offer(new MessageItem(tree, id));
+		MessageItem messageItem = new MessageItem(tree, id);
+		boolean result = items.offer(messageItem);
 
 		if (!result) {
-			m_error++;
-			if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
-				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
-				      + bucketIndex);
+			boolean retry = m_retryItems.offer(messageItem);
+
+			if (!retry) {
+				m_error++;
+				if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
+					m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
+					      + bucketIndex);
+				}
+				m_serverStateManager.addMessageDumpLoss(1);
 			}
-			m_serverStateManager.addMessageDumpLoss(1);
 		}
 		logStorageState(tree);
 	}
@@ -411,13 +419,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			return "Message-Gzip-" + m_index;
 		}
 
-		private void gzipMessage(MessageItem item, boolean monitor) {
-			Transaction t = null;
-
-			if (monitor) {
-				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
-				t.setStatus(Transaction.SUCCESS);
-			}
+		private void gzipMessage(MessageItem item) {
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
@@ -449,11 +451,15 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 			} catch (Throwable e) {
 				Cat.logError(e);
-			} finally {
-				if (monitor) {
-					t.complete();
-				}
 			}
+		}
+
+		private void gzipMessageWithMonitor(MessageItem item) {
+			Transaction t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+			t.setStatus(Transaction.SUCCESS);
+
+			gzipMessage(item);
+			t.complete();
 		}
 
 		@Override
@@ -464,10 +470,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 					if (item != null) {
 						m_count++;
-						if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
-							gzipMessage(item, true);
+						if (m_count % (10000) == 0) {
+							gzipMessageWithMonitor(item);
 						} else {
-							gzipMessage(item, false);
+							gzipMessage(item);
 						}
 					}
 				}
