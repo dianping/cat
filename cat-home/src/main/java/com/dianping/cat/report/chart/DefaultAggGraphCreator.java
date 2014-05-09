@@ -50,7 +50,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
 
-					buildLineChartTitle(alertItems, lineChart, key, keyTitle);
+					buildLineChartTitle(alertItems, lineChart, key, buildChartTitle(keyTitle));
 					lineChart.setTitle(buildChartTitle(keyTitle));
 					lineChart.setId(buildChartTitle(keyTitle));
 					lineChart.setStart(startDate);
