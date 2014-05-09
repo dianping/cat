@@ -110,12 +110,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 			try {
-	         System.out.println(m_projectDao.findAll(ProjectEntity.READSET_FULL));
-         } catch (DalException e1) {
-	         // TODO Auto-generated catch block
-	         e1.printStackTrace();
-         }
-			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
 				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
