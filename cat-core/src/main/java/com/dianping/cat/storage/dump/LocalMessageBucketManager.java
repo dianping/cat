@@ -74,7 +74,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
-	private BlockingQueue<MessageItem> m_retryItems = new LinkedBlockingQueue<MessageItem>();
+	private BlockingQueue<MessageItem> m_retryItems = new LinkedBlockingQueue<MessageItem>(m_messageBlockSize);
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
