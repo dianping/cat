@@ -66,15 +66,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 13;
 
-	private int m_gzipMessageSize = 5000;
+	private int m_gzipMessageSize = 10000;
 
-	private int m_messageBlockSize = 5000;
+	private int m_messageBlockSize = 10000;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
-
-	private BlockingQueue<MessageItem> m_retryItems = new LinkedBlockingQueue<MessageItem>(m_messageBlockSize);
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -128,7 +126,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
 		}
-		Threads.forGroup("Cat").start(new MessageGzip(m_retryItems, -1));
 	}
 
 	@Override
@@ -337,22 +334,29 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		m_total++;
-		int bucketIndex = (int) (m_total % m_gzipThreads);
-		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
+		boolean errorFlag = true;
+		int index = (int) (m_total % m_gzipThreads);
 		MessageItem messageItem = new MessageItem(tree, id);
-		boolean result = items.offer(messageItem);
+		int retryTime = 0;
 
-		if (!result) {
-			boolean retry = m_retryItems.offer(messageItem);
+		while (retryTime < m_gzipThreads) {
+			LinkedBlockingQueue<MessageItem> queue = m_messageQueues.get((index + retryTime) % m_gzipThreads);
+			boolean result = queue.offer(messageItem);
 
-			if (!retry) {
-				m_error++;
-				if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
-					m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
-					      + bucketIndex);
-				}
-				m_serverStateManager.addMessageDumpLoss(1);
+			if (result) {
+				errorFlag = false;
+				break;
 			}
+			retryTime++;
+		}
+
+		if (errorFlag) {
+			m_error++;
+			if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
+				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
+				      + index);
+			}
+			m_serverStateManager.addMessageDumpLoss(1);
 		}
 		logStorageState(tree);
 	}
