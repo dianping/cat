@@ -44,14 +44,14 @@ public class DefaultAggGraphCreator extends GraphCreator {
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
 			String keyTitle = keyMapEntry.getKey();
+			String chartTitle = keyTitle.substring(keyTitle.lastIndexOf(":") + 1);
 			LineChart lineChart = new LineChart();
-
+			
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
-
-					buildLineChartTitle(alertItems, lineChart, key, buildChartTitle(keyTitle));
-					lineChart.setTitle(buildChartTitle(keyTitle));
-					lineChart.setId(buildChartTitle(keyTitle));
+					buildLineChartTitle(alertItems, lineChart, key, chartTitle);
+					lineChart.setTitle(chartTitle);
+					lineChart.setId(chartTitle);
 					lineChart.setStart(startDate);
 					lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
@@ -85,10 +85,6 @@ public class DefaultAggGraphCreator extends GraphCreator {
 		} else {
 			chart.setHtmlTitle(title);
 		}
-	}
-
-	public String buildChartTitle(String title) {
-		return title.substring(title.lastIndexOf(":") + 1);
 	}
 
 	public String buildLineTitle(String lineKey) {
