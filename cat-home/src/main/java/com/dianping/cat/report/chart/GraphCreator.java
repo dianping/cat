@@ -22,7 +22,7 @@ import com.dianping.cat.report.task.metric.MetricType;
 
 public class GraphCreator extends GraphCreatorBase{
 	
-	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
+	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 			final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);

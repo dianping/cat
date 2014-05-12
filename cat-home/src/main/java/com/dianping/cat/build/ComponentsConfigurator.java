@@ -25,6 +25,7 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
+import com.dianping.cat.report.chart.DefaultAggGraphCreator;
 import com.dianping.cat.report.chart.GraphCreator;
 import com.dianping.cat.report.chart.MetricDataFetcher;
 import com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl;
@@ -125,6 +126,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, MetricAggregationConfigManager.class,
 		      AlertInfo.class));
+		all.add(C(DefaultAggGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
+		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
+		            MetricGroupConfigManager.class, AlertInfo.class));
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -145,7 +149,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class));		
 		
-		all.add(C(ExceptionAlert.class).req(AlertConfig.class,MailSMS.class, ProductLineConfigManager.class,
+		all.add(C(ExceptionAlert.class).req(ProjectDao.class, AlertConfig.class,MailSMS.class, ProductLineConfigManager.class,
 				ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
 		
 		// database
