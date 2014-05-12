@@ -81,7 +81,7 @@
 <p><span class='text-error'>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示</span></p>
 <p><span class='text-error'>2、告警邮件:当这个产品线下的业务指标出现异常时，会发送邮件到此邮箱</span></p>
 <p><span class='text-error'>3、告警短信:当这个产品线下的业务指标出现异常时，会发送邮件到此号码</span></p>
-<h4 class="text-error">url : <a href="" target="/cat/s/config?op=topologyProductLines">链接</a></h4>
+<h4 class="text-error">url : <a href="/cat/s/config?op=topologyProductLines" target="_blank">链接</a></h4>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business01.png"/>
 </br> 
 <h4 class="text-success">第四步:图形展示以及告警配置</h4>
