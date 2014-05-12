@@ -122,6 +122,26 @@ public abstract class GraphCreatorBase implements LogEnabled {
 		}
 	}
 
+	public void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
+
+		if (chart.getHtmlTitle().contains("<span style='color:red'>")) {
+			return;
+		}
+		int index = key.lastIndexOf(":");
+		String id = key.substring(0, index);
+		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
+		String metricId = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+		      config.getMetricKey());
+
+		config.setId(metricId);
+
+		if (alertItems.contains(config)) {
+			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+		} else {
+			chart.setHtmlTitle(title);
+		}
+	}
+
 	protected double[] convert(double[] value, int removeLength) {
 		int length = value.length;
 		int newLength = length - removeLength;

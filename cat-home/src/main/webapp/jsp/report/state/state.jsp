@@ -50,7 +50,7 @@
 	<h3 class="text-center text-success">CAT服务端正常</h3>
 </c:if>
 
-<table width="80%">
+<table width="100%">
 	<tr>
 		<th width="35%" colspan=2>指标</th>
 		<th width="20%">值</th>

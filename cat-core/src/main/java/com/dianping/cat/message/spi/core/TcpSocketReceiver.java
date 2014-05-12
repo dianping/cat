@@ -73,7 +73,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private volatile long m_processCount;
 
-	private volatile int m_decodeThreads =12;
+	private volatile int m_decodeThreads = 15;
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>> m_queues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>>();
 
