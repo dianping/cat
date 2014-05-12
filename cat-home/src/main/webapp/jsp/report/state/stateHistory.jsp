@@ -39,7 +39,7 @@
 		</th>
 	</tr>
 </table>
-<table width="100%">
+<table width="80%">
 	<tr>
 		<tr>
 		<th width="35%" colspan=2>指标</th>
