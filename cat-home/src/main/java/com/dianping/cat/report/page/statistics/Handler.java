@@ -85,8 +85,8 @@ public class Handler implements PageHandler<Context> {
 	private void buildAlertInfo(Model model, Payload payload) {
 		AlertReport alertReport = queryAlertReport(payload);
 		model.setAlertReport(alertReport);
-		List<com.dianping.cat.home.alertReport.entity.Domain> sortedDoamins = buildSortedAlertInfo(alertReport, model);
-		model.setAlertDomains(sortedDoamins);
+		List<com.dianping.cat.home.alertReport.entity.Domain> sortedDomains = buildSortedAlertInfo(alertReport, model);
+		model.setAlertDomains(sortedDomains);
 	}
 	
 	private void builAlertDetails(Model model, Payload payload) {
@@ -146,39 +146,45 @@ public class Handler implements PageHandler<Context> {
 	}
 	
 	private List<com.dianping.cat.home.alertReport.entity.Domain> buildSortedAlertInfo(AlertReport report, Model model) {
-		List<com.dianping.cat.home.alertReport.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alertReport.entity.Domain>(
-		      report.getDomains().values());
-		Comparator<com.dianping.cat.home.alertReport.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alertReport.entity.Domain>() {
-
-			@Override
-			public int compare(com.dianping.cat.home.alertReport.entity.Domain o1,
-			      com.dianping.cat.home.alertReport.entity.Domain o2) {
-				int gap = o2.getErrorNumber() - o1.getErrorNumber();
-
-				return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
-			}
-		};
+		List<com.dianping.cat.home.alertReport.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alertReport.entity.Domain>();
 		
-		Collections.sort(domains, domainCompator);
+		if (!report.getDomains().values().isEmpty()) {
+			domains = new ArrayList<com.dianping.cat.home.alertReport.entity.Domain>(report.getDomains().values());
+			Comparator<com.dianping.cat.home.alertReport.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alertReport.entity.Domain>() {
+
+				@Override
+				public int compare(com.dianping.cat.home.alertReport.entity.Domain o1,
+				      com.dianping.cat.home.alertReport.entity.Domain o2) {
+					int gap = o2.getErrorNumber() - o1.getErrorNumber();
+
+					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
+				}
+			};
+
+			Collections.sort(domains, domainCompator);
+		}
 		return domains;
 	}
 	
 	private List<com.dianping.cat.home.alertReport.entity.Exception> buildSortedAlertDetails(AlertReport report,
 	      String domainName) {
+		List<com.dianping.cat.home.alertReport.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alertReport.entity.Exception>();
 		com.dianping.cat.home.alertReport.entity.Domain domain = report.getDomains().get(domainName);
-		List<com.dianping.cat.home.alertReport.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alertReport.entity.Exception>(
-		      domain.getExceptions().values());
-		Comparator<com.dianping.cat.home.alertReport.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alertReport.entity.Exception>() {
+		
+		if (domain != null && !domain.getExceptions().isEmpty()) {
+			exceptions = new ArrayList<com.dianping.cat.home.alertReport.entity.Exception>(domain.getExceptions().values());
+			Comparator<com.dianping.cat.home.alertReport.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alertReport.entity.Exception>() {
 
-			@Override
-			public int compare(Exception o1, Exception o2) {
-				int gap = o2.getErrorNumber() - o1.getErrorNumber();
+				@Override
+				public int compare(Exception o1, Exception o2) {
+					int gap = o2.getErrorNumber() - o1.getErrorNumber();
 
-				return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
-			}
-		};
+					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
+				}
+			};
 
-		Collections.sort(exceptions, exceptionCompator);
+			Collections.sort(exceptions, exceptionCompator);
+		}
 		return exceptions;
 	}	
 	private void buildUtilizationInfo(Model model, Payload payload) {

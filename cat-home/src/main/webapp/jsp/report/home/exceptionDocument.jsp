@@ -29,6 +29,5 @@
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/exceptionReport.jpeg"/>
 <p/>
 <p>b) 点击“Detail”查看详细异常情况</p>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/exception1.jpeg"/>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/exception2.jpeg"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/exception.jpeg"/>
 </br>
