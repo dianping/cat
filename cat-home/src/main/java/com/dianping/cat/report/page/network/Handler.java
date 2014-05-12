@@ -20,7 +20,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
-import com.dianping.cat.report.chart.GraphCreator;
+import com.dianping.cat.report.chart.DefaultAggGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
@@ -44,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 	private AggregationGraphCreator m_aggregationGraphCreator;
 
 	@Inject
-	private GraphCreator m_graphCreator;
+	private DefaultAggGraphCreator m_defaultAggGraphCreator;
 
 	@Inject
 	private NetGraphManager m_netGraphManager;
@@ -70,7 +70,8 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
+			Map<String, LineChart> charts = m_defaultAggGraphCreator.buildChartsByProductLine(payload.getProduct(), start,
+			      end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
@@ -98,6 +99,10 @@ public class Handler implements PageHandler<Context> {
 			if ("network".equalsIgnoreCase(entry.getValue().getDisplay())) {
 				metricAggregationGroupList.add(entry.getValue());
 			}
+		}
+		
+		if(payload.getProduct() == null && payload.getGroup() == null) {
+			payload.setAction(Action.NETTOPOLOGY.getName());
 		}
 
 		model.setMetricAggregationGroup(metricAggregationGroupList);

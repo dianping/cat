@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -111,8 +112,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			try {
 				return queryReport(domain);
 			} catch (Exception e) {
-				// for concurrent modify exception
-				return queryReport(domain);
+				try {
+					return queryReport(domain);
+					// for concurrent modify exception
+				} catch (ConcurrentModificationException ce) {
+					Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
+					return new TransactionReport(domain);
+				}
 			}
 		} else {
 			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());

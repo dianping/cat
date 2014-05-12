@@ -2,18 +2,24 @@ package com.dianping.cat.report.page.state;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -39,6 +45,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	private static final String CAT = "Cat";
 
@@ -87,6 +96,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);
+			model.setMessage(buildCatInfoMessage(report));
 			break;
 		case HISTORY:
 			report = getHistoryReport(payload);
@@ -112,6 +122,34 @@ public class Handler implements PageHandler<Context> {
 			model.setGraph(new JsonBuilder().toJson(item));
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private String buildCatInfoMessage(StateReport report) {
+		int realSize = report.getMachines().size();
+		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
+		int excepeted = servers.size();
+		Set<String> errorServers = new HashSet<String>();
+
+		if (realSize != excepeted) {
+			for (Pair<String, Integer> server : servers) {
+				String serverIp = server.getKey();
+
+				if (report.getMachines().get(serverIp) == null) {
+					errorServers.add(serverIp);
+				}
+			}
+		}
+		for (Machine machine : report.getMachines().values()) {
+			if (machine.getTotalLoss() > 100 * 10000) {
+				errorServers.add(machine.getIp());
+			}
+		}
+
+		if (errorServers.size() > 0) {
+			return errorServers.toString();
+		} else {
+			return null;
+		}
 	}
 
 	private void normalize(Model model, Payload payload) {

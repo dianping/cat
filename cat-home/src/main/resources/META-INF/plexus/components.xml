@@ -272,6 +272,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.TransactionReportService</implementation>
 			<requirements>
@@ -1664,6 +1694,9 @@
 			<implementation>com.dianping.cat.report.task.exceptionAlert.ExceptionAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
 				</requirement>
 				<requirement>
@@ -1687,30 +1720,6 @@
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
-			<role-hint>cat</role-hint>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
-			<configuration>
-				<id>cat</id>
-				<maximum-pool-size>3</maximum-pool-size>
-				<connection-timeout>1s</connection-timeout>
-				<idle-timeout>10m</idle-timeout>
-				<statement-cache-size>1000</statement-cache-size>
-				<properties>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://127.0.0.1:3306/cat</url>
-					<user>test</user>
-					<password>123</password>
-					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-				</properties>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
@@ -1937,30 +1946,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
-			<role-hint>user</role-hint>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
-			<configuration>
-				<id>user</id>
-				<maximum-pool-size>3</maximum-pool-size>
-				<connection-timeout>1s</connection-timeout>
-				<idle-timeout>10m</idle-timeout>
-				<statement-cache-size>1000</statement-cache-size>
-				<properties>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://192.168.8.44:3306/hawk</url>
-					<user>hawk</user>
-					<password>hawk</password>
-					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-				</properties>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2744,6 +2729,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3171,7 +3159,7 @@
 					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.GraphCreator</role>
+					<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
@@ -3203,6 +3191,36 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
