@@ -46,14 +46,15 @@ public class DefaultAggGraphCreator extends GraphCreator {
 			String keyTitle = keyMapEntry.getKey();
 			String chartTitle = keyTitle.substring(keyTitle.lastIndexOf(":") + 1);
 			LineChart lineChart = new LineChart();
-			
+			lineChart.setTitle(chartTitle);
+			lineChart.setHtmlTitle(chartTitle);
+			lineChart.setId(chartTitle);
+			lineChart.setStart(startDate);
+			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
 					buildLineChartTitle(alertItems, lineChart, key, chartTitle);
-					lineChart.setTitle(chartTitle);
-					lineChart.setId(chartTitle);
-					lineChart.setStart(startDate);
-					lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
 					double[] baselines = queryBaseline(key, startDate, endDate);
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
@@ -70,25 +71,10 @@ public class DefaultAggGraphCreator extends GraphCreator {
 		return charts;
 	}
 
-	public void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
-
-		int index = key.lastIndexOf(":");
-		String id = key.substring(0, index);
-		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
-		String metricId = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-		      config.getMetricKey());
-
-		config.setId(metricId);
-
-		if (alertItems.contains(config)) {
-			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
-		} else {
-			chart.setHtmlTitle(title);
-		}
-	}
-
 	public String buildLineTitle(String lineKey) {
-		String tmp = lineKey.substring(0, lineKey.lastIndexOf(":"));
+		int colonIndex = lineKey.lastIndexOf(":");
+		String tmp = lineKey.substring(0, colonIndex > -1 ? colonIndex : 0);
+		
 		return tmp.substring(tmp.lastIndexOf("-") + 1);
 	}
 
@@ -107,7 +93,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 			MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(key);
 			String avgTitle = keyTitle + Chinese.Suffix_AVG;
 
-			if (config.getShowAvg()) {
+			if (config != null && config.getShowAvg()) {
 				List<String> keyList = findOrCreate(aggregationKeys, avgTitle);
 				String avgKey = key + ":" + MetricType.AVG.name();
 				keyList.add(avgKey);
@@ -118,7 +104,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 			MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(key);
 			String sumTitle = keyTitle + Chinese.Suffix_SUM;
 
-			if (config.getShowSum()) {
+			if (config != null && config.getShowSum()) {
 				List<String> keyList = findOrCreate(aggregationKeys, sumTitle);
 				String sumKey = key + ":" + MetricType.SUM.name();
 				keyList.add(sumKey);
@@ -129,7 +115,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 			MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(key);
 			String countTitle = keyTitle + Chinese.Suffix_COUNT;
 
-			if (config.getShowCount()) {
+			if (config != null && config.getShowCount()) {
 				List<String> keyList = findOrCreate(aggregationKeys, countTitle);
 				String countKey = key + ":" + MetricType.COUNT.name();
 				keyList.add(countKey);
@@ -143,8 +129,11 @@ public class DefaultAggGraphCreator extends GraphCreator {
 		Set<String> keySet = new LinkedHashSet<String>();
 
 		for (String key : keys) {
-			String tmp = key.substring(0, key.lastIndexOf(":"));
-			keySet.add(tmp.substring(0, tmp.lastIndexOf("-")));
+			int colonIndex = key.lastIndexOf(":");
+			String tmp = key.substring(0, colonIndex > -1 ? colonIndex : 0);
+			
+			int hyphenIndex = tmp.lastIndexOf("-");
+			keySet.add(tmp.substring(0, hyphenIndex > -1 ? hyphenIndex : 0));
 		}
 
 		Map<String, List<String>> aggregationKeys = new LinkedHashMap<String, List<String>>();
