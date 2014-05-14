@@ -23,7 +23,9 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.monitorrules.entity.Condition;
 import com.dianping.cat.home.monitorrules.entity.Config;
+import com.dianping.cat.home.monitorrules.entity.Subcondition;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -70,14 +72,81 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	private boolean isMonitorRuleAlert = false;
+	private void addDescMetricIfNotExist(MetricItemConfig config, List<Config> configs) {
+		double descPer = config.getDecreasePercentage();
+		double descVal = config.getDecreaseValue();
+		boolean isDescPerExist = false;
+		boolean isDescValExist = false;
+		String dayBeginTime = "00:00";
+		String dayEndTime = "24:00";
 
-	private Pair<Boolean, String> checkDataByJudge(MetricItemConfig config, double[] value, double[] baseline, MetricType type, List<Config> configs) {
-		if (isMonitorRuleAlert) {
-			return m_alertConfig.checkData(config, value, baseline, type, configs);
-		}else{
-			return m_alertConfig.checkData(config, value, baseline, type);
+		if (descPer == 0) {
+			descPer = 50;
 		}
+		if (descVal == 0) {
+			descVal = 100;
+		}
+
+		for (Config con : configs) {
+			String startTime = con.getStarttime();
+			String endTime = con.getEndtime();
+
+			if (startTime == null || !startTime.equals(dayBeginTime) || endTime == null || !endTime.equals(dayEndTime)) {
+				continue;
+			}
+
+			for (Condition c : con.getConditions()) {
+				List<Subcondition> subCons = c.getSubconditions();
+
+				if (subCons.size() != 1) {
+					continue;
+				}
+
+				switch (subCons.get(0).getType()) {
+				case 1:
+					isDescPerExist = true;
+					break;
+				case 2:
+					isDescValExist = true;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		if (!isDescPerExist) {
+			addNewCondition(configs, 1, descPer, dayBeginTime, dayEndTime);
+		}
+
+		if (!isDescValExist) {
+			addNewCondition(configs, 2, descVal, dayBeginTime, dayEndTime);
+		}
+
+	}
+
+	private void addNewCondition(List<Config> configs, int type, double val, String dayBeginTime, String dayEndTime) {
+		configs.add(new Config()
+		      .setStarttime(dayBeginTime)
+		      .setEndtime(dayEndTime)
+		      .addCondition(
+		            new Condition().setTitle("default rule").addSubcondition(
+		                  new Subcondition().setType(type).setText(String.valueOf(val)))));
+	}
+
+	private Pair<Boolean, String> checkDataByJudge(MetricItemConfig config, double[] value, double[] baseline,
+	      MetricType type, List<Config> configs) {
+		Pair<Boolean, String> originResult = m_alertConfig.checkData(config, value, baseline, type);
+
+		addDescMetricIfNotExist(config, configs);
+		
+		Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(config, value, baseline, type, configs);
+
+		if (!originResult.equals(ruleJudgeResult)) {
+			Cat.logError("rule execute error!", new Exception());
+		}
+
+		return originResult;
 	}
 
 	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
