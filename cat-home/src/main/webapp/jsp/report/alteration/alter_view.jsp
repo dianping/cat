@@ -32,7 +32,7 @@
 						<span class="hreftip"  data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</span>
 					</c:when>
 					<c:otherwise>
-						<a class="hreftip" target="_blank" href="${item.url}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</a>
+						<a class="hreftip out_url" target="_blank" href="${item.url}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</a>
 					</c:otherwise>
 					</c:choose>
 				</td>
@@ -46,6 +46,11 @@
 		$(".header").hide();
 		$('i[tips]').popover();
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+		
+		$(".out_url").each(function(){
+			var cur = $(this);
+			cur.attr("href", decodeURIComponent(cur.attr("href")));
+		});
 		
 		<c:if test="${payload.fullScreen}">
 			$('#fullScreen').addClass('btn-danger');
