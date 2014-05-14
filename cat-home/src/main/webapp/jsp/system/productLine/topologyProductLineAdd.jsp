@@ -25,7 +25,9 @@
 					<tr>
 						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
-							value="${model.productLine.id}" required /></td>
+							value="${model.productLine.id}" required />
+							<input name="type" value="${payload.type}" type="hidden"/>	
+						</td>
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">产品线标题（中文）</td>
@@ -88,6 +90,19 @@
 							<c:otherwise>
 								<input type="radio" name="productLine.networkDashboard" value="true" />是
 								<input type="radio" name="productLine.networkDashboard" value="false" checked />否
+							</c:otherwise>
+						</c:choose></td>
+					</tr>
+					<tr>
+						<td style="text-align: right" class="text-success">是否显示到外部监控</td>
+						<td><c:choose>
+							<c:when test="${model.productLine.userMonitorDashboard}">
+								<input type="radio" name="productLine.userMonitorDashboard" value="true" checked />是	
+								<input type="radio" name="productLine.userMonitorDashboard" value="false" />否
+							</c:when>
+							<c:otherwise>
+								<input type="radio" name="productLine.userMonitorDashboard" value="true" />是
+								<input type="radio" name="productLine.userMonitorDashboard" value="false" checked />否
 							</c:otherwise>
 						</c:choose></td>
 					</tr>

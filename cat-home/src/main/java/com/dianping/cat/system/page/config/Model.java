@@ -47,7 +47,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private ProductLine m_productLine;
 
 	private Map<String, ProductLine> m_productLines;
-
+	
+	private Map<String,List<ProductLine>> m_typeToProductLines;
+	
 	private MetricItemConfig m_metricItemConfig;
 
 	private Map<ProductLine, List<MetricItemConfig>> m_productMetricConfigs;
@@ -274,6 +276,15 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
 	}
+
+	public Map<String, List<ProductLine>> getTypeToProductLines() {
+   	return m_typeToProductLines;
+   }
+
+	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
+   	m_typeToProductLines = typeToProductLines;
+   }
+
 
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;

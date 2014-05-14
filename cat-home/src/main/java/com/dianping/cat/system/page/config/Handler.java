@@ -249,6 +249,7 @@ public class Handler implements PageHandler<Context> {
 
 		case TOPOLOGY_GRAPH_PRODUCT_LINE:
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
+			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
 			graphPruductLineAddOrUpdate(payload, model);
@@ -257,10 +258,12 @@ public class Handler implements PageHandler<Context> {
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
 			model.setOpState(m_productLineConfigManger.deleteProductLine(payload.getProductLineName()));
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
+			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
+			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
 
 		case METRIC_CONFIG_ADD_OR_UPDATE:
