@@ -34,7 +34,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class MetricAlert implements Task, LogEnabled {
+public class SwitchAlert implements Task, LogEnabled {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;

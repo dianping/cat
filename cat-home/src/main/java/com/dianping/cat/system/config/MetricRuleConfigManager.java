@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -33,45 +35,79 @@ public class MetricRuleConfigManager implements Initializable {
 
 	public Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> getMetricIdRuleMap() {
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.monitorrules.entity.Config>>();
-		
-		for(Rule rule : m_config.getRules()){
-			for(MetricItem metricItem : rule.getMetricItems()){
+
+		for (Rule rule : m_config.getRules()) {
+			for (MetricItem metricItem : rule.getMetricItems()) {
 				String type = metricItem.getType();
-				
-				if(type==null || !type.equals("id")){
+
+				if (type == null || !type.equals("id")) {
 					continue;
 				}
-				
+
 				String key = metricItem.getText();
 				List<com.dianping.cat.home.monitorrules.entity.Config> configs = getOrBuildRuleList(map, key);
 				configs.addAll(rule.getConfigs());
 			}
 		}
-		
-	   return map;
-   }
+
+		return map;
+	}
 
 	public MonitorRules getMonitorRules() {
 		return m_config;
 	}
 
 	private List<com.dianping.cat.home.monitorrules.entity.Config> getOrBuildRuleList(
-         Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> map, String key) {
+	      Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> map, String key) {
 		List<com.dianping.cat.home.monitorrules.entity.Config> configs = map.get(key);
-		
-	   if(configs==null){
-	   	configs = new ArrayList<com.dianping.cat.home.monitorrules.entity.Config>();
-	   	map.put(key, configs);
-	   }
-	   return configs;
-   }
+
+		if (configs == null) {
+			configs = new ArrayList<com.dianping.cat.home.monitorrules.entity.Config>();
+			map.put(key, configs);
+		}
+		return configs;
+	}
+
+	public List<com.dianping.cat.home.monitorrules.entity.Config> getConfigs(String product, String domain, String key,
+	      String metricKey) {
+		List<com.dianping.cat.home.monitorrules.entity.Config> configs = new ArrayList<com.dianping.cat.home.monitorrules.entity.Config>();
+
+		for (Rule rule : m_config.getRules()) {
+			for (MetricItem metricItem : rule.getMetricItems()) {
+				String type = metricItem.getType();
+
+				if (type == null) {
+					continue;
+				} else if (type.equals("id")) {
+					String context = metricItem.getText();
+
+					if (context != null && context.equals(metricKey)) {
+						configs.addAll(rule.getConfigs());
+						break;
+					}
+				} else if (type.equals("wildcard")) {
+					String context = metricItem.getText();
+					String source = product + domain + key;
+					Pattern p = Pattern.compile(context);
+					Matcher m = p.matcher(source);
+
+					if (m.find()) {
+						configs.addAll(rule.getConfigs());
+						break;
+					}
+				}
+			}
+		}
+
+		return configs;
+	}
 
 	@Override
 	public void initialize() throws InitializationException {
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
-			
+
 			m_config = DefaultSaxParser.parse(content);
 			m_configId = config.getId();
 		} catch (DalNotFoundException e) {
@@ -125,5 +161,5 @@ public class MetricRuleConfigManager implements Initializable {
 		}
 		return true;
 	}
-	
+
 }
