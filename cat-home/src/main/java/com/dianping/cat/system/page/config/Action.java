@@ -15,6 +15,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	AGGREGATION_DELETE("aggregationDelete"),
 
+	URL_PATTERN_ALL("urlPatterns"),
+
+	URL_PATTERN_UPDATE("urlPatternUpdate"),
+
+	URL_PATTERN_UPDATE_SUBMIT("urlPatternUpdateSubmit"),
+
+	URL_PATTERN_DELETE("urlPatternDelete"),
+
 	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("topologyGraphNodeConfigList"),
 
 	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("topologyGraphNodeConfigAdd"),

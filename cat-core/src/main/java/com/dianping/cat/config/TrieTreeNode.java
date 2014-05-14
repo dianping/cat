@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.problem.aggregation;
+package com.dianping.cat.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -103,6 +103,6 @@ public class TrieTreeNode {
 		public String toString() {
 			return "TrieTreeKey [m_ch=" + m_ch + ", m_isPrefix=" + m_isPrefix + "]";
 		}
-
 	}
+	
 }

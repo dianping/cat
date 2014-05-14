@@ -7,8 +7,8 @@
 		<version>1.0.5</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cat-broker-server</artifactId>
-	<name>cat-broker-server</name>
+	<artifactId>cat-broker-service</artifactId>
+	<name>cat-broker-service</name>
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
@@ -148,7 +148,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
 				<configuration>
-					<warName>cat-broker-server-${env}-${version}</warName>
+					<warName>cat-broker-service-${env}-${version}</warName>
 					<webResources>
 						<resource>
 							<directory>src/main/resources</directory>

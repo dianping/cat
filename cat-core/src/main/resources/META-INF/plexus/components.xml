@@ -68,6 +68,22 @@
 			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.UrlPatternHandler</role>
+			<implementation>com.dianping.cat.config.DefaultUrlPatternHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.storage.dump.MessageBucket</role>
 			<role-hint>local</role-hint>
 			<implementation>com.dianping.cat.storage.dump.LocalMessageBucket</implementation>

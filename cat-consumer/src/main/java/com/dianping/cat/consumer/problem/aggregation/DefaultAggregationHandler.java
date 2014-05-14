@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.config.AggregationMessageFormat;
+import com.dianping.cat.config.CompositeFormat;
+import com.dianping.cat.config.TrieTreeNode;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 
 public class DefaultAggregationHandler implements AggregationHandler {

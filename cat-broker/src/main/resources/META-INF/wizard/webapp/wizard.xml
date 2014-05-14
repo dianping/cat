@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat.broker">
+   <webapp package="com.dianping.cat.broker" webres="true" plugin-management="false">
+      <module name="api" path="api" default="true">
+         <page name="signal" title="signal" default="true" path="signal" template="default">
+            <description>signal api</description>
+         </page>
+         <page name="batch" title="batch" default="true" path="batch" template="default">
+            <description>batch api</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>

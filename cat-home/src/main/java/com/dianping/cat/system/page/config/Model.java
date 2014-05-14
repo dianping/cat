@@ -9,6 +9,7 @@ import java.util.Map;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -30,6 +31,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<AggregationRule> m_aggregationRules;
 
+	private PatternItem m_patternItem;
+
+	private List<PatternItem> m_patternItems;
+	
 	private ExceptionLimit m_exceptionLimit;
 
 	private List<ExceptionLimit> m_exceptionLimits;
@@ -284,7 +289,22 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
    	m_typeToProductLines = typeToProductLines;
    }
+	
+	public PatternItem getPatternItem() {
+   	return m_patternItem;
+   }
 
+	public void setPatternItem(PatternItem patternItem) {
+   	m_patternItem = patternItem;
+   }
+
+	public List<PatternItem> getPatternItems() {
+   	return m_patternItems;
+   }
+
+	public void setPatternItems(List<PatternItem> patternItems) {
+   	m_patternItems = patternItems;
+   }
 
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;

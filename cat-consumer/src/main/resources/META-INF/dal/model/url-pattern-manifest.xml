@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="url-pattern-codegen.xml" />
+  <file path="url-pattern-model.xml" />
+</manifest>
+

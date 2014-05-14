@@ -27,6 +27,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.config.UrlPatternConfigManager;
 import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -84,13 +85,16 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-	
+
 	@Inject
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;
-	
+
+	@Inject
+	private UrlPatternConfigManager m_urlPatternConfigManager;
+
 	@Inject
 	private DomainNavManager m_manager;
-	
+
 	@Inject
 	private ReportService m_reportService;
 
@@ -198,20 +202,35 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case AGGREGATION_ALL:
-			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
+			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
 			break;
 		case AGGREGATION_UPDATE:
 			model.setAggregationRule(m_aggreationConfigManager.queryAggration(payload.getPattern()));
 			break;
 		case AGGREGATION_UPDATE_SUBMIT:
 			updateAggregationRule(payload);
-			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
+			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
 			break;
 		case AGGREGATION_DELETE:
 			deleteAggregationRule(payload);
-			model.setAggregationRules(m_aggreationConfigManager.queryAggrarationRules());
+			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
 			break;
 
+		case URL_PATTERN_ALL:
+			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
+			break;
+		case URL_PATTERN_UPDATE:
+			model.setPatternItem(m_urlPatternConfigManager.queryUrlPattern(payload.getKey()));
+			break;
+		case URL_PATTERN_UPDATE_SUBMIT:
+			m_urlPatternConfigManager.insertPatternItem(payload.getPatternItem());
+			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
+			break;
+		case URL_PATTERN_DELETE:
+			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
+			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
+			break;
+		
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			break;
@@ -356,7 +375,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		m_jspViewer.view(ctx, model);
 	}
-	
+
 	private List<String> getDoaminList() {
 		Collection<ProductLine> productLines = m_productLineConfigManger.queryAllProductLines().values();
 		Set<String> domains = new HashSet<String>();
@@ -366,20 +385,20 @@ public class Handler implements PageHandler<Context> {
 		}
 		return new ArrayList<String>(domains);
 	}
-	
+
 	private List<String> getExceptionList() {
 		long current = System.currentTimeMillis();
-		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR -TimeUtil.ONE_DAY) ;
+		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR - TimeUtil.ONE_DAY);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
 		Set<String> exceptions = new HashSet<String>();
-		
+
 		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
 			exceptions.addAll(domain.getValue().getExceptionItems().keySet());
 		}
 		return new ArrayList<String>(exceptions);
 	}
-	
+
 	private void metricConfigAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 

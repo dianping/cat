@@ -3453,6 +3453,9 @@
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 				<requirement>
@@ -3484,6 +3487,18 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternHandler</role>
 				</requirement>
 			</requirements>
 		</component>
