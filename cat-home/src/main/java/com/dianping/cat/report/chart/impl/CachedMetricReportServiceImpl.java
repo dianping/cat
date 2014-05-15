@@ -54,7 +54,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 	}
 
 	@Override
-	public MetricReport query(String product, Date start) {
+	public MetricReport queryMetricReport(String product, Date start) {
 		long time = start.getTime();
 		ModelPeriod period = ModelPeriod.getByTime(time);
 
@@ -73,5 +73,28 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			return getReportFromCache(product, time);
 		}
 	}
+
+	@Override
+   public MetricReport queryUserMonitorReport(String product, Map<String, String> properties, Date start) {
+		long time = start.getTime();
+		ModelPeriod period = ModelPeriod.getByTime(time);
+
+		if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
+			ModelRequest request = new ModelRequest(product, time);
+			
+			request.getProperties().putAll(properties);
+
+			if (m_service.isEligable(request)) {
+				ModelResponse<MetricReport> response = m_service.invoke(request);
+				MetricReport report = response.getModel();
+
+				return report;
+			} else {
+				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
+			}
+		} else {
+			return getReportFromCache(product, time);
+		}
+   }
 
 }

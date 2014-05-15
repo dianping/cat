@@ -92,12 +92,14 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 				if (duration > 0) {
 					logMetric(timestamp, duration, group, city + ":" + channel + ":hit");
-					logMetric(timestamp, duration, group, city + ":" + ":hit");
-					logMetric(timestamp, duration, group, channel + ":hit");
+
+					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
+						logMetric(timestamp, duration, group, city + ":" + channel + ":error");
+					}
 				}
 
 				if (!StringUtils.isEmpty(httpCode)) {
-					String key = city + ":" + channel + ":httpCode|" + httpCode;
+					String key = city + ":" + channel + ":httpStatus|" + httpCode;
 					Metric metric = Cat.getProducer().newMetric(group, key);
 					DefaultMetric defaultMetric = (DefaultMetric) metric;
 

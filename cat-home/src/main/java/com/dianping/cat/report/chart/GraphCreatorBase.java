@@ -232,7 +232,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 	      List<MetricItemConfig> metricConfigs);
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
-		MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
+		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 		
@@ -255,7 +255,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 		}
 		// if current report is not exist, use last day value replace it.
 		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
-			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
+			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start - TimeUtil.ONE_DAY));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
 			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"

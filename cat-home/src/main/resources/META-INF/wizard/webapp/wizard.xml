@@ -65,6 +65,9 @@
          <page name="network" title="Network" path="network" template="default">
             <description>Network</description>
          </page>
+         <page name="userMonitor" title="Monitor" path="userMonitor" template="default">
+            <description>UserMonitor</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">
