@@ -22,10 +22,12 @@ public class AlertConfig {
 
 	private static final Long ONE_MINUTE_MILLSEC = 60000L;
 
+	private static final int JUDGE_DEFAULT_MINUTE = 3;
+
 	public List<String> buildExceptionSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
 
-		phones.add("15201789489");//佳林
+		phones.add("15201789489");// 佳林
 		return phones;
 	}
 
@@ -44,7 +46,7 @@ public class AlertConfig {
 	public List<String> buildMailReceivers(Project project) {
 		List<String> emails = new ArrayList<String>();
 		String emailList = project.getEmail();
-		
+
 		emails.add("yong.you@dianping.com");
 		emails.add("jialin.sun@dianping.com");
 		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
@@ -63,15 +65,18 @@ public class AlertConfig {
 		List<String> phones = new ArrayList<String>();
 		String phonesList = productLine.getPhone();
 
-		phones.add("13916536843");//值班
-		phones.add("18616671676");//尤勇
-		phones.add("13858086694");//黄河
+		phones.add("13916536843");// 值班
+		phones.add("18616671676");// 尤勇
+		phones.add("13858086694");// 黄河
 		phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
 		return phones;
 	}
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
-		int length = value.length;
+		int listLength = value.length;
+		int length = JUDGE_DEFAULT_MINUTE > listLength ? listLength : JUDGE_DEFAULT_MINUTE;
+		double[] valueTrim = getLastMinutes(value, length);
+		double[] baseLineTrim = getLastMinutes(baseline, length);
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
 		double decreasePercent = config.getDecreasePercentage();
@@ -88,17 +93,18 @@ public class AlertConfig {
 		}
 
 		for (int i = 0; i < length; i++) {
-			baselines.append(df.format(baseline[i])).append(" ");
-			values.append(df.format(value[i])).append(" ");
-			valueSum = valueSum + value[i];
-			baselineSum = baselineSum + baseline[i];
+			baselines.append(df.format(baseLineTrim[i])).append(" ");
+			values.append(df.format(valueTrim[i])).append(" ");
+			valueSum = valueSum + valueTrim[i];
+			baselineSum = baselineSum + baseLineTrim[i];
 
-			if (baseline[i] <= 0) {
-				baseline[i] = 100;
+			if (baseLineTrim[i] <= 0) {
+				baseLineTrim[i] = 100;
 				return new Pair<Boolean, String>(false, "");
 			}
 			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (value[i] / baseline[i] > (1 - decreasePercent / 100) || (baseline[i] - value[i]) < decreaseValue) {
+				if (valueTrim[i] / baseLineTrim[i] > (1 - decreasePercent / 100)
+				      || (baseLineTrim[i] - valueTrim[i]) < decreaseValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -116,6 +122,40 @@ public class AlertConfig {
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type,
 	      List<Config> configs) {
+		int valLength = value.length;
+
+		for (Config con : configs) {
+			int dataLength = getMaxMinute(con);
+			
+			if (dataLength > valLength) {
+				continue;
+			}
+			
+			double[] validVal = getLastMinutes(value, dataLength);
+			double[] validBase = getLastMinutes(baseline, dataLength);
+			Pair<Boolean, String> tmpResult = checkDataByConfig(config, validVal, validBase, type, con);
+			if (tmpResult.getKey() == true) {
+				return tmpResult;
+			}
+		}
+
+		return new Pair<Boolean, String>(false, "");
+	}
+
+	private int getMaxMinute(Config con) {
+		int maxMinute = 0;
+		for (Condition condition : con.getConditions()) {
+			int tmpMinute = condition.getMinute();
+			if (tmpMinute > maxMinute) {
+				maxMinute = tmpMinute;
+			}
+		}
+		return maxMinute;
+	}
+
+	private Pair<Boolean, String> checkDataByConfig(MetricItemConfig config, double[] value, double[] baseline,
+	      MetricType type, Config con) {
+
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
@@ -133,7 +173,7 @@ public class AlertConfig {
 				return new Pair<Boolean, String>(false, "");
 			}
 			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (!judgeByRule(configs, value[i], baseline[i])) {
+				if (!judgeByRule(con, value[i], baseline[i], i, length)) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -149,6 +189,16 @@ public class AlertConfig {
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
 
+	private double[] getLastMinutes(double[] doubleList, int remainCount) {
+		double[] result = new double[remainCount];
+		int startIndex = doubleList.length - remainCount;
+
+		for (int i = 0; i < remainCount; i++) {
+			result[i] = doubleList[startIndex + i];
+		}
+		return result;
+	}
+
 	private Long getMillsByString(String time) throws Exception {
 		String[] times = time.split(":");
 		int hour = Integer.parseInt(times[0]);
@@ -158,56 +208,60 @@ public class AlertConfig {
 		return result;
 	}
 
-	private boolean judgeByRule(List<Config> configs, double value, double baseline) {
+	private boolean judgeByRule(Config ruleConfig, double value, double baseline, int index, int length) {
 		boolean isRuleTriggered = false;
 
-		for (Config ruleConfig : configs) {
+		long ruleStartTime;
+		long ruleEndTime;
+		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+
+		try {
+			ruleStartTime = getMillsByString(ruleConfig.getStarttime());
+			ruleEndTime = getMillsByString(ruleConfig.getEndtime()) + ONE_MINUTE_MILLSEC;
+		} catch (Exception ex) {
+			ruleStartTime = 0L;
+			ruleEndTime = 86400000L;
+		}
+
+		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+			return false;
+		}
+
+		for (Condition condition : ruleConfig.getConditions()) {
 			if (isRuleTriggered) {
 				break;
 			}
 
-			long ruleStartTime;
-			long ruleEndTime;
-			long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+			int minute = condition.getMinute();
 
-			try {
-				ruleStartTime = getMillsByString(ruleConfig.getStarttime());
-				ruleEndTime = getMillsByString(ruleConfig.getEndtime()) + ONE_MINUTE_MILLSEC;
-			} catch (Exception ex) {
-				ruleStartTime = 0L;
-				ruleEndTime = 86400000L;
+			if (minute == 0) {
+				minute = JUDGE_DEFAULT_MINUTE;
 			}
 
-			if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+			if (index < length - minute) {
 				continue;
 			}
 
-			for (Condition condition : ruleConfig.getConditions()) {
-				if (isRuleTriggered) {
+			boolean isSubRuleTriggered = true;
+
+			for (Subcondition subCondition : condition.getSubconditions()) {
+				if (!isSubRuleTriggered) {
 					break;
 				}
 
-				boolean isSubRuleTriggered = true;
+				int ruleType = subCondition.getType();
+				int ruleValue = Integer.parseInt(subCondition.getText());
+				RuleType rule = RuleType.getByTypeId(ruleType);
 
-				for (Subcondition subCondition : condition.getSubconditions()) {
-					if (!isSubRuleTriggered) {
-						break;
-					}
-
-					int ruleType = subCondition.getType();
-					int ruleValue = Integer.parseInt(subCondition.getText());
-					RuleType rule = RuleType.getByTypeId(ruleType);
-
-					if (rule == null) {
-						continue;
-					} else {
-						isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
-					}
+				if (rule == null) {
+					continue;
+				} else {
+					isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
 				}
+			}
 
-				if (isSubRuleTriggered) {
-					isRuleTriggered = true;
-				}
+			if (isSubRuleTriggered) {
+				isRuleTriggered = true;
 			}
 		}
 

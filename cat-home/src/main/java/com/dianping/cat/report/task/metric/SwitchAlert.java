@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.metric;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,40 +100,49 @@ public class SwitchAlert implements Task, LogEnabled {
 			for (Condition c : con.getConditions()) {
 				List<Subcondition> subCons = c.getSubconditions();
 
-				if (subCons.size() != 1) {
+				if (subCons.size() != 2) {
 					continue;
 				}
 
-				switch (subCons.get(0).getType()) {
-				case 1:
-					isDescPerExist = true;
+				for (Subcondition sub : subCons) {
+					switch (sub.getType()) {
+					case 1:
+						isDescPerExist = true;
+						break;
+					case 2:
+						isDescValExist = true;
+						break;
+					default:
+						break;
+					}
+				}
+
+				if (isDescPerExist && isDescValExist) {
 					break;
-				case 2:
-					isDescValExist = true;
-					break;
-				default:
-					break;
+				} else {
+					isDescPerExist = false;
+					isDescValExist = false;
 				}
 			}
 		}
 
-		if (!isDescPerExist) {
-			addNewCondition(configs, 1, descPer, dayBeginTime, dayEndTime);
-		}
-
-		if (!isDescValExist) {
-			addNewCondition(configs, 2, descVal, dayBeginTime, dayEndTime);
+		if (isDescPerExist && isDescValExist) {
+			return;
+		} else {
+			addNewCondition(configs, 1, descPer, 2, descVal, dayBeginTime, dayEndTime);
 		}
 
 	}
 
-	private void addNewCondition(List<Config> configs, int type, double val, String dayBeginTime, String dayEndTime) {
+	private void addNewCondition(List<Config> configs, int type, double val, int type2, double val2,
+	      String dayBeginTime, String dayEndTime) {
 		configs.add(new Config()
 		      .setStarttime(dayBeginTime)
 		      .setEndtime(dayEndTime)
 		      .addCondition(
-		            new Condition().setTitle("default rule").addSubcondition(
-		                  new Subcondition().setType(type).setText(String.valueOf(val)))));
+		            new Condition().setTitle("default rule")
+		                  .addSubcondition(new Subcondition().setType(type).setText(String.valueOf(val)))
+		                  .addSubcondition(new Subcondition().setType(type2).setText(String.valueOf(val2)))));
 	}
 
 	private Pair<Boolean, String> checkDataByJudge(MetricItemConfig config, double[] value, double[] baseline,
@@ -156,12 +167,13 @@ public class SwitchAlert implements Task, LogEnabled {
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
 		List<Config> configs = m_metricRuleConfigManager.getConfigs(product, domain, key, metricKey);
+		int maxMinute = getMaxMinute(configs);
 
-		if (minute >= DATA_CHECK_MINUTE - 1) {
+		if (minute >= maxMinute - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
 			if (report != null) {
-				int start = minute + 1 - DATA_CHECK_MINUTE;
+				int start = minute + 1 - maxMinute;
 				int end = minute;
 
 				value = queryRealData(start, end, metricKey, report, type);
@@ -173,7 +185,7 @@ public class SwitchAlert implements Task, LogEnabled {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
 
 			if (lastReport != null) {
-				int start = 60 + minute + 1 - (DATA_CHECK_MINUTE);
+				int start = 60 + minute + 1 - (maxMinute);
 				int end = 60 + minute;
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
@@ -190,7 +202,7 @@ public class SwitchAlert implements Task, LogEnabled {
 				double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
 				      new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				int lastStart = 60 + 1 - (DATA_CHECK_MINUTE - minute);
+				int lastStart = 60 + 1 - (maxMinute - minute);
 				int lastEnd = 59;
 				double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
 				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
@@ -244,6 +256,20 @@ public class SwitchAlert implements Task, LogEnabled {
 			throw new RuntimeException("internal error, this can't be reached.");
 		}
 	}
+
+	private int getMaxMinute(List<Config> configs) {
+		int maxMinute = DATA_CHECK_MINUTE;
+		
+		for(Config config : configs){
+			for(Condition con : config.getConditions()){
+				int tmpMinute = con.getMinute();
+				if(tmpMinute > maxMinute){
+					maxMinute = tmpMinute;
+				}
+			}
+		}
+	   return maxMinute;
+   }
 
 	@Override
 	public String getName() {
@@ -385,8 +411,12 @@ public class SwitchAlert implements Task, LogEnabled {
 	}
 
 	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
-		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+		/*
+		 * List<String> emails = m_alertConfig.buildMailReceivers(productLine); List<String> phones =
+		 * m_alertConfig.buildSMSReceivers(productLine);
+		 */
+		List<String> emails = new ArrayList<String>(Arrays.asList("18662513308"));
+		List<String> phones = new ArrayList<String>(Arrays.asList("leon.li@dianping.com"));
 		String title = m_alertConfig.buildMailTitle(productLine, config);
 
 		m_logger.info(title + " " + content + " " + emails);

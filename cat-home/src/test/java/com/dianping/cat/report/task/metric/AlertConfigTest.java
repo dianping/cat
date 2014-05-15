@@ -147,8 +147,23 @@ public class AlertConfigTest {
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = alertConfig
-		      .checkData(config, value8, baseline8, MetricType.COUNT, configMap.get("subconditionCombination"));
+		result = alertConfig.checkData(config, value8, baseline8, MetricType.COUNT,
+		      configMap.get("subconditionCombination"));
 		Assert.assertEquals(result.getKey().booleanValue(), false);
+	}
+
+	@Test
+	public void testMinute() {
+		AlertConfig alertConfig = new AlertConfig();
+		MetricItemConfig config = new MetricItemConfig();
+		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
+
+		Assert.assertNotNull(configMap);
+
+		double baseline[] = { 50, 200, 200 };
+		double value[] = { 50, 100, 100 };
+		Pair<Boolean, String> result = alertConfig.checkData(config, value, baseline, MetricType.COUNT,
+		      configMap.get("two-minute"));
+		Assert.assertEquals(result.getKey().booleanValue(), true);
 	}
 }

@@ -20,7 +20,7 @@
 	</entity>
 	<entity name="condition">
 		<attribute name="title" value-type="String" />
-		<attribute name="minute" value-type="int" />
+		<attribute name="minute" value-type="int" default-value="2"/>
 		<entity-ref name="subcondition" type="list" names="subconditions" />
 	</entity>
 	<entity name="subcondition">
