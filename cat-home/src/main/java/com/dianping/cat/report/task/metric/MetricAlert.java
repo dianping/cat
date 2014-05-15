@@ -151,7 +151,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 		Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(config, value, baseline, type, configs);
 
-		if (!originResult.equals(ruleJudgeResult)) {
+		if (originResult.getKey() != ruleJudgeResult.getKey()) {
 			Cat.logError("rule execute error!", new Exception());
 		}
 

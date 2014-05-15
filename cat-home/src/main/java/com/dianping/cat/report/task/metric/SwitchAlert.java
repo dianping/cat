@@ -1,7 +1,5 @@
 package com.dianping.cat.report.task.metric;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,7 +55,7 @@ public class SwitchAlert implements Task, LogEnabled {
 	private RemoteMetricReportService m_service;
 
 	@Inject
-	private AlertConfig m_alertConfig;
+	private SwitchAlertConfig m_alertConfig;
 
 	@Inject
 	private AlertInfo m_alertInfo;
@@ -153,7 +151,7 @@ public class SwitchAlert implements Task, LogEnabled {
 
 		Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(config, value, baseline, type, configs);
 
-		if (!originResult.equals(ruleJudgeResult)) {
+		if (originResult.getKey() != ruleJudgeResult.getKey()) {
 			Cat.logError("rule execute error!", new Exception());
 		}
 
@@ -259,17 +257,17 @@ public class SwitchAlert implements Task, LogEnabled {
 
 	private int getMaxMinute(List<Config> configs) {
 		int maxMinute = DATA_CHECK_MINUTE;
-		
-		for(Config config : configs){
-			for(Condition con : config.getConditions()){
+
+		for (Config config : configs) {
+			for (Condition con : config.getConditions()) {
 				int tmpMinute = con.getMinute();
-				if(tmpMinute > maxMinute){
+				if (tmpMinute > maxMinute) {
 					maxMinute = tmpMinute;
 				}
 			}
 		}
-	   return maxMinute;
-   }
+		return maxMinute;
+	}
 
 	@Override
 	public String getName() {
@@ -411,12 +409,10 @@ public class SwitchAlert implements Task, LogEnabled {
 	}
 
 	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
-		/*
-		 * List<String> emails = m_alertConfig.buildMailReceivers(productLine); List<String> phones =
-		 * m_alertConfig.buildSMSReceivers(productLine);
-		 */
-		List<String> emails = new ArrayList<String>(Arrays.asList("18662513308"));
-		List<String> phones = new ArrayList<String>(Arrays.asList("leon.li@dianping.com"));
+
+		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
+		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+
 		String title = m_alertConfig.buildMailTitle(productLine, config);
 
 		m_logger.info(title + " " + content + " " + emails);
