@@ -12,8 +12,8 @@ public enum RuleType {
       }
 
 		@Override
-      public int getId() {
-	      return 1;
+      public String getId() {
+	      return "DescPer";
       }
 	},
 	
@@ -24,8 +24,8 @@ public enum RuleType {
       }
 
 		@Override
-      public int getId() {
-	      return 2;
+      public String getId() {
+	      return "DescVal";
       }
 	},
 	
@@ -36,8 +36,8 @@ public enum RuleType {
       }
 
 		@Override
-      public int getId() {
-	      return 3;
+      public String getId() {
+	      return "AscPer";
       }
 	},
 	
@@ -48,8 +48,8 @@ public enum RuleType {
       }
 
 		@Override
-      public int getId() {
-	      return 4;
+      public String getId() {
+	      return "AscVal";
       }
 	},
 	
@@ -60,8 +60,8 @@ public enum RuleType {
       }
 
 		@Override
-      public int getId() {
-	      return 5;
+      public String getId() {
+	      return "MaxVal";
       }
 	},
 	
@@ -72,12 +72,12 @@ public enum RuleType {
       }
 
 		@Override
-      public int getId() {
-	      return 6;
+      public String getId() {
+	      return "MinVal";
       }
 	};
 	
-	static Map<Integer,RuleType> s_map = new LinkedHashMap<Integer,RuleType>();
+	static Map<String,RuleType> s_map = new LinkedHashMap<String,RuleType>();
 	
 	static {
 		for(RuleType type : RuleType.values()){
@@ -87,9 +87,9 @@ public enum RuleType {
 	
 	public abstract boolean executeRule(double value, double baseline, double ruleValue);
 	
-	public abstract int getId();
+	public abstract String getId();
 	
-	public static RuleType getByTypeId(int typeId){
+	public static RuleType getByTypeId(String typeId){
 		return s_map.get(typeId);
 	}
 	

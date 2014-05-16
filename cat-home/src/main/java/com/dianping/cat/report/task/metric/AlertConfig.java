@@ -249,7 +249,7 @@ public class AlertConfig {
 					break;
 				}
 
-				int ruleType = subCondition.getType();
+				String ruleType = subCondition.getType();
 				int ruleValue = Integer.parseInt(subCondition.getText());
 				RuleType rule = RuleType.getByTypeId(ruleType);
 

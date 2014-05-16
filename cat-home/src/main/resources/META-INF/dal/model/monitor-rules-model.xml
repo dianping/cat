@@ -24,7 +24,7 @@
 		<entity-ref name="subcondition" type="list" names="subconditions" />
 	</entity>
 	<entity name="subcondition">
-		<attribute name="type" value-type="int" />
+		<attribute name="type" value-type="String" />
 		<element name="text" value-type="String" text="true" />
 	</entity>
 </model>

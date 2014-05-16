@@ -103,11 +103,13 @@ public class MetricAlert implements Task, LogEnabled {
 				}
 
 				for (Subcondition sub : subCons) {
-					switch (sub.getType()) {
-					case 1:
+					RuleType type = RuleType.getByTypeId(sub.getType());
+
+					switch (type) {
+					case DecreasePercentage:
 						isDescPerExist = true;
 						break;
-					case 2:
+					case DecreaseValue:
 						isDescValExist = true;
 						break;
 					default:
@@ -127,12 +129,12 @@ public class MetricAlert implements Task, LogEnabled {
 		if (isDescPerExist && isDescValExist) {
 			return;
 		} else {
-			addNewCondition(configs, 1, descPer, 2, descVal, dayBeginTime, dayEndTime);
+			addNewCondition(configs, "DescPer", descPer, "DescVal", descVal, dayBeginTime, dayEndTime);
 		}
 
 	}
 
-	private void addNewCondition(List<Config> configs, int type, double val, int type2, double val2,
+	private void addNewCondition(List<Config> configs, String type, double val, String type2, double val2,
 	      String dayBeginTime, String dayEndTime) {
 		configs.add(new Config()
 		      .setStarttime(dayBeginTime)
@@ -157,7 +159,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 		return originResult;
 	}
-	
+
 	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
@@ -257,17 +259,17 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private int getMaxMinute(List<Config> configs) {
 		int maxMinute = DATA_CHECK_MINUTE;
-		
-		for(Config config : configs){
-			for(Condition con : config.getConditions()){
+
+		for (Config config : configs) {
+			for (Condition con : config.getConditions()) {
 				int tmpMinute = con.getMinute();
-				if(tmpMinute > maxMinute){
+				if (tmpMinute > maxMinute) {
 					maxMinute = tmpMinute;
 				}
 			}
 		}
-	   return maxMinute;
-   }
+		return maxMinute;
+	}
 
 	@Override
 	public String getName() {
