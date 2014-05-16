@@ -17,7 +17,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
-import com.dianping.cat.broker.api.page.IpConvert.PositionInfo;
+import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.config.UrlPatternConfigManager;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -35,7 +35,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 	private Map<Integer, BlockingQueue<MonitorEntity>> m_queues = new LinkedHashMap<Integer, BlockingQueue<MonitorEntity>>();
 
 	@Inject
-	private IpConvert m_conver;
+	private IpService m_ipService;
 
 	@Inject
 	private UrlPatternConfigManager m_patternManger;
@@ -88,10 +88,10 @@ public class MonitorManager implements Initializable, LogEnabled {
 			Transaction t = Cat.newTransaction("Monitor", url);
 
 			try {
-				PositionInfo ip = m_conver.convert(entity.getIp());
+				IpInfo ip = m_ipService.findIpInfoByString(entity.getIp());
 
 				if (ip != null) {
-					String city = ip.getCity();
+					String city = ip.getProvince() + "-" + ip.getCity();
 					String channel = ip.getChannel();
 					String httpCode = entity.getHttpCode();
 					String errorCode = entity.getErrorCode();

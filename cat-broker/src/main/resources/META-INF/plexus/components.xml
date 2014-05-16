@@ -5,6 +5,10 @@
 			<implementation>com.dianping.cat.broker.api.page.IpConvert</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.broker.api.page.IpService</role>
+			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 			<implementation>com.dianping.cat.broker.api.page.RequestUtils</implementation>
 		</component>
@@ -17,6 +21,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -65,6 +72,9 @@
 					<role>com.dianping.cat.broker.api.page.IpConvert</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.broker.api.page.IpService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
@@ -72,6 +82,10 @@
 		<component>
 			<role>com.dianping.cat.broker.api.page.IpConvert</role>
 			<implementation>com.dianping.cat.broker.api.page.IpConvert</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.IpService</role>
+			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
