@@ -21,6 +21,7 @@
    			 	<li class="text-right"><a href="#tab1" data-toggle="tab"><strong>版本说明</strong></a></li>
    			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>集成文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>业务监控</strong></a></li>
+   			 	<li class="text-right"><a href="#tab12" data-toggle="tab"><strong>规则设置</strong></a></li>
    			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>变更监控</strong></a></li>
    			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>网络监控</strong></a></li>
    			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>异常监控</strong></a></li>
@@ -43,6 +44,7 @@
 	    		<div class="tab-pane" id="tab9"><%@ include file="userDocument.jsp"%></div>
 	    		<div class="tab-pane" id="tab10"><%@ include file="problem.jsp"%></div>
 	    		<div class="tab-pane" id="tab11"><%@ include file="plugin.jsp"%></div>
+	    		<div class="tab-pane" id="tab12"><%@ include file="monitorRule.jsp"%></div>
 			</div>
 	</div>
 </div>

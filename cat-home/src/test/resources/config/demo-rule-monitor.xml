@@ -9,36 +9,36 @@
 		
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-				<subcondition type="1">40</subcondition>
-				<subcondition type="1">40</subcondition>
+				<subcondition type="DescPer">40</subcondition>
+				<subcondition type="DescPer">40</subcondition>
 			</condition>
 			<condition>
-				<subcondition type="2">200</subcondition>
+				<subcondition type="DescVal">200</subcondition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="conditionCombination">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-				<subcondition type="1">400</subcondition>
+				<subcondition type="DescPer">400</subcondition>
 			</condition>
 			<condition>
-				<subcondition type="1">400</subcondition>
-				<subcondition type="2">900</subcondition>
+				<subcondition type="DescPer">400</subcondition>
+				<subcondition type="DescVal">900</subcondition>
 			</condition>
 			<condition>	<!-- trigger alert -->
-				<subcondition type="1">40</subcondition>
-				<subcondition type="2">100</subcondition>
+				<subcondition type="DescPer">40</subcondition>
+				<subcondition type="DescVal">100</subcondition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="subconditionCombination">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-				<subcondition type="1">40</subcondition>
-				<subcondition type="2">80</subcondition>
+				<subcondition type="DescPer">40</subcondition>
+				<subcondition type="DescVal">80</subcondition>
 				<!-- block alert -->
-				<subcondition type="6">10</subcondition>
+				<subcondition type="MinVal">10</subcondition>
 			</condition>
 		</config>
 	</rule>

@@ -2,10 +2,10 @@
 	<rule id="two-minute">
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="2">
-					<subcondition type="1">40</subcondition>
+					<subcondition type="DescPer">40</subcondition>
 			</condition>
 			<condition minute="2">
-					<subcondition type="2">80</subcondition>
+					<subcondition type="DescVal">80</subcondition>
 			</condition>
 		</config>
 	</rule>
