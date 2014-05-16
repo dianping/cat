@@ -11,6 +11,14 @@
 		<component>
 			<role>com.dianping.cat.broker.api.page.MonitorManager</role>
 			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.IpConvert</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
@@ -26,11 +34,11 @@
 			<implementation>com.dianping.cat.broker.api.ApiModule</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.broker.api.page.signal.Handler</role>
-			<implementation>com.dianping.cat.broker.api.page.signal.Handler</implementation>
+			<role>com.dianping.cat.broker.api.page.single.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.single.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.broker.api.page.signal.JspViewer</role>
+					<role>com.dianping.cat.broker.api.page.single.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
@@ -41,8 +49,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.broker.api.page.signal.JspViewer</role>
-			<implementation>com.dianping.cat.broker.api.page.signal.JspViewer</implementation>
+			<role>com.dianping.cat.broker.api.page.single.JspViewer</role>
+			<implementation>com.dianping.cat.broker.api.page.single.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -52,6 +60,39 @@
 		<component>
 			<role>com.dianping.cat.broker.api.page.MonitorManager</role>
 			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.IpConvert</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.IpConvert</role>
+			<implementation>com.dianping.cat.broker.api.page.IpConvert</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.config.ConfigDao</role>
+			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.broker.api.page.RequestUtils</role>

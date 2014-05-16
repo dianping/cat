@@ -1,4 +1,4 @@
-package com.dianping.cat.broker.api.page.signal;
+package com.dianping.cat.broker.api.page.single;
 
 public enum JspFile {
 	VIEW("/jsp/api/signal.jsp"),

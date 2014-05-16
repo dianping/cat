@@ -1,15 +1,19 @@
 package com.dianping.cat.config;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 
 public class DefaultUrlPatternHandler implements UrlPatternHandler {
 
 	private TrieTreeNode m_formats = new TrieTreeNode();
+
+	private Set<String> m_orignals = new HashSet<String>();
 
 	/**
 	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
@@ -66,7 +70,13 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 
 	@Override
 	public String handle(String input) {
-		return parse(m_formats, input);
+		boolean exist = m_orignals.contains(input);
+
+		if (exist) {
+			return input;
+		} else {
+			return parse(m_formats, input);
+		}
 	}
 
 	/**
@@ -139,7 +149,7 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 				return output;
 			}
 		}
-		return input;
+		return null;
 	}
 
 	@Override
@@ -154,16 +164,19 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 			int index1 = format.indexOf('{');
 
 			if (index1 == -1 || index1 == format.length() - 1) {
+				m_orignals.add(format);
 				continue;
 			}
 			int index2 = format.lastIndexOf('}');
 
 			if (index2 == -1 || index2 < index1) {
+				m_orignals.add(format);
 				continue;
 			}
 
 			String key1 = format.substring(0, index1);
 			String key2 = format.substring(index2 + 1);
+
 			AggregationMessageFormat value = new AggregationMessageFormat(format);
 
 			buildFormatTree(formats, key1.toCharArray(), key2.toCharArray(), value);

@@ -123,7 +123,6 @@ public abstract class GraphCreatorBase implements LogEnabled {
 	}
 
 	public void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
-
 		if (chart.getHtmlTitle().contains("<span style='color:red'>")) {
 			return;
 		}
@@ -175,7 +174,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 		return current.getTime() == date.getTime() - TimeUtil.ONE_HOUR;
 	}
 
-	private void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
+	protected void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
 		for (Entry<String, double[]> entry : item.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();

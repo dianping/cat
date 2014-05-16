@@ -1,4 +1,4 @@
-package com.dianping.cat.broker.api.page.signal;
+package com.dianping.cat.broker.api.page.single;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view");

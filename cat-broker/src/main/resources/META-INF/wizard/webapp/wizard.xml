@@ -2,8 +2,8 @@
 <wizard package="com.dianping.cat.broker">
    <webapp package="com.dianping.cat.broker" webres="true" plugin-management="false">
       <module name="api" path="api" default="true">
-         <page name="signal" title="signal" default="true" path="signal" template="default">
-            <description>signal api</description>
+         <page name="single" title="single" default="true" path="single" template="default">
+            <description>single api</description>
          </page>
          <page name="batch" title="batch" default="true" path="batch" template="default">
             <description>batch api</description>

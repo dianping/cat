@@ -1,14 +1,23 @@
 package com.dianping.cat.report.page.userMonitor;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.alibaba.cobar.parser.util.Pair;
+import com.dianping.cat.Monitor;
 import com.dianping.cat.config.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -25,9 +34,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private CityManager m_cityManager;
-	
+
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private UserMonitorGraphCreator m_graphCreator;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -44,8 +56,46 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 		List<PatternItem> items = m_patternManager.queryUrlPatternRules();
-		
-		
+
+		long start = payload.getHistoryStartDate().getTime();
+		long end = payload.getHistoryEndDate().getTime();
+		start = start - start % TimeUtil.ONE_HOUR;
+		end = end - end % TimeUtil.ONE_HOUR;
+
+		Date startDate = new Date(start);
+		Date endDate = new Date(end);
+		String type = payload.getType();
+		String channel = payload.getChannel();
+		String city = payload.getCity();
+		Map<String, String> pars = new LinkedHashMap<String, String>();
+
+		// TODO
+		endDate = TimeUtil.getCurrentHour();
+
+		startDate = new Date(startDate.getTime() - 4 * TimeUtil.ONE_HOUR);
+		endDate = new Date(startDate.getTime() + TimeUtil.ONE_HOUR);
+
+		city = "南京";
+		channel = "联通";
+		type = "httpStatus";
+
+		pars.put("type", type);
+		pars.put("channel", channel);
+		pars.put("city", city);
+
+		String url = payload.getUrl();
+		if (Monitor.TYPE_INFO.equals(type)) {
+			Map<String, LineChart> charts = m_graphCreator.queryBaseInfo(startDate, endDate, url, pars);
+
+			model.setLineCharts(charts);
+		} else {
+			Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
+
+			model.setLineChart(pair.getKey());
+			model.setPieChart(pair.getValue());
+		}
+		model.setStart(startDate);
+		model.setEnd(endDate);
 		model.setCities(m_cityManager.getCities());
 		model.setPattermItems(items);
 		model.setAction(Action.VIEW);
@@ -55,8 +105,7 @@ public class Handler implements PageHandler<Context> {
 			m_jspViewer.view(ctx, model);
 		}
 	}
-	
-	
+
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.USERMONITOR);
 

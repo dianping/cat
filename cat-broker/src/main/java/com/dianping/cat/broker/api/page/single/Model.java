@@ -1,4 +1,4 @@
-package com.dianping.cat.broker.api.page.signal;
+package com.dianping.cat.broker.api.page.single;
 
 import com.dianping.cat.broker.api.ApiPage;
 import org.unidal.web.mvc.ViewModel;

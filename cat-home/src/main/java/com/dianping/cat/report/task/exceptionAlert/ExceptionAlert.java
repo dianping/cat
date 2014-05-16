@@ -47,9 +47,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private MailSMS m_mailSms;
 
 	@Inject
-	protected ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
 	private ExceptionThresholdConfigManager m_configManager;
 
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)

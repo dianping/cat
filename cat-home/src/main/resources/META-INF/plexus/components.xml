@@ -272,6 +272,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
 			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
 			<requirements>
@@ -1701,9 +1731,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.tool.MailSMS</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
@@ -3274,6 +3301,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>

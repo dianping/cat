@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.userMonitor;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Monitor;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -74,15 +75,15 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private boolean validate(String city, String channel, String info) {
-		if ("info".equals(m_type)) {
+		if (Monitor.TYPE_INFO.equals(m_type)) {
 			if (validateCity(city) && validateChannel(channel) && validateInfo(info)) {
 				return true;
 			}
-		} else if ("httpStatus".equals(m_type)) {
+		} else if (Monitor.HTTP_STATUS.equals(m_type)) {
 			if (validateCity(city) && validateChannel(channel) && validateHttpStatus(info)) {
 				return true;
 			}
-		} else if ("errorCode".equals(m_type)) {
+		} else if (Monitor.ERROR_CODE.equals(m_type)) {
 			if (validateCity(city) && validateChannel(channel) && validateErrorCode(info)) {
 				return true;
 			}
@@ -91,7 +92,7 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private boolean validateInfo(String info) {
-		if ("hit".equals(info) || "error".equals("info")) {
+		if (Monitor.HIT.equals(info) || Monitor.ERROR.equals(info)) {
 			return true;
 		} else {
 			return false;
@@ -99,7 +100,7 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private boolean validateHttpStatus(String info) {
-		if (info.startsWith("httpStatus")) {
+		if (info.startsWith(Monitor.HTTP_STATUS)) {
 			return true;
 		} else {
 			return false;
@@ -107,7 +108,7 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private boolean validateErrorCode(String info) {
-		if (info.startsWith("errorStatus")) {
+		if (info.startsWith(Monitor.ERROR_CODE)) {
 			return true;
 		} else {
 			return false;
@@ -115,7 +116,7 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private boolean validateCity(String city) {
-		if (StringUtils.isEmpty(m_city) || city.equals(m_city)) {
+		if (StringUtils.isEmpty(m_city) || city.contains(m_city)) {
 			return true;
 		} else {
 			return false;

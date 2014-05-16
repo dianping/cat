@@ -44,6 +44,8 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
+import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
+import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
 import com.dianping.cat.report.task.metric.AlertConfig;
@@ -126,9 +128,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, MetricAggregationConfigManager.class,
 		      AlertInfo.class));
-		all.add(C(DefaultAggGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
-		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class, AlertInfo.class));
+
+		all.add(C(UserMonitorGraphCreator.class, DefaultUserMonitGraphCreator.class).req(CachedMetricReportService.class,
+		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+
+		all.add(C(DefaultAggGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -142,16 +149,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertConfig.class));
 
 		all.add(C(AlertInfo.class));
-		
+
 		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, AlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class));		
-		
-		all.add(C(ExceptionAlert.class).req(ProjectDao.class, AlertConfig.class,MailSMS.class, ProductLineConfigManager.class,
-				ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
-		
+		      .req(RemoteMetricReportService.class));
+
+		all.add(C(ExceptionAlert.class).req(ProjectDao.class, AlertConfig.class, MailSMS.class,
+		      ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

@@ -9,6 +9,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.broker.api.page.IpConvert;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
+import com.dianping.cat.config.UrlPatternConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -17,7 +18,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(IpConvert.class));
 		all.add(C(RequestUtils.class));
-		all.add(C(MonitorManager.class).req(IpConvert.class));
+		all.add(C(MonitorManager.class).req(IpConvert.class, UrlPatternConfigManager.class));
 
 		// Please keep it as last
 		all.addAll(new WebComponentConfigurator().defineComponents());

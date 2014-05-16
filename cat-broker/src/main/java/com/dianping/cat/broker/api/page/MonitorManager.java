@@ -16,7 +16,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpConvert.PositionInfo;
+import com.dianping.cat.config.UrlPatternConfigManager;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -34,6 +36,9 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 	@Inject
 	private IpConvert m_conver;
+
+	@Inject
+	private UrlPatternConfigManager m_patternManger;
 
 	private Logger m_logger;
 
@@ -70,58 +75,63 @@ public class MonitorManager implements Initializable, LogEnabled {
 		return false;
 	}
 
-	// KEY: city:channel:hit
-	// KEY: city:channel:httpError|200
-	// KEY: city:channel:errorCode|200
+	private String getFormatUrl(String url) {
+		String result = m_patternManger.handle(url);
+
+		return result;
+	}
 
 	private void processOneEntity(MonitorEntity entity) {
-		String url = entity.getTargetUrl();
-		Transaction t = Cat.newTransaction("Monitor", url);
+		String url = getFormatUrl(entity.getTargetUrl());
 
-		try {
-			PositionInfo ip = m_conver.convert(entity.getIp());
+		if (url != null) {
+			Transaction t = Cat.newTransaction("Monitor", url);
 
-			if (ip != null) {
-				String city = ip.getCity();
-				String channel = ip.getChannel();
-				String httpCode = entity.getHttpCode();
-				String errorCode = entity.getErrorCode();
-				long timestamp = entity.getTimestamp();
-				double duration = entity.getDuration();
-				String group = url;
+			try {
+				PositionInfo ip = m_conver.convert(entity.getIp());
 
-				if (duration > 0) {
-					logMetric(timestamp, duration, group, city + ":" + channel + ":hit");
+				if (ip != null) {
+					String city = ip.getCity();
+					String channel = ip.getChannel();
+					String httpCode = entity.getHttpCode();
+					String errorCode = entity.getErrorCode();
+					long timestamp = entity.getTimestamp();
+					double duration = entity.getDuration();
+					String group = url;
 
-					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
-						logMetric(timestamp, duration, group, city + ":" + channel + ":error");
+					if (duration > 0) {
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+
+						if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
+							logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
+						}
+					}
+
+					if (!StringUtils.isEmpty(httpCode)) {
+						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
+						Metric metric = Cat.getProducer().newMetric(group, key);
+						DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+						defaultMetric.setTimestamp(timestamp);
+						defaultMetric.setStatus("C");
+						defaultMetric.addData(String.valueOf(1));
+					}
+					if (!StringUtils.isEmpty(errorCode)) {
+						String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
+						Metric metric = Cat.getProducer().newMetric(group, key);
+						DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+						defaultMetric.setTimestamp(timestamp);
+						defaultMetric.setStatus("C");
+						defaultMetric.addData(String.valueOf(1));
 					}
 				}
-
-				if (!StringUtils.isEmpty(httpCode)) {
-					String key = city + ":" + channel + ":httpStatus|" + httpCode;
-					Metric metric = Cat.getProducer().newMetric(group, key);
-					DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-					defaultMetric.setTimestamp(timestamp);
-					defaultMetric.setStatus("C");
-					defaultMetric.addData(String.valueOf(1));
-				}
-				if (!StringUtils.isEmpty(errorCode)) {
-					String key = city + ":" + channel + ":errorCode|" + errorCode;
-					Metric metric = Cat.getProducer().newMetric(group, key);
-					DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-					defaultMetric.setTimestamp(timestamp);
-					defaultMetric.setStatus("C");
-					defaultMetric.addData(String.valueOf(1));
-				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
-		} catch (Exception e) {
-			Cat.logError(e);
-			t.setStatus(e);
-		} finally {
-			t.complete();
 		}
 	}
 
