@@ -1,45 +1,41 @@
 <monitor-rules>
-	<rule id="decreasePercentage">
-		<metric-item type="id">domain:url:metric</metric-item>
-		<metric-item type="id">TuanGouWeb:URL:/index</metric-item>
+	<rule id="switchErrorAndDiscard">
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=errors$)
+		</metric-item>
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=discards$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=errors$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=discards$)
+		</metric-item>
 		
-		<config starttime="06:00" endtime="09:00">
-			<condition>
-					<subcondition type="1">40</subcondition>
-			</condition>
-			<condition>
-					<subcondition type="2">200</subcondition>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="3">
+				<subcondition type="MaxVal">3</subcondition>
 			</condition>
 		</config>
 	</rule>
-	<rule id="conditionCombination">
+	<rule id="switchInAndOut">
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=in$)
+		</metric-item>
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=out$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=in$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=out$)
+		</metric-item>
+		
 		<config starttime="00:00" endtime="24:00">
-			<condition>
-					<subcondition type="1">400</subcondition>
-			</condition>
-			<condition>
-					<subcondition type="1">400</subcondition>
-					<subcondition type="2">900</subcondition>
-			</condition>
-			<condition>
-					<subcondition type="1">40</subcondition>
-					<subcondition type="2">100</subcondition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="subconditionCombination">
-		<config starttime="00:00" endtime="24:00">
-			<condition>
-					<subcondition type="1">400</subcondition>
-			</condition>
-			<condition>
-					<subcondition type="1">400</subcondition>
-					<subcondition type="2">900</subcondition>
-			</condition>
-			<condition>
-					<subcondition type="1">40</subcondition>
-					<subcondition type="2">200</subcondition>
-					<subcondition type="6">10</subcondition>
+			<condition minute="2">
+				<subcondition type="DescPer">50</subcondition>
 			</condition>
 		</config>
 	</rule>
