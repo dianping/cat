@@ -21,6 +21,12 @@ import com.dianping.cat.report.page.PieChart.Item;
 
 public class DefaultUserMonitGraphCreator extends GraphCreatorBase implements UserMonitorGraphCreator {
 
+	private static final String COUNT = "COUNT";
+
+	private static final String AVG = "AVG";
+
+	private static final String SUCESS_PERCENT = "SUCESS_PERCENT";
+
 	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		LineChart lineChart = new LineChart();
@@ -63,6 +69,9 @@ public class DefaultUserMonitGraphCreator extends GraphCreatorBase implements Us
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
+			if (SUCESS_PERCENT.equals(key)) {
+				lineChart.setMinYlable(95);
+			}
 			lineChart.setId(key);
 			lineChart.setTitle(key);
 			lineChart.setStart(startDate);
@@ -117,10 +126,11 @@ public class DefaultUserMonitGraphCreator extends GraphCreatorBase implements Us
 		double[] count = new double[60];
 		double[] avg = new double[60];
 		double[] error = new double[60];
+		double[] successPercent = new double[60];
 
-		data.put("count", count);
-		data.put("avg", avg);
-		data.put("error", error);
+		data.put(COUNT, count);
+		data.put(AVG, avg);
+		data.put(SUCESS_PERCENT, successPercent);
 
 		Map<String, MetricItem> items = report.getMetricItems();
 
@@ -137,6 +147,18 @@ public class DefaultUserMonitGraphCreator extends GraphCreatorBase implements Us
 				} else if (key.endsWith(Monitor.ERROR)) {
 					error[id] = segment.getCount();
 				}
+			}
+		}
+
+		for (int i = 0; i < 60; i++) {
+			double countNumber = count[i];
+			double errerNumber = error[i];
+			double sum = countNumber + errerNumber;
+
+			if (sum > 0) {
+				successPercent[i] = countNumber * 100 / sum;
+			} else {
+				successPercent[i] = 100;
 			}
 		}
 		return data;

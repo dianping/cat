@@ -13,13 +13,69 @@
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 	<script type="text/javascript">
+		function query(){
+			var url = $("#url").val();
+			var city = $("#city").val();
+			var type = $("#type").val();
+			var channel = $("#channel").val();
+			var start = $("#startTime").val();
+			var end = $("#endTime").val();
+			
+			window.location.href="?url="+url +"&city="+city+"&type="+type+"&channel="+channel+"&startDate="+start+"&endDate="+end;
+		}
+		
 		$(document).ready(function() {
 			$("#url").select2();
-			$("#city").select2();
-
 			$('#datetimepicker1').datetimepicker();
 			$('#datetimepicker2').datetimepicker();
+			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
+			$('#endTime').val("${w:format(model.end,'yyyy-MM-dd HH:mm')}");
+			$('#type').val('${payload.type}');
+			$('#channel').val('${payload.channel}');
+			$('#url').val('${payload.url}');
 			
+			var cityData = ${model.cityInfo};
+			var select = $('#province');
+			function change(){
+				var key = $("#province").val();
+				var value = cityData[key];
+				
+				select = document.getElementById("city");
+				select.length=0;
+				for (var prop in value) {
+				    var opt = $('<option />');
+			  		var city = value[prop].city;
+			  		
+			  		if(city==''){
+				  		opt.html('ALL');
+			  		}else{
+				  		opt.html(value[prop].city);
+			  		}
+				  	opt.val(value[prop].province+'-'+value[prop].city);
+			  		opt.appendTo(select);
+				}
+			}
+			select.on('change',change);
+			
+			for (var prop in cityData) {
+			  	if (cityData.hasOwnProperty(prop)) { 
+			  		var opt = $('<option />');
+			  		opt.val(prop);
+			  		opt.html(prop);
+			  		opt.appendTo(select);
+			  }
+			}
+			
+			var city = '${payload.city}';
+			var array = city.split('-');
+			
+			console.log(array[0]+"====" +array[1]+"===="+array.length);
+			$('#province').val(array[0]);
+			change();
+			
+			if(array.length==2){
+				$("#city").val(city);
+			}
 			
 			<c:choose>
 			<c:when test="${payload.type eq 'info'}">
@@ -34,66 +90,55 @@
 			</c:otherwise>
 			</c:choose>
 		});
-		
-		function query(){
-			var url = $("#url").val();
-			var city = $("#city").val();
-			var type = $("#type").val();
-			var start = $("#startTime").val();
-			var end = $("#endTime").val();
-			
-			window.location.href="?url="+url +"&city="+city+"&type="+type+"&startDate="+start+"&endDate="+end;
-		}
 		</script>
-		
 	<div class="report">
 		<table>
 			<tr>
 				<th class="left">
 					URL:
-					<select name="url" id="url">
+					<select name="url" id="url" style="width:400px;">
 	                     <c:forEach var="item" items="${model.pattermItems}">
-	                           <option value="${item.pattern}">${item.pattern}</option>
+	                           <option value="${item.name}">${item.pattern}</option>
 	                     </c:forEach>
+                 	 </select>
+                 	 省份
+                 	 <select style="width:100px;" name="province" id="province">
                  	 </select>
                  	 城市
-                 	 <select style="width:200px;" name="city" id="city">
-	                     <c:forEach var="item" items="${model.cities}">
-	                           <option value="${item}">${item}</option>
-	                     </c:forEach>
-                 	 </select>
+                 	 <select style="width:100px;" name="city" id="city" >
+                 	 </select> 
                  	 运营商
-                 	 <select style="width:120px;" name="type" id="type">
+                 	 <select style="width:120px;" name="channel" id="channel">
 	                           <option value="">ALL</option>
 	                           <option value="中国电信">中国电信</option>
 	                           <option value="中国移动">中国移动</option>
 	                           <option value="中国联通">中国联通</option>
 	                           <option value="中国铁通">中国铁通</option>
+	                           <option value="其他">其他</option>
                  	 </select>
-                 	 类型
+                 	 查询类型
                  	 <select style="width:120px;" name="type" id="type">
-	                           <option value="hit">访问量</option>
-	                           <option value="HttpCode">HttpStatus</option>
-	                           <option value="ErrorCode">ErrorCode</option>
+	                           <option value="info">访问情况</option>
+	                           <option value="httpStatus">HttpStatus</option>
+	                           <option value="errorCode">ErrorCode</option>
                  	 </select>
                  	 </th>
                  	 </tr>
-                 	 <tr><th  class="left">
+                 	 <tr><th  class="right">
                  	 开始时间
                  	 <div id="datetimepicker1" class="input-append date" style="margin-bottom:0px;">
-			           <input id="startTime" name="startTime" style="height:30px;width:150px;" placeholder="开始时间"  
-			              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on"> <i
+			           <input id="startTime" name="startTime" style="height:30px;width:150px;"
+			              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on"> <i
 			              data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 			           </span>
 			       	 </div>
                  	 结束时间
                  	 <div id="datetimepicker2" class="input-append date"  style="margin-bottom:0px;">
-			           <input id="endTime"  name="endTime" style="height:30px;width:150px;"  placeholder="结束时间"  
-			              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on"> <i
+			           <input id="endTime"  name="endTime" style="height:30px;width:150px;"  
+			              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on"> <i
 			              data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 			           </span>
 			        </div>
-			        
 			        <input class="btn btn-primary  btn-small"  value="查询"
 						onclick="query()"
 						type="submit"></div>

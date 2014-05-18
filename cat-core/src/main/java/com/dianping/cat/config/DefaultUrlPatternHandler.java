@@ -1,6 +1,7 @@
 package com.dianping.cat.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 	private TrieTreeNode m_formats = new TrieTreeNode();
 
 	private Set<String> m_orignals = new HashSet<String>();
+
+	private Map<String, String> m_urlToId = new HashMap<String, String>();
 
 	/**
 	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
@@ -73,9 +76,9 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 		boolean exist = m_orignals.contains(input);
 
 		if (exist) {
-			return input;
+			return m_urlToId.get(input);
 		} else {
-			return parse(m_formats, input);
+			return m_urlToId.get(parse(m_formats, input));
 		}
 	}
 
@@ -161,6 +164,9 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 			if (format == null || format.isEmpty()) {
 				continue;
 			}
+
+			m_urlToId.put(format, item.getName());
+
 			int index1 = format.indexOf('{');
 
 			if (index1 == -1 || index1 == format.length() - 1) {

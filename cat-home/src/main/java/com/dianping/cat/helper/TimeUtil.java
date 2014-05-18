@@ -24,6 +24,17 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 	
+	public static Date getCurrentHour(int index) {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.HOUR_OF_DAY, index);
+
+		return cal.getTime();
+	}
+	
 	public static Date getCurrentHour() {
 		Calendar cal = Calendar.getInstance();
 

@@ -26,6 +26,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private Date m_start;
 
 	private Date m_end;
+	
+	private String m_cityInfo;
+	
+	public String getCityInfo() {
+   	return m_cityInfo;
+   }
+
+	public void setCityInfo(String cityInfo) {
+   	m_cityInfo = cityInfo;
+   }
 
 	public Date getStart() {
 		return m_start;
@@ -69,7 +79,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<LineChart> getLineCharts() {
-		return new ArrayList<LineChart>(m_lineCharts.values());
+		if(m_lineCharts!=null){
+			return new ArrayList<LineChart>(m_lineCharts.values());
+		}else{
+			return new ArrayList<LineChart>();
+		}
 	}
 
 	public void setLineCharts(Map<String, LineChart> lineCharts) {

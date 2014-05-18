@@ -78,6 +78,30 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 		}
 	}
 
+	private MetricReport hackForTest(String product, Map<String, String> properties) {
+		MetricReport report = null;
+		try {
+			String content = Files.forIO().readFrom(new File("/tmp/data.txt"), "utf-8");
+
+			report = DefaultSaxParser.parse(content);
+
+			report.setProduct(product);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		String city = properties.get("city");
+		String channel = properties.get("channel");
+		String type = properties.get("type");
+
+		UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
+
+		convert.visitMetricReport(report);
+
+		return convert.getReport();
+	}
+
 	@Override
 	public MetricReport queryUserMonitorReport(String product, Map<String, String> properties, Date start) {
 		long time = start.getTime();
@@ -92,35 +116,16 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 				ModelResponse<MetricReport> response = m_service.invoke(request);
 				MetricReport report = response.getModel();
 
-				return report;
+				return hackForTest(product, properties);
+				// return report;
 			} else {
 				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
 			}
 		} else {
 			MetricReport report = getReportFromCache(product, time);
-			
-				try {
-		         String content = Files.forIO().readFrom(new File("/tmp/data.txt"), "utf-8");
-		         
-		         report = DefaultSaxParser.parse(content);
-		         
-		         report.setProduct(product);
-		         
-	         } catch (Exception e) {
-		         // TODO Auto-generated catch block
-		         e.printStackTrace();
-	         }
-				
-			String city = properties.get("city");
-			String channel = properties.get("channel");
-			String type = properties.get("type");
-			
-			System.err.println(city+" " + channel+"  "+type);
-			UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
+			// return report;
 
-			convert.visitMetricReport(report);
-
-			return convert.getReport();
+			return hackForTest(product, properties);
 		}
 	}
 

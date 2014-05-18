@@ -18,6 +18,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
+import com.site.lookup.util.StringUtils;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -55,10 +56,11 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
-		List<PatternItem> items = m_patternManager.queryUrlPatternRules();
+		List<PatternItem> rules = m_patternManager.queryUrlPatternRules();
 
 		long start = payload.getHistoryStartDate().getTime();
 		long end = payload.getHistoryEndDate().getTime();
+
 		start = start - start % TimeUtil.ONE_HOUR;
 		end = end - end % TimeUtil.ONE_HOUR;
 
@@ -68,38 +70,36 @@ public class Handler implements PageHandler<Context> {
 		String channel = payload.getChannel();
 		String city = payload.getCity();
 		Map<String, String> pars = new LinkedHashMap<String, String>();
+		String url = payload.getUrl();
 
-		// TODO
-		endDate = TimeUtil.getCurrentHour();
+		if (url == null && rules.size() > 0) {
+			url = rules.get(0).getName();
+		}
 
-		startDate = new Date(startDate.getTime() - 4 * TimeUtil.ONE_HOUR);
-		endDate = new Date(startDate.getTime() + TimeUtil.ONE_HOUR);
-
-		city = "南京";
-		channel = "联通";
-		type = "httpStatus";
-
+		 city="江苏";
+		
 		pars.put("type", type);
 		pars.put("channel", channel);
 		pars.put("city", city);
 
-		String url = payload.getUrl();
-		if (Monitor.TYPE_INFO.equals(type)) {
-			Map<String, LineChart> charts = m_graphCreator.queryBaseInfo(startDate, endDate, url, pars);
+		if (url != null) {
+			if (Monitor.TYPE_INFO.equals(type)) {
+				Map<String, LineChart> charts = m_graphCreator.queryBaseInfo(startDate, endDate, url, pars);
 
-			model.setLineCharts(charts);
-		} else {
-			Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
+				model.setLineCharts(charts);
+			} else {
+				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
 
-			model.setLineChart(pair.getKey());
-			model.setPieChart(pair.getValue());
+				model.setLineChart(pair.getKey());
+				model.setPieChart(pair.getValue());
+			}
 		}
 		model.setStart(startDate);
 		model.setEnd(endDate);
-		model.setCities(m_cityManager.getCities());
-		model.setPattermItems(items);
+		model.setPattermItems(rules);
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.USERMONITOR);
+		model.setCityInfo(m_cityManager.getCityInfo());
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);

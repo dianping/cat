@@ -77,7 +77,7 @@ function TabManager() {
 	};
 	
 	this.headersWillBeSent = function(tabId, headers) {
-		headers.push({name: "X-CAT-TRACE-MODE", value: "true"});
+		headers.push({name: "X-CAT-TRACE-MODE", value: "1"});
 		return {requestHeaders: headers};
 	};
 	

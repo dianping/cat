@@ -30,6 +30,8 @@ public class LineChart {
 	private List<Map<Long, Double>> m_datas = new ArrayList<Map<Long, Double>>();
 
 	private double[] m_ylable;
+	
+	private double m_minYlable;
 
 	public LineChart() {
 	}
@@ -154,6 +156,14 @@ public class LineChart {
 		m_values = values;
 		return this;
 	}
+
+	public double getMinYlable() {
+   	return m_minYlable;
+   }
+
+	public void setMinYlable(double minYlable) {
+   	m_minYlable = minYlable;
+   }
 
 	public LineChart setYlable(double[] ylable) {
 		if (ylable == null) {
