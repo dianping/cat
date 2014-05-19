@@ -35,6 +35,19 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.USERMONITOR);
 	}
 
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public String getChannel() {
+		return m_channel;
+	}
+
+	public String getCity() {
+		return m_city;
+	}
+
 	public Date getHistoryEndDate() {
 		try {
 			if (m_customEnd != null && m_customEnd.length() > 0) {
@@ -61,17 +74,28 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	@Override
-	public Action getAction() {
-		return m_action;
-	}
-
-	@Override
 	public ReportPage getPage() {
 		return m_page;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
+	public String getUrl() {
+		return m_url;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setChannel(String channel) {
+		m_channel = channel;
+	}
+
+	public void setCity(String city) {
+		m_city = city;
 	}
 
 	@Override
@@ -79,36 +103,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_page = ReportPage.getByName(page, ReportPage.USERMONITOR);
 	}
 
-	public String getUrl() {
-		return m_url;
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	public void setUrl(String url) {
 		m_url = url;
-	}
-
-	public String getCity() {
-		return m_city;
-	}
-
-	public void setCity(String city) {
-		m_city = city;
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setType(String type) {
-		m_type = type;
 	}
 
 	@Override

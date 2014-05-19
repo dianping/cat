@@ -24,6 +24,10 @@ public class UserMonitorConvert extends BaseVisitor {
 		m_channel = channel;
 	}
 
+	public MetricReport getReport() {
+		return m_report;
+	}
+
 	public void mergeMetricItem(MetricItem from, MetricItem to) {
 		for (Segment temp : to.getSegments().values()) {
 			Segment target = from.findOrCreateSegment(temp.getId());
@@ -40,8 +44,61 @@ public class UserMonitorConvert extends BaseVisitor {
 		}
 	}
 
-	public MetricReport getReport() {
-		return m_report;
+	private boolean validate(String city, String channel, String info) {
+		if (Monitor.TYPE_INFO.equals(m_type)) {
+			if (validateCity(city) && validateChannel(channel) && validateInfo(info)) {
+				return true;
+			}
+		} else if (Monitor.HTTP_STATUS.equals(m_type)) {
+			if (validateCity(city) && validateChannel(channel) && validateHttpStatus(info)) {
+				return true;
+			}
+		} else if (Monitor.ERROR_CODE.equals(m_type)) {
+			if (validateCity(city) && validateChannel(channel) && validateErrorCode(info)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean validateChannel(String channel) {
+		if (StringUtils.isEmpty(m_channel) || channel.equals(m_channel)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean validateCity(String city) {
+		if (StringUtils.isEmpty(m_city) || city.contains(m_city)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean validateErrorCode(String info) {
+		if (info.startsWith(Monitor.ERROR_CODE)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean validateHttpStatus(String info) {
+		if (info.startsWith(Monitor.HTTP_STATUS)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean validateInfo(String info) {
+		if (Monitor.HIT.equals(info) || Monitor.ERROR.equals(info)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -72,63 +129,6 @@ public class UserMonitorConvert extends BaseVisitor {
 	@Override
 	public void visitSegment(Segment segment) {
 		super.visitSegment(segment);
-	}
-
-	private boolean validate(String city, String channel, String info) {
-		if (Monitor.TYPE_INFO.equals(m_type)) {
-			if (validateCity(city) && validateChannel(channel) && validateInfo(info)) {
-				return true;
-			}
-		} else if (Monitor.HTTP_STATUS.equals(m_type)) {
-			if (validateCity(city) && validateChannel(channel) && validateHttpStatus(info)) {
-				return true;
-			}
-		} else if (Monitor.ERROR_CODE.equals(m_type)) {
-			if (validateCity(city) && validateChannel(channel) && validateErrorCode(info)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean validateInfo(String info) {
-		if (Monitor.HIT.equals(info) || Monitor.ERROR.equals(info)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateHttpStatus(String info) {
-		if (info.startsWith(Monitor.HTTP_STATUS)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateErrorCode(String info) {
-		if (info.startsWith(Monitor.ERROR_CODE)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateCity(String city) {
-		if (StringUtils.isEmpty(m_city) || city.contains(m_city)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateChannel(String channel) {
-		if (StringUtils.isEmpty(m_channel) || channel.equals(m_channel)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

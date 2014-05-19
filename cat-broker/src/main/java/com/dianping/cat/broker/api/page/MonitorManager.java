@@ -102,23 +102,15 @@ public class MonitorManager implements Initializable, LogEnabled {
 			String url = getFormatUrl(targetUrl);
 
 			if (url != null) {
-				System.out.println(entity);
 				Transaction t = Cat.newTransaction("Monitor", url);
 
 				try {
-					IpInfo ip = m_ipService.findIpInfoByString(entity.getIp());
+					String ip = entity.getIp();
+					IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
 
-					if (ip == null) {
-						System.out.println("hack!!");
-						ip = new IpInfo();
-						ip.setChannel("中国电信");
-						ip.setCity("上海市");
-						ip.setProvince("上海市");
-					}
-
-					if (ip != null) {
-						String city = ip.getProvince() + "-" + ip.getCity();
-						String channel = ip.getChannel();
+					if (ipInfo != null) {
+						String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
+						String channel = ipInfo.getChannel();
 						String httpCode = entity.getHttpStatus();
 						String errorCode = entity.getErrorCode();
 						long timestamp = entity.getTimestamp();
@@ -149,6 +141,8 @@ public class MonitorManager implements Initializable, LogEnabled {
 							defaultMetric.setStatus("C");
 							defaultMetric.addData(String.valueOf(1));
 						}
+					} else {
+						m_logger.error(String.format("ip service can't resolve ip: ", ip));
 					}
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
@@ -199,7 +193,6 @@ public class MonitorManager implements Initializable, LogEnabled {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }

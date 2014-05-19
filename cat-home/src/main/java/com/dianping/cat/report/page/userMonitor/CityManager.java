@@ -17,10 +17,10 @@ public class CityManager implements Initializable {
 
 	public Map<String, List<City>> maps = new TreeMap<String, List<City>>();
 
-	public String getCityInfo(){
+	public String getCityInfo() {
 		return new JsonBuilder().toJson(maps);
 	}
-	
+
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -29,23 +29,20 @@ public class CityManager implements Initializable {
 
 			for (String temp : cities) {
 				String[] tabs = temp.split("\\|");
-				
-				if(tabs.length>3){
-				String province = tabs[1];
-				String city = tabs[2];
 
-				List<City> list = maps.get(province);
+				if (tabs.length > 3) {
+					String province = tabs[1];
+					String city = tabs[2];
 
-				if (list == null) {
-					list = new ArrayList<City>();
-					list.add(new City(province,""));
-					
-					maps.put(province, list);
-				}
+					List<City> list = maps.get(province);
 
-				list.add(new City(province, city));
-				}else{
-					System.out.println(temp);
+					if (list == null) {
+						list = new ArrayList<City>();
+						list.add(new City(province, ""));
+
+						maps.put(province, list);
+					}
+					list.add(new City(province, city));
 				}
 			}
 		} catch (IOException e) {
@@ -64,20 +61,20 @@ public class CityManager implements Initializable {
 			m_city = city;
 		}
 
-		public String getProvince() {
-			return m_province;
-		}
-
-		public void setProvince(String province) {
-			m_province = province;
-		}
-
 		public String getCity() {
 			return m_city;
 		}
 
+		public String getProvince() {
+			return m_province;
+		}
+
 		public void setCity(String city) {
 			m_city = city;
+		}
+
+		public void setProvince(String province) {
+			m_province = province;
 		}
 	}
 }

@@ -18,41 +18,63 @@ public class MonitorEntity {
 
 	private String m_ip;
 
-	public String getCity() {
-		return m_city;
-	}
-
-	public void setCity(String city) {
-		m_city = city;
-	}
-
 	public String getChannel() {
 		return m_channel;
 	}
 
-	public void setChannel(String channel) {
-		m_channel = channel;
+	public String getCity() {
+		return m_city;
 	}
+
+	public double getDuration() {
+		return m_duration;
+	}
+
+	public String getErrorCode() {
+		return m_errorCode;
+	}
+
+	public String getHttpStatus() {
+   	return m_httpStatus;
+   }
 
 	public String getIp() {
 		return m_ip;
 	}
 
-	public void setIp(String ip) {
-		m_ip = ip;
+	public String getTargetUrl() {
+		return m_targetUrl;
 	}
 
 	public long getTimestamp() {
 		return m_timestamp;
 	}
 
-	public MonitorEntity setTimestamp(long timestamp) {
-		m_timestamp = timestamp;
+	public void setChannel(String channel) {
+		m_channel = channel;
+	}
+
+	public void setCity(String city) {
+		m_city = city;
+	}
+
+	public MonitorEntity setDuration(double duration) {
+		m_duration = duration;
 		return this;
 	}
 
-	public String getTargetUrl() {
-		return m_targetUrl;
+	public MonitorEntity setErrorCode(String errorCode) {
+		m_errorCode = errorCode;
+		return this;
+	}
+	
+	public MonitorEntity setHttpStatus(String httpStatus) {
+   	m_httpStatus = httpStatus;
+   	return this;
+   }
+
+	public void setIp(String ip) {
+		m_ip = ip;
 	}
 
 	public MonitorEntity setTargetUrl(String targetUrl) {
@@ -60,30 +82,8 @@ public class MonitorEntity {
 		return this;
 	}
 
-	public double getDuration() {
-		return m_duration;
-	}
-
-	public MonitorEntity setDuration(double duration) {
-		m_duration = duration;
-		return this;
-	}
-	
-	public String getHttpStatus() {
-   	return m_httpStatus;
-   }
-
-	public MonitorEntity setHttpStatus(String httpStatus) {
-   	m_httpStatus = httpStatus;
-   	return this;
-   }
-
-	public String getErrorCode() {
-		return m_errorCode;
-	}
-
-	public MonitorEntity setErrorCode(String errorCode) {
-		m_errorCode = errorCode;
+	public MonitorEntity setTimestamp(long timestamp) {
+		m_timestamp = timestamp;
 		return this;
 	}
 
