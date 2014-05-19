@@ -10,13 +10,15 @@ import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-public class Handler implements PageHandler<Context> {
+public class Handler implements PageHandler<Context>,LogEnabled{
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -25,6 +27,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RequestUtils m_util;
+
+	private Logger m_logger ;
+
+	@Override
+   public void enableLogging(Logger logger) {
+		m_logger = logger;
+   }
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -55,6 +64,8 @@ public class Handler implements PageHandler<Context> {
 			entity.setTimestamp(payload.getTimestamp());
 
 			m_manager.offer(entity);
+		} else {
+			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
 		if (!ctx.isProcessStopped()) {
