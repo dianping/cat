@@ -165,14 +165,13 @@ public class MetricAlert implements Task, LogEnabled {
 		String domain = config.getDomain();
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
-		List<Config> configs = m_metricRuleConfigManager.getConfigs(product, domain, key, metricKey);
-		int maxMinute = queryMaxMinute(configs);
+		List<Config> configs = m_metricRuleConfigManager.buildConfigs(product, domain, key, metricKey);
 
-		if (minute >= maxMinute - 1) {
+		if (minute >= DATA_CHECK_MINUTE - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
 			if (report != null) {
-				int start = minute + 1 - maxMinute;
+				int start = minute + 1 - DATA_CHECK_MINUTE;
 				int end = minute;
 
 				value = queryRealData(start, end, metricKey, report, type);
@@ -184,7 +183,7 @@ public class MetricAlert implements Task, LogEnabled {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
 
 			if (lastReport != null) {
-				int start = 60 + minute + 1 - (maxMinute);
+				int start = 60 + minute + 1 - (DATA_CHECK_MINUTE);
 				int end = 60 + minute;
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
@@ -201,7 +200,7 @@ public class MetricAlert implements Task, LogEnabled {
 				double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
 				      new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				int lastStart = 60 + 1 - (maxMinute - minute);
+				int lastStart = 60 + 1 - (DATA_CHECK_MINUTE - minute);
 				int lastEnd = 59;
 				double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
 				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
@@ -256,20 +255,6 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private int queryMaxMinute(List<Config> configs) {
-		int maxMinute = DATA_CHECK_MINUTE;
-
-		for (Config config : configs) {
-			for (Condition con : config.getConditions()) {
-				int tmpMinute = con.getMinute();
-				if (tmpMinute > maxMinute) {
-					maxMinute = tmpMinute;
-				}
-			}
-		}
-		return maxMinute;
-	}
-
 	@Override
 	public String getName() {
 		return "metric-alert";
@@ -296,7 +281,7 @@ public class MetricAlert implements Task, LogEnabled {
 		      .isShowCountDashboard())) {
 			return;
 		}
-		String product =productLine.getId();
+		String product = productLine.getId();
 
 		Pair<Boolean, String> alert = null;
 		if (config.isShowAvg()) {

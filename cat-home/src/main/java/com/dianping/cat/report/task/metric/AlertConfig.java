@@ -22,8 +22,6 @@ public class AlertConfig {
 
 	private static final Long ONE_MINUTE_MILLSEC = 60000L;
 
-	private static final int JUDGE_DEFAULT_MINUTE = 3;
-
 	public List<String> buildExceptionSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
 
@@ -73,10 +71,7 @@ public class AlertConfig {
 	}
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
-		int listLength = value.length;
-		int length = JUDGE_DEFAULT_MINUTE > listLength ? listLength : JUDGE_DEFAULT_MINUTE;
-		double[] valueTrim = getLastMinutes(value, length);
-		double[] baseLineTrim = getLastMinutes(baseline, length);
+		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
 		double decreasePercent = config.getDecreasePercentage();
@@ -93,18 +88,18 @@ public class AlertConfig {
 		}
 
 		for (int i = 0; i < length; i++) {
-			baselines.append(df.format(baseLineTrim[i])).append(" ");
-			values.append(df.format(valueTrim[i])).append(" ");
-			valueSum = valueSum + valueTrim[i];
-			baselineSum = baselineSum + baseLineTrim[i];
+			baselines.append(df.format(baseline[i])).append(" ");
+			values.append(df.format(value[i])).append(" ");
+			valueSum = valueSum + value[i];
+			baselineSum = baselineSum + baseline[i];
 
-			if (baseLineTrim[i] <= 0) {
-				baseLineTrim[i] = 100;
+			if (baseline[i] <= 0) {
+				baseline[i] = 100;
 				return new Pair<Boolean, String>(false, "");
 			}
 			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (valueTrim[i] / baseLineTrim[i] > (1 - decreasePercent / 100)
-				      || (baseLineTrim[i] - valueTrim[i]) < decreaseValue) {
+				if (value[i] / baseline[i] > (1 - decreasePercent / 100)
+				      || (baseline[i] - value[i]) < decreaseValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -122,34 +117,13 @@ public class AlertConfig {
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type,
 	      List<Config> configs) {
-		int valLength = value.length;
-
-		for (Config con : configs) {
-			int dataLength = getMaxMinute(con);
-			
-			if (dataLength > valLength) {
-				continue;
-			}
-			
-			double[] validVal = getLastMinutes(value, dataLength);
-			double[] validBase = getLastMinutes(baseline, dataLength);
-			Pair<Boolean, String> tmpResult = checkDataByConfig(config, validVal, validBase, type, con);
+		for (Config con : configs) {			
+			Pair<Boolean, String> tmpResult = checkDataByConfig(config, value, baseline, type, con);
 			if (tmpResult.getKey() == true) {
 				return tmpResult;
 			}
 		}
 		return new Pair<Boolean, String>(false, "");
-	}
-
-	private int getMaxMinute(Config con) {
-		int maxMinute = 0;
-		for (Condition condition : con.getConditions()) {
-			int tmpMinute = condition.getMinute();
-			if (tmpMinute > maxMinute) {
-				maxMinute = tmpMinute;
-			}
-		}
-		return maxMinute;
 	}
 
 	private Pair<Boolean, String> checkDataByConfig(MetricItemConfig config, double[] value, double[] baseline,
@@ -185,16 +159,6 @@ public class AlertConfig {
 		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
-	}
-
-	private double[] getLastMinutes(double[] doubleList, int remainCount) {
-		double[] result = new double[remainCount];
-		int startIndex = doubleList.length - remainCount;
-
-		for (int i = 0; i < remainCount; i++) {
-			result[i] = doubleList[startIndex + i];
-		}
-		return result;
 	}
 
 	private Long getMillsByString(String time) throws Exception {
@@ -233,7 +197,7 @@ public class AlertConfig {
 			int minute = condition.getMinute();
 
 			if (minute == 0) {
-				minute = JUDGE_DEFAULT_MINUTE;
+				minute = 3;
 			}
 
 			if (index < length - minute) {

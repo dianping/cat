@@ -65,64 +65,10 @@ public class SwitchAlertConfig {
 		return phones;
 	}
 
-	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
-		int listLength = value.length;
-		int length = JUDGE_DEFAULT_MINUTE > listLength ? listLength : JUDGE_DEFAULT_MINUTE;
-		double[] valueTrim = getLastMinutes(value, length);
-		double[] baseLineTrim = getLastMinutes(baseline, length);
-		StringBuilder baselines = new StringBuilder();
-		StringBuilder values = new StringBuilder();
-		double decreasePercent = config.getDecreasePercentage();
-		double decreaseValue = config.getDecreaseValue();
-		double valueSum = 0;
-		double baselineSum = 0;
-		DecimalFormat df = new DecimalFormat("0.0");
-
-		if (decreasePercent == 0) {
-			decreasePercent = 50;
-		}
-		if (decreaseValue == 0) {
-			decreaseValue = 100;
-		}
-
-		for (int i = 0; i < length; i++) {
-			baselines.append(df.format(baseLineTrim[i])).append(" ");
-			values.append(df.format(valueTrim[i])).append(" ");
-			valueSum = valueSum + valueTrim[i];
-			baselineSum = baselineSum + baseLineTrim[i];
-
-			if (baseLineTrim[i] <= 0) {
-				baseLineTrim[i] = 100;
-				return new Pair<Boolean, String>(false, "");
-			}
-			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (valueTrim[i] / baseLineTrim[i] > (1 - decreasePercent / 100)
-				      || (baseLineTrim[i] - valueTrim[i]) < decreaseValue) {
-					return new Pair<Boolean, String>(false, "");
-				}
-			}
-		}
-		double percent = (1 - valueSum / baselineSum) * 100;
-		StringBuilder sb = new StringBuilder();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		sb.append("[基线值:").append(baselines.toString()).append("] ");
-		sb.append("[实际值:").append(values.toString()).append("] ");
-		sb.append("[下降:").append(df.format(percent)).append("%").append("]");
-		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
-		return new Pair<Boolean, String>(true, sb.toString());
-	}
-
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type,
 	      List<Config> configs) {
-		int valLength = value.length;
-
 		for (Config con : configs) {
-			int dataLength = getMaxMinute(con);
-			
-			if (dataLength > valLength) {
-				continue;
-			}
+			int dataLength = queryMaxMinute(con);
 			
 			double[] validVal = getLastMinutes(value, dataLength);
 			double[] validBase = getLastMinutes(baseline, dataLength);
@@ -135,7 +81,7 @@ public class SwitchAlertConfig {
 		return new Pair<Boolean, String>(false, "");
 	}
 
-	private int getMaxMinute(Config con) {
+	private int queryMaxMinute(Config con) {
 		int maxMinute = 0;
 		for (Condition condition : con.getConditions()) {
 			int tmpMinute = condition.getMinute();
@@ -148,7 +94,6 @@ public class SwitchAlertConfig {
 
 	private Pair<Boolean, String> checkDataByConfig(MetricItemConfig config, double[] value, double[] baseline,
 	      MetricType type, Config con) {
-
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
