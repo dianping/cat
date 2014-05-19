@@ -14,7 +14,7 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	private Action m_action;
 
 	@FieldMeta("ts")
-	private int m_timestamp;
+	private long m_timestamp;
 
 	@FieldMeta("tu")
 	private String m_targetUrl;
@@ -25,8 +25,8 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	@FieldMeta("d")
 	private double m_duration;
 
-	@FieldMeta("tc")
-	private String m_httpCode;
+	@FieldMeta("hs")
+	private String m_httpStatus;
 
 	@FieldMeta("ec")
 	private String m_errorCode;
@@ -40,11 +40,11 @@ public class Payload implements ActionPayload<ApiPage, Action> {
       return m_action;
    }
 
-	public int getTimestamp() {
+	public long getTimestamp() {
    	return m_timestamp;
    }
 
-	public void setTimestamp(int timestamp) {
+	public void setTimestamp(long timestamp) {
    	m_timestamp = timestamp;
    }
 
@@ -71,13 +71,13 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	public void setDuration(double duration) {
    	m_duration = duration;
    }
-
-	public String getHttpCode() {
-   	return m_httpCode;
+	
+	public String getHttpStatus() {
+   	return m_httpStatus;
    }
 
-	public void setHttpCode(String httpCode) {
-   	m_httpCode = httpCode;
+	public void setHttpStatus(String httpStatus) {
+   	m_httpStatus = httpStatus;
    }
 
 	public String getErrorCode() {

@@ -28,13 +28,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "signal")
+	@InboundActionMeta(name = "single")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "signal")
+	@OutboundActionMeta(name = "single")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -49,7 +49,7 @@ public class Handler implements PageHandler<Context> {
 		if (userIp != null) {
 			entity.setDuration(payload.getDuration());
 			entity.setErrorCode(payload.getErrorCode());
-			entity.setHttpCode(payload.getHttpCode());
+			entity.setHttpStatus(payload.getHttpStatus());
 			entity.setIp(userIp);
 			entity.setTargetUrl(payload.getTargetUrl());
 			entity.setTimestamp(payload.getTimestamp());

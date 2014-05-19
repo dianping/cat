@@ -2,13 +2,13 @@ package com.dianping.cat.broker.api.page;
 
 public class MonitorEntity {
 
-	private int m_timestamp;
+	private long m_timestamp;
 
 	private String m_targetUrl;
 
 	private double m_duration;
 
-	private String m_httpCode;
+	private String m_httpStatus;
 
 	private String m_errorCode;
 
@@ -42,11 +42,11 @@ public class MonitorEntity {
 		m_ip = ip;
 	}
 
-	public int getTimestamp() {
+	public long getTimestamp() {
 		return m_timestamp;
 	}
 
-	public MonitorEntity setTimestamp(int timestamp) {
+	public MonitorEntity setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 		return this;
 	}
@@ -68,15 +68,15 @@ public class MonitorEntity {
 		m_duration = duration;
 		return this;
 	}
+	
+	public String getHttpStatus() {
+   	return m_httpStatus;
+   }
 
-	public String getHttpCode() {
-		return m_httpCode;
-	}
-
-	public MonitorEntity setHttpCode(String httpCode) {
-		m_httpCode = httpCode;
-		return this;
-	}
+	public MonitorEntity setHttpStatus(String httpStatus) {
+   	m_httpStatus = httpStatus;
+   	return this;
+   }
 
 	public String getErrorCode() {
 		return m_errorCode;
@@ -90,7 +90,7 @@ public class MonitorEntity {
 	@Override
    public String toString() {
 	   return "MonitorEntity [m_timestamp=" + m_timestamp + ", m_targetUrl=" + m_targetUrl + ", m_duration="
-	         + m_duration + ", m_httpCode=" + m_httpCode + ", m_errorCode=" + m_errorCode + ", m_city=" + m_city
+	         + m_duration + ", m_httpStatus=" + m_httpStatus + ", m_errorCode=" + m_errorCode + ", m_city=" + m_city
 	         + ", m_channel=" + m_channel + ", m_ip=" + m_ip + "]";
    }
 	

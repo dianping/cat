@@ -85,61 +85,61 @@ public class TestCode {
 
 	public String getKey1(int i) {
 		if (i < 100) {
-			return "江苏 南京:中国移动:httpStatus|200";
+			return "broker-service:Metric:江苏 南京:中国移动:httpStatus|200";
 		} else if (i < 200) {
-			return "江苏 南京:中国移动:httpStatus|300";
+			return "broker-service:Metric:江苏 南京:中国移动:httpStatus|300";
 		} else if (i < 300) {
-			return "江苏 南京:中国移动:httpStatus|400";
+			return "broker-service:Metric:江苏 南京:中国移动:httpStatus|400";
 		} else if (i < 400) {
-			return "江苏 南京:中国联通:httpStatus|200";
+			return "broker-service:Metric:江苏 南京:中国联通:httpStatus|200";
 		} else if (i < 500) {
-			return "江苏 南京:中国联通:httpStatus|300";
+			return "broker-service:Metric:江苏 南京:中国联通:httpStatus|300";
 		} else if (i < 600) {
-			return "江苏 扬州:中国联通:httpStatus|200";
+			return "broker-service:Metric:江苏 扬州:中国联通:httpStatus|200";
 		} else if (i < 700) {
-			return "江苏 扬州:中国联通:httpStatus|300";
+			return "broker-service:Metric:江苏 扬州:中国联通:httpStatus|300";
 		} else {
-			return "江苏 扬州:中国联通:httpStatus|400";
+			return "broker-service:Metric:江苏 扬州:中国联通:httpStatus|400";
 		}
 	}
 
 	public String getKey3(int i) {
 		if (i < 100) {
-			return "江苏 南京:中国移动:errorCode|200";
+			return "broker-service:Metric:江苏 南京:中国移动:errorCode|200";
 		} else if (i < 200) {
-			return "江苏 南京:中国移动:errorCode|300";
+			return "broker-service:Metric:江苏 南京:中国移动:errorCode|300";
 		} else if (i < 300) {
-			return "江苏 南京:中国移动:errorCode|400";
+			return "broker-service:Metric:江苏 南京:中国移动:errorCode|400";
 		} else if (i < 400) {
-			return "江苏 南京:中国联通:errorCode|200";
+			return "broker-service:Metric:江苏 南京:中国联通:errorCode|200";
 		} else if (i < 500) {
-			return "江苏 南京:中国联通:errorCode|300";
+			return "broker-service:Metric:江苏 南京:中国联通:errorCode|300";
 		} else if (i < 600) {
-			return "江苏 扬州:中国联通:errorCode|200";
+			return "broker-service:Metric:江苏 扬州:中国联通:errorCode|200";
 		} else if (i < 700) {
-			return "江苏 扬州:中国联通:errorCode|300";
+			return "broker-service:Metric:江苏 扬州:中国联通:errorCode|300";
 		} else {
-			return "江苏 扬州:中国联通:errorCode|400";
+			return "broker-service:Metric:江苏 扬州:中国联通:errorCode|400";
 		}
 	}
 
 	public String getKey2(int i) {
 		if (i < 100) {
-			return "江苏 南京:中国移动:hit";
+			return "broker-service:Metric:江苏 南京:中国移动:hit";
 		} else if (i < 200) {
-			return "江苏 南京:中国移动:hit";
+			return "broker-service:Metric:江苏 南京:中国移动:hit";
 		} else if (i < 300) {
-			return "江苏 南京:中国移动:error";
+			return "broker-service:Metric:江苏 南京:中国移动:error";
 		} else if (i < 400) {
-			return "江苏 南京:中国联通:error";
+			return "broker-service:Metric:江苏 南京:中国联通:error";
 		} else if (i < 500) {
-			return "江苏 南京:中国联通:hit";
+			return "broker-service:Metric:江苏 南京:中国联通:hit";
 		} else if (i < 600) {
-			return "江苏 扬州:中国联通:hit";
+			return "broker-service:Metric:江苏 扬州:中国联通:hit";
 		} else if (i < 700) {
-			return "江苏 扬州:中国联通:error";
+			return "broker-service:Metric:江苏 扬州:中国联通:error";
 		} else {
-			return "江苏 扬州:中国联通:error";
+			return "broker-service:Metric:江苏 扬州:中国联通:error";
 		}
 
 	}

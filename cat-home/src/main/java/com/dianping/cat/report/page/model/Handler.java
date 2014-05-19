@@ -220,9 +220,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else if (MetricAnalyzer.ID.equals(report)) {
 				response = m_metricService.invoke(request);
 
-				String type = request.getProperty("type");
-				String city = request.getProperty("city");
-				String channel = request.getProperty("channel");
+				String type = payload.getType();
+				String city =payload.getCity();
+				String channel =payload.getChannel();
 
 				if (type != null) { // for user monitor report
 					UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);

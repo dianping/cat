@@ -28,7 +28,7 @@ public class TestServer extends JettyServer {
 
    @Override
    protected String getContextPath() {
-      return "/broker-server";
+      return "/broker-service";
    }
 
    @Override
@@ -38,13 +38,13 @@ public class TestServer extends JettyServer {
 
    @Override
    protected void postConfigure(WebAppContext context) {
-      context.addFilter(GzipFilter.class, "/monitor/*", Handler.ALL);
+		context.addFilter(GzipFilter.class, "/*", Handler.ALL);
    }
 
    @Test
    public void startWebapp() throws Exception {
       // open the page in the default browser
-      display("/broker-server/monitor");
+      display("/broker-service/api");
       waitForAnyKey();
    }
 }

@@ -75,8 +75,6 @@ public class Handler implements PageHandler<Context> {
 			url = rules.get(0).getName();
 		}
 
-		 city="江苏";
-		
 		pars.put("type", type);
 		pars.put("channel", channel);
 		pars.put("city", city);

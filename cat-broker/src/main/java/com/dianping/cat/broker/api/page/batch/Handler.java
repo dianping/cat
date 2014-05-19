@@ -50,11 +50,11 @@ public class Handler implements PageHandler<Context> {
 					if (tabs.length == 5) {
 						MonitorEntity entity = new MonitorEntity();
 
-						entity.setTimestamp(Integer.parseInt(tabs[0]));
+						entity.setTimestamp(Long.parseLong(tabs[0]));
 						entity.setTargetUrl(tabs[1]);
 						entity.setDuration(Double.parseDouble(tabs[1]));
 						entity.setErrorCode(tabs[3]);
-						entity.setHttpCode(tabs[4]);
+						entity.setHttpStatus(tabs[4]);
 						entity.setIp(userIp);
 
 						m_manager.offer(entity);

@@ -21,7 +21,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_url;
 
 	@FieldMeta("city")
-	private String m_city = "北京市";
+	private String m_city = "上海市";
 
 	@FieldMeta("channel")
 	private String m_channel;

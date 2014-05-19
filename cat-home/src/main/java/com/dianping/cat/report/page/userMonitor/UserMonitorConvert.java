@@ -49,9 +49,9 @@ public class UserMonitorConvert extends BaseVisitor {
 		try {
 			String id = metricItem.getId();
 			String[] temp = id.split(":");
-			String city = temp[0];
-			String channel = temp[1];
-			String info = temp[2];
+			String city = temp[2];
+			String channel = temp[3];
+			String info = temp[4];
 
 			if (validate(city, channel, info)) {
 				MetricItem item = m_report.findOrCreateMetricItem(info);

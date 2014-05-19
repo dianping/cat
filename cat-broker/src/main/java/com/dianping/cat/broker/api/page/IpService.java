@@ -172,7 +172,7 @@ public class IpService implements Initializable {
 		}
 	}
 
-	public class Area {
+	public static class Area {
 		private Integer m_areaId;
 
 		private String m_nation;
@@ -215,7 +215,7 @@ public class IpService implements Initializable {
 
 	}
 
-	public class Corporation {
+	public static class Corporation {
 		private Integer m_corporationId;
 
 		private String m_name;
@@ -238,7 +238,7 @@ public class IpService implements Initializable {
 
 	}
 
-	public class IpInfo {
+	public static class IpInfo {
 		private String m_nation;
 
 		private String m_province;
