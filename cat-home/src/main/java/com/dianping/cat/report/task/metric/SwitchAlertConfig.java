@@ -81,17 +81,6 @@ public class SwitchAlertConfig {
 		return new Pair<Boolean, String>(false, "");
 	}
 
-	private int queryMaxMinute(Config con) {
-		int maxMinute = 0;
-		for (Condition condition : con.getConditions()) {
-			int tmpMinute = condition.getMinute();
-			if (tmpMinute > maxMinute) {
-				maxMinute = tmpMinute;
-			}
-		}
-		return maxMinute;
-	}
-
 	private Pair<Boolean, String> checkDataByConfig(MetricItemConfig config, double[] value, double[] baseline,
 	      MetricType type, Config con) {
 		int length = value.length;
@@ -204,6 +193,17 @@ public class SwitchAlertConfig {
 		}
 
 		return isRuleTriggered;
+	}
+
+	private int queryMaxMinute(Config con) {
+		int maxMinute = 0;
+		for (Condition condition : con.getConditions()) {
+			int tmpMinute = condition.getMinute();
+			if (tmpMinute > maxMinute) {
+				maxMinute = tmpMinute;
+			}
+		}
+		return maxMinute;
 	}
 
 }
