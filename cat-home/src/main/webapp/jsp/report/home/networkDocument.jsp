@@ -29,7 +29,7 @@
 <table style="width:90%" class="table table-striped table-bordered table-condensed">
 	<tr><th width="20%">节点</th><th width="20%">属性</th><th>说明</th></tr>
 	<tr>
-		<td rowspan="4">metric-aggregation-group</td>
+		<td rowspan="4" style="vertical-align:middle">metric-aggregation-group</td>
 		<td>id</td>
 		<td>汇总组唯一ID名称，<span class="text-error">必需，</span>仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</td>
 	<tr>
@@ -46,7 +46,7 @@
 	</tr>
 	
 	<tr>
-		<td rowspan="8">metric-aggregation</td>
+		<td rowspan="8" style="vertical-align:middle">metric-aggregation</td>
 		<td>id</td>
 		<td>汇总图形唯一ID名称，<span class="text-error">必需，</span>仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</td>
 	<tr>
@@ -74,7 +74,7 @@
 		<td>汇总曲线集合，<span class="text-error">必需</td>
 	</tr>
 	<tr>
-		<td rowspan="6">metric-aggregation</td>
+		<td rowspan="6" style="vertical-align:middle">metric-aggregation</td>
 		<td>key</td>
 		<td>汇总曲线唯一ID名称，<span class="text-error">必需，</span>对应每个指标的key字段，必须与网络参数指标发送中的key保持一致。</td>
 	<tr>
