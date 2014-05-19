@@ -14,7 +14,7 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
-
+	
 	@Override
 	public String getName() {
 		return "Config-Reload";

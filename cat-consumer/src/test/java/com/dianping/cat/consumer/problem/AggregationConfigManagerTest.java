@@ -46,7 +46,7 @@ public class AggregationConfigManagerTest {
 
 		Assert.assertEquals(3, s_storeCount);
 
-		List<AggregationRule> rules = manager.queryAggrarationRules();
+		List<AggregationRule> rules = manager.queryAggregationRules();
 		Assert.assertEquals(3, rules.size());
 
 		List<AggregationRule> dbRules = manager.queryAggrarationRulesFromDB();
@@ -64,7 +64,7 @@ public class AggregationConfigManagerTest {
 		manager.setConfigDao(new MockConfigDao2());
 		manager.initialize();
 
-		List<AggregationRule> rules = manager.queryAggrarationRules();
+		List<AggregationRule> rules = manager.queryAggregationRules();
 		Assert.assertEquals(0, rules.size());
 	}
 

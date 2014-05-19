@@ -1,4 +1,4 @@
-package com.dianping.cat.demo;
+package com.dianping.cat.report.alert;
 
 import java.util.HashMap;
 import java.util.List;

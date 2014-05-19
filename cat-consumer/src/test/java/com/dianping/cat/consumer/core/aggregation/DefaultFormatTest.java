@@ -8,8 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.dianping.cat.consumer.problem.aggregation.DefaultFormat;
-import com.dianping.cat.consumer.problem.aggregation.Format;
+import com.dianping.cat.config.DefaultFormat;
+import com.dianping.cat.config.Format;
 
 public class DefaultFormatTest {
 

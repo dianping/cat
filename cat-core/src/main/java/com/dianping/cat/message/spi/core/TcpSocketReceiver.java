@@ -67,13 +67,13 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
 
-	private int m_queueSize = 8000;
+	private int m_queueSize = 10000;
 
 	private volatile int m_errorCount;
 
 	private volatile long m_processCount;
 
-	private volatile int m_decodeThreads =12;
+	private volatile int m_decodeThreads = 15;
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>> m_queues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<ChannelBuffer>>();
 

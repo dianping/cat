@@ -12,6 +12,10 @@ import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.config.DefaultUrlPatternHandler;
+import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.UrlPatternHandler;
+import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -52,6 +56,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 
 		all.add(C(DecodeMessageTask.class));
+
+		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
+
+		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class));
 
 		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //

@@ -45,16 +45,14 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>
-							${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml,
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/event-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/problem-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/heartbeat-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,
-					 </manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>

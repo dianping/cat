@@ -48,6 +48,14 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "productLineConfig";
 
+	public static final String METRIC_MONITOR = "业务监控";
+
+	public static final String NETWORK_MONITOR = "网络监控";
+
+	public static final String USER_MONITOR = "外部监控";
+
+	public static final String ERROR_MONITOR = "错误监控";
+
 	private Map<String, String> buildDomainToProductLines() {
 		Map<String, ProductLine> productLines = getCompany().getProductLines();
 		Map<String, String> domainToProductLines = new HashMap<String, String>();
@@ -185,7 +193,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return sortProductLineByOrder(productLines);
 	}
-	
+
 	public Map<String, ProductLine> queryNetworkProductLines() {
 		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
 
@@ -202,6 +210,54 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		String productLine = m_domainToProductLines.get(domain);
 
 		return productLine == null ? "Default" : productLine;
+	}
+
+	public Map<String, List<ProductLine>> queryTypeProductLines() {
+		Map<String, List<ProductLine>> productLines = new LinkedHashMap<String, List<ProductLine>>();
+
+		productLines.put(METRIC_MONITOR, new ArrayList<ProductLine>());
+		productLines.put(NETWORK_MONITOR, new ArrayList<ProductLine>());
+		productLines.put(USER_MONITOR, new ArrayList<ProductLine>());
+		productLines.put(ERROR_MONITOR, new ArrayList<ProductLine>());
+
+		for (ProductLine line : getCompany().getProductLines().values()) {
+			String id = line.getId();
+
+			if (id != null && id.length() > 0) {
+				String key = null;
+
+				if (line.getMetricDashboard()) {
+					key = METRIC_MONITOR;
+				}
+				if (line.getNetworkDashboard()) {
+					key = NETWORK_MONITOR;
+				}
+				if (line.getUserMonitorDashboard()) {
+					key = USER_MONITOR;
+				}
+				if (line.getDashboard()) {
+					key = ERROR_MONITOR;
+				}
+				if (key != null) {
+					List<ProductLine> list = productLines.get(key);
+
+					list.add(line);
+				}
+			}
+		}
+
+		for (Entry<String, List<ProductLine>> entry : productLines.entrySet()) {
+			List<ProductLine> value = entry.getValue();
+			Collections.sort(value, new Comparator<ProductLine>() {
+
+				@Override
+				public int compare(ProductLine o1, ProductLine o2) {
+					return (int) (o1.getOrder() * 100 - o2.getOrder() * 100);
+				}
+			});
+		}
+
+		return productLines;
 	}
 
 	public void refreshProductLineConfig() throws DalException, SAXException, IOException {

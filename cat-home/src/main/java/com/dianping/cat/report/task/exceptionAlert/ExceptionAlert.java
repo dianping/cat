@@ -16,7 +16,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.core.dal.Project;
@@ -45,9 +44,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	@Inject
 	private MailSMS m_mailSms;
-
-	@Inject
-	protected ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
 	private ExceptionThresholdConfigManager m_configManager;

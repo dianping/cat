@@ -16,10 +16,10 @@ import com.dianping.cat.service.ModelPeriod;
 public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
 
 	@FieldMeta("endDate")
-	private String m_customEnd;
+	protected String m_customEnd;
 
 	@FieldMeta("startDate")
-	private String m_customStart;
+	protected String m_customStart;
 
 	@FieldMeta("date")
 	private long m_date;
@@ -168,6 +168,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public Date getHistoryStartDate() {
 		if (m_customStart != null) {
+			System.out.println(m_customStart);
 			try {
 				if (m_customStart.length() == 8) {
 					return m_dayFormat.parse(m_customStart);

@@ -131,7 +131,6 @@ public class MetricAlert implements Task, LogEnabled {
 		} else {
 			addNewCondition(configs, "DescPer", descPer, "DescVal", descVal, dayBeginTime, dayEndTime);
 		}
-
 	}
 
 	private void addNewCondition(List<Config> configs, String type, double val, String type2, double val2,
@@ -167,7 +166,7 @@ public class MetricAlert implements Task, LogEnabled {
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
 		List<Config> configs = m_metricRuleConfigManager.getConfigs(product, domain, key, metricKey);
-		int maxMinute = getMaxMinute(configs);
+		int maxMinute = queryMaxMinute(configs);
 
 		if (minute >= maxMinute - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -257,7 +256,7 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private int getMaxMinute(List<Config> configs) {
+	private int queryMaxMinute(List<Config> configs) {
 		int maxMinute = DATA_CHECK_MINUTE;
 
 		for (Config config : configs) {
@@ -292,11 +291,12 @@ public class MetricAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	private void processMetricItemConfig(MetricItemConfig config, int minute, String product, ProductLine productLine) {
+	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
 		if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
 		      .isShowCountDashboard())) {
 			return;
 		}
+		String product =productLine.getId();
 
 		Pair<Boolean, String> alert = null;
 		if (config.isShowAvg()) {
@@ -322,10 +322,9 @@ public class MetricAlert implements Task, LogEnabled {
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
-			processMetricItemConfig(config, minute, product, productLine);
+			processMetricItemConfig(config, minute,  productLine);
 		}
 	}
 

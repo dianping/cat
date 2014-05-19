@@ -185,7 +185,6 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 		}
 	}
 
-	@Override
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
 
 		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);

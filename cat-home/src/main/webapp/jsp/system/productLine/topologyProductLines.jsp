@@ -16,6 +16,14 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			var type = '${payload.type}';
+			if(type ==''){
+				type = '业务监控';
+			}
+			$('#tab-'+type).addClass('active');
+			$('#tabContent-'+type).addClass('active');
+
+			
 			$('#topologyProductLines').addClass('active');
 			$('#content .nav-tabs a').mouseenter(function (e) {
 				  e.preventDefault();
@@ -48,38 +56,51 @@
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
-			<table class="table table-striped table-bordered">
-				<tr class="text-success">
-					<th width="20%">产品线</th>
-					<th width="12%">标题</th>
-					<th width="8%">顺序</th>
-					<th width="5%">监控大盘</th>
-					<th width="5%">业务大盘</th>
-					<th width="10%">网络大盘</th>
-					<th width="40%">项目列表</th>
-					<th width="10%">操作 <a href="?op=topologyProductLineAdd" class='update btn btn-primary btn-small'>新增</a></th>
-				</tr>
-				<c:forEach var="entry" items="${model.productLines}" varStatus="status">
-					<c:set var='item' value='${entry.value}'/>
-					<tr><td>${item.id}</td><td>${item.title}</td>
-					<td>${item.order}</td>
-					<td><c:if test="${item.dashboard}"><span class="text-error"><strong>是</strong></span></c:if>
-						<c:if test="${!item.dashboard}"><span><strong>否</strong></span></c:if>  </td>
-					<td><c:if test="${item.metricDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
-						<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
-					<td><c:if test="${item.networkDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
-						<c:if test="${!item.networkDashboard}"><span><strong>否</strong></span></c:if>  </td>
-					<td>
-						<c:forEach var="domain" items="${item.domains}"> 
-							${domain.key},
-						</c:forEach>
-					</td>
-					<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}" class='update btn btn-primary btn-small'>修改</a>
-					<a href="?op=topologyProductLineDelete&productLineName=${item.id}" class='delete btn-danger btn btn-primary btn-small'>删除</a></td>
+			<h5 id="state" class="text-center text-error">&nbsp;</h5>
+			<div class="tabbable"> <!-- Only required for left/right tabs -->
+			  <ul class="nav nav-tabs">
+			  	<c:forEach var="item" items="${model.typeToProductLines}" varStatus="status">
+			  		<c:set var="type" value="${item.key}"/>
+				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"> <h4 class="text-error">${type}</h4></a></li>
+				</c:forEach>
+			  </ul>
+				<div class="tab-content">
+			  	<c:forEach var="listItem" items="${model.typeToProductLines}" varStatus="status">
+				<c:set var="type" value="${listItem.key}"/>
+				<div class="tab-pane" id="tabContent-${type}">
+				<table class="table table-striped table-bordered">
+					<tr class="text-success">
+						<th width="10%">产品线</th>
+						<th width="10%">标题</th>
+						<th width="5%">顺序</th>
+						<th width="5%">错误监控</th>
+						<th width="5%">业务监控</th>
+						<th width="5%">网络监控</th>
+						<th width="5%">外部监控</th>
+						<th width="45%">项目列表</th>
+						<th width="10%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class='update btn btn-primary btn-small'>新增</a></th>
+					</tr>
+					<c:forEach var="item" items="${listItem.value}" varStatus="status">
+						<tr><td>${item.id}</td><td>${item.title}</td>
+						<td>${item.order}</td>
+						<td><c:if test="${item.dashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+							<c:if test="${!item.dashboard}"><span><strong>否</strong></span></c:if>  </td>
+						<td><c:if test="${item.metricDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+							<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
+						<td><c:if test="${item.networkDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+							<c:if test="${!item.networkDashboard}"><span><strong>否</strong></span></c:if>  </td>
+						<td><c:if test="${item.userMonitorDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+							<c:if test="${!item.userMonitorDashboard}"><span><strong>否</strong></span></c:if>  </td>
+						<td>
+							<c:forEach var="domain" items="${item.domains}"> 
+								${domain.key},
+							</c:forEach>
+						</td>
+						<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}&type=${type}" class='update btn btn-primary btn-small'>修改</a>
+						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class='delete btn-danger btn btn-primary btn-small'>删除</a></td>
 					</tr>
 				</c:forEach>
-			</table>
+			</table></div></c:forEach></div></div>
 		</div>
 	</div>
 </a:body>

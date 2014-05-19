@@ -62,8 +62,6 @@ public class SwitchAlert implements Task, LogEnabled {
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
-	private static final int DATA_CHECK_MINUTE = 3;
-
 	private static final int DATA_AREADY_MINUTE = 1;
 
 	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
@@ -104,7 +102,7 @@ public class SwitchAlert implements Task, LogEnabled {
 
 				for (Subcondition sub : subCons) {
 					RuleType type = RuleType.getByTypeId(sub.getType());
-					
+
 					switch (type) {
 					case DecreasePercentage:
 						isDescPerExist = true;
@@ -167,7 +165,7 @@ public class SwitchAlert implements Task, LogEnabled {
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
 		List<Config> configs = m_metricRuleConfigManager.getConfigs(product, domain, key, metricKey);
-		int maxMinute = getMaxMinute(configs);
+		int maxMinute = queryCheckMinute(configs);
 
 		if (minute >= maxMinute - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -257,12 +255,13 @@ public class SwitchAlert implements Task, LogEnabled {
 		}
 	}
 
-	private int getMaxMinute(List<Config> configs) {
-		int maxMinute = DATA_CHECK_MINUTE;
+	private int queryCheckMinute(List<Config> configs) {
+		int maxMinute = 0;
 
 		for (Config config : configs) {
 			for (Condition con : config.getConditions()) {
 				int tmpMinute = con.getMinute();
+
 				if (tmpMinute > maxMinute) {
 					maxMinute = tmpMinute;
 				}
@@ -292,13 +291,10 @@ public class SwitchAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	private void processMetricItemConfig(MetricItemConfig config, int minute, String product, ProductLine productLine) {
-		if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
-		      .isShowCountDashboard())) {
-			return;
-		}
-
+	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
+		String product = productLine.getId();
 		Pair<Boolean, String> alert = null;
+		
 		if (config.isShowAvg()) {
 			alert = computeAlertInfo(minute, product, config, MetricType.AVG);
 		}
@@ -322,10 +318,9 @@ public class SwitchAlert implements Task, LogEnabled {
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-		String product = productLine.getId();
 
 		for (MetricItemConfig config : configs) {
-			processMetricItemConfig(config, minute, product, productLine);
+			processMetricItemConfig(config, minute, productLine);
 		}
 	}
 
@@ -376,7 +371,7 @@ public class SwitchAlert implements Task, LogEnabled {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("MetricAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("SwitchAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			m_currentReports.clear();
@@ -386,7 +381,9 @@ public class SwitchAlert implements Task, LogEnabled {
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						processProductLine(productLine);
+						if (productLine.isNetworkDashboard()) {
+							processProductLine(productLine);
+						}
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -411,7 +408,6 @@ public class SwitchAlert implements Task, LogEnabled {
 	}
 
 	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
-
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
 

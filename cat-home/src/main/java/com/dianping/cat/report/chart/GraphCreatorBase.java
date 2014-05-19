@@ -123,7 +123,6 @@ public abstract class GraphCreatorBase implements LogEnabled {
 	}
 
 	public void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
-
 		if (chart.getHtmlTitle().contains("<span style='color:red'>")) {
 			return;
 		}
@@ -175,7 +174,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 		return current.getTime() == date.getTime() - TimeUtil.ONE_HOUR;
 	}
 
-	private void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
+	protected void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
 		for (Entry<String, double[]> entry : item.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();
@@ -232,7 +231,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 	      List<MetricItemConfig> metricConfigs);
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
-		MetricReport metricReport = m_metricReportService.query(productLine, new Date(start));
+		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
 		
@@ -255,7 +254,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 		}
 		// if current report is not exist, use last day value replace it.
 		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
-			MetricReport lastMetricReport = m_metricReportService.query(productLine, new Date(start - TimeUtil.ONE_DAY));
+			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start - TimeUtil.ONE_DAY));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
 			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"

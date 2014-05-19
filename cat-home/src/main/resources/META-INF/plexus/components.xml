@@ -272,6 +272,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
 			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
 			<requirements>
@@ -1703,9 +1733,6 @@
 					<role>com.dianping.cat.system.tool.MailSMS</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 				<requirement>
@@ -1768,16 +1795,6 @@
 			<configuration>
 				<logical-table-name>monthly-report-content</logical-table-name>
 				<physical-table-name>monthly_report_content</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>net-topology-report</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>net-topology-report</logical-table-name>
-				<physical-table-name>report</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1850,15 +1867,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 			<implementation>com.dianping.cat.home.dal.report.MonthlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.NetTopologyReportDao</role>
-			<implementation>com.dianping.cat.home.dal.report.NetTopologyReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -3279,6 +3287,52 @@
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.userMonitor.Handler</role>
+			<implementation>com.dianping.cat.report.page.userMonitor.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.userMonitor.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.userMonitor.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.userMonitor.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
+			<implementation>com.dianping.cat.report.page.userMonitor.CityManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -3470,6 +3524,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>

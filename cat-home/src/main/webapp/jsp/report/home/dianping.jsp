@@ -2,9 +2,7 @@
 </br>
 </br>
 </br>
-<h4 class="text-error">【2014-05-05】</h4>
-
-<img  class="img-polaroid"  width='80%' src="${model.webapp}/images/projectUpdate.png"/>
+<h4 class="text-error">【2014-05-12】</h4>
 
 </br>
 <a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/s/config">修改项目分组【修改连接】</a>

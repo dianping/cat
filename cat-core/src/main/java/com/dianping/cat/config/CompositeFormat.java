@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.problem.aggregation;
+package com.dianping.cat.config;
 
 import java.text.ParseException;
 import java.util.ArrayList;

@@ -22,7 +22,7 @@ public class AggregationConfigManager implements Initializable {
 	
 	@Inject
 	protected AggregationHandler m_handler;
-
+	
 	private int m_configId;
 
 	private static final String CONFIG_NAME = "aggreationConfig";
@@ -33,7 +33,7 @@ public class AggregationConfigManager implements Initializable {
 
 	public boolean deleteAggregationRule(String rule) {
 		m_aggregation.removeAggregationRule(rule);
-		m_handler.register(queryAggrarationRules());
+		m_handler.register(queryAggregationRules());
 		return storeConfig();
 	}
 	
@@ -69,16 +69,16 @@ public class AggregationConfigManager implements Initializable {
 		if (m_aggregation == null) {
 			m_aggregation = new Aggregation();
 		}
-		m_handler.register(queryAggrarationRules());
+		m_handler.register(queryAggregationRules());
 	}
 
 	public boolean insertAggregationRule(AggregationRule rule) {
 		m_aggregation.addAggregationRule(rule);
-		m_handler.register(queryAggrarationRules());
+		m_handler.register(queryAggregationRules());
 		return storeConfig();
 	}
 
-	public List<AggregationRule> queryAggrarationRules() {
+	public List<AggregationRule> queryAggregationRules() {
 		return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
 	}
 

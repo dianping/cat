@@ -28,6 +28,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -56,6 +57,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
+import com.dianping.cat.report.page.userMonitor.UserMonitorConvert;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -165,7 +167,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		// display only, no action here
 	}
 
-	@Override
+   @SuppressWarnings("unchecked")
+   @Override
 	@OutboundActionMeta(name = "model")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
@@ -216,6 +219,19 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_topService.invoke(request);
 			} else if (MetricAnalyzer.ID.equals(report)) {
 				response = m_metricService.invoke(request);
+
+				String type = request.getProperty("type");
+				String city = request.getProperty("city");
+				String channel = request.getProperty("channel");
+
+				if (type != null) { // for user monitor report
+					UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
+					MetricReport metricReport = (MetricReport) response.getModel();
+
+					convert.visitMetricReport(metricReport);
+					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+				}
+
 			} else if (DependencyAnalyzer.ID.equals(report)) {
 				response = m_dependencyService.invoke(request);
 			} else {

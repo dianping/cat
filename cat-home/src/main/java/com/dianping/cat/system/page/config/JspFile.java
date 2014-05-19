@@ -9,6 +9,10 @@ public enum JspFile {
 
 	AGGREGATION_UPATE("/jsp/system/aggregation/aggregationUpdate.jsp"),
 
+	URL_PATTERN_ALL("/jsp/system/urlPattern/urlPattern.jsp"),
+
+	URL_PATTERN_UPATE("/jsp/system/urlPattern/urlPatternUpdate.jsp"),
+
 	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("/jsp/system/topology/topologyGraphNodeConfigAdd.jsp"),
 
 	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("/jsp/system/topology/topologyGraphNodeConfigs.jsp"),
@@ -36,11 +40,11 @@ public enum JspFile {
 	BUG_CONFIG_UPDATE("/jsp/system/bug/bugConfig.jsp"),
 
 	UTILIZATION_CONFIG_UPDATE("/jsp/system/utilization/utilizationConfig.jsp"),
-	
+
 	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"),
-	
+
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
-	
+
 	METRIC_AGGREGATION_CONFIG_UPDATE("/jsp/system/metricAggregation/metricAggregationConfig.jsp");
 
 	private String m_path;

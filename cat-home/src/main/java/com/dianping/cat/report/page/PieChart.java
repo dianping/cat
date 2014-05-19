@@ -11,21 +11,21 @@ public class PieChart {
 
 	private transient int MAX_SIZE = 10;
 
-	public void addItems(List<Item> temps) {
-		Collections.sort(temps, new ItemCompartor());
-		int size = temps.size();
+	public void addItems(List<Item> items) {
+		Collections.sort(items, new ItemCompartor());
+		int size = items.size();
 
 		if (size <= MAX_SIZE) {
-			m_items = temps;
+			m_items = items;
 		} else {
 			for (int i = 0; i < MAX_SIZE; i++) {
-				m_items.add(temps.get(i));
+				m_items.add(items.get(i));
 			}
 			Item item = new Item().setTitle("Other");
 
 			double sum = 0;
 			for (int i = MAX_SIZE; i < size; i++) {
-				Item temp = temps.get(i);
+				Item temp = items.get(i);
 
 				sum += temp.getNumber();
 			}
