@@ -43,6 +43,17 @@ public class MonitorManager implements Initializable, LogEnabled {
 	private Logger m_logger;
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	private String getFormatUrl(String url) {
+		String result = m_patternManger.handle(url);
+
+		return result;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		for (int i = 0; i < m_threadCounts; i++) {
 			BlockingQueue<MonitorEntity> queue = new LinkedBlockingQueue<MonitorEntity>(10000);
@@ -50,6 +61,15 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 			m_queues.put(i, queue);
 		}
+	}
+
+	private void logMetric(long timestamp, double duration, String group, String key) {
+		Metric metric = Cat.getProducer().newMetric(group, key);
+		DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+		defaultMetric.setTimestamp(timestamp);
+		defaultMetric.setStatus("S,C");
+		defaultMetric.addData(String.format("%s,%.2f", 1, duration));
 	}
 
 	public boolean offer(MonitorEntity entity) {
@@ -75,12 +95,6 @@ public class MonitorManager implements Initializable, LogEnabled {
 		return false;
 	}
 
-	private String getFormatUrl(String url) {
-		String result = m_patternManger.handle(url);
-
-		return result;
-	}
-
 	private void processOneEntity(MonitorEntity entity) {
 		String url = getFormatUrl(entity.getTargetUrl());
 
@@ -101,12 +115,10 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 					if (duration > 0) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
-
-						if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
-							logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
-						}
 					}
-
+					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
+					}
 					if (!StringUtils.isEmpty(httpCode)) {
 						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
 						Metric metric = Cat.getProducer().newMetric(group, key);
@@ -135,15 +147,6 @@ public class MonitorManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private void logMetric(long timestamp, double duration, String group, String key) {
-		Metric metric = Cat.getProducer().newMetric(group, key);
-		DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-		defaultMetric.setTimestamp(timestamp);
-		defaultMetric.setStatus("S,C");
-		defaultMetric.addData(String.format("%s,%.2f", 1, duration));
-	}
-
 	public class MessageSender implements Task {
 
 		private BlockingQueue<MonitorEntity> m_queue;
@@ -153,6 +156,11 @@ public class MonitorManager implements Initializable, LogEnabled {
 		public MessageSender(BlockingQueue<MonitorEntity> queue, int index) {
 			m_queue = queue;
 			m_index = index;
+		}
+
+		@Override
+		public String getName() {
+			return "Message-Send-" + m_index;
 		}
 
 		@Override
@@ -175,19 +183,9 @@ public class MonitorManager implements Initializable, LogEnabled {
 		}
 
 		@Override
-		public String getName() {
-			return "Message-Send-" + m_index;
-		}
-
-		@Override
 		public void shutdown() {
 		}
 
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

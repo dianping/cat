@@ -15,9 +15,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 
 public class IpService implements Initializable {
-	private Map<Integer, Area> m_areaMap;
+	private Map<Integer, Area> m_areas;
 
-	private Map<Integer, Corporation> m_corpMap;
+	private Map<Integer, Corporation> m_corps;
 
 	private int[] m_areaIds;
 
@@ -35,7 +35,7 @@ public class IpService implements Initializable {
 			if (ip >= m_starts[mid] && ip <= m_ends[mid]) {
 				IpInfo ipInfo = new IpInfo();
 
-				Area area = m_areaMap.get(m_areaIds[mid]);
+				Area area = m_areas.get(m_areaIds[mid]);
 				if (area != null) {
 					ipInfo.setNation(area.getNation());
 					ipInfo.setProvince(area.getProvince());
@@ -46,7 +46,7 @@ public class IpService implements Initializable {
 					ipInfo.setCity("未知");
 				}
 
-				Corporation corp = m_corpMap.get(m_corpIds[mid]);
+				Corporation corp = m_corps.get(m_corpIds[mid]);
 
 				if (corp != null) {
 					ipInfo.setChannel(corp.getName());
@@ -88,7 +88,7 @@ public class IpService implements Initializable {
 			String line;
 			String[] strs;
 			int id;
-			m_areaMap = new LinkedHashMap<Integer, Area>();
+			m_areas = new LinkedHashMap<Integer, Area>();
 
 			while ((line = areaReader.readLine()) != null) {
 				strs = line.split(":");
@@ -100,11 +100,11 @@ public class IpService implements Initializable {
 				area.setNation(areaStr[0]);
 				area.setProvince(areaStr[1]);
 				area.setCity(areaStr[2]);
-				m_areaMap.put(id, area);
+				m_areas.put(id, area);
 			}
 			areaReader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class IpService implements Initializable {
 			String line;
 			String[] strs;
 			int id;
-			m_corpMap = new LinkedHashMap<Integer, Corporation>();
+			m_corps = new LinkedHashMap<Integer, Corporation>();
 
 			while ((line = corpReader.readLine()) != null) {
 				strs = line.split(":");
@@ -123,11 +123,11 @@ public class IpService implements Initializable {
 				id = Integer.parseInt(strs[1]);
 				corp.setCorporationId(id);
 				corp.setName(strs[0]);
-				m_corpMap.put(id, corp);
+				m_corps.put(id, corp);
 			}
 			corpReader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 	}
 
@@ -279,5 +279,5 @@ public class IpService implements Initializable {
 			m_province = province;
 		}
 	}
-	
+
 }
