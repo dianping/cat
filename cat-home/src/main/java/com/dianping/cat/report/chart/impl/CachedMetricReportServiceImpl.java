@@ -123,8 +123,13 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			}
 		} else {
 			MetricReport report = getReportFromCache(product, time);
-			// return report;
 
+			String city = properties.get("city");
+			String channel = properties.get("channel");
+			String type = properties.get("type");
+
+			UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
+			// return convert.getReport();
 			return hackForTest(product, properties);
 		}
 	}

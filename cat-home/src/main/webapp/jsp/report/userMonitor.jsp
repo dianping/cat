@@ -25,7 +25,6 @@
 		}
 		
 		$(document).ready(function() {
-			$("#url").select2();
 			$('#datetimepicker1').datetimepicker();
 			$('#datetimepicker2').datetimepicker();
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
