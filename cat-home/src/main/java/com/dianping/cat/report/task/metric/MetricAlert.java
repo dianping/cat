@@ -131,7 +131,6 @@ public class MetricAlert implements Task, LogEnabled {
 		} else {
 			addNewCondition(configs, "DescPer", descPer, "DescVal", descVal, dayBeginTime, dayEndTime);
 		}
-
 	}
 
 	private void addNewCondition(List<Config> configs, String type, double val, String type2, double val2,
