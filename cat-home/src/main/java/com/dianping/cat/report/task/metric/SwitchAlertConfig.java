@@ -10,13 +10,12 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.monitorrules.entity.Condition;
 import com.dianping.cat.home.monitorrules.entity.Config;
 import com.dianping.cat.home.monitorrules.entity.Subcondition;
-import com.dianping.cat.core.dal.Project;
-import com.site.helper.Splitters;
 
-public class AlertConfig {
+public class SwitchAlertConfig {
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 
@@ -27,29 +26,25 @@ public class AlertConfig {
 	public List<String> buildExceptionSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
 
-		phones.add("15201789489");// 佳林
+		phones.add("18662513308");
 		return phones;
 	}
 
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> emails = new ArrayList<String>();
-		String emailList = productLine.getEmail();
+		//String emailList = productLine.getEmail();
 
-		emails.add("yong.you@dianping.com");
-		emails.add("jialin.sun@dianping.com");
-		emails.add("argus@dianping.com");
-		emails.add("monitor@dianping.com");
-		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
+		emails.add("leon.li@dianping.com");
+		//emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
 		return emails;
 	}
 
 	public List<String> buildMailReceivers(Project project) {
 		List<String> emails = new ArrayList<String>();
-		String emailList = project.getEmail();
+		//String emailList = project.getEmail();
 
-		emails.add("yong.you@dianping.com");
-		emails.add("jialin.sun@dianping.com");
-		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
+		emails.add("leon.li@dianping.com");
+		//emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
 		return emails;
 	}
 
@@ -63,12 +58,10 @@ public class AlertConfig {
 
 	public List<String> buildSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
-		String phonesList = productLine.getPhone();
+		//String phonesList = productLine.getPhone();
 
-		phones.add("13916536843");// 值班
-		phones.add("18616671676");// 尤勇
-		phones.add("13858086694");// 黄河
-		phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
+		phones.add("18662513308");
+		//phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
 		return phones;
 	}
 

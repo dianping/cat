@@ -34,7 +34,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class MetricAlert implements Task, LogEnabled {
+public class SwitchAlert implements Task, LogEnabled {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
@@ -55,7 +55,7 @@ public class MetricAlert implements Task, LogEnabled {
 	private RemoteMetricReportService m_service;
 
 	@Inject
-	private AlertConfig m_alertConfig;
+	private SwitchAlertConfig m_alertConfig;
 
 	@Inject
 	private AlertInfo m_alertInfo;
@@ -104,7 +104,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 				for (Subcondition sub : subCons) {
 					RuleType type = RuleType.getByTypeId(sub.getType());
-
+					
 					switch (type) {
 					case DecreasePercentage:
 						isDescPerExist = true;
@@ -411,8 +411,10 @@ public class MetricAlert implements Task, LogEnabled {
 	}
 
 	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
+
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+
 		String title = m_alertConfig.buildMailTitle(productLine, config);
 
 		m_logger.info(title + " " + content + " " + emails);

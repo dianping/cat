@@ -164,6 +164,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/metric-aggregation-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/netgraph-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
                             </manifest>
 						</configuration>
 					</execution>

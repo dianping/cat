@@ -23,16 +23,16 @@
 			<th width="12%">机器名</th>
 		</tr>
 		<c:forEach var="item" items="${model.alterations}" varStatus="status">
-			<tr class="aleration_${item.type}">
+			<tr class="content_${item.type}" style="display:table-row">
 				<td>${w:format(item.date,'yyyy-MM-dd HH:mm:ss')}</td>
-				<td>${item.type}</td>
+				<td class="aleration_${item.type}">${item.type}</td>
 				<td class="text-info">
 				<c:choose>
 					<c:when test="${empty item.url}">
 						<span class="hreftip"  data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</span>
 					</c:when>
 					<c:otherwise>
-						<a class="hreftip" target="_blank" href="${item.url}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</a>
+						<a class="hreftip out_url" target="_blank" href="${item.url}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</a>
 					</c:otherwise>
 					</c:choose>
 				</td>
@@ -47,6 +47,11 @@
 		$('i[tips]').popover();
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		
+		$(".out_url").each(function(){
+			var cur = $(this);
+			cur.attr("href", decodeURIComponent(cur.attr("href")));
+		});
+		
 		<c:if test="${payload.fullScreen}">
 			$('#fullScreen').addClass('btn-danger');
 			$('.navbar').hide();
@@ -58,14 +63,31 @@
 			$('.footer').show();
 		</c:if>
 		
-		$(".typeButton").click(function(){
-			var type = "."+this.id.replace("Button","");
-			if($(type).css("display")=="table-cell"){
-				$(this).removeClass("btn-primary");
-				$(type).css("display","none");
-			}else if($(type).css("display")=="none"){
-				$(this).addClass("btn-primary");
-				$(type).css("display","table-cell");
+		<c:if test="${!payload.showPuppet}">
+			$("#show_puppet").attr("checked",false);
+			$(".content_puppet").css("display","none");
+		</c:if>
+		
+		<c:if test="${!payload.showWorkflow}">
+			$("#show_workflow").attr("checked",false);
+			$(".content_workflow").css("display","none");
+		</c:if>
+	
+		<c:if test="${!payload.showLazyman}">
+			$("#show_lazyman").attr("checked",false);
+			$(".content_lazyman").css("display","none");
+		</c:if>
+		
+		$(".typeCheckbox").click(function(){
+			var typeContent = ".content_"+this.id.replace("show_","");
+			var isChecked = document.getElementById(this.id).checked;
+			
+			if(!isChecked){
+				$(this).attr("checked",false);
+				$(typeContent).css("display","none");
+			}else{
+				$(this).attr("checked",true);
+				$(typeContent).css("display","table-row");
 			}
 		})
 		
