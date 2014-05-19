@@ -118,7 +118,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		m_domainToProductLines = buildDomainToProductLines();
 	}
 
-	public boolean insertIfNotExsit(String line, String domain) {
+	public boolean insertIfNotExsit(String line, String domain, boolean userMonitor, boolean networkMonitor) {
 		Company company = getCompany();
 
 		if (company != null) {
@@ -129,6 +129,10 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				productLine.setId(line);
 				productLine.setTitle(line);
 				productLine.addDomain(new Domain(domain));
+				productLine.setNetworkDashboard(networkMonitor);
+				productLine.setUserMonitorDashboard(userMonitor);
+				productLine.setMetricDashboard(false);
+				
 				company.addProductLine(productLine);
 
 				return storeConfig();

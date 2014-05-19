@@ -1,17 +1,14 @@
 package com.dianping.cat.report.chart.impl;
 
-import java.io.File;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -78,30 +75,6 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 		}
 	}
 
-	private MetricReport hackForTest(String product, Map<String, String> properties) {
-		MetricReport report = null;
-		try {
-			String content = Files.forIO().readFrom(new File("/tmp/data.txt"), "utf-8");
-
-			report = DefaultSaxParser.parse(content);
-
-			report.setProduct(product);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String city = properties.get("city");
-		String channel = properties.get("channel");
-		String type = properties.get("type");
-
-		UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
-
-		convert.visitMetricReport(report);
-
-		return convert.getReport();
-	}
-
 	@Override
 	public MetricReport queryUserMonitorReport(String product, Map<String, String> properties, Date start) {
 		long time = start.getTime();
@@ -116,21 +89,20 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 				ModelResponse<MetricReport> response = m_service.invoke(request);
 				MetricReport report = response.getModel();
 
-				return hackForTest(product, properties);
-				// return report;
+				return report;
 			} else {
 				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
 			}
 		} else {
 			MetricReport report = getReportFromCache(product, time);
-
 			String city = properties.get("city");
 			String channel = properties.get("channel");
 			String type = properties.get("type");
 
 			UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
-			// return convert.getReport();
-			return hackForTest(product, properties);
+
+			convert.visitMetricReport(report);
+			return convert.getReport();
 		}
 	}
 
