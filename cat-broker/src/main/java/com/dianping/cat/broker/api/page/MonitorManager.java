@@ -98,6 +98,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 	private void processOneEntity(MonitorEntity entity) {
 		String targetUrl = entity.getTargetUrl();
 
+		System.err.println(entity);
 		if (targetUrl != null) {
 			String url = getFormatUrl(targetUrl);
 

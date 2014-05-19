@@ -13,6 +13,17 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 
    @FieldMeta("c")
    private String  m_content;
+   
+	@FieldMeta("v")
+	private String m_version;
+	
+	public String getVersion() {
+   	return m_version;
+   }
+
+	public void setVersion(String version) {
+   	m_version = version;
+   }
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);

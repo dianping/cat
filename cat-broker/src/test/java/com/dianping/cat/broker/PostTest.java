@@ -52,15 +52,14 @@ public class PostTest {
 
 	@Test
 	public void test() throws Exception {
-		String url = "http://localhost:2765/broker-service/api/batch";
-
+		String url = "http://localhost:2765/broker-service/api/batch?v=1.0";
 		URLConnection conn = new URL(url).openConnection();
 
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
 		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
-		String content = "1400037748182\thttp\t300\t200\t300\n1400037748182\thttp\t300\t200\t300\n1400037748182\thttp\t300\t200\t300\n";
+		String content = "&c=1400037748182\\thttp\\t300\\t200\\t300\\n1400037748182\\thttp\\t300\\t200\\t300\\n1400037748182\\thttp\\t300\\t200\\t300\\n";
 		writer.write(content);
 		writer.flush();
 
