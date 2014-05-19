@@ -1,0 +1,45 @@
+<monitor-rules>
+	<rule id="demo1">
+		<metric-item type="id">
+			f5-2400-1-dianping-com:2400-1-dianping-com:1/1-1-in
+		</metric-item>
+		<metric-item type="regex">
+			switch\w*:\w*:\w*in\w*
+		</metric-item>
+		
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+				<subcondition type="DescPer">40</subcondition>
+				<subcondition type="DescPer">40</subcondition>
+			</condition>
+			<condition>
+				<subcondition type="DescVal">200</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="conditionCombination">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+				<subcondition type="DescPer">400</subcondition>
+			</condition>
+			<condition>
+				<subcondition type="DescPer">400</subcondition>
+				<subcondition type="DescVal">900</subcondition>
+			</condition>
+			<condition>	<!-- trigger alert -->
+				<subcondition type="DescPer">40</subcondition>
+				<subcondition type="DescVal">100</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="subconditionCombination">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+				<subcondition type="DescPer">40</subcondition>
+				<subcondition type="DescVal">80</subcondition>
+				<!-- block alert -->
+				<subcondition type="MinVal">10</subcondition>
+			</condition>
+		</config>
+	</rule>
+</monitor-rules>

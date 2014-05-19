@@ -34,7 +34,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class MetricAlert implements Task, LogEnabled {
+public class SwitchAlert implements Task, LogEnabled {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
@@ -55,14 +55,12 @@ public class MetricAlert implements Task, LogEnabled {
 	private RemoteMetricReportService m_service;
 
 	@Inject
-	private AlertConfig m_alertConfig;
+	private SwitchAlertConfig m_alertConfig;
 
 	@Inject
 	private AlertInfo m_alertInfo;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
-
-	private static final int DATA_CHECK_MINUTE = 3;
 
 	private static final int DATA_AREADY_MINUTE = 1;
 
@@ -258,11 +256,12 @@ public class MetricAlert implements Task, LogEnabled {
 	}
 
 	private int queryCheckMinute(List<Config> configs) {
-		int maxMinute = DATA_CHECK_MINUTE;
+		int maxMinute = 0;
 
 		for (Config config : configs) {
 			for (Condition con : config.getConditions()) {
 				int tmpMinute = con.getMinute();
+
 				if (tmpMinute > maxMinute) {
 					maxMinute = tmpMinute;
 				}
@@ -293,13 +292,9 @@ public class MetricAlert implements Task, LogEnabled {
 	}
 
 	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
-		if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
-		      .isShowCountDashboard())) {
-			return;
-		}
-		String product =productLine.getId();
-
+		String product = productLine.getId();
 		Pair<Boolean, String> alert = null;
+		
 		if (config.isShowAvg()) {
 			alert = computeAlertInfo(minute, product, config, MetricType.AVG);
 		}
@@ -325,7 +320,7 @@ public class MetricAlert implements Task, LogEnabled {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (MetricItemConfig config : configs) {
-			processMetricItemConfig(config, minute,  productLine);
+			processMetricItemConfig(config, minute, productLine);
 		}
 	}
 
@@ -376,7 +371,7 @@ public class MetricAlert implements Task, LogEnabled {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("MetricAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("SwitchAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			m_currentReports.clear();
@@ -386,7 +381,9 @@ public class MetricAlert implements Task, LogEnabled {
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						processProductLine(productLine);
+						if (productLine.isNetworkDashboard()) {
+							processProductLine(productLine);
+						}
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -413,6 +410,7 @@ public class MetricAlert implements Task, LogEnabled {
 	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+
 		String title = m_alertConfig.buildMailTitle(productLine, config);
 
 		m_logger.info(title + " " + content + " " + emails);

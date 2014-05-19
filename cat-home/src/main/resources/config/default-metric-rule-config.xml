@@ -1,0 +1,43 @@
+<monitor-rules>
+	<rule id="switchErrorAndDiscard">
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=errors$)
+		</metric-item>
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=discards$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=errors$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=discards$)
+		</metric-item>
+		
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="3">
+				<subcondition type="MaxVal">3</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="switchInAndOut">
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=in$)
+		</metric-item>
+		<metric-item type="regex">
+			f5[^:]*:[^:]+:.*(?=out$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=in$)
+		</metric-item>
+		<metric-item type="regex">
+			switch[^:]*:[^:]+:.*(?=out$)
+		</metric-item>
+		
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="2">
+				<subcondition type="DescPer">50</subcondition>
+			</condition>
+		</config>
+	</rule>
+</monitor-rules>
+

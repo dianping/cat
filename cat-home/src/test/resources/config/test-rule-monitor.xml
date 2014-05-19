@@ -1,0 +1,98 @@
+<monitor-rules>
+	<rule id="decreasePercentage">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="DescVal">200</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="decreaseValue">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">200</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="DescVal">95</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="increasePercentage">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">200</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="AscPer">49</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="increaseValue">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">200</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="AscVal">49</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="absoluteMaxValue">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">200</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="MaxVal">450</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="absoluteMinValue">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">200</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="MinVal">51</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="conditionCombination">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">400</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="DescPer">400</subcondition>
+					<subcondition type="DescVal">900</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">100</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="subconditionCombination">
+		<config starttime="00:00" endtime="24:00">
+			<condition>
+					<subcondition type="DescPer">400</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="DescPer">400</subcondition>
+					<subcondition type="DescVal">900</subcondition>
+			</condition>
+			<condition>
+					<subcondition type="DescPer">40</subcondition>
+					<subcondition type="DescVal">200</subcondition>
+					<subcondition type="MinVal">10</subcondition>
+			</condition>
+		</config>
+	</rule>
+</monitor-rules>

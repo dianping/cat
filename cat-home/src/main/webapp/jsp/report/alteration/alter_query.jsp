@@ -21,6 +21,10 @@
 	<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
 	<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
 	<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
+	类型
+	<input type="checkbox" checked="checked" id="show_puppet" class="typeCheckbox"/>   puppet 
+	<input type="checkbox" checked="checked" id="show_workflow" class="typeCheckbox"/>   workflow 
+	<input type="checkbox" checked="checked" id="show_lazyman" class="typeCheckbox"/>   lazyman 
 	<br>
 	<div class="btn-group">
 	  
@@ -28,6 +32,19 @@
 	</div>
 
 <script>
+	function typeCheckStr(){
+		var result = "";
+		if(!document.getElementById("show_puppet").checked){
+			result += "showPuppet=false&";
+		}
+		if(!document.getElementById("show_workflow").checked){
+			result += "showWorkflow=false&";
+		}
+		if(!document.getElementById("show_lazyman").checked){
+			result += "showLazyman=false&";
+		}
+		return result;
+	}
 	function queryNew(){
 		var startTime=$("#startTime").val();
 		var endTime=$("#endTime").val();
@@ -36,14 +53,16 @@
 		window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&hostname="+hostname;
 	}
 	function queryFullScreen(isFullScreen){
+		var typeStatus = typeCheckStr();
 		<c:if test="${payload.refresh}">
-			window.location.href="?domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}";
+			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}";
 		</c:if>
 		<c:if test="${!payload.refresh}">
-			window.location.href="?domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>";
+			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>";
 		</c:if>
 	}
 	function queryFrequency(frequency){
-		window.location.href="?domain=${payload.domain}&hostname=${payload.hostname}&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency;
+		var typeStatus = typeCheckStr();
+		window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency;
 	}
 </script>

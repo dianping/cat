@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
@@ -129,7 +130,9 @@ HeavyReportBuilderTest.class,
 
 AlertReportBuilderTest.class,
 
-TopReportVisitorTest.class})
+TopReportVisitorTest.class,
+
+RuleConfigTest.class})
 
 public class AllTests {
 	

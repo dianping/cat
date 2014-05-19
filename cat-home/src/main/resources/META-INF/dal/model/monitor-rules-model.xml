@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.monitorrules"
+	enable-sax-parser="true" enable-xml-parser="true" enable-xml-builder="true">
+	<entity name="monitor-rules" root="true">
+		<entity-ref name="rule" type="list" names="rules" />
+	</entity>
+	<entity name="rule">
+		<attribute name="id" value-type="String" />
+		<entity-ref name="metric-item" type="list" names="metric-items" />
+		<entity-ref name="config" type="list" names="configs" />
+	</entity>
+	<entity name="metric-item">
+		<attribute name="type" value-type="String" />
+		<element name="text" value-type="String" text="true" />
+	</entity>
+	<entity name="config">
+		<attribute name="starttime" value-type="String" />
+		<attribute name="endtime" value-type="String" />
+		<entity-ref name="condition" type="list" names="conditions" />
+	</entity>
+	<entity name="condition">
+		<attribute name="title" value-type="String" />
+		<attribute name="minute" value-type="int" default-value="2"/>
+		<entity-ref name="subcondition" type="list" names="subconditions" />
+	</entity>
+	<entity name="subcondition">
+		<attribute name="type" value-type="String" />
+		<element name="text" value-type="String" text="true" />
+	</entity>
+</model>
+
