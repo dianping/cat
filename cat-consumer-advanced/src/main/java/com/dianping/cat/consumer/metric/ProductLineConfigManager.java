@@ -134,7 +134,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				productLine.setMetricDashboard(false);
 				
 				company.addProductLine(productLine);
-
 				return storeConfig();
 			} else {
 				Map<String, Domain> domains = productLine.getDomains();

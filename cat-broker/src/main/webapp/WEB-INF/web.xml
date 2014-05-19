@@ -17,7 +17,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>mvc-servlet</servlet-name>
-		<url-pattern>/monitor/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 	<jsp-config>
 		<taglib>

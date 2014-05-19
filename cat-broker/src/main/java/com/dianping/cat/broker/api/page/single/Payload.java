@@ -95,7 +95,7 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 
    @Override
    public void setPage(String page) {
-      m_page = ApiPage.getByName(page, ApiPage.SIGNAL);
+      m_page = ApiPage.getByName(page, ApiPage.SINGLE);
    }
 
    @Override

@@ -87,4 +87,11 @@ public class MonitorEntity {
 		return this;
 	}
 
+	@Override
+   public String toString() {
+	   return "MonitorEntity [m_timestamp=" + m_timestamp + ", m_targetUrl=" + m_targetUrl + ", m_duration="
+	         + m_duration + ", m_httpCode=" + m_httpCode + ", m_errorCode=" + m_errorCode + ", m_city=" + m_city
+	         + ", m_channel=" + m_channel + ", m_ip=" + m_ip + "]";
+   }
+	
 }

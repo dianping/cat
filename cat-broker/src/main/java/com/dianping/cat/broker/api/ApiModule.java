@@ -4,7 +4,7 @@ import org.unidal.web.mvc.AbstractModule;
 import org.unidal.web.mvc.annotation.ModuleMeta;
 import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
-@ModuleMeta(name = "api", defaultInboundAction = "signal", defaultTransition = "default", defaultErrorAction = "default")
+@ModuleMeta(name = "api", defaultInboundAction = "single", defaultTransition = "default", defaultErrorAction = "default")
 @ModulePagesMeta({
 
 com.dianping.cat.broker.api.page.single.Handler.class,

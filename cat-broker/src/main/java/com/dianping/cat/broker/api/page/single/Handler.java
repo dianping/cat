@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 		HttpServletRequest request = ctx.getHttpServletRequest();
 
 		model.setAction(Action.VIEW);
-		model.setPage(ApiPage.SIGNAL);
+		model.setPage(ApiPage.SINGLE);
 
 		MonitorEntity entity = new MonitorEntity();
 		String userIp = m_util.getRemoteIp(request);

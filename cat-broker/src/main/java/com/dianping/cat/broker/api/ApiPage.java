@@ -5,7 +5,7 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum ApiPage implements Page {
 
-   SIGNAL("signal", "signal", "signal", "signal api", true),
+   SINGLE("single", "single", "single", "single api", true),
 
    BATCH("batch", "batch", "batch", "batch api", true);
 

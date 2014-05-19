@@ -99,6 +99,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 		String url = getFormatUrl(entity.getTargetUrl());
 
 		if (url != null) {
+			System.out.println(entity);
 			Transaction t = Cat.newTransaction("Monitor", url);
 
 			try {
