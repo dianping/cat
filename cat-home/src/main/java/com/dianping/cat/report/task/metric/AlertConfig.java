@@ -138,7 +138,6 @@ public class AlertConfig {
 				return tmpResult;
 			}
 		}
-
 		return new Pair<Boolean, String>(false, "");
 	}
 
@@ -155,7 +154,6 @@ public class AlertConfig {
 
 	private Pair<Boolean, String> checkDataByConfig(MetricItemConfig config, double[] value, double[] baseline,
 	      MetricType type, Config con) {
-
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();

@@ -167,7 +167,7 @@ public class MetricAlert implements Task, LogEnabled {
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
 		List<Config> configs = m_metricRuleConfigManager.getConfigs(product, domain, key, metricKey);
-		int maxMinute = queryCheckMinute(configs);
+		int maxMinute = queryMaxMinute(configs);
 
 		if (minute >= maxMinute - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -257,7 +257,7 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private int queryCheckMinute(List<Config> configs) {
+	private int queryMaxMinute(List<Config> configs) {
 		int maxMinute = DATA_CHECK_MINUTE;
 
 		for (Config config : configs) {
