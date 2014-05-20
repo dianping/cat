@@ -17,6 +17,7 @@ import com.dianping.cat.home.monitorrules.entity.Rule;
 import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.metric.AlertConfig;
 import com.dianping.cat.report.task.metric.MetricType;
+import com.dianping.cat.report.task.metric.SwitchAlertConfig;
 
 public class RuleConfigTest {
 
@@ -83,7 +84,7 @@ public class RuleConfigTest {
 
 	@Test
 	public void testMinute() {
-		AlertConfig alertConfig = new AlertConfig();
+		SwitchAlertConfig alertConfig = new SwitchAlertConfig();
 		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
