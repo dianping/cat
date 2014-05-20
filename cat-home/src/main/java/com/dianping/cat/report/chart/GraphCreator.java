@@ -19,13 +19,12 @@ import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 
-public class GraphCreator extends GraphCreatorBase{
+public class GraphCreator extends BaseGraphCreator{
 	
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 			final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
-		
 		int step = m_dataExtractor.getStep();
 		
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {

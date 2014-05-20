@@ -29,7 +29,7 @@ import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
-public abstract class GraphCreatorBase implements LogEnabled {
+public abstract class BaseGraphCreator implements LogEnabled {
 	@Inject
 	protected BaselineService m_baselineService;
 
