@@ -109,9 +109,9 @@ public class DomainManager implements Initializable, LogEnabled {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+				
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
-					m_domainsInCat.add(info.getDomain());
 					m_ipsInCat.put(info.getIp(), info);
 				}
 
