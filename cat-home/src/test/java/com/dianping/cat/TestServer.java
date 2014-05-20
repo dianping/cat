@@ -17,7 +17,6 @@ public class TestServer extends JettyServer {
 		server.startServer();
 		server.startWebApp();
 		server.stopServer();
-		System.out.println("h2fly test");
 	}
 
 	@Before

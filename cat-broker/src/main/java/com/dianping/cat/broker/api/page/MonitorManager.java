@@ -96,53 +96,62 @@ public class MonitorManager implements Initializable, LogEnabled {
 	}
 
 	private void processOneEntity(MonitorEntity entity) {
-		String url = getFormatUrl(entity.getTargetUrl());
+		String targetUrl = entity.getTargetUrl();
 
-		if (url != null) {
-			Transaction t = Cat.newTransaction("Monitor", url);
+		System.err.println(entity);
+		if (targetUrl != null) {
+			String url = getFormatUrl(targetUrl);
 
-			try {
-				IpInfo ip = m_ipService.findIpInfoByString(entity.getIp());
+			if (url != null) {
+				Transaction t = Cat.newTransaction("Monitor", url);
 
-				if (ip != null) {
-					String city = ip.getProvince() + "-" + ip.getCity();
-					String channel = ip.getChannel();
-					String httpCode = entity.getHttpCode();
-					String errorCode = entity.getErrorCode();
-					long timestamp = entity.getTimestamp();
-					double duration = entity.getDuration();
-					String group = url;
+				try {
+					String ip = entity.getIp();
+					IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
 
-					if (duration > 0) {
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+					if (ipInfo != null) {
+						String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
+						String channel = ipInfo.getChannel();
+						String httpCode = entity.getHttpStatus();
+						String errorCode = entity.getErrorCode();
+						long timestamp = entity.getTimestamp();
+						double duration = entity.getDuration();
+						String group = url;
+
+						if (duration > 0) {
+							logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+						}
+						if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
+							logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
+						}
+						if (!StringUtils.isEmpty(httpCode)) {
+							String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
+							Metric metric = Cat.getProducer().newMetric(group, key);
+							DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+							defaultMetric.setTimestamp(timestamp);
+							defaultMetric.setStatus("C");
+							defaultMetric.addData(String.valueOf(1));
+						}
+						if (!StringUtils.isEmpty(errorCode)) {
+							String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
+							Metric metric = Cat.getProducer().newMetric(group, key);
+							DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+							defaultMetric.setTimestamp(timestamp);
+							defaultMetric.setStatus("C");
+							defaultMetric.addData(String.valueOf(1));
+						}
+					} else {
+						m_logger.error(String.format("ip service can't resolve ip: ", ip));
 					}
-					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
-					}
-					if (!StringUtils.isEmpty(httpCode)) {
-						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
-						Metric metric = Cat.getProducer().newMetric(group, key);
-						DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-						defaultMetric.setTimestamp(timestamp);
-						defaultMetric.setStatus("C");
-						defaultMetric.addData(String.valueOf(1));
-					}
-					if (!StringUtils.isEmpty(errorCode)) {
-						String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
-						Metric metric = Cat.getProducer().newMetric(group, key);
-						DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-						defaultMetric.setTimestamp(timestamp);
-						defaultMetric.setStatus("C");
-						defaultMetric.addData(String.valueOf(1));
-					}
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					Cat.logError(e);
+					t.setStatus(e);
+				} finally {
+					t.complete();
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				t.complete();
 			}
 		}
 	}
@@ -185,7 +194,6 @@ public class MonitorManager implements Initializable, LogEnabled {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }

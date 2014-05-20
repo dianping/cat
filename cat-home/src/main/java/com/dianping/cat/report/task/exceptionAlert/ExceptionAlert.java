@@ -28,7 +28,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
-import com.dianping.cat.report.task.metric.AlertConfig;
+import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
@@ -40,7 +40,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private ProjectDao m_projectDao;
 
 	@Inject
-	private AlertConfig m_alertConfig;
+	private MetricAlertConfig m_alertConfig;
 
 	@Inject
 	private MailSMS m_mailSms;

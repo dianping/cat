@@ -72,12 +72,12 @@ public class SwitchAlertConfig {
 			
 			double[] validVal = getLastMinutes(value, dataLength);
 			double[] validBase = getLastMinutes(baseline, dataLength);
-			Pair<Boolean, String> tmpResult = checkDataByConfig(config, validVal, validBase, type, con);
-			if (tmpResult.getKey() == true) {
-				return tmpResult;
+			Pair<Boolean, String> result = checkDataByConfig(config, validVal, validBase, type, con);
+			
+			if (result.getKey() == true) {
+				return result;
 			}
 		}
-
 		return new Pair<Boolean, String>(false, "");
 	}
 

@@ -16,7 +16,7 @@ import com.dianping.cat.home.monitorrules.entity.Subcondition;
 import com.dianping.cat.core.dal.Project;
 import com.site.helper.Splitters;
 
-public class AlertConfig {
+public class MetricAlertConfig {
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 
@@ -98,8 +98,7 @@ public class AlertConfig {
 				return new Pair<Boolean, String>(false, "");
 			}
 			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (value[i] / baseline[i] > (1 - decreasePercent / 100)
-				      || (baseline[i] - value[i]) < decreaseValue) {
+				if (value[i] / baseline[i] > (1 - decreasePercent / 100) || (baseline[i] - value[i]) < decreaseValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -117,8 +116,9 @@ public class AlertConfig {
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type,
 	      List<Config> configs) {
-		for (Config con : configs) {			
-			Pair<Boolean, String> tmpResult = checkDataByConfig(config, value, baseline, type, con);
+		for (Config con : configs) {
+			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline, type, con);
+			
 			if (tmpResult.getKey() == true) {
 				return tmpResult;
 			}
@@ -126,8 +126,7 @@ public class AlertConfig {
 		return new Pair<Boolean, String>(false, "");
 	}
 
-	private Pair<Boolean, String> checkDataByConfig(MetricItemConfig config, double[] value, double[] baseline,
-	      MetricType type, Config con) {
+	private Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type, Config con) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();

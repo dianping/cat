@@ -118,7 +118,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		m_domainToProductLines = buildDomainToProductLines();
 	}
 
-	public boolean insertIfNotExsit(String line, String domain) {
+	public boolean insertIfNotExsit(String line, String domain, boolean userMonitor, boolean networkMonitor) {
 		Company company = getCompany();
 
 		if (company != null) {
@@ -129,8 +129,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				productLine.setId(line);
 				productLine.setTitle(line);
 				productLine.addDomain(new Domain(domain));
-				company.addProductLine(productLine);
+				productLine.setNetworkDashboard(networkMonitor);
+				productLine.setUserMonitorDashboard(userMonitor);
+				productLine.setMetricDashboard(false);
 
+				company.addProductLine(productLine);
 				return storeConfig();
 			} else {
 				Map<String, Domain> domains = productLine.getDomains();
@@ -224,24 +227,17 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			String id = line.getId();
 
 			if (id != null && id.length() > 0) {
-				String key = null;
-
 				if (line.getMetricDashboard()) {
-					key = METRIC_MONITOR;
+					productLines.get(METRIC_MONITOR).add(line);
 				}
 				if (line.getNetworkDashboard()) {
-					key = NETWORK_MONITOR;
+					productLines.get(NETWORK_MONITOR).add(line);
 				}
 				if (line.getUserMonitorDashboard()) {
-					key = USER_MONITOR;
+					productLines.get(USER_MONITOR).add(line);
 				}
 				if (line.getDashboard()) {
-					key = ERROR_MONITOR;
-				}
-				if (key != null) {
-					List<ProductLine> list = productLines.get(key);
-
-					list.add(line);
+					productLines.get(ERROR_MONITOR).add(line);
 				}
 			}
 		}

@@ -8,7 +8,7 @@ public class NavigationBar {
 	public Page[] getVisiblePages() {
       return new Page[] {
    
-      ApiPage.SIGNAL,
+      ApiPage.SINGLE,
       
       ApiPage.BATCH
 

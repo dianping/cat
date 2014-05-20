@@ -2,7 +2,6 @@ package com.dianping.cat.report.chart;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
-public class AggregationGraphCreator extends GraphCreatorBase {
+public class AggregationGraphCreator extends BaseGraphCreator {
 
 	@Inject
 	private MetricAggregationConfigManager m_metricAggregationConfigManager;
@@ -131,7 +130,7 @@ public class AggregationGraphCreator extends GraphCreatorBase {
 
 	protected boolean isProductLineInGroup(String productLine, List<MetricAggregation> metricAggregations) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		for(MetricItemConfig metricConfig : metricConfigs){
 			String domain = metricConfig.getDomain();
 			String type = metricConfig.getType();

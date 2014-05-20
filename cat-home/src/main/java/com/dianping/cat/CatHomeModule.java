@@ -46,14 +46,14 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(domainNavManager);
 			Threads.forGroup("Cat").start(taskConsumer);
 		}
-		
+
 		if (serverConfigManager.isAlertMachine() && !serverConfigManager.isLocalMode()) {
 			MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
-			SwitchAlert switchAlert = ctx.lookup(SwitchAlert.class);
+			SwitchAlert swtichAlert = ctx.lookup(SwitchAlert.class);
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
 
+			Threads.forGroup("Cat").start(swtichAlert);
 			Threads.forGroup("Cat").start(metricAlert);
-			Threads.forGroup("Cat").start(switchAlert);
 			Threads.forGroup("Cat").start(exceptionAlert);
 		}
 		executeAlarmModule(ctx);

@@ -29,65 +29,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_cityInfo;
 	
-	public String getCityInfo() {
-   	return m_cityInfo;
-   }
-
-	public void setCityInfo(String cityInfo) {
-   	m_cityInfo = cityInfo;
-   }
-
-	public Date getStart() {
-		return m_start;
-	}
-
-	public void setStart(Date start) {
-		m_start = start;
-	}
-
-	public Date getEnd() {
-		return m_end;
-	}
-
-	public void setEnd(Date end) {
-		m_end = end;
-	}
-
-	public List<PatternItem> getPattermItems() {
-		return m_pattermItems;
-	}
-
-	public void setPattermItems(List<PatternItem> pattermItems) {
-		m_pattermItems = pattermItems;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	@Override
-	public Action getDefaultAction() {
-		return Action.VIEW;
 	}
 
 	public List<String> getCities() {
 		return m_cities;
 	}
 
-	public void setCities(List<String> cities) {
-		m_cities = cities;
-	}
+	public String getCityInfo() {
+   	return m_cityInfo;
+   }
 
-	public List<LineChart> getLineCharts() {
-		if(m_lineCharts!=null){
-			return new ArrayList<LineChart>(m_lineCharts.values());
-		}else{
-			return new ArrayList<LineChart>();
-		}
-	}
-
-	public void setLineCharts(Map<String, LineChart> lineCharts) {
-		m_lineCharts = lineCharts;
+	@Override
+	public Action getDefaultAction() {
+		return Action.VIEW;
 	}
 
 	@Override
@@ -100,20 +56,64 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new ArrayList<String>();
 	}
 
+	public Date getEnd() {
+		return m_end;
+	}
+
 	public LineChart getLineChart() {
    	return m_lineChart;
    }
 
-	public void setLineChart(LineChart lineChart) {
-   	m_lineChart = lineChart;
-   }
+	public List<LineChart> getLineCharts() {
+		if(m_lineCharts!=null){
+			return new ArrayList<LineChart>(m_lineCharts.values());
+		}else{
+			return new ArrayList<LineChart>();
+		}
+	}
+
+	public List<PatternItem> getPattermItems() {
+		return m_pattermItems;
+	}
 
 	public PieChart getPieChart() {
    	return m_pieChart;
    }
 
+	public Date getStart() {
+		return m_start;
+	}
+
+	public void setCities(List<String> cities) {
+		m_cities = cities;
+	}
+
+	public void setCityInfo(String cityInfo) {
+   	m_cityInfo = cityInfo;
+   }
+
+	public void setEnd(Date end) {
+		m_end = end;
+	}
+
+	public void setLineChart(LineChart lineChart) {
+   	m_lineChart = lineChart;
+   }
+
+	public void setLineCharts(Map<String, LineChart> lineCharts) {
+		m_lineCharts = lineCharts;
+	}
+
+	public void setPattermItems(List<PatternItem> pattermItems) {
+		m_pattermItems = pattermItems;
+	}
+
 	public void setPieChart(PieChart pieChart) {
    	m_pieChart = pieChart;
    }
+
+	public void setStart(Date start) {
+		m_start = start;
+	}
 	
 }

@@ -14,7 +14,7 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	private Action m_action;
 
 	@FieldMeta("ts")
-	private int m_timestamp;
+	private long m_timestamp;
 
 	@FieldMeta("tu")
 	private String m_targetUrl;
@@ -25,67 +25,27 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	@FieldMeta("d")
 	private double m_duration;
 
-	@FieldMeta("tc")
-	private String m_httpCode;
+	@FieldMeta("hs")
+	private String m_httpStatus;
 
 	@FieldMeta("ec")
 	private String m_errorCode;
-
-   public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
-   }
 
    @Override
    public Action getAction() {
       return m_action;
    }
 
-	public int getTimestamp() {
-   	return m_timestamp;
-   }
-
-	public void setTimestamp(int timestamp) {
-   	m_timestamp = timestamp;
-   }
-
-	public String getTargetUrl() {
-   	return m_targetUrl;
-   }
-
-	public void setTargetUrl(String targetUrl) {
-   	m_targetUrl = targetUrl;
-   }
-
-	public String getVersion() {
-   	return m_version;
-   }
-
-	public void setVersion(String version) {
-   	m_version = version;
-   }
-
-	public double getDuration() {
+   public double getDuration() {
    	return m_duration;
-   }
-
-	public void setDuration(double duration) {
-   	m_duration = duration;
-   }
-
-	public String getHttpCode() {
-   	return m_httpCode;
-   }
-
-	public void setHttpCode(String httpCode) {
-   	m_httpCode = httpCode;
    }
 
 	public String getErrorCode() {
    	return m_errorCode;
    }
 
-	public void setErrorCode(String errorCode) {
-   	m_errorCode = errorCode;
+	public String getHttpStatus() {
+   	return m_httpStatus;
    }
 
 	@Override
@@ -93,9 +53,49 @@ public class Payload implements ActionPayload<ApiPage, Action> {
       return m_page;
    }
 
-   @Override
+	public String getTargetUrl() {
+   	return m_targetUrl;
+   }
+
+	public long getTimestamp() {
+   	return m_timestamp;
+   }
+
+	public String getVersion() {
+   	return m_version;
+   }
+
+	public void setAction(String action) {
+      m_action = Action.getByName(action, Action.VIEW);
+   }
+
+	public void setDuration(double duration) {
+   	m_duration = duration;
+   }
+	
+	public void setErrorCode(String errorCode) {
+   	m_errorCode = errorCode;
+   }
+
+	public void setHttpStatus(String httpStatus) {
+   	m_httpStatus = httpStatus;
+   }
+
+	@Override
    public void setPage(String page) {
-      m_page = ApiPage.getByName(page, ApiPage.SIGNAL);
+      m_page = ApiPage.getByName(page, ApiPage.SINGLE);
+   }
+
+	public void setTargetUrl(String targetUrl) {
+   	m_targetUrl = targetUrl;
+   }
+
+	public void setTimestamp(long timestamp) {
+   	m_timestamp = timestamp;
+   }
+
+   public void setVersion(String version) {
+   	m_version = version;
    }
 
    @Override

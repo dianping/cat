@@ -75,6 +75,20 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return report;
 	}
 
+	private void insertDefaultProductline(String type, String domain) {
+	   String group;
+	   group = type;
+	   boolean userMonitor = false;
+	   boolean networkMonitor = false;
+
+	   if ("broker-service".equals(domain)) {
+	   	userMonitor = true;
+	   } else {
+	   	networkMonitor = true;
+	   }
+	   m_productLineConfigManager.insertIfNotExsit(group, domain, userMonitor, networkMonitor);
+   }
+
 	protected void loadReports() {
 		Bucket<String> reportBucket = null;
 
@@ -94,59 +108,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
-	}
-
-	@Override
-	public void process(MessageTree tree) {
-		String domain = tree.getDomain();
-		String product = m_productLineConfigManager.queryProductLineByDomain(domain);
-		MetricReport report = m_reports.get(product);
-
-		if (report == null) {
-			report = new MetricReport(product);
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
-			m_reports.put(product, report);
-		}
-
-		Message message = tree.getMessage();
-
-		if (message instanceof Transaction) {
-			processMetricOnTransaction(product, report, (Transaction) message, tree);
-		}
-		if (message instanceof Transaction) {
-			processTransaction(product, report, tree, (Transaction) message);
-		} else if (message instanceof Metric) {
-			processMetric(product, report, tree, (Metric) message);
-		}
-	}
-
-	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
-		String type = metric.getType();
-		String name = metric.getName();
-		String domain = tree.getDomain();
-		String data = (String) metric.getData();
-		String status = metric.getStatus();
-		ConfigItem config = parseValue(status, data);
-
-		if (!StringUtils.isEmpty(type)) {
-			group = type;
-			m_productLineConfigManager.insertIfNotExsit(group, domain);
-		}
-		if (config != null) {
-			long current = metric.getTimestamp() / 1000 / 60;
-			int min = (int) (current % (60));
-			String key = m_configManager.buildMetricKey(domain, "Metric", name);
-			MetricItem metricItem = report.findOrCreateMetricItem(key);
-
-			metricItem.addDomain(domain).setType(status);
-			updateMetric(metricItem, min, config.getCount(), config.getValue());
-
-			config.setTitle(name);
-			m_configManager.insertIfNotExist(domain, "Metric", name, config);
-		}
-		return 0;
 	}
 
 	private ConfigItem parseValue(String status, String data) {
@@ -184,19 +145,56 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return config;
 	}
 
-	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
-		int count = 0;
-		List<Message> children = t.getChildren();
+	@Override
+	public void process(MessageTree tree) {
+		String domain = tree.getDomain();
+		String product = m_productLineConfigManager.queryProductLineByDomain(domain);
+		MetricReport report = m_reports.get(product);
 
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				count += processTransaction(group, report, tree, (Transaction) child);
-			} else if (child instanceof Metric) {
-				count += processMetric(group, report, tree, (Metric) child);
-			}
+		if (report == null) {
+			report = new MetricReport(product);
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+
+			m_reports.put(product, report);
 		}
 
-		return count;
+		Message message = tree.getMessage();
+
+		if (message instanceof Transaction) {
+			processMetricOnTransaction(product, report, (Transaction) message, tree);
+		}
+		if (message instanceof Transaction) {
+			processTransaction(product, report, tree, (Transaction) message);
+		} else if (message instanceof Metric) {
+			processMetric(product, report, tree, (Metric) message);
+		}
+	}
+
+	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
+		String type = metric.getType();
+		String name = metric.getName();
+		String domain = tree.getDomain();
+		String data = (String) metric.getData();
+		String status = metric.getStatus();
+		ConfigItem config = parseValue(status, data);
+
+		if (!StringUtils.isEmpty(type)) {
+			insertDefaultProductline(type, domain);
+		}
+		if (config != null) {
+			long current = metric.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+			String key = m_configManager.buildMetricKey(domain, "Metric", name);
+			MetricItem metricItem = report.findOrCreateMetricItem(key);
+
+			metricItem.addDomain(domain).setType(status);
+			updateMetric(metricItem, min, config.getCount(), config.getValue());
+
+			config.setTitle(name);
+			m_configManager.insertIfNotExist(domain, "Metric", name, config);
+		}
+		return 0;
 	}
 
 	private void processMetricOnTransaction(String product, MetricReport report, Transaction transaction,
@@ -222,6 +220,41 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				updateMetric(metricItem, min, 1, sum);
 			}
 		}
+	}
+
+	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
+		int count = 0;
+		List<Message> children = t.getChildren();
+
+		for (Message child : children) {
+			if (child instanceof Transaction) {
+				count += processTransaction(group, report, tree, (Transaction) child);
+			} else if (child instanceof Metric) {
+				count += processMetric(group, report, tree, (Metric) child);
+			}
+		}
+
+		return count;
+	}
+
+	public void setBucketManager(BucketManager bucketManager) {
+		m_bucketManager = bucketManager;
+	}
+
+	public void setBusinessReportDao(BusinessReportDao businessReportDao) {
+		m_businessReportDao = businessReportDao;
+	}
+
+	public void setConfigManager(MetricConfigManager configManager) {
+		m_configManager = configManager;
+	}
+
+	public void setProductLineConfigManager(ProductLineConfigManager productLineConfigManager) {
+		m_productLineConfigManager = productLineConfigManager;
+	}
+
+	public void setTaskManager(TaskManager taskManager) {
+		m_taskManager = taskManager;
 	}
 
 	protected void storeReports(boolean atEnd) {
@@ -305,16 +338,28 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 		private String m_title;
 
+		public int getCount() {
+			return m_count;
+		}
+
 		public String getTitle() {
 			return m_title;
 		}
 
-		public void setTitle(String title) {
-			m_title = title;
+		public double getValue() {
+			return m_value;
 		}
 
-		public int getCount() {
-			return m_count;
+		public boolean isShowAvg() {
+			return m_showAvg;
+		}
+
+		public boolean isShowCount() {
+			return m_showCount;
+		}
+
+		public boolean isShowSum() {
+			return m_showSum;
 		}
 
 		public ConfigItem setCount(int count) {
@@ -322,17 +367,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			return this;
 		}
 
-		public double getValue() {
-			return m_value;
-		}
-
-		public ConfigItem setValue(double value) {
-			m_value = value;
+		public ConfigItem setShowAvg(boolean showAvg) {
+			m_showAvg = showAvg;
 			return this;
-		}
-
-		public boolean isShowCount() {
-			return m_showCount;
 		}
 
 		public ConfigItem setShowCount(boolean showCount) {
@@ -340,43 +377,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			return this;
 		}
 
-		public boolean isShowAvg() {
-			return m_showAvg;
-		}
-
-		public ConfigItem setShowAvg(boolean showAvg) {
-			m_showAvg = showAvg;
-			return this;
-		}
-
-		public boolean isShowSum() {
-			return m_showSum;
-		}
-
 		public ConfigItem setShowSum(boolean showSum) {
 			m_showSum = showSum;
 			return this;
 		}
-	}
 
-	public void setBucketManager(BucketManager bucketManager) {
-		m_bucketManager = bucketManager;
-	}
+		public void setTitle(String title) {
+			m_title = title;
+		}
 
-	public void setBusinessReportDao(BusinessReportDao businessReportDao) {
-		m_businessReportDao = businessReportDao;
-	}
-
-	public void setConfigManager(MetricConfigManager configManager) {
-		m_configManager = configManager;
-	}
-
-	public void setProductLineConfigManager(ProductLineConfigManager productLineConfigManager) {
-		m_productLineConfigManager = productLineConfigManager;
-	}
-
-	public void setTaskManager(TaskManager taskManager) {
-		m_taskManager = taskManager;
+		public ConfigItem setValue(double value) {
+			m_value = value;
+			return this;
+		}
 	}
 
 }

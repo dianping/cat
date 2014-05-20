@@ -96,6 +96,7 @@ function graphMetricChart(container, data) {
 			useUTC : false
 		}
 	});
+	var ylabelMin = data.minYlable;
 	var _data = parseMetricLineData(data);
 	$(container).highcharts(
 			{
@@ -119,7 +120,7 @@ function graphMetricChart(container, data) {
 					}
 				},
 				yAxis : {
-					min : 0.0
+					min : ylabelMin
 				},
 				credits : {
 					enabled : false
@@ -147,7 +148,7 @@ function graphMetricChart(container, data) {
 								+ this.series.name
 								+ '</b><br/>'
 								+ Highcharts.dateFormat('%Y-%m-%d %H:%M',
-										this.x) + ': ' + this.y;
+										this.x) + ' ' + Number(this.y).toFixed(1);
 					}
 				},
 				series : _data

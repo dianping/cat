@@ -15,7 +15,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.home.monitorrules.entity.MonitorRules;
 import com.dianping.cat.home.monitorrules.entity.Rule;
 import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.metric.AlertConfig;
+import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.report.task.metric.SwitchAlertConfig;
 
@@ -47,7 +47,7 @@ public class RuleConfigTest {
 
 	@Test
 	public void testRule() {
-		AlertConfig alertConfig = new AlertConfig();
+		MetricAlertConfig alertConfig = new MetricAlertConfig();
 		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
 
@@ -62,7 +62,7 @@ public class RuleConfigTest {
 	
 	@Test
 	public void testCondition() {
-		AlertConfig alertConfig = new AlertConfig();
+		MetricAlertConfig alertConfig = new MetricAlertConfig();
 		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
 		Pair<Boolean, String> result;

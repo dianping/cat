@@ -1,12 +1,10 @@
 package com.dianping.cat.report.task.metric;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -17,45 +15,23 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.monitorrules.entity.Condition;
 import com.dianping.cat.home.monitorrules.entity.Config;
 import com.dianping.cat.home.monitorrules.entity.Subcondition;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class MetricAlert implements Task, LogEnabled {
-
-	@Inject
-	private MetricConfigManager m_metricConfigManager;
-
-	@Inject
-	private ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
-	private MetricRuleConfigManager m_metricRuleConfigManager;
-
-	@Inject
-	private BaselineService m_baselineService;
+public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	private MailSMS m_mailSms;
 
 	@Inject
-	private RemoteMetricReportService m_service;
-
-	@Inject
-	private AlertConfig m_alertConfig;
+	private MetricAlertConfig m_alertConfig;
 
 	@Inject
 	private AlertInfo m_alertInfo;
@@ -64,98 +40,25 @@ public class MetricAlert implements Task, LogEnabled {
 
 	private static final int DATA_CHECK_MINUTE = 3;
 
-	private static final int DATA_AREADY_MINUTE = 1;
-
-	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
-
-	private Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
-
 	private Logger m_logger;
 
-	private void addDescMetricIfNotExist(MetricItemConfig config, List<Config> configs) {
-		double descPer = config.getDecreasePercentage();
-		double descVal = config.getDecreaseValue();
-		boolean isDescPerExist = false;
-		boolean isDescValExist = false;
-		String dayBeginTime = "00:00";
-		String dayEndTime = "24:00";
-
-		if (descPer == 0) {
-			descPer = 50;
-		}
-		if (descVal == 0) {
-			descVal = 100;
-		}
-
-		for (Config con : configs) {
-			String startTime = con.getStarttime();
-			String endTime = con.getEndtime();
-
-			if (startTime == null || !startTime.equals(dayBeginTime) || endTime == null || !endTime.equals(dayEndTime)) {
-				continue;
-			}
-
-			for (Condition c : con.getConditions()) {
-				List<Subcondition> subCons = c.getSubconditions();
-
-				if (subCons.size() != 2) {
-					continue;
-				}
-
-				for (Subcondition sub : subCons) {
-					RuleType type = RuleType.getByTypeId(sub.getType());
-
-					switch (type) {
-					case DecreasePercentage:
-						isDescPerExist = true;
-						break;
-					case DecreaseValue:
-						isDescValExist = true;
-						break;
-					default:
-						break;
-					}
-				}
-
-				if (isDescPerExist && isDescValExist) {
-					break;
-				} else {
-					isDescPerExist = false;
-					isDescValExist = false;
-				}
-			}
-		}
-
-		if (isDescPerExist && isDescValExist) {
-			return;
-		} else {
-			addNewCondition(configs, "DescPer", descPer, "DescVal", descVal, dayBeginTime, dayEndTime);
-		}
-	}
-
-	private void addNewCondition(List<Config> configs, String type, double val, String type2, double val2,
-	      String dayBeginTime, String dayEndTime) {
-		configs.add(new Config()
-		      .setStarttime(dayBeginTime)
-		      .setEndtime(dayEndTime)
-		      .addCondition(
-		            new Condition().setTitle("default rule")
-		                  .addSubcondition(new Subcondition().setType(type).setText(String.valueOf(val)))
-		                  .addSubcondition(new Subcondition().setType(type2).setText(String.valueOf(val2)))));
-	}
-
 	private Pair<Boolean, String> checkDataByJudge(MetricItemConfig config, double[] value, double[] baseline,
-	      MetricType type, List<Config> configs) {
+	      MetricType type) {
 		Pair<Boolean, String> originResult = m_alertConfig.checkData(config, value, baseline, type);
 
-		addDescMetricIfNotExist(config, configs);
+		try {
+			List<Config> configs = convert(config);
+			Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(config, value, baseline, type, configs);
 
-		Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(config, value, baseline, type, configs);
-
-		if (originResult.getKey() != ruleJudgeResult.getKey()) {
-			Cat.logError("rule execute error!", new Exception());
+			if (originResult.getKey() != ruleJudgeResult.getKey()) {
+				String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+				      config.getMetricKey());
+				m_logger.error(String.format("Error judge result, config: %s, value: %s, baseline: %s", metricKey,
+				      printArray(value), printArray(baseline)));
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-
 		return originResult;
 	}
 
@@ -165,7 +68,6 @@ public class MetricAlert implements Task, LogEnabled {
 		String domain = config.getDomain();
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
-		List<Config> configs = m_metricRuleConfigManager.buildConfigs(product, domain, key, metricKey);
 
 		if (minute >= DATA_CHECK_MINUTE - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -177,7 +79,7 @@ public class MetricAlert implements Task, LogEnabled {
 				value = queryRealData(start, end, metricKey, report, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				return checkDataByJudge(config, value, baseline, type, configs);
+				return checkDataByJudge(config, value, baseline, type);
 			}
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
@@ -188,7 +90,7 @@ public class MetricAlert implements Task, LogEnabled {
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-				return checkDataByJudge(config, value, baseline, type, configs);
+				return checkDataByJudge(config, value, baseline, type);
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -208,10 +110,36 @@ public class MetricAlert implements Task, LogEnabled {
 
 				value = mergerArray(lastValue, currentValue);
 				baseline = mergerArray(lastBaseline, currentBaseline);
-				return checkDataByJudge(config, value, baseline, type, configs);
+				return checkDataByJudge(config, value, baseline, type);
 			}
 		}
 		return null;
+	}
+
+	private List<Config> convert(MetricItemConfig metricItemConfig) {
+		List<Config> configs = new ArrayList<Config>();
+		Config config = new Config();
+		Condition condition = new Condition();
+		Subcondition subcondition1 = new Subcondition();
+		Subcondition subcondition2 = new Subcondition();
+
+		double decreasePercent = metricItemConfig.getDecreasePercentage();
+		double decreaseValue = metricItemConfig.getDecreaseValue();
+
+		if (decreasePercent == 0) {
+			decreasePercent = 50;
+		}
+		if (decreaseValue == 0) {
+			decreaseValue = 100;
+		}
+
+		subcondition1.setType("DescPer").setText(String.valueOf(decreasePercent));
+		subcondition2.setType("DescVal").setText(String.valueOf(decreaseValue));
+
+		condition.addSubcondition(subcondition1).addSubcondition(subcondition2);
+		config.addCondition(condition);
+		configs.add(config);
+		return configs;
 	}
 
 	@Override
@@ -219,64 +147,21 @@ public class MetricAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	private MetricReport fetchMetricReport(String product, ModelPeriod period) {
-		if (period == ModelPeriod.CURRENT) {
-			MetricReport report = m_currentReports.get(product);
-
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime()).setProperty(
-				      "requireAll", "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_currentReports.put(product, report);
-				}
-				return report;
-			}
-		} else if (period == ModelPeriod.LAST) {
-			MetricReport report = m_lastReports.get(product);
-
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime()).setProperty("requireAll",
-				      "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_lastReports.put(product, report);
-				}
-				return report;
-			}
-		} else {
-			throw new RuntimeException("internal error, this can't be reached.");
-		}
-	}
-
 	@Override
 	public String getName() {
 		return "metric-alert";
 	}
 
-	private double[] mergerArray(double[] from, double[] to) {
-		int fromLength = from.length;
-		int toLength = to.length;
-		double[] result = new double[fromLength + toLength];
-		int index = 0;
+	private String printArray(double[] value) {
+		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < fromLength; i++) {
-			result[i] = from[i];
-			index++;
+		for (double d : value) {
+			sb.append(d).append(" ");
 		}
-		for (int i = 0; i < toLength; i++) {
-			result[i + index] = to[i];
-		}
-		return result;
+		return sb.toString();
 	}
 
-	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
+	protected void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
 		if ((!config.getAlarm() && !config.isShowAvgDashboard() && !config.isShowSumDashboard() && !config
 		      .isShowCountDashboard())) {
 			return;
@@ -302,57 +187,14 @@ public class MetricAlert implements Task, LogEnabled {
 		}
 	}
 
-	private void processProductLine(ProductLine productLine) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
-		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-
-		for (MetricItemConfig config : configs) {
-			processMetricItemConfig(config, minute,  productLine);
-		}
-	}
-
-	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
-		double[] baseline = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
-		int length = end - start + 1;
-		double[] result = new double[length];
-		System.arraycopy(baseline, start, result, 0, length);
-
-		return result;
-	}
-
-	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
-		double[] all = new double[60];
-		Map<Integer, Segment> map = report.findOrCreateMetricItem(metricKey).getSegments();
-
-		for (Entry<Integer, Segment> entry : map.entrySet()) {
-			Integer minute = entry.getKey();
-			Segment seg = entry.getValue();
-
-			if (type == MetricType.AVG) {
-				all[minute] = seg.getAvg();
-			} else if (type == MetricType.COUNT) {
-				all[minute] = (double) seg.getCount();
-			} else if (type == MetricType.SUM) {
-				all[minute] = seg.getSum();
-			}
-		}
-		int length = end - start + 1;
-		double[] result = new double[length];
-		System.arraycopy(all, start, result, 0, length);
-
-		return result;
-	}
-
 	@Override
 	public void run() {
+		boolean active = true;
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			active = false;
 		}
-		boolean active = true;
 		while (active) {
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
 			String minuteStr = String.valueOf(minute);
@@ -370,7 +212,9 @@ public class MetricAlert implements Task, LogEnabled {
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						processProductLine(productLine);
+						if (productLine.isMetricDashboard()) {
+							processProductLine(productLine);
+						}
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

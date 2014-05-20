@@ -25,7 +25,6 @@
 		}
 		
 		$(document).ready(function() {
-			$("#url").select2();
 			$('#datetimepicker1').datetimepicker();
 			$('#datetimepicker2').datetimepicker();
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
@@ -139,7 +138,7 @@
 			              data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 			           </span>
 			        </div>
-			        <input class="btn btn-primary  btn-small"  value="查询"
+			        <input class="btn btn-primary "   value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 						onclick="query()"
 						type="submit"></div>
 				</th>

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +19,12 @@ import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 
-public class GraphCreator extends GraphCreatorBase{
+public class GraphCreator extends BaseGraphCreator{
 	
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 			final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
-		
 		int step = m_dataExtractor.getStep();
 		
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
@@ -98,7 +96,7 @@ public class GraphCreator extends GraphCreatorBase{
 
 	protected boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(domains);
 
 		for (MetricKeyConfig metric : configs) {
 			String domain = metric.getMetricDomain();
@@ -140,7 +138,7 @@ public class GraphCreator extends GraphCreatorBase{
 	private boolean showInDashboard(String productline) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productline);
 
-		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		for (MetricItemConfig config : configs) {
 			if (config.isShowAvgDashboard() || config.isShowCountDashboard() || config.isShowSumDashboard()) {
 				return true;

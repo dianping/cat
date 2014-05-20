@@ -132,6 +132,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -1676,8 +1685,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.AlertConfig</role>
-			<implementation>com.dianping.cat.report.task.metric.AlertConfig</implementation>
+			<role>com.dianping.cat.report.task.metric.MetricAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.metric.MetricAlertConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.SwitchAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.metric.SwitchAlertConfig</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
@@ -1709,13 +1722,43 @@
 					<role>com.dianping.cat.system.tool.MailSMS</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+					<role>com.dianping.cat.report.task.metric.MetricAlertConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.SwitchAlert</role>
+			<implementation>com.dianping.cat.report.task.metric.SwitchAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.SwitchAlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1727,7 +1770,7 @@
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+					<role>com.dianping.cat.report.task.metric.MetricAlertConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.tool.MailSMS</role>

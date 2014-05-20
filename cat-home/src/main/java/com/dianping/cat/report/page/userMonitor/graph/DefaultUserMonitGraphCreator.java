@@ -14,18 +14,18 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.chart.GraphCreatorBase;
+import com.dianping.cat.report.chart.BaseGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 
-public class DefaultUserMonitGraphCreator extends GraphCreatorBase implements UserMonitorGraphCreator {
+public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
 
-	private static final String COUNT = "COUNT";
+	private static final String COUNT = "访问量";
 
-	private static final String AVG = "AVG";
+	private static final String AVG = "响应时间";
 
-	private static final String SUCESS_PERCENT = "SUCESS_PERCENT";
+	private static final String SUCESS_PERCENT = "调用成功率";
 
 	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {

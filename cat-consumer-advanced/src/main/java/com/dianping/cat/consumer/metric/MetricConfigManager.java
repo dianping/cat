@@ -2,13 +2,13 @@ package com.dianping.cat.consumer.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -119,7 +119,7 @@ public class MetricConfigManager implements Initializable {
 		return getMetricConfig().findMetricItemConfig(id);
 	}
 
-	public List<MetricItemConfig> queryMetricItemConfigs(Set<String> domains) {
+	public List<MetricItemConfig> queryMetricItemConfigs(Collection<String> domains) {
 		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>();
 		Map<String, MetricItemConfig> metricConfig = getMetricConfig().getMetricItemConfigs();
 

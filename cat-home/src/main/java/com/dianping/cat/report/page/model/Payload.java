@@ -26,6 +26,12 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("name")
 	private String m_name;
 
+	@FieldMeta("city")
+	private String m_city;
+
+	@FieldMeta("channel")
+	private String m_channel;
+
 	private ReportPage m_page;
 
 	// /<report>/<domain>/<period>
@@ -143,6 +149,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
+	
+	public String getCity() {
+   	return m_city;
+   }
+
+	public void setCity(String city) {
+   	m_city = city;
+   }
+
+	public String getChannel() {
+   	return m_channel;
+   }
+
+	public void setChannel(String channel) {
+   	m_channel = channel;
+   }
 
 	public void setWaterfall(boolean waterfall) {
 		m_waterfall = waterfall;
