@@ -48,7 +48,7 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 
 		try {
 			List<Config> configs = convert(config);
-			Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(config, value, baseline, type, configs);
+			Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(value, baseline, type, configs);
 
 			if (originResult.getKey() != ruleJudgeResult.getKey()) {
 				String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
@@ -120,8 +120,8 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 		List<Config> configs = new ArrayList<Config>();
 		Config config = new Config();
 		Condition condition = new Condition();
-		Subcondition subcondition1 = new Subcondition();
-		Subcondition subcondition2 = new Subcondition();
+		Subcondition descPerSubcon = new Subcondition();
+		Subcondition descValSubcon = new Subcondition();
 
 		double decreasePercent = metricItemConfig.getDecreasePercentage();
 		double decreaseValue = metricItemConfig.getDecreaseValue();
@@ -133,10 +133,10 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 			decreaseValue = 100;
 		}
 
-		subcondition1.setType("DescPer").setText(String.valueOf(decreasePercent));
-		subcondition2.setType("DescVal").setText(String.valueOf(decreaseValue));
+		descPerSubcon.setType("DescPer").setText(String.valueOf(decreasePercent));
+		descValSubcon.setType("DescVal").setText(String.valueOf(decreaseValue));
 
-		condition.addSubcondition(subcondition1).addSubcondition(subcondition2);
+		condition.addSubcondition(descPerSubcon).addSubcondition(descValSubcon);
 		config.addCondition(condition);
 		configs.add(config);
 		return configs;
@@ -205,8 +205,6 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 			Transaction t = Cat.newTransaction("MetricAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
-			m_currentReports.clear();
-			m_lastReports.clear();
 			try {
 				Map<String, ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines();
 
@@ -224,6 +222,8 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 			} catch (Exception e) {
 				t.setStatus(e);
 			} finally {
+				m_currentReports.clear();
+				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;

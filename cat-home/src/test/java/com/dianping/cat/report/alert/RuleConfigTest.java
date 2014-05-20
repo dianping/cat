@@ -11,7 +11,6 @@ import org.unidal.helper.Files;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.home.monitorrules.entity.MonitorRules;
 import com.dianping.cat.home.monitorrules.entity.Rule;
 import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
@@ -48,14 +47,13 @@ public class RuleConfigTest {
 	@Test
 	public void testRule() {
 		MetricAlertConfig alertConfig = new MetricAlertConfig();
-		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
-		Pair<Boolean, String> result = alertConfig.checkData(config, value, baseline, MetricType.COUNT,
+		Pair<Boolean, String> result = alertConfig.checkData(value, baseline, MetricType.COUNT,
 		      configMap.get("demo1"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 	}
@@ -63,7 +61,6 @@ public class RuleConfigTest {
 	@Test
 	public void testCondition() {
 		MetricAlertConfig alertConfig = new MetricAlertConfig();
-		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
 		Pair<Boolean, String> result;
 		
@@ -72,12 +69,12 @@ public class RuleConfigTest {
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
 		result = alertConfig
-		      .checkData(config, value7, baseline7, MetricType.COUNT, configMap.get("conditionCombination"));
+		      .checkData(value7, baseline7, MetricType.COUNT, configMap.get("conditionCombination"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = alertConfig.checkData(config, value8, baseline8, MetricType.COUNT,
+		result = alertConfig.checkData(value8, baseline8, MetricType.COUNT,
 		      configMap.get("subconditionCombination"));
 		Assert.assertEquals(result.getKey().booleanValue(), false);
 	}
@@ -85,14 +82,13 @@ public class RuleConfigTest {
 	@Test
 	public void testMinute() {
 		SwitchAlertConfig alertConfig = new SwitchAlertConfig();
-		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		Pair<Boolean, String> result = alertConfig.checkData(config, value, baseline, MetricType.COUNT,
+		Pair<Boolean, String> result = alertConfig.checkData(value, baseline, MetricType.COUNT,
 		      configMap.get("two-minute"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 	}
