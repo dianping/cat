@@ -7,8 +7,8 @@
 		<version>1.0.5</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cat-broker-service</artifactId>
-	<name>cat-broker-service</name>
+	<artifactId>broker-service</artifactId>
+	<name>broker-service</name>
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
