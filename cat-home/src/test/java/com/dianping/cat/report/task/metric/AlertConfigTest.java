@@ -154,7 +154,7 @@ public class AlertConfigTest {
 
 	@Test
 	public void testMinute() {
-		AlertConfig alertConfig = new AlertConfig();
+		SwitchAlertConfig alertConfig = new SwitchAlertConfig();
 		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 

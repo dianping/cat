@@ -1720,6 +1720,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.SwitchAlert</role>
+			<implementation>com.dianping.cat.report.task.metric.SwitchAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.metric.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.exceptionAlert.ExceptionAlert</role>
 			<implementation>com.dianping.cat.report.task.exceptionAlert.ExceptionAlert</implementation>
 			<requirements>

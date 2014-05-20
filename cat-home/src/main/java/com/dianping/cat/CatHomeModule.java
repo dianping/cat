@@ -52,8 +52,8 @@ public class CatHomeModule extends AbstractModule {
 			SwitchAlert swtichAlert = ctx.lookup(SwitchAlert.class);
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
 
-			Threads.forGroup("Cat").start(metricAlert);
 			Threads.forGroup("Cat").start(swtichAlert);
+			Threads.forGroup("Cat").start(metricAlert);
 			Threads.forGroup("Cat").start(exceptionAlert);
 		}
 		executeAlarmModule(ctx);

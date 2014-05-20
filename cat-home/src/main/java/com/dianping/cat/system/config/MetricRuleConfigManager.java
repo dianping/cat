@@ -68,7 +68,7 @@ public class MetricRuleConfigManager implements Initializable {
 		return configs;
 	}
 
-	public List<com.dianping.cat.home.monitorrules.entity.Config> getConfigs(String product, String domain, String key,
+	public List<com.dianping.cat.home.monitorrules.entity.Config> buildConfigs(String product, String domain, String key,
 	      String metricKey) {
 		List<com.dianping.cat.home.monitorrules.entity.Config> configs = new ArrayList<com.dianping.cat.home.monitorrules.entity.Config>();
 

@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -233,7 +233,7 @@ public abstract class GraphCreatorBase implements LogEnabled {
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(new HashSet<String>(domains));
+		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		
 		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
 			@Override

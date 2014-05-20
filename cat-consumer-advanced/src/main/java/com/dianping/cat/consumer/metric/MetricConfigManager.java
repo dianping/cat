@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.metric;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -119,7 +120,7 @@ public class MetricConfigManager implements Initializable {
 		return getMetricConfig().findMetricItemConfig(id);
 	}
 
-	public List<MetricItemConfig> queryMetricItemConfigs(Set<String> domains) {
+	public List<MetricItemConfig> queryMetricItemConfigs(Collection<String> domains) {
 		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>();
 		Map<String, MetricItemConfig> metricConfig = getMetricConfig().getMetricItemConfigs();
 
