@@ -86,7 +86,7 @@ public class MetricRuleConfigManager implements Initializable {
 						break;
 					}
 				} else if (type.equals("regex")) {
-					String[] context = metricItem.getText().split(":");
+					String[] context = metricItem.getText().trim().split("\\(s\\)");
 
 					Pattern p = Pattern.compile(context[0]);
 					Matcher m = p.matcher(product);

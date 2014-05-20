@@ -2,7 +2,6 @@ package com.dianping.cat.report.task.metric;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,10 +40,6 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
-	private Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
-
-	private Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
-
 	private Logger m_logger;
 
 	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
@@ -66,7 +61,7 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 				value = queryRealData(start, end, metricKey, report, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				return m_alertConfig.checkData(config, value, baseline, type, configs);
+				return m_alertConfig.checkData(value, baseline, type, configs);
 			}
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
@@ -77,7 +72,7 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-				return m_alertConfig.checkData(config, value, baseline, type, configs);
+				return m_alertConfig.checkData(value, baseline, type, configs);
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -97,7 +92,7 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 
 				value = mergerArray(lastValue, currentValue);
 				baseline = mergerArray(lastBaseline, currentBaseline);
-				return m_alertConfig.checkData(config, value, baseline, type, configs);
+				return m_alertConfig.checkData(value, baseline, type, configs);
 			}
 		}
 		return null;
@@ -129,7 +124,6 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 
 		if (alert != null && alert.getKey()) {
 			config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
-
 			m_alertInfo.addMetric(config, new Date().getTime());
 			sendAlertInfo(productLine, config, alert.getValue());
 		}
@@ -169,8 +163,6 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 			Transaction t = Cat.newTransaction("SwitchAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
-			m_currentReports.clear();
-			m_lastReports.clear();
 			try {
 				Map<String, ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines();
 
@@ -188,6 +180,8 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 			} catch (Exception e) {
 				t.setStatus(e);
 			} finally {
+				m_currentReports.clear();
+				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;
