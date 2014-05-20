@@ -119,7 +119,7 @@ public abstract class BaseAlertConfig {
 				}
 
 				String ruleType = subCondition.getType();
-				int ruleValue = Integer.parseInt(subCondition.getText());
+				double ruleValue = Double.parseDouble(subCondition.getText());
 				RuleType rule = RuleType.getByTypeId(ruleType);
 
 				if (rule == null) {
