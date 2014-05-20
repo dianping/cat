@@ -19,6 +19,7 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -107,7 +108,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 				try {
 					String ip = entity.getIp();
 					IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
-				
+
 					if (ipInfo != null) {
 						String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
 						String channel = ipInfo.getChannel();
@@ -142,6 +143,8 @@ public class MonitorManager implements Initializable, LogEnabled {
 							defaultMetric.addData(String.valueOf(1));
 						}
 					} else {
+						Cat.logEvent("IpService", "NotFound", Event.SUCCESS, ip);
+						
 						m_logger.error(String.format("ip service can't resolve ip: ", ip));
 					}
 					t.setStatus(Transaction.SUCCESS);

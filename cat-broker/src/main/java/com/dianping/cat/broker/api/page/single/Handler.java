@@ -5,10 +5,12 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.ApiPage;
 import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
+import com.dianping.cat.message.Event;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -18,7 +20,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-public class Handler implements PageHandler<Context>,LogEnabled{
+public class Handler implements PageHandler<Context>, LogEnabled {
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -28,12 +30,12 @@ public class Handler implements PageHandler<Context>,LogEnabled{
 	@Inject
 	private RequestUtils m_util;
 
-	private Logger m_logger ;
+	private Logger m_logger;
 
 	@Override
-   public void enableLogging(Logger logger) {
+	public void enableLogging(Logger logger) {
 		m_logger = logger;
-   }
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -56,6 +58,8 @@ public class Handler implements PageHandler<Context>,LogEnabled{
 		String userIp = m_util.getRemoteIp(request);
 
 		if (userIp != null) {
+			Cat.logEvent("Ip", "hit", Event.SUCCESS, userIp);
+
 			entity.setDuration(payload.getDuration());
 			entity.setErrorCode(payload.getErrorCode());
 			entity.setHttpStatus(payload.getHttpStatus());
@@ -65,6 +69,8 @@ public class Handler implements PageHandler<Context>,LogEnabled{
 
 			m_manager.offer(entity);
 		} else {
+			Cat.logEvent("Ip", "miss", Event.SUCCESS, request.getHeader("x-forwarded-for"));
+
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 

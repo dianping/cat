@@ -25,29 +25,30 @@ public class PostTest {
 			String url = null;
 
 			for (int i = 0; i < 100; i++) {
-				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&hs=200&ts="
+				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=200&ts="
 				      + time;
+				System.out.println(url);
 				read(url);
 			}
 
 			for (int i = 0; i < 150; i++) {
-				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&hs=300&ts="
+				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=300&ts="
 				      + time;
 				read(url);
 			}
 
 			for (int i = 0; i < 200; i++) {
-				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&hs=400&ts="
+				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=400&ts="
 				      + time;
 				read(url);
 			}
 			for (int i = 0; i < 250; i++) {
-				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&ec=300&ts="
+				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&ec=300&ts="
 				      + time;
 				read(url);
 			}
 			for (int i = 0; i < 300; i++) {
-				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&ec=400&ts="
+				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&ec=400&ts="
 				      + time;
 				read(url);
 			}
@@ -63,7 +64,7 @@ public class PostTest {
 
 	@Test
 	public void test() throws Exception {
-		String url = "http://localhost:2765/broker-service/api/batch?v=1.0";
+		String url = "http://localhost:2765/broker-service/api/singel?v=1.0";
 		URLConnection conn = new URL(url).openConnection();
 
 		conn.setDoOutput(true);
