@@ -21,11 +21,11 @@ import com.dianping.cat.report.page.PieChart.Item;
 
 public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
 
-	private static final String COUNT = "访问量";
+	private static final String COUNT = "访问量(次数)";
 
-	private static final String AVG = "响应时间";
+	private static final String AVG = "响应时间(ms)";
 
-	private static final String SUCESS_PERCENT = "调用成功率";
+	private static final String SUCESS_PERCENT = "调用成功率(%)";
 
 	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {

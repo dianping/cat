@@ -258,6 +258,7 @@
 					WHERE <FIELD name='period'/> = ${period}
 					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name}
+					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
 			<query name="find-all-by-period" type="SELECT" multiple="true">
@@ -312,6 +313,7 @@
 					WHERE <FIELD name='period'/> = ${period}
 					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name} 
+					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
 		</query-defs>
@@ -545,6 +547,7 @@
 					WHERE <FIELD name='period'/> = ${period}
 					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name} 
+					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
 			<query name="delete-report-by-domain-name-period" type="DELETE">
@@ -575,6 +578,7 @@
 					WHERE <FIELD name='period'/> = ${period}
 					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name} 
+					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
 			<query name="delete-report-by-domain-name-period" type="DELETE">
