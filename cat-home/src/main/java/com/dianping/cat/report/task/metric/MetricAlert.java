@@ -15,8 +15,6 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.monitorrules.entity.Condition;
@@ -30,16 +28,10 @@ import com.dianping.cat.system.tool.MailSMS;
 public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	private MetricConfigManager m_metricConfigManager;
-
-	@Inject
-	private ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
 	private MailSMS m_mailSms;
 
 	@Inject
-	private AlertConfig m_alertConfig;
+	private MetricAlertConfig m_alertConfig;
 
 	@Inject
 	private AlertInfo m_alertInfo;

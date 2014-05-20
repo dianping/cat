@@ -44,7 +44,7 @@ public class AlertConfigTest {
 
 	@Test
 	public void test() {
-		AlertConfig alertConfig = new AlertConfig();
+		MetricAlertConfig alertConfig = new MetricAlertConfig();
 		MetricItemConfig config = new MetricItemConfig();
 
 		double baseline[] = { 100, 100 };
@@ -102,7 +102,7 @@ public class AlertConfigTest {
 
 	@Test
 	public void testRule() {
-		AlertConfig alertConfig = new AlertConfig();
+		MetricAlertConfig alertConfig = new MetricAlertConfig();
 		MetricItemConfig config = new MetricItemConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
 

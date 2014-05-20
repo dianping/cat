@@ -16,7 +16,7 @@ import com.dianping.cat.home.monitorrules.entity.Subcondition;
 import com.dianping.cat.core.dal.Project;
 import com.site.helper.Splitters;
 
-public class AlertConfig {
+public class MetricAlertConfig {
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 

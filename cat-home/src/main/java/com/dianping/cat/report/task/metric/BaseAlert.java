@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -100,7 +101,11 @@ public abstract class BaseAlert {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (MetricItemConfig config : configs) {
-			processMetricItemConfig(config, minute, productLine);
+			try {
+				processMetricItemConfig(config, minute, productLine);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 
