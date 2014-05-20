@@ -21,6 +21,13 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<configuration>
+				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+			</configuration>
+		</component>
+		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
