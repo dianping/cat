@@ -224,7 +224,7 @@
 				<param name="domain" />
 				<statement><![CDATA[
 				SELECT <FIELDS/> 
-				FROM <TABLE/>  WHERE <FIELD name='domain'/> = ${domain}
+				FROM <TABLE/>  WHERE binary(<FIELD name='domain'/>) = binary(${domain})
 				]]></statement>
 			</query>
 		</query-defs>
