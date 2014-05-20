@@ -129,7 +129,7 @@
 							<goal>plexus</goal>
 						</goals>
 						<configuration>
-							<className>com.dianping.cat.build.ComponentsConfigurator</className>
+							<className>com.dianping.cat.broker.build.ComponentsConfigurator</className>
 							<env>dev</env>
 						</configuration>
 					</execution>
