@@ -15,7 +15,7 @@ public class SwitchAlertConfig extends BaseAlertConfig {
 	public List<String> buildExceptionSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
 
-		phones.add("18662513308");
+		//phones.add("18662513308");
 		return phones;
 	}
 
@@ -41,7 +41,7 @@ public class SwitchAlertConfig extends BaseAlertConfig {
 		List<String> phones = new ArrayList<String>();
 		// String phonesList = productLine.getPhone();
 
-		phones.add("18662513308");
+		//phones.add("18662513308");
 		// phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
 		return phones;
 	}
