@@ -11,41 +11,47 @@ import org.unidal.helper.Urls;
 
 public class PostTest {
 
+	public String m_localhost = "localhost:2765";
+
+	public String m_online = "114.80.165.63";
+
 	@Test
 	public void testSingle() throws Exception {
+		String host = m_online;
+
 		while (true) {
 
 			long time = System.currentTimeMillis();
 			String url = null;
 
 			for (int i = 0; i < 100; i++) {
-				url = "http://localhost:2765/broker-service/api?v=1.0&tu=http://www.dianping.com/movie&d=100&hs=200&ts="
+				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&hs=200&ts="
 				      + time;
 				read(url);
 			}
 
 			for (int i = 0; i < 150; i++) {
-				url = "http://localhost:2765/broker-service/api?v=1.0&tu=http://www.dianping.com/movie&d=100&hs=300&ts="
+				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&hs=300&ts="
 				      + time;
 				read(url);
 			}
 
 			for (int i = 0; i < 200; i++) {
-				url = "http://localhost:2765/broker-service/api?v=1.0&tu=http://www.dianping.com/movie&d=100&hs=400&ts="
+				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&hs=400&ts="
 				      + time;
 				read(url);
 			}
 			for (int i = 0; i < 250; i++) {
-				url = "http://localhost:2765/broker-service/api?v=1.0&tu=http://www.dianping.com/movie&d=100&ec=300&ts="
+				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&ec=300&ts="
 				      + time;
 				read(url);
 			}
 			for (int i = 0; i < 300; i++) {
-				url = "http://localhost:2765/broker-service/api?v=1.0&tu=http://www.dianping.com/movie&d=100&ec=400&ts="
+				url = "http://" + host + "/broker-service/api?v=1.0&tu=http://www.dianping.com/test&d=100&ec=400&ts="
 				      + time;
 				read(url);
 			}
-			Thread.sleep(20*1000);
+			Thread.sleep(20 * 1000);
 		}
 	}
 
