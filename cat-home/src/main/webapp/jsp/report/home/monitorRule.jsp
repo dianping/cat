@@ -24,8 +24,8 @@
 <p> 1).每一个rule元素为规则的基本单位。请按照需求添加一个rule元素或者对某一个rule进行修改</p>
 <p> 2).rule元素由两个部分组成：监控对象与监控规则</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;a.监控对象：由metric－item元素匹配。metric-item元素可以有多个。metric-item支持两种匹配方式：</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 按照id匹配。此种方式适用于匹配一个具体的监控指标。此时type为id，内容为 <b>产品线:项目名:指标</b></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) 按照正则表达式匹配。此种情况适用于同时匹配多个监控对象。此时type为regex，内容仍形如 <b>产品线:项目名:指标</b>，三者用冒号分割。三者每一项都可以写为正则表达式。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 按照id匹配。此种方式适用于匹配一个具体的监控指标。此时type为id，内容为 <b>项目名:类型:指标</b></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) 按照正则表达式匹配。此种情况适用于同时匹配多个监控对象。此时type为regex，内容仍形如 <b>产品线(s)项目名(s)指标</b>，三者用(s)分割。三者每一项都可以写为正则表达式。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;b.监控条件配置：由config元素组成，每个config代表一个时间段的规则，由starttime和endtime两个属性确定。时间的配置格式为：“hh:mm”，请注意hh为24小时制。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;config元素由多个监控条件组成，条件由condition元素表示。一个config下的多个condition为并联关系，当一个condition被触发，conditon所在的整个rule就被触发。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;condition元素中的minute属性表示该条件的持续时间。设定时间单位为分钟。当指标在设定的时间长度内连续触发了该条规则，才会出发该condition。</p>
