@@ -11,7 +11,6 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.DefaultUrlPatternHandler;
 import com.dianping.cat.config.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
-import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 
 public class UrlPatternConvertTest {
 
@@ -32,7 +31,7 @@ public class UrlPatternConvertTest {
 
 	private class MockRuleManger extends UrlPatternConfigManager {
 		public void register() {
-			List<PatternItem> rules = getPatternItem(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END);
+			List<PatternItem> rules = getPatternItem(Constants.FRONT_END);
 
 			m_handler = new DefaultUrlPatternHandler();
 			m_handler.register(rules);
@@ -45,7 +44,7 @@ public class UrlPatternConvertTest {
 			return item;
 		}
 
-		public List<PatternItem> getPatternItem(int type, String domain) {
+		public List<PatternItem> getPatternItem(String domain) {
 			List<PatternItem> rules = new ArrayList<PatternItem>();
 			rules.add(buildRule("http://www.dianping.com/{City}/food"));
 

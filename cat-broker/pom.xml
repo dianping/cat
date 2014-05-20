@@ -24,15 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-consumer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-consumer-advanced</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-hadoop</artifactId>
+			<artifactId>cat-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

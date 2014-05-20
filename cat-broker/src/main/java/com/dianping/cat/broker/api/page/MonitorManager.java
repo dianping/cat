@@ -107,19 +107,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 				try {
 					String ip = entity.getIp();
 					IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
-					
-					if(ipInfo==null){
-						ipInfo = new IpInfo();
-						if(m_total%2==1){
-							ipInfo.setChannel("中国移动");
-							ipInfo.setProvince("江苏省");
-							ipInfo.setCity("南京市");
-						}else{
-							ipInfo.setChannel("中国联通");
-							ipInfo.setProvince("江苏省");
-							ipInfo.setCity("盐城市");
-						}
-					}
+				
 					if (ipInfo != null) {
 						String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
 						String channel = ipInfo.getChannel();
