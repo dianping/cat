@@ -50,8 +50,8 @@ public class SwitchAlertConfig extends BaseAlertConfig {
 		for (Config con : configs) {
 			int dataLength = queryMaxMinute(con);
 
-			double[] validVal = getLastMinutes(value, dataLength);
-			double[] validBase = getLastMinutes(baseline, dataLength);
+			double[] validVal = buildLastMinutes(value, dataLength);
+			double[] validBase = buildLastMinutes(baseline, dataLength);
 			Pair<Boolean, String> result = checkDataByConfig(validVal, validBase, type, con);
 
 			if (result.getKey() == true) {
@@ -61,15 +61,6 @@ public class SwitchAlertConfig extends BaseAlertConfig {
 		return new Pair<Boolean, String>(false, "");
 	}
 
-	private double[] getLastMinutes(double[] doubleList, int remainCount) {
-		double[] result = new double[remainCount];
-		int startIndex = doubleList.length - remainCount;
-
-		for (int i = 0; i < remainCount; i++) {
-			result[i] = doubleList[startIndex + i];
-		}
-		return result;
-	}
 
 	private int queryMaxMinute(Config con) {
 		int maxMinute = 0;
