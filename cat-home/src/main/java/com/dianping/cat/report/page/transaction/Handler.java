@@ -163,7 +163,7 @@ public class Handler implements PageHandler<Context> {
 	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())//
+		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())
 		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
@@ -297,7 +297,7 @@ public class Handler implements PageHandler<Context> {
 		case GROUP_GRAPHS:
 			report = getTransactionGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
-			
+
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
