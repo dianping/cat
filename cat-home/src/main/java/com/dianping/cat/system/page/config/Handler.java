@@ -2,7 +2,6 @@ package com.dianping.cat.system.page.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -95,7 +94,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricRuleConfigManager m_metricRuleConfigManager;
-	
+
 	@Inject
 	private DomainNavManager m_manager;
 
@@ -234,7 +233,7 @@ public class Handler implements PageHandler<Context> {
 			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
 			break;
-		
+
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			break;
@@ -332,8 +331,8 @@ public class Handler implements PageHandler<Context> {
 			      payload.getException()));
 			break;
 		case EXCEPTION_THRESHOLD_ADD:
-			model.setExceptionList(getExceptionList());
-			model.setDomainList(getDoaminList());
+			model.setExceptionList(queryExceptionList());
+			model.setDomainList(queryDoaminList());
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
 			updateExceptionLimit(payload);
@@ -387,29 +386,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private List<String> getDoaminList() {
-		Collection<ProductLine> productLines = m_productLineConfigManger.queryAllProductLines().values();
-		Set<String> domains = new HashSet<String>();
-
-		for (ProductLine line : productLines) {
-			domains.addAll(m_productLineConfigManger.queryDomainsByProductLine(line.getId()));
-		}
-		return new ArrayList<String>(domains);
-	}
-
-	private List<String> getExceptionList() {
-		long current = System.currentTimeMillis();
-		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR - TimeUtil.ONE_DAY);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
-		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
-		Set<String> exceptions = new HashSet<String>();
-
-		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
-			exceptions.addAll(domain.getValue().getExceptionItems().keySet());
-		}
-		return new ArrayList<String>(exceptions);
 	}
 
 	private void metricConfigAdd(Payload payload, Model model) {
@@ -473,6 +449,29 @@ public class Handler implements PageHandler<Context> {
 		}
 		Collections.sort(projects, new ProjectCompartor());
 		return projects;
+	}
+
+	private List<String> queryDoaminList() {
+		List<String> result = new ArrayList<String>();
+		List<Project> projects = queryAllProjects();
+
+		for (Project p : projects) {
+			result.add(p.getDomain());
+		}
+		return result;
+	}
+
+	private List<String> queryExceptionList() {
+		long current = System.currentTimeMillis();
+		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR - TimeUtil.ONE_DAY);
+		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
+		Set<String> exceptions = new HashSet<String>();
+
+		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
+			exceptions.addAll(domain.getValue().getExceptionItems().keySet());
+		}
+		return new ArrayList<String>(exceptions);
 	}
 
 	private Project queryProjectById(int projectId) {
