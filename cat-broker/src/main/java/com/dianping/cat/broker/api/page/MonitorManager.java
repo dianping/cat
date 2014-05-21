@@ -145,7 +145,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 				} else {
 					Cat.logEvent("IpService", "NotFound", Event.SUCCESS, ip);
 
-					m_logger.error(String.format("ip service can't resolve ip: ", ip));
+					m_logger.error(String.format("ip service can't resolve ip  %s", ip));
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
