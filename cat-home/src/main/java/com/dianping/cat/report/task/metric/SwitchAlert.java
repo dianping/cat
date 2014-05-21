@@ -30,7 +30,7 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 	private MetricRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
-	private MailSMS m_mailSms;
+	protected MailSMS m_mailSms;
 
 	@Inject
 	private SwitchAlertConfig m_alertConfig;
@@ -198,7 +198,7 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 
 	private void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+		//List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
 		String title = m_alertConfig.buildMailTitle(productLine, config);
 
 		m_logger.info(title + " " + content + " " + emails);
