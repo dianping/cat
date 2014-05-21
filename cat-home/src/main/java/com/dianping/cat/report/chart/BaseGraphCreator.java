@@ -270,8 +270,9 @@ public abstract class BaseGraphCreator implements LogEnabled {
 			Map<String, double[]> newCurrentValues = new LinkedHashMap<String, double[]>();
 			int step = m_dataExtractor.getStep();
 			
-			if (step <= 0)
+			if (step <= 0){
 				return allCurrentValues;
+			}
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
 			int removeLength = 60 / step - (minute / step);
 

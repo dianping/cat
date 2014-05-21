@@ -2,7 +2,7 @@ package com.dianping.cat.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -90,10 +90,8 @@ public class UrlPatternConfigManager implements Initializable {
 		return m_UrlPattern.findPatternItem(key);
 	}
 
-	public List<PatternItem> queryUrlPatternRules() {
-		ArrayList<PatternItem> patterns = new ArrayList<PatternItem>(m_UrlPattern.getPatternItems().values());
-
-		return patterns;
+	public Collection<PatternItem> queryUrlPatternRules() {
+		return m_UrlPattern.getPatternItems().values();
 	}
 
 	public void refreshUrlPatternConfig() throws DalException, SAXException, IOException {
@@ -145,7 +143,7 @@ public class UrlPatternConfigManager implements Initializable {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(60 * 1000L);
+					Thread.sleep(10 * 1000L);
 				} catch (InterruptedException e) {
 					active = false;
 				}

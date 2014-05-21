@@ -1,18 +1,15 @@
 package com.dianping.cat.config;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 
 public interface UrlPatternHandler {
 
 	/**
-	 * register aggregation rule to handler
-	 * 
-	 * @param formats
-	 *           page type and domain to rule List Map
+	 * register url rule to handler
 	 */
-	public void register(List<PatternItem> rules);
+	public void register(Collection<PatternItem> rules);
 
 	/**
 	 * parse input to output use aggregation rule

@@ -2,6 +2,10 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
+	<filter>
+		<filter-name>cat-filter</filter-name>
+		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
+	</filter>
 	<servlet>
 		<servlet-name>mvc-servlet</servlet-name>
 		<servlet-class>org.unidal.web.MVC</servlet-class>
@@ -15,6 +19,17 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/jsp/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
 	<servlet-mapping>
 		<servlet-name>mvc-servlet</servlet-name>
 		<url-pattern>/api/*</url-pattern>

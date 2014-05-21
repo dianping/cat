@@ -21,11 +21,11 @@ import com.dianping.cat.report.page.PieChart.Item;
 
 public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
 
-	private static final String COUNT = "访问量";
+	private static final String COUNT = "访问量(次数)";
 
-	private static final String AVG = "响应时间";
+	private static final String AVG = "响应时间(ms)";
 
-	private static final String SUCESS_PERCENT = "调用成功率";
+	private static final String SUCESS_PERCENT = "调用成功率(%)";
 
 	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
@@ -55,7 +55,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 
 	@Override
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		return null;
+		throw new RuntimeException("unsupport in user monitor graph!");
 	}
 
 	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
@@ -142,7 +142,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 				int id = segment.getId();
 
 				if (key.endsWith(Monitor.HIT)) {
-					count[id] = segment.getCount();
+					count[id] = segment.getCount() * 10;
 					avg[id] = segment.getAvg();
 				} else if (key.endsWith(Monitor.ERROR)) {
 					error[id] = segment.getCount();
@@ -151,12 +151,10 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 		}
 
 		for (int i = 0; i < 60; i++) {
-			double countNumber = count[i];
-			double errerNumber = error[i];
-			double sum = countNumber + errerNumber;
+			double sum = count[i] + error[i];
 
 			if (sum > 0) {
-				successPercent[i] = countNumber * 100 / sum;
+				successPercent[i] = count[i] * 100 / sum;
 			} else {
 				successPercent[i] = 100;
 			}

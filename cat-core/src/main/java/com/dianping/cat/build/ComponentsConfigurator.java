@@ -26,7 +26,6 @@ import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
-import com.dianping.cat.message.spi.core.TcpSocketReceiver.DecodeMessageTask;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -54,8 +53,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
-
-		all.add(C(DecodeMessageTask.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 

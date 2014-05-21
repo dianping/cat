@@ -1,6 +1,7 @@
 package com.dianping.cat.config;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,15 +9,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 
-public class DefaultUrlPatternHandler implements UrlPatternHandler {
+public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 
 	private TrieTreeNode m_formats = new TrieTreeNode();
 
 	private Set<String> m_orignals = new HashSet<String>();
 
 	private Map<String, String> m_urlToId = new HashMap<String, String>();
+
+	private Logger m_logger;
 
 	/**
 	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
@@ -156,11 +162,15 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 	}
 
 	@Override
-	public void register(List<PatternItem> rules) {
+	public void register(Collection<PatternItem> rules) {
+		m_logger.info("register url pattern start");
+		
 		TrieTreeNode formats = new TrieTreeNode();
 
 		for (PatternItem item : rules) {
 			String format = item.getPattern();
+			
+			m_logger.info(String.format("url pattern id : %s ,pattern : %s", item.getName(), item.getPattern()));
 			if (format == null || format.isEmpty()) {
 				continue;
 			}
@@ -188,5 +198,12 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler {
 			buildFormatTree(formats, key1.toCharArray(), key2.toCharArray(), value);
 		}
 		m_formats = formats;
+
+		m_logger.info("register url pattern end");
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }
