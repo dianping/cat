@@ -143,7 +143,7 @@ public class UrlPatternConfigManager implements Initializable {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(60 * 1000L);
+					Thread.sleep(10 * 1000L);
 				} catch (InterruptedException e) {
 					active = false;
 				}
