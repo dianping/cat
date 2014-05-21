@@ -202,8 +202,8 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 		String title = m_alertConfig.buildMailTitle(productLine, config);
 
 		m_logger.info(title + " " + content + " " + emails);
-		m_mailSms.sendEmail(title, content, emails);
-		m_mailSms.sendSms(title + " " + content, content, phones);
+		//m_mailSms.sendEmail(title, content, emails);
+		//m_mailSms.sendSms(title + " " + content, content, phones);
 
 		Cat.logEvent("SwitchAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
