@@ -8,17 +8,19 @@ import com.dianping.cat.broker.api.page.IpService.IpInfo;
 
 public class IpServiceTest extends ComponentTestCase {
 	@Test
+	public void getSystemTime() throws Exception {
+		System.err.println(System.currentTimeMillis() - 60 * 1000 * 2);
+	}
+
+	@Test
 	public void test() throws Exception {
 		IpService service = (IpService) lookup(IpService.class);
-		
-		System.err.println(service.findIpInfoByString("10.10.253.20"));
-		
 
 		for (int i = 0; i < 1000; i++) {
 			String ip = i % 255 + "." + i % 255 + "." + i % 255 + "." + i % 255;
 			IpInfo info = service.findIpInfoByString(ip);
-			
-			if(info!=null){
+
+			if (info != null) {
 				System.out.println(info.getChannel());
 				System.out.println(info.getCity());
 				System.out.println(info.getProvince());

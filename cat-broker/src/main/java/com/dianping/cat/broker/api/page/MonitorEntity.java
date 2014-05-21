@@ -15,19 +15,7 @@ public class MonitorEntity {
 
 	private String m_errorCode;
 
-	private String m_city;
-
-	private String m_channel;
-
 	private String m_ip;
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public String getCity() {
-		return m_city;
-	}
 
 	public double getDuration() {
 		return m_duration;
@@ -51,14 +39,6 @@ public class MonitorEntity {
 
 	public long getTimestamp() {
 		return m_timestamp;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public void setCity(String city) {
-		m_city = city;
 	}
 
 	public MonitorEntity setDuration(double duration) {
@@ -97,8 +77,7 @@ public class MonitorEntity {
 	@Override
 	public String toString() {
 		return "MonitorEntity [m_timestamp=" + m_timestamp + ", m_targetUrl=" + m_targetUrl + ", m_duration="
-		      + m_duration + ", m_httpStatus=" + m_httpStatus + ", m_errorCode=" + m_errorCode + ", m_city=" + m_city
-		      + ", m_channel=" + m_channel + ", m_ip=" + m_ip + "]";
+		      + m_duration + ", m_httpStatus=" + m_httpStatus + ", m_errorCode=" + m_errorCode + ", m_ip=" + m_ip + "]";
 	}
 
 }

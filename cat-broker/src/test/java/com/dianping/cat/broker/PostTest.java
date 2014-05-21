@@ -19,7 +19,12 @@ public class PostTest {
 
 	@Test
 	public void test1() throws UnsupportedEncodingException {
+		System.err.println(System.currentTimeMillis() - 60 * 1000 * 2);
 		String url = "v=1&c=1400650097	http://m.api.dianping.com/searchshop.api	0	200	0";
+
+		String url2 = "1400656368280\thttp://m.api.dianping.com/searchshop.api\t300\t200\t300\n";
+
+		System.out.println("http://114.80.165.63/broker-service/api/batch?v=1&c="+URLEncoder.encode(url2, "utf-8"));
 
 		System.out.println("http://114.80.165.63/broker-service/api/batch?" + URLEncoder.encode(url, "utf-8"));
 	}
