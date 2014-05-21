@@ -19,8 +19,6 @@ public class IpServiceTest extends ComponentTestCase {
 				System.out.println(info.getChannel());
 				System.out.println(info.getCity());
 				System.out.println(info.getProvince());
-			}else{
-				System.err.println("====");
 			}
 		}
 	}

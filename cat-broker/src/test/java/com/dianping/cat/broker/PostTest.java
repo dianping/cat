@@ -21,35 +21,35 @@ public class PostTest {
 
 		while (true) {
 
-			long time = System.currentTimeMillis();
+			long time = System.currentTimeMillis() - 60 * 1000 * 5;
 			String url = null;
 
 			for (int i = 0; i < 100; i++) {
-				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=200&ts="
-				      + time;
+				url = "http://" + host
+				      + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=200&ts=" + time;
 				System.out.println(url);
 				read(url);
 			}
 
 			for (int i = 0; i < 150; i++) {
-				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=300&ts="
-				      + time;
+				url = "http://" + host
+				      + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=300&ts=" + time;
 				read(url);
 			}
 
 			for (int i = 0; i < 200; i++) {
-				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=400&ts="
-				      + time;
+				url = "http://" + host
+				      + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&hs=400&ts=" + time;
 				read(url);
 			}
 			for (int i = 0; i < 250; i++) {
-				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&ec=300&ts="
-				      + time;
+				url = "http://" + host
+				      + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&ec=300&ts=" + time;
 				read(url);
 			}
 			for (int i = 0; i < 300; i++) {
-				url = "http://" + host + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&ec=400&ts="
-				      + time;
+				url = "http://" + host
+				      + "/broker-service/api/singel?v=1.0&tu=http://www.dianping.com/test&d=100&ec=400&ts=" + time;
 				read(url);
 			}
 			Thread.sleep(20 * 1000);
