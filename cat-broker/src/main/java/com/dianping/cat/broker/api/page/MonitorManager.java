@@ -108,6 +108,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 			if (ipInfo != null) {
 				Transaction t = Cat.newTransaction("Monitor", url);
+				
 				try {
 					String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
 					String channel = ipInfo.getChannel();

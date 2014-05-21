@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Date;
 
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -17,14 +16,12 @@ public class PostTest {
 	public String m_localhost = "localhost:2765";
 
 	public String m_online = "114.80.165.63";
-	
+
 	@Test
-	public void test1() throws UnsupportedEncodingException{
-		
-		System.out.println(System.currentTimeMillis()-60*1000*2);
-		String url="v=1&c=1400650097	http://m.api.dianping.com/searchshop.api	0	200	0";
-		
-		System.out.println("http://114.80.165.63/broker-service/api/batch?"+URLEncoder.encode(url, "utf-8"));
+	public void test1() throws UnsupportedEncodingException {
+		String url = "v=1&c=1400650097	http://m.api.dianping.com/searchshop.api	0	200	0";
+
+		System.out.println("http://114.80.165.63/broker-service/api/batch?" + URLEncoder.encode(url, "utf-8"));
 	}
 
 	@Test
