@@ -151,7 +151,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 		}
 
 		for (int i = 0; i < 60; i++) {
-			double countNumber = count[i];
+			double countNumber = count[i] * 10.0;
 			double errerNumber = error[i];
 			double sum = countNumber + errerNumber;
 
