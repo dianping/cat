@@ -108,18 +108,18 @@
                  	 </select> 
                  	 运营商
                  	 <select style="width:120px;" name="channel" id="channel">
-	                           <option value="">ALL</option>
-	                           <option value="中国电信">中国电信</option>
-	                           <option value="中国移动">中国移动</option>
-	                           <option value="中国联通">中国联通</option>
-	                           <option value="中国铁通">中国铁通</option>
-	                           <option value="其他">其他</option>
+                           <option value="">ALL</option>
+                           <option value="中国电信">中国电信</option>
+                           <option value="中国移动">中国移动</option>
+                           <option value="中国联通">中国联通</option>
+                           <option value="中国铁通">中国铁通</option>
+                           <option value="其他">其他</option>
                  	 </select>
                  	 查询类型
                  	 <select style="width:120px;" name="type" id="type">
-	                           <option value="info">访问情况</option>
-	                           <option value="httpStatus">HttpStatus</option>
-	                           <option value="errorCode">ErrorCode</option>
+                           <option value="info">访问情况</option>
+                           <option value="httpStatus">HttpStatus</option>
+                           <option value="errorCode">ErrorCode</option>
                  	 </select>
                  	 </th>
                  	 </tr>
