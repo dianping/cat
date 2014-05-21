@@ -21,14 +21,23 @@ public abstract class BaseAlertConfig {
 
 	public abstract List<String> buildExceptionSMSReceivers(ProductLine productLine);
 
+	protected double[] buildLastMinutes(double[] doubleList, int remainCount) {
+		if (doubleList.length <= remainCount) {
+			return doubleList;
+		}
+
+		double[] result = new double[remainCount];
+		int startIndex = doubleList.length - remainCount;
+
+		for (int i = 0; i < remainCount; i++) {
+			result[i] = doubleList[startIndex + i];
+		}
+		return result;
+	}
+
 	public abstract List<String> buildMailReceivers(ProductLine productLine);
 
 	public abstract List<String> buildMailReceivers(Project project);
-
-	public abstract List<String> buildSMSReceivers(ProductLine productLine);
-
-	public abstract Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type,
-	      List<Config> configs);
 
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
 		StringBuilder sb = new StringBuilder();
@@ -38,7 +47,12 @@ public abstract class BaseAlertConfig {
 		return sb.toString();
 	}
 
-	protected Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type, Config con) {
+	public abstract List<String> buildSMSReceivers(ProductLine productLine);
+
+	public abstract Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type,
+	      List<Config> configs);
+
+	protected Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
@@ -53,14 +67,13 @@ public abstract class BaseAlertConfig {
 
 			if (baseline[i] <= 0) {
 				baseline[i] = 100;
+			}
+
+			if (!checkDataByMinute(condition, value[i], baseline[i])) {
 				return new Pair<Boolean, String>(false, "");
 			}
-			if (type == MetricType.COUNT || type == MetricType.SUM) {
-				if (!judgeByRule(con, value[i], baseline[i], i, length)) {
-					return new Pair<Boolean, String>(false, "");
-				}
-			}
 		}
+
 		double percent = (1 - valueSum / baselineSum) * 100;
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -72,6 +85,55 @@ public abstract class BaseAlertConfig {
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
 
+	protected Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type, Config config) {
+		long ruleStartTime;
+		long ruleEndTime;
+		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+
+		try {
+			ruleStartTime = getMillsByString(config.getStarttime());
+			ruleEndTime = getMillsByString(config.getEndtime()) + ONE_MINUTE_MILLSEC;
+		} catch (Exception ex) {
+			ruleStartTime = 0L;
+			ruleEndTime = 86400000L;
+		}
+
+		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+			return new Pair<Boolean, String>(false, "");
+		}
+
+		for (Condition condition : config.getConditions()) {
+			int conditionMinute = condition.getMinute();
+			double[] valueValid = buildLastMinutes(value, conditionMinute);
+			double[] baselineValid = buildLastMinutes(baseline, conditionMinute);
+
+			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, baselineValid, condition);
+
+			if (condResult.getKey() == true) {
+				return condResult;
+			}
+		}
+
+		return new Pair<Boolean, String>(false, "");
+	}
+
+	private boolean checkDataByMinute(Condition condition, double value, double baseline) {
+		for (Subcondition subCondition : condition.getSubconditions()) {
+			String ruleType = subCondition.getType();
+			double ruleValue = Double.parseDouble(subCondition.getText());
+			RuleType rule = RuleType.getByTypeId(ruleType);
+
+			if (rule != null) {
+				boolean isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
+
+				if (!isSubRuleTriggered) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	protected Long getMillsByString(String time) throws Exception {
 		String[] times = time.split(":");
 		int hour = Integer.parseInt(times[0]);
@@ -79,62 +141,6 @@ public abstract class BaseAlertConfig {
 		long result = hour * 60 * 60 * 1000 + minute * 60 * 1000;
 
 		return result;
-	}
-
-	private boolean judgeByRule(Config ruleConfig, double value, double baseline, int index, int length) {
-		boolean isRuleTriggered = false;
-
-		long ruleStartTime;
-		long ruleEndTime;
-		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
-
-		try {
-			ruleStartTime = getMillsByString(ruleConfig.getStarttime());
-			ruleEndTime = getMillsByString(ruleConfig.getEndtime()) + ONE_MINUTE_MILLSEC;
-		} catch (Exception ex) {
-			ruleStartTime = 0L;
-			ruleEndTime = 86400000L;
-		}
-
-		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
-			return false;
-		}
-
-		for (Condition condition : ruleConfig.getConditions()) {
-			if (isRuleTriggered) {
-				break;
-			}
-
-			int minute = condition.getMinute();
-
-			if (index < length - minute) {
-				continue;
-			}
-
-			boolean isSubRuleTriggered = true;
-
-			for (Subcondition subCondition : condition.getSubconditions()) {
-				if (!isSubRuleTriggered) {
-					break;
-				}
-
-				String ruleType = subCondition.getType();
-				double ruleValue = Double.parseDouble(subCondition.getText());
-				RuleType rule = RuleType.getByTypeId(ruleType);
-
-				if (rule == null) {
-					continue;
-				} else {
-					isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
-				}
-			}
-
-			if (isSubRuleTriggered) {
-				isRuleTriggered = true;
-			}
-		}
-
-		return isRuleTriggered;
 	}
 
 }

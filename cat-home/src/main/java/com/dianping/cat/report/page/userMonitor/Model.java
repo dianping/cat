@@ -13,7 +13,7 @@ import com.dianping.cat.report.page.PieChart;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
-	private List<PatternItem> m_pattermItems;
+	private Collection<PatternItem> m_pattermItems;
 
 	private List<String> m_cities;
 
@@ -72,7 +72,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
-	public List<PatternItem> getPattermItems() {
+	public Collection<PatternItem> getPattermItems() {
 		return m_pattermItems;
 	}
 
@@ -104,7 +104,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_lineCharts = lineCharts;
 	}
 
-	public void setPattermItems(List<PatternItem> pattermItems) {
+	public void setPattermItems(Collection<PatternItem> pattermItems) {
 		m_pattermItems = pattermItems;
 	}
 

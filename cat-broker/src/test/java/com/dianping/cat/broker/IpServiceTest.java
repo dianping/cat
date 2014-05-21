@@ -10,6 +10,9 @@ public class IpServiceTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		IpService service = (IpService) lookup(IpService.class);
+		
+		System.err.println(service.findIpInfoByString("10.10.253.20"));
+		
 
 		for (int i = 0; i < 1000; i++) {
 			String ip = i % 255 + "." + i % 255 + "." + i % 255 + "." + i % 255;
