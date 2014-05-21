@@ -6,6 +6,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	PROJECT_UPDATE("update"),
 
 	PROJECT_UPDATE_SUBMIT("updateSubmit"),
+	
+	PROJECT_DELETE("projectDelete"),
 
 	AGGREGATION_ALL("aggregations"),
 

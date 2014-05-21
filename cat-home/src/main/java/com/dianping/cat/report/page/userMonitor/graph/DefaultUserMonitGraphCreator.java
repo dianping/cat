@@ -142,7 +142,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 				int id = segment.getId();
 
 				if (key.endsWith(Monitor.HIT)) {
-					count[id] = segment.getCount();
+					count[id] = segment.getCount() * 10;
 					avg[id] = segment.getAvg();
 				} else if (key.endsWith(Monitor.ERROR)) {
 					error[id] = segment.getCount();
@@ -151,12 +151,10 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 		}
 
 		for (int i = 0; i < 60; i++) {
-			double countNumber = count[i] * 10.0;
-			double errerNumber = error[i];
-			double sum = countNumber + errerNumber;
+			double sum = count[i] + error[i];
 
 			if (sum > 0) {
-				successPercent[i] = countNumber * 100 / sum;
+				successPercent[i] = count[i] * 100 / sum;
 			} else {
 				successPercent[i] = 100;
 			}

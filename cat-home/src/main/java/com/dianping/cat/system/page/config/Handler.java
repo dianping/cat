@@ -109,6 +109,17 @@ public class Handler implements PageHandler<Context> {
 		m_exceptionConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
 	}
 
+	private void deleteProject(Payload payload) {
+		try {
+			Project proto = new Project();
+			proto.setId(payload.getProjectId());
+			proto.setKeyId(payload.getProjectId());
+			m_projectDao.deleteByPK(proto);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	private void graphEdgeConfigAdd(Payload payload, Model model) {
 		String type = payload.getType();
 		String from = payload.getFrom();
@@ -203,7 +214,10 @@ public class Handler implements PageHandler<Context> {
 			updateProject(payload);
 			model.setProjects(queryAllProjects());
 			break;
-
+		case PROJECT_DELETE:
+			deleteProject(payload);
+			model.setProjects(queryAllProjects());
+			break;
 		case AGGREGATION_ALL:
 			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
 			break;
