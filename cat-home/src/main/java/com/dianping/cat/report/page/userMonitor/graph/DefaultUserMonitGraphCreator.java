@@ -55,7 +55,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 
 	@Override
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		return null;
+		throw new RuntimeException("unsupport in user monitor graph!");
 	}
 
 	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
