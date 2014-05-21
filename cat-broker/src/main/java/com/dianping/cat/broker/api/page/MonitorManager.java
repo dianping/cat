@@ -103,13 +103,12 @@ public class MonitorManager implements Initializable, LogEnabled {
 		String url = getFormatUrl(targetUrl);
 
 		if (url != null) {
-			Transaction t = Cat.newTransaction("Monitor", url);
+			String ip = entity.getIp();
+			IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
 
-			try {
-				String ip = entity.getIp();
-				IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
-
-				if (ipInfo != null) {
+			if (ipInfo != null) {
+				Transaction t = Cat.newTransaction("Monitor", url);
+				try {
 					String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
 					String channel = ipInfo.getChannel();
 					String httpCode = entity.getHttpStatus();
@@ -142,20 +141,20 @@ public class MonitorManager implements Initializable, LogEnabled {
 						defaultMetric.setStatus("C");
 						defaultMetric.addData(String.valueOf(1));
 					}
-				} else {
-					Cat.logEvent("IpService", "NotFound", Event.SUCCESS, ip);
-
-					m_logger.error(String.format("ip service can't resolve ip  %s", ip));
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					Cat.logError(e);
+					t.setStatus(e);
+				} finally {
+					t.complete();
 				}
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				Cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				t.complete();
+			} else {
+				Cat.logEvent("IpService", "NotFound", Event.SUCCESS, ip);
+
+				m_logger.error(String.format("ip service can't resolve ip  %s", ip));
 			}
 		} else {
-			m_logger.info(String.format("no pattern for url", targetUrl));
+			m_logger.info(String.format("no url pattern %s", entity.toString()));
 		}
 	}
 

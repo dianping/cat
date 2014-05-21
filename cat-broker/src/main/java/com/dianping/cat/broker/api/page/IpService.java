@@ -63,19 +63,19 @@ public class IpService implements Initializable {
 	}
 
 	public IpInfo findIpInfoByString(String ip) {
-		String[] segments = ip.split("\\.");
-		if (segments.length != 4) {
-			return null;
-		}
-
 		try {
+			String[] segments = ip.split("\\.");
+			if (segments.length != 4) {
+				return null;
+			}
+
 			long ip_num = Long.parseLong(segments[0]) << 24;
 			ip_num += Integer.parseInt(segments[1]) << 16;
 			ip_num += Integer.parseInt(segments[2]) << 8;
 			ip_num += Integer.parseInt(segments[3]);
 
 			return findIpInfo(ip_num);
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -139,10 +139,10 @@ public class IpService implements Initializable {
 		initCorpMap(corpFile);
 		initIpTable(ipFile);
 	}
-	
+
 	public void initIpTable(String ipFile) {
 		BufferedReader reader = null;
-		
+
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(ipFile)));
 			int size = Integer.parseInt(reader.readLine());
