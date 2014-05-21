@@ -40,7 +40,7 @@
 						<td>${item.name}</td>
 						<td>${item.group}</td>
 						<td>${item.pattern}</td>
-						<td><a class='btn  btn-small btn-primary'href="?op=urlPatternUpdate&key=${item.name}">编辑</a>
+						<td>
 						<a class='delete btn  btn-small btn-danger' href="?op=urlPatternDelete&key=${item.name}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
