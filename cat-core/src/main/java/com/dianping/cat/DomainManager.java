@@ -67,62 +67,6 @@ public class DomainManager implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public boolean insert(String domain, String ip) {
-		try {
-			Hostinfo info = m_hostInfoDao.createLocal();
-
-			info.setDomain(domain);
-			info.setIp(ip);
-			m_hostInfoDao.insert(info);
-			m_domainsInCat.add(domain);
-			m_ipsInCat.put(ip, info);
-			return true;
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return false;
-	}
-
-	public void insertDomain(String domain) {
-		try {
-			m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalNotFoundException e) {
-			Project project = m_projectDao.createLocal();
-
-			project.setDomain(domain);
-			project.setProjectLine("Default");
-			project.setDepartment("Default");
-			try {
-				m_projectDao.insert(project);
-				m_domainsInCat.add(domain);
-			} catch (Exception ex) {
-				Cat.logError(ex);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	public String queryDomainByIp(String ip) {
-		String project = m_ipDomains.get(ip);
-
-		if (project == null) {
-			project = m_cmdbs.get(ip);
-
-			if (project == null) {
-				if (!m_unknownIps.containsKey(ip)) {
-					m_unknownIps.put(ip, ip);
-				}
-				return UNKNOWN_PROJECT;
-			}
-		}
-		return project;
-	}
-
-	public Hostinfo queryHostInfoByIp(String ip) {
-		return m_ipsInCat.get(ip);
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
@@ -146,6 +90,59 @@ public class DomainManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public boolean insert(String domain, String ip) {
+		try {
+			Hostinfo info = m_hostInfoDao.createLocal();
+
+			info.setDomain(domain);
+			info.setIp(ip);
+			m_hostInfoDao.insert(info);
+			m_domainsInCat.add(domain);
+			m_ipsInCat.put(ip, info);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return false;
+	}
+
+	public boolean insertDomain(String domain) {
+		Project project = m_projectDao.createLocal();
+
+		project.setDomain(domain);
+		project.setProjectLine("Default");
+		project.setDepartment("Default");
+		try {
+			m_projectDao.insert(project);
+			m_domainsInCat.add(domain);
+
+			return true;
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+		return false;
+	}
+
+	public String queryDomainByIp(String ip) {
+		String project = m_ipDomains.get(ip);
+
+		if (project == null) {
+			project = m_cmdbs.get(ip);
+
+			if (project == null) {
+				if (!m_unknownIps.containsKey(ip)) {
+					m_unknownIps.put(ip, ip);
+				}
+				return UNKNOWN_PROJECT;
+			}
+		}
+		return project;
+	}
+
+
+	public Hostinfo queryHostInfoByIp(String ip) {
+		return m_ipsInCat.get(ip);
+	}
 
 	public String queryHostnameByIp(String ip) {
 		String hostname = null;
@@ -270,40 +267,5 @@ public class DomainManager implements Initializable, LogEnabled {
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	public boolean insertDomain(String domain) {
-		Project project = m_projectDao.createLocal();
-
-		project.setDomain(domain);
-		project.setProjectLine("Default");
-		project.setDepartment("Default");
-		try {
-			m_projectDao.insert(project);
-			m_domainsInCat.add(domain);
-
-			return true;
-		} catch (Exception ex) {
-			Cat.logError(ex);
-		}
-		return false;
-	}
-
-	public boolean update(int id, String domain, String ip) {
-		try {
-			Hostinfo info = m_hostInfoDao.createLocal();
-
-			info.setId(id);
-			info.setDomain(domain);
-			info.setIp(ip);
-			info.setLastModifiedDate(new Date());
-			m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
-			m_domainsInCat.add(domain);
-			m_ipsInCat.put(ip, info);
-			return true;
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return false;
 	}
 }
