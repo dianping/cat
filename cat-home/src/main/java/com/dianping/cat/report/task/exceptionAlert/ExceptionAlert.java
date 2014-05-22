@@ -66,7 +66,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_configManager);
-
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
@@ -104,6 +103,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
+
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
@@ -149,6 +149,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		for (List<Item> item : items) {
 			for (Item i : item) {
 				String domain = i.getDomain();
+
 				ExceptionLimit totalExceptionLimit = m_configManager.queryDomainTotalLimit(domain);
 				int totalWarnLimit = -1;
 				int totalErrorLimit = -1;
@@ -165,6 +166,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 					double warnLimit = -1;
 					double errorLimit = -1;
 					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(domain, entry.getKey());
+					totalException += entry.getValue();
 
 					if (exceptionLimit != null) {
 						warnLimit = exceptionLimit.getWarning();
@@ -173,11 +175,9 @@ public class ExceptionAlert implements Task, LogEnabled {
 						if (errorLimit > 0 && value > errorLimit) {
 							findOrCreateDomain(alertExceptions, domain).add(
 							      new AlertException(exceptionName, ERROR_FLAG, value));
-							totalException++;
 						} else if (warnLimit > 0 && value > warnLimit) {
 							findOrCreateDomain(alertExceptions, domain).add(
 							      new AlertException(exceptionName, WARN_FLAG, value));
-							totalException++;
 						}
 					}
 				}
@@ -220,12 +220,12 @@ public class ExceptionAlert implements Task, LogEnabled {
 				errorExceptions.add(exception.getName());
 			}
 		}
-		String mailContent = "[异常警告] [" + domain + "] : ";
+		String mailContent = "[异常警告] [" + domain + "] : " + exceptions.toString();
 
 		m_logger.info(title + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(title.toString(), mailContent, emails);
 
-		Cat.logEvent("MetricAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
+		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
 	}
 
 	@Override

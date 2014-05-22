@@ -81,7 +81,7 @@
 						</c:choose></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">是否显示到业务网络大盘</td>
+						<td style="text-align: right" class="text-success">是否显示到网络监控</td>
 						<td><c:choose>
 							<c:when test="${model.productLine.networkDashboard}">
 								<input type="radio" name="productLine.networkDashboard" value="true" checked />是	
@@ -90,6 +90,19 @@
 							<c:otherwise>
 								<input type="radio" name="productLine.networkDashboard" value="true" />是
 								<input type="radio" name="productLine.networkDashboard" value="false" checked />否
+							</c:otherwise>
+						</c:choose></td>
+					</tr>
+					<tr>
+						<td style="text-align: right" class="text-success">是否显示到系统监控</td>
+						<td><c:choose>
+							<c:when test="${model.productLine.systemMonitorDashboard}">
+								<input type="radio" name="productLine.systemMonitorDashboard" value="true" checked />是	
+								<input type="radio" name="productLine.systemMonitorDashboard" value="false" />否
+							</c:when>
+							<c:otherwise>
+								<input type="radio" name="productLine.systemMonitorDashboard" value="true" />是
+								<input type="radio" name="productLine.systemMonitorDashboard" value="false" checked />否
 							</c:otherwise>
 						</c:choose></td>
 					</tr>

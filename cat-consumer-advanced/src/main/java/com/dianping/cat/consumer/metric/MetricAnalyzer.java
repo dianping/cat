@@ -75,20 +75,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return report;
 	}
 
-	private void insertDefaultProductline(String type, String domain) {
-	   String group;
-	   group = type;
-	   boolean userMonitor = false;
-	   boolean networkMonitor = false;
-
-	   if ("broker-service".equals(domain)) {
-	   	userMonitor = true;
-	   } else {
-	   	networkMonitor = true;
-	   }
-	   m_productLineConfigManager.insertIfNotExsit(group, domain, userMonitor, networkMonitor);
-   }
-
 	protected void loadReports() {
 		Bucket<String> reportBucket = null;
 
@@ -180,7 +166,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		ConfigItem config = parseValue(status, data);
 
 		if (!StringUtils.isEmpty(type)) {
-			insertDefaultProductline(type, domain);
+			m_productLineConfigManager.insertIfNotExsit(type, domain);
 		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
