@@ -7,16 +7,20 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestSendMessage {
 
 	@Test
 	public void sendException() throws Exception {
-
 		for (int i = 0; i < 10; i++) {
 			Transaction t = Cat.newTransaction("Midas", "XXName");
 			try {
 				t.setStatus("Fail");
+				
+				DefaultMessageTree	tree =(DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+			
+				tree.setDomain("rs-mapi-web");
 			} catch (Exception e) {
 				t.setStatus(Transaction.SUCCESS);
 				Cat.logError(e);

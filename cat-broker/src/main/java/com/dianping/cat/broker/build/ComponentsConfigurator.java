@@ -3,6 +3,7 @@ package com.dianping.cat.broker.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -19,6 +20,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(IpService.class));
 		all.add(C(RequestUtils.class));
 		all.add(C(MonitorManager.class).req(UrlPatternConfigManager.class, IpService.class));
+
+		// database
+		all.add(C(JdbcDataSourceDescriptorManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		// Please keep it as last
 		all.addAll(new WebComponentConfigurator().defineComponents());

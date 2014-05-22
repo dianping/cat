@@ -1,11 +1,9 @@
 package com.dianping.cat.broker.api.page;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -65,19 +63,19 @@ public class IpService implements Initializable {
 	}
 
 	public IpInfo findIpInfoByString(String ip) {
-		String[] segments = ip.split("\\.");
-		if (segments.length != 4) {
-			return null;
-		}
-
 		try {
+			String[] segments = ip.split("\\.");
+			if (segments.length != 4) {
+				return null;
+			}
+
 			long ip_num = Long.parseLong(segments[0]) << 24;
 			ip_num += Integer.parseInt(segments[1]) << 16;
 			ip_num += Integer.parseInt(segments[2]) << 8;
 			ip_num += Integer.parseInt(segments[3]);
 
 			return findIpInfo(ip_num);
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -143,30 +141,33 @@ public class IpService implements Initializable {
 	}
 
 	public void initIpTable(String ipFile) {
-		DataInputStream reader = null;
-		try {
-			RandomAccessFile sizeReader = new RandomAccessFile(ipFile, "r");
-			sizeReader.seek(sizeReader.length() - 4);
-			int size = sizeReader.readInt();
-			sizeReader.close();
+		BufferedReader reader = null;
 
-			reader = new DataInputStream(new FileInputStream(ipFile));
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(ipFile)));
+			int size = Integer.parseInt(reader.readLine());
+			String line;
+			String[] strs;
+
 			m_starts = new long[size];
 			m_ends = new long[size];
 			m_areaIds = new int[size];
 			m_corpIds = new int[size];
 			for (int i = 0; i < size; i++) {
-				m_starts[i] = reader.readLong();
-				m_ends[i] = reader.readLong();
-				m_areaIds[i] = reader.readInt();
-				m_corpIds[i] = reader.readInt();
+				line = reader.readLine();
+				strs = line.split(":");
+				m_starts[i] = Long.parseLong(strs[0]);
+				m_ends[i] = Long.parseLong(strs[1]);
+				m_areaIds[i] = Integer.parseInt(strs[2]);
+				m_corpIds[i] = Integer.parseInt(strs[3]);
 			}
+
 		} catch (IOException e) {
 			Cat.logError(e);
 		} finally {
 			try {
 				reader.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}

@@ -15,7 +15,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -110,9 +109,9 @@ public class DomainManager implements Initializable, LogEnabled {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+				
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
-					m_domainsInCat.add(info.getDomain());
 					m_ipsInCat.put(info.getIp(), info);
 				}
 
@@ -222,24 +221,21 @@ public class DomainManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public void insertDomain(String domain) {
-		try {
-			m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalNotFoundException e) {
-			Project project = m_projectDao.createLocal();
+	public boolean insertDomain(String domain) {
+		Project project = m_projectDao.createLocal();
 
-			project.setDomain(domain);
-			project.setProjectLine("Default");
-			project.setDepartment("Default");
-			try {
-				m_projectDao.insert(project);
-				m_domainsInCat.add(domain);
-			} catch (Exception ex) {
-				Cat.logError(ex);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
+		project.setDomain(domain);
+		project.setProjectLine("Default");
+		project.setDepartment("Default");
+		try {
+			m_projectDao.insert(project);
+			m_domainsInCat.add(domain);
+
+			return true;
+		} catch (Exception ex) {
+			Cat.logError(ex);
 		}
+		return false;
 	}
 
 	public boolean update(int id, String domain, String ip) {

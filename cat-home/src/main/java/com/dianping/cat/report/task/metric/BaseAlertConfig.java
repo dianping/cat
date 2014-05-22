@@ -22,10 +22,10 @@ public abstract class BaseAlertConfig {
 	public abstract List<String> buildExceptionSMSReceivers(ProductLine productLine);
 
 	protected double[] buildLastMinutes(double[] doubleList, int remainCount) {
-		if(doubleList.length <= remainCount){
+		if (doubleList.length <= remainCount) {
 			return doubleList;
 		}
-		
+
 		double[] result = new double[remainCount];
 		int startIndex = doubleList.length - remainCount;
 

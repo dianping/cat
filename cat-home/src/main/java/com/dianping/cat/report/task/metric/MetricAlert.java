@@ -53,6 +53,7 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 			if (originResult.getKey() != ruleJudgeResult.getKey()) {
 				String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 				      config.getMetricKey());
+				
 				m_logger.error(String.format("Error judge result, config: %s, value: %s, baseline: %s", metricKey,
 				      printArray(value), printArray(baseline)));
 			}

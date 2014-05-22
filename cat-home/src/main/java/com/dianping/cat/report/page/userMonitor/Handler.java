@@ -1,9 +1,10 @@
 package com.dianping.cat.report.page.userMonitor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -55,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
-		List<PatternItem> rules = m_patternManager.queryUrlPatternRules();
+		Collection<PatternItem> rules = m_patternManager.queryUrlPatternRules();
 
 		long start = payload.getHistoryStartDate().getTime();
 		long end = payload.getHistoryEndDate().getTime();
@@ -72,7 +73,7 @@ public class Handler implements PageHandler<Context> {
 		String url = payload.getUrl();
 
 		if (url == null && rules.size() > 0) {
-			url = rules.get(0).getName();
+			url = new ArrayList<PatternItem>(rules).get(0).getName();
 		}
 
 		pars.put("type", type);
