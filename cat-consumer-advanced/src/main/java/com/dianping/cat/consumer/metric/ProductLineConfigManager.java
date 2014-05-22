@@ -126,16 +126,16 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	public void buildDefaultDashboard(ProductLine productLine, String domain) {
 
-		String productiLine = productLine.getId();
+		String line = productLine.getId();
 		boolean userMonitor = false;
 		boolean networkMonitor = false;
 		boolean systemMonitor = false;
 
 		if ("broker-service".equals(domain)) {
 			userMonitor = true;
-		} else if (productiLine.startsWith(NETWORK_MONITOR_PREFIX)) {
+		} else if (line.startsWith(NETWORK_MONITOR_PREFIX)) {
 			networkMonitor = true;
-		} else if (productiLine.startsWith(SYSTEM_MONITOR_PREFIX)) {
+		} else if (line.startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
 		}
 		productLine.setNetworkDashboard(networkMonitor);
