@@ -17,6 +17,9 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#projectList').addClass('active');
+			$(".delete").bind("click", function() {
+				return confirm("确定要删除此项目吗(不可恢复)？");
+			});
 			init();
 		});
 	</script>
@@ -46,7 +49,8 @@
 						<td>${item.projectLine}</td>
 						<td>${item.email}</td>
 						<td>${item.owner}</td>
-						<td><a  class="btn btn-primary btn-small" href="?op=update&projectId=${item.id}">编辑</a></td>
+						<td><a  class="btn btn-primary btn-small" href="?op=update&projectId=${item.id}">编辑</a>
+						<a  class="btn btn-danger btn-small delete" href="?op=projectDelete&projectId=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 			</table>

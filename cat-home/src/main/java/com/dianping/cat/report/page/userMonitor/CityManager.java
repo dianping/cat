@@ -2,9 +2,9 @@ package com.dianping.cat.report.page.userMonitor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -15,7 +15,7 @@ import com.dianping.cat.report.page.JsonBuilder;
 
 public class CityManager implements Initializable {
 
-	public Map<String, List<City>> maps = new TreeMap<String, List<City>>();
+	public Map<String, List<City>> maps = new LinkedHashMap<String, List<City>>();
 
 	public String getCityInfo() {
 		return new JsonBuilder().toJson(maps);
@@ -24,7 +24,7 @@ public class CityManager implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		try {
-			String content = Files.forIO().readFrom(this.getClass().getResourceAsStream("/config/area_china"), "utf-8");
+			String content = Files.forIO().readFrom(this.getClass().getResourceAsStream("/config/city"), "utf-8");
 			String[] cities = content.split("\n");
 
 			for (String temp : cities) {

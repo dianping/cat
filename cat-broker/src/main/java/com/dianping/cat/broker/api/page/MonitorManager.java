@@ -19,6 +19,7 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -73,77 +74,73 @@ public class MonitorManager implements Initializable, LogEnabled {
 	}
 
 	public boolean offer(MonitorEntity entity) {
-		m_total++;
+		if (!StringUtils.isEmpty(entity.getTargetUrl())) {
+			m_total++;
 
-		int index = (int) (m_total % m_threadCounts);
-		int retryTime = 0;
+			int index = (int) (m_total % m_threadCounts);
+			int retryTime = 0;
 
-		while (retryTime < m_threadCounts) {
-			BlockingQueue<MonitorEntity> queue = m_queues.get((index + retryTime) % m_threadCounts);
-			boolean result = queue.offer(entity);
+			while (retryTime < m_threadCounts) {
+				BlockingQueue<MonitorEntity> queue = m_queues.get((index + retryTime) % m_threadCounts);
+				boolean result = queue.offer(entity);
 
-			if (result) {
-				return true;
+				if (result) {
+					return true;
+				}
+				retryTime++;
 			}
-			retryTime++;
-		}
 
-		m_errorCount++;
-		if (m_errorCount % CatConstants.ERROR_COUNT == 0) {
-			m_logger.error("Error when offer entity to queues, size:" + m_errorCount);
+			m_errorCount++;
+			if (m_errorCount % CatConstants.ERROR_COUNT == 0) {
+				m_logger.error("Error when offer entity to queues, size:" + m_errorCount);
+			}
 		}
 		return false;
 	}
 
 	private void processOneEntity(MonitorEntity entity) {
 		String targetUrl = entity.getTargetUrl();
+		String url = getFormatUrl(targetUrl);
 
-		System.err.println(entity);
-		if (targetUrl != null) {
-			String url = getFormatUrl(targetUrl);
+		if (url != null) {
+			String ip = entity.getIp();
+			IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
 
-			if (url != null) {
+			if (ipInfo != null) {
 				Transaction t = Cat.newTransaction("Monitor", url);
-
+				
 				try {
-					String ip = entity.getIp();
-					IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
+					String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
+					String channel = ipInfo.getChannel();
+					String httpCode = entity.getHttpStatus();
+					String errorCode = entity.getErrorCode();
+					long timestamp = entity.getTimestamp();
+					double duration = entity.getDuration();
+					String group = url;
 
-					if (ipInfo != null) {
-						String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
-						String channel = ipInfo.getChannel();
-						String httpCode = entity.getHttpStatus();
-						String errorCode = entity.getErrorCode();
-						long timestamp = entity.getTimestamp();
-						double duration = entity.getDuration();
-						String group = url;
+					if (duration > 0) {
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+					}
+					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
+					}
+					if (!StringUtils.isEmpty(httpCode)) {
+						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
+						Metric metric = Cat.getProducer().newMetric(group, key);
+						DefaultMetric defaultMetric = (DefaultMetric) metric;
 
-						if (duration > 0) {
-							logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
-						}
-						if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
-							logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
-						}
-						if (!StringUtils.isEmpty(httpCode)) {
-							String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
-							Metric metric = Cat.getProducer().newMetric(group, key);
-							DefaultMetric defaultMetric = (DefaultMetric) metric;
+						defaultMetric.setTimestamp(timestamp);
+						defaultMetric.setStatus("C");
+						defaultMetric.addData(String.valueOf(1));
+					}
+					if (!StringUtils.isEmpty(errorCode)) {
+						String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
+						Metric metric = Cat.getProducer().newMetric(group, key);
+						DefaultMetric defaultMetric = (DefaultMetric) metric;
 
-							defaultMetric.setTimestamp(timestamp);
-							defaultMetric.setStatus("C");
-							defaultMetric.addData(String.valueOf(1));
-						}
-						if (!StringUtils.isEmpty(errorCode)) {
-							String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
-							Metric metric = Cat.getProducer().newMetric(group, key);
-							DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-							defaultMetric.setTimestamp(timestamp);
-							defaultMetric.setStatus("C");
-							defaultMetric.addData(String.valueOf(1));
-						}
-					} else {
-						m_logger.error(String.format("ip service can't resolve ip: ", ip));
+						defaultMetric.setTimestamp(timestamp);
+						defaultMetric.setStatus("C");
+						defaultMetric.addData(String.valueOf(1));
 					}
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
@@ -152,7 +149,13 @@ public class MonitorManager implements Initializable, LogEnabled {
 				} finally {
 					t.complete();
 				}
+			} else {
+				Cat.logEvent("IpService", "NotFound", Event.SUCCESS, ip);
+
+				m_logger.error(String.format("ip service can't resolve ip  %s", ip));
 			}
+		} else {
+			m_logger.info(String.format("no url pattern %s", entity.toString()));
 		}
 	}
 

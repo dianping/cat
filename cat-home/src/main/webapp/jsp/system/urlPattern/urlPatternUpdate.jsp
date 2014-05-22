@@ -18,21 +18,24 @@
 		<div class="span10">
 		</br>
 			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit">
-				<table style='width:60%' class='table table-striped table-bordered'>
+				<table style='width:80%' class='table table-striped table-bordered'>
 					<tr>
-						<td>唯一ID</td>
+						<th>唯一ID</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
+						<td><span class="text-error">不能有特殊字符，仅限于英文字母和-</span></td>
 					</tr>
 					<tr>
-						<td>所属组</td>
+						<th>所属组</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.group" required value="${model.patternItem.group}"/></td>
+						<td><span class="text-error">暂时不起作用，仅仅用作url的分组，用于展示目的</span></td>
 					</tr>
 					<tr>
-						<td>pattern</td>
+						<th>所属组</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.pattern" required value="${model.patternItem.pattern}"/></td>
+						<td><span class="text-error">支付完全匹配方式，和部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</span></td>
 					</tr>
 					<tr>
-						<td style='text-align:center' colspan='2'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
+						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
 					</tr>
 				</table>
 			</form> </div></div></div>

@@ -52,43 +52,43 @@ import com.dianping.cat.system.notify.RenderTest;
 ValueTranslaterTest.class,
 
 /* .report.page.model */
-EventReportFilterTest.class, 
+EventReportFilterTest.class,
 
 TransactionReportFilterTest.class,
 
 ProblemReportMergerTest.class,
 
 /* . report.page.transcation */
-PayloadTest.class, 
+PayloadTest.class,
 
 /* . report.page.cross */
 CrossReportMergerTest.class,
 
 /* graph test */
-EventGraphDataTest.class, 
+EventGraphDataTest.class,
 
 HeartbeatGraphDataTest.class,
 
-ProblemGraphDataTest.class, 
+ProblemGraphDataTest.class,
 
 TransactionGraphDataTest.class,
 
 /* .report.task */
-TaskConsumerTest.class, 
+TaskConsumerTest.class,
 
 TaskHelperTest.class,
 
-HistoryEventMergerTest.class, 
+HistoryEventMergerTest.class,
 
 HistoryTransactionMergerTest.class,
 
-ProblemCreateGraphDataTest.class, 
+ProblemCreateGraphDataTest.class,
 
 ProblemGraphCreatorTest.class,
 
-TransactionGraphCreatorTest.class, 
+TransactionGraphCreatorTest.class,
 
-EventGraphCreatorTest.class, 
+EventGraphCreatorTest.class,
 
 EventDailyGraphMergerTest.class,
 
@@ -102,17 +102,17 @@ RenderTest.class,
 StateReportMergerTest.class,
 
 /* Daily Graph Test */
-DailyTransactionReportGraphTest.class, 
+DailyTransactionReportGraphTest.class,
 
 ProblemDailyGraphTest.class,
 
 /* Metric */
-MetricReportParseTest.class, 
+MetricReportParseTest.class,
 
 MetricReportMergerTest.class,
 
 /* Dependency */
-DependencyReportMergerTest.class, 
+DependencyReportMergerTest.class,
 
 GraphConfigManagerTest.class,
 
@@ -132,13 +132,15 @@ AlertReportBuilderTest.class,
 
 TopReportVisitorTest.class,
 
-RuleConfigTest.class})
+RuleConfigTest.class,
+
+AlertConfigTest.class })
 
 public class AllTests {
-	
+
 	@BeforeClass
-   public static void setUp() {
+	public static void setUp() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
 		Locale.setDefault(Locale.CHINESE);
-   }
+	}
 }

@@ -1,75 +1,84 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.DomainManager</role>
-			<implementation>com.dianping.cat.DomainManager</implementation>
+			<role>com.dianping.cat.broker.api.page.IpService</role>
+			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.RequestUtils</role>
+			<implementation>com.dianping.cat.broker.api.page.RequestUtils</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.MonitorManager</role>
+			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+					<role>com.dianping.cat.broker.api.page.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.task.TaskManager</role>
-			<implementation>com.dianping.cat.task.TaskManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<configuration>
+				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
+			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
+			<configuration>
+				<modules>
+					<module default="true">com.dianping.cat.broker.api.ApiModule</module>
+				</modules>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.ApiModule</role>
+			<implementation>com.dianping.cat.broker.api.ApiModule</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.single.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.single.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
+					<role>com.dianping.cat.broker.api.page.single.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.ServerConfigManager</role>
-			<implementation>com.dianping.cat.ServerConfigManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
-			<implementation>com.dianping.cat.message.spi.core.DefaultMessagePathBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
-			<implementation>com.dianping.cat.analysis.DefaultMessageAnalyzerManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
-			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
+			<role>com.dianping.cat.broker.api.page.single.JspViewer</role>
+			<implementation>com.dianping.cat.broker.api.page.single.JspViewer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageHandler</role>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
-			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
+			<role>com.dianping.cat.broker.api.page.MonitorManager</role>
+			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.IpService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</role>
-			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver$DecodeMessageTask</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.UrlPatternHandler</role>
-			<implementation>com.dianping.cat.config.DefaultUrlPatternHandler</implementation>
+			<role>com.dianping.cat.broker.api.page.IpService</role>
+			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
@@ -84,49 +93,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.dump.MessageBucket</role>
-			<role-hint>local</role-hint>
-			<implementation>com.dianping.cat.storage.dump.LocalMessageBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
-			<role-hint>local</role-hint>
-			<implementation>com.dianping.cat.storage.dump.LocalMessageBucketManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.initialization.Module</role>
-			<role-hint>cat-core</role-hint>
-			<implementation>com.dianping.cat.CatCoreModule</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>config</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>config</logical-table-name>
-				<physical-table-name>config</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
 			<role>com.dianping.cat.core.config.ConfigDao</role>
 			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
 			<requirements>
@@ -136,237 +102,30 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>dailygraph</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>dailygraph</logical-table-name>
-				<physical-table-name>dailygraph</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
+			<role>com.dianping.cat.broker.api.page.RequestUtils</role>
+			<implementation>com.dianping.cat.broker.api.page.RequestUtils</implementation>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>dailyreport</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>dailyreport</logical-table-name>
-				<physical-table-name>dailyreport</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>graph</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>graph</logical-table-name>
-				<physical-table-name>graph</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>hostinfo</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name>hostinfo</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>monthreport</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>monthreport</logical-table-name>
-				<physical-table-name>monthreport</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>project</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>project</logical-table-name>
-				<physical-table-name>project</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>report</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>report</logical-table-name>
-				<physical-table-name>report</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>report-content</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>report-content</logical-table-name>
-				<physical-table-name>report_content</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>task</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>task</logical-table-name>
-				<physical-table-name>task</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>weeklyreport</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>weeklyreport</logical-table-name>
-				<physical-table-name>weeklyreport</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyGraphDao</implementation>
+			<role>com.dianping.cat.broker.api.page.batch.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.batch.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.broker.api.page.batch.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.core.dal.DailyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyReportDao</implementation>
+			<role>com.dianping.cat.broker.api.page.batch.JspViewer</role>
+			<implementation>com.dianping.cat.broker.api.page.batch.JspViewer</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.GraphDao</role>
-			<implementation>com.dianping.cat.core.dal.GraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HostinfoDao</role>
-			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.MonthlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.ProjectDao</role>
-			<implementation>com.dianping.cat.core.dal.ProjectDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.HourlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-			<implementation>com.dianping.cat.core.dal.HourlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.TaskDao</role>
-			<implementation>com.dianping.cat.core.dal.TaskDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.WeeklyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.core.HtmlEncodingBufferWriter</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.core.HtmlMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>waterfall</role-hint>
-			<implementation>com.dianping.cat.message.spi.core.WaterfallMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.BucketManager</role>
-			<implementation>com.dianping.cat.storage.DefaultBucketManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>java.lang.String-report</role-hint>
-			<implementation>com.dianping.cat.storage.report.LocalReportBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

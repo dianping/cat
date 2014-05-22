@@ -201,20 +201,28 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
 		if (m_serverConfigManager.validateDomain(domain)) {
 			if (!m_domainManager.containsDomainInCat(domain)) {
-				m_domainManager.insertDomain(domain);
+				boolean insert = m_domainManager.insertDomain(domain);
+
+				if (!insert) {
+					m_logger.warn(String.format("Error when insert domain %s info", domain));
+				}
 			}
 			Hostinfo info = m_domainManager.queryHostInfoByIp(ip);
 
 			if (info == null) {
 				m_domainManager.insert(domain, ip);
-			} else if (!info.getDomain().equals(domain)) {
-				// only work on online environment
-				long current = System.currentTimeMillis();
-				Date lastModifiedDate = info.getLastModifiedDate();
+			} else {
+				String oldDomain = info.getDomain();
 
-				if (lastModifiedDate != null && (current - lastModifiedDate.getTime()) > ONE_HOUR) {
-					m_domainManager.update(info.getId(), domain, ip);
-					m_logger.info(String.format("old domain is %s , change ip %s to %s", info.getDomain(), ip, domain));
+				if (!oldDomain.equals(domain) && !oldDomain.equals(Constants.CAT)) {
+					// only work on online environment
+					long current = System.currentTimeMillis();
+					Date lastModifiedDate = info.getLastModifiedDate();
+
+					if (lastModifiedDate != null && (current - lastModifiedDate.getTime()) > ONE_HOUR) {
+						m_domainManager.update(info.getId(), domain, ip);
+						m_logger.info(String.format("old domain is %s , change ip %s to %s", oldDomain, ip, domain));
+					}
 				}
 			}
 		}

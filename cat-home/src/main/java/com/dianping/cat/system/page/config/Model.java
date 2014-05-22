@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.config;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private PatternItem m_patternItem;
 
-	private List<PatternItem> m_patternItems;
+	private Collection<PatternItem> m_patternItems;
 	
 	private ExceptionLimit m_exceptionLimit;
 
@@ -298,11 +299,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
    	m_patternItem = patternItem;
    }
 
-	public List<PatternItem> getPatternItems() {
+	public Collection<PatternItem> getPatternItems() {
    	return m_patternItems;
    }
 
-	public void setPatternItems(List<PatternItem> patternItems) {
+	public void setPatternItems(Collection<PatternItem> patternItems) {
    	m_patternItems = patternItems;
    }
 
