@@ -108,11 +108,11 @@ public class ExceptionAlert implements Task, LogEnabled {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
 				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
+				
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
 						sendAlertForDomain(entry.getKey(), entry.getValue());
 					} catch (Exception e) {
-						e.printStackTrace();
 						m_logger.error(e.getMessage());
 					}
 				}
@@ -225,7 +225,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		m_logger.info(title + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(title.toString(), mailContent, emails);
 
-		Cat.logEvent("MetricAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
+		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
 	}
 
 	@Override

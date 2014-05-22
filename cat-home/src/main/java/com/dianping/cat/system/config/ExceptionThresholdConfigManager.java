@@ -98,6 +98,7 @@ public class ExceptionThresholdConfigManager implements Initializable {
 
 	public ExceptionLimit queryDomainTotalLimit(String domain) {
 		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
+		
 		if (result == null) {
 			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
 		}

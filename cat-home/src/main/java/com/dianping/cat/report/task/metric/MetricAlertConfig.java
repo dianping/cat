@@ -14,7 +14,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.monitorrules.entity.Config;
 import com.site.helper.Splitters;
 
-public class MetricAlertConfig extends BaseAlertConfig{
+public class MetricAlertConfig extends BaseAlertConfig {
 
 	public List<String> buildExceptionSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
@@ -31,7 +31,10 @@ public class MetricAlertConfig extends BaseAlertConfig{
 		emails.add("jialin.sun@dianping.com");
 		emails.add("argus@dianping.com");
 		emails.add("monitor@dianping.com");
-		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
+
+		if (emailList != null) {
+			emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
+		}
 		return emails;
 	}
 
@@ -41,7 +44,9 @@ public class MetricAlertConfig extends BaseAlertConfig{
 
 		emails.add("yong.you@dianping.com");
 		emails.add("jialin.sun@dianping.com");
-		emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
+		if (emailList != null) {
+			emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
+		}
 		return emails;
 	}
 
@@ -52,7 +57,10 @@ public class MetricAlertConfig extends BaseAlertConfig{
 		phones.add("13916536843");// 值班
 		phones.add("18616671676");// 尤勇
 		phones.add("13858086694");// 黄河
-		phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
+
+		if (phonesList != null) {
+			phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
+		}
 		return phones;
 	}
 
@@ -100,16 +108,15 @@ public class MetricAlertConfig extends BaseAlertConfig{
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
 
-	public Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type,
-	      List<Config> configs) {
+	public Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type, List<Config> configs) {
 		for (Config con : configs) {
 			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline, type, con);
-			
+
 			if (tmpResult.getKey() == true) {
 				return tmpResult;
 			}
 		}
 		return new Pair<Boolean, String>(false, "");
 	}
-	
+
 }
