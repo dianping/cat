@@ -125,7 +125,7 @@
 .topology {
 	text-align: center;
 	margin: 20px 0;
-	height: 640px;
+	height: 840px;
 	float: left;
 }
 
