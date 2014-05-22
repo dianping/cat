@@ -96,6 +96,7 @@ public class Handler implements PageHandler<Context> {
 
 			Metric metric = Cat.getProducer().newMetric(group, key);
 			DefaultMetric defaultMetric = (DefaultMetric) metric;
+			
 			if (defaultMetric != null) {
 				defaultMetric.setTimestamp(time);
 			}

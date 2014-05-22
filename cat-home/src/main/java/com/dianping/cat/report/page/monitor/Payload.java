@@ -123,9 +123,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		if (m_action == null) {
 			m_action = Action.COUNT_API;
 		}
-		if(m_type == null) {
-			m_type = "network";
-		}
 	}
 	
 }

@@ -66,6 +66,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_configManager);
+		
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
@@ -149,7 +150,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 		for (List<Item> item : items) {
 			for (Item i : item) {
 				String domain = i.getDomain();
-
 				ExceptionLimit totalExceptionLimit = m_configManager.queryDomainTotalLimit(domain);
 				int totalWarnLimit = -1;
 				int totalErrorLimit = -1;
