@@ -57,6 +57,8 @@ public class DomainManager implements Initializable, LogEnabled {
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
+	
+	private static final long DURATION = 60 * 60 * 1000L; 
 
 	public boolean containsDomainInCat(String domain) {
 		return m_domainsInCat.contains(domain);
@@ -69,7 +71,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (!m_manager.isLocalMode()) {
+		//if (!m_manager.isLocalMode()) {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
@@ -87,7 +89,8 @@ public class DomainManager implements Initializable, LogEnabled {
 				Cat.logError(e);
 			}
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
-		}
+			Threads.forGroup("Cat").start(new UploadHostinfoDBTask());
+		//}
 	}
 
 	public boolean insert(String domain, String ip) {
@@ -268,4 +271,90 @@ public class DomainManager implements Initializable, LogEnabled {
 		public void shutdown() {
 		}
 	}
+	
+	public class UploadHostinfoDBTask implements Task {
+		
+		private static final String CMDB_HOSTNAME_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=hostname&tidy=true";
+
+		@Override
+		public String getName() {
+			return "update_hostinfo_db";
+		}
+		
+		public String parseHostname(String content) throws Exception {
+			JsonObject object = new JsonObject(content);
+			JsonArray array = object.getJSONArray("hostname");
+
+			if (array.length() > 0) {
+				return array.getString(0);
+			}
+			return null;
+		}
+		
+		private String queryHostnameFromCMDB(String ip) {
+			String hostname = null;
+			
+			try {
+				String cmdb = String.format(CMDB_HOSTNAME_URL, ip);
+				URL url = new URL(cmdb);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				int nRc = conn.getResponseCode();
+
+				if (nRc == HttpURLConnection.HTTP_OK) {
+					InputStream input = conn.getInputStream();
+					String content = Files.forIO().readFrom(input, "utf-8");
+					hostname = parseHostname(content.trim());
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			
+			return hostname;
+      }
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				long startMill = System.currentTimeMillis();
+				
+				try {
+					List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+					for(Hostinfo info : infos){
+						String hostname = info.getHostname();
+						if(info.getHostname() == null || "".equals(hostname)){
+							String ip = info.getIp();
+							String cmdbHostname = queryHostnameFromCMDB(ip);
+							
+							if(cmdbHostname != null){
+								info.setHostname(cmdbHostname);
+								m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
+							}else{
+								m_logger.error("cant find hostname for ip: " + ip);
+							}
+							
+						}
+					}
+				} catch (Throwable e) {
+					Cat.logError(e);
+				}
+				
+				try {
+					long executeMills = System.currentTimeMillis() - startMill;
+					
+					if(executeMills < DURATION){
+						Thread.sleep(DURATION - executeMills);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+	
 }
