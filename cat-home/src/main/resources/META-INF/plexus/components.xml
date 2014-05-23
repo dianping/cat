@@ -1673,6 +1673,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
