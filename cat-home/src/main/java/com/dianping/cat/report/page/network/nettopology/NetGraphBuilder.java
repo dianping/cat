@@ -40,6 +40,10 @@ public class NetGraphBuilder implements Initializable {
 					try {
 						double insum = 0;
 						double outsum = 0;
+						double inDiscardsSum = 0;
+						double outDiscardsSum = 0;
+						double inErrorsSum = 0;
+						double outErrorsSum = 0;
 
 						for (Interface inter : connection.getInterfaces()) {
 							String group = inter.getGroup();
@@ -48,9 +52,17 @@ public class NetGraphBuilder implements Initializable {
 							updateInterface(inter, report, i);
 							insum += inter.getIn();
 							outsum += inter.getOut();
+							inDiscardsSum += inter.getIndiscards();
+							outDiscardsSum += inter.getOutdiscards();
+							inErrorsSum += inter.getInerrors();
+							outErrorsSum += inter.getOuterrors();
 						}
 						connection.setInsum(insum);
 						connection.setOutsum(outsum);
+						connection.setIndiscards(inDiscardsSum);
+						connection.setOutdiscards(outDiscardsSum);
+						connection.setInerrors(inErrorsSum);
+						connection.setOuterrors(outErrorsSum);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -117,9 +129,17 @@ public class NetGraphBuilder implements Initializable {
 		try {
 			MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-in");
 			MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-out");
+			MetricItem inDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-indiscards");
+			MetricItem outDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-outdiscards");
+			MetricItem inErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-inerrors");
+			MetricItem outErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-outerrors");
 
 			inter.setIn(inItem.findOrCreateSegment(minute).getSum() / 60 * 8);
 			inter.setOut(outItem.findOrCreateSegment(minute).getSum() / 60 * 8);
+			inter.setIndiscards(inDiscardsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setOutdiscards(outDiscardsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setInerrors(inErrorsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setOuterrors(outErrorsItem.findOrCreateSegment(minute).getSum() / 60);
 		} catch (Exception e) {
 			inter.setIn(0.0);
 			inter.setOut(0.0);

@@ -76,8 +76,9 @@
 						<th width="5%">错误监控</th>
 						<th width="5%">业务监控</th>
 						<th width="5%">网络监控</th>
+						<th width="5%">系统监控</th>
 						<th width="5%">外部监控</th>
-						<th width="45%">项目列表</th>
+						<th width="40%">项目列表</th>
 						<th width="10%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class='update btn btn-primary btn-small'>新增</a></th>
 					</tr>
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">
@@ -89,6 +90,8 @@
 							<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
 						<td><c:if test="${item.networkDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
 							<c:if test="${!item.networkDashboard}"><span><strong>否</strong></span></c:if>  </td>
+						<td><c:if test="${item.systemMonitorDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+							<c:if test="${!item.systemMonitorDashboard}"><span><strong>否</strong></span></c:if>  </td>
 						<td><c:if test="${item.userMonitorDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
 							<c:if test="${!item.userMonitorDashboard}"><span><strong>否</strong></span></c:if>  </td>
 						<td>

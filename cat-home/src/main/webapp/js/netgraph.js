@@ -24,14 +24,14 @@ var $_netgraph = {
             'warnning':'rgb(255,255,0)',
             'serious':'rgb(255,0,0)',
         },
-        'conn_tooltip_offset':20,
+        'conn_tooltip_offset':10,
 
         'anchor_text_size':16,
         'anchor_text_color':'rgb(100,100,100)',
 
         'focus_scale':2,
 
-        'tooltip_width':220,
+        'tooltip_width':275,
     },
 
     topos: {
@@ -121,10 +121,14 @@ var $_netgraph = {
                 continue;
             }
 
-            var inData, outData, state, fill;
+            var inData, outData, state, fill, indiscards, outdiscards, inerrors, outerrors;
             inData = cn['insum'];
             outData = cn['outsum'];
             state = cn['state'];
+            indiscards = cn['indiscards'];
+            outdiscards = cn['outdiscards'];
+            inerrors = cn['inerrors'];
+            outerrors = cn['outerrors'];
             if (inData == undefined) {
                 inData = 0;
             }
@@ -139,6 +143,18 @@ var $_netgraph = {
             }
             else {
                 fill = this.setting.conn_color.normal;
+            }
+            if (indiscards == undefined) {
+                indiscards = 0;
+            }
+            if (outdiscards == undefined) {
+                outdiscards = 0;
+            }
+            if (inerrors == undefined) {
+                inerrors = 0;
+            }
+            if (outerrors == undefined) {
+                outerrors = 0;
             }
 
             var f_anchor = 0;
@@ -164,11 +180,11 @@ var $_netgraph = {
             }
 
             if(!f_anchor && !t_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[inData,outData],'name':to,'fill':fill};
+                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[inData,outData,indiscards,outdiscards,inerrors,outerrors],'name':to,'fill':fill};
                 sw[from]['conn'].push(id);
             }
             else if(!f_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[inData,outData],'name':to,'fill':fill};
+                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[inData,outData,indiscards,outdiscards,inerrors,outerrors],'name':to,'fill':fill};
                 sw[from]['conn'].push(id);
             }
         }
@@ -182,14 +198,16 @@ var $_netgraph = {
         var mx = (d.x1 + d.x2) / 2;
         var my = (d.y1 + d.y2) / 2;
         var x, y;
-        if (mx <= 300)
+        if (mx <= this.setting.tooltip_width)
             x = mx + this.setting.conn_tooltip_offset;
         else
             x = mx - this.setting.tooltip_width - this.setting.conn_tooltip_offset;
-        y = my + this.setting.conn_tooltip_offset;
+        y = my - this.setting.conn_tooltip_offset;
         var tip = [];
         tip.push('[from '+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]));
+        tip.push('[from '+d['name'] + ']-[in-discard-err]: ' + this.decorateNumber(d['data'][2]) + ' , ' + this.decorateNumber(d['data'][4]));
         tip.push('[to '+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][1]));
+        tip.push('[to '+d['name'] + ']-[out-discard-err]: ' + this.decorateNumber(d['data'][3]) + ' , ' + this.decorateNumber(d['data'][5]));
 		this.show_tooltip(wrapper,x,y,tip);
 
         var conn = document.getElementById(wrapper+'-'+id);
@@ -211,7 +229,9 @@ var $_netgraph = {
         for(var i in topo.data['switchs'][id].conn) {
             conn = topo.data['conn'][topo.data['switchs'][id].conn[i]];
             tip.push('[from '+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]));
+            tip.push('[from '+conn['name'] + ']-[in-discard-err]: ' + this.decorateNumber(conn['data'][2]) + ' , ' + this.decorateNumber(conn['data'][4]));
             tip.push('[to '+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][1]));
+            tip.push('[to '+conn['name'] + ']-[out-discard-err]: ' + this.decorateNumber(conn['data'][3]) + ' , ' + this.decorateNumber(conn['data'][5]));
         }
 		this.show_tooltip(wrapper,x,y,tip);
 
@@ -294,6 +314,10 @@ var $_netgraph = {
             t.appendChild(textString);
             g.appendChild(t);
             ty += 20;
+        }
+
+        if (y > height) {
+            y -= height;
         }
 
 		this.setAttrValues(g, {'visibility':'visible','transform':'translate('+x+','+y+')','opacity':1});
