@@ -1833,21 +1833,21 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>hostinfo</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name>hostinfo</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>monthly-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>monthly-report-content</logical-table-name>
 				<physical-table-name>monthly_report_content</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>sqlreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>sqlreport</logical-table-name>
+				<physical-table-name>sqlreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1908,8 +1908,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.HostinfoDao</role>
-			<implementation>com.dianping.cat.home.dal.report.HostinfoDao</implementation>
+			<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MonthlyReportContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1917,8 +1917,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
-			<implementation>com.dianping.cat.home.dal.report.MonthlyReportContentDao</implementation>
+			<role>com.dianping.cat.home.dal.report.SqlreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.SqlreportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2016,6 +2016,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.product.ProductUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.product.ProductUpdateTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>

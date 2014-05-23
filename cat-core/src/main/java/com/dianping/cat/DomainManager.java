@@ -323,7 +323,7 @@ public class DomainManager implements Initializable, LogEnabled {
 					List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 					for(Hostinfo info : infos){
 						String hostname = info.getHostname();
-						if(info.getHostname() == null || "".equals(hostname)){
+						if(hostname == null || "".equals(hostname)){
 							String ip = info.getIp();
 							String cmdbHostname = queryHostnameFromCMDB(ip);
 							
