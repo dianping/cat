@@ -68,7 +68,6 @@
 			var city = '${payload.city}';
 			var array = city.split('-');
 			
-			console.log(array[0]+"====" +array[1]+"===="+array.length);
 			$('#province').val(array[0]);
 			change();
 			

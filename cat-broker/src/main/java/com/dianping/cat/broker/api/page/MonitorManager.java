@@ -108,7 +108,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 			if (ipInfo != null) {
 				Transaction t = Cat.newTransaction("Monitor", url);
-				
+
 				try {
 					String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
 					String channel = ipInfo.getChannel();
@@ -123,6 +123,8 @@ public class MonitorManager implements Initializable, LogEnabled {
 					}
 					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
+					}else{
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
 					}
 					if (!StringUtils.isEmpty(httpCode)) {
 						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;

@@ -27,6 +27,8 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 
 	private static final String SUCESS_PERCENT = "调用成功率(%)";
 
+	private static final int MULTIPLE = 10;
+
 	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		LineChart lineChart = new LineChart();
@@ -113,8 +115,13 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 				datas.put(key, data);
 			}
 			for (Segment segment : segments.values()) {
+				int count = segment.getCount();
+
+				if ("200".equals(key)) {
+					count = count * MULTIPLE;
+				}
 				int minute = segment.getId();
-				data[minute] = segment.getCount();
+				data[minute] = count;
 			}
 		}
 		return datas;
@@ -142,7 +149,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 				int id = segment.getId();
 
 				if (key.endsWith(Monitor.HIT)) {
-					count[id] = segment.getCount() * 10;
+					count[id] = segment.getCount() * MULTIPLE;
 					avg[id] = segment.getAvg();
 				} else if (key.endsWith(Monitor.ERROR)) {
 					error[id] = segment.getCount();
@@ -154,7 +161,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			double sum = count[i] + error[i];
 
 			if (sum > 0) {
-				successPercent[i] = count[i] * 100 / sum;
+				successPercent[i] = count[i] / sum * 100;
 			} else {
 				successPercent[i] = 100;
 			}

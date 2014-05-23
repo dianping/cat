@@ -3,6 +3,8 @@ package com.dianping.cat;
 public class Monitor {
 
 	public static final String HIT = "hit";
+	
+	public static final String AVG = "avg";
 
 	public static final String ERROR = "error";
 
