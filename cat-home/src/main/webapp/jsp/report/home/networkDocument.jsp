@@ -18,13 +18,30 @@
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/networkMetric.jpeg"/>
 <p/>
 <p>(1) 关于网络监控的监控指标的确定以及产品线配置请参考业务监控文档</p>
+<p>(2) 对于网络监控中的指标选取及Key格式规定</p>
+<xmp class="well">
+a) 每个端口的进出流量汇总
+   [端口名字] + [-in]  --> 进端口流量KEY
+   [端口名字] + [-out] --> 出端口流量KEY
+	 	
+b) 每个端口的错包丢包情况汇总 
+   [端口名字] + [-inerrors]  --> 进端口错包数KEY
+   [端口名字] + [-outerrors] --> 出端口错包数KEY
+   [端口名字] + [-indiscards]  --> 进端口丢包数KEY
+   [端口名字] + [-outdiscards] --> 出端口丢包数KEY
+</xmp>
+
 <p>(2) 对于网络的监控代码埋点，仅支持业务监控代码埋点中的HTTP API调用方式。</p>
-<p>(3) 对于需要在网络监控显示的指标，需对产品线做显示到网络大盘配置，如下图</p>
+<p class="text-error">注意：url中项目组名字(group)必须以"system-"作为开头</p>
+<xmp class="well">
+如：http://cat.dianpingoa.com/cat/r/monitor?group=system-switch&domain=2400-1-dianping-com&key=Ethernet1/1-1-in&op=sum&sum=100
+</xmp>
+<p>(3) 对于需要在网络监控显示的指标，需对产品线做显示到<a href="/cat/s/config?op=topologyProductLines">网络大盘配置</a>，如下图</p>
 <img  class="img-polaroid"  width='40%' src="${model.webapp}/images/networkProductLine.jpeg"/>
 </br>
 </br> 
 <h4 class="text-success">3. 监控汇总定制</h4>
-<p>除了默认汇总展示之外，用户可以根据不同需求对网络指标进行汇总定制，在业务指标汇总中填写配置信息。</p>
+<p>除了默认汇总展示之外，用户可以根据不同需求对网络指标进行汇总定制，在<a href="/cat/s/config?op=metricAggregationConfigUpdate">业务指标汇总</a>中填写配置信息。</p>
 <h5>(1) 配置说明</h5>
 <table style="width:90%" class="table table-striped table-bordered table-condensed">
 	<tr><th width="20%">节点</th><th width="20%">属性</th><th>说明</th></tr>
@@ -94,35 +111,43 @@
 		<td>是否显示基线，<span class="text-error">非必需，</span>，可选项为true、false，默认继承自父节点的base-line值</td>
 	</tr>
 </table>
-<h5>(2) 指标汇总配置实例如下：</h5>
+<h5>(2) <a href="/cat/s/config?op=metricAggregationConfigUpdate">指标汇总配置</a>实例如下：</h5>
 <xmp class="well">
 <metric-aggregation-config>
-	<metric-aggregation-group id="f5-2400-1-dianping-com" type="Metric" display="network">
-		<metric-aggregation id="f5-2400-1-in" display-type="count" base-line="false" operation="{data}*60+100">
+	<metric-aggregation-group id="f5-2400-1-dianping-com-flow" type="Metric" display="network">
+		<metric-aggregation id="f5-2400-1-in-flow" display-type="count" base-line="false" operation="{data}*60+100">
 			<metric-aggregation-item domain="Domain1" key="1/1-1-in" operation="{data}*60/100+100" />
 			<metric-aggregation-item domain="Domain2" key="1/1-2-in" />
 			<metric-aggregation-item domain="Domain3" key="1/1-3-in" />
 			<metric-aggregation-item domain="Domain4" key="1/1-4-in" />
 		</metric-aggregation>
-		<metric-aggregation id="f5-2400-1-out" domain="Domain" display="sum" base-line="true">
+		<metric-aggregation id="f5-2400-1-out-flow" domain="Domain" display="sum" base-line="true">
 			<metric-aggregation-item domain="Domain2" key="1/1-1-out" display-type="count" base-line="false"/>
 			<metric-aggregation-item key="1/1-2-out"/>
 			<metric-aggregation-item key="1/1-3-out"/>
 			<metric-aggregation-item key="1/1-4-out"/>
 		</metric-aggregation>
 	</metric-aggregation-group>
-	<metric-aggregation-group id="f5-2500-1-dianping-com" domain="DmainAll" type="Metric" display="network">
-		<metric-aggregation id="f5-2500-1-in" display-type="sum" title="switch">
-			<metric-aggregation-item key="1/1-1-in" />
-			<metric-aggregation-item key="1/1-2-in" />
-			<metric-aggregation-item key="1/1-3-in" />
-			<metric-aggregation-item key="1/1-4-in" />
+	<metric-aggregation-group id="f5-2400-1-dianping-com-packages" domain="DmainAll" type="Metric" display="network">
+		<metric-aggregation id="f5-2400-1-in-packages" display-type="sum" title="switch">
+			<metric-aggregation-item key="1/1-1-inerrors" />
+			<metric-aggregation-item key="1/1-2-inerrors" />
+			<metric-aggregation-item key="1/1-3-inerrors" />
+			<metric-aggregation-item key="1/1-4-inerrors" />
+			<metric-aggregation-item key="1/1-1-indiscards" />
+			<metric-aggregation-item key="1/1-2-indiscards" />
+			<metric-aggregation-item key="1/1-3-indiscards" />
+			<metric-aggregation-item key="1/1-4-indiscards" />
 		</metric-aggregation>
-		<metric-aggregation id="f5-2500-1-out" display-type="sum">
-			<metric-aggregation-item key="1/1-1-out" />
-			<metric-aggregation-item key="1/1-2-out" />
-			<metric-aggregation-item key="1/1-3-out" />
-			<metric-aggregation-item key="1/1-4-out" />
+		<metric-aggregation id="f5-2400-1-out-packages" display-type="sum">
+			<metric-aggregation-item key="1/1-1-outerrors" />
+			<metric-aggregation-item key="1/1-2-outerrors" />
+			<metric-aggregation-item key="1/1-3-outerrors" />
+			<metric-aggregation-item key="1/1-4-outerrors" />
+			<metric-aggregation-item key="1/1-1-outdiscards" />
+			<metric-aggregation-item key="1/1-2-outdiscards" />
+			<metric-aggregation-item key="1/1-3-outdiscards" />
+			<metric-aggregation-item key="1/1-4-outdiscards" />
 		</metric-aggregation>
 	</metric-aggregation-group>
 </metric-aggregation-config>

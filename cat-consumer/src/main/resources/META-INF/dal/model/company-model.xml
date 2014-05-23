@@ -15,6 +15,7 @@
     <attribute name="dashboard" value-type="boolean"  primitive="true" />
     <attribute name="metric-dashboard" value-type="boolean"  primitive="true" default-value="true"/>
     <attribute name="network-dashboard" value-type="boolean"  primitive="true" default-value="false"/>
+    <attribute name="system-monitor-dashboard" value-type="boolean"  primitive="true" default-value="false"/>
     <attribute name="user-monitor-dashboard" value-type="boolean"  primitive="true" default-value="false"/>
     <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
   </entity>
