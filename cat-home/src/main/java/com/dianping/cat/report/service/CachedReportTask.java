@@ -82,7 +82,7 @@ public class CachedReportTask implements Task, LogEnabled {
 
 		for (String domain : domains) {
 			if (m_configManger.validateDomain(domain)) {
-				Transaction t = Cat.newTransaction("System", "Reload-Month-" + domain);
+				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Month-" + domain);
 
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
 				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
@@ -125,7 +125,7 @@ public class CachedReportTask implements Task, LogEnabled {
 
 		for (String domain : domains) {
 			if (m_configManger.validateDomain(domain)) {
-				Transaction t = Cat.newTransaction("System", "Reload-Week-" + domain);
+				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Week-" + domain);
 
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
 				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
