@@ -96,7 +96,7 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			}
 		}
 
-		if (email != null && !"null".equals(email)) {
+		if (email != null && !"".equals(email) && !"null".equals(email)) {
 			infosMap.put("email", email.toString());
 		}
 
