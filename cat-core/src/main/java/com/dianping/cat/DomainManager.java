@@ -71,7 +71,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		//if (!m_manager.isLocalMode()) {
+		if (!m_manager.isLocalMode()) {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
@@ -90,7 +90,7 @@ public class DomainManager implements Initializable, LogEnabled {
 			}
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
 			Threads.forGroup("Cat").start(new UploadHostinfoDBTask());
-		//}
+		}
 	}
 
 	public boolean insert(String domain, String ip) {
