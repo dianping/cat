@@ -19,10 +19,10 @@
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
 						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.type}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}"
-									class="current">${ip}</a>
+									class="current">${ip} ${model.ipToHostname[ip]}</a>
 					</c:when>
 					<c:otherwise>
-						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.type}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}">${ip}</a>
+						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.type}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}">${ip} ${model.ipToHostname[ip]}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

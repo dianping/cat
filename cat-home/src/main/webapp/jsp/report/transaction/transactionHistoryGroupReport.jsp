@@ -17,7 +17,7 @@
 		<th>机器:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
 						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.type}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}"
-						>${ip}</a>
+						>${ip} ${model.ipToHostname[ip]}</a>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>

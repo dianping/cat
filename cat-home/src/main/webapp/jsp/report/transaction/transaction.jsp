@@ -31,10 +31,10 @@
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
 						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
-							class="current">${ip}</a>
+							class="current">${ip} ${model.ipToHostname[ip]}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip} ${model.ipToHostname[ip]}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

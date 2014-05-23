@@ -29,7 +29,7 @@
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
 						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
-						>${ip}</a>
+						>${ip} ${model.ipToHostname[ip]}</a>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
