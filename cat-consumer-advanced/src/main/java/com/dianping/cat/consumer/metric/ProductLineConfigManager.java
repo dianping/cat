@@ -125,7 +125,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public void buildDefaultDashboard(ProductLine productLine, String domain) {
-
 		String line = productLine.getId();
 		boolean userMonitor = false;
 		boolean networkMonitor = false;
