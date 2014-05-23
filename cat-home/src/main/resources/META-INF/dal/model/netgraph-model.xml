@@ -33,6 +33,10 @@
     <entity-ref name="interface" type="list" names="interfaces" />
     <attribute name="insum" value-type="double" />
     <attribute name="outsum" value-type="double" />
+    <attribute name="indiscards" value-type="double" />
+    <attribute name="outdiscards" value-type="double" />
+    <attribute name="inerrors" value-type="double" />
+    <attribute name="outerrors" value-type="double" />
   </entity>
   <entity name="interface">
     <attribute name="group" value-type="String" />
@@ -41,5 +45,9 @@
     <attribute name="state" value-type="int" />
     <attribute name="in" value-type="double" />
     <attribute name="out" value-type="double" />
+    <attribute name="indiscards" value-type="double" />
+    <attribute name="outdiscards" value-type="double" />
+    <attribute name="inerrors" value-type="double" />
+    <attribute name="outerrors" value-type="double" />
   </entity>
 </model>
