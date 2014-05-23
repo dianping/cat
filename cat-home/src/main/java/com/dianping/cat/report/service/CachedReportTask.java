@@ -1,9 +1,12 @@
 package com.dianping.cat.report.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -29,7 +32,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
 
-public class CachedReportTask implements Task {
+public class CachedReportTask implements Task, LogEnabled {
 
 	private long m_end;
 
@@ -38,6 +41,8 @@ public class CachedReportTask implements Task {
 
 	@Inject
 	private ServerConfigManager m_configManger;
+
+	private Logger m_logger;
 
 	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
 		MonthlyReport report = new MonthlyReport();
@@ -167,18 +172,18 @@ public class CachedReportTask implements Task {
 
 			// assume dailyreport job has been completed in two hours.
 			if (time > m_end && cal.get(Calendar.HOUR_OF_DAY) >= 3) {
-				Transaction t = Cat.newTransaction("System", "ReportReload");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				Date start = new Date();
+
 				try {
 					reloadCurrentWeekly();
 					reloadCurrentMonthly();
 					m_end = date.getTime();
-					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
 					Cat.logError(e);
-					t.setStatus(e);
-				} finally {
-					t.complete();
 				}
+				m_logger.info(String.format("reload report start at %s, end at %s", sdf.format(start),
+				      sdf.format(new Date())));
 			}
 			try {
 				Thread.sleep(60 * 60 * 1000);
@@ -190,6 +195,11 @@ public class CachedReportTask implements Task {
 
 	@Override
 	public void shutdown() {
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }
