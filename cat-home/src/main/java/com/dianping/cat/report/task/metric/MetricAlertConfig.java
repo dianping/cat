@@ -42,7 +42,6 @@ public class MetricAlertConfig extends BaseAlertConfig {
 		List<String> emails = new ArrayList<String>();
 		String emailList = project.getEmail();
 
-		emails.add("yong.you@dianping.com");
 		emails.add("jialin.sun@dianping.com");
 		if (emailList != null) {
 			emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
