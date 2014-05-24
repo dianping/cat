@@ -54,7 +54,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	public static final String USER_MONITOR = "外部监控";
 
-	public static final String ERROR_MONITOR = "错误监控";
+	public static final String APPLICATION_MONITOR = "应用监控";
 
 	public static final String SYSTEM_MONITOR = "系统监控";
 
@@ -243,10 +243,10 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		Map<String, List<ProductLine>> productLines = new LinkedHashMap<String, List<ProductLine>>();
 
 		productLines.put(METRIC_MONITOR, new ArrayList<ProductLine>());
+		productLines.put(USER_MONITOR, new ArrayList<ProductLine>());
+		productLines.put(APPLICATION_MONITOR, new ArrayList<ProductLine>());
 		productLines.put(NETWORK_MONITOR, new ArrayList<ProductLine>());
 		productLines.put(SYSTEM_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(USER_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(ERROR_MONITOR, new ArrayList<ProductLine>());
 
 		for (ProductLine line : getCompany().getProductLines().values()) {
 			String id = line.getId();
@@ -261,8 +261,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				if (line.getUserMonitorDashboard()) {
 					productLines.get(USER_MONITOR).add(line);
 				}
-				if (line.getDashboard()) {
-					productLines.get(ERROR_MONITOR).add(line);
+				if (line.getDashboard() || line.getApplicationDashboard()) {
+					line.setApplicationDashboard(true);
+					productLines.get(APPLICATION_MONITOR).add(line);
 				}
 				if (line.getSystemMonitorDashboard()) {
 					productLines.get(SYSTEM_MONITOR).add(line);
