@@ -21,7 +21,7 @@ public class AlertInfo implements Initializable {
 	protected MetricConfigManager m_manager;
 
 	public void addAlertInfo(MetricItemConfig config, long value) {
-		m_alertInfos.putIfAbsent(config, value);
+		m_alertInfos.put(config, value);
 	}
 
 	public List<MetricItemConfig> queryLastestAlarmInfo(int minute) {

@@ -416,6 +416,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (!StringUtil.isEmpty(domain) && !StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
 			config.setId(m_metricConfigManager.buildMetricKey(domain, type, metricKey));
+			
 			return m_metricConfigManager.insertMetricItemConfig(config);
 		} else {
 			return false;

@@ -123,7 +123,6 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 		}
 
 		if (alert != null && alert.getKey()) {
-			config.setId(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
 			m_alertInfo.addAlertInfo(config, new Date().getTime());
 			sendAlertInfo(productLine, config, alert.getValue());
 		}

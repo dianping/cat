@@ -87,7 +87,7 @@ public class MetricConfigManager implements Initializable {
 			m_metricConfig = new MetricConfig();
 		}
 	}
-
+	
 	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
 		String key = buildMetricKey(domain, type, metricKey);
 		MetricItemConfig config = m_metricConfig.findMetricItemConfig(key);
