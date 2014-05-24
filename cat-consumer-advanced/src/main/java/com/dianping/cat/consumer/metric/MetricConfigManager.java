@@ -109,6 +109,9 @@ public class MetricConfigManager implements Initializable {
 				if ("Default".equals(productLine)) {
 					unused.add(config.getId());
 				}
+				if (config.getId().contains(":metric:")) {
+					unused.add(config.getId());
+				}
 			}
 			for (String id : unused) {
 				m_metricConfig.removeMetricItemConfig(id);
