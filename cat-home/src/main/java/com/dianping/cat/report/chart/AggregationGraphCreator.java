@@ -63,7 +63,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 
 	private Pair<String, LineChart> buildAggerationChart(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures, MetricAggregation metricAggregation) {
-
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(m_aggregationGroup);
 		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
@@ -88,7 +87,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 			String itemKey = domain + ":" + type + ":" + metricAggregationItem.getKey() + ":" + displayType.toUpperCase();
 
 			if (dataWithOutFutures.containsKey(itemKey)) {
-				buildLineChartTitle(alertItems, lineChart, itemKey, title);
+				buildLineChartTitle(alertItems, lineChart, itemKey);
 				
 				Map<Long, Double> all = convertToMap(datas.get(itemKey), startDate, 1);
 				Map<Long, Double> current = convertToMap(dataWithOutFutures.get(itemKey), startDate, step);

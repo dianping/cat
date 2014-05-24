@@ -12,7 +12,7 @@ public class AlertInfo {
 
 	private ConcurrentHashMap<MetricItemConfig, Long> m_alerts = new ConcurrentHashMap<MetricItemConfig, Long>();
 
-	public void addMetric(MetricItemConfig config, long value) {
+	public void addAlertInfo(MetricItemConfig config, long value) {
 		m_alerts.putIfAbsent(config, value);
 	}
 
