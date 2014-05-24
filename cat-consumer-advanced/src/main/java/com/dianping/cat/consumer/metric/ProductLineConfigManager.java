@@ -58,7 +58,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	public static final String SYSTEM_MONITOR = "系统监控";
 
-	public static final String NETWORK_MONITOR_PREFIX = "network-";
+	public static final String NETWORK_SWITCH_PREFIX = "switch-";
+
+	public static final String NETWORK_F5_PREFIX = "f5-";
 
 	public static final String SYSTEM_MONITOR_PREFIX = "system-";
 
@@ -132,11 +134,12 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		if ("broker-service".equals(domain)) {
 			userMonitor = true;
-		} else if (line.startsWith(NETWORK_MONITOR_PREFIX)) {
+		} else if (line.startsWith(NETWORK_SWITCH_PREFIX) || line.startsWith(NETWORK_F5_PREFIX)) {
 			networkMonitor = true;
 		} else if (line.startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
 		}
+
 		productLine.setNetworkDashboard(networkMonitor);
 		productLine.setUserMonitorDashboard(userMonitor);
 		productLine.setSystemMonitorDashboard(systemMonitor);
@@ -168,9 +171,8 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 					return storeConfig();
 				}
 			}
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public boolean insertProductLine(ProductLine line, String[] domains) {

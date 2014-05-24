@@ -12,7 +12,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
@@ -52,6 +51,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
+
+	private static final String METRIC = "metric";
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -148,9 +149,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			processMetricOnTransaction(product, report, (Transaction) message, tree);
-		}
-		if (message instanceof Transaction) {
 			processTransaction(product, report, tree, (Transaction) message);
 		} else if (message instanceof Metric) {
 			processMetric(product, report, tree, (Metric) message);
@@ -159,7 +157,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
 		String type = metric.getType();
-		String name = metric.getName();
+		String metricName = metric.getName();
 		String domain = tree.getDomain();
 		String data = (String) metric.getData();
 		String status = metric.getStatus();
@@ -171,41 +169,17 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
-			String key = m_configManager.buildMetricKey(domain, "Metric", name);
+			String key = m_configManager.buildMetricKey(domain, METRIC, metricName);
 			MetricItem metricItem = report.findOrCreateMetricItem(key);
 
 			metricItem.addDomain(domain).setType(status);
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
-			config.setTitle(name);
-			m_configManager.insertIfNotExist(domain, "Metric", name, config);
+			config.setTitle(metricName);
+
+			m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 		}
 		return 0;
-	}
-
-	private void processMetricOnTransaction(String product, MetricReport report, Transaction transaction,
-	      MessageTree tree) {
-		String type = transaction.getType();
-
-		if (type.equals("Service")) {
-			type = "PigeonService";
-		}
-		if ("URL".equals(type) || "PigeonService".equals(type)) {
-			String domain = tree.getDomain();
-			String name = transaction.getName();
-			String key = m_configManager.buildMetricKey(domain, type, name);
-			MetricItemConfig config = m_configManager.queryMetricItemConfig(key);
-
-			if (config != null) {
-				long current = transaction.getTimestamp() / 1000 / 60;
-				int min = (int) (current % (60));
-				double sum = transaction.getDurationInMicros();
-				MetricItem metricItem = report.findOrCreateMetricItem(key);
-
-				metricItem.addDomain(domain).setType("C");
-				updateMetric(metricItem, min, 1, sum);
-			}
-		}
 	}
 
 	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
