@@ -125,6 +125,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
+		
+		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
 
 		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,

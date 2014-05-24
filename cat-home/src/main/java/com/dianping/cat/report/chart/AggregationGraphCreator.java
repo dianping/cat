@@ -65,7 +65,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	      Date endDate, final Map<String, double[]> dataWithOutFutures, MetricAggregation metricAggregation) {
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(m_aggregationGroup);
-		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
+		List<MetricItemConfig> alertItems = m_alertInfo.queryLastestAlarmInfo(5);
 		String type = metricAggregationGroup.getType();
 		int step = m_dataExtractor.getStep();
 		String id = metricAggregation.getId();

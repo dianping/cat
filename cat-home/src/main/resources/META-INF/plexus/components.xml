@@ -218,6 +218,15 @@
 			<implementation>com.dianping.cat.report.chart.impl.MetricDataFetcherImpl</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.chart.GraphCreator</role>
 			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
 			<requirements>
@@ -2937,6 +2946,11 @@
 		<component>
 			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
 			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.jsError.Handler</role>
