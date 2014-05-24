@@ -49,27 +49,29 @@ public class Handler implements PageHandler<Context> {
 		String file = payload.getFile();
 		String host = parseHost();
 
-		if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
-			if (m_referer != null) {
-				file = m_referer;
-			} else {
-				file = "unknown";
+		if (host.contains("dianping")) {
+			if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
+				if (m_referer != null) {
+					file = m_referer;
+				} else {
+					file = "unknown";
+				}
 			}
+
+			int index = file.indexOf('?');
+			if (index > -1) {
+				file = file.substring(0, index);
+			}
+			Cat.logEvent("Error", file, "Error", error);
+			Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
+			      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
+
+			MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
+
+			tree.setDomain(Constants.FRONT_END);
+			tree.setHostName(host);
+			tree.setIpAddress(host);
 		}
-
-		int index = file.indexOf('?');
-		if (index > -1) {
-			file = file.substring(0, index);
-		}
-		Cat.logEvent("Error", file, "Error", error);
-		Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
-		      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
-
-		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
-
-		tree.setDomain(Constants.FRONT_END);
-		tree.setHostName(host);
-		tree.setIpAddress(host);
 		model.setStatus("SUCCESS");
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.JSERROR);
