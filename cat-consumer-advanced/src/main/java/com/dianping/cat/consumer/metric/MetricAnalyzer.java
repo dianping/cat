@@ -177,10 +177,17 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setTitle(metricName);
 
-			m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+			insertDefaultConfig(metricName, domain, config);
 		}
 		return 0;
 	}
+
+	private void insertDefaultConfig(String metricName, String domain, ConfigItem config) {
+		//外部监控Key不需要存储
+		if (!Constants.BROKER_SERVICE.equals(domain)) {
+	   	m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+	   }
+   }
 
 	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
 		int count = 0;

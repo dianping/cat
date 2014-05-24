@@ -23,6 +23,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -132,7 +133,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		boolean networkMonitor = false;
 		boolean systemMonitor = false;
 
-		if ("broker-service".equals(domain)) {
+		if (Constants.BROKER_SERVICE.equals(domain)) {
 			userMonitor = true;
 		} else if (line.startsWith(NETWORK_SWITCH_PREFIX) || line.startsWith(NETWORK_F5_PREFIX)) {
 			networkMonitor = true;
