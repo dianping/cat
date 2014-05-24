@@ -15,20 +15,20 @@ import com.dianping.cat.helper.TimeUtil;
 
 public class AlertInfo implements Initializable {
 
-	private ConcurrentHashMap<MetricItemConfig, Long> m_alerts = new ConcurrentHashMap<MetricItemConfig, Long>();
+	private ConcurrentHashMap<MetricItemConfig, Long> m_alertInfos = new ConcurrentHashMap<MetricItemConfig, Long>();
 
 	@Inject
 	protected MetricConfigManager m_manager;
 
 	public void addAlertInfo(MetricItemConfig config, long value) {
-		m_alerts.putIfAbsent(config, value);
+		m_alertInfos.putIfAbsent(config, value);
 	}
 
 	public List<MetricItemConfig> queryLastestAlarmInfo(int minute) {
 		List<MetricItemConfig> config = new ArrayList<MetricItemConfig>();
 		long currentTimeMillis = System.currentTimeMillis();
 
-		for (Entry<MetricItemConfig, Long> entry : m_alerts.entrySet()) {
+		for (Entry<MetricItemConfig, Long> entry : m_alertInfos.entrySet()) {
 			Long value = entry.getValue();
 
 			if (currentTimeMillis - value < TimeUtil.ONE_MINUTE * minute) {

@@ -95,6 +95,9 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		}
 	}
 
+	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
+	      List<MetricItemConfig> metricConfigs);
+
 	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
@@ -112,19 +115,6 @@ public abstract class BaseGraphCreator implements LogEnabled {
 			chart.setHtmlTitle(title);
 		}
 	}
-
-	private String queryMetricItemDes(String type) {
-	   String des = "";
-
-		if (MetricType.AVG.name().equals(type)) {
-			des = Chinese.Suffix_AVG;
-		} else if (MetricType.SUM.name().equals(type)) {
-			des = Chinese.Suffix_SUM;
-		} else if (MetricType.COUNT.name().equals(type)) {
-			des = Chinese.Suffix_COUNT;
-		}
-	   return des;
-   }
 
 	protected double[] convert(double[] value, int removeLength) {
 		int length = value.length;
@@ -194,6 +184,23 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		return oldCurrentValues;
 	}
 
+	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
+		LineChart value = charts.get(key);
+
+		if (value != null) {
+			result.put(key, charts.get(key));
+		}
+	}
+
+	protected void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
+		double[] value = datas.get(key);
+
+		if (value == null) {
+			value = new double[60];
+		}
+		values.put(key, value);
+	}
+
 	protected double[] queryBaseline(String key, Date start, Date end) {
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_MINUTE);
 		double[] result = new double[size];
@@ -212,8 +219,18 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		return result;
 	}
 
-	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
-	      List<MetricItemConfig> metricConfigs);
+	private String queryMetricItemDes(String type) {
+	   String des = "";
+
+		if (MetricType.AVG.name().equals(type)) {
+			des = Chinese.Suffix_AVG;
+		} else if (MetricType.SUM.name().equals(type)) {
+			des = Chinese.Suffix_SUM;
+		} else if (MetricType.COUNT.name().equals(type)) {
+			des = Chinese.Suffix_COUNT;
+		}
+	   return des;
+   }
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
@@ -271,22 +288,5 @@ public abstract class BaseGraphCreator implements LogEnabled {
 			return newCurrentValues;
 		}
 		return allCurrentValues;
-	}
-
-	protected void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
-		double[] value = datas.get(key);
-
-		if (value == null) {
-			value = new double[60];
-		}
-		values.put(key, value);
-	}
-
-	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
-		LineChart value = charts.get(key);
-
-		if (value != null) {
-			result.put(key, charts.get(key));
-		}
 	}
 }

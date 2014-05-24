@@ -33,7 +33,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 
 	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
-
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(m_aggregationGroup);
 		List<MetricAggregation> metricAggregations = metricAggregationGroup.getMetricAggregations();
@@ -48,7 +47,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	}
 
 	public void rebuildData(Map<Long, Double> data, String operation) {
-
 		String op = null;
 
 		for (Entry<Long, Double> entry : data.entrySet()) {
@@ -79,7 +77,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 		lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
 		for (MetricAggregationItem metricAggregationItem : metricAggregation.getMetricAggregationItems()) {
-
 			String domain = getAttribute(metricAggregation.getDomain(), metricAggregationItem.getDomain());
 			String displayType = getAttribute(metricAggregation.getDisplayType(), metricAggregationItem.getDisplayType());
 			boolean baseLine = getAttribute(metricAggregation.getBaseLine(), metricAggregationItem.getBaseLine());
@@ -130,6 +127,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	protected boolean isProductLineInGroup(String productLine, List<MetricAggregation> metricAggregations) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
+		
 		for(MetricItemConfig metricConfig : metricConfigs){
 			String domain = metricConfig.getDomain();
 			String type = metricConfig.getType();
@@ -152,6 +150,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 
 	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
 		m_aggregationGroup = metricGroup;
+		
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(metricGroup);
@@ -184,7 +183,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	}
 
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-
 		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 
