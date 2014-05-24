@@ -15,7 +15,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 
-public class DefaultAggGraphCreator extends GraphCreator {
+public class NetworkGraphCreator extends GraphCreator {
 
 	private static String IN_KEY_SUFFIX = "-in";
 

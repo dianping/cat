@@ -320,8 +320,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.NetworkGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -3227,7 +3227,7 @@
 					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
+					<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
@@ -3286,8 +3286,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.NetworkGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
