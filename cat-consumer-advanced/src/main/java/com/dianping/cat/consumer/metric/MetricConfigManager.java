@@ -109,7 +109,7 @@ public class MetricConfigManager implements Initializable {
 				if ("Default".equals(productLine)) {
 					unused.add(config.getId());
 				}
-				if (config.getId().contains(":metric:")) {
+				if (!config.getId().contains(":Metric:")) {
 					unused.add(config.getId());
 				}
 			}

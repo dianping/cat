@@ -119,7 +119,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 					String group = url;
 
 					if (duration > 0) {
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
 					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);

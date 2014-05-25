@@ -13,11 +13,14 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.consumer.metric.model.entity.Statistic;
+import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.BaseGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
+import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 
 public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
 
@@ -28,6 +31,30 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 	private static final String SUCESS_PERCENT = "调用成功率(%)";
 
 	private static final int MULTIPLE = 10;
+
+	private List<PieChart> buildDetailPieChart(MetricReport report) {
+		Map<String, Statistic> statics = report.getStatistics();
+		List<PieChart> charts = new ArrayList<PieChart>();
+
+		for (Entry<String, Statistic> entry : statics.entrySet()) {
+			PieChart chart = new PieChart().setMaxSize(Integer.MAX_VALUE);
+			List<Item> items = new ArrayList<Item>();
+			Statistic values = entry.getValue();
+			Map<String, StatisticsItem> statisticsItems = values.getStatisticsItems();
+			
+			for (StatisticsItem tmp : statisticsItems.values()) {
+				Item item = new Item();
+
+				item.setNumber(tmp.getCount());
+				item.setTitle(tmp.getId());
+				items.add(item);
+			}
+			chart.setTitle(entry.getKey());
+			chart.addItems(items);
+			charts.add(chart);
+		}
+		return charts;
+	}
 
 	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
@@ -72,7 +99,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			LineChart lineChart = new LineChart();
 
 			if (SUCESS_PERCENT.equals(key)) {
-				lineChart.setMinYlable(95);
+				lineChart.setMinYlable(90);
 			}
 			lineChart.setId(key);
 			lineChart.setTitle(key);
@@ -150,9 +177,10 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 
 				if (key.endsWith(Monitor.HIT)) {
 					count[id] = segment.getCount() * MULTIPLE;
-					avg[id] = segment.getAvg();
 				} else if (key.endsWith(Monitor.ERROR)) {
 					error[id] = segment.getCount();
+				} else if (key.endsWith(Monitor.AVG)) {
+					avg[id] = segment.getAvg();
 				}
 			}
 		}
@@ -161,7 +189,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			double sum = count[i] + error[i];
 
 			if (sum > 0) {
-				successPercent[i] = count[i] / sum * 100;
+				successPercent[i] = count[i] / sum * 100.0;
 			} else {
 				successPercent[i] = 100;
 			}
@@ -169,12 +197,14 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 		return data;
 	}
 
-	private Map<String, double[]> prepareAllData(String url, Map<String, String> pars, Date startDate, Date endDate) {
+	private Map<String, double[]> prepareAllData(MetricReport all, String url, Map<String, String> pars, Date startDate,
+	      Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
 		Map<String, double[]> sourceValue = new LinkedHashMap<String, double[]>();
 		int index = 0;
 		String type = pars.get("type");
+		MetricReportMerger merger = new MetricReportMerger(all);
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			MetricReport report = m_metricReportService.queryUserMonitorReport(url, pars, new Date(start));
@@ -183,6 +213,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 				Map<String, double[]> currentValues = fetchMetricInfoData(report);
 
 				mergeMap(sourceValue, currentValues, totalSize, index);
+				report.accept(merger);
 			} else {
 				Map<String, double[]> currentValues = fetchMetricCodeInfo(report);
 
@@ -194,17 +225,22 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 	}
 
 	@Override
-	public Map<String, LineChart> queryBaseInfo(Date startDate, Date endDate, String url, Map<String, String> pars) {
-		Map<String, double[]> oldCurrentValues = prepareAllData(url, pars, startDate, endDate);
+	public Pair<Map<String, LineChart>, List<PieChart>> queryBaseInfo(Date startDate, Date endDate, String url,
+	      Map<String, String> pars) {
+		MetricReport report = new MetricReport(url);
+		Map<String, double[]> oldCurrentValues = prepareAllData(report, url, pars, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 
-		return buildInfoChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		Map<String, LineChart> lineCharts = buildInfoChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		List<PieChart> pieCharts = buildDetailPieChart(report);
+		return new Pair<Map<String, LineChart>, List<PieChart>>(lineCharts, pieCharts);
 	}
 
 	@Override
 	public Pair<LineChart, PieChart> queryErrorInfo(Date startDate, Date endDate, String url, Map<String, String> pars) {
-		Map<String, double[]> oldCurrentValues = prepareAllData(url, pars, startDate, endDate);
+		MetricReport report = new MetricReport(url);
+		Map<String, double[]> oldCurrentValues = prepareAllData(report, url, pars, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 

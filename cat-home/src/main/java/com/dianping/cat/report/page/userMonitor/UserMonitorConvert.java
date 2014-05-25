@@ -1,10 +1,13 @@
 package com.dianping.cat.report.page.userMonitor;
 
+import org.hsqldb.lib.StringUtil;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.site.lookup.util.StringUtils;
 
@@ -23,6 +26,44 @@ public class UserMonitorConvert extends BaseVisitor {
 		m_city = city;
 		m_channel = channel;
 	}
+
+	private void buildDetailInfo(MetricItem metricItem, String city, String channel, String info) {
+	   int total = 0;
+
+	   for (Segment segment : metricItem.getSegments().values()) {
+	   	total = total + segment.getCount();
+	   }
+
+	   if (Monitor.TYPE_INFO.equals(m_type)) {
+	   	String key = "";
+
+	   	if (info.equals(Monitor.HIT)) {
+	   		key = Monitor.HIT_COUNT;
+	   	} else if (info.equals(Monitor.ERROR)) {
+	   		key = Monitor.ERROR_COUNT;
+	   	} else {
+	   		return;
+	   	}
+	   	int index = city.indexOf('-');
+	   	if (StringUtil.isEmpty(m_city)) {
+	   		StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
+	   		      city.substring(0, index));
+
+	   		tem.setCount(tem.getCount() + total);
+	   	} else {
+	   		StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
+	   		      city.substring(index + 1));
+
+	   		tem.setCount(tem.getCount() + total);
+	   	}
+	   	if (StringUtil.isEmpty(m_channel)) {
+	   		StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CHANNEL + key)
+	   		      .findOrCreateStatisticsItem(channel);
+
+	   		tem.setCount(tem.getCount() + total);
+	   	}
+	   }
+   }
 
 	public MetricReport getReport() {
 		return m_report;
@@ -94,7 +135,7 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private boolean validateInfo(String info) {
-		if (Monitor.HIT.equals(info) || Monitor.ERROR.equals(info)) {
+		if (Monitor.AVG.equals(info) || Monitor.HIT.equals(info) || Monitor.ERROR.equals(info)) {
 			return true;
 		} else {
 			return false;
@@ -114,6 +155,8 @@ public class UserMonitorConvert extends BaseVisitor {
 				MetricItem item = m_report.findOrCreateMetricItem(info);
 
 				mergeMetricItem(item, metricItem);
+
+				buildDetailInfo(metricItem, city, channel, info);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
