@@ -66,7 +66,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_configManager);
-		
+
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
@@ -209,7 +209,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		StringBuilder title = new StringBuilder();
 
-		title.append("[异常告警] [项目组: ").append(domain).append("] [时间: ").append(new Date()).append("]");
+		title.append("[异常告警] [项目组: ").append(domain).append("]");
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();
 
@@ -220,10 +220,13 @@ public class ExceptionAlert implements Task, LogEnabled {
 				errorExceptions.add(exception.getName());
 			}
 		}
-		String mailContent = "[异常警告] [" + domain + "] : " + exceptions.toString();
+		StringBuilder mailContent = new StringBuilder();
+		
+		mailContent.append("[异常警告] [").append(domain).append(exceptions.toString());
+		mailContent.append("[时间: ").append(new Date()).append("]");
 
 		m_logger.info(title + " " + mailContent + " " + emails);
-		m_mailSms.sendEmail(title.toString(), mailContent, emails);
+		m_mailSms.sendEmail(title.toString(), mailContent.toString(), emails);
 
 		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
 	}

@@ -133,9 +133,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		if ("broker-service".equals(domain)) {
 			userMonitor = true;
-		} else if (line.startsWith(NETWORK_MONITOR_PREFIX)) {
+		} else if (line.toLowerCase().startsWith(NETWORK_MONITOR_PREFIX)) {
 			networkMonitor = true;
-		} else if (line.startsWith(SYSTEM_MONITOR_PREFIX)) {
+		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
 		}
 		productLine.setNetworkDashboard(networkMonitor);
