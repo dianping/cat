@@ -71,6 +71,20 @@
 		    <input id="queryname" style="WIDTH: 60px"  onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
+			<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
+			<script type="text/javascript">
+				var buildIpHostMap = function(){
+					var ipToHost = {};
+					<c:forEach var="ip" items="${model.ips}">
+						ipToHost["${ip}"] = "${model.ipToHostname[ip]}";
+					</c:forEach>
+					return ipToHost;
+				};
+				
+				$(document).ready(function() {
+					appendHostname(buildIpHostMap());
+				});
+			</script>
 			<script>
 			function filterByName(date,domain,ip){
 				var queryname=$("#queryname").val();
