@@ -22,9 +22,11 @@ public class Constants {
 	public static final String REPORT_UTILIZATION = "utilization";
 
 	public static final String REPORT_HEAVY = "heavy";
-	
+
 	public static final String REPORT_NET_TOPOLOGY = "NetTopology";
 
 	public static final String REPORT_ALERT = "alert";
+
+	public static final String BROKER_SERVICE = "broker-service";
 
 }

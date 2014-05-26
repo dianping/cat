@@ -82,7 +82,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
-		ProductLinesDashboard dashboardGraph = m_graphManager.buildDashboardGraph(reportTime.getTime());
+		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
 		Map<String, List<TopologyNode>> dashboardNodes = dashboardGraph.getNodes();
 
 		for (Entry<String, List<TopologyNode>> entry : dashboardNodes.entrySet()) {

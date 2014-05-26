@@ -218,6 +218,15 @@
 			<implementation>com.dianping.cat.report.chart.impl.MetricDataFetcherImpl</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
+			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.chart.GraphCreator</role>
 			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
 			<requirements>
@@ -311,8 +320,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.NetworkGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -1673,6 +1682,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2929,11 +2941,19 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
 			<implementation>com.dianping.cat.report.task.metric.AlertInfo</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.jsError.Handler</role>
@@ -3210,7 +3230,7 @@
 					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
+					<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
@@ -3269,8 +3289,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.DefaultAggGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.DefaultAggGraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.NetworkGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>

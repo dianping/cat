@@ -31,7 +31,7 @@
 					<th width="15%">唯一ID</th>
 					<th width="15%">属于组</th>
 					<th width="62%">Pattern内容</th>
-					<th width="8%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=urlPatternUpdate">新增</a></th>
+					<th width="8%"><a class='btn btn-primary btn-small' href="?op=urlPatternUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.patternItems}"

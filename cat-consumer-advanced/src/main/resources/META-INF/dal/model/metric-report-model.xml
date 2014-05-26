@@ -7,6 +7,7 @@
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <entity-ref name="metric-item" type="map" names="metric-items" method-find-or-create="true" />
+    <entity-ref name="statistic" type="map" names="statistics" method-find-or-create="true" />
   </entity>
   <entity name="metric-item">
     <attribute name="id" value-type="String" key="true"/>
@@ -34,5 +35,13 @@
     <attribute name="count" value-type="int"  primitive="true"/>
     <attribute name="sum" value-type="double" primitive="true"/>
     <attribute name="avg" value-type="double" primitive="true"/>
+  </entity>
+  <entity name="statistic">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="statistics-item" type="map" names="statistics-items" method-find-or-create="true" />
+  </entity>
+  <entity name="statistics-item">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="count" value-type="int"  primitive="true"/>
   </entity>
 </model>

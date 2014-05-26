@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.exceptionAlert;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -66,7 +67,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_configManager);
-		
+
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
@@ -109,11 +110,11 @@ public class ExceptionAlert implements Task, LogEnabled {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
 				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
+
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
 						sendAlertForDomain(entry.getKey(), entry.getValue());
 					} catch (Exception e) {
-						e.printStackTrace();
 						m_logger.error(e.getMessage());
 					}
 				}
@@ -208,8 +209,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		StringBuilder title = new StringBuilder();
-
-		title.append("[异常告警] [项目组: ").append(domain).append("] [时间: ").append(new Date()).append("]");
+		title.append("[CAT异常告警] [项目: ").append(domain).append("]");
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();
 
@@ -220,7 +220,13 @@ public class ExceptionAlert implements Task, LogEnabled {
 				errorExceptions.add(exception.getName());
 			}
 		}
-		String mailContent = "[异常警告] [" + domain + "] : " + exceptions.toString();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[CAT异常告警] [").append(domain).append("] : ");
+		sb.append(exceptions.toString()).append("[时间: ")
+		      .append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date())).append("]");
+
+		String mailContent = sb.toString();
 
 		m_logger.info(title + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(title.toString(), mailContent, emails);

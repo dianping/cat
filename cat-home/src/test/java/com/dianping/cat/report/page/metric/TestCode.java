@@ -46,6 +46,7 @@ public class TestCode {
 			report.addMetricItem(create(getKey1(i), i));
 			report.addMetricItem(create(getKey2(i), i));
 			report.addMetricItem(create(getKey3(i), i));
+			report.addMetricItem(create(getKey4(i), i));
 		}
 		Files.forIO().writeTo(new File("/tmp/data.txt"), report.toString());
 	}
@@ -85,62 +86,81 @@ public class TestCode {
 
 	public String getKey1(int i) {
 		if (i < 100) {
-			return "broker-service:Metric:江苏 南京:中国移动:httpStatus|200";
+			return "broker-service:Metric:江苏-南京:中国移动:httpStatus|200";
 		} else if (i < 200) {
-			return "broker-service:Metric:江苏 南京:中国移动:httpStatus|300";
+			return "broker-service:Metric:江苏-南京:中国移动:httpStatus|300";
 		} else if (i < 300) {
-			return "broker-service:Metric:江苏 南京:中国移动:httpStatus|400";
+			return "broker-service:Metric:江苏-南京:中国移动:httpStatus|400";
 		} else if (i < 400) {
-			return "broker-service:Metric:江苏 南京:中国联通:httpStatus|200";
+			return "broker-service:Metric:江苏-南京:中国联通:httpStatus|200";
 		} else if (i < 500) {
-			return "broker-service:Metric:江苏 南京:中国联通:httpStatus|300";
+			return "broker-service:Metric:江苏-南京:中国联通:httpStatus|300";
 		} else if (i < 600) {
-			return "broker-service:Metric:江苏 扬州:中国联通:httpStatus|200";
+			return "broker-service:Metric:江苏-扬州:中国联通:httpStatus|200";
 		} else if (i < 700) {
-			return "broker-service:Metric:江苏 扬州:中国联通:httpStatus|300";
+			return "broker-service:Metric:江苏-扬州:中国联通:httpStatus|300";
 		} else {
-			return "broker-service:Metric:江苏 扬州:中国联通:httpStatus|400";
+			return "broker-service:Metric:江苏-扬州:中国联通:httpStatus|400";
 		}
 	}
 
 	public String getKey3(int i) {
 		if (i < 100) {
-			return "broker-service:Metric:江苏 南京:中国移动:errorCode|200";
+			return "broker-service:Metric:江苏-南京:中国移动:errorCode|200";
 		} else if (i < 200) {
-			return "broker-service:Metric:江苏 南京:中国移动:errorCode|300";
+			return "broker-service:Metric:江苏-南京:中国移动:errorCode|300";
 		} else if (i < 300) {
-			return "broker-service:Metric:江苏 南京:中国移动:errorCode|400";
+			return "broker-service:Metric:江苏-南京:中国移动:errorCode|400";
 		} else if (i < 400) {
-			return "broker-service:Metric:江苏 南京:中国联通:errorCode|200";
+			return "broker-service:Metric:江苏-南京:中国联通:errorCode|200";
 		} else if (i < 500) {
-			return "broker-service:Metric:江苏 南京:中国联通:errorCode|300";
+			return "broker-service:Metric:江苏-南京:中国联通:errorCode|300";
 		} else if (i < 600) {
-			return "broker-service:Metric:江苏 扬州:中国联通:errorCode|200";
+			return "broker-service:Metric:江苏-扬州:中国联通:errorCode|200";
 		} else if (i < 700) {
-			return "broker-service:Metric:江苏 扬州:中国联通:errorCode|300";
+			return "broker-service:Metric:江苏-扬州:中国联通:errorCode|300";
 		} else {
-			return "broker-service:Metric:江苏 扬州:中国联通:errorCode|400";
+			return "broker-service:Metric:江苏-扬州:中国联通:errorCode|400";
 		}
 	}
 
 	public String getKey2(int i) {
 		if (i < 100) {
-			return "broker-service:Metric:江苏 南京:中国移动:hit";
+			return "broker-service:Metric:江苏-南京:中国移动:hit";
 		} else if (i < 200) {
-			return "broker-service:Metric:江苏 南京:中国移动:hit";
+			return "broker-service:Metric:江苏-南京:中国移动:hit";
 		} else if (i < 300) {
-			return "broker-service:Metric:江苏 南京:中国移动:error";
+			return "broker-service:Metric:江苏-南京:中国移动:error";
 		} else if (i < 400) {
-			return "broker-service:Metric:江苏 南京:中国联通:error";
+			return "broker-service:Metric:江苏-南京:中国联通:error";
 		} else if (i < 500) {
-			return "broker-service:Metric:江苏 南京:中国联通:hit";
+			return "broker-service:Metric:江苏-南京:中国联通:hit";
 		} else if (i < 600) {
-			return "broker-service:Metric:江苏 扬州:中国联通:hit";
+			return "broker-service:Metric:江苏-扬州:中国联通:hit";
 		} else if (i < 700) {
-			return "broker-service:Metric:江苏 扬州:中国联通:error";
+			return "broker-service:Metric:江苏-扬州:中国联通:error";
 		} else {
-			return "broker-service:Metric:江苏 扬州:中国联通:error";
+			return "broker-service:Metric:江苏-扬州:中国联通:error";
 		}
+	}
 
+	public String getKey4(int i) {
+		if (i < 100) {
+			return "broker-service:Metric:江苏-南京:中国移动:avg";
+		} else if (i < 200) {
+			return "broker-service:Metric:江苏-南京:中国移动:avg";
+		} else if (i < 300) {
+			return "broker-service:Metric:江苏-南京:中国移动:avg";
+		} else if (i < 400) {
+			return "broker-service:Metric:江苏-南京:中国联通:avg";
+		} else if (i < 500) {
+			return "broker-service:Metric:江苏-南京:中国联通:avg";
+		} else if (i < 600) {
+			return "broker-service:Metric:江苏-扬州:中国联通:avg";
+		} else if (i < 700) {
+			return "broker-service:Metric:江苏-扬州:中国联通:avg";
+		} else {
+			return "broker-service:Metric:江苏-扬州:中国联通:avg";
+		}
 	}
 }

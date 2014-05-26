@@ -23,7 +23,7 @@
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
+						<td style="width:25%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
 							value="${model.productLine.id}" required />
 							<input name="type" value="${payload.type}" type="hidden"/>	
