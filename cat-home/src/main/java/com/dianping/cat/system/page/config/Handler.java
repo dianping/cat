@@ -461,7 +461,8 @@ public class Handler implements PageHandler<Context> {
 	private List<String> queryDoaminList() {
 		List<String> result = new ArrayList<String>();
 		List<Project> projects = queryAllProjects();
-
+		
+		result.add("Default");
 		for (Project p : projects) {
 			result.add(p.getDomain());
 		}
@@ -474,6 +475,8 @@ public class Handler implements PageHandler<Context> {
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
 		Set<String> exceptions = new HashSet<String>();
+		
+		exceptions.add("Total");
 
 		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
 			exceptions.addAll(domain.getValue().getExceptionItems().keySet());

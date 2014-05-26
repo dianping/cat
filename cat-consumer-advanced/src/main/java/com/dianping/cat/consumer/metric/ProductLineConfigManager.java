@@ -135,9 +135,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		if (Constants.BROKER_SERVICE.equals(domain)) {
 			userMonitor = true;
-		} else if (line.startsWith(NETWORK_SWITCH_PREFIX) || line.startsWith(NETWORK_F5_PREFIX)) {
+		} else if (line.toLowerCase().startsWith(NETWORK_SWITCH_PREFIX) || line.toLowerCase().startsWith(NETWORK_F5_PREFIX)) {
 			networkMonitor = true;
-		} else if (line.startsWith(SYSTEM_MONITOR_PREFIX)) {
+		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
 		}
 
