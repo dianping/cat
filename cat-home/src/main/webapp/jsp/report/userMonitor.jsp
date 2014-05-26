@@ -168,7 +168,7 @@
 				<c:forEach var="item" items="${model.pieCharts}" varStatus="status">
 					<div style="float: left;">
 						<h5 class="text-center">${item.title}</h5>
-						<div id="${item.title}" style="width:600px; height:500px;"></div>
+						<div id="${item.title}" style="width:600px; height:450px;"></div>
 					</div>
 				</c:forEach></div>
 			</c:when>
