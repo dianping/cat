@@ -2342,6 +2342,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.DomainManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
