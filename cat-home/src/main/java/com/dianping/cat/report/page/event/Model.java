@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -44,6 +45,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_type;
 
 	private String m_pieChart;
+	
+	private Map<String, String> m_ipToHostname;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -126,6 +129,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public Map<String, String> getIpToHostname() {
+		return m_ipToHostname;
+	}
+
 	public String getMobileResponse() {
 		return m_mobileResponse;
 	}
@@ -180,6 +187,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setHitTrend(String hitTrend) {
 		m_hitTrend = hitTrend;
+	}
+
+	public void setIpToHostname(Map<String, String> ipToHostname) {
+		m_ipToHostname = ipToHostname;
 	}
 
 	public void setMobileResponse(String mobileResponse) {

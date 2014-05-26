@@ -58,8 +58,6 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 	
-	private static final long DURATION = 60 * 60 * 1000L; 
-
 	public boolean containsDomainInCat(String domain) {
 		return m_domainsInCat.contains(domain);
 	}
@@ -148,15 +146,14 @@ public class DomainManager implements Initializable, LogEnabled {
 	}
 
 	public String queryHostnameByIp(String ip) {
-		String hostname = null;
-		
 	   try {
-	      hostname = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL).getHostname();
+	      String hostname = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL).getHostname();
+	      return hostname;
       } catch (DalException e) {
 	      Cat.logError(e);
       }
 	   
-	   return hostname;
+	   return null;
    }
 
 	public boolean update(int id, String domain, String ip) {
@@ -274,6 +271,7 @@ public class DomainManager implements Initializable, LogEnabled {
 	
 	public class UploadHostinfoDBTask implements Task {
 		
+		private static final long DURATION = 60 * 60 * 1000L; 
 		private static final String CMDB_HOSTNAME_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=hostname&tidy=true";
 
 		@Override
@@ -292,8 +290,6 @@ public class DomainManager implements Initializable, LogEnabled {
 		}
 		
 		private String queryHostnameFromCMDB(String ip) {
-			String hostname = null;
-			
 			try {
 				String cmdb = String.format(CMDB_HOSTNAME_URL, ip);
 				URL url = new URL(cmdb);
@@ -303,13 +299,13 @@ public class DomainManager implements Initializable, LogEnabled {
 				if (nRc == HttpURLConnection.HTTP_OK) {
 					InputStream input = conn.getInputStream();
 					String content = Files.forIO().readFrom(input, "utf-8");
-					hostname = parseHostname(content.trim());
+					return parseHostname(content.trim());
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 			
-			return hostname;
+			return null;
       }
 
 		@Override
@@ -327,7 +323,7 @@ public class DomainManager implements Initializable, LogEnabled {
 							String ip = info.getIp();
 							String cmdbHostname = queryHostnameFromCMDB(ip);
 							
-							if(cmdbHostname != null){
+							if(cmdbHostname != null && !"".equals(cmdbHostname)){
 								info.setHostname(cmdbHostname);
 								m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
 							}else{

@@ -74,6 +74,7 @@ public class ProductUpdateTask implements Task, LogEnabled {
 	private Map<String, String> parseInfos(String content) throws Exception {
 		Map<String, String> infosMap = new HashMap<String, String>();
 		JsonObject object = new JsonObject(content);
+
 		JsonArray owners = object.getJSONArray("rd_duty");
 
 		if (owners.length() > 0) {
@@ -81,31 +82,27 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		}
 
 		JsonArray emails = object.getJSONArray("project_email");
-		StringBuilder email = new StringBuilder(256);
+		StringBuilder emailBuilder = new StringBuilder(256);
 		int length = emails.length();
 
 		if (length > 0) {
-			email.append(emails.getString(0));
+			emailBuilder.append(emails.getString(0));
 
 			for (int i = 1; i < length; i++) {
 				String tmpEmail = emails.getString(i);
 				if (tmpEmail != null && !"".equals(tmpEmail) && !"null".equals(tmpEmail)) {
-					email.append(",");
-					email.append(tmpEmail);
+					emailBuilder.append(",");
+					emailBuilder.append(tmpEmail);
 				}
 			}
 		}
 
-		if (email != null && !"".equals(email) && !"null".equals(email)) {
-			infosMap.put("email", email.toString());
-		}
+		infosMap.put("email", emailBuilder.toString());
 
 		return infosMap;
 	}
 
 	private String queryDomainFromCMDB(String ip) {
-		String domain = null;
-
 		try {
 			String cmdb = String.format(CMDB_DOMAIN_URL, ip);
 			URL url = new URL(cmdb);
@@ -119,7 +116,7 @@ public class ProductUpdateTask implements Task, LogEnabled {
 				int length = domains.length();
 
 				if (length == 1) {
-					domain = domains.getString(0);
+					return domains.getString(0);
 				} else if (length > 1) {
 					m_logger.error("too many domains for ip: " + ip);
 				}
@@ -128,12 +125,10 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			Cat.logError(e);
 		}
 
-		return domain;
+		return null;
 	}
 
 	private Map<String, String> queryInfosFromCMDB(String cmdbDomain) {
-		Map<String, String> infosMap = null;
-
 		try {
 			String cmdb = String.format(CMDB_INFO_URL, cmdbDomain);
 			URL url = new URL(cmdb);
@@ -143,13 +138,13 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			if (nRc == HttpURLConnection.HTTP_OK) {
 				InputStream input = conn.getInputStream();
 				String content = Files.forIO().readFrom(input, "utf-8");
-				infosMap = parseInfos(content.trim());
+				return parseInfos(content.trim());
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		return infosMap;
+		return null;
 	}
 
 	@Override
@@ -175,8 +170,8 @@ public class ProductUpdateTask implements Task, LogEnabled {
 							continue;
 						}
 
-						isCmdbDomainChange = true;
 						proj.setCmdbDomain(cmdbDomain);
+						isCmdbDomainChange = true;
 					}
 
 					if (updateProject(proj) || isCmdbDomainChange) {
@@ -205,17 +200,25 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		String email = infosMap.get("email");
 		boolean isProjChanged = false;
 
-		if (owner != null && !"".equals(owner) && !owner.equals(proj.getOwner())) {
-			isProjChanged = true;
+		if (!checkIfInvalidOrEqual(owner, proj.getOwner())) {
 			proj.setOwner(owner);
+			isProjChanged = true;
 		}
 
-		if (email != null && !"".equals(email) && !email.equals(proj.getEmail())) {
-			isProjChanged = true;
+		if (!checkIfInvalidOrEqual(email, proj.getEmail())) {
 			proj.setEmail(email);
+			isProjChanged = true;
 		}
 
 		return isProjChanged;
+	}
+	
+	private boolean checkIfInvalidOrEqual(String source, String target){
+		if(source == null || "".equals(source) || !"null".equals(source)){
+			return true;
+		}else{
+			return source.equals(target);
+		}
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +50,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_pieChart;
 	
-	private Map<String, String> m_ipToHostname = new HashMap<String, String>();
+	private Map<String, String> m_ipToHostname;
 
 	public Model(Context ctx) {
 		super(ctx);

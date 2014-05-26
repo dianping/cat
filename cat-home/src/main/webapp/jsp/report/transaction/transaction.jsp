@@ -31,10 +31,10 @@
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
 						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
-							class="current">${ip} ${model.ipToHostname[ip]}</a>
+							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip} ${model.ipToHostname[ip]}</a>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -42,7 +42,20 @@
 		</th>
 	</tr>
 </table>
-
+<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
+<script type="text/javascript">
+	var buildIpHostMap = function(){
+		var ipToHost = {};
+		<c:forEach var="ip" items="${model.ips}">
+			ipToHost["${ip}"] = "${model.ipToHostname[ip]}";
+		</c:forEach>
+		return ipToHost;
+	};
+	
+	$(document).ready(function() {
+		appendHostname(buildIpHostMap());
+	});
+</script>
 <table class="groups">
 	<tr class="left">
 		<th>机器分组: &nbsp;&nbsp; 
@@ -58,7 +71,6 @@
 		</th>
 	</tr>
 </table>
-
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
