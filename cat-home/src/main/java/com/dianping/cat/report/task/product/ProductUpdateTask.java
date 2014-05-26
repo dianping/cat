@@ -81,7 +81,7 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		}
 
 		JsonArray emails = object.getJSONArray("project_email");
-		StringBuilder email = new StringBuilder();
+		StringBuilder email = new StringBuilder(256);
 		int length = emails.length();
 
 		if (length > 0) {
