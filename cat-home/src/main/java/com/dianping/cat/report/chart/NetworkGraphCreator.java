@@ -15,7 +15,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 
-public class DefaultAggGraphCreator extends GraphCreator {
+public class NetworkGraphCreator extends GraphCreator {
 
 	private static String IN_KEY_SUFFIX = "-in";
 
@@ -36,10 +36,9 @@ public class DefaultAggGraphCreator extends GraphCreator {
 	@Override
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
-
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
+		List<MetricItemConfig> alertItems = m_alertInfo.queryLastestAlarmInfo(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
@@ -54,7 +53,7 @@ public class DefaultAggGraphCreator extends GraphCreator {
 
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
-					buildLineChartTitle(alertItems, lineChart, key, chartTitle);
+					buildLineChartTitle(alertItems, lineChart, key);
 
 					double[] baselines = queryBaseline(key, startDate, endDate);
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);

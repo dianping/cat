@@ -162,8 +162,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-			<implementation>com.dianping.cat.consumer.metric.MetricConfigManager</implementation>
+			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -171,11 +171,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+			<implementation>com.dianping.cat.consumer.metric.MetricConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

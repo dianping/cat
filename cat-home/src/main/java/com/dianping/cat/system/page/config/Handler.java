@@ -416,6 +416,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (!StringUtil.isEmpty(domain) && !StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
 			config.setId(m_metricConfigManager.buildMetricKey(domain, type, metricKey));
+			
 			return m_metricConfigManager.insertMetricItemConfig(config);
 		} else {
 			return false;
@@ -428,28 +429,20 @@ public class Handler implements PageHandler<Context> {
 		Set<String> exists = new HashSet<String>();
 
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
-			Set<String> domains = entry.getValue().getDomains().keySet();
-			List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
+			ProductLine productLine = entry.getValue();
+			
+			if (productLine.isMetricDashboard()) {
+				Set<String> domains = productLine.getDomains().keySet();
+				List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 
-			for (MetricItemConfig config : configs) {
-				exists.add(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
+				for (MetricItemConfig config : configs) {
+					exists.add(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+					      config.getMetricKey()));
+				}
+				metricConfigs.put(productLine, configs);
 			}
-
-			metricConfigs.put(entry.getValue(), configs);
 		}
 
-		Map<String, MetricItemConfig> allConfigs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs();
-		Set<String> keysClone = new HashSet<String>(allConfigs.keySet());
-		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
-
-		for (String key : exists) {
-			keysClone.remove(key);
-		}
-		for (String str : keysClone) {
-			otherConfigs.add(allConfigs.get(str));
-		}
-		ProductLine otherProductLine = new ProductLine("Other").setTitle("Other");
-		metricConfigs.put(otherProductLine, otherConfigs);
 		model.setProductMetricConfigs(metricConfigs);
 	}
 

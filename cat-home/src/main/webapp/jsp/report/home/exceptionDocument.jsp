@@ -42,3 +42,5 @@ b) 当监测到特定异常总数，达到该项目组设定的该异常阈值�
 <p/>
 <p>b) 点击“<a href="/cat/r/statistics?domain=Cat&op=alert">Detail</a>”查看详细异常情况</p>
 </br>
+<h4 class="text-success">4. 异常告警<a href="/cat/s/config?op=projects">邮件配置</a></h4>
+<p>针对每个项目组，可以进行组邮件和联系人的配置，CAT将根据此配置进行邮件的发送。</p>

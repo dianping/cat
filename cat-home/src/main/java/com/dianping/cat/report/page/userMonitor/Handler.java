@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -82,9 +83,13 @@ public class Handler implements PageHandler<Context> {
 
 		if (url != null) {
 			if (Monitor.TYPE_INFO.equals(type)) {
-				Map<String, LineChart> charts = m_graphCreator.queryBaseInfo(startDate, endDate, url, pars);
+				Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate, url,
+				      pars);
+				Map<String, LineChart> lineCharts = charts.getKey();
+				List<PieChart> pieCharts = charts.getValue();
 
-				model.setLineCharts(charts);
+				model.setLineCharts(lineCharts);
+				model.setPieCharts(pieCharts);
 			} else {
 				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
 

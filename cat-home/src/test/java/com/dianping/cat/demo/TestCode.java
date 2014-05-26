@@ -10,7 +10,6 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestCode {
 	
-	
 	public void logError(Throwable able){
 		  Transaction t = Cat.newTransaction("Neocortex", "Error");
 		  

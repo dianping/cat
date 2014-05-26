@@ -20,7 +20,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
-import com.dianping.cat.report.chart.DefaultAggGraphCreator;
+import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
@@ -44,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 	private AggregationGraphCreator m_aggregationGraphCreator;
 
 	@Inject
-	private DefaultAggGraphCreator m_defaultAggGraphCreator;
+	private NetworkGraphCreator m_defaultAggGraphCreator;
 
 	@Inject
 	private NetGraphManager m_netGraphManager;

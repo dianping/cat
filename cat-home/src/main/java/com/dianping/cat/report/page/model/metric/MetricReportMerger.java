@@ -6,6 +6,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.consumer.metric.model.transform.DefaultMerger;
 
 public class MetricReportMerger extends DefaultMerger {
@@ -52,4 +53,10 @@ public class MetricReportMerger extends DefaultMerger {
 			old.setAvg(old.getSum() / old.getCount());
 		}
 	}
+
+	@Override
+	protected void mergeStatisticsItem(StatisticsItem to, StatisticsItem from) {
+		to.setCount(to.getCount() + from.getCount());
+	}
+
 }

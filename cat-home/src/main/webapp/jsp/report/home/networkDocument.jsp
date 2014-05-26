@@ -32,9 +32,9 @@ b) 每个端口的错包丢包情况汇总
 </xmp>
 
 <p>(2) 对于网络的监控代码埋点，仅支持业务监控代码埋点中的HTTP API调用方式。</p>
-<p class="text-error">注意：url中项目组名字(group)必须以"system-"作为开头</p>
+<p class="text-error">注意：url中项目组名字(group)必须以"switch-"或"f5-"作为开头</p>
 <xmp class="well">
-如：http://cat.dianpingoa.com/cat/r/monitor?group=system-switch&domain=2400-1-dianping-com&key=Ethernet1/1-1-in&op=sum&sum=100
+如：http://cat.dianpingoa.com/cat/r/monitor?group=f5-2400&domain=2400-1-dianping-com&key=Ethernet1/1-1-in&op=sum&sum=100
 </xmp>
 <p>(3) 对于需要在网络监控显示的指标，需对产品线做显示到<a href="/cat/s/config?op=topologyProductLines">网络大盘配置</a>，如下图</p>
 <img  class="img-polaroid"  width='40%' src="${model.webapp}/images/networkProductLine.jpeg"/>

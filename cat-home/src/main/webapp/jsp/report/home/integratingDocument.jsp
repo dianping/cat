@@ -5,7 +5,7 @@
 <dl>
   <dt><h5 class="text-success">1.Web.xml中新增filter</h5></dt>
   <dd><p class="detailContent">注：如果项目是对外不提供URL访问，比如GroupService，仅仅提供Pigeon服务，则不需要。</p>
-	<p class="text-error detailContent"><strong>Filter放在url-rewrite-filter 之后的第一个。</strong></p>
+	<h5 class="text-error detailContent"><strong>Filter放在url-rewrite-filter 之后的第一个，如果不是会导致URL的个数无限多，比如search/1/2,search/2/3等等，无法监控，后端存储压力也变大。</strong></h5>
 	<xmp class="well">
     <filter>
         <filter-name>cat-filter</filter-name>

@@ -19,6 +19,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, LineChart> m_lineCharts;
 	
+	private List<PieChart> m_pieCharts;
+	
 	private LineChart m_lineChart;
 	
 	private PieChart m_pieChart;
@@ -80,6 +82,10 @@ public class Model extends AbstractReportModel<Action, Context> {
    	return m_pieChart;
    }
 
+	public List<PieChart> getPieCharts() {
+   	return m_pieCharts;
+   }
+
 	public Date getStart() {
 		return m_start;
 	}
@@ -110,6 +116,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setPieChart(PieChart pieChart) {
    	m_pieChart = pieChart;
+   }
+
+	public void setPieCharts(List<PieChart> pieCharts) {
+   	m_pieCharts = pieCharts;
    }
 
 	public void setStart(Date start) {
