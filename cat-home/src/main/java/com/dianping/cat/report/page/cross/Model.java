@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.cross;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -22,6 +23,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_callSort;
 
 	private String m_queryName;
+	
+	private Map<String, String> m_ipToHostname;
 
 	@EntityMeta
 	private HostInfo m_hostInfo;
@@ -92,6 +95,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public Map<String, String> getIpToHostname() {
+		return m_ipToHostname;
+	}
+
 	public MethodInfo getMethodInfo() {
 		return m_methodInfo;
 	}
@@ -122,6 +129,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setInfo(MethodQueryInfo info) {
 		m_info = info;
+	}
+
+	public void setIpToHostname(Map<String, String> ipToHostname) {
+		m_ipToHostname = ipToHostname;
 	}
 
 	public void setMethodInfo(MethodInfo methodInfo) {

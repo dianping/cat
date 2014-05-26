@@ -2,9 +2,12 @@ package com.dianping.cat.report.page.cache;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -19,6 +22,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -51,6 +55,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private DomainManager m_domainManager;
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
@@ -86,6 +93,19 @@ public class Handler implements PageHandler<Context> {
 		}
 		chart.addItems(items);
 		return chart.getJsonString();
+	}
+
+	private void buildIpToHostnameMap(Model model) {
+		Collection<String> ips = model.getIps();
+		Map<String, String> ipToHostname = new HashMap<String, String>();
+
+		for (String ip : ips) {
+			String hostname = m_domainManager.queryHostnameByIp(ip);
+			ipToHostname.put(ip, hostname);
+		}
+
+		model.setIpToHostname(ipToHostname);
+
 	}
 
 	private void calculateEventTps(Payload payload, EventReport report) {
@@ -243,6 +263,9 @@ public class Handler implements PageHandler<Context> {
 				model.setPieChart(buildPieChart(model.getReport()));
 			}
 		}
+
+		buildIpToHostnameMap(model);
+
 		m_jspViewer.view(ctx, model);
 	}
 

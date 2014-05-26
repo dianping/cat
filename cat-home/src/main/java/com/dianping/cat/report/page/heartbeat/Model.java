@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -62,6 +63,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_systemLoadAverageGraph;
 
 	private String m_totalThreadGraph;
+	
+	private Map<String, String> m_ipToHostname;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -160,6 +163,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public Map<String, String> getIpToHostname() {
+		return m_ipToHostname;
+	}
+
 	public String getMemoryFreeGraph() {
 		return m_memoryFreeGraph;
 	}
@@ -255,6 +262,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
+	}
+
+	public void setIpToHostname(Map<String, String> ipToHostname) {
+		m_ipToHostname = ipToHostname;
 	}
 
 	public void setMemoryFreeGraph(String memoryFreeGraph) {

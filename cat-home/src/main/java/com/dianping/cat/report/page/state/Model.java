@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.state;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
@@ -24,6 +25,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String m_message;
 
 	public String m_graph;
+	
+	private Map<String, String> m_ipToHostname;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -55,6 +58,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return StringSortHelper.sortDomain(m_report.getMachines().keySet());
 	}
 
+	public Map<String, String> getIpToHostname() {
+		return m_ipToHostname;
+	}
+
+	public String getMessage() {
+   	return m_message;
+   }
+
 	public StateReport getReport() {
 		return m_report;
 	}
@@ -67,9 +78,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_graph = graph;
 	}
 	
-	public String getMessage() {
-   	return m_message;
-   }
+	public void setIpToHostname(Map<String, String> ipToHostname) {
+		m_ipToHostname = ipToHostname;
+	}
 
 	public void setMessage(String message) {
    	m_message = message;

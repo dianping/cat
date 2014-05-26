@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -18,6 +19,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private CacheReport m_report;
 
 	private String m_pieChart;
+	
+	private Map<String, String> m_ipToHostname;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -55,6 +58,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public Map<String, String> getIpToHostname() {
+		return m_ipToHostname;
+	}
+
 	public String getPieChart() {
 		return m_pieChart;
 	}
@@ -65,6 +72,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public CacheReport getReport() {
 		return m_report;
+	}
+
+	public void setIpToHostname(Map<String, String> ipToHostname) {
+		m_ipToHostname = ipToHostname;
 	}
 
 	public void setPieChart(String pieChart) {
