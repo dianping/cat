@@ -28,42 +28,42 @@ public class UserMonitorConvert extends BaseVisitor {
 	}
 
 	private void buildDetailInfo(MetricItem metricItem, String city, String channel, String info) {
-	   int total = 0;
+		int total = 0;
 
-	   for (Segment segment : metricItem.getSegments().values()) {
-	   	total = total + segment.getCount();
-	   }
+		for (Segment segment : metricItem.getSegments().values()) {
+			total = total + segment.getCount();
+		}
 
-	   if (Monitor.TYPE_INFO.equals(m_type)) {
-	   	String key = "";
+		if (Monitor.TYPE_INFO.equals(m_type)) {
+			String key = "";
 
-	   	if (info.equals(Monitor.HIT)) {
-	   		key = Monitor.HIT_COUNT;
-	   	} else if (info.equals(Monitor.ERROR)) {
-	   		key = Monitor.ERROR_COUNT;
-	   	} else {
-	   		return;
-	   	}
-	   	int index = city.indexOf('-');
-	   	if (StringUtil.isEmpty(m_city)) {
-	   		StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
-	   		      city.substring(0, index));
+			if (info.equals(Monitor.HIT)) {
+				key = Monitor.HIT_COUNT;
+			} else if (info.equals(Monitor.ERROR)) {
+				key = Monitor.ERROR_COUNT;
+			} else {
+				return;
+			}
+			int index = city.indexOf('-');
+			if (StringUtil.isEmpty(m_city)) {
+				StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
+				      city.substring(0, index));
 
-	   		tem.setCount(tem.getCount() + total);
-	   	} else {
-	   		StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
-	   		      city.substring(index + 1));
+				tem.setCount(tem.getCount() + total);
+			} else if (!m_city.equals(city)) {
+				StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
+				      city.substring(index + 1));
 
-	   		tem.setCount(tem.getCount() + total);
-	   	}
-	   	if (StringUtil.isEmpty(m_channel)) {
-	   		StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CHANNEL + key)
-	   		      .findOrCreateStatisticsItem(channel);
+				tem.setCount(tem.getCount() + total);
+			}
+			if (StringUtil.isEmpty(m_channel)) {
+				StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CHANNEL + key).findOrCreateStatisticsItem(
+				      channel);
 
-	   		tem.setCount(tem.getCount() + total);
-	   	}
-	   }
-   }
+				tem.setCount(tem.getCount() + total);
+			}
+		}
+	}
 
 	public MetricReport getReport() {
 		return m_report;
