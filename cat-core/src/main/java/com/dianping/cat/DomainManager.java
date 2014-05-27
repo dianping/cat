@@ -28,6 +28,7 @@ import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
+import com.site.lookup.util.StringUtils;
 
 public class DomainManager implements Initializable, LogEnabled {
 
@@ -57,7 +58,7 @@ public class DomainManager implements Initializable, LogEnabled {
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
-	
+
 	public boolean containsDomainInCat(String domain) {
 		return m_domainsInCat.contains(domain);
 	}
@@ -87,7 +88,6 @@ public class DomainManager implements Initializable, LogEnabled {
 				Cat.logError(e);
 			}
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
-			Threads.forGroup("Cat").start(new UploadHostinfoDBTask());
 		}
 	}
 
@@ -140,21 +140,36 @@ public class DomainManager implements Initializable, LogEnabled {
 		return project;
 	}
 
-
 	public Hostinfo queryHostInfoByIp(String ip) {
 		return m_ipsInCat.get(ip);
 	}
 
 	public String queryHostnameByIp(String ip) {
-	   try {
-	      String hostname = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL).getHostname();
-	      return hostname;
-      } catch (DalException e) {
-	      Cat.logError(e);
-      }
-	   
-	   return null;
-   }
+		try {
+			Hostinfo info = m_ipsInCat.get(ip);
+			String hostname = null;
+
+			if (info != null) {
+				hostname = info.getHostname();
+
+				if (StringUtils.isNotEmpty(hostname)) {
+					return hostname;
+				}
+			}
+			
+			info = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+
+			if (info != null) {
+				m_ipsInCat.put(ip, info);
+				hostname = info.getHostname();
+			}
+			return hostname;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+
+		return null;
+	}
 
 	public boolean update(int id, String domain, String ip) {
 		try {
@@ -268,89 +283,5 @@ public class DomainManager implements Initializable, LogEnabled {
 		public void shutdown() {
 		}
 	}
-	
-	public class UploadHostinfoDBTask implements Task {
-		
-		private static final long DURATION = 60 * 60 * 1000L; 
-		private static final String CMDB_HOSTNAME_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=hostname&tidy=true";
 
-		@Override
-		public String getName() {
-			return "update_hostinfo_db";
-		}
-		
-		public String parseHostname(String content) throws Exception {
-			JsonObject object = new JsonObject(content);
-			JsonArray array = object.getJSONArray("hostname");
-
-			if (array.length() > 0) {
-				return array.getString(0);
-			}
-			return null;
-		}
-		
-		private String queryHostnameFromCMDB(String ip) {
-			try {
-				String cmdb = String.format(CMDB_HOSTNAME_URL, ip);
-				URL url = new URL(cmdb);
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-				int nRc = conn.getResponseCode();
-
-				if (nRc == HttpURLConnection.HTTP_OK) {
-					InputStream input = conn.getInputStream();
-					String content = Files.forIO().readFrom(input, "utf-8");
-					return parseHostname(content.trim());
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-			
-			return null;
-      }
-
-		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				long startMill = System.currentTimeMillis();
-				
-				try {
-					List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
-					for(Hostinfo info : infos){
-						String hostname = info.getHostname();
-						if(hostname == null || "".equals(hostname)){
-							String ip = info.getIp();
-							String cmdbHostname = queryHostnameFromCMDB(ip);
-							
-							if(cmdbHostname != null && !"".equals(cmdbHostname)){
-								info.setHostname(cmdbHostname);
-								m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
-							}else{
-								m_logger.error("cant find hostname for ip: " + ip);
-							}
-							
-						}
-					}
-				} catch (Throwable e) {
-					Cat.logError(e);
-				}
-				
-				try {
-					long executeMills = System.currentTimeMillis() - startMill;
-					
-					if(executeMills < DURATION){
-						Thread.sleep(DURATION - executeMills);
-					}
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-	
 }

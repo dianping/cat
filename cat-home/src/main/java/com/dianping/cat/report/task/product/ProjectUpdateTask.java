@@ -23,8 +23,9 @@ import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
+import com.site.lookup.util.StringUtils;
 
-public class ProductUpdateTask implements Task, LogEnabled {
+public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Inject
 	private HostinfoDao m_hostInfoDao;
@@ -34,13 +35,15 @@ public class ProductUpdateTask implements Task, LogEnabled {
 
 	private Logger m_logger;
 
+	private Map<String, String> m_domainToIpMap = new HashMap<String, String>();
+
 	private static final long DURATION = 60 * 60 * 1000L;
 
 	private static final String CMDB_DOMAIN_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
 	private static final String CMDB_INFO_URL = "http://cmdb.dp/cmdb/device/s?q=app:%s&fl=rd_duty,project_email,project_owner_mobile&tidy=true";
 
-	private Map<String, String> m_domainToIpMap = new HashMap<String, String>();
+	private static final String CMDB_HOSTNAME_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=hostname&tidy=true";
 
 	private void buildDomainToIpMap() {
 		try {
@@ -63,7 +66,7 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			for (int i = 0; i < length; i++) {
 				String tmpString = array.getString(i);
 
-				if (checkIfValid(tmpString)) {
+				if (checkIfValid(tmpString) && builder.indexOf(tmpString) < 0) {
 					builder.append(tmpString);
 					builder.append(",");
 				}
@@ -73,11 +76,16 @@ public class ProductUpdateTask implements Task, LogEnabled {
 
 			if (builderLength > 0) {
 				String result = builder.substring(0, builderLength - 1);
+
 				return result;
 			}
 		}
-		
+
 		return null;
+	}
+
+	private boolean checkIfEqual(String source, String target) {
+		return source.equals(target);
 	}
 
 	private boolean checkIfValid(String source) {
@@ -85,10 +93,6 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			return false;
 		}
 		return true;
-	}
-	
-	private boolean checkIfEqual(String source, String target) {
-		return source.equals(target);
 	}
 
 	@Override
@@ -108,7 +112,17 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		if (array.length() > 0) {
 			return array.getString(0);
 		}
-		
+
+		return null;
+	}
+
+	public String parseHostname(String content) throws Exception {
+		JsonObject object = new JsonObject(content);
+		JsonArray array = object.getJSONArray("hostname");
+
+		if (array.length() > 0) {
+			return array.getString(0);
+		}
 		return null;
 	}
 
@@ -123,13 +137,13 @@ public class ProductUpdateTask implements Task, LogEnabled {
 
 		JsonArray emails = object.getJSONArray("project_email");
 		String email = buildStringFromJsonArray(emails);
-		if(email != null){
+		if (email != null) {
 			infosMap.put("email", email);
 		}
 
 		JsonArray phones = object.getJSONArray("project_owner_mobile");
 		String phone = buildStringFromJsonArray(phones);
-		if(phone != null){
+		if (phone != null) {
 			infosMap.put("phone", phone);
 		}
 
@@ -147,13 +161,32 @@ public class ProductUpdateTask implements Task, LogEnabled {
 				InputStream input = conn.getInputStream();
 				String content = Files.forIO().readFrom(input, "utf-8");
 				String domain = parseDomain(content.trim());
-				
-				if(checkIfValid(domain)){
+
+				if (checkIfValid(domain)) {
 					return domain;
 				}
-				
+
 				m_logger.error("cannt find single domain for ip: " + ip);
 				return null;
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return null;
+	}
+
+	private String queryHostnameFromCMDB(String ip) {
+		try {
+			String cmdb = String.format(CMDB_HOSTNAME_URL, ip);
+			URL url = new URL(cmdb);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			int nRc = conn.getResponseCode();
+
+			if (nRc == HttpURLConnection.HTTP_OK) {
+				InputStream input = conn.getInputStream();
+				String content = Files.forIO().readFrom(input, "utf-8");
+				return parseHostname(content.trim());
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -187,36 +220,8 @@ public class ProductUpdateTask implements Task, LogEnabled {
 
 		while (active) {
 			long startMill = System.currentTimeMillis();
-			buildDomainToIpMap();
-
-			try {
-				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-
-				for (Project proj : projects) {
-					String cmdbDomain = proj.getCmdbDomain();
-					boolean isCmdbDomainChange = false;
-
-					if (!checkIfValid(cmdbDomain)) {
-						String ip = m_domainToIpMap.get(proj.getDomain());
-						cmdbDomain = queryDomainFromCMDB(ip);
-
-						if (!checkIfValid(cmdbDomain)) {
-							continue;
-						}
-
-						proj.setCmdbDomain(cmdbDomain);
-						isCmdbDomainChange = true;
-					}
-
-					boolean isProjectInfoChange = updateProject(proj);
-
-					if (isProjectInfoChange || isCmdbDomainChange) {
-						m_projectDao.updateByPK(proj, ProjectEntity.UPDATESET_FULL);
-					}
-				}
-			} catch (Throwable e) {
-				Cat.logError(e);
-			}
+			updateProjectInfo();
+			updateHostNameInfo();
 
 			try {
 				long executeMills = System.currentTimeMillis() - startMill;
@@ -232,6 +237,28 @@ public class ProductUpdateTask implements Task, LogEnabled {
 
 	@Override
 	public void shutdown() {
+	}
+
+	private void updateHostNameInfo() {
+		try {
+			List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+
+			for (Hostinfo info : infos) {
+				String hostname = info.getHostname();
+				String ip = info.getIp();
+				String cmdbHostname = queryHostnameFromCMDB(ip);
+
+				if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
+					info.setHostname(cmdbHostname);
+					m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
+				} else {
+					m_logger.error("cant find hostname for ip: " + ip);
+
+				}
+			}
+		} catch (Throwable e) {
+			Cat.logError(e);
+		}
 	}
 
 	private boolean updateProject(Project proj) {
@@ -253,13 +280,46 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			proj.setEmail(email);
 			isProjChanged = true;
 		}
-		
+
 		if (checkIfValid(phone) && !checkIfEqual(phone, dbPhone)) {
 			proj.setPhone(phone);
 			isProjChanged = true;
 		}
 
 		return isProjChanged;
+	}
+
+	private void updateProjectInfo() {
+		buildDomainToIpMap();
+
+		try {
+			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+
+			for (Project proj : projects) {
+				String cmdbDomain = proj.getCmdbDomain();
+				boolean isCmdbDomainChange = false;
+
+				if (!checkIfValid(cmdbDomain)) {
+					String ip = m_domainToIpMap.get(proj.getDomain());
+					cmdbDomain = queryDomainFromCMDB(ip);
+
+					if (!checkIfValid(cmdbDomain)) {
+						continue;
+					}
+
+					proj.setCmdbDomain(cmdbDomain);
+					isCmdbDomainChange = true;
+				}
+
+				boolean isProjectInfoChange = updateProject(proj);
+
+				if (isProjectInfoChange || isCmdbDomainChange) {
+					m_projectDao.updateByPK(proj, ProjectEntity.UPDATESET_FULL);
+				}
+			}
+		} catch (Throwable e) {
+			Cat.logError(e);
+		}
 	}
 
 }

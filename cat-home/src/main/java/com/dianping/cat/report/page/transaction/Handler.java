@@ -3,9 +3,7 @@ package com.dianping.cat.report.page.transaction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -19,7 +17,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -69,24 +66,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DomainGroupConfigManager m_configManager;
 
-	@Inject
-	private DomainManager m_domainManager;
-
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
-
-	private void buildIpToHostnameMap(Model model) {
-		List<String> ips = model.getIps();
-		Map<String, String> ipToHostname = new HashMap<String, String>();
-
-		for (String ip : ips) {
-			String hostname = m_domainManager.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
-		}
-
-		model.setIpToHostname(ipToHostname);
-
-	}
 
 	private void buildTransactionMetaInfo(Model model, Payload payload, TransactionReport report) {
 		String type = payload.getType();
@@ -329,8 +310,6 @@ public class Handler implements PageHandler<Context> {
 			m_historyGraph.buildGroupTrendGraph(model, payload, ips);
 			break;
 		}
-
-		buildIpToHostnameMap(model);
 
 		if (payload.isXml()) {
 			m_xmlViewer.view(ctx, model);

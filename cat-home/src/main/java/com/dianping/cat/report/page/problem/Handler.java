@@ -6,7 +6,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +20,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -71,22 +69,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JsonBuilder m_jsonBuilder;
-
-	@Inject
-	private DomainManager m_domainManager;
-
-	private void buildIpToHostnameMap(Model model) {
-		List<String> ips = model.getIps();
-		Map<String, String> ipToHostname = new HashMap<String, String>();
-
-		for (String ip : ips) {
-			String hostname = m_domainManager.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
-		}
-
-		model.setIpToHostname(ipToHostname);
-
-	}
 
 	private ProblemReport buildFrontEndByRule(ProblemReport report) {
 		report.accept(m_problemReportAggregation);
@@ -291,9 +273,6 @@ public class Handler implements PageHandler<Context> {
 			showDetail(model, payload);
 			break;
 		}
-		
-		buildIpToHostnameMap(model);
-		
 		m_jspViewer.view(ctx, model);
 	}
 

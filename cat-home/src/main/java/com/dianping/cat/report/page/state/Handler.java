@@ -2,10 +2,8 @@ package com.dianping.cat.report.page.state;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -19,7 +17,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
@@ -52,23 +49,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_configManager;
 	
-	@Inject
-	private DomainManager m_domainManager;
-
 	private static final String CAT = "Cat";
-
-	private void buildIpToHostnameMap(Model model) {
-		List<String> ips = model.getIps();
-		Map<String, String> ipToHostname = new HashMap<String, String>();
-
-		for (String ip : ips) {
-			String hostname = m_domainManager.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
-		}
-
-		model.setIpToHostname(ipToHostname);
-
-	}
 
 	public StateReport getHistoryReport(Payload payload) {
 		String domain = CAT;
@@ -140,9 +121,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setGraph(new JsonBuilder().toJson(item));
 		}
-		
-		buildIpToHostnameMap(model);
-		
 		m_jspViewer.view(ctx, model);
 	}
 

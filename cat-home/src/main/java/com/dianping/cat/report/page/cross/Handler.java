@@ -1,11 +1,8 @@
 package com.dianping.cat.report.page.cross;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -69,19 +66,6 @@ public class Handler implements PageHandler<Context> {
 		projectInfo.setClientIp(Constants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 		return projectInfo;
-	}
-
-	private void buildIpToHostnameMap(Model model) {
-		Collection<String> ips = model.getIps();
-		Map<String, String> ipToHostname = new HashMap<String, String>();
-
-		for (String ip : ips) {
-			String hostname = m_domainManager.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
-		}
-
-		model.setIpToHostname(ipToHostname);
-
 	}
 
 	private CrossReport getHourlyReport(Payload payload) {
@@ -282,9 +266,6 @@ public class Handler implements PageHandler<Context> {
 			model.setInfo(info.getInfo());
 			break;
 		}
-		
-		buildIpToHostnameMap(model);
-		
 		m_jspViewer.view(ctx, model);
 	}
 

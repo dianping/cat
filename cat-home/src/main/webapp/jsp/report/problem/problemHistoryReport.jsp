@@ -56,16 +56,8 @@
 		<%@ include file="problemQuery.jsp" %></th>
 		<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 		<script type="text/javascript">
-			var buildIpHostMap = function(){
-				var ipToHost = {};
-				<c:forEach var="ip" items="${model.ips}">
-					ipToHost["${ip}"] = "${model.ipToHostname[ip]}";
-				</c:forEach>
-				return ipToHost;
-			};
-			
 			$(document).ready(function() {
-				appendHostname(buildIpHostMap());
+				appendHostname(${model.ipToHostnameStr});
 			});
 		</script>
 		<script>

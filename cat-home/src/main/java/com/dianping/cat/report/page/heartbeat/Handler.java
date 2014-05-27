@@ -2,9 +2,6 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -18,7 +15,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -50,22 +46,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-
-	@Inject
-	private DomainManager m_domainManager;
-
-	private void buildIpToHostnameMap(Model model) {
-		List<String> ips = model.getIps();
-		Map<String, String> ipToHostname = new HashMap<String, String>();
-
-		for (String ip : ips) {
-			String hostname = m_domainManager.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
-		}
-
-		model.setIpToHostname(ipToHostname);
-
-	}
 
 	private void buildHeartbeatGraphInfo(Model model, DisplayHeartbeat displayHeartbeat) {
 		if (displayHeartbeat == null) {
@@ -164,9 +144,6 @@ public class Handler implements PageHandler<Context> {
 			buildHistoryGraph(model, payload);
 			break;
 		}
-
-		buildIpToHostnameMap(model);
-
 		m_jspViewer.view(ctx, model);
 	}
 

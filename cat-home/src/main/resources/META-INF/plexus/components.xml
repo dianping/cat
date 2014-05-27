@@ -2020,8 +2020,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.product.ProductUpdateTask</role>
-			<implementation>com.dianping.cat.report.task.product.ProductUpdateTask</implementation>
+			<role>com.dianping.cat.report.task.product.ProjectUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.product.ProjectUpdateTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
@@ -2114,9 +2114,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.JsonBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2216,39 +2213,6 @@
 			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.DomainManager</role>
-			<implementation>com.dianping.cat.DomainManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HostinfoDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HostinfoDao</role>
-			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.ProjectDao</role>
-			<implementation>com.dianping.cat.core.dal.ProjectDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -2275,9 +2239,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2345,9 +2306,6 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2398,9 +2356,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2750,6 +2705,39 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.DomainManager</role>
+			<implementation>com.dianping.cat.DomainManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.HostinfoDao</role>
+			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.ProjectDao</role>
+			<implementation>com.dianping.cat.core.dal.ProjectDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.cache.Handler</role>
 			<implementation>com.dianping.cat.report.page.cache.Handler</implementation>
 			<requirements>
@@ -2766,9 +2754,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2809,9 +2794,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
 				</requirement>
 			</requirements>
 		</component>
