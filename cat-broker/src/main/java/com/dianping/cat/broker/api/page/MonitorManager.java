@@ -19,7 +19,6 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.config.UrlPatternConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -73,7 +72,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 		defaultMetric.setStatus("C");
 		defaultMetric.addData(String.valueOf(count));
 	}
-
+	
 	private void logMetricForAvg(long timestamp, double duration, String group, String key) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
@@ -132,12 +131,12 @@ public class MonitorManager implements Initializable, LogEnabled {
 						logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
 					if ("200".equals(httpStatus) && "200".equals(errorCode)) {
-						Cat.logEvent(targetUrl, "Normal", Event.SUCCESS, null);
 						String key = city + ":" + channel + ":" + Monitor.HIT;
+						
 						logMetricForCount(timestamp, group, key, 10);
 					} else {
-						Cat.logEvent(targetUrl, "AbNormal", Event.SUCCESS, null);
 						String key = city + ":" + channel + ":" + Monitor.ERROR;
+						
 						logMetricForCount(timestamp, group, key, 1);
 					}
 
