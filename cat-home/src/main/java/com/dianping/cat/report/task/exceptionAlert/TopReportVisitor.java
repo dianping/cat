@@ -6,16 +6,13 @@ import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class TopReportVisitor extends BaseVisitor {
 
 	private ExceptionThresholdConfigManager m_exceptionThresholdConfigManager;
-
-	private ExceptionExcludeConfigManager m_exceptionExcludeConfigManager;
 
 	private AlertReport m_report;
 
@@ -36,11 +33,6 @@ public class TopReportVisitor extends BaseVisitor {
 		return this;
 	}
 
-	public TopReportVisitor setExceptionExcludeConfigManager(ExceptionExcludeConfigManager exceptionExcludeConfigManager) {
-		m_exceptionExcludeConfigManager = exceptionExcludeConfigManager;
-		return this;
-	}
-
 	@Override
 	public void visitDomain(Domain domain) {
 		m_currentDomain = domain.getName();
@@ -50,7 +42,7 @@ public class TopReportVisitor extends BaseVisitor {
 	@Override
 	public void visitError(Error error) {
 
-		ExceptionExclude exceptionExclude = m_exceptionExcludeConfigManager.queryDomainExceptionExclude(m_currentDomain,
+		ExceptionExclude exceptionExclude = m_exceptionThresholdConfigManager.queryDomainExceptionExclude(m_currentDomain,
 		      error.getId());
 
 		if (exceptionExclude != null) {

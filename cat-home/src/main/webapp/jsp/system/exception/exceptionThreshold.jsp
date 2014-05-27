@@ -82,7 +82,8 @@
 					<th width="10%">Warning阈值</th>
 					<th width="10%">Error阈值</th>
 					<th width="5%">操作&nbsp;&nbsp;  <a class='create btn btn-primary btn-small' href="?op=exceptionThresholdAdd">新增</a></th>
-				</tr></thead><tbody>
+				</tr></thead>
+				<tbody>
 
 				<c:forEach var="item" items="${model.exceptionLimits}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
@@ -93,7 +94,7 @@
 					<td><a class='update btn  btn-small btn-primary'href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
 					<a class='delete btn  btn-small btn-danger' href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.id}">删除</a></td>
 					</tr>
-				</c:forEach></tbody>
+				</c:forEach>
 				</tbody>
 			</table>
 		</div>

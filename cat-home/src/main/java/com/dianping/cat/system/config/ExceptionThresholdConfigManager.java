@@ -14,6 +14,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.dependency.exception.entity.DomainConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionThresholdConfig;
 import com.dianping.cat.home.dependency.exception.transform.DefaultSaxParser;
@@ -32,6 +33,8 @@ public class ExceptionThresholdConfigManager implements Initializable {
 	public static String DEFAULT_STRING = "Default";
 
 	public static String TOTAL_STRING = "Total";
+	
+	public static String ALL_STRING = "All";
 
 	public boolean deleteExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
@@ -101,6 +104,46 @@ public class ExceptionThresholdConfigManager implements Initializable {
 		
 		if (result == null) {
 			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
+		}
+		return result;
+	}
+	
+	public boolean deleteExceptionExclude(String domain, String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
+		
+		domainConfig.removeExceptionExclude(exceptionName);
+		return storeConfig();
+	}
+	
+	public boolean insertExceptionExclude(ExceptionExclude exception) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(exception.getDomain());
+		
+		domainConfig.getExceptionExcludes().put(exception.getId(), exception);
+		return storeConfig();
+	}
+
+	public List<ExceptionExclude> queryAllExceptionExcludes() {
+		List<ExceptionExclude> result = new ArrayList<ExceptionExclude>();
+		
+		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
+			result.addAll(domainConfig.getExceptionExcludes().values());
+		}
+		return result;
+	}
+
+	public ExceptionExclude queryDomainExceptionExclude(String domain, String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
+		ExceptionExclude result = null;
+
+		if (domainConfig == null) {
+			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
+		}
+		if (domainConfig != null) {
+			result = domainConfig.getExceptionExcludes().get(exceptionName);
+			
+			if (result == null) {
+				result = domainConfig.getExceptionExcludes().get(ALL_STRING);
+			}
 		}
 		return result;
 	}

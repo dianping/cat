@@ -3,7 +3,8 @@
 	<domain-config id = "Default">
 		<exception-limit domain="Default" id="Total" warning="50" error="100"></exception-limit>
 		<exception-limit domain="Default" id="NPE" warning="50" error="100"></exception-limit>
-		<exception-limit/>
+		<exception-exclude domain="Default" id="java.lang.IllegalArgumentException"></exception-exclude>
+		<exception-exclude domain="Default" id="NPE"></exception-exclude>
 	</domain-config>
 	<domain-config id = "Cat"></domain-config>
 </exception-threshold-config>
