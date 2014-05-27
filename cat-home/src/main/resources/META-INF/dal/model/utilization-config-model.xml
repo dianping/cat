@@ -12,6 +12,7 @@
   </entity>
   <entity name="domain">
     <attribute name="id" value-type="String" key="true"/>
+    <attribute name="cmdb-id" value-type="String"/>
     <attribute name="url-weight" value-type="double"  primitive="true"/>
     <attribute name="service-weight" value-type="double" primitive="true" />
     <attribute name="sql-weight" value-type="double"  primitive="true"/>
