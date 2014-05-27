@@ -54,6 +54,12 @@
 		
 		<tr><th>
 		<%@ include file="problemQuery.jsp" %></th>
+		<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				appendHostname(${model.ipToHostnameStr});
+			});
+		</script>
 		<script>
 			function longTimeChange(date,domain,ip){
 				var customDate ='${model.customDate}';

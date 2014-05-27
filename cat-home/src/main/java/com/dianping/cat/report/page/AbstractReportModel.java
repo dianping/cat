@@ -1,9 +1,12 @@
 package com.dianping.cat.report.page;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.unidal.lookup.ContainerLoader;
@@ -12,6 +15,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.DomainManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.DomainNavManager;
@@ -41,10 +45,13 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	private DomainNavManager m_manager;
 
+	private DomainManager m_domainManager;
+
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 		try {
 			m_manager = ContainerLoader.getDefaultContainer().lookup(DomainNavManager.class);
+			m_domainManager = ContainerLoader.getDefaultContainer().lookup(DomainManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -106,8 +113,11 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 			return Integer.toString(hour);
 		}
 	}
+	
+	public String getIpToHostnameStr(){
+		return new JsonBuilder().toJson(getIpToHostname());
+	}
 
-	// required by report tag
 	public abstract String getDomain();
 
 	public Map<String, Department> getDomainGroups() {
@@ -121,6 +131,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return m_exception;
 	}
 
+	// required by report tag
 	// required by report history tag
 	public HistoryNav[] getHistoryNavs() {
 		return HistoryNav.values();
@@ -128,6 +139,22 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+	
+	public List<String> getIps() {
+		return new ArrayList<String>();
+	};
+
+	public Map<String, String> getIpToHostname() {
+		List<String> ips = getIps();
+		Map<String, String> ipToHostname = new HashMap<String, String>();
+
+		for (String ip : ips) {
+			String hostname = m_domainManager.queryHostnameByIp(ip);
+			ipToHostname.put(ip, hostname);
+		}
+
+		return ipToHostname;
 	}
 
 	public String getLogViewBaseUri() {

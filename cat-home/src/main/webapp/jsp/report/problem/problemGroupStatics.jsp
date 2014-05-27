@@ -49,8 +49,11 @@
 				 </c:forEach>
 			</th>
 		</tr>
+		<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
+				appendHostname(${model.ipToHostnameStr});
+				
 				$.each($('table.machines a'),function(index,item){
 					var id=$(item).text();
 					<c:forEach var="ip" items="${model.groupIps}">

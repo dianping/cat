@@ -42,7 +42,12 @@
 		</th>
 	</tr>
 </table>
-
+<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		appendHostname(${model.ipToHostnameStr});
+	});
+</script>
 <table class="groups">
 	<tr class="left">
 		<th>机器分组: &nbsp;&nbsp; 
@@ -58,7 +63,6 @@
 		</th>
 	</tr>
 </table>
-
 <table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">

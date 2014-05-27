@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.cross;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -22,7 +23,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_callSort;
 
 	private String m_queryName;
-
+	
 	@EntityMeta
 	private HostInfo m_hostInfo;
 
@@ -84,7 +85,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_info;
 	}
 
-	public Collection<String> getIps() {
+	public List<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {

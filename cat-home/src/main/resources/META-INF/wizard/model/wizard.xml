@@ -48,4 +48,7 @@
    <model package="com.dianping.cat.home.alertReport" name="alert-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/exceptionAlert/alert-report.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.exception-exclude-config" name="exception-exclude-config">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/exception-exclude-config.xml</sample-model>
+   </model>
 </wizard>

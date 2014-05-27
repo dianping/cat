@@ -55,6 +55,11 @@
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
+			<td>项目组号码</td>
+			<td><input type="name" name="project.phone" size="50" value="${model.project.phone}"/></td>
+			<td>可选字段(多个，逗号分割)</td>
+		</tr>
+		<tr>
 			<td>&nbsp;</td>
 			<td><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
 		</tr>

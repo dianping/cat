@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.transaction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -50,17 +49,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_pieChart;
 	
-	private Map<String,String> m_ipToHost;
-	
-
-	public Map<String, String> getIpToHost() {
-   	return m_ipToHost;
-   }
-
 	public Model(Context ctx) {
 		super(ctx);
 	}
-
+	
 	@Override
 	public Action getDefaultAction() {
 		return Action.HOURLY_REPORT;

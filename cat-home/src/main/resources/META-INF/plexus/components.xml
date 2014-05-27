@@ -87,6 +87,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.ExceptionExcludeConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionExcludeConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 			<implementation>com.dianping.cat.system.config.DomainGroupConfigManager</implementation>
 			<requirements>
@@ -1059,6 +1068,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionExcludeConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1791,6 +1803,9 @@
 					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionExcludeConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
@@ -2028,6 +2043,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.product.ProjectUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.product.ProjectUpdateTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>
