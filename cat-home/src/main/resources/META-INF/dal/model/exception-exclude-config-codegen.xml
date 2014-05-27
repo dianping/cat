@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="exception-exclude-config" root="true">
+    <entity-ref name="domain-config" type="list" names="domain-configs" />
+  </entity>
+  <entity name="domain-config">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="exception-exclude" type="list" names="exception-excludes" />
+  </entity>
+  <entity name="exception-exclude">
+    <attribute name="domain" value-type="String" />
+    <attribute name="id" value-type="String" />
+  </entity>
+</model>
+
