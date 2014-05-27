@@ -7,24 +7,37 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.home.alertReport.entity.AlertReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
+import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 
 public class TopReportVisitor extends BaseVisitor {
 
-	private ExceptionThresholdConfigManager m_configManager;
+	private ExceptionThresholdConfigManager m_exceptionThresholdConfigManager;
+
+	private ExceptionExcludeConfigManager m_exceptionExcludeConfigManager;
 
 	private AlertReport m_report;
 
 	private String m_currentDomain;
 
-	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
+	private long m_totalSegmentException;
 
-	public TopReportVisitor(ExceptionThresholdConfigManager configManager) {
-		m_configManager = configManager;
-	}
+	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
 
 	public TopReportVisitor setReport(AlertReport report) {
 		m_report = report;
+		return this;
+	}
+
+	public TopReportVisitor setExceptionThresholdConfigManager(
+	      ExceptionThresholdConfigManager exceptionThresholdConfigManager) {
+		m_exceptionThresholdConfigManager = exceptionThresholdConfigManager;
+		return this;
+	}
+
+	public TopReportVisitor setExceptionExcludeConfigManager(ExceptionExcludeConfigManager exceptionExcludeConfigManager) {
+		m_exceptionExcludeConfigManager = exceptionExcludeConfigManager;
 		return this;
 	}
 
@@ -36,16 +49,26 @@ public class TopReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitError(Error error) {
+
+		ExceptionExclude exceptionExclude = m_exceptionExcludeConfigManager.queryDomainExceptionExclude(m_currentDomain,
+		      error.getId());
+
+		if (exceptionExclude != null) {
+			return;
+		}
+
 		int warnLimit = -1;
 		int errorLimit = -1;
+		int count = error.getCount();
+		ExceptionLimit exceptionLimit = m_exceptionThresholdConfigManager.queryDomainExceptionLimit(m_currentDomain,
+		      error.getId());
 
-		ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_currentDomain, error.getId());
+		m_totalSegmentException += count;
 
 		if (exceptionLimit != null) {
 			warnLimit = exceptionLimit.getWarning();
 			errorLimit = exceptionLimit.getError();
 		}
-		int count = error.getCount();
 
 		if (errorLimit > 0 & warnLimit > 0 & count >= Math.min(warnLimit, errorLimit)) {
 
@@ -66,31 +89,32 @@ public class TopReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitSegment(Segment segment) {
-		long totalSegmentException = segment.getError();
-		ExceptionLimit exceptionLimit = m_configManager.queryDomainTotalLimit(m_currentDomain);
+		m_totalSegmentException = 0;
+
+		super.visitSegment(segment);
+
+		ExceptionLimit exceptionLimit = m_exceptionThresholdConfigManager.queryDomainTotalLimit(m_currentDomain);
 		int warnLimit = -1;
 		int errorLimit = -1;
-		
+
 		if (exceptionLimit != null) {
 			warnLimit = exceptionLimit.getWarning();
 			errorLimit = exceptionLimit.getError();
 		}
 
-		if (errorLimit > 0 & warnLimit > 0 & totalSegmentException >= Math.min(warnLimit, errorLimit)) {
+		if (errorLimit > 0 & warnLimit > 0 & m_totalSegmentException >= Math.min(warnLimit, errorLimit)) {
 			com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
 			com.dianping.cat.home.alertReport.entity.Exception exception = domain
 			      .findOrCreateException(TOTAL_EXCEPTION_ALERT);
 
-			if (totalSegmentException >= errorLimit) {
+			if (m_totalSegmentException >= errorLimit) {
 				domain.incErrorNumber();
 				exception.incErrorNumber();
-			} else if (totalSegmentException >= warnLimit) {
+			} else if (m_totalSegmentException >= warnLimit) {
 				domain.incWarnNumber();
 				exception.incWarnNumber();
 			}
-
 		}
-		super.visitSegment(segment);
 	}
 
 	@Override
