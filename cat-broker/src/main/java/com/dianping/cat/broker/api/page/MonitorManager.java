@@ -19,6 +19,7 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -111,7 +112,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 				try {
 					String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
 					String channel = ipInfo.getChannel();
-					String httpCode = entity.getHttpStatus();
+					String httpStatus = entity.getHttpStatus();
 					String errorCode = entity.getErrorCode();
 					long timestamp = entity.getTimestamp();
 					double duration = entity.getDuration();
@@ -120,13 +121,16 @@ public class MonitorManager implements Initializable, LogEnabled {
 					if (duration > 0) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
-					if (!"200".equals(httpCode) || !"200".equals(errorCode)) {
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
-					} else {
+					if ("200".equals(httpStatus) && "200".equals(errorCode)) {
+						Cat.logEvent(targetUrl, "Normal",Event.SUCCESS,null);
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+					} else {
+						Cat.logEvent(targetUrl, "AbNormal",Event.SUCCESS,null);
+						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
 					}
-					if (!StringUtils.isEmpty(httpCode)) {
-						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpCode;
+
+					if (!StringUtils.isEmpty(httpStatus)) {
+						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
 						Metric metric = Cat.getProducer().newMetric(group, key);
 						DefaultMetric defaultMetric = (DefaultMetric) metric;
 
