@@ -15,7 +15,6 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExcludeConfig;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineCreator;
 import com.dianping.cat.report.baseline.BaselineService;

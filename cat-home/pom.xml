@@ -158,7 +158,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/utilization-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/domainGroup-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-aggregation-config-manifest.xml,

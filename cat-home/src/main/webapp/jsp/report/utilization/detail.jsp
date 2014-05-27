@@ -17,6 +17,7 @@
 							<thead>
 							<tr>
 								<th>Web应用</th>
+								<th>CMDB</th>
 								<th>机器数</th>
 								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的URL访问总量"></i></th>
 								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器URL每秒的访问最大量"></i></th>
@@ -34,6 +35,7 @@
 							<c:forEach var="item" items="${model.utilizationWebList}" varStatus="status">
 								<tr>
 									<td>${item.id}</td>
+									<td>${item.cmdbId}</td>
 									<td style="text-align:right">${item.machineNumber}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.count,'###0')}</td>
 									<td style="text-align:right">${w:format(item.applicationStates.URL.maxQps,'###0')}</td>

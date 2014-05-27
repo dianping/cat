@@ -26,9 +26,9 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
-import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.chart.GraphCreator;
 import com.dianping.cat.report.chart.MetricDataFetcher;
+import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl;
 import com.dianping.cat.report.chart.impl.DataExtractorImpl;
 import com.dianping.cat.report.chart.impl.MetricDataFetcherImpl;
@@ -65,7 +65,6 @@ import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
-import com.dianping.cat.system.config.UtilizationConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -105,8 +104,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
-
-		all.add(C(UtilizationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 
