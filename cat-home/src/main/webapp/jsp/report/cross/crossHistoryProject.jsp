@@ -38,6 +38,12 @@
 		</th>
 	</tr>
 </table>
+<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		appendHostname(${model.ipToHostnameStr});
+	});
+</script>
 <table class='data'>
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
 		<tr>

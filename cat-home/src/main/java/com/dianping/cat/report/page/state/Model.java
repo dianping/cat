@@ -24,7 +24,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String m_message;
 
 	public String m_graph;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -55,6 +55,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return StringSortHelper.sortDomain(m_report.getMachines().keySet());
 	}
 
+	public String getMessage() {
+   	return m_message;
+   }
+
 	public StateReport getReport() {
 		return m_report;
 	}
@@ -66,10 +70,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setGraph(String graph) {
 		m_graph = graph;
 	}
-	
-	public String getMessage() {
-   	return m_message;
-   }
 
 	public void setMessage(String message) {
    	m_message = message;

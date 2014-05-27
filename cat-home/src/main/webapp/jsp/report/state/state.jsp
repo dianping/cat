@@ -197,8 +197,10 @@
 </jsp:body>
 </a:report>
 
+<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		appendHostname(${model.ipToHostnameStr});
 		$('.position').hide();
 	});
 </script>

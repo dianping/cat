@@ -44,7 +44,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_type;
 
 	private String m_pieChart;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}

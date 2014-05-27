@@ -2032,6 +2032,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.product.ProjectUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.product.ProjectUpdateTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>

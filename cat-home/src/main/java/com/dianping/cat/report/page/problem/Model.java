@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -37,6 +38,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_hour;
 
 	private int m_lastMinute; // last minute of current hour
+	
+	private Map<String, String> m_ipToHostname;
 
 	@EntityMeta
 	private ProblemReport m_report;
@@ -45,15 +48,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private ThreadLevelInfo m_threadLevelInfo;
-	
-	private List<String> m_groups;
-	
-	private List<String> m_groupIps;
 
+	private List<String> m_groups;
+
+	private List<String> m_groupIps;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
-
+	
 	public ProblemStatistics getAllStatistics() {
 		return m_allStatistics;
 	}
@@ -134,6 +137,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public Map<String, String> getIpToHostname() {
+		return m_ipToHostname;
+	}
+
 	public int getLastMinute() {
 		return m_lastMinute;
 	}
@@ -206,6 +213,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setHour(int hour) {
 		m_hour = hour;
+	}
+
+	public void setIpToHostname(Map<String, String> ipToHostname) {
+		m_ipToHostname = ipToHostname;
 	}
 
 	public void setLastMinute(int lastMinute) {

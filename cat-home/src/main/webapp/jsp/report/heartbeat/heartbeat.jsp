@@ -143,9 +143,10 @@
 	</c:forEach>
 </table>
 
-
+<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		appendHostname(${model.ipToHostnameStr});
 		$($('.text-error')[3]).hide();
 	});
 </script>

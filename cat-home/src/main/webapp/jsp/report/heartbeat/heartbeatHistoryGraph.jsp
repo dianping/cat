@@ -89,4 +89,10 @@
 	</script>
 </jsp:body>
 </a:historyReport>
-	<script type="text/javascript" src="/cat/js/heartbeatHistory.js"></script>
+<script type="text/javascript" src="/cat/js/heartbeatHistory.js"></script>
+<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		appendHostname(${model.ipToHostnameStr});
+	});
+</script>
