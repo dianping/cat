@@ -78,8 +78,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionThresholdConfigManager</implementation>
+			<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1057,7 +1057,7 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1788,7 +1788,7 @@
 					<role>com.dianping.cat.system.tool.MailSMS</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2846,7 +2846,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2860,8 +2860,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionThresholdConfigManager</implementation>
+			<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3077,7 +3077,7 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3408,6 +3408,30 @@
 			<implementation>com.dianping.cat.report.page.userMonitor.CityManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.system.Handler</role>
+			<implementation>com.dianping.cat.report.page.system.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.system.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.GraphCreator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.system.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.system.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -3583,7 +3607,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>

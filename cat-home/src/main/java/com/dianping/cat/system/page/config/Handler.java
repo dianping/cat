@@ -39,6 +39,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.service.ReportService;
@@ -46,7 +47,7 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
@@ -72,7 +73,7 @@ public class Handler implements PageHandler<Context> {
 	private MetricConfigManager m_metricConfigManager;
 
 	@Inject
-	private ExceptionThresholdConfigManager m_exceptionConfigManager;
+	private ExceptionConfigManager m_exceptionConfigManager;
 
 	@Inject
 	private UtilizationConfigManager m_utilizationConfigManager;
@@ -107,6 +108,10 @@ public class Handler implements PageHandler<Context> {
 
 	private void deleteExceptionLimit(Payload payload) {
 		m_exceptionConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
+	}
+
+	private void deleteExceptionExclude(Payload payload) {
+		m_exceptionConfigManager.deleteExceptionExclude(payload.getDomain(), payload.getException());
 	}
 
 	private void deleteProject(Payload payload) {
@@ -333,24 +338,46 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_metricRuleConfigManager.getMonitorRules().toString());
 			break;
-		case EXCEPTION_THRESHOLDS:
-			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+		case EXCEPTION:
+			loadExceptionConfig(model);
 			break;
 		case EXCEPTION_THRESHOLD_DELETE:
 			deleteExceptionLimit(payload);
-			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+			loadExceptionConfig(model);
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE:
 			model.setExceptionLimit(m_exceptionConfigManager.queryDomainExceptionLimit(payload.getDomain(),
 			      payload.getException()));
 			break;
 		case EXCEPTION_THRESHOLD_ADD:
-			model.setExceptionList(queryExceptionList());
+			List<String> exceptionThresholdList = queryExceptionList();
+
+			exceptionThresholdList.add(ExceptionConfigManager.TOTAL_STRING);
+			model.setExceptionList(exceptionThresholdList);
 			model.setDomainList(queryDoaminList());
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
 			updateExceptionLimit(payload);
-			model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+			loadExceptionConfig(model);
+			break;
+		case EXCEPTION_EXCLUDE_DELETE:
+			deleteExceptionExclude(payload);
+			loadExceptionConfig(model);
+			break;
+		case EXCEPTION_EXCLUDE_UPDATE:
+			model.setExceptionExclude(m_exceptionConfigManager.queryDomainExceptionExclude(payload.getDomain(),
+			      payload.getException()));
+			break;
+		case EXCEPTION_EXCLUDE_ADD:
+			List<String> exceptionExcludeList = queryExceptionList();
+
+			exceptionExcludeList.add(ExceptionConfigManager.ALL_STRING);
+			model.setExceptionList(exceptionExcludeList);
+			model.setDomainList(queryDoaminList());
+			break;
+		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
+			updateExceptionExclude(payload);
+			loadExceptionConfig(model);
 			break;
 		case BUG_CONFIG_UPDATE:
 			String xml = payload.getBug();
@@ -402,6 +429,11 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private void loadExceptionConfig(Model model) {
+		model.setExceptionExcludes(m_exceptionConfigManager.queryAllExceptionExcludes());
+		model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+	}
+
 	private void metricConfigAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 
@@ -416,7 +448,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (!StringUtil.isEmpty(domain) && !StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
 			config.setId(m_metricConfigManager.buildMetricKey(domain, type, metricKey));
-			
+
 			return m_metricConfigManager.insertMetricItemConfig(config);
 		} else {
 			return false;
@@ -430,7 +462,7 @@ public class Handler implements PageHandler<Context> {
 
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
 			ProductLine productLine = entry.getValue();
-			
+
 			if (productLine.isMetricDashboard()) {
 				Set<String> domains = productLine.getDomains().keySet();
 				List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
@@ -461,7 +493,7 @@ public class Handler implements PageHandler<Context> {
 	private List<String> queryDoaminList() {
 		List<String> result = new ArrayList<String>();
 		List<Project> projects = queryAllProjects();
-		
+
 		result.add("Default");
 		for (Project p : projects) {
 			result.add(p.getDomain());
@@ -475,8 +507,6 @@ public class Handler implements PageHandler<Context> {
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
 		Set<String> exceptions = new HashSet<String>();
-		
-		exceptions.add("Total");
 
 		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
 			exceptions.addAll(domain.getValue().getExceptionItems().keySet());
@@ -502,7 +532,17 @@ public class Handler implements PageHandler<Context> {
 	private void updateExceptionLimit(Payload payload) {
 		ExceptionLimit limit = payload.getExceptionLimit();
 		m_exceptionConfigManager.insertExceptionLimit(limit);
+	}
 
+	private void updateExceptionExclude(Payload payload) {
+		ExceptionExclude exclude = payload.getExceptionExclude();
+		String domain = payload.getDomain();
+		String exception = payload.getException();
+
+		if (domain != null && exception != null) {
+			m_exceptionConfigManager.deleteExceptionExclude(domain, exception);
+		}
+		m_exceptionConfigManager.insertExceptionExclude(exclude);
 	}
 
 	private void updateProject(Payload payload) {

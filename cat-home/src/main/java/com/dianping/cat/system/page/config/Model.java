@@ -19,6 +19,7 @@ import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
 
@@ -35,10 +36,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private PatternItem m_patternItem;
 
 	private Collection<PatternItem> m_patternItems;
-	
+
 	private ExceptionLimit m_exceptionLimit;
 
 	private List<ExceptionLimit> m_exceptionLimits;
+
+	private ExceptionExclude m_exceptionExclude;
+
+	private List<ExceptionExclude> m_exceptionExcludes;
 
 	private String m_opState = SUCCESS;
 
@@ -53,9 +58,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private ProductLine m_productLine;
 
 	private Map<String, ProductLine> m_productLines;
-	
-	private Map<String,List<ProductLine>> m_typeToProductLines;
-	
+
+	private Map<String, List<ProductLine>> m_typeToProductLines;
+
 	private MetricItemConfig m_metricItemConfig;
 
 	private Map<ProductLine, List<MetricItemConfig>> m_productMetricConfigs;
@@ -65,9 +70,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_content;
 
 	private Map<String, Domain> m_productLineToDomains;
-	
+
 	private List<String> domainList;
-	
+
 	private List<String> exceptionList;
 
 	public static final String SUCCESS = "Success";
@@ -149,6 +154,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<ExceptionLimit> getExceptionLimits() {
 		return m_exceptionLimits;
+	}
+
+	public ExceptionExclude getExceptionExclude() {
+		return m_exceptionExclude;
+	}
+
+	public List<ExceptionExclude> getExceptionExcludes() {
+		return m_exceptionExcludes;
 	}
 
 	public String getIpAddress() {
@@ -243,6 +256,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_exceptionLimits = exceptionLimits;
 	}
 
+	public void setExceptionExclude(ExceptionExclude exceptionExclude) {
+		m_exceptionExclude = exceptionExclude;
+	}
+
+	public void setExceptionExcludes(List<ExceptionExclude> exceptionExcludes) {
+		m_exceptionExcludes = exceptionExcludes;
+	}
+
 	public void setGraphConfig(TopologyGraphConfig config) {
 		m_config = config;
 	}
@@ -284,28 +305,28 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public Map<String, List<ProductLine>> getTypeToProductLines() {
-   	return m_typeToProductLines;
-   }
+		return m_typeToProductLines;
+	}
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
-   	m_typeToProductLines = typeToProductLines;
-   }
-	
+		m_typeToProductLines = typeToProductLines;
+	}
+
 	public PatternItem getPatternItem() {
-   	return m_patternItem;
-   }
+		return m_patternItem;
+	}
 
 	public void setPatternItem(PatternItem patternItem) {
-   	m_patternItem = patternItem;
-   }
+		m_patternItem = patternItem;
+	}
 
 	public Collection<PatternItem> getPatternItems() {
-   	return m_patternItems;
-   }
+		return m_patternItems;
+	}
 
 	public void setPatternItems(Collection<PatternItem> patternItems) {
-   	m_patternItems = patternItems;
-   }
+		m_patternItems = patternItems;
+	}
 
 	public static class Edge {
 		private List<EdgeConfig> m_edgeConfigs;

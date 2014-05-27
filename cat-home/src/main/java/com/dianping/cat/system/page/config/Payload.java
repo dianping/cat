@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
 
@@ -45,6 +46,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("exceptionLimit")
 	private ExceptionLimit m_exceptionLimit = new ExceptionLimit();
+
+	@ObjectMeta("exceptionExclude")
+	private ExceptionExclude m_exceptionExclude = new ExceptionExclude();
 
 	@FieldMeta("projectId")
 	private int m_projectId;
@@ -126,6 +130,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public ExceptionLimit getExceptionLimit() {
 		return m_exceptionLimit;
+	}
+
+	public ExceptionExclude getExceptionExclude() {
+		return m_exceptionExclude;
 	}
 
 	public String getFrom() {

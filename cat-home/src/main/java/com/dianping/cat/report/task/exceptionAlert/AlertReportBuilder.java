@@ -18,7 +18,7 @@ import com.dianping.cat.home.alertReport.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class AlertReportBuilder implements ReportTaskBuilder {
 
@@ -26,7 +26,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	protected ReportService m_reportService;
 
 	@Inject
-	private ExceptionThresholdConfigManager m_exceptionThresholdConfigManager;
+	private ExceptionConfigManager m_exceptionConfigManager;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -48,7 +48,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		AlertReport alertReport = new AlertReport(Constants.CAT);
 		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport)
-		      .setExceptionThresholdConfigManager(m_exceptionThresholdConfigManager);
+		      .setExceptionConfigManager(m_exceptionConfigManager);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 
 		alertReport.setStartTime(start);

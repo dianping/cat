@@ -9,8 +9,8 @@
    <model package="com.dianping.cat.home.info" name="info">
       <sample-model>src/test/resources/com/dianping/cat/system/config/info.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.exception-threshold" name="exception-threshold-config">
-      <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/exception-threshold-config.xml</sample-model>
+   <model package="com.dianping.cat.home.exception-config" name="exception-config">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/dependency/exception-config.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.bug" name="bug">
       <sample-model>src/test/resources/com/dianping/cat/report/page/bug/bug.xml</sample-model>

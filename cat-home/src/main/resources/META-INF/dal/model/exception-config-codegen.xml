@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="exception-threshold-config" root="true">
+  <entity name="exception-config" root="true">
     <entity-ref name="domain-config" type="list" names="domain-configs" />
   </entity>
   <entity name="domain-config">

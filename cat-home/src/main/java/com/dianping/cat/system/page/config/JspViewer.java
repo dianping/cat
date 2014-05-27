@@ -73,15 +73,20 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case METRIC_RULE_CONFIG_UPDATE:
 			return JspFile.METRIC_RULE_CONFIG_UPDATE.getPath();
 			// Excepton Config
-		case EXCEPTION_THRESHOLDS:
-			return JspFile.EXCEPTION_THRESHOLD.getPath();
+		case EXCEPTION:
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
-			return JspFile.EXCEPTION_THRESHOLD.getPath();
 		case EXCEPTION_THRESHOLD_DELETE:
-			return JspFile.EXCEPTION_THRESHOLD.getPath();
+			return JspFile.EXCEPTION.getPath();
 		case EXCEPTION_THRESHOLD_UPDATE:
 		case EXCEPTION_THRESHOLD_ADD:
 			return JspFile.EXCEPTION_THRESHOLD_CONFIG.getPath();
+			//Exception Exclude Config
+		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
+		case EXCEPTION_EXCLUDE_DELETE:
+			return JspFile.EXCEPTION.getPath();
+		case EXCEPTION_EXCLUDE_UPDATE:
+		case EXCEPTION_EXCLUDE_ADD:
+			return JspFile.EXCEPTION_EXCLUDE_CONFIG.getPath(); 
 			// Bug
 		case BUG_CONFIG_UPDATE:
 			return JspFile.BUG_CONFIG_UPDATE.getPath();

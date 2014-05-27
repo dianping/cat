@@ -14,26 +14,26 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.dependency.exception.entity.DomainConfig;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionThresholdConfig;
 import com.dianping.cat.home.dependency.exception.transform.DefaultSaxParser;
 
-public class ExceptionThresholdConfigManager implements Initializable {
+public class ExceptionConfigManager implements Initializable {
 
 	@Inject
 	private ConfigDao m_configDao;
 
 	private int m_configId;
 
-	private ExceptionThresholdConfig m_exceptionConfig;
+	private ExceptionConfig m_exceptionConfig;
 
-	private static final String CONFIG_NAME = "exceptionThresholdConfig";
+	private static final String CONFIG_NAME = "exceptionConfig";
 
 	public static String DEFAULT_STRING = "Default";
 
 	public static String TOTAL_STRING = "Total";
-	
+
 	public static String ALL_STRING = "All";
 
 	public boolean deleteExceptionLimit(String domain, String exceptionName) {
@@ -53,7 +53,7 @@ public class ExceptionThresholdConfigManager implements Initializable {
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-exception-threshold-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-exception-config.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -69,7 +69,7 @@ public class ExceptionThresholdConfigManager implements Initializable {
 			Cat.logError(e);
 		}
 		if (m_exceptionConfig == null) {
-			m_exceptionConfig = new ExceptionThresholdConfig();
+			m_exceptionConfig = new ExceptionConfig();
 		}
 	}
 
@@ -101,30 +101,30 @@ public class ExceptionThresholdConfigManager implements Initializable {
 
 	public ExceptionLimit queryDomainTotalLimit(String domain) {
 		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
-		
+
 		if (result == null) {
 			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
 		}
 		return result;
 	}
-	
+
 	public boolean deleteExceptionExclude(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
-		
+
 		domainConfig.removeExceptionExclude(exceptionName);
 		return storeConfig();
 	}
-	
+
 	public boolean insertExceptionExclude(ExceptionExclude exception) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(exception.getDomain());
-		
+
 		domainConfig.getExceptionExcludes().put(exception.getId(), exception);
 		return storeConfig();
 	}
 
 	public List<ExceptionExclude> queryAllExceptionExcludes() {
 		List<ExceptionExclude> result = new ArrayList<ExceptionExclude>();
-		
+
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionExcludes().values());
 		}
@@ -140,7 +140,7 @@ public class ExceptionThresholdConfigManager implements Initializable {
 		}
 		if (domainConfig != null) {
 			result = domainConfig.getExceptionExcludes().get(exceptionName);
-			
+
 			if (result == null) {
 				result = domainConfig.getExceptionExcludes().get(ALL_STRING);
 			}

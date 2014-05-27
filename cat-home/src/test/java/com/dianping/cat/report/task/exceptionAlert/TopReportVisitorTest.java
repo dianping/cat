@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.alertReport.entity.AlertReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TopReportVisitorTest extends ComponentTestCase {
 
@@ -26,10 +26,10 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		String expectedAlertReportXml = Files.forIO()
 		      .readFrom(getClass().getResourceAsStream("alertReport.xml"), "utf-8");
 
-		ThresholdConfigMock m_thresholeConfigManager = new ThresholdConfigMock();
+		ExceptionConfigMock exceptionConfigManager = new ExceptionConfigMock();
 		AlertReport alertReport = new AlertReport(Constants.CAT);
-		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionThresholdConfigManager(
-		      m_thresholeConfigManager);
+		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
+				exceptionConfigManager);
 
 		alertReport.setStartTime(topReport.getStartTime());
 		alertReport.setEndTime(topReport.getEndTime());
@@ -39,13 +39,13 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		      .replace("\r", ""));
 	}
 
-	public class ThresholdConfigMock extends ExceptionThresholdConfigManager {
+	public class ExceptionConfigMock extends ExceptionConfigManager {
 
 		private Map<String, ExceptionLimit> exceptionLimitMap = new HashMap<String, ExceptionLimit>();
 
 		private Map<String, ExceptionExclude> exceptionExcludeMap = new HashMap<String, ExceptionExclude>();
 
-		public ThresholdConfigMock() {
+		public ExceptionConfigMock() {
 			// exception limit
 			ExceptionLimit exceptionAA = new ExceptionLimit("exceptionA");
 			exceptionAA.setDomain("domainA").setError(10).setWarning(5);
