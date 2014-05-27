@@ -29,7 +29,7 @@ import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class ExternalInfoBuilder {
 
@@ -46,7 +46,7 @@ public class ExternalInfoBuilder {
 	private ReportService m_reportService;
 
 	@Inject
-	private ExceptionThresholdConfigManager m_configManager;
+	private ExceptionConfigManager m_configManager;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exception-config>
+   <domain-config id="Default">
+      <exception-limit domain="Default" id="Total" warning="200" error="400"/>
+   </domain-config>
+   <domain-config id="UserBaseService">
+      <exception-limit domain="UserBaseService" id="net.spy.memcached.internal.CheckedOperationTimeoutException" warning="10000" error="20000"/>
+      <exception-limit domain="UserBaseService" id="Total" warning="20000" error="40000"/>
+   </domain-config>
+   <domain-config id="ShoppicService">
+      <exception-limit domain="ShoppicService" id="Total" warning="20" error="1000"/>
+   </domain-config>
+   <domain-config id="BAESEmployeeportWeb">
+      <exception-limit domain="BAESEmployeeportWeb" id="Total" warning="10" error="10"/>
+   </domain-config>
+   <domain-config id="NeoCortex">
+      <exception-limit domain="NeoCortex" id="com.dianping.neocortex.services.impl.ServiceException" warning="300" error="1000"/>
+   </domain-config>
+   <domain-config id="PiccenterService">
+      <exception-limit domain="PiccenterService" id="Total" warning="10" error="1000"/>
+   </domain-config>
+   <domain-config id="PiccenterUpload">
+      <exception-limit domain="PiccenterUpload" id="Total" warning="5" error="500"/>
+   </domain-config>
+   <domain-config id="ShoppicWeb">
+      <exception-limit domain="ShoppicWeb" id="Total" warning="30" error="1000"/>
+   </domain-config>
+   <domain-config id="PiccenterWeb">
+      <exception-limit domain="PiccenterWeb" id="Total" warning="50" error="1000"/>
+   </domain-config>
+   <domain-config id="SearchTuanGou">
+      <exception-limit domain="SearchTuanGou" id="com.dianping.dpsf.exception.NetTimeoutException" warning="1000" error="10000"/>
+   </domain-config>
+   <domain-config id="BaTgpMq">
+      <exception-limit domain="BaTgpMq" id="Total" warning="1" error="1"/>
+   </domain-config>
+   <domain-config id="ReviewServer">
+      <exception-limit domain="ReviewServer" id="Total" warning="60" error="120"/>
+   </domain-config>
+   <domain-config id="ReviewWeb">
+      <exception-limit domain="ReviewWeb" id="Total" warning="60" error="120"/>
+   </domain-config>
+</exception-config>

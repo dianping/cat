@@ -18,11 +18,11 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TopMetric extends BaseVisitor {
 
-	private ExceptionThresholdConfigManager m_configManager;
+	private ExceptionConfigManager m_configManager;
 
 	private String m_currentDomain;
 
@@ -50,7 +50,7 @@ public class TopMetric extends BaseVisitor {
 
 	private Date m_start;
 
-	public TopMetric(int count, int tops, ExceptionThresholdConfigManager configManager) {
+	public TopMetric(int count, int tops, ExceptionConfigManager configManager) {
 		m_configManager = configManager;
 		m_error = new MetricItem(count, tops, m_configManager);
 		m_url = new MetricItem(count, tops);
@@ -164,11 +164,11 @@ public class TopMetric extends BaseVisitor {
 
 		private int m_alert;
 
-		private ExceptionThresholdConfigManager m_configManager;
+		private ExceptionConfigManager m_configManager;
 
 		private Map<String, Double> m_exceptions = new HashMap<String, Double>();
 
-		public Item(String domain, double value, ExceptionThresholdConfigManager configManager) {
+		public Item(String domain, double value, ExceptionConfigManager configManager) {
 			m_domain = domain;
 			m_value = value;
 			m_configManager = configManager;
@@ -269,14 +269,14 @@ public class TopMetric extends BaseVisitor {
 
 		private Map<String, List<Item>> m_result;
 
-		private ExceptionThresholdConfigManager m_configManager;
+		private ExceptionConfigManager m_configManager;
 
 		public MetricItem(int minuteCount, int itemSize) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
 		}
 
-		public MetricItem(int minuteCount, int itemSize, ExceptionThresholdConfigManager configManager) {
+		public MetricItem(int minuteCount, int itemSize, ExceptionConfigManager configManager) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
 			m_configManager = configManager;

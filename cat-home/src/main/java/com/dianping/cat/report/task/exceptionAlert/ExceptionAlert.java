@@ -23,8 +23,8 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -33,8 +33,7 @@ import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class ExceptionAlert implements Task, LogEnabled {
@@ -49,10 +48,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private MailSMS m_mailSms;
 
 	@Inject
-	private ExceptionThresholdConfigManager m_exceptionThresholdConfigManager;
-
-	@Inject
-	private ExceptionExcludeConfigManager m_exceptionExcludeConfigManager;
+	private ExceptionConfigManager m_exceptionConfigManager;
 
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_topService;
@@ -71,7 +67,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
-		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionThresholdConfigManager);
+		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
 
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
@@ -156,7 +152,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		for (List<Item> item : items) {
 			for (Item i : item) {
 				String domain = i.getDomain();
-				ExceptionLimit totalExceptionLimit = m_exceptionThresholdConfigManager.queryDomainTotalLimit(domain);
+				ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(domain);
 				int totalWarnLimit = -1;
 				int totalErrorLimit = -1;
 				int totalException = 0;
@@ -168,8 +164,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				for (Entry<String, Double> entry : i.getException().entrySet()) {
 					String exceptionName = entry.getKey();
-					ExceptionExclude result = m_exceptionExcludeConfigManager.queryDomainExceptionExclude(domain,
-					      exceptionName);
+					ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
 
 					if (result != null) {
 						continue;
@@ -178,8 +173,8 @@ public class ExceptionAlert implements Task, LogEnabled {
 					double value = entry.getValue().doubleValue();
 					double warnLimit = -1;
 					double errorLimit = -1;
-					ExceptionLimit exceptionLimit = m_exceptionThresholdConfigManager.queryDomainExceptionLimit(domain,
-					      exceptionName);
+					ExceptionLimit exceptionLimit = m_exceptionConfigManager
+					      .queryDomainExceptionLimit(domain, exceptionName);
 
 					totalException += entry.getValue();
 

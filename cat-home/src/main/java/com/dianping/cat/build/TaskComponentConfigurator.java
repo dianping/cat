@@ -51,8 +51,7 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -106,8 +105,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
 
-		all.add(C(AlertReportBuilder.class).req(ReportService.class, ExceptionThresholdConfigManager.class,
-		      ExceptionExcludeConfigManager.class));
+		all.add(C(AlertReportBuilder.class).req(ReportService.class, ExceptionConfigManager.class));
 
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
 

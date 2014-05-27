@@ -59,7 +59,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
 
-	EXCEPTION_THRESHOLDS("exceptionThresholds"),
+	EXCEPTION("exception"),
 
 	EXCEPTION_THRESHOLD_UPDATE("exceptionThresholdUpdate"),
 	
@@ -68,6 +68,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	EXCEPTION_THRESHOLD_UPDATE_SUBMIT("exceptionThresholdUpdateSubmit"),
 
 	EXCEPTION_THRESHOLD_DELETE("exceptionThresholdDelete"),
+	
+	EXCEPTION_EXCLUDE_UPDATE("exceptionExcludeUpdate"),
+	
+	EXCEPTION_EXCLUDE_ADD("exceptionExcludeAdd"),
+	
+	EXCEPTION_EXCLUDE_UPDATE_SUBMIT("exceptionExcludeUpdateSubmit"),
+	
+	EXCEPTION_EXCLUDE_DELETE("exceptionExcludeDelete"),
 
 	BUG_CONFIG_UPDATE("bugConfigUpdate"),
 

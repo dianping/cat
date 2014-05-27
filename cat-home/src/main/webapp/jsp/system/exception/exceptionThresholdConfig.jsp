@@ -20,20 +20,20 @@
 	</script>
 
 <form name="exceptionConfig" id="form" method="post"
-	action="${model.pageUri}?op=exceptionExcludeUpdateSubmit">
+	action="${model.pageUri}?op=exceptionThresholdUpdateSubmit&type=异常阈值">
 	<h4 class="text-center text-error" id="state">&nbsp;</h4>
 	<h4 class="text-center text-error">修改异常报警配置信息</h4>
 	<table class="table table-striped table-bordered table-condensed table-hover">
-	<c:set  var="action" value="exceptionExcludeUpdate"/>
+	<c:set  var="action" value="exceptionThresholdUpdate"/>
 		<tr>
 			<td style="text-align:right" class="text-success">项目名称</td>
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.domain" value="${model.exceptionExclude.domain}"/>
+				<input name="exceptionLimit.domain" value="${model.exceptionLimit.domain}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<select name="exceptionExclude.domain" id="domainId" style="width:200px;">
+				<select name="exceptionLimit.domain" id="domainId" style="width:200px;">
 					<c:forEach var="item" items="${model.domainList}">
                         <option value="${item}">${item}</option> 							
 					</c:forEach>
@@ -42,21 +42,36 @@
 			</c:choose>
 			</td>
 		</tr>
+	  
 
 		<tr>
 			<td style="text-align:right" class="text-success">异常名称</td>
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.id" value="${model.exceptionExclude.id}"/>
+				<input name="exceptionLimit.id" value="${model.exceptionLimit.id}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<div id="jqxcombobox" name='exceptionExclude.id' >
+				<div id="jqxcombobox" name='exceptionLimit.id' >
 		        </div>
 			</c:otherwise>
 			</c:choose>
+		 
 			</td>
 		</tr>
+		
+		<tr>
+			<td style="text-align: right" class="text-success">warning阈值</td>
+			<td><input id="warningThreshold" name="exceptionLimit.warning"
+				value="${model.exceptionLimit.warning}" required /></td>
+		</tr>
+		
+		<tr>
+			<td style="text-align: right" class="text-success">error阈值</td>
+			<td><input id="errorThreshold" name="exceptionLimit.error"
+				value="${model.exceptionLimit.error}" required /></td>
+		</tr>
+
 		<tr>
 			<td colspan='2'  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
 				name="submit" value="提交"/></td>
