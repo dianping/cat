@@ -3601,9 +3601,6 @@
 					<role>com.dianping.cat.system.config.ExceptionThresholdConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionExcludeConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
 				</requirement>
 				<requirement>
@@ -3644,15 +3641,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.ExceptionExcludeConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionExcludeConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
