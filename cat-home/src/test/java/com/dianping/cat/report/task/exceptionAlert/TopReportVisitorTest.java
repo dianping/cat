@@ -11,10 +11,9 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TopReportVisitorTest extends ComponentTestCase {
 
@@ -27,12 +26,10 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		String expectedAlertReportXml = Files.forIO()
 		      .readFrom(getClass().getResourceAsStream("alertReport.xml"), "utf-8");
 
-		ThresholdConfigMock m_thresholeConfigManager = new ThresholdConfigMock();
-		ExcludeConfigMock m_excludeConfigManager = new ExcludeConfigMock();
+		ExceptionConfigMock exceptionConfigManager = new ExceptionConfigMock();
 		AlertReport alertReport = new AlertReport(Constants.CAT);
-		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport)
-		      .setExceptionThresholdConfigManager(m_thresholeConfigManager)
-		      .setExceptionExcludeConfigManager(m_excludeConfigManager);
+		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
+				exceptionConfigManager);
 
 		alertReport.setStartTime(topReport.getStartTime());
 		alertReport.setEndTime(topReport.getEndTime());
@@ -42,76 +39,72 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		      .replace("\r", ""));
 	}
 
-	public class ThresholdConfigMock extends ExceptionThresholdConfigManager {
+	public class ExceptionConfigMock extends ExceptionConfigManager {
 
-		private Map<String, ExceptionLimit> exceptionMap = new HashMap<String, ExceptionLimit>();
+		private Map<String, ExceptionLimit> exceptionLimitMap = new HashMap<String, ExceptionLimit>();
 
-		public ThresholdConfigMock() {
+		private Map<String, ExceptionExclude> exceptionExcludeMap = new HashMap<String, ExceptionExclude>();
+
+		public ExceptionConfigMock() {
+			// exception limit
 			ExceptionLimit exceptionAA = new ExceptionLimit("exceptionA");
 			exceptionAA.setDomain("domainA").setError(10).setWarning(5);
-			exceptionMap.put(exceptionAA.getDomain() + "_" + exceptionAA.getId(), exceptionAA);
+			exceptionLimitMap.put(exceptionAA.getDomain() + "_" + exceptionAA.getId(), exceptionAA);
 
 			ExceptionLimit exceptionAT = new ExceptionLimit("Total");
 			exceptionAT.setDomain("domainA").setError(20).setWarning(10);
-			exceptionMap.put(exceptionAT.getDomain(), exceptionAT);
+			exceptionLimitMap.put(exceptionAT.getDomain(), exceptionAT);
 
 			ExceptionLimit exceptionBA = new ExceptionLimit("exceptionA");
 			exceptionBA.setDomain("domainB").setError(10).setWarning(5);
-			exceptionMap.put(exceptionBA.getDomain() + "_" + exceptionBA.getId(), exceptionBA);
+			exceptionLimitMap.put(exceptionBA.getDomain() + "_" + exceptionBA.getId(), exceptionBA);
 
 			ExceptionLimit exceptionCA = new ExceptionLimit("exceptionA");
 			exceptionCA.setDomain("domainC").setError(10).setWarning(5);
-			exceptionMap.put(exceptionCA.getDomain() + "_" + exceptionCA.getId(), exceptionCA);
+			exceptionLimitMap.put(exceptionCA.getDomain() + "_" + exceptionCA.getId(), exceptionCA);
 
 			ExceptionLimit exceptionCB = new ExceptionLimit("exceptionB");
 			exceptionCB.setDomain("domainC").setError(10).setWarning(5);
-			exceptionMap.put(exceptionCB.getDomain() + "_" + exceptionCB.getId(), exceptionCB);
+			exceptionLimitMap.put(exceptionCB.getDomain() + "_" + exceptionCB.getId(), exceptionCB);
 
 			ExceptionLimit exceptionCC = new ExceptionLimit("exceptionC");
 			exceptionCC.setDomain("domainC").setError(10).setWarning(5);
-			exceptionMap.put(exceptionCC.getDomain() + "_" + exceptionCC.getId(), exceptionCC);
+			exceptionLimitMap.put(exceptionCC.getDomain() + "_" + exceptionCC.getId(), exceptionCC);
 
 			ExceptionLimit exceptionCD = new ExceptionLimit("exceptionD");
 			exceptionCD.setDomain("domainC").setError(10).setWarning(5);
-			exceptionMap.put(exceptionCD.getDomain() + "_" + exceptionCD.getId(), exceptionCD);
+			exceptionLimitMap.put(exceptionCD.getDomain() + "_" + exceptionCD.getId(), exceptionCD);
 
 			ExceptionLimit exceptionCT = new ExceptionLimit("Total");
 			exceptionCT.setDomain("domainC").setError(20).setWarning(10);
-			exceptionMap.put(exceptionCT.getDomain(), exceptionCT);
+			exceptionLimitMap.put(exceptionCT.getDomain(), exceptionCT);
+
+			// exception exclude
+			ExceptionExclude exceptionAll = new ExceptionExclude("All");
+			exceptionAll.setDomain("domainA");
+			exceptionExcludeMap.put(exceptionAll.getDomain() + "_" + exceptionAll.getId(), exceptionAll);
+
+			ExceptionExclude exceptionCAExclude = new ExceptionExclude("exceptionA");
+			exceptionCAExclude.setDomain("domainC");
+			exceptionExcludeMap.put(exceptionCAExclude.getDomain() + "_" + exceptionCAExclude.getId(), exceptionCAExclude);
 
 		}
 
 		public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
-			return exceptionMap.get(domain + "_" + exceptionName);
+			return exceptionLimitMap.get(domain + "_" + exceptionName);
 		}
 
 		public ExceptionLimit queryDomainTotalLimit(String domain) {
-			return exceptionMap.get(domain);
-		}
-	}
-
-	public class ExcludeConfigMock extends ExceptionExcludeConfigManager {
-
-		private Map<String, ExceptionExclude> exceptionMap = new HashMap<String, ExceptionExclude>();
-
-		public ExcludeConfigMock() {
-			ExceptionExclude exceptionAll = new ExceptionExclude("All");
-			exceptionAll.setDomain("domainA");
-			exceptionMap.put(exceptionAll.getDomain() + "_" + exceptionAll.getId(), exceptionAll);
-
-			ExceptionExclude exceptionCA = new ExceptionExclude("exceptionA");
-			exceptionCA.setDomain("domainC");
-			exceptionMap.put(exceptionCA.getDomain() + "_" + exceptionCA.getId(), exceptionCA);
+			return exceptionLimitMap.get(domain);
 		}
 
 		public ExceptionExclude queryDomainExceptionExclude(String domain, String exceptionName) {
 			ExceptionExclude exceptionExclude = null;
-			exceptionExclude = exceptionMap.get(domain + "_" + exceptionName);
+			exceptionExclude = exceptionExcludeMap.get(domain + "_" + exceptionName);
 			if (exceptionExclude == null) {
-				exceptionExclude = exceptionMap.get(domain + "_All");
+				exceptionExclude = exceptionExcludeMap.get(domain + "_All");
 			}
 			return exceptionExclude;
 		}
 	}
-
 }

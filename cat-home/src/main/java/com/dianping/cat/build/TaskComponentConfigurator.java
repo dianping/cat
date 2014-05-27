@@ -15,7 +15,6 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExcludeConfig;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineCreator;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -52,8 +51,7 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -107,8 +105,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateReportBuilder.class).req(ReportService.class));
 
-		all.add(C(AlertReportBuilder.class).req(ReportService.class, ExceptionThresholdConfigManager.class,
-		      ExceptionExcludeConfigManager.class));
+		all.add(C(AlertReportBuilder.class).req(ReportService.class, ExceptionConfigManager.class));
 
 		all.add(C(HeavyReportBuilder.class).req(ReportService.class));
 

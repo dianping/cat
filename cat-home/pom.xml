@@ -152,7 +152,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/info-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/exception-threshold-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/exception-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/bug-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/bug-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
@@ -165,7 +165,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/netgraph-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/exception-exclude-config-manifest.xml,
                             </manifest>
 						</configuration>
 					</execution>

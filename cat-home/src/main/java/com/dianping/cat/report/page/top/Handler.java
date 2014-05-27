@@ -21,7 +21,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -37,7 +37,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private ExceptionThresholdConfigManager m_configManager;
+	private ExceptionConfigManager m_configManager;
 
 	private TopReport getReport(Payload payload) {
 		String domain = Constants.CAT;

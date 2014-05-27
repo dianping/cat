@@ -60,8 +60,7 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
@@ -98,9 +97,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(ExceptionThresholdConfigManager.class).req(ConfigDao.class));
-
-		all.add(C(ExceptionExcludeConfigManager.class).req(ConfigDao.class));
+		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 
@@ -175,8 +172,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(RemoteMetricReportService.class, MetricRuleConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, MetricAlertConfig.class, MailSMS.class,
-		      ExceptionThresholdConfigManager.class, ExceptionExcludeConfigManager.class).req(ModelService.class,
-		      TopAnalyzer.ID));
+		      ExceptionConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

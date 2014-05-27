@@ -6,16 +6,13 @@ import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
-import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
-import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
+import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TopReportVisitor extends BaseVisitor {
 
-	private ExceptionThresholdConfigManager m_exceptionThresholdConfigManager;
-
-	private ExceptionExcludeConfigManager m_exceptionExcludeConfigManager;
+	private ExceptionConfigManager m_exceptionConfigManager;
 
 	private AlertReport m_report;
 
@@ -30,14 +27,8 @@ public class TopReportVisitor extends BaseVisitor {
 		return this;
 	}
 
-	public TopReportVisitor setExceptionThresholdConfigManager(
-	      ExceptionThresholdConfigManager exceptionThresholdConfigManager) {
-		m_exceptionThresholdConfigManager = exceptionThresholdConfigManager;
-		return this;
-	}
-
-	public TopReportVisitor setExceptionExcludeConfigManager(ExceptionExcludeConfigManager exceptionExcludeConfigManager) {
-		m_exceptionExcludeConfigManager = exceptionExcludeConfigManager;
+	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
+		m_exceptionConfigManager = exceptionConfigManager;
 		return this;
 	}
 
@@ -50,7 +41,7 @@ public class TopReportVisitor extends BaseVisitor {
 	@Override
 	public void visitError(Error error) {
 
-		ExceptionExclude exceptionExclude = m_exceptionExcludeConfigManager.queryDomainExceptionExclude(m_currentDomain,
+		ExceptionExclude exceptionExclude = m_exceptionConfigManager.queryDomainExceptionExclude(m_currentDomain,
 		      error.getId());
 
 		if (exceptionExclude != null) {
@@ -60,8 +51,8 @@ public class TopReportVisitor extends BaseVisitor {
 		int warnLimit = -1;
 		int errorLimit = -1;
 		int count = error.getCount();
-		ExceptionLimit exceptionLimit = m_exceptionThresholdConfigManager.queryDomainExceptionLimit(m_currentDomain,
-		      error.getId());
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager
+		      .queryDomainExceptionLimit(m_currentDomain, error.getId());
 
 		m_totalSegmentException += count;
 
@@ -93,7 +84,7 @@ public class TopReportVisitor extends BaseVisitor {
 
 		super.visitSegment(segment);
 
-		ExceptionLimit exceptionLimit = m_exceptionThresholdConfigManager.queryDomainTotalLimit(m_currentDomain);
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(m_currentDomain);
 		int warnLimit = -1;
 		int errorLimit = -1;
 

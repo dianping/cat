@@ -33,9 +33,11 @@ public enum JspFile {
 	
 	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metricRule/metricRuleConfig.jsp"),
 
-	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
+	EXCEPTION("/jsp/system/exception/exception.jsp"),
 
 	EXCEPTION_THRESHOLD_CONFIG("/jsp/system/exception/exceptionThresholdConfig.jsp"),
+	
+	EXCEPTION_EXCLUDE_CONFIG("/jsp/system/exception/exceptionExcludeConfig.jsp"),
 
 	BUG_CONFIG_UPDATE("/jsp/system/bug/bugConfig.jsp"),
 

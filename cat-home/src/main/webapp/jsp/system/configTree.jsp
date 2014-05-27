@@ -7,8 +7,7 @@
            <li class='nav-header'><h4>应用监控配置</h4></li>
 	       <li class="text-right" id="topylogyNodeConfigList"><a href="?op=topologyGraphNodeConfigList"><strong>拓扑节点阀值</strong></a></li>
 	       <li class="text-right" id="topylogyEdgeConfigList"><a href="?op=topologyGraphEdgeConfigList"><strong>拓扑依赖阀值</strong></a></li>
-	       <li class="text-right" id="exceptionConfigList"><a href="?op=exceptionThresholds"><strong>异常阀值配置</strong></a></li>
-	       <li class="text-right" id="exceptionExcludeConfigList"><a href="?op=exceptionExcludes"><strong>异常过滤配置</strong></a></li>
+	       <li class="text-right" id="exceptionConfigList"><a href="?op=exception"><strong>异常告警配置</strong></a></li>
            <li class='nav-header'><h4>外部监控配置</h4></li>
 	       <li class="text-right" id="urlPatternList"><a href="?op=urlPatterns"><strong>URL合并规则</strong></a></li>
 	       <li class="text-right" id="aggregationList"><a href="?op=aggregations"><strong>JS合并规则</strong></a></li>
