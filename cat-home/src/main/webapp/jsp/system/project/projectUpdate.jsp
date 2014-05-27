@@ -35,6 +35,11 @@
 			<td></td>
 		</tr>
 		<tr>
+			<td>CMDB项目名称</td>
+			<td>${model.project.cmdbDomain}</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>所属部门</td>
 			<td><input type="name" name="project.department" value="${model.project.department}" required/></td>
 			<td style='color:red'>（一级分类）建议填写，主站、手机、团购、搜索、架构</td>
