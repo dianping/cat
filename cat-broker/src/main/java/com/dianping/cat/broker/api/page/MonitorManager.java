@@ -64,7 +64,17 @@ public class MonitorManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private void logMetric(long timestamp, double duration, String group, String key) {
+	private void logMetricForCount(long timestamp, String group, String key, int count) {
+		Metric metric = Cat.getProducer().newMetric(group, key);
+		DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+		defaultMetric.setTimestamp(timestamp);
+
+		defaultMetric.setStatus("C");
+		defaultMetric.addData(String.valueOf(count));
+	}
+
+	private void logMetricForAvg(long timestamp, double duration, String group, String key) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
 
@@ -119,33 +129,35 @@ public class MonitorManager implements Initializable, LogEnabled {
 					String group = url;
 
 					if (duration > 0) {
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
+						logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
 					if ("200".equals(httpStatus) && "200".equals(errorCode)) {
 						Cat.logEvent(targetUrl, "Normal", Event.SUCCESS, null);
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
+						String key = city + ":" + channel + ":" + Monitor.HIT;
+						logMetricForCount(timestamp, group, key, 10);
 					} else {
 						Cat.logEvent(targetUrl, "AbNormal", Event.SUCCESS, null);
-						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
+						String key = city + ":" + channel + ":" + Monitor.ERROR;
+						logMetricForCount(timestamp, group, key, 1);
 					}
 
 					if (!StringUtils.isEmpty(httpStatus)) {
 						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
-						Metric metric = Cat.getProducer().newMetric(group, key);
-						DefaultMetric defaultMetric = (DefaultMetric) metric;
+						int count = 1;
 
-						defaultMetric.setTimestamp(timestamp);
-						defaultMetric.setStatus("C");
-						defaultMetric.addData(String.valueOf(1));
+						if ("200".equals(httpStatus)) {
+							count = 10;
+						}
+						logMetricForCount(timestamp, group, key, count);
 					}
 					if (!StringUtils.isEmpty(errorCode)) {
 						String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
-						Metric metric = Cat.getProducer().newMetric(group, key);
-						DefaultMetric defaultMetric = (DefaultMetric) metric;
+						int count = 1;
 
-						defaultMetric.setTimestamp(timestamp);
-						defaultMetric.setStatus("C");
-						defaultMetric.addData(String.valueOf(1));
+						if ("200".equals(errorCode)) {
+							count = 10;
+						}
+						logMetricForCount(timestamp, group, key, count);
 					}
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
