@@ -241,16 +241,20 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 
 			for (Hostinfo info : infos) {
-				String hostname = info.getHostname();
-				String ip = info.getIp();
-				String cmdbHostname = queryHostnameFromCMDB(ip);
+				try {
+	            String hostname = info.getHostname();
+	            String ip = info.getIp();
+	            String cmdbHostname = queryHostnameFromCMDB(ip);
 
-				if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
-					info.setHostname(cmdbHostname);
-					m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
-				} else {
-					m_logger.error("can't find hostname for ip: " + ip);
-				}
+	            if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
+	            	info.setHostname(cmdbHostname);
+	            	m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
+	            } else {
+	            	m_logger.error("can't find hostname for ip: " + ip);
+	            }
+            } catch (Exception e) {
+            	Cat.logError(e);
+            }
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);
