@@ -38,7 +38,7 @@ public class ProductUpdateTask implements Task, LogEnabled {
 
 	private static final String CMDB_DOMAIN_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
-	private static final String CMDB_INFO_URL = "http://cmdb.dp/cmdb/device/s?q=app:%s&fl=rd_duty,project_email&tidy=true";
+	private static final String CMDB_INFO_URL = "http://cmdb.dp/cmdb/device/s?q=app:%s&fl=rd_duty,project_email,project_owner_mobile&tidy=true";
 
 	private Map<String, String> m_domainToIpMap = new HashMap<String, String>();
 
@@ -54,6 +54,43 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		}
 	}
 
+	private String buildStringFromJsonArray(JsonArray array) {
+		int length = array.length();
+
+		if (length > 0) {
+			StringBuilder builder = new StringBuilder(256);
+
+			for (int i = 0; i < length; i++) {
+				String tmpString = array.getString(i);
+
+				if (checkIfValid(tmpString)) {
+					builder.append(tmpString);
+					builder.append(",");
+				}
+			}
+
+			int builderLength = builder.length();
+
+			if (builderLength > 0) {
+				String result = builder.substring(0, builderLength - 1);
+				return result;
+			}
+		}
+		
+		return null;
+	}
+
+	private boolean checkIfValid(String source) {
+		if (source == null || "".equals(source) || "null".equals(source)) {
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean checkIfEqual(String source, String target) {
+		return source.equals(target);
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -64,17 +101,20 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		return "product_update_task";
 	}
 
-	public JsonArray parseDomain(String content) throws Exception {
+	public String parseDomain(String content) throws Exception {
 		JsonObject object = new JsonObject(content);
 		JsonArray array = object.getJSONArray("app");
 
-		return array;
+		if (array.length() > 0) {
+			return array.getString(0);
+		}
+		
+		return null;
 	}
 
 	private Map<String, String> parseInfos(String content) throws Exception {
 		Map<String, String> infosMap = new HashMap<String, String>();
 		JsonObject object = new JsonObject(content);
-
 		JsonArray owners = object.getJSONArray("rd_duty");
 
 		if (owners.length() > 0) {
@@ -82,22 +122,16 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		}
 
 		JsonArray emails = object.getJSONArray("project_email");
-		StringBuilder emailBuilder = new StringBuilder(256);
-		int length = emails.length();
-
-		if (length > 0) {
-			emailBuilder.append(emails.getString(0));
-
-			for (int i = 1; i < length; i++) {
-				String tmpEmail = emails.getString(i);
-				if (tmpEmail != null && !"".equals(tmpEmail) && !"null".equals(tmpEmail)) {
-					emailBuilder.append(",");
-					emailBuilder.append(tmpEmail);
-				}
-			}
+		String email = buildStringFromJsonArray(emails);
+		if(email != null){
+			infosMap.put("email", email);
 		}
 
-		infosMap.put("email", emailBuilder.toString());
+		JsonArray phones = object.getJSONArray("project_owner_mobile");
+		String phone = buildStringFromJsonArray(phones);
+		if(phone != null){
+			infosMap.put("phone", phone);
+		}
 
 		return infosMap;
 	}
@@ -112,14 +146,14 @@ public class ProductUpdateTask implements Task, LogEnabled {
 			if (nRc == HttpURLConnection.HTTP_OK) {
 				InputStream input = conn.getInputStream();
 				String content = Files.forIO().readFrom(input, "utf-8");
-				JsonArray domains = parseDomain(content.trim());
-				int length = domains.length();
-
-				if (length == 1) {
-					return domains.getString(0);
-				} else if (length > 1) {
-					m_logger.error("too many domains for ip: " + ip);
+				String domain = parseDomain(content.trim());
+				
+				if(checkIfValid(domain)){
+					return domain;
 				}
+				
+				m_logger.error("cannt find single domain for ip: " + ip);
+				return null;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -162,11 +196,11 @@ public class ProductUpdateTask implements Task, LogEnabled {
 					String cmdbDomain = proj.getCmdbDomain();
 					boolean isCmdbDomainChange = false;
 
-					if (cmdbDomain == null || "".equals(cmdbDomain)) {
+					if (!checkIfValid(cmdbDomain)) {
 						String ip = m_domainToIpMap.get(proj.getDomain());
 						cmdbDomain = queryDomainFromCMDB(ip);
 
-						if (cmdbDomain == null || "".equals(cmdbDomain)) {
+						if (!checkIfValid(cmdbDomain)) {
 							continue;
 						}
 
@@ -174,7 +208,9 @@ public class ProductUpdateTask implements Task, LogEnabled {
 						isCmdbDomainChange = true;
 					}
 
-					if (updateProject(proj) || isCmdbDomainChange) {
+					boolean isProjectInfoChange = updateProject(proj);
+
+					if (isProjectInfoChange || isCmdbDomainChange) {
 						m_projectDao.updateByPK(proj, ProjectEntity.UPDATESET_FULL);
 					}
 				}
@@ -194,35 +230,36 @@ public class ProductUpdateTask implements Task, LogEnabled {
 		}
 	}
 
+	@Override
+	public void shutdown() {
+	}
+
 	private boolean updateProject(Project proj) {
 		Map<String, String> infosMap = queryInfosFromCMDB(proj.getCmdbDomain());
 		String owner = infosMap.get("owner");
 		String email = infosMap.get("email");
+		String phone = infosMap.get("phone");
+		String dbOwner = proj.getOwner();
+		String dbEmail = proj.getEmail();
+		String dbPhone = proj.getPhone();
 		boolean isProjChanged = false;
 
-		if (!checkIfInvalidOrEqual(owner, proj.getOwner())) {
+		if (checkIfValid(owner) && !checkIfEqual(owner, dbOwner)) {
 			proj.setOwner(owner);
 			isProjChanged = true;
 		}
 
-		if (!checkIfInvalidOrEqual(email, proj.getEmail())) {
+		if (checkIfValid(email) && !checkIfEqual(email, dbEmail)) {
 			proj.setEmail(email);
+			isProjChanged = true;
+		}
+		
+		if (checkIfValid(phone) && !checkIfEqual(phone, dbPhone)) {
+			proj.setPhone(phone);
 			isProjChanged = true;
 		}
 
 		return isProjChanged;
-	}
-	
-	private boolean checkIfInvalidOrEqual(String source, String target){
-		if(source == null || "".equals(source) || !"null".equals(source)){
-			return true;
-		}else{
-			return source.equals(target);
-		}
-	}
-
-	@Override
-	public void shutdown() {
 	}
 
 }

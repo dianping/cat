@@ -38,7 +38,8 @@
 					<th width="10%">所属部门</th>
 					<th width="10%">二级分类（可按照产品线）</th>
 					<th width="15%">组邮件</th>
-					<th width="8%">负责人</th>
+					<th width="15%">组号码</th>
+					<th width="5%">负责人</th>
 					<th width="5%">操作</th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.projects}"
@@ -48,6 +49,7 @@
 						<td>${item.department}</td>
 						<td>${item.projectLine}</td>
 						<td>${item.email}</td>
+						<td>${item.phone}</td>
 						<td>${item.owner}</td>
 						<td><a  class="btn btn-primary btn-small" href="?op=update&projectId=${item.id}">编辑</a>
 						<a  class="btn btn-danger btn-small delete" href="?op=projectDelete&projectId=${item.id}">删除</a></td>
