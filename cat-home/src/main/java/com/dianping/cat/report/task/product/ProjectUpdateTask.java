@@ -292,8 +292,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			for (Project pro : projects) {
 				try {
 					List<String> ips = m_domainToIpMap.get(pro.getDomain());
+					String orginalDomain = pro.getCmdbDomain();
 					String cmdbDomain = queryCmdbName(ips);
-					boolean isChange = !cmdbDomain.equals(pro.getCmdbDomain());
+					boolean isChange = !cmdbDomain.equals(orginalDomain);
 
 					if (checkIfValid(cmdbDomain)) {
 						pro.setCmdbDomain(cmdbDomain);
