@@ -36,8 +36,8 @@
 		</tr>
 		<tr>
 			<td>CMDB项目名称</td>
-			<td>${model.project.cmdbDomain}</td>
-			<td></td>
+			<td><input type="name" name="project.cmdbDomain" value="${model.project.cmdbDomain}" required/></td>
+			<td>cmdb中项目统一名称</td>
 		</tr>
 		<tr>
 			<td>所属部门</td>
