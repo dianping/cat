@@ -30,9 +30,10 @@
 						<td><span class="text-error">暂时不起作用，仅仅用作url的分组，用于展示目的</span></td>
 					</tr>
 					<tr>
-						<th>所属组</th>
+						<th>Pattern名</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.pattern" required value="${model.patternItem.pattern}"/></td>
-						<td><span class="text-error">支付完全匹配方式，和部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</span></td>
+						<td><span class="text-error">支持完全匹配方式，比如http://m.api.dianping.com/searchshop.api，
+													<br/>部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</span></td>
 					</tr>
 					<tr>
 						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>

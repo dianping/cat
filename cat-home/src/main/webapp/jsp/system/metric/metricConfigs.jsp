@@ -100,7 +100,9 @@
 				     			<th width="8%"><h5 class='text-center'>显示次数</h5></th>
 				     			<th width="8%"><h5 class='text-center'>显示平均值</h5></th>
 				     			<th width="8%"><h5 class='text-center'>显示总和</h5></th>
-				     			<th width="13%"><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a></h5></th>
+				     			<th width="13%"><h5 class='text-center'>操作
+								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
+ 								--%></h5></th>
 				     		</tr>
 					     	<c:forEach var="config" items="${value}">
 				     			<tr>

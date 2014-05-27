@@ -13,31 +13,25 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.dependency.exception.entity.DomainConfig;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionThresholdConfig;
-import com.dianping.cat.home.dependency.exception.transform.DefaultSaxParser;
+import com.dianping.cat.home.dependency.exceptionExclude.entity.DomainConfig;
+import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
+import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExcludeConfig;
+import com.dianping.cat.home.dependency.exceptionExclude.transform.DefaultSaxParser;
 
-public class ExceptionThresholdConfigManager implements Initializable {
+public class ExceptionExcludeConfigManager implements Initializable {
 
 	@Inject
 	private ConfigDao m_configDao;
 
 	private int m_configId;
 
-	private ExceptionThresholdConfig m_exceptionConfig;
-
-	private static final String CONFIG_NAME = "exceptionThresholdConfig";
+	private ExceptionExcludeConfig m_exceptionConfig;
 
 	public static String DEFAULT_STRING = "Default";
 
-	public static String TOTAL_STRING = "Total";
+	public static String ALL_STRING = "All";
 
-	public boolean deleteExceptionLimit(String domain, String exceptionName) {
-		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
-		domainConfig.removeExceptionLimit(exceptionName);
-		return storeConfig();
-	}
+	private static final String CONFIG_NAME = "exceptionExcludeConfig";
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -50,7 +44,7 @@ public class ExceptionThresholdConfigManager implements Initializable {
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-exception-threshold-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-exception-exclude-config.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -66,41 +60,46 @@ public class ExceptionThresholdConfigManager implements Initializable {
 			Cat.logError(e);
 		}
 		if (m_exceptionConfig == null) {
-			m_exceptionConfig = new ExceptionThresholdConfig();
+			m_exceptionConfig = new ExceptionExcludeConfig();
 		}
 	}
 
-	public boolean insertExceptionLimit(ExceptionLimit limit) {
-		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
-		domainConfig.getExceptionLimits().put(limit.getId(), limit);
+	public boolean deleteExceptionExclude(String domain, String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
+		
+		domainConfig.removeExceptionExclude(exceptionName);
 		return storeConfig();
 	}
 
-	public List<ExceptionLimit> queryAllExceptionLimits() {
-		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
+	public boolean insertExceptionExclude(ExceptionExclude exception) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(exception.getDomain());
+		
+		domainConfig.getExceptionExcludes().put(exception.getId(), exception);
+		return storeConfig();
+	}
+
+	public List<ExceptionExclude> queryAllExceptionExcludes() {
+		List<ExceptionExclude> result = new ArrayList<ExceptionExclude>();
+		
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
-			result.addAll(domainConfig.getExceptionLimits().values());
+			result.addAll(domainConfig.getExceptionExcludes().values());
 		}
 		return result;
 	}
 
-	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
+	public ExceptionExclude queryDomainExceptionExclude(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
-		ExceptionLimit result = null;
+		ExceptionExclude result = null;
+
 		if (domainConfig == null) {
 			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
 		}
 		if (domainConfig != null) {
-			result = domainConfig.getExceptionLimits().get(exceptionName);
-		}
-		return result;
-	}
-
-	public ExceptionLimit queryDomainTotalLimit(String domain) {
-		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
-		
-		if (result == null) {
-			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
+			result = domainConfig.getExceptionExcludes().get(exceptionName);
+			
+			if (result == null) {
+				result = domainConfig.getExceptionExcludes().get(ALL_STRING);
+			}
 		}
 		return result;
 	}

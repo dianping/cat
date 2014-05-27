@@ -26,7 +26,7 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
-import com.dianping.cat.report.chart.DefaultAggGraphCreator;
+import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.chart.GraphCreator;
 import com.dianping.cat.report.chart.MetricDataFetcher;
 import com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl;
@@ -60,6 +60,7 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
+import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
@@ -99,6 +100,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ExceptionThresholdConfigManager.class).req(ConfigDao.class));
 
+		all.add(C(ExceptionExcludeConfigManager.class).req(ConfigDao.class));
+
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
@@ -128,6 +131,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 
+		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
+
 		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
 		            MetricGroupConfigManager.class, AlertInfo.class));
@@ -140,7 +145,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 
-		all.add(C(DefaultAggGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 		// report serivce
@@ -170,7 +175,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(RemoteMetricReportService.class, MetricRuleConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, MetricAlertConfig.class, MailSMS.class,
-		      ExceptionThresholdConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
+		      ExceptionThresholdConfigManager.class, ExceptionExcludeConfigManager.class).req(ModelService.class,
+		      TopAnalyzer.ID));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

@@ -43,7 +43,7 @@
 <p>接口调用请求说明</p>
 <pre>
 	http请求方式: GET（请使用http协议）
-	http://cat.dianpingoa.com/cat/r/systemMonitor?
+	http://cat.dianpingoa.com/cat/r/monitor?
 </pre>
 <p>参数说明</p>
 <table style="width:90%" class="table table-striped table-bordered table-condensed">

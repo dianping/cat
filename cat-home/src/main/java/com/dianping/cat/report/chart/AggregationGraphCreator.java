@@ -33,7 +33,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 
 	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
-
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(m_aggregationGroup);
 		List<MetricAggregation> metricAggregations = metricAggregationGroup.getMetricAggregations();
@@ -48,7 +47,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	}
 
 	public void rebuildData(Map<Long, Double> data, String operation) {
-
 		String op = null;
 
 		for (Entry<Long, Double> entry : data.entrySet()) {
@@ -63,10 +61,9 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 
 	private Pair<String, LineChart> buildAggerationChart(final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures, MetricAggregation metricAggregation) {
-
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(m_aggregationGroup);
-		List<MetricItemConfig> alertItems = m_alertInfo.getLastestAlarm(5);
+		List<MetricItemConfig> alertItems = m_alertInfo.queryLastestAlarmInfo(5);
 		String type = metricAggregationGroup.getType();
 		int step = m_dataExtractor.getStep();
 		String id = metricAggregation.getId();
@@ -80,7 +77,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 		lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
 		for (MetricAggregationItem metricAggregationItem : metricAggregation.getMetricAggregationItems()) {
-
 			String domain = getAttribute(metricAggregation.getDomain(), metricAggregationItem.getDomain());
 			String displayType = getAttribute(metricAggregation.getDisplayType(), metricAggregationItem.getDisplayType());
 			boolean baseLine = getAttribute(metricAggregation.getBaseLine(), metricAggregationItem.getBaseLine());
@@ -88,7 +84,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 			String itemKey = domain + ":" + type + ":" + metricAggregationItem.getKey() + ":" + displayType.toUpperCase();
 
 			if (dataWithOutFutures.containsKey(itemKey)) {
-				buildLineChartTitle(alertItems, lineChart, itemKey, title);
+				buildLineChartTitle(alertItems, lineChart, itemKey);
 				
 				Map<Long, Double> all = convertToMap(datas.get(itemKey), startDate, 1);
 				Map<Long, Double> current = convertToMap(dataWithOutFutures.get(itemKey), startDate, step);
@@ -131,6 +127,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	protected boolean isProductLineInGroup(String productLine, List<MetricAggregation> metricAggregations) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
+		
 		for(MetricItemConfig metricConfig : metricConfigs){
 			String domain = metricConfig.getDomain();
 			String type = metricConfig.getType();
@@ -153,6 +150,7 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 
 	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
 		m_aggregationGroup = metricGroup;
+		
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		MetricAggregationGroup metricAggregationGroup = m_metricAggregationConfigManager.getMetricAggregationConfig()
 		      .findMetricAggregationGroup(metricGroup);
@@ -185,7 +183,6 @@ public class AggregationGraphCreator extends BaseGraphCreator {
 	}
 
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-
 		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 

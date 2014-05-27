@@ -123,7 +123,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	@Override
 	public void visitDependency(Dependency dependency) {
 		String type = dependency.getType();
-		// pigeonServer is no use
+		
 		if (!m_pigeonServices.contains(type)) {
 			TopologyEdge edge = m_itemBuilder.buildEdge(m_domain, dependency);
 			TopologyGraph graph = findOrCreateGraph();

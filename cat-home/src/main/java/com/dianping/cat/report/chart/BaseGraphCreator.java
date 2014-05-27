@@ -62,8 +62,10 @@ public abstract class BaseGraphCreator implements LogEnabled {
 
 	protected void addLastMinuteData(Map<Long, Double> current, Map<Long, Double> all, int minute, Date end) {
 		int step = m_dataExtractor.getStep();
-		if (step == 1)
+		
+		if (step == 1) {
 			return;
+		}
 		long endTime = 0;
 		long currentTime = System.currentTimeMillis();
 		if (end.getTime() > currentTime) {
@@ -93,46 +95,19 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		}
 	}
 
+	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
+	      List<MetricItemConfig> metricConfigs);
+
 	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
-		String id = key.substring(0, index);
+		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
-		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
-		String metricId = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-		      config.getMetricKey());
-		String des = "";
-		
-		config.setId(metricId);
-		if (MetricType.AVG.name().equals(type)) {
-			des = Chinese.Suffix_AVG;
-		} else if (MetricType.SUM.name().equals(type)) {
-			des = Chinese.Suffix_SUM;
-		} else if (MetricType.COUNT.name().equals(type)) {
-			des = Chinese.Suffix_COUNT;
-		}
+		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
+		String des = queryMetricItemDes(type);
 		String title = config.getTitle() + des;
 
 		chart.setTitle(title);
 		chart.setId(metricId + ":" + type);
-
-		if (alertItems.contains(config)) {
-			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
-		} else {
-			chart.setHtmlTitle(title);
-		}
-	}
-
-	public void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
-		if (chart.getHtmlTitle().contains("<span style='color:red'>")) {
-			return;
-		}
-		int index = key.lastIndexOf(":");
-		String id = key.substring(0, index);
-		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(id);
-		String metricId = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-		      config.getMetricKey());
-
-		config.setId(metricId);
 
 		if (alertItems.contains(config)) {
 			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
@@ -202,11 +177,28 @@ public abstract class BaseGraphCreator implements LogEnabled {
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
-			
+
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);
 			index++;
 		}
 		return oldCurrentValues;
+	}
+
+	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
+		LineChart value = charts.get(key);
+
+		if (value != null) {
+			result.put(key, charts.get(key));
+		}
+	}
+
+	protected void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
+		double[] value = datas.get(key);
+
+		if (value == null) {
+			value = new double[60];
+		}
+		values.put(key, value);
 	}
 
 	protected double[] queryBaseline(String key, Date start, Date end) {
@@ -227,14 +219,24 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		return result;
 	}
 
-	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
-	      List<MetricItemConfig> metricConfigs);
+	private String queryMetricItemDes(String type) {
+	   String des = "";
+
+		if (MetricType.AVG.name().equals(type)) {
+			des = Chinese.Suffix_AVG;
+		} else if (MetricType.SUM.name().equals(type)) {
+			des = Chinese.Suffix_SUM;
+		} else if (MetricType.COUNT.name().equals(type)) {
+			des = Chinese.Suffix_COUNT;
+		}
+	   return des;
+   }
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
-		
+
 		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
 			@Override
 			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
@@ -254,7 +256,8 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		}
 		// if current report is not exist, use last day value replace it.
 		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
-			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start - TimeUtil.ONE_DAY));
+			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start
+			      - TimeUtil.ONE_DAY));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
 			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
@@ -269,8 +272,8 @@ public abstract class BaseGraphCreator implements LogEnabled {
 			// remove the minute of future
 			Map<String, double[]> newCurrentValues = new LinkedHashMap<String, double[]>();
 			int step = m_dataExtractor.getStep();
-			
-			if (step <= 0){
+
+			if (step <= 0) {
 				return allCurrentValues;
 			}
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
@@ -285,22 +288,5 @@ public abstract class BaseGraphCreator implements LogEnabled {
 			return newCurrentValues;
 		}
 		return allCurrentValues;
-	}
-
-	protected void putKey(Map<String, double[]> datas, Map<String, double[]> values, String key) {
-		double[] value = datas.get(key);
-
-		if (value == null) {
-			value = new double[60];
-		}
-		values.put(key, value);
-	}
-	
-	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
-		LineChart value = charts.get(key);
-
-		if (value != null) {
-			result.put(key, charts.get(key));
-		}
 	}
 }

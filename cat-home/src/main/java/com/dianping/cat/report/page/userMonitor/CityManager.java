@@ -38,8 +38,10 @@ public class CityManager implements Initializable {
 
 					if (list == null) {
 						list = new ArrayList<City>();
-						list.add(new City(province, ""));
 
+						if (province.length() > 0) {
+							list.add(new City(province, ""));
+						}
 						maps.put(province, list);
 					}
 					list.add(new City(province, city));

@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.exceptionAlert;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.dependency.exceptionExclude.entity.ExceptionExclude;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -31,6 +33,7 @@ import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.ExceptionExcludeConfigManager;
 import com.dianping.cat.system.config.ExceptionThresholdConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -46,7 +49,10 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private MailSMS m_mailSms;
 
 	@Inject
-	private ExceptionThresholdConfigManager m_configManager;
+	private ExceptionThresholdConfigManager m_exceptionThresholdConfigManager;
+
+	@Inject
+	private ExceptionExcludeConfigManager m_exceptionExcludeConfigManager;
 
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_topService;
@@ -65,7 +71,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
-		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_configManager);
+		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionThresholdConfigManager);
 
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
@@ -104,15 +110,16 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
+
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
 				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
+
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
 						sendAlertForDomain(entry.getKey(), entry.getValue());
 					} catch (Exception e) {
-						e.printStackTrace();
 						m_logger.error(e.getMessage());
 					}
 				}
@@ -149,7 +156,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		for (List<Item> item : items) {
 			for (Item i : item) {
 				String domain = i.getDomain();
-				ExceptionLimit totalExceptionLimit = m_configManager.queryDomainTotalLimit(domain);
+				ExceptionLimit totalExceptionLimit = m_exceptionThresholdConfigManager.queryDomainTotalLimit(domain);
 				int totalWarnLimit = -1;
 				int totalErrorLimit = -1;
 				int totalException = 0;
@@ -161,10 +168,20 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				for (Entry<String, Double> entry : i.getException().entrySet()) {
 					String exceptionName = entry.getKey();
+					ExceptionExclude result = m_exceptionExcludeConfigManager.queryDomainExceptionExclude(domain,
+					      exceptionName);
+
+					if (result != null) {
+						continue;
+					}
+
 					double value = entry.getValue().doubleValue();
 					double warnLimit = -1;
 					double errorLimit = -1;
-					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(domain, entry.getKey());
+					ExceptionLimit exceptionLimit = m_exceptionThresholdConfigManager.queryDomainExceptionLimit(domain,
+					      exceptionName);
+
+					totalException += entry.getValue();
 
 					if (exceptionLimit != null) {
 						warnLimit = exceptionLimit.getWarning();
@@ -173,11 +190,9 @@ public class ExceptionAlert implements Task, LogEnabled {
 						if (errorLimit > 0 && value > errorLimit) {
 							findOrCreateDomain(alertExceptions, domain).add(
 							      new AlertException(exceptionName, ERROR_FLAG, value));
-							totalException++;
 						} else if (warnLimit > 0 && value > warnLimit) {
 							findOrCreateDomain(alertExceptions, domain).add(
 							      new AlertException(exceptionName, WARN_FLAG, value));
-							totalException++;
 						}
 					}
 				}
@@ -208,8 +223,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		StringBuilder title = new StringBuilder();
-
-		title.append("[异常告警] [项目组: ").append(domain).append("] [时间: ").append(new Date()).append("]");
+		title.append("[CAT异常告警] [项目: ").append(domain).append("]");
 		List<String> errorExceptions = new ArrayList<String>();
 		List<String> warnExceptions = new ArrayList<String>();
 
@@ -220,12 +234,18 @@ public class ExceptionAlert implements Task, LogEnabled {
 				errorExceptions.add(exception.getName());
 			}
 		}
-		String mailContent = "[异常警告] [" + domain + "] : ";
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[CAT异常告警] [").append(domain).append("] : ");
+		sb.append(exceptions.toString()).append("[时间: ")
+		      .append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date())).append("]");
+
+		String mailContent = sb.toString();
 
 		m_logger.info(title + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(title.toString(), mailContent, emails);
 
-		Cat.logEvent("MetricAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
+		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
 	}
 
 	@Override
