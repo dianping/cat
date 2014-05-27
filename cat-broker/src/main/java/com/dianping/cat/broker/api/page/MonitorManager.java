@@ -120,7 +120,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 					if (duration > 0) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
-					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
+					if (!"200".equals(httpCode) || !"200".equals(errorCode)) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
 					} else {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
