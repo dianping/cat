@@ -19,7 +19,6 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.config.UrlPatternConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -123,7 +122,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 					}
 					if (!"200".equals(httpCode) || !StringUtils.isEmpty(errorCode)) {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
-					}else{
+					} else {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
 					}
 					if (!StringUtils.isEmpty(httpCode)) {
@@ -152,12 +151,8 @@ public class MonitorManager implements Initializable, LogEnabled {
 					t.complete();
 				}
 			} else {
-				Cat.logEvent("IpService", "NotFound", Event.SUCCESS, ip);
-
-				m_logger.error(String.format("ip service can't resolve ip  %s", ip));
+				m_logger.error(String.format("can't find ip for %s", ip));
 			}
-		} else {
-			m_logger.info(String.format("no url pattern %s", entity.toString()));
 		}
 	}
 

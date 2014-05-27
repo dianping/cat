@@ -133,7 +133,7 @@
 	</script>
 	<jsp:doBody />
 	<table class="footer" style="margin-top:5px;">
-		<tr><td>©2003-2013 dianping.com, All Rights Reserved.</td></tr>
+		<tr><td>©2003-2014 dianping.com, All Rights Reserved.</td></tr>
 	</table>
 	<res:jsSlot id="bottom-js" />
 </body>

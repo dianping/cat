@@ -49,7 +49,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Inject
 	private TaskManager m_taskManager;
 
-	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
 
 	private static final String METRIC = "Metric";
