@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.home;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import com.dianping.cat.report.page.AbstractReportModel;
 
@@ -39,5 +41,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setDomain(String domain) {
 		m_domain = domain;
+	}
+
+	@Override
+	public List<String> getIps() {
+		return new ArrayList<String>();
 	}
 }

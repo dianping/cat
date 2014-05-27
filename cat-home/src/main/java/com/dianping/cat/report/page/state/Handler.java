@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_configManager;
-
+	
 	private static final String CAT = "Cat";
 
 	public StateReport getHistoryReport(Payload payload) {

@@ -244,7 +244,7 @@ public class Handler implements PageHandler<Context> {
 				name = Constants.ALL;
 				report = m_mergeManager.mergerAllName(report, ip, name);
 			}
-			
+
 			model.setReport(report);
 			buildEventNameGraph(model, report, type, name, ip);
 			break;

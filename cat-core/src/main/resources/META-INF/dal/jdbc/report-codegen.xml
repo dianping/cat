@@ -55,7 +55,7 @@
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="period" unique="true" members="period ASC, domain ASC, name ASC" />
-    <index name="type" members="type ASC" />
+	<index name="type" members="type ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -133,6 +133,7 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="ip" field="ip" value-type="String" length="50" nullable="false" />
     <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
+    <member name="hostname" field="hostname" value-type="String" length="50" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
@@ -213,10 +214,12 @@
   <entity name="project" table="project" alias="p">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
+    <member name="cmdb-domain" field="cmdb_domain" value-type="String" length="50" />
     <member name="project-line" field="project_line" value-type="String" length="50" />
     <member name="department" field="department" value-type="String" length="50" />
     <member name="owner" field="owner" value-type="String" length="50" />
     <member name="email" field="email" value-type="String" length="200" />
+    <member name="phone" field="phone" value-type="String" length="200" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <member name="modify-date" field="modify_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />

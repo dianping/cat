@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -48,12 +49,13 @@ import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreat
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
-import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricAlert;
+import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.report.task.metric.RemoteMetricReportService;
 import com.dianping.cat.report.task.metric.SwitchAlert;
 import com.dianping.cat.report.task.metric.SwitchAlertConfig;
+import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -181,6 +183,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
+
+		// update project database
+		all.add(C(ProjectUpdateTask.class)//
+				.req(ProjectDao.class, HostinfoDao.class));
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
