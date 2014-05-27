@@ -122,10 +122,10 @@ public class MonitorManager implements Initializable, LogEnabled {
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
 					if ("200".equals(httpStatus) && "200".equals(errorCode)) {
-						Cat.logEvent(targetUrl, "Normal",Event.SUCCESS,null);
+						Cat.logEvent(targetUrl, "Normal", Event.SUCCESS, null);
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.HIT);
 					} else {
-						Cat.logEvent(targetUrl, "AbNormal",Event.SUCCESS,null);
+						Cat.logEvent(targetUrl, "AbNormal", Event.SUCCESS, null);
 						logMetric(timestamp, duration, group, city + ":" + channel + ":" + Monitor.ERROR);
 					}
 
