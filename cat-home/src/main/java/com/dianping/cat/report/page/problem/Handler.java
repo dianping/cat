@@ -265,6 +265,7 @@ public class Handler implements PageHandler<Context> {
 			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 			
 			report = showSummarizeReport(model, payload);
+			report = filterReportByGroup(report, domain, group);
 			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
 			buildDistributionChart(model,payload, report);
 			break;
