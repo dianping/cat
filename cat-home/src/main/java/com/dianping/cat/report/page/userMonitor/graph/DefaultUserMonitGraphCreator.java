@@ -30,8 +30,6 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 
 	private static final String SUCESS_PERCENT = "调用成功率(%)";
 
-	private static final int MULTIPLE = 10;
-
 	private List<PieChart> buildDetailPieChart(MetricReport report) {
 		Map<String, Statistic> statics = report.getStatistics();
 		List<PieChart> charts = new ArrayList<PieChart>();
@@ -41,7 +39,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			List<Item> items = new ArrayList<Item>();
 			Statistic values = entry.getValue();
 			Map<String, StatisticsItem> statisticsItems = values.getStatisticsItems();
-			
+
 			for (StatisticsItem tmp : statisticsItems.values()) {
 				Item item = new Item();
 
@@ -143,11 +141,8 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			}
 			for (Segment segment : segments.values()) {
 				int count = segment.getCount();
-
-				if ("200".equals(key)) {
-					count = count * MULTIPLE;
-				}
 				int minute = segment.getId();
+
 				data[minute] = count;
 			}
 		}
@@ -176,7 +171,7 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 				int id = segment.getId();
 
 				if (key.endsWith(Monitor.HIT)) {
-					count[id] = segment.getCount() * MULTIPLE;
+					count[id] = segment.getCount();
 				} else if (key.endsWith(Monitor.ERROR)) {
 					error[id] = segment.getCount();
 				} else if (key.endsWith(Monitor.AVG)) {

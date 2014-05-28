@@ -59,7 +59,6 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(exceptionAlert);
 			Threads.forGroup("Cat").start(productUpdateTask);
 		}
-
 		executeAlarmModule(ctx);
 	}
 

@@ -105,15 +105,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
-			<implementation>com.dianping.cat.system.config.UtilizationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
 			<requirements>
@@ -3408,30 +3399,6 @@
 			<implementation>com.dianping.cat.report.page.userMonitor.CityManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.system.Handler</role>
-			<implementation>com.dianping.cat.report.page.system.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.system.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.GraphCreator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.system.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.system.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -3610,9 +3577,6 @@
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
@@ -3650,15 +3614,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.UtilizationConfigManager</role>
-			<implementation>com.dianping.cat.system.config.UtilizationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
