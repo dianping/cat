@@ -79,8 +79,8 @@
 			var id = $(item).text();
 			<c:forEach var="ip" items="${model.groupIps}">
 			group = '${ip}';
-			if (group == id) {
-				$(item).addClass('current');
+			if(id.indexOf(group)!=-1){
+					$(item).addClass('current');
 			}
 			</c:forEach>
 		});
