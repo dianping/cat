@@ -37,6 +37,8 @@
 	graphLineChart(document.getElementById('errorTrend'), errorData);
 	
 	var distributionChart = ${model.distributionChart};
-	graphPieChart(document.getElementById('distributionChart'), distributionChart);
-	
+
+	if(distributionChart!=null&&distributionChart.length>0){
+		graphPieChart(document.getElementById('distributionChart'), distributionChart);
+	}
 </script>
