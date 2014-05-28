@@ -68,7 +68,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
-
+		
 		response.getWriter().write("OK");
 	}
 }
