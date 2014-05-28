@@ -5,6 +5,9 @@ function historyGraphLineChart(cell,response){
 	
 	var data = $('#errorTrendMeta',cell).text();
 	graphLineChart($('#errorTrend',cell)[0],eval('('+data+')'));
+	
+	data = $('#distributionChartMeta',cell).text();
+	graphPieChart($('#distributionChart',cell)[0],eval('('+data+')'));
 }
 
 

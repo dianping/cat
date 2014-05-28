@@ -11,8 +11,8 @@
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <style type="text/css">
 .graph {
-	width: 550px;
-	height: 350px;
+	width: 600px;
+	height: 400px;
 	margin: 4px auto;
 }
 </style>
@@ -22,12 +22,23 @@
 		<td>
 		<h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
 		<div id="errorTrend" class="graph"></div></td>
+		
+		<td>
+		<h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
+		<div id="distributionChart" class="graph"></div></td>
+		
 	</tr>
 	<tr><td  style="display:none">
 		<div id ="errorTrendMeta">${model.errorsTrend}</div>
+	</td><td  style="display:none">
+		<div id ="distributionChartMeta">${model.distributionChart}</div>
 	</td></tr>
 </table>
 <script type="text/javascript">
 	var errorData = ${model.errorsTrend};
 	graphLineChart(document.getElementById('errorTrend'), errorData);
+	
+	var distributionChart = ${model.distributionChart};
+	graphPieChart(document.getElementById('distributionChart'), distributionChart);
+
 </script>
