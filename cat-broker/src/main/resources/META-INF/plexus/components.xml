@@ -45,22 +45,10 @@
 			<implementation>com.dianping.cat.broker.api.page.single.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.broker.api.page.single.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.broker.api.page.single.JspViewer</role>
-			<implementation>com.dianping.cat.broker.api.page.single.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -110,22 +98,10 @@
 			<implementation>com.dianping.cat.broker.api.page.batch.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.broker.api.page.batch.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.broker.api.page.batch.JspViewer</role>
-			<implementation>com.dianping.cat.broker.api.page.batch.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

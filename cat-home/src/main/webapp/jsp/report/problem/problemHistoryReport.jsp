@@ -13,6 +13,8 @@
 	<jsp:body>
 	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['appendHostname.js']}" target="head-js"/>
+	
 <table class="machines">
 	<tr style="text-align:left">
 		<th>机器: &nbsp;[&nbsp; <c:choose>
@@ -54,7 +56,6 @@
 		
 		<tr><th>
 		<%@ include file="problemQuery.jsp" %></th>
-		<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				appendHostname(${model.ipToHostnameStr});

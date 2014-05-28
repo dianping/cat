@@ -49,7 +49,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Inject
 	private TaskManager m_taskManager;
 
-	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
 
 	private static final String METRIC = "Metric";
@@ -64,11 +63,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		m_logger = logger;
 	}
 
-	public MetricReport getReport(String product) {
-		MetricReport report = m_reports.get(product);
+	public MetricReport getReport(String group) {
+		MetricReport report = m_reports.get(group);
 
 		if (report == null) {
-			report = new MetricReport(product);
+			report = new MetricReport(group);
 
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
@@ -135,7 +134,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		String product = m_productLineConfigManager.queryProductLineByDomain(domain);
+		String group = m_productLineConfigManager.queryProductLineByDomain(domain);
+		MetricReport report = findOrCreateReport(group);
+
+		Message message = tree.getMessage();
+
+		if (message instanceof Transaction) {
+			processTransaction(report, tree, (Transaction) message);
+		} else if (message instanceof Metric) {
+			processMetric(report, tree, (Metric) message);
+		}
+	}
+
+	private MetricReport findOrCreateReport(String product) {
 		MetricReport report = m_reports.get(product);
 
 		if (report == null) {
@@ -145,26 +156,23 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			m_reports.put(product, report);
 		}
-
-		Message message = tree.getMessage();
-
-		if (message instanceof Transaction) {
-			processTransaction(product, report, tree, (Transaction) message);
-		} else if (message instanceof Metric) {
-			processMetric(product, report, tree, (Metric) message);
-		}
+		return report;
 	}
 
-	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
-		String type = metric.getType();
+	private int processMetric(MetricReport report, MessageTree tree, Metric metric) {
+		String group = metric.getType();
 		String metricName = metric.getName();
 		String domain = tree.getDomain();
 		String data = (String) metric.getData();
 		String status = metric.getStatus();
 		ConfigItem config = parseValue(status, data);
 
-		if (!StringUtils.isEmpty(type)) {
-			m_productLineConfigManager.insertIfNotExsit(type, domain);
+		if (!StringUtils.isEmpty(group)) {
+			m_productLineConfigManager.insertIfNotExsit(group, domain);
+
+			if (Constants.BROKER_SERVICE.equals(domain)) {
+				report = findOrCreateReport(group);
+			}
 		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
@@ -183,21 +191,20 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	private void insertDefaultConfig(String metricName, String domain, ConfigItem config) {
-		//外部监控Key不需要存储
 		if (!Constants.BROKER_SERVICE.equals(domain)) {
-	   	m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
-	   }
-   }
+			m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+		}
+	}
 
-	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
+	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {
 		int count = 0;
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Transaction) {
-				count += processTransaction(group, report, tree, (Transaction) child);
+				count += processTransaction(report, tree, (Transaction) child);
 			} else if (child instanceof Metric) {
-				count += processMetric(group, report, tree, (Metric) child);
+				count += processMetric(report, tree, (Metric) child);
 			}
 		}
 

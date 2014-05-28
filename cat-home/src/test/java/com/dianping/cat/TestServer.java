@@ -18,7 +18,7 @@ public class TestServer extends JettyServer {
 		server.startWebApp();
 		server.stopServer();
 	}
-
+	
 	@Before
 	public void before() throws Exception {
 		System.setProperty("devMode", "true");

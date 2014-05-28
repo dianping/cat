@@ -35,6 +35,7 @@
 			<thead>
 				<tr class="odd">
 					<th width="15%">项目名称</th>
+					<th width="15%">CMDB名称</th>
 					<th width="10%">所属部门</th>
 					<th width="10%">二级分类（可按照产品线）</th>
 					<th width="15%">组邮件</th>
@@ -46,6 +47,7 @@
 					varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${item.domain}</td>
+						<td>${item.cmdbDomain}</td>
 						<td>${item.department}</td>
 						<td>${item.projectLine}</td>
 						<td>${item.email}</td>

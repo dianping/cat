@@ -164,29 +164,27 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 	@Override
 	public void register(Collection<PatternItem> rules) {
 		m_logger.info("register url pattern start");
-		
+
 		TrieTreeNode formats = new TrieTreeNode();
+		Set<String> orignals = new HashSet<String>();
+		Map<String, String> urlToId = new HashMap<String, String>();
 
 		for (PatternItem item : rules) {
 			String format = item.getPattern();
-			
-			m_logger.info(String.format("url pattern id : %s ,pattern : %s", item.getName(), item.getPattern()));
-			if (format == null || format.isEmpty()) {
-				continue;
-			}
 
-			m_urlToId.put(format, item.getName());
+			m_logger.info(String.format("url pattern id : %s , pattern : %s", item.getName(), format));
+			urlToId.put(format, item.getName());
 
 			int index1 = format.indexOf('{');
 
 			if (index1 == -1 || index1 == format.length() - 1) {
-				m_orignals.add(format);
+				orignals.add(format);
 				continue;
 			}
 			int index2 = format.lastIndexOf('}');
 
 			if (index2 == -1 || index2 < index1) {
-				m_orignals.add(format);
+				orignals.add(format);
 				continue;
 			}
 
@@ -198,7 +196,11 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 			buildFormatTree(formats, key1.toCharArray(), key2.toCharArray(), value);
 		}
 		m_formats = formats;
+		m_orignals = orignals;
+		m_urlToId = urlToId;
 
+		m_logger.info(m_orignals.toString());
+		m_logger.info(m_urlToId.toString());
 		m_logger.info("register url pattern end");
 	}
 

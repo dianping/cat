@@ -9,6 +9,7 @@
   </entity>
   <entity name="domain">
     <attribute name="id" value-type="String" key="true"/>
+    <attribute name="cmdb-id" value-type="String"/>
     <attribute name="machine-number" value-type="int"  primitive="true"/>
     <entity-ref name="machineState" type="map" names="machineStates"  method-find-or-create='true'/>
     <entity-ref name="applicationState" type="map" names="applicationStates"  method-find-or-create='true'/>

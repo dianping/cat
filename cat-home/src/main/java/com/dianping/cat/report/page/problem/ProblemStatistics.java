@@ -110,12 +110,12 @@ public class ProblemStatistics extends BaseVisitor {
 	public void visitMachine(Machine machine) {
 		if (m_allIp == true || m_ip.equals(machine.getIp())) {
 			List<Entry> entries = machine.getEntries();
+			
 			for (Entry entry : entries) {
 				statisticsDuration(entry);
 			}
 		}
 		super.visitMachine(machine);
-
 	}
 
 	public static class StatusStatistics {

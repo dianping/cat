@@ -88,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 		List<com.dianping.cat.home.alertReport.entity.Domain> sortedDomains = buildSortedAlertInfo(alertReport, model);
 		model.setAlertDomains(sortedDomains);
 	}
-	
+
 	private void builAlertDetails(Model model, Payload payload) {
 		AlertReport alertReport = queryAlertReport(payload);
 		List<com.dianping.cat.home.alertReport.entity.Exception> sortedExceptions = buildSortedAlertDetails(alertReport,
@@ -96,7 +96,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAlertExceptions(sortedExceptions);
 	}
-	
+
 	private void buildHeavyInfo(Model model, Payload payload) {
 		HeavyReport heavyReport = queryHeavyReport(payload);
 
@@ -144,10 +144,10 @@ public class Handler implements PageHandler<Context> {
 			model.setCacheServices(cacheServices);
 		}
 	}
-	
+
 	private List<com.dianping.cat.home.alertReport.entity.Domain> buildSortedAlertInfo(AlertReport report, Model model) {
 		List<com.dianping.cat.home.alertReport.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alertReport.entity.Domain>();
-		
+
 		if (!report.getDomains().values().isEmpty()) {
 			domains = new ArrayList<com.dianping.cat.home.alertReport.entity.Domain>(report.getDomains().values());
 			Comparator<com.dianping.cat.home.alertReport.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alertReport.entity.Domain>() {
@@ -165,12 +165,12 @@ public class Handler implements PageHandler<Context> {
 		}
 		return domains;
 	}
-	
+
 	private List<com.dianping.cat.home.alertReport.entity.Exception> buildSortedAlertDetails(AlertReport report,
 	      String domainName) {
 		List<com.dianping.cat.home.alertReport.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alertReport.entity.Exception>();
 		com.dianping.cat.home.alertReport.entity.Domain domain = report.getDomains().get(domainName);
-		
+
 		if (domain != null && !domain.getExceptions().isEmpty()) {
 			exceptions = new ArrayList<com.dianping.cat.home.alertReport.entity.Exception>(domain.getExceptions().values());
 			Comparator<com.dianping.cat.home.alertReport.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alertReport.entity.Exception>() {
@@ -186,12 +186,14 @@ public class Handler implements PageHandler<Context> {
 			Collections.sort(exceptions, exceptionCompator);
 		}
 		return exceptions;
-	}	
+	}
+
 	private void buildUtilizationInfo(Model model, Payload payload) {
 		UtilizationReport utilizationReport = queryUtilizationReport(payload);
 		Collection<com.dianping.cat.home.utilization.entity.Domain> dUList = utilizationReport.getDomains().values();
 		List<com.dianping.cat.home.utilization.entity.Domain> dUWebList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
 		List<com.dianping.cat.home.utilization.entity.Domain> dUServiceList = new LinkedList<com.dianping.cat.home.utilization.entity.Domain>();
+
 		for (com.dianping.cat.home.utilization.entity.Domain d : dUList) {
 			if (d.findApplicationState("URL") != null) {
 				dUWebList.add(d);
@@ -277,10 +279,10 @@ public class Handler implements PageHandler<Context> {
 
 		return m_reportService.queryHeavyReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
-	
+
 	private AlertReport queryAlertReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		
+
 		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
@@ -313,7 +315,16 @@ public class Handler implements PageHandler<Context> {
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 		UtilizationReport report = m_reportService.queryUtilizationReport(Constants.CAT, pair.getKey(), pair.getValue());
+		Collection<com.dianping.cat.home.utilization.entity.Domain> domains = report.getDomains().values();
 
+		for (com.dianping.cat.home.utilization.entity.Domain d : domains) {
+			String domain = d.getId();
+			Project project = findProjectByDomain(domain);
+
+			if (project != null) {
+				d.setCmdbId(project.getCmdbDomain());
+			}
+		}
 		return report;
 	}
 

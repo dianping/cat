@@ -2,7 +2,6 @@
 </br>
 </br>
 </br>
-<h4 class="text-error">【2014-05-12】</h4>
 
 </br>
 <a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/s/config">修改项目分组【修改连接】</a>

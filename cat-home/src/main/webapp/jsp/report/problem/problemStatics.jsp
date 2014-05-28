@@ -19,7 +19,7 @@
 	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
-	<tr style="text-align:left">
+	<tr style="text-align:left"> 
 		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}${payload.queryString}"

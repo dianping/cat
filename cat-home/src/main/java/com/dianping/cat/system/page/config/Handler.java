@@ -51,7 +51,6 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
-import com.dianping.cat.system.config.UtilizationConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -74,9 +73,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;
-
-	@Inject
-	private UtilizationConfigManager m_utilizationConfigManager;
 
 	@Inject
 	private DomainGroupConfigManager m_domainGroupConfigManger;
@@ -388,16 +384,6 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setBug(m_bugConfigManager.getBugConfig().toString());
 			break;
-		case UTILIZATION_CONFIG_UPDATE:
-			String content = payload.getContent();
-			if (!StringUtils.isEmpty(content)) {
-				model.setOpState(m_utilizationConfigManager.insert(content));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_utilizationConfigManager.getUtilizationConfig().toString());
-			break;
-
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 			String domainGroupContent = payload.getContent();
 			if (!StringUtils.isEmpty(domainGroupContent)) {

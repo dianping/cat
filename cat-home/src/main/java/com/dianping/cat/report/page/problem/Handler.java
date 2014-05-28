@@ -217,7 +217,7 @@ public class Handler implements PageHandler<Context> {
 			String state = payload.getStatus();
 			Date start = report.getStartTime();
 			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
-
+			
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
 			break;
@@ -239,7 +239,7 @@ public class Handler implements PageHandler<Context> {
 			type = payload.getType();
 			state = payload.getStatus();
 			start = report.getStartTime();
-			vistor = new HourlyLineChartVisitor(ip, type, state, start);
+			vistor = new HourlyLineChartVisitor("", type, state, start);
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
 			break;

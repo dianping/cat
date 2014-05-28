@@ -21,9 +21,9 @@ public class IpServiceTest extends ComponentTestCase {
 			IpInfo info = service.findIpInfoByString(ip);
 
 			if (info != null) {
-				System.out.println(info.getChannel());
-				System.out.println(info.getCity());
-				System.out.println(info.getProvince());
+				System.out.print(ip+ " "+info.getChannel());
+				System.out.print(" "+info.getCity());
+				System.out.print(" "+info.getProvince());
 			}
 		}
 	}
