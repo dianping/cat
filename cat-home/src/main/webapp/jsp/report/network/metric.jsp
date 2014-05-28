@@ -44,10 +44,7 @@
 	</c:when>
 	<c:otherwise>
 		<a:body>
-		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		
-		
 		<div class="report">
 			<table class="header">
 				<tr>
