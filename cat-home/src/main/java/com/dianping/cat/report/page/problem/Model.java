@@ -37,7 +37,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_hour;
 
 	private int m_lastMinute; // last minute of current hour
-	
+
 	@EntityMeta
 	private ProblemReport m_report;
 
@@ -49,11 +49,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<String> m_groups;
 
 	private List<String> m_groupIps;
-	
+
+	private String m_distributionChart;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
-	
+
 	public ProblemStatistics getAllStatistics() {
 		return m_allStatistics;
 	}
@@ -107,8 +109,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<String> getGroupIps() {
-   	return m_groupIps;
-   }
+		return m_groupIps;
+	}
 
 	public GroupLevelInfo getGroupLevelInfo() {
 		return m_groupLevelInfo;
@@ -119,8 +121,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<String> getGroups() {
-   	return m_groups;
-   }
+		return m_groups;
+	}
 
 	public int getHour() {
 		return m_hour;
@@ -189,8 +191,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setGroupIps(List<String> groupIps) {
-   	m_groupIps = groupIps;
-   }
+		m_groupIps = groupIps;
+	}
 
 	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
 		m_groupLevelInfo = groupLevelInfo;
@@ -201,8 +203,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setGroups(List<String> groups) {
-   	m_groups = groups;
-   }
+		m_groups = groups;
+	}
 
 	public void setHour(int hour) {
 		m_hour = hour;
@@ -223,5 +225,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
 		m_threadLevelInfo = threadLevelInfo;
 	}
+
+	public String getDistributionChart() {
+   	return m_distributionChart;
+   }
+
+	public void setDistributionChart(String distributionChart) {
+   	m_distributionChart = distributionChart;
+   }
 	
 }
