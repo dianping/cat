@@ -10,7 +10,6 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.metric.Range;
@@ -22,8 +21,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<LineChart> m_lineCharts;
 
 	private Collection<ProductLine> m_productLines;
-
-	private Collection<MetricAggregationGroup> m_metricAggregationGroup;
 
 	private Date m_startTime;
 
@@ -82,14 +79,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setStartTime(Date startTime) {
 		m_startTime = startTime;
-	}
-
-	public Collection<MetricAggregationGroup> getMetricAggregationGroup() {
-		return m_metricAggregationGroup;
-	}
-
-	public void setMetricAggregationGroup(Collection<MetricAggregationGroup> metricAggregationGroup) {
-		m_metricAggregationGroup = metricAggregationGroup;
 	}
 
 	public Collection<ProductLine> getProductLines() {

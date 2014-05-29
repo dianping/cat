@@ -3,8 +3,6 @@ package com.dianping.cat.report.page.network;
 public enum Action implements org.unidal.web.mvc.Action {
 	NETTOPOLOGY("view"),
 
-	AGGREGATION("aggregation"),
-
 	METRIC("metric");
 
 	private String m_name;
