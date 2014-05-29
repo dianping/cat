@@ -24,11 +24,11 @@ import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 
 public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
 
-	private static final String COUNT = "访问量(次数)";
+	private static final String COUNT = "每分钟访问量(次数)";
 
-	private static final String AVG = "响应时间(ms)";
+	private static final String AVG = "每分钟响应时间(ms)";
 
-	private static final String SUCESS_PERCENT = "调用成功率(%)";
+	private static final String SUCESS_PERCENT = "每分钟调用成功率(%)";
 
 	private List<PieChart> buildDetailPieChart(MetricReport report) {
 		Map<String, Statistic> statics = report.getStatistics();

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -53,14 +54,21 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 					if (tabs.length == 5) {
 						MonitorEntity entity = new MonitorEntity();
+						String errorCode = tabs[3];
 
+						if (StringUtils.isEmpty(errorCode)) {
+							errorCode = "not-set";
+						}
 						entity.setTimestamp(Long.parseLong(tabs[0]));
 						entity.setTargetUrl(tabs[1]);
 						entity.setDuration(Double.parseDouble(tabs[2]));
-						entity.setErrorCode(tabs[3]);
+						entity.setErrorCode(errorCode);
 						entity.setHttpStatus(tabs[4]);
 						entity.setIp(userIp);
 
+						if (payload.getVersion().equals("1")) {
+							entity.setCount(10);
+						}
 						m_manager.offer(entity);
 					}
 				}
