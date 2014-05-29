@@ -21,15 +21,13 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.AlertInfo;
-import com.dianping.cat.report.task.metric.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
-public abstract class BaseGraphCreator implements LogEnabled {
+public abstract class AbstractGraphCreator implements LogEnabled {
 	@Inject
 	protected BaselineService m_baselineService;
 
@@ -62,7 +60,7 @@ public abstract class BaseGraphCreator implements LogEnabled {
 
 	protected void addLastMinuteData(Map<Long, Double> current, Map<Long, Double> all, int minute, Date end) {
 		int step = m_dataExtractor.getStep();
-		
+
 		if (step == 1) {
 			return;
 		}
@@ -97,24 +95,6 @@ public abstract class BaseGraphCreator implements LogEnabled {
 
 	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
 	      List<MetricItemConfig> metricConfigs);
-
-	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
-		int index = key.lastIndexOf(":");
-		String metricId = key.substring(0, index);
-		String type = key.substring(index + 1);
-		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
-		String des = queryMetricItemDes(type);
-		String title = config.getTitle() + des;
-
-		chart.setTitle(title);
-		chart.setId(metricId + ":" + type);
-
-		if (alertItems.contains(config)) {
-			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
-		} else {
-			chart.setHtmlTitle(title);
-		}
-	}
 
 	protected double[] convert(double[] value, int removeLength) {
 		int length = value.length;
@@ -218,19 +198,6 @@ public abstract class BaseGraphCreator implements LogEnabled {
 		}
 		return result;
 	}
-
-	private String queryMetricItemDes(String type) {
-	   String des = "";
-
-		if (MetricType.AVG.name().equals(type)) {
-			des = Chinese.Suffix_AVG;
-		} else if (MetricType.SUM.name().equals(type)) {
-			des = Chinese.Suffix_SUM;
-		} else if (MetricType.COUNT.name().equals(type)) {
-			des = Chinese.Suffix_COUNT;
-		}
-	   return des;
-   }
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));

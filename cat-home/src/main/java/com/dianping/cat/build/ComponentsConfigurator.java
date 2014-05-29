@@ -25,7 +25,7 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
-import com.dianping.cat.report.chart.GraphCreator;
+import com.dianping.cat.report.chart.MetricGraphCreator;
 import com.dianping.cat.report.chart.MetricDataFetcher;
 import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl;
@@ -123,7 +123,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
 
-		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
+		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
 		            MetricGroupConfigManager.class, AlertInfo.class));
 

@@ -209,8 +209,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -2834,7 +2834,7 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.GraphCreator</role>
+					<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2866,8 +2866,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
