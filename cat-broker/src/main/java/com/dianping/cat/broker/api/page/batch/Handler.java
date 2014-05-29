@@ -51,10 +51,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				for (String line : lines) {
 					String[] tabs = line.split("\t");
-
+					//timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
 					if (tabs.length == 5) {
 						MonitorEntity entity = new MonitorEntity();
-						String errorCode = tabs[3];
+						String errorCode = tabs[4];
 
 						if (StringUtils.isEmpty(errorCode)) {
 							errorCode = "not-set";
@@ -62,8 +62,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						entity.setTimestamp(Long.parseLong(tabs[0]));
 						entity.setTargetUrl(tabs[1]);
 						entity.setDuration(Double.parseDouble(tabs[2]));
+						entity.setHttpStatus(tabs[3]);
 						entity.setErrorCode(errorCode);
-						entity.setHttpStatus(tabs[4]);
 						entity.setIp(userIp);
 
 						if (payload.getVersion().equals("1")) {
