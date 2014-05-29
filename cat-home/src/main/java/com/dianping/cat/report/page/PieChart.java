@@ -11,7 +11,7 @@ public class PieChart {
 
 	private List<Item> m_items = new ArrayList<Item>();
 
-	private transient int m_size = 10;
+	private transient int m_size = 30;
 
 	public PieChart setTitle(String title) {
 		m_title = title;
@@ -19,8 +19,8 @@ public class PieChart {
 	}
 
 	public String getTitle() {
-   	return m_title;
-   }
+		return m_title;
+	}
 
 	public void addItems(List<Item> items) {
 		Collections.sort(items, new ItemCompartor());

@@ -144,11 +144,17 @@ function graphMetricChart(container, data) {
 				tooltip : {
 					allowPointSelect : false,
 					formatter : function() {
-						return '<b>'
-								+ this.series.name
-								+ '</b><br/>'
-								+ Highcharts.dateFormat('%Y-%m-%d %H:%M',
-										this.x) + ' ' + Number(this.y).toFixed(1);
+						var	number0 = Number(this.y).toFixed(0);
+						var number1 = Number(this.y).toFixed(1);
+						var number = number1;
+						
+						if(Number(number1)==Number(number0)){
+							number = number0;
+						}
+						
+						return  Highcharts.dateFormat('%Y-%m-%d %H:%M',
+										this.x)  
+								+ '<br/>['+ this.series.name + '] '+ '<b>' + number + '</b>';
 					}
 				},
 				series : _data

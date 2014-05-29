@@ -204,6 +204,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GRAPH:
 			m_historyGraphs.buildTrendGraph(model, payload);
+			
+			report = showSummarizeReport(model, payload);
+			buildDistributionChart(model,payload, report);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -217,9 +220,10 @@ public class Handler implements PageHandler<Context> {
 			String state = payload.getStatus();
 			Date start = report.getStartTime();
 			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
-			
+
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
+			buildDistributionChart(model,payload, report);
 			break;
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload, VIEW);
@@ -242,6 +246,7 @@ public class Handler implements PageHandler<Context> {
 			vistor = new HourlyLineChartVisitor("", type, state, start);
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
+			buildDistributionChart(model,payload, report);
 			break;
 		case HISTORY_GROUP_REPORT:
 			report = showSummarizeReport(model, payload);
@@ -258,8 +263,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GROUP_GRAPH:
 			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-
+			
+			report = showSummarizeReport(model, payload);
+			report = filterReportByGroup(report, domain, group);
 			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+			buildDistributionChart(model,payload, report);
 			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);
@@ -274,6 +282,15 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
+		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
+			PieGraphChartVisitor pieChart = new PieGraphChartVisitor(payload.getType(), payload.getStatus());
+
+			pieChart.visitProblemReport(report);
+			model.setDistributionChart(pieChart.getPieChart().getJsonString());
+		}
 	}
 
 	private void normalize(Model model, Payload payload) {
