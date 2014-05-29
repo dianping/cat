@@ -19,14 +19,14 @@ import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 
-public class GraphCreator extends BaseGraphCreator{
-	
+public class MetricGraphCreator extends AbstractGraphCreator {
+
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
-			final Map<String, double[]> dataWithOutFutures) {
+	      final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<MetricItemConfig> alertItems = m_alertInfo.queryLastestAlarmInfo(5);
 		int step = m_dataExtractor.getStep();
-		
+
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
 			double[] value = entry.getValue();
@@ -47,8 +47,8 @@ public class GraphCreator extends BaseGraphCreator{
 			charts.put(key, lineChart);
 		}
 		return charts;
-	}	
-	
+	}
+
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
@@ -112,7 +112,7 @@ public class GraphCreator extends BaseGraphCreator{
 		}
 		return false;
 	}
-	
+
 	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
 		List<MetricKeyConfig> metricConfigs = m_metricGroupConfigManager.queryMetricGroupConfig(metricGroup);
@@ -147,8 +147,42 @@ public class GraphCreator extends BaseGraphCreator{
 		return false;
 	}
 
-   protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);  
+	protected String queryMetricItemDes(String type) {
+		String des = "";
+
+		if (MetricType.AVG.name().equals(type)) {
+			des = Chinese.Suffix_AVG;
+		} else if (MetricType.SUM.name().equals(type)) {
+			des = Chinese.Suffix_SUM;
+		} else if (MetricType.COUNT.name().equals(type)) {
+			des = Chinese.Suffix_COUNT;
+		}
+		return des;
+	}
+
+	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
+		int index = key.lastIndexOf(":");
+		String metricId = key.substring(0, index);
+		String type = key.substring(index + 1);
+		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
+		System.out.println(metricId);
+		if (config != null) {
+			String des = queryMetricItemDes(type);
+			String title = config.getTitle() + des;
+
+			chart.setTitle(title);
+			chart.setId(metricId + ":" + type);
+
+			if (alertItems.contains(config)) {
+				chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+			} else {
+				chart.setHtmlTitle(title);
+			}
+		}
+	}
+
+	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
+		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 
 		for (MetricItemConfig config : metricConfigs) {
@@ -168,6 +202,6 @@ public class GraphCreator extends BaseGraphCreator{
 			}
 		}
 		return values;
-   }
-	
+	}
+
 }

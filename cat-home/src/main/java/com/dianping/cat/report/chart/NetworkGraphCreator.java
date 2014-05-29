@@ -2,6 +2,7 @@ package com.dianping.cat.report.chart;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,23 +16,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.metric.MetricType;
 
-public class NetworkGraphCreator extends GraphCreator {
-
-	private static String IN_KEY_SUFFIX = "-in";
-
-	private static String OUT_KEY_SUFFIX = "-out";
-
-	private static String FLOW_TITLE_SUFFIX = "-flow";
-
-	private static String IN_ERRORS_KEY_SUFFIX = "-inerrors";
-
-	private static String OUT_ERRORS_KEY_SUFFIX = "-outerrors";
-
-	private static String IN_DISCARDS_KEY_SUFFIX = "-indiscards";
-
-	private static String OUT_DISCARDS_KEY_SUFFIX = "-outdiscards";
-
-	private static String PACKAGE_TITLE_SUFFIX = "-package";
+public class NetworkGraphCreator extends MetricGraphCreator {
 
 	@Override
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
@@ -53,7 +38,7 @@ public class NetworkGraphCreator extends GraphCreator {
 
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
-					buildLineChartTitle(alertItems, lineChart, key);
+					buildLineChartTitle(alertItems, lineChart, key, chartTitle);
 
 					double[] baselines = queryBaseline(key, startDate, endDate);
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
@@ -70,10 +55,24 @@ public class NetworkGraphCreator extends GraphCreator {
 		return charts;
 	}
 
+	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
+		int index = key.lastIndexOf(":");
+		String metricId = key.substring(0, index);
+		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
+
+		chart.setTitle(title);
+
+		if (alertItems.contains(config)) {
+			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+		} else {
+			chart.setHtmlTitle(title);
+		}
+	}
+
 	public String buildLineTitle(String lineKey) {
 		int colonIndex = lineKey.lastIndexOf(":");
 		String tmp = lineKey.substring(0, colonIndex > -1 ? colonIndex : 0);
-		
+
 		return tmp.substring(tmp.lastIndexOf("-") + 1);
 	}
 
@@ -120,48 +119,33 @@ public class NetworkGraphCreator extends GraphCreator {
 				keyList.add(countKey);
 			}
 		}
-
 		return aggregationKeys;
 	}
 
 	public Map<String, List<String>> buildLineChartKeys(Set<String> keys) {
-		Set<String> keySet = new LinkedHashSet<String>();
+		Set<String> groupSet = new LinkedHashSet<String>();
+		Set<String> keySet = new HashSet<String>();
+		Map<String, List<String>> aggregationKeys = new LinkedHashMap<String, List<String>>();
 
 		for (String key : keys) {
 			int colonIndex = key.lastIndexOf(":");
 			String tmp = key.substring(0, colonIndex > -1 ? colonIndex : 0);
-			
+			keySet.add(tmp);
+
 			int hyphenIndex = tmp.lastIndexOf("-");
-			keySet.add(tmp.substring(0, hyphenIndex > -1 ? hyphenIndex : 0));
+			groupSet.add(tmp.substring(0, hyphenIndex > -1 ? hyphenIndex : 0));
 		}
 
-		Map<String, List<String>> aggregationKeys = new LinkedHashMap<String, List<String>>();
-
-		for (String key : keySet) {
-			String inFlowKey = key + IN_KEY_SUFFIX;
-			String outFlowKey = key + OUT_KEY_SUFFIX;
-			String flowTitle = key + FLOW_TITLE_SUFFIX;
-			List<String> flowKeys = new ArrayList<String>();
-
-			flowKeys.add(inFlowKey);
-			flowKeys.add(outFlowKey);
-			aggregationKeys.putAll(buildKeys(flowTitle, flowKeys));
-
-			String inErrorKey = key + IN_ERRORS_KEY_SUFFIX;
-			String outErrorKey = key + OUT_ERRORS_KEY_SUFFIX;
-			String inDiscardsKey = key + IN_DISCARDS_KEY_SUFFIX;
-			String outDiscardsKey = key + OUT_DISCARDS_KEY_SUFFIX;
-			String discardsTitle = key + PACKAGE_TITLE_SUFFIX;
-			List<String> discardsKeys = new ArrayList<String>();
-
-			discardsKeys.add(inErrorKey);
-			discardsKeys.add(outErrorKey);
-			discardsKeys.add(inDiscardsKey);
-			discardsKeys.add(outDiscardsKey);
-			aggregationKeys.putAll(buildKeys(discardsTitle, discardsKeys));
+		for (String group : groupSet) {
+			List<String> keyList = new ArrayList<String>();
+			for (String key : keySet) {
+				if (key.startsWith(group)) {
+					keyList.add(key);
+				}
+				aggregationKeys.putAll(buildKeys(group, keyList));
+			}
 		}
 
 		return aggregationKeys;
 	}
-
 }

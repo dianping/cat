@@ -16,13 +16,13 @@ import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.chart.BaseGraphCreator;
+import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 
-public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
+public class DefaultUserMonitGraphCreator extends AbstractGraphCreator implements UserMonitorGraphCreator {
 
 	private static final String COUNT = "访问量(次数)";
 
