@@ -96,9 +96,6 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
-			if (SUCESS_PERCENT.equals(key)) {
-				lineChart.setMinYlable(90);
-			}
 			lineChart.setId(key);
 			lineChart.setTitle(key);
 			lineChart.setStart(startDate);
