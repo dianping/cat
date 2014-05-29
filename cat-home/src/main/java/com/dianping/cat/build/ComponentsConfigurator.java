@@ -23,7 +23,6 @@ import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineService;
-import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
 import com.dianping.cat.report.chart.GraphCreator;
@@ -61,7 +60,6 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
-import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
@@ -104,8 +102,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(MetricAggregationConfigManager.class).req(ConfigDao.class));
-
 		all.add(C(MetricRuleConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
@@ -130,10 +126,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
 		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
 		            MetricGroupConfigManager.class, AlertInfo.class));
-		all.add(C(AggregationGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, MetricAggregationConfigManager.class,
-		      AlertInfo.class));
 
 		all.add(C(UserMonitorGraphCreator.class, DefaultUserMonitGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,

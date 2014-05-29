@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -17,15 +16,12 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.metricAggregation.entity.MetricAggregationGroup;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.chart.AggregationGraphCreator;
 import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.system.config.MetricAggregationConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -36,12 +32,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
-	private MetricAggregationConfigManager m_metricAggregationConfigManager;
-
-	@Inject
-	private AggregationGraphCreator m_aggregationGraphCreator;
 
 	@Inject
 	private NetworkGraphCreator m_defaultAggGraphCreator;
@@ -75,11 +65,6 @@ public class Handler implements PageHandler<Context> {
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
-		case AGGREGATION:
-			Map<String, LineChart> allCharts = m_aggregationGraphCreator.buildDashboardByGroup(start, end,
-			      payload.getGroup());
-			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
-			break;
 		case NETTOPOLOGY:
 			model.setNetGraphData(m_netGraphManager.getNetGraphData(model.getStartTime(), model.getMinute()));
 			break;
@@ -91,21 +76,10 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.NETWORK);
 
-		Map<String, MetricAggregationGroup> metricAggregationGroups = m_metricAggregationConfigManager
-		      .getMetricAggregationConfig().getMetricAggregationGroups();
-		List<MetricAggregationGroup> metricAggregationGroupList = new ArrayList<MetricAggregationGroup>();
-
-		for (Entry<String, MetricAggregationGroup> entry : metricAggregationGroups.entrySet()) {
-			if ("network".equalsIgnoreCase(entry.getValue().getDisplay())) {
-				metricAggregationGroupList.add(entry.getValue());
-			}
-		}
-		
 		if(payload.getProduct() == null && payload.getGroup() == null) {
 			payload.setAction(Action.NETTOPOLOGY.getName());
 		}
 
-		model.setMetricAggregationGroup(metricAggregationGroupList);
 		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
 
 		m_normalizePayload.normalize(model, payload);
