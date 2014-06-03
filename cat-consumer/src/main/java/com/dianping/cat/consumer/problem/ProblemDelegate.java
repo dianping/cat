@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.problem;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -52,6 +53,18 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		if (frontEnd != null) {
 			reports.put(Constants.FRONT_END, rebuildFrontEndReport(frontEnd));
 		}
+
+		try {
+			ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter();
+
+			for (Entry<String, ProblemReport> entry : reports.entrySet()) {
+				ProblemReport report = entry.getValue();
+
+				problemReportURLFilter.visitProblemReport(report);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	public ProblemReport rebuildFrontEndReport(ProblemReport report) {
@@ -89,7 +102,8 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		String domain = report.getDomain();
 
 		if (domain.equals(Constants.ALL)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
+			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
