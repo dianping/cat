@@ -1,4 +1,4 @@
-package com.dianping.cat.config;
+package com.dianping.cat.config.url;
 
 import java.io.IOException;
 import java.util.ArrayList;

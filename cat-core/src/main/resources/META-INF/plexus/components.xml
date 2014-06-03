@@ -80,18 +80,18 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.UrlPatternHandler</role>
-			<implementation>com.dianping.cat.config.DefaultUrlPatternHandler</implementation>
+			<role>com.dianping.cat.config.url.UrlPatternHandler</role>
+			<implementation>com.dianping.cat.config.url.DefaultUrlPatternHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.url.UrlPatternConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternHandler</role>
+					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
 				</requirement>
 			</requirements>
 		</component>

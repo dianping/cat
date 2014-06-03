@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.config.AggregationMessageFormat;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 
-public class DefaultAggregationHandler implements AggregationHandler {
+public class DefaultAggregationHandler implements AggregationHandler, LogEnabled {
 
-	Map<Integer, Map<String, TrieTreeNode>> m_formats = new HashMap<Integer, Map<String, TrieTreeNode>>();
+	private Map<Integer, Map<String, TrieTreeNode>> m_formats = new HashMap<Integer, Map<String, TrieTreeNode>>();
+
+	private Logger m_logger;
 
 	private Map<String, TrieTreeNode> findOrCreateTrieTreeNodes(int type) {
 		Map<String, TrieTreeNode> nodes = m_formats.get(type);
@@ -177,6 +181,7 @@ public class DefaultAggregationHandler implements AggregationHandler {
 	@Override
 	public String handle(int type, String domain, String input) {
 		TrieTreeNode formatTree = getFormatTree(type, domain);
+
 		if (formatTree == null) {
 			return input;
 		}
@@ -185,10 +190,13 @@ public class DefaultAggregationHandler implements AggregationHandler {
 
 	@Override
 	public void register(List<AggregationRule> rules) {
+		m_logger.info("aggregation rule start!");
 		m_formats.clear();
 
 		for (AggregationRule rule : rules) {
 			String format = rule.getPattern();
+
+			m_logger.info("aggregation rule : " + format);
 
 			if (format == null || format.isEmpty()) {
 				continue;
@@ -214,5 +222,12 @@ public class DefaultAggregationHandler implements AggregationHandler {
 				buildFormatTree(node, key1.toCharArray(), key2.toCharArray(), value);
 			}
 		}
+
+		m_logger.info("aggregation rule end!");
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

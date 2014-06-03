@@ -13,7 +13,7 @@
 			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.IpService</role>
@@ -60,7 +60,7 @@
 					<role>com.dianping.cat.broker.api.page.IpService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -69,14 +69,14 @@
 			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.url.UrlPatternConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternHandler</role>
+					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
 				</requirement>
 			</requirements>
 		</component>

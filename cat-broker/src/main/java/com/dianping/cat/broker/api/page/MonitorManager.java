@@ -18,7 +18,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
-import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;

@@ -3228,7 +3228,7 @@
 					<role>com.dianping.cat.report.page.userMonitor.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
@@ -3251,14 +3251,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.url.UrlPatternConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternHandler</role>
+					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3454,7 +3454,7 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>

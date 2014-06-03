@@ -77,7 +77,13 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private String parseFile(String file) {
-		return m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, file);
+		String result = m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, file);
+
+		if (result.equals(file)) {
+			return subUrl(file);
+		} else {
+			return result;
+		}
 	}
 
 	private String parseHost() {
@@ -149,5 +155,20 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		return null;
+	}
+
+	private String subUrl(String url) {
+		String[] str = url.split("\\/");
+		StringBuilder sb = new StringBuilder();
+
+		if (str.length > 4) {
+			for (int i = 0; i <= 4; i++) {
+				sb.append(str[i]).append("/");
+			}
+
+			return sb.toString();
+		} else {
+			return url;
+		}
 	}
 }

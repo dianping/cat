@@ -26,58 +26,29 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 
 	@FieldMeta("data")
 	private String m_data;
-
-	public long getTimestamp() {
-		return m_timestamp;
-	}
-
-	public void setTimestamp(long timestamp) {
-		m_timestamp = timestamp;
-	}
-
-	public String getError() {
-		return m_error;
-	}
-
-	public void setError(String error) {
-		m_error = error;
-	}
-
-	public String getFile() {
-		return m_file;
-	}
-
-	public void setFile(String file) {
-		m_file = file;
-	}
-
-	public String getLine() {
-		return m_line;
-	}
-
-	public void setLine(String line) {
-		m_line = line;
+	
+	@FieldMeta("v")
+	private String m_version;
+	
+	@Override
+	public Action getAction() {
+		return m_action;
 	}
 
 	public String getData() {
 		return m_data;
 	}
 
-	public void setData(String data) {
-		m_data = data;
+	public String getError() {
+		return m_error;
 	}
 
-	public void setPage(ApiPage page) {
-		m_page = page;
+	public String getFile() {
+		return m_file;
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
-	@Override
-	public Action getAction() {
-		return m_action;
+	public String getLine() {
+		return m_line;
 	}
 
 	@Override
@@ -85,10 +56,50 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 		return m_page;
 	}
 
+	public long getTimestamp() {
+		return m_timestamp;
+	}
+
+	public String getVersion() {
+   	return m_version;
+   }
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setData(String data) {
+		m_data = data;
+	}
+
+	public void setError(String error) {
+		m_error = error;
+	}
+
+	public void setFile(String file) {
+		m_file = file;
+	}
+
+	public void setLine(String line) {
+		m_line = line;
+	}
+
+	public void setPage(ApiPage page) {
+		m_page = page;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ApiPage.getByName(page, ApiPage.JS);
 	}
+
+	public void setTimestamp(long timestamp) {
+		m_timestamp = timestamp;
+	}
+
+	public void setVersion(String version) {
+   	m_version = version;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

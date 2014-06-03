@@ -1,4 +1,4 @@
-package com.dianping.cat.config;
+package com.dianping.cat.config.url;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +12,9 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dianping.cat.config.CompositeFormat;
+import com.dianping.cat.config.TrieTreeNode;
+import com.dianping.cat.config.aggregation.AggregationMessageFormat;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 
 public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
