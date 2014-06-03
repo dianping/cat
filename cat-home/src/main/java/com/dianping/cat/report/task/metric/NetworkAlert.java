@@ -61,7 +61,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 				value = queryRealData(start, end, metricKey, report, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				return m_alertConfig.checkData(value, baseline, type, configs);
+				return DataChecker.checkData(value, baseline, type, configs);
 			}
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
@@ -72,7 +72,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-				return m_alertConfig.checkData(value, baseline, type, configs);
+				return DataChecker.checkData(value, baseline, type, configs);
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -92,7 +92,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 				value = mergerArray(lastValue, currentValue);
 				baseline = mergerArray(lastBaseline, currentBaseline);
-				return m_alertConfig.checkData(value, baseline, type, configs);
+				return DataChecker.checkData(value, baseline, type, configs);
 			}
 		}
 		return null;

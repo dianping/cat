@@ -49,14 +49,17 @@ import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreat
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
+import com.dianping.cat.report.task.exceptionAlert.ExceptionAlertConfig;
 import com.dianping.cat.report.task.metric.AlertInfo;
+import com.dianping.cat.report.task.metric.BaseAlertConfig;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricAlertConfig;
-import com.dianping.cat.report.task.metric.RemoteMetricReportService;
 import com.dianping.cat.report.task.metric.NetworkAlert;
 import com.dianping.cat.report.task.metric.NetworkAlertConfig;
+import com.dianping.cat.report.task.metric.RemoteMetricReportService;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -107,6 +110,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricAggregationConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(MetricRuleConfigManager.class).req(ConfigDao.class));
+		
+		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -151,10 +156,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
+		
+		all.add(C(BaseAlertConfig.class).req(AlertConfigManager.class));
 
-		all.add(C(MetricAlertConfig.class));
+		all.add(C(MetricAlertConfig.class).req(AlertConfigManager.class));
 
-		all.add(C(NetworkAlertConfig.class));
+		all.add(C(NetworkAlertConfig.class).req(AlertConfigManager.class));
+
+		all.add(C(ExceptionAlertConfig.class).req(AlertConfigManager.class));
 
 		all.add(C(AlertInfo.class));
 
@@ -168,7 +177,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class, MetricRuleConfigManager.class));
 
-		all.add(C(ExceptionAlert.class).req(ProjectDao.class, MetricAlertConfig.class, MailSMS.class,
+		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
 		      ExceptionConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		// database

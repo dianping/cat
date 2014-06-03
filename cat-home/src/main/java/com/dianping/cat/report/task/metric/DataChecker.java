@@ -7,33 +7,18 @@ import java.util.List;
 
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.monitorrules.entity.Condition;
 import com.dianping.cat.home.monitorrules.entity.Config;
 import com.dianping.cat.home.monitorrules.entity.Subcondition;
 
-public abstract class BaseAlertConfig {
-	protected DecimalFormat m_df = new DecimalFormat("0.0");
+public class DataChecker {
+
+	private static DecimalFormat m_df = new DecimalFormat("0.0");
 
 	protected static final Long ONE_MINUTE_MILLSEC = 60000L;
 
-	public abstract List<String> buildSMSReceivers(ProductLine productLine);
-	
-	public abstract List<String> buildMailReceivers(ProductLine productLine);
-
-	public abstract List<String> buildMailReceivers(Project project);
-	
-	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
-		sb.append("[业务指标 ").append(config.getTitle()).append("]");
-		return sb.toString();
-	}
-	
-	public Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type, List<Config> configs) {
+	public static Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type,
+	      List<Config> configs) {
 		for (Config con : configs) {
 			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline, type, con);
 
@@ -43,9 +28,10 @@ public abstract class BaseAlertConfig {
 		}
 		return new Pair<Boolean, String>(false, "");
 	}
-	
-	protected Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type, Config config) {
-		if(judgeCurrentNotInConfigRange(config)){
+
+	protected static Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type,
+	      Config config) {
+		if (judgeCurrentNotInConfigRange(config)) {
 			return new Pair<Boolean, String>(false, "");
 		}
 
@@ -64,7 +50,7 @@ public abstract class BaseAlertConfig {
 		return new Pair<Boolean, String>(false, "");
 	}
 
-	protected Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
+	protected static Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
 		StringBuilder values = new StringBuilder();
@@ -97,7 +83,7 @@ public abstract class BaseAlertConfig {
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
 
-	private boolean checkDataByMinute(Condition condition, double value, double baseline) {
+	private static boolean checkDataByMinute(Condition condition, double value, double baseline) {
 		for (Subcondition subCondition : condition.getSubconditions()) {
 			String ruleType = subCondition.getType();
 			double ruleValue = Double.parseDouble(subCondition.getText());
@@ -113,8 +99,8 @@ public abstract class BaseAlertConfig {
 		}
 		return true;
 	}
-	
-	protected double[] buildLastMinutesDoubleArray(double[] doubleList, int remainCount) {
+
+	protected static double[] buildLastMinutesDoubleArray(double[] doubleList, int remainCount) {
 		if (doubleList.length <= remainCount) {
 			return doubleList;
 		}
@@ -125,11 +111,11 @@ public abstract class BaseAlertConfig {
 		for (int i = 0; i < remainCount; i++) {
 			result[i] = doubleList[startIndex + i];
 		}
-		
+
 		return result;
 	}
 
-	protected Long buildMillsByString(String time) throws Exception {
+	protected static Long buildMillsByString(String time) throws Exception {
 		String[] times = time.split(":");
 		int hour = Integer.parseInt(times[0]);
 		int minute = Integer.parseInt(times[1]);
@@ -137,8 +123,8 @@ public abstract class BaseAlertConfig {
 
 		return result;
 	}
-	
-	private boolean judgeCurrentNotInConfigRange(Config config) {
+
+	private static boolean judgeCurrentNotInConfigRange(Config config) {
 		long ruleStartTime;
 		long ruleEndTime;
 		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
@@ -154,8 +140,8 @@ public abstract class BaseAlertConfig {
 		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
 			return true;
 		}
-		
+
 		return false;
-   }
+	}
 
 }

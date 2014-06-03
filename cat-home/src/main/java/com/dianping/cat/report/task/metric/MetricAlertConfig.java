@@ -2,59 +2,16 @@ package com.dianping.cat.report.task.metric;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.core.dal.Project;
-import com.site.helper.Splitters;
 
 public class MetricAlertConfig extends BaseAlertConfig {
 
-	public List<String> buildSMSReceivers(ProductLine productLine) {
-		List<String> phones = new ArrayList<String>();
-		String phonesList = productLine.getPhone();
-
-		phones.add("13916536843");// 值班
-		phones.add("18616671676");// 尤勇
-		phones.add("13858086694");// 黄河
-
-		if (phonesList != null) {
-			phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
-		}
-		return phones;
-	}
-
-	public List<String> buildMailReceivers(ProductLine productLine) {
-		List<String> emails = new ArrayList<String>();
-		String emailList = productLine.getEmail();
-
-		emails.add("yong.you@dianping.com");
-		emails.add("jialin.sun@dianping.com");
-		emails.add("argus@dianping.com");
-		emails.add("monitor@dianping.com");
-
-		if (emailList != null) {
-			emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
-		}
-		return emails;
-	}
-
-	public List<String> buildMailReceivers(Project project) {
-		List<String> emails = new ArrayList<String>();
-		String emailList = project.getEmail();
-
-		emails.add("jialin.sun@dianping.com");
-		if (emailList != null) {
-			emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
-		}
-		return emails;
-	}
-
+	private String m_ID = "metric";
+	
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
@@ -97,6 +54,10 @@ public class MetricAlertConfig extends BaseAlertConfig {
 		sb.append("[下降:").append(df.format(percent)).append("%").append("]");
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
+	}
+	
+	public String getID() {
+		return m_ID;
 	}
 
 }

@@ -48,7 +48,7 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 
 		try {
 			List<Config> configs = convert(config);
-			Pair<Boolean, String> ruleJudgeResult = m_alertConfig.checkData(value, baseline, type, configs);
+			Pair<Boolean, String> ruleJudgeResult = DataChecker.checkData(value, baseline, type, configs);
 
 			if (originResult.getKey() != ruleJudgeResult.getKey()) {
 				String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),

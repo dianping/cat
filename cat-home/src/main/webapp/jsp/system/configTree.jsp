@@ -15,6 +15,7 @@
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
 	       <li class="text-right" id="metricGroupConfigUpdate"><a href="?op=metricGroupConfigUpdate"><strong>业务指标分组</strong></a></li>
 	       <li class="text-right" id="metricRuleConfigUpdate"><a href="?op=metricRuleConfigUpdate"><strong>监控告警配置</strong></a></li>
+	       <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>告警默认发送人配置</strong></a></li>
 	       <li class="text-right" id="metricAggregationConfigUpdate"><a href="?op=metricAggregationConfigUpdate"><strong>监控指标汇总</strong></a></li>
            <li class='nav-header'><h4>报表展示配置</h4></li>
 	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常规范配置</strong></a></li>
