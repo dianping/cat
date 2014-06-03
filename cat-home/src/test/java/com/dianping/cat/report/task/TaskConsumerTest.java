@@ -74,13 +74,13 @@ public class TaskConsumerTest {
 		}
 
 		@Override
-      public String getName() {
-	      return "MockConsumer";
-      }
+		public String getName() {
+			return "MockConsumer";
+		}
 
 		@Override
-      public void shutdown() {
-      }
+		public void shutdown() {
+		}
 	};
 
 	/**
@@ -158,7 +158,7 @@ public class TaskConsumerTest {
 			Thread.sleep(10);
 		}
 
-		Assert.assertEquals("[1, 10, 11, 10, 11, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
+		Assert.assertEquals("[1, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
 		Assert.assertEquals(TaskConsumer.STATUS_DOING, t.getStatus());
 	}
 
@@ -254,7 +254,7 @@ public class TaskConsumerTest {
 			Thread.sleep(10);
 		}
 
-		Assert.assertEquals("[1, 8, 7, 10, 11, 10, 11, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
+		Assert.assertEquals("[1, 8, 7, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
 		Assert.assertEquals(TaskConsumer.STATUS_FAIL, t.getStatus());
 	}
 
