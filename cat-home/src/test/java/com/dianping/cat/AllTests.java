@@ -16,7 +16,6 @@ import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
-import com.dianping.cat.report.page.jsError.ParseTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
@@ -118,9 +117,6 @@ GraphConfigManagerTest.class,
 
 MetricReportParseTest.class,
 
-/* jsError */
-ParseTest.class,
-
 /* service */
 ServiceReportMergerTest.class,
 
@@ -134,8 +130,8 @@ TopReportVisitorTest.class,
 
 RuleConfigTest.class,
 
-AlertConfigTest.class })
-
+AlertConfigTest.class,
+ })
 public class AllTests {
 
 	@BeforeClass

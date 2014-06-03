@@ -1,13 +1,13 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.api.page.js;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.broker.api.ApiPage;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
-	private ReportPage m_page;
+public class Payload implements ActionPayload<ApiPage, Action> {
+	private ApiPage m_page;
 
 	@FieldMeta("op")
 	private Action m_action;
@@ -26,7 +26,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("data")
 	private String m_data;
-
+	
+	@FieldMeta("v")
+	private String m_version;
+	
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -49,13 +52,17 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	@Override
-	public ReportPage getPage() {
+	public ApiPage getPage() {
 		return m_page;
 	}
 
 	public long getTimestamp() {
 		return m_timestamp;
 	}
+
+	public String getVersion() {
+   	return m_version;
+   }
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
@@ -77,14 +84,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_line = line;
 	}
 
+	public void setPage(ApiPage page) {
+		m_page = page;
+	}
+
 	@Override
 	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.JSERROR);
+		m_page = ApiPage.getByName(page, ApiPage.JS);
 	}
 
 	public void setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 	}
+
+	public void setVersion(String version) {
+   	m_version = version;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
@@ -92,5 +107,4 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 			m_action = Action.VIEW;
 		}
 	}
-
 }

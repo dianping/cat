@@ -23,7 +23,6 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemReportAggregation;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -65,15 +64,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private ProblemReportAggregation m_problemReportAggregation;
-
-	@Inject
 	private JsonBuilder m_jsonBuilder;
-
-	private ProblemReport buildFrontEndByRule(ProblemReport report) {
-		report.accept(m_problemReportAggregation);
-		return m_problemReportAggregation.getReport();
-	}
 
 	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
 		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
@@ -100,11 +91,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
-		ProblemReport report = getHourlyReportInternal(payload, type);
-		if (Constants.FRONT_END.equals(payload.getDomain())) {
-			report = buildFrontEndByRule(report);
-		}
-		return report;
+		return getHourlyReportInternal(payload, type);
 	}
 
 	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
@@ -204,9 +191,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GRAPH:
 			m_historyGraphs.buildTrendGraph(model, payload);
-			
+
 			report = showSummarizeReport(model, payload);
-			buildDistributionChart(model,payload, report);
+			buildDistributionChart(model, payload, report);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -223,7 +210,7 @@ public class Handler implements PageHandler<Context> {
 
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
-			buildDistributionChart(model,payload, report);
+			buildDistributionChart(model, payload, report);
 			break;
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload, VIEW);
@@ -246,7 +233,7 @@ public class Handler implements PageHandler<Context> {
 			vistor = new HourlyLineChartVisitor("", type, state, start);
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
-			buildDistributionChart(model,payload, report);
+			buildDistributionChart(model, payload, report);
 			break;
 		case HISTORY_GROUP_REPORT:
 			report = showSummarizeReport(model, payload);
@@ -263,11 +250,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GROUP_GRAPH:
 			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-			
+
 			report = showSummarizeReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
-			buildDistributionChart(model,payload, report);
+			buildDistributionChart(model, payload, report);
 			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);

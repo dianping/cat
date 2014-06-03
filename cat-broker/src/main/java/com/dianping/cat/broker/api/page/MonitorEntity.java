@@ -17,6 +17,16 @@ public class MonitorEntity {
 
 	private String m_ip;
 
+	private int m_count = 1;
+
+	public int getCount() {
+		return m_count;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
+	}
+
 	public double getDuration() {
 		return m_duration;
 	}

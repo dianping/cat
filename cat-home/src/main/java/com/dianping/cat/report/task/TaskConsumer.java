@@ -6,7 +6,7 @@ import com.dianping.cat.core.dal.Task;
 
 public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
-	private static final int MAX_TODO_RETRY_TIMES = 3;
+	private static final int MAX_TODO_RETRY_TIMES = 1;
 
 	public static final int STATUS_TODO = 1;
 

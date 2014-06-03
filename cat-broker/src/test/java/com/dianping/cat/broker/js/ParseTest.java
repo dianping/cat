@@ -1,8 +1,10 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.js;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+
+import com.dianping.cat.broker.api.page.js.Handler;
 
 public class ParseTest {
 

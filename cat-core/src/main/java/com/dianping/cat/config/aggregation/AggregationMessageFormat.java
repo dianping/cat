@@ -1,4 +1,4 @@
-package com.dianping.cat.config;
+package com.dianping.cat.config.aggregation;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

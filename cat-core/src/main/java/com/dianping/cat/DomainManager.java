@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -146,24 +147,27 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	public String queryHostnameByIp(String ip) {
 		try {
-			Hostinfo info = m_ipsInCat.get(ip);
-			String hostname = null;
+			if (validateIp(ip)) {
+				Hostinfo info = m_ipsInCat.get(ip);
+				String hostname = null;
 
-			if (info != null) {
-				hostname = info.getHostname();
+				if (info != null) {
+					hostname = info.getHostname();
 
-				if (StringUtils.isNotEmpty(hostname)) {
-					return hostname;
+					if (StringUtils.isNotEmpty(hostname)) {
+						return hostname;
+					}
 				}
-			}
-			
-			info = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				info = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 
-			if (info != null) {
-				m_ipsInCat.put(ip, info);
-				hostname = info.getHostname();
+				if (info != null) {
+					m_ipsInCat.put(ip, info);
+					hostname = info.getHostname();
+				}
+				return hostname;
+			} else {
+				return null;
 			}
-			return hostname;
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -187,6 +191,12 @@ public class DomainManager implements Initializable, LogEnabled {
 			Cat.logError(e);
 		}
 		return false;
+	}
+
+	private boolean validateIp(String str) {
+		Pattern pattern = Pattern
+		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		return pattern.matcher(str).matches();
 	}
 
 	public class ReloadDomainTask implements Task {

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.api.page.js;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view");

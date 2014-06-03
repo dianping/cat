@@ -25,8 +25,8 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
-import com.dianping.cat.report.chart.MetricGraphCreator;
 import com.dianping.cat.report.chart.MetricDataFetcher;
+import com.dianping.cat.report.chart.MetricGraphCreator;
 import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl;
 import com.dianping.cat.report.chart.impl.DataExtractorImpl;
@@ -123,9 +123,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
 
-		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
-		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class, AlertInfo.class));
+		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 
 		all.add(C(UserMonitorGraphCreator.class, DefaultUserMonitGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
@@ -171,7 +171,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// update project database
 		all.add(C(ProjectUpdateTask.class)//
-				.req(ProjectDao.class, HostinfoDao.class));
+		      .req(ProjectDao.class, HostinfoDao.class));
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());

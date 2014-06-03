@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.problem;
+package com.dianping.cat.broker.js;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.dal.jdbc.Readset;
 import org.unidal.dal.jdbc.Updateset;
 
-import com.dianping.cat.consumer.aggreation.model.entity.Aggregation;
-import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
-import com.dianping.cat.consumer.problem.aggregation.AggregationHandler;
+import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.aggregation.AggregationHandler;
+import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 

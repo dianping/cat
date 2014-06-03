@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.problem;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -18,9 +19,6 @@ import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 public class ProblemDelegate implements ReportDelegate<ProblemReport> {
-
-	@Inject
-	private ProblemReportAggregation m_problemReportAggregation;
 
 	@Inject
 	private TaskManager m_taskManager;
@@ -47,19 +45,19 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			reports.put(all.getDomain(), all);
 		}
 
-		ProblemReport frontEnd = reports.get(Constants.FRONT_END);
+		try {
+			ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter();
 
-		if (frontEnd != null) {
-			reports.put(Constants.FRONT_END, rebuildFrontEndReport(frontEnd));
+			for (Entry<String, ProblemReport> entry : reports.entrySet()) {
+				ProblemReport report = entry.getValue();
+
+				problemReportURLFilter.visitProblemReport(report);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
-	public ProblemReport rebuildFrontEndReport(ProblemReport report) {
-		m_problemReportAggregation.refreshRule();
-		report.accept(m_problemReportAggregation);
-
-		return m_problemReportAggregation.getReport();
-	}
 
 	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
 		ProblemReport report = new ProblemReport(Constants.ALL);
@@ -89,7 +87,8 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		String domain = report.getDomain();
 
 		if (domain.equals(Constants.ALL)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
+			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);

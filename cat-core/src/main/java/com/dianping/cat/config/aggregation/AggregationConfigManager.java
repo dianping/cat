@@ -1,17 +1,22 @@
-package com.dianping.cat.consumer.problem.aggregation;
+package com.dianping.cat.config.aggregation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.aggreation.model.entity.Aggregation;
-import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.consumer.aggreation.model.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.aggreation.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -19,16 +24,18 @@ import com.dianping.cat.core.config.ConfigEntity;
 public class AggregationConfigManager implements Initializable {
 	@Inject
 	protected ConfigDao m_configDao;
-	
+
 	@Inject
 	protected AggregationHandler m_handler;
-	
+
 	private int m_configId;
 
 	private static final String CONFIG_NAME = "aggreationConfig";
 
 	private Aggregation m_aggregation;
-	
+
+	private long m_modifyTime;
+
 	public static final int PROBLEM_TYPE = 3;
 
 	public boolean deleteAggregationRule(String rule) {
@@ -36,11 +43,11 @@ public class AggregationConfigManager implements Initializable {
 		m_handler.register(queryAggregationRules());
 		return storeConfig();
 	}
-	
+
 	public String handle(int type, String domain, String status) {
 		return m_handler.handle(type, domain, status);
 	}
-	
+
 	@Override
 	public void initialize() {
 		try {
@@ -49,6 +56,7 @@ public class AggregationConfigManager implements Initializable {
 
 			m_aggregation = DefaultSaxParser.parse(content);
 			m_configId = config.getId();
+			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
@@ -70,6 +78,8 @@ public class AggregationConfigManager implements Initializable {
 			m_aggregation = new Aggregation();
 		}
 		m_handler.register(queryAggregationRules());
+
+		Threads.forGroup("Cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insertAggregationRule(AggregationRule rule) {
@@ -126,8 +136,54 @@ public class AggregationConfigManager implements Initializable {
 	}
 
 	public void refreshRule() {
-	   List<AggregationRule> rules = queryAggrarationRulesFromDB();
-	  
-	   m_handler.register(rules);
-   }
+		List<AggregationRule> rules = queryAggrarationRulesFromDB();
+
+		m_handler.register(rules);
+	}
+
+	public void refreshAggreationConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				Aggregation aggregation = DefaultSaxParser.parse(content);
+
+				m_aggregation = aggregation;
+				m_handler.register(queryAggregationRules());
+				m_modifyTime = modifyTime;
+			}
+		}
+	}
+	
+	public class ConfigReloadTask implements Task {
+
+		@Override
+		public String getName() {
+			return "Aggreation-Config-Reload";
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+			while (active) {
+				try {
+					refreshAggreationConfig();
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(10 * 1000L);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
 }

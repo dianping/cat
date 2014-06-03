@@ -18,7 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.alibaba.cobar.parser.util.Pair;
 import com.dianping.cat.Monitor;
-import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
