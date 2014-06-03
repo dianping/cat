@@ -16,7 +16,7 @@ import com.dianping.cat.home.monitorrules.entity.Rule;
 import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.report.task.metric.MetricType;
-import com.dianping.cat.report.task.metric.SwitchAlertConfig;
+import com.dianping.cat.report.task.metric.NetworkAlertConfig;
 
 public class RuleConfigTest {
 
@@ -81,7 +81,7 @@ public class RuleConfigTest {
 
 	@Test
 	public void testMinute() {
-		SwitchAlertConfig alertConfig = new SwitchAlertConfig();
+		NetworkAlertConfig alertConfig = new NetworkAlertConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);

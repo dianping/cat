@@ -11,15 +11,21 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.monitorrules.entity.Config;
 import com.site.helper.Splitters;
 
 public class MetricAlertConfig extends BaseAlertConfig {
 
-	public List<String> buildExceptionSMSReceivers(ProductLine productLine) {
+	public List<String> buildSMSReceivers(ProductLine productLine) {
 		List<String> phones = new ArrayList<String>();
+		String phonesList = productLine.getPhone();
 
-		phones.add("15201789489");// 佳林
+		phones.add("13916536843");// 值班
+		phones.add("18616671676");// 尤勇
+		phones.add("13858086694");// 黄河
+
+		if (phonesList != null) {
+			phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
+		}
 		return phones;
 	}
 
@@ -47,20 +53,6 @@ public class MetricAlertConfig extends BaseAlertConfig {
 			emails.addAll(Splitters.by(",").noEmptyItem().split(emailList));
 		}
 		return emails;
-	}
-
-	public List<String> buildSMSReceivers(ProductLine productLine) {
-		List<String> phones = new ArrayList<String>();
-		String phonesList = productLine.getPhone();
-
-		phones.add("13916536843");// 值班
-		phones.add("18616671676");// 尤勇
-		phones.add("13858086694");// 黄河
-
-		if (phonesList != null) {
-			phones.addAll(Splitters.by(",").noEmptyItem().split(phonesList));
-		}
-		return phones;
 	}
 
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
@@ -105,17 +97,6 @@ public class MetricAlertConfig extends BaseAlertConfig {
 		sb.append("[下降:").append(df.format(percent)).append("%").append("]");
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
-	}
-
-	public Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type, List<Config> configs) {
-		for (Config con : configs) {
-			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline, type, con);
-
-			if (tmpResult.getKey() == true) {
-				return tmpResult;
-			}
-		}
-		return new Pair<Boolean, String>(false, "");
 	}
 
 }

@@ -153,7 +153,7 @@ public class AlertConfigTest {
 
 	@Test
 	public void testMinute() {
-		SwitchAlertConfig alertConfig = new SwitchAlertConfig();
+		NetworkAlertConfig alertConfig = new NetworkAlertConfig();
 		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);

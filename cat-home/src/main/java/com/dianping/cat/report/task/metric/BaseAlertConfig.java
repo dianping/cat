@@ -19,26 +19,12 @@ public abstract class BaseAlertConfig {
 
 	protected static final Long ONE_MINUTE_MILLSEC = 60000L;
 
-	public abstract List<String> buildExceptionSMSReceivers(ProductLine productLine);
-
-	protected double[] buildLastMinutes(double[] doubleList, int remainCount) {
-		if (doubleList.length <= remainCount) {
-			return doubleList;
-		}
-
-		double[] result = new double[remainCount];
-		int startIndex = doubleList.length - remainCount;
-
-		for (int i = 0; i < remainCount; i++) {
-			result[i] = doubleList[startIndex + i];
-		}
-		return result;
-	}
-
+	public abstract List<String> buildSMSReceivers(ProductLine productLine);
+	
 	public abstract List<String> buildMailReceivers(ProductLine productLine);
 
 	public abstract List<String> buildMailReceivers(Project project);
-
+	
 	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
 		StringBuilder sb = new StringBuilder();
 
@@ -46,11 +32,37 @@ public abstract class BaseAlertConfig {
 		sb.append("[业务指标 ").append(config.getTitle()).append("]");
 		return sb.toString();
 	}
+	
+	public Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type, List<Config> configs) {
+		for (Config con : configs) {
+			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline, type, con);
 
-	public abstract List<String> buildSMSReceivers(ProductLine productLine);
+			if (tmpResult.getKey() == true) {
+				return tmpResult;
+			}
+		}
+		return new Pair<Boolean, String>(false, "");
+	}
+	
+	protected Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type, Config config) {
+		if(judgeCurrentNotInConfigRange(config)){
+			return new Pair<Boolean, String>(false, "");
+		}
 
-	public abstract Pair<Boolean, String> checkData(double[] value, double[] baseline, MetricType type,
-	      List<Config> configs);
+		for (Condition condition : config.getConditions()) {
+			int conditionMinute = condition.getMinute();
+			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
+			double[] baselineValid = buildLastMinutesDoubleArray(baseline, conditionMinute);
+
+			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, baselineValid, condition);
+
+			if (condResult.getKey() == true) {
+				return condResult;
+			}
+		}
+
+		return new Pair<Boolean, String>(false, "");
+	}
 
 	protected Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
 		int length = value.length;
@@ -85,38 +97,6 @@ public abstract class BaseAlertConfig {
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
 
-	protected Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, MetricType type, Config config) {
-		long ruleStartTime;
-		long ruleEndTime;
-		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
-
-		try {
-			ruleStartTime = getMillsByString(config.getStarttime());
-			ruleEndTime = getMillsByString(config.getEndtime()) + ONE_MINUTE_MILLSEC;
-		} catch (Exception ex) {
-			ruleStartTime = 0L;
-			ruleEndTime = 86400000L;
-		}
-
-		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
-			return new Pair<Boolean, String>(false, "");
-		}
-
-		for (Condition condition : config.getConditions()) {
-			int conditionMinute = condition.getMinute();
-			double[] valueValid = buildLastMinutes(value, conditionMinute);
-			double[] baselineValid = buildLastMinutes(baseline, conditionMinute);
-
-			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, baselineValid, condition);
-
-			if (condResult.getKey() == true) {
-				return condResult;
-			}
-		}
-
-		return new Pair<Boolean, String>(false, "");
-	}
-
 	private boolean checkDataByMinute(Condition condition, double value, double baseline) {
 		for (Subcondition subCondition : condition.getSubconditions()) {
 			String ruleType = subCondition.getType();
@@ -133,8 +113,23 @@ public abstract class BaseAlertConfig {
 		}
 		return true;
 	}
+	
+	protected double[] buildLastMinutesDoubleArray(double[] doubleList, int remainCount) {
+		if (doubleList.length <= remainCount) {
+			return doubleList;
+		}
 
-	protected Long getMillsByString(String time) throws Exception {
+		double[] result = new double[remainCount];
+		int startIndex = doubleList.length - remainCount;
+
+		for (int i = 0; i < remainCount; i++) {
+			result[i] = doubleList[startIndex + i];
+		}
+		
+		return result;
+	}
+
+	protected Long buildMillsByString(String time) throws Exception {
 		String[] times = time.split(":");
 		int hour = Integer.parseInt(times[0]);
 		int minute = Integer.parseInt(times[1]);
@@ -142,5 +137,25 @@ public abstract class BaseAlertConfig {
 
 		return result;
 	}
+	
+	private boolean judgeCurrentNotInConfigRange(Config config) {
+		long ruleStartTime;
+		long ruleEndTime;
+		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+
+		try {
+			ruleStartTime = buildMillsByString(config.getStarttime());
+			ruleEndTime = buildMillsByString(config.getEndtime()) + ONE_MINUTE_MILLSEC;
+		} catch (Exception ex) {
+			ruleStartTime = 0L;
+			ruleEndTime = 86400000L;
+		}
+
+		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+			return true;
+		}
+		
+		return false;
+   }
 
 }

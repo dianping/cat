@@ -53,8 +53,8 @@ import com.dianping.cat.report.task.metric.AlertInfo;
 import com.dianping.cat.report.task.metric.MetricAlert;
 import com.dianping.cat.report.task.metric.MetricAlertConfig;
 import com.dianping.cat.report.task.metric.RemoteMetricReportService;
-import com.dianping.cat.report.task.metric.SwitchAlert;
-import com.dianping.cat.report.task.metric.SwitchAlertConfig;
+import com.dianping.cat.report.task.metric.NetworkAlert;
+import com.dianping.cat.report.task.metric.NetworkAlertConfig;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -154,7 +154,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricAlertConfig.class));
 
-		all.add(C(SwitchAlertConfig.class));
+		all.add(C(NetworkAlertConfig.class));
 
 		all.add(C(AlertInfo.class));
 
@@ -164,8 +164,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      BaselineService.class, MailSMS.class, MetricAlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class));
 
-		all.add(C(SwitchAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, SwitchAlertConfig.class, AlertInfo.class)//
+		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class, MetricRuleConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, MetricAlertConfig.class, MailSMS.class,

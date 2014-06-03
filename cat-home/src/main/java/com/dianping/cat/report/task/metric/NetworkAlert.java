@@ -24,7 +24,7 @@ import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
+public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	private MetricRuleConfigManager m_metricRuleConfigManager;
@@ -33,7 +33,7 @@ public class SwitchAlert extends BaseAlert implements Task, LogEnabled {
 	protected MailSMS m_mailSms;
 
 	@Inject
-	private SwitchAlertConfig m_alertConfig;
+	private NetworkAlertConfig m_alertConfig;
 
 	@Inject
 	private AlertInfo m_alertInfo;
