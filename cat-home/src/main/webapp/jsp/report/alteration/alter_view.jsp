@@ -11,8 +11,6 @@
 
 <a:report title="Alteration Report" navUrlPrefix="">
 	<jsp:body>
-	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<%@ include file="alter_query.jsp"%>
 	<table	class="problem table table-striped table-bordered table-condensed table-hover">
 		<tr class="text-success">

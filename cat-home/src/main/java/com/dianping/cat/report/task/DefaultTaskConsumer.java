@@ -83,7 +83,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Override
 	protected void taskRetryDuration() {
-		LockSupport.parkNanos(10L * 1000 * 1000 * 1000);// sleep 10 sec
+		LockSupport.parkNanos(2L * 1000 * 1000 * 1000);// sleep 10 sec
 	}
 
 	@Override

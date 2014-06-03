@@ -8,8 +8,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.DefaultUrlPatternHandler;
-import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.url.DefaultUrlPatternHandler;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 
 public class UrlPatternConvertTest {

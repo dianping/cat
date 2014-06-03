@@ -19,7 +19,6 @@
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr class="left">
@@ -79,8 +78,8 @@
 			var id = $(item).text();
 			<c:forEach var="ip" items="${model.groupIps}">
 			group = '${ip}';
-			if (group == id) {
-				$(item).addClass('current');
+			if(id.indexOf(group)!=-1){
+					$(item).addClass('current');
 			}
 			</c:forEach>
 		});

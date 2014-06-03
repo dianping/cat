@@ -16,7 +16,6 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <table class="machines">

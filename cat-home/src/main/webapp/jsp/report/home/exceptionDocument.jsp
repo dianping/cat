@@ -3,7 +3,7 @@
 </br>
 <h4 class="text-info">对所有应用异常进行监控，通过对异常次数的判断选择进行警告的发送，并统计出异常警告报表。</h4>
 </br>
-<h4 class="text-success">1. 异常监控配置<a href="/cat/s/config?op=exception">设置</a></h4>
+<h4 class="text-success">1. 异常阈值<a href="/cat/s/config?op=exception">配置</a></h4>
 <table style="width:90%" class="table table-striped table-bordered table-condensed">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
@@ -35,8 +35,12 @@
 		<td>具体异常名称，<span class="text-error">必需，</span>当设置为“All”时，是过滤当前项目组所有异常；当设置为特定异常名称时，仅过滤当前项目组所有同名的异常</td>
 	</tr>
 </table>
+<br/>
+<h4 class="text-success">3. 异常告警<a href="/cat/s/config?op=projects">组邮件配置</a></h4>
+<p>针对每个项目组，可以进行组邮件和联系人的配置，CAT将根据此配置进行邮件的发送。</p>
+<p class="text-error">注意：不设置组邮件的话，您将错过第一时间知晓异常的机会！</p>
 </br>
-<h4 class="text-success">3. 异常告警</h4>
+<h4 class="text-success">4. 异常告警</h4>
 <h5>(1) 实时监测当前的应用异常情况，对于超过阈值设置的异常，Warning级别的仅发送邮件，Error级别的同时发送邮件和短信。</h5>
 <h5>(2) 监测异常并发送警报的周期为：<span class="text-error">一分钟</span></h5>
 <h5>(3) 异常判定规则</h5>
@@ -50,10 +54,7 @@ b) 当监测到特定异常总数，达到该项目组设定的该异常阈值�
    如果特定异常在一个周期内出现多次超过阈值的情况，不会立即告警，而是周期结束时根据异常总和大小来判定并告警，故一个周期内最多只发送该告警一次。
 </xmp>
 </br>
-<h4 class="text-success">4. 异常告警统计<a href="/cat/r/statistics?domain=Cat&op=alert">报表</a></h4>
+<h4 class="text-success">5. 异常告警统计<a href="/cat/r/statistics?domain=Cat&op=alert">报表</a></h4>
 <p>a) 将异常告警的情况进行统计，按Error警告的次数从大到小进行排序，呈现出错警告及排行的详细情况。</p>
 <p/>
 <p>b) 点击“<a href="/cat/r/statistics?domain=Cat&op=alert">Detail</a>”查看详细异常情况</p>
-<br/>
-<h4 class="text-success">5. 异常告警<a href="/cat/s/config?op=projects">邮件配置</a></h4>
-<p>针对每个项目组，可以进行组邮件和联系人的配置，CAT将根据此配置进行邮件的发送。</p>

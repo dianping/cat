@@ -14,7 +14,6 @@
 	navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
@@ -65,7 +64,7 @@
 			var id = $(item).text();
 			<c:forEach var="ip" items="${model.groupIps}">
 			group = '${ip}';
-			if (group == id) {
+			if(id.indexOf(group)!=-1){
 				$(item).addClass('current');
 			}
 			</c:forEach>

@@ -127,12 +127,12 @@ public class NetGraphBuilder implements Initializable {
 		String key = inter.getKey();
 
 		try {
-			MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-in");
-			MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-out");
-			MetricItem inDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-indiscards");
-			MetricItem outDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-outdiscards");
-			MetricItem inErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-inerrors");
-			MetricItem outErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-outerrors");
+			MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-flow-in");
+			MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-flow-out");
+			MetricItem inDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-indiscards");
+			MetricItem outDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-outdiscards");
+			MetricItem inErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-inerrors");
+			MetricItem outErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-outerrors");
 
 			inter.setIn(inItem.findOrCreateSegment(minute).getSum() / 60 * 8);
 			inter.setOut(outItem.findOrCreateSegment(minute).getSum() / 60 * 8);

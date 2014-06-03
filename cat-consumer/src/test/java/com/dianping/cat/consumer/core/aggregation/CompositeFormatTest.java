@@ -8,8 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.dianping.cat.config.AggregationMessageFormat;
 import com.dianping.cat.config.CompositeFormat;
+import com.dianping.cat.config.aggregation.AggregationMessageFormat;
 
 public class CompositeFormatTest {
 	@Rule

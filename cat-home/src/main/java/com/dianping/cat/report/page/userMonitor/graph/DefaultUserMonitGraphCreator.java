@@ -16,19 +16,19 @@ import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.chart.BaseGraphCreator;
+import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 
-public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements UserMonitorGraphCreator {
+public class DefaultUserMonitGraphCreator extends AbstractGraphCreator implements UserMonitorGraphCreator {
 
-	private static final String COUNT = "访问量(次数)";
+	private static final String COUNT = "每分钟访问量(次数)";
 
-	private static final String AVG = "响应时间(ms)";
+	private static final String AVG = "每分钟响应时间(ms)";
 
-	private static final String SUCESS_PERCENT = "调用成功率(%)";
+	private static final String SUCESS_PERCENT = "每分钟调用成功率(%)";
 
 	private List<PieChart> buildDetailPieChart(MetricReport report) {
 		Map<String, Statistic> statics = report.getStatistics();
@@ -96,9 +96,6 @@ public class DefaultUserMonitGraphCreator extends BaseGraphCreator implements Us
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
-			if (SUCESS_PERCENT.equals(key)) {
-				lineChart.setMinYlable(90);
-			}
 			lineChart.setId(key);
 			lineChart.setTitle(key);
 			lineChart.setStart(startDate);

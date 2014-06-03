@@ -256,7 +256,10 @@ public class TopMetric extends BaseVisitor {
 
 		@Override
 		public int compare(Item o1, Item o2) {
-			return (int) (o2.getValue() - o1.getValue());
+			int alert = o2.getAlert() - o1.getAlert();
+			int value = (int) (o2.getValue() - o1.getValue());
+			
+			return alert == 0 ? value : alert;
 		}
 	}
 

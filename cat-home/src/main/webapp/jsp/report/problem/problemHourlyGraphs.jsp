@@ -12,20 +12,33 @@
 <style type="text/css">
 .graph {
 	width: 600px;
-	height: 300px;
+	height: 400px;
 	margin: 4px auto;
 }
 </style>
 
 <table>
 	<tr>
-		<td><div id="errorTrend" class="graph"></div></td>
+		<td><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
+		<div id="errorTrend" class="graph"></div></td>
+		<td><h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
+		<div id="distributionChart" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">
 		<div id ="errorTrendMeta">${model.errorsTrend}</div>
-	</td></tr>
+	</td>
+	<td  style="display:none">
+		<div id ="distributionChartMeta">${model.distributionChart}</div>
+	</td>
+	</tr>
 </table>
 <script type="text/javascript">
 	var errorData = ${model.errorsTrend};
 	graphLineChart(document.getElementById('errorTrend'), errorData);
+	
+	var distributionChart = ${model.distributionChart};
+
+	if(distributionChart!=null&&distributionChart.length>0){
+		graphPieChart(document.getElementById('distributionChart'), distributionChart);
+	}
 </script>

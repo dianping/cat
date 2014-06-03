@@ -26,12 +26,12 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.config.UrlPatternConfigManager;
-import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -49,7 +49,6 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
-import com.dianping.cat.system.config.MetricAggregationConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.MetricRuleConfigManager;
 
@@ -83,9 +82,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-
-	@Inject
-	private MetricAggregationConfigManager m_metricAggregationConfigManager;
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
@@ -415,15 +411,6 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(true);
 			}
 			model.setContent(m_metricGroupConfigManager.getMetricGroupConfig().toString());
-			break;
-		case METRIC_AGGREGATION_CONFIG_UPDATE:
-			String metricAggregationConfig = payload.getContent();
-			if (!StringUtils.isEmpty(metricAggregationConfig)) {
-				model.setOpState(m_metricAggregationConfigManager.insert(metricAggregationConfig));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_metricAggregationConfigManager.getMetricAggregationConfig().toString());
 			break;
 		}
 		m_jspViewer.view(ctx, model);

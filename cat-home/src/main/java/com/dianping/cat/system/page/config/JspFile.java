@@ -49,9 +49,7 @@ public enum JspFile {
 
 	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
-	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
-
-	METRIC_AGGREGATION_CONFIG_UPDATE("/jsp/system/metricAggregation/metricAggregationConfig.jsp");
+	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp");
 
 	private String m_path;
 

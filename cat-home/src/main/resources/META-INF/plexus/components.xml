@@ -114,15 +114,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-			<implementation>com.dianping.cat.system.config.MetricAggregationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.MetricRuleConfigManager</implementation>
 			<requirements>
@@ -227,8 +218,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -250,39 +241,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.AggregationGraphCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
@@ -2150,9 +2108,6 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.JsonBuilder</role>
 				</requirement>
 			</requirements>
@@ -2224,27 +2179,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.ProblemReportAggregation</role>
-			<implementation>com.dianping.cat.consumer.problem.ProblemReportAggregation</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
-			<implementation>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.problem.aggregation.AggregationHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2913,7 +2847,7 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.GraphCreator</role>
+					<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2945,8 +2879,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.GraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.GraphCreator</implementation>
+			<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
+			<implementation>com.dianping.cat.report.chart.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -2992,24 +2926,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.jsError.Handler</role>
-			<implementation>com.dianping.cat.report.page.jsError.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.jsError.JspViewer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.jsError.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.jsError.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3264,12 +3180,6 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
 				</requirement>
 				<requirement>
@@ -3283,48 +3193,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-			<implementation>com.dianping.cat.system.config.MetricAggregationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.chart.AggregationGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.AggregationGraphCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3397,7 +3265,7 @@
 					<role>com.dianping.cat.report.page.userMonitor.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
@@ -3420,14 +3288,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.UrlPatternConfigManager</implementation>
+			<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.url.UrlPatternConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.UrlPatternHandler</role>
+					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3605,7 +3473,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -3623,10 +3491,7 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricAggregationConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
@@ -3657,6 +3522,18 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.config.aggregation.AggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
 				</requirement>
 			</requirements>
 		</component>

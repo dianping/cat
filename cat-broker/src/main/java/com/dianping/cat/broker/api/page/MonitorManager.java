@@ -18,7 +18,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
-import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -72,7 +72,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 		defaultMetric.setStatus("C");
 		defaultMetric.addData(String.valueOf(count));
 	}
-	
+
 	private void logMetricForAvg(long timestamp, double duration, String group, String key) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
@@ -126,36 +126,28 @@ public class MonitorManager implements Initializable, LogEnabled {
 					long timestamp = entity.getTimestamp();
 					double duration = entity.getDuration();
 					String group = url;
+					int count = entity.getCount();
 
 					if (duration > 0) {
 						logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 					}
-					if ("200".equals(httpStatus) && "200".equals(errorCode)) {
+					if ("200".equals(httpStatus)) {
 						String key = city + ":" + channel + ":" + Monitor.HIT;
-						
-						logMetricForCount(timestamp, group, key, 10);
+
+						logMetricForCount(timestamp, group, key, count);
 					} else {
 						String key = city + ":" + channel + ":" + Monitor.ERROR;
-						
-						logMetricForCount(timestamp, group, key, 1);
-					}
 
+						logMetricForCount(timestamp, group, key, count);
+					}
 					if (!StringUtils.isEmpty(httpStatus)) {
 						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
-						int count = 1;
 
-						if ("200".equals(httpStatus)) {
-							count = 10;
-						}
 						logMetricForCount(timestamp, group, key, count);
 					}
 					if (!StringUtils.isEmpty(errorCode)) {
 						String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
-						int count = 1;
 
-						if ("200".equals(errorCode)) {
-							count = 10;
-						}
 						logMetricForCount(timestamp, group, key, count);
 					}
 					t.setStatus(Transaction.SUCCESS);

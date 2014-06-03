@@ -82,13 +82,13 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case EXCEPTION_THRESHOLD_UPDATE:
 		case EXCEPTION_THRESHOLD_ADD:
 			return JspFile.EXCEPTION_THRESHOLD_CONFIG.getPath();
-			//Exception Exclude Config
+			// Exception Exclude Config
 		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
 		case EXCEPTION_EXCLUDE_DELETE:
 			return JspFile.EXCEPTION.getPath();
 		case EXCEPTION_EXCLUDE_UPDATE:
 		case EXCEPTION_EXCLUDE_ADD:
-			return JspFile.EXCEPTION_EXCLUDE_CONFIG.getPath(); 
+			return JspFile.EXCEPTION_EXCLUDE_CONFIG.getPath();
 			// Bug
 		case BUG_CONFIG_UPDATE:
 			return JspFile.BUG_CONFIG_UPDATE.getPath();
@@ -96,10 +96,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
 		case METRIC_GROUP_CONFIG_UPDATE:
 			return JspFile.METRIC_GROUP_CONFIG_UPDATE.getPath();
-		case METRIC_AGGREGATION_CONFIG_UPDATE:
-			return JspFile.METRIC_AGGREGATION_CONFIG_UPDATE.getPath();
+		default:
+			throw new RuntimeException("Unknown action: " + action);
 		}
-
-		throw new RuntimeException("Unknown action: " + action);
 	}
 }
