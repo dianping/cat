@@ -1,8 +1,8 @@
-package com.dianping.cat.consumer.problem.aggregation;
+package com.dianping.cat.config.aggregation;
 
 import java.util.List;
 
-import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 
 public interface AggregationHandler {
 

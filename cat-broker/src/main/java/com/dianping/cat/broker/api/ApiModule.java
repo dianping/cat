@@ -9,7 +9,9 @@ import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
 com.dianping.cat.broker.api.page.single.Handler.class,
 
-com.dianping.cat.broker.api.page.batch.Handler.class
+com.dianping.cat.broker.api.page.batch.Handler.class,
+
+com.dianping.cat.broker.api.page.js.Handler.class
 })
 public class ApiModule extends AbstractModule {
 

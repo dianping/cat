@@ -105,5 +105,26 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.js.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.js.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.config.aggregation.AggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>

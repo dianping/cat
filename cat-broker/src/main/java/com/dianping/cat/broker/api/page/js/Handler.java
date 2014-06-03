@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.api.page.js;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -17,14 +18,14 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
-	private JspViewer m_jspViewer;
+	private AggregationConfigManager m_manager;
 
 	private static final String ACCESS = "DirectAccess";
 
@@ -34,20 +35,20 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "jsError")
+	@InboundActionMeta(name = "js")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "jsError")
+	@OutboundActionMeta(name = "js")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
-		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		long timestamp = payload.getTimestamp();
 		String error = payload.getError();
 		String file = payload.getFile();
 		String host = parseHost();
+		HttpServletResponse response = ctx.getHttpServletResponse();
 
 		if (host.contains("dianping")) {
 			if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
@@ -62,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 			if (index > -1) {
 				file = file.substring(0, index);
 			}
-			Cat.logEvent("Error", file, "Error", error);
+			Cat.logEvent("Error", parseFile(file), "Error", error);
 			Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 			      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 
@@ -72,10 +73,11 @@ public class Handler implements PageHandler<Context> {
 			tree.setHostName(host);
 			tree.setIpAddress(host);
 		}
-		model.setStatus("SUCCESS");
-		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.JSERROR);
-		m_jspViewer.view(ctx, model);
+		response.getWriter().write("OK");
+	}
+
+	private String parseFile(String file) {
+		return m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, file);
 	}
 
 	private String parseHost() {
@@ -106,7 +108,7 @@ public class Handler implements PageHandler<Context> {
 		return ACCESS;
 	}
 
-	protected String parseValue(final String key, final String data) {
+	public String parseValue(final String key, final String data) {
 		int len = data == null ? 0 : data.length();
 		int keyLen = key.length();
 		StringBuilder name = new StringBuilder();

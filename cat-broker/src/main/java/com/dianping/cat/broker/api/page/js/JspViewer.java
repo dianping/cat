@@ -1,10 +1,9 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.api.page.js;
 
+import com.dianping.cat.broker.api.ApiPage;
 import org.unidal.web.mvc.view.BaseJspViewer;
 
-import com.dianping.cat.report.ReportPage;
-
-public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model> {
+public class JspViewer extends BaseJspViewer<ApiPage, Action, Context, Model> {
 	@Override
 	protected String getJspFilePath(Context ctx, Model model) {
 		Action action = model.getAction();

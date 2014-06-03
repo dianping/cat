@@ -1,7 +1,7 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.api.page.js;
 
 public enum JspFile {
-	VIEW("/jsp/report/jsError.jsp"),
+	VIEW("/jsp/api/js.jsp"),
 
 	;
 

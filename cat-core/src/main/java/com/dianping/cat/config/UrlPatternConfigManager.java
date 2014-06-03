@@ -55,7 +55,6 @@ public class UrlPatternConfigManager implements Initializable {
 			m_configId = config.getId();
 			m_modifyTime = config.getModifyDate().getTime();
 
-			Threads.forGroup("Cat").start(new ConfigReloadTask());
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
@@ -77,6 +76,7 @@ public class UrlPatternConfigManager implements Initializable {
 			m_UrlPattern = new UrlPattern();
 		}
 		m_handler.register(queryUrlPatternRules());
+		Threads.forGroup("Cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insertPatternItem(PatternItem rule) {

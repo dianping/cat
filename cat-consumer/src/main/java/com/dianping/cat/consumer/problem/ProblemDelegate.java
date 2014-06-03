@@ -21,9 +21,6 @@ import com.dianping.cat.task.TaskManager.TaskProlicy;
 public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 	@Inject
-	private ProblemReportAggregation m_problemReportAggregation;
-
-	@Inject
 	private TaskManager m_taskManager;
 
 	@Inject
@@ -48,12 +45,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			reports.put(all.getDomain(), all);
 		}
 
-		ProblemReport frontEnd = reports.get(Constants.FRONT_END);
-
-		if (frontEnd != null) {
-			reports.put(Constants.FRONT_END, rebuildFrontEndReport(frontEnd));
-		}
-
 		try {
 			ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter();
 
@@ -67,12 +58,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		}
 	}
 
-	public ProblemReport rebuildFrontEndReport(ProblemReport report) {
-		m_problemReportAggregation.refreshRule();
-		report.accept(m_problemReportAggregation);
-
-		return m_problemReportAggregation.getReport();
-	}
 
 	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
 		ProblemReport report = new ProblemReport(Constants.ALL);

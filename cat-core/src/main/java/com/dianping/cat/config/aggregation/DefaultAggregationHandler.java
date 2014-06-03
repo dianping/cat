@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.problem.aggregation;
+package com.dianping.cat.config.aggregation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import com.dianping.cat.config.AggregationMessageFormat;
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
-import com.dianping.cat.consumer.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 
 public class DefaultAggregationHandler implements AggregationHandler {
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.jsError;
+package com.dianping.cat.broker.js;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

@@ -64,6 +64,22 @@
 			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
+			<implementation>com.dianping.cat.config.aggregation.DefaultAggregationHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.config.aggregation.AggregationConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.UrlPatternHandler</role>
 			<implementation>com.dianping.cat.config.DefaultUrlPatternHandler</implementation>
 		</component>

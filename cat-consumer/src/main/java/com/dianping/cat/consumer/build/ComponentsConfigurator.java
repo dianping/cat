@@ -24,17 +24,12 @@ import com.dianping.cat.consumer.problem.LongExecutionProblemHandler;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemDelegate;
 import com.dianping.cat.consumer.problem.ProblemHandler;
-import com.dianping.cat.consumer.problem.ProblemReportAggregation;
-import com.dianping.cat.consumer.problem.aggregation.AggregationConfigManager;
-import com.dianping.cat.consumer.problem.aggregation.AggregationHandler;
-import com.dianping.cat.consumer.problem.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateDelegate;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
-import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.spi.core.MessageConsumer;
@@ -120,12 +115,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
 		      .req(ServerConfigManager.class));
 
-		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
-
-		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
-
-		all.add(C(ProblemReportAggregation.class).req(AggregationConfigManager.class));
-
 		all.add(C(MessageAnalyzer.class, ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID) //
 		      .req(ProblemHandler.class, //
@@ -135,7 +124,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, ProblemDelegate.class) //
-		      .req(ProblemReportAggregation.class, TaskManager.class, ServerConfigManager.class));
+		      .req( TaskManager.class, ServerConfigManager.class));
 
 		return all;
 	}
