@@ -10,11 +10,9 @@ import com.dianping.cat.broker.js.ParseTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-	// add test classes here
+AggregationConfigManagerTest.class,
 
-   AggregationConfigManagerTest.class,
-
-   ParseTest.class,
+ParseTest.class
 
 })
 public class AllTests {
