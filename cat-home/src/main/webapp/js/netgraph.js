@@ -111,14 +111,18 @@ var $_netgraph = {
 
             var from = cn['from'];
             var to = cn['to'];
-            if (!sw[from] || 
-                    (!sw[to] && !an[to])) {
+            if (!sw[from] || (!sw[to] && !an[to])) {
                 continue;
             }
 
             var id = from + '=>' + to;
             if(id in conn) {
                 continue;
+            }
+
+            if(sw[from]['group'] == undefined && cn['interfaces'][0] != undefined) {
+                sw[from]['group'] = cn['interfaces'][0]['group'];
+                sw[from]['domain'] = cn['interfaces'][0]['domain'];
             }
 
             var inData, outData, state, fill, indiscards, outdiscards, inerrors, outerrors;
@@ -204,10 +208,8 @@ var $_netgraph = {
             x = mx - this.setting.tooltip_width - this.setting.conn_tooltip_offset;
         y = my - this.setting.conn_tooltip_offset;
         var tip = [];
-        tip.push('[from '+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]));
-        tip.push('[from '+d['name'] + ']-[in-discard-err]: ' + this.decorateNumber(d['data'][2]) + ' , ' + this.decorateNumber(d['data'][4]));
-        tip.push('[to '+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][1]));
-        tip.push('[to '+d['name'] + ']-[out-discard-err]: ' + this.decorateNumber(d['data'][3]) + ' , ' + this.decorateNumber(d['data'][5]));
+        tip.push('[from '+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]) + ', ' + this.decorateNumber(d['data'][2]) + ', ' + this.decorateNumber(d['data'][4]));
+        tip.push('[to '+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][1]) + ', ' + this.decorateNumber(d['data'][3]) + ', ' + this.decorateNumber(d['data'][5]));
 		this.show_tooltip(wrapper,x,y,tip);
 
         var conn = document.getElementById(wrapper+'-'+id);
@@ -228,10 +230,8 @@ var $_netgraph = {
         var tip = [];
         for(var i in topo.data['switchs'][id].conn) {
             conn = topo.data['conn'][topo.data['switchs'][id].conn[i]];
-            tip.push('[from '+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]));
-            tip.push('[from '+conn['name'] + ']-[in-discard-err]: ' + this.decorateNumber(conn['data'][2]) + ' , ' + this.decorateNumber(conn['data'][4]));
-            tip.push('[to '+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][1]));
-            tip.push('[to '+conn['name'] + ']-[out-discard-err]: ' + this.decorateNumber(conn['data'][3]) + ' , ' + this.decorateNumber(conn['data'][5]));
+            tip.push('[from '+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]) + ', ' + this.decorateNumber(conn['data'][2]) + ', ' + this.decorateNumber(conn['data'][4]));
+            tip.push('[to '+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][1]) + ', ' + this.decorateNumber(conn['data'][3]) + ', ' + this.decorateNumber(conn['data'][5]));
         }
 		this.show_tooltip(wrapper,x,y,tip);
 
@@ -323,11 +323,22 @@ var $_netgraph = {
 		this.setAttrValues(g, {'visibility':'visible','transform':'translate('+x+','+y+')','opacity':1});
 	},
 
+    sw_detail: function(topo, id) {
+        var sw = topo.data['switchs'][id];
+        var group = sw['group'];
+        var domain = sw['domain'];
+        window.open('?op=metric&domain=Cat&product='+group, '_blank');
+    },
+
 	render: function(wrapper) {
         var topo = this.topos[wrapper];
 		for (var id in topo.data['conn']) {
 			var d = topo.data['conn'][id];
-			this.draw_conn(wrapper, d.x1, d.y1, d.x2, d.y2, id, d.fill);
+            var flow = d.data[0];
+            if (flow < d.data[1]) {
+                flow = d.data[1];
+            }
+			this.draw_conn(wrapper, d.x1, d.y1, d.x2, d.y2, id, d.fill, flow);
 		}
 
 		for (var id in topo.data['switchs']) {
@@ -372,6 +383,8 @@ var $_netgraph = {
             'stroke':this.setting.sw_border_color,
             'stroke-width':this.setting.sw_border_width,
         });
+        var sw_detail_ = this.sw_detail;
+        sw.addEventListener("click", function(){sw_detail_(topo, id)}, false);
 		g.appendChild(sw);
 
 		var text = document.createElementNS(this.NS,"text");
@@ -383,6 +396,7 @@ var $_netgraph = {
             'fill':this.setting.sw_text_color,
             'text-anchor':'middle',
         });
+        text.addEventListener("click", function(){sw_detail_(topo, id)}, false);
 		var textString = document.createTextNode(id);
 		text.appendChild(textString);
 		g.appendChild(text);
@@ -394,8 +408,19 @@ var $_netgraph = {
         });
 	},
 
-	draw_conn: function(wrapper, x1, y1, x2, y2, id, fill) {
+	draw_conn: function(wrapper, x1, y1, x2, y2, id, fill, flow) {
         var topo = this.topos[wrapper];
+
+        var width = flow / 1000000000 * 8;
+        if (width < 2 && width > 0) {
+            width = 3;
+        } 
+        else if (width <= 0) {
+            width = 1;
+        }
+        else if (width > 20) {
+            width = 20;
+        }
 
 		var line = document.createElementNS(this.NS, "line");
 		this.setAttrValues(line, {
@@ -405,7 +430,7 @@ var $_netgraph = {
 					'x2':x2,
 					'y2':y2,
 					'stroke':fill,
-					'stroke-width':this.setting.conn_width,
+					'stroke-width':width,
                     'onmouseover':'$_netgraph.conn_mousein("'+wrapper+'","'+id+'");',
                     'onmouseout':'$_netgraph.conn_mouseout("'+wrapper+'","'+id+'");',
                 });
@@ -426,7 +451,7 @@ var $_netgraph = {
 
     decorateNumber: function(num) {
         if (num < 1024) {
-            num = Math.round(num);
+            num = Math.round(num * 100) / 100;
         }
         else if (num < 1024 * 1024) {
             num = Math.round(num / 1024 * 100) / 100 + 'K';

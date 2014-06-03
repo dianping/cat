@@ -7,3 +7,5 @@
 .*
 /*.bat
 !.travis.yml
+
+test.java
