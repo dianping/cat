@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.exceptionAlert;
+package com.dianping.cat.report.task.alert.exception;
 
 import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;

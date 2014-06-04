@@ -24,7 +24,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.task.metric.AlertInfo;
+import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public abstract class AbstractGraphCreator implements LogEnabled {

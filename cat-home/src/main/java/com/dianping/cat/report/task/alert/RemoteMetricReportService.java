@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.metric;
+package com.dianping.cat.report.task.alert;
 
 import java.io.IOException;
 import java.io.InputStream;
