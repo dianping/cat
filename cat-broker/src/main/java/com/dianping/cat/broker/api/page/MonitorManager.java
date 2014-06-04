@@ -158,6 +158,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 					Cat.logEvent("ip", "notFound", Event.SUCCESS, ip);
 					m_logger.error(String.format("can't find ip for %s", ip));
 				}
+				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				Cat.logError(e);
 				t.setStatus(e);
