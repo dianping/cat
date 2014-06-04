@@ -16,10 +16,10 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<form name="metricRuleConfigUpdate" id="form" method="post"
-				action="${model.pageUri}?op=metricRuleConfigUpdate">
+			<form name="domainMetricRuleConfigUpdate" id="form" method="post"
+				action="${model.pageUri}?op=domainMetricRuleConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">网络监控规则相关信息</h4>
+				<h4 class="text-center text-error">业务监控规则相关信息</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
@@ -35,7 +35,7 @@
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#metricRuleConfigUpdate').addClass('active');
+			$('#domainMetricRuleConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

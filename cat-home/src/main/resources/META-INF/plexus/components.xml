@@ -3494,6 +3494,9 @@
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -3534,6 +3537,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainMetricRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
