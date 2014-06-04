@@ -58,6 +58,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	METRIC_CONFIG_DELETE("metricConfigDelete"),
 	
 	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
+	
+	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 
 	EXCEPTION("exception"),
 

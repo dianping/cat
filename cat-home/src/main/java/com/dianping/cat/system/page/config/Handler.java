@@ -46,6 +46,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.BugConfigManager;
+import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
@@ -87,6 +88,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricRuleConfigManager m_metricRuleConfigManager;
+
+	@Inject
+	private AlertConfigManager m_alertConfigManager;
 
 	@Inject
 	private DomainNavManager m_manager;
@@ -329,6 +333,16 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(true);
 			}
 			model.setContent(m_metricRuleConfigManager.getMonitorRules().toString());
+			break;
+		case ALERT_DEFAULT_RECEIVERS:
+			String alertDefaultReceivers = payload.getContent();
+			
+			if (!StringUtils.isEmpty(alertDefaultReceivers)) {
+				model.setOpState(m_alertConfigManager.insert(alertDefaultReceivers));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_alertConfigManager.getAlertConfig().toString());
 			break;
 		case EXCEPTION:
 			loadExceptionConfig(model);
