@@ -78,13 +78,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 		response.getWriter().write("OK");
 	}
-	
-	private  static boolean validate(String errorCode, String httpStatus) {
+
+	private boolean validate(String errorCode, String httpStatus) {
 		try {
 			if (StringUtils.isNotEmpty(errorCode) && !Constrants.NOT_SET.equals(errorCode)) {
 				Double.parseDouble(errorCode);
 			}
-			if (StringUtils.isNotEmpty(httpStatus)) {
+			if (StringUtils.isNotEmpty(httpStatus) && !Constrants.NOT_SET.equals(httpStatus)) {
 				Double.parseDouble(httpStatus);
 			}
 			return true;
