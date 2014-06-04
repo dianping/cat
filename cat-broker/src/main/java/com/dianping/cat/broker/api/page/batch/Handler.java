@@ -30,6 +30,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private Logger m_logger;
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "batch")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
@@ -51,9 +56,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				for (String line : lines) {
 					String[] tabs = line.split("\t");
-					//timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
-					if (tabs.length == 5) {
+					// timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
+					if (tabs.length == 5 && validate(tabs[3], tabs[4])) {
 						MonitorEntity entity = new MonitorEntity();
+						String httpStatus = tabs[3];
 						String errorCode = tabs[4];
 
 						if (StringUtils.isEmpty(errorCode)) {
@@ -62,7 +68,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						entity.setTimestamp(Long.parseLong(tabs[0]));
 						entity.setTargetUrl(tabs[1]);
 						entity.setDuration(Double.parseDouble(tabs[2]));
-						entity.setHttpStatus(tabs[3]);
+						entity.setHttpStatus(httpStatus);
 						entity.setErrorCode(errorCode);
 						entity.setIp(userIp);
 
@@ -81,8 +87,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		response.getWriter().write("OK");
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
+	private boolean validate(String errorCode, String httpStatus) {
+		try {
+			Double.parseDouble(errorCode);
+			Double.parseDouble(httpStatus);
+
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
