@@ -33,6 +33,8 @@ public enum JspFile {
 	
 	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metricRule/metricRuleConfig.jsp"),
 
+	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
+	
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 
 	EXCEPTION("/jsp/system/exception/exception.jsp"),

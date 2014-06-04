@@ -16,7 +16,7 @@ import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
 import com.dianping.cat.report.task.metric.MetricAlert;
-import com.dianping.cat.report.task.metric.SwitchAlert;
+import com.dianping.cat.report.task.metric.NetworkAlert;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -50,7 +50,7 @@ public class CatHomeModule extends AbstractModule {
 
 		if (serverConfigManager.isAlertMachine() && !serverConfigManager.isLocalMode()) {
 			MetricAlert metricAlert = ctx.lookup(MetricAlert.class);
-			SwitchAlert swtichAlert = ctx.lookup(SwitchAlert.class);
+			NetworkAlert swtichAlert = ctx.lookup(NetworkAlert.class);
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
 			ProjectUpdateTask productUpdateTask = ctx.lookup(ProjectUpdateTask.class);
 

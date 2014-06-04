@@ -123,6 +123,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.AlertConfigManager</role>
+			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
 			<requirements>
@@ -1646,12 +1655,40 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.MetricAlertConfig</role>
-			<implementation>com.dianping.cat.report.task.metric.MetricAlertConfig</implementation>
+			<role>com.dianping.cat.report.task.metric.BaseAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.metric.BaseAlertConfig</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.SwitchAlertConfig</role>
-			<implementation>com.dianping.cat.report.task.metric.SwitchAlertConfig</implementation>
+			<role>com.dianping.cat.report.task.metric.MetricAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.metric.MetricAlertConfig</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.metric.NetworkAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.metric.NetworkAlertConfig</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.exceptionAlert.ExceptionAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.exceptionAlert.ExceptionAlertConfig</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.metric.AlertInfo</role>
@@ -1694,8 +1731,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.SwitchAlert</role>
-			<implementation>com.dianping.cat.report.task.metric.SwitchAlert</implementation>
+			<role>com.dianping.cat.report.task.metric.NetworkAlert</role>
+			<implementation>com.dianping.cat.report.task.metric.NetworkAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -1710,7 +1747,7 @@
 					<role>com.dianping.cat.system.tool.MailSMS</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.metric.SwitchAlertConfig</role>
+					<role>com.dianping.cat.report.task.metric.NetworkAlertConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.AlertInfo</role>
@@ -1731,7 +1768,7 @@
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.metric.MetricAlertConfig</role>
+					<role>com.dianping.cat.report.task.exceptionAlert.ExceptionAlertConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.tool.MailSMS</role>
@@ -3460,6 +3497,9 @@
 					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 				<requirement>
@@ -3500,6 +3540,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.MetricRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.AlertConfigManager</role>
+			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
