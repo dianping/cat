@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.alertconfig.entity.Receiver;
@@ -18,11 +17,11 @@ public abstract class BaseAlertConfig {
 	@Inject
 	protected AlertConfigManager m_manager;
 
-	public abstract String getID();
+	public abstract String getId();
 
 	public List<String> buildSMSReceivers(ProductLine productLine) {
 		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getID());
+		Receiver receiver = m_manager.getReceiverById(getId());
 		
 		if(receiver!=null && !receiver.isEnable()){
 			return smsReceivers;
@@ -36,7 +35,7 @@ public abstract class BaseAlertConfig {
 
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getID());
+		Receiver receiver = m_manager.getReceiverById(getId());
 		
 		if(receiver!=null && !receiver.isEnable()){
 			return mailReceivers;
@@ -50,7 +49,7 @@ public abstract class BaseAlertConfig {
 
 	public List<String> buildMailReceivers(Project project) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getID());
+		Receiver receiver = m_manager.getReceiverById(getId());
 		
 		if(receiver!=null && !receiver.isEnable()){
 			return mailReceivers;
@@ -125,11 +124,4 @@ public abstract class BaseAlertConfig {
 		return emails;
 	}
 
-	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
-		sb.append("[业务指标 ").append(config.getTitle()).append("]");
-		return sb.toString();
-	}
 }

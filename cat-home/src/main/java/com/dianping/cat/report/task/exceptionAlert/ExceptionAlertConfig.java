@@ -4,10 +4,10 @@ import com.dianping.cat.report.task.metric.BaseAlertConfig;
 
 public class ExceptionAlertConfig extends BaseAlertConfig {
 
-	private String m_ID = "exception";
-	
-	public String getID() {
-		return m_ID;
+	private String m_id = "exception";
+
+	public String getId() {
+		return m_id;
 	}
 
 }

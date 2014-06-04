@@ -72,7 +72,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			StringBuilder builder = new StringBuilder(256);
 
 			for (int i = 0; i < length; i++) {
-				String tmpString = array.getString(i);
+				String tmpString = extractStringFromJsonElement(array.getString(i));
 
 				if (checkIfValid(tmpString) && builder.indexOf(tmpString) < 0) {
 					builder.append(tmpString);
@@ -92,9 +92,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		return null;
 	}
 
-	private boolean checkIfEqual(String source, String target) {
-		if (source == null || target == null) {
-			return false;
+	private boolean checkIfNullOrEqual(String source, String target) {
+		if (source == null) {
+			return true;
 		} else {
 			return source.equals(target);
 		}
@@ -112,9 +112,37 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
+	private String extractStringFromJsonElement(String str) {
+		if(str != null && str.startsWith("[\"")){
+			return str.replace("[\"", "").replace("\"]", "");
+		}else{
+			return str;
+		}
+   }
+
 	@Override
 	public String getName() {
 		return "product_update_task";
+	}
+
+	private String mergeAndBuildUniqueString(String baseStr, String appendStr) {
+		if (StringUtils.isEmpty(appendStr)) {
+			return baseStr;
+		}
+
+		StringBuilder builder = new StringBuilder(256);
+		builder.append(baseStr);
+
+		for (String str : appendStr.split(",")) {
+			String tmpStr = extractStringFromJsonElement(str);
+
+			if (builder.indexOf(tmpStr) < 0) {
+				builder.append(",");
+				builder.append(tmpStr);
+			}
+		}
+
+		return builder.toString();
 	}
 
 	public String parseDomain(String content) throws Exception {
@@ -242,19 +270,23 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 			for (Hostinfo info : infos) {
 				try {
-	            String hostname = info.getHostname();
-	            String ip = info.getIp();
-	            String cmdbHostname = queryHostnameFromCMDB(ip);
+					String hostname = info.getHostname();
+					String ip = info.getIp();
+					String cmdbHostname = queryHostnameFromCMDB(ip);
 
-	            if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
-	            	info.setHostname(cmdbHostname);
-	            	m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
-	            } else {
-	            	m_logger.error("can't find hostname for ip: " + ip);
-	            }
-            } catch (Exception e) {
-            	Cat.logError(e);
-            }
+					if (StringUtils.isEmpty(cmdbHostname)) {
+						continue;
+					}
+
+					if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
+						info.setHostname(cmdbHostname);
+						m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
+					} else {
+						m_logger.error("can't find hostname for ip: " + ip);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);
@@ -263,24 +295,24 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private boolean updateProject(Project proj) {
 		Map<String, String> infosMap = queryProjectInfoFromCMDB(proj.getCmdbDomain());
-		String owner = infosMap.get("owner");
-		String email = infosMap.get("email");
-		String phone = infosMap.get("phone");
+		String cmdbOwner = infosMap.get("owner");
+		String cmdbEmail = infosMap.get("email");
+		String cmdbPhone = infosMap.get("phone");
 		String dbOwner = proj.getOwner();
 		String dbEmail = proj.getEmail();
 		String dbPhone = proj.getPhone();
 		boolean isProjChanged = false;
 
-		if (!checkIfEqual(owner, dbOwner)) {
-			proj.setOwner(owner);
+		if (!checkIfNullOrEqual(cmdbOwner, dbOwner)) {
+			proj.setOwner(mergeAndBuildUniqueString(cmdbOwner, dbOwner));
 			isProjChanged = true;
 		}
-		if (!checkIfEqual(email, dbEmail)) {
-			proj.setEmail(email);
+		if (!checkIfNullOrEqual(cmdbEmail, dbEmail)) {
+			proj.setEmail(mergeAndBuildUniqueString(cmdbEmail, dbEmail));
 			isProjChanged = true;
 		}
-		if (!checkIfEqual(phone, dbPhone)) {
-			proj.setPhone(phone);
+		if (!checkIfNullOrEqual(cmdbPhone, dbPhone)) {
+			proj.setPhone(mergeAndBuildUniqueString(cmdbPhone, dbPhone));
 			isProjChanged = true;
 		}
 

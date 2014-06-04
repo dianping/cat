@@ -7,11 +7,20 @@ import java.util.Date;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 
 public class MetricAlertConfig extends BaseAlertConfig {
 
-	private String m_ID = "metric";
-	
+	private String m_id = "metric";
+
+	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
+		sb.append("[业务指标 ").append(config.getTitle()).append("]");
+		return sb.toString();
+	}
+
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
@@ -55,9 +64,9 @@ public class MetricAlertConfig extends BaseAlertConfig {
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
-	
-	public String getID() {
-		return m_ID;
+
+	public String getId() {
+		return m_id;
 	}
 
 }
