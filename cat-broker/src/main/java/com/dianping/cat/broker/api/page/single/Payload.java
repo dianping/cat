@@ -1,11 +1,12 @@
 package com.dianping.cat.broker.api.page.single;
 
-import com.dianping.cat.broker.api.ApiPage;
-import com.dianping.cat.broker.api.page.batch.Action;
-
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.broker.api.ApiPage;
+import com.dianping.cat.broker.api.page.Constrants;
+import com.dianping.cat.broker.api.page.batch.Action;
 
 public class Payload implements ActionPayload<ApiPage, Action> {
 	private ApiPage m_page;
@@ -29,7 +30,7 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	private String m_httpStatus = "200";
 
 	@FieldMeta("ec")
-	private String m_errorCode = "not-set";
+	private String m_errorCode = Constrants.NOT_SET;
 
 	@Override
 	public Action getAction() {

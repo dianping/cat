@@ -15,6 +15,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.broker.api.page.Constrants;
 import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
@@ -63,7 +64,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						String errorCode = tabs[4];
 
 						if (StringUtils.isEmpty(errorCode)) {
-							errorCode = "not-set";
+							errorCode = Constrants.NOT_SET;
 						}
 						entity.setTimestamp(Long.parseLong(tabs[0]));
 						entity.setTargetUrl(tabs[1]);
@@ -87,14 +88,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		response.getWriter().write("OK");
 	}
 
-	private boolean validate(String errorCode, String httpStatus) {
+	private  static boolean validate(String errorCode, String httpStatus) {
 		try {
-			Double.parseDouble(errorCode);
-			Double.parseDouble(httpStatus);
-
+			if (StringUtils.isNotEmpty(errorCode) && !Constrants.NOT_SET.equals(errorCode)) {
+				Double.parseDouble(errorCode);
+			}
+			if (StringUtils.isNotEmpty(httpStatus)) {
+				Double.parseDouble(httpStatus);
+			}
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
+
 }
