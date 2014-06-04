@@ -52,6 +52,8 @@ public class NavigationBar {
 		ReportPage.STATISTICS,
 		
 		ReportPage.LOGVIEW,
+		
+		ReportPage.SYSTEM,
 
 		};
 	}

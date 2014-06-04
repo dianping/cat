@@ -135,7 +135,8 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		if (Constants.BROKER_SERVICE.equals(domain)) {
 			userMonitor = true;
-		} else if (line.toLowerCase().startsWith(NETWORK_SWITCH_PREFIX) || line.toLowerCase().startsWith(NETWORK_F5_PREFIX)) {
+		} else if (line.toLowerCase().startsWith(NETWORK_SWITCH_PREFIX)
+		      || line.toLowerCase().startsWith(NETWORK_F5_PREFIX)) {
 			networkMonitor = true;
 		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
@@ -232,6 +233,10 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return productLines;
+	}
+
+	public String querySystemProductLineByDomain(String domain) {
+		return "System-" + domain;
 	}
 
 	public String queryProductLineByDomain(String domain) {

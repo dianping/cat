@@ -165,7 +165,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
 		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
-		System.out.println(metricId);
 		if (config != null) {
 			String des = queryMetricItemDes(type);
 			String title = config.getTitle() + des;

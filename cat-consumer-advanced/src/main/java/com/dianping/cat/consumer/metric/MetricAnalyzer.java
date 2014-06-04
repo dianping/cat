@@ -170,7 +170,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (!StringUtils.isEmpty(group)) {
 			m_productLineConfigManager.insertIfNotExsit(group, domain);
 
-			if (Constants.BROKER_SERVICE.equals(domain)) {
+			if (Constants.BROKER_SERVICE.equals(domain) || group.startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX)) {
 				report = findOrCreateReport(group);
 			}
 		}

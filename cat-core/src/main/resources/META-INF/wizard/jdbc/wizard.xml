@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wizard package="com.dianping.cat.core">
+<wizard package="com.dianping.cat">
    <jdbc package="com.dianping.cat.core" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://127.0.0.1:3306/cat</url>
          <user>root</user>
-         <password>password</password>
+         <password></password>
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
       <group name="report" package="com.dianping.cat.core.dal">

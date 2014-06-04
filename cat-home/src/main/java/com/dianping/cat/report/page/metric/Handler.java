@@ -60,7 +60,6 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case METRIC:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
-
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		case DASHBOARD:
