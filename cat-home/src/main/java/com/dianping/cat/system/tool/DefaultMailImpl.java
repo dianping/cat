@@ -6,7 +6,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.Security;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -67,8 +66,6 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	@Override
 	public void initialize() {
-		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-
 		m_name = m_manager.getEmailAccount();
 		m_password = m_manager.getEmailPassword();
 		m_authenticator = new DefaultAuthenticator(m_name, m_password);
