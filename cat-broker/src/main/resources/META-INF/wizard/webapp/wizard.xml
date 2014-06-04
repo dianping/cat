@@ -11,6 +11,9 @@
          <page name="js" title="Js" path="js" template="default">
             <description>Js</description>
          </page>
+         <page name="cdn" title="Cdn" path="cdn" template="default">
+            <description>Cdn</description>
+         </page>
       </module>
    </webapp>
 </wizard>

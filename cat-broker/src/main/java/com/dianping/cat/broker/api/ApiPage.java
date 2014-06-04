@@ -9,7 +9,9 @@ public enum ApiPage implements Page {
 
    BATCH("batch", "batch", "batch", "batch api", true),
 
-   JS("js", "js", "Js", "Js", true);
+   JS("js", "js", "Js", "Js", true),
+
+   CDN("cdn", "cdn", "Cdn", "Cdn", true);
 
    private String m_name;
 
