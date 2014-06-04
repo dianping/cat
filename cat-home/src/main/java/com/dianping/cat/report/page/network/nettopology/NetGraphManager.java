@@ -28,7 +28,7 @@ import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.metric.RemoteMetricReportService;
+import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.service.ModelRequest;
 
 public class NetGraphManager implements Initializable, LogEnabled {

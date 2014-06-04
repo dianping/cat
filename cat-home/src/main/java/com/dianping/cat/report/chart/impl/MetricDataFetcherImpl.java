@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.report.chart.MetricDataFetcher;
-import com.dianping.cat.report.task.metric.MetricType;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricDataFetcherImpl implements MetricDataFetcher {
 

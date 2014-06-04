@@ -1,9 +1,7 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,44 +29,13 @@ public class MetricRuleConfigManager implements Initializable {
 
 	private MonitorRules m_config;
 
-	private static final String CONFIG_NAME = "monitorRulesConfig";
-
-	public Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> getMetricIdRuleMap() {
-		Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.monitorrules.entity.Config>>();
-
-		for (Rule rule : m_config.getRules()) {
-			for (MetricItem metricItem : rule.getMetricItems()) {
-				String type = metricItem.getType();
-
-				if (type == null || !type.equals("id")) {
-					continue;
-				}
-
-				String key = metricItem.getText();
-				List<com.dianping.cat.home.monitorrules.entity.Config> configs = getOrBuildRuleList(map, key);
-				configs.addAll(rule.getConfigs());
-			}
-		}
-
-		return map;
-	}
+	private static final String CONFIG_NAME = "metricRulesConfig";
 
 	public MonitorRules getMonitorRules() {
 		return m_config;
 	}
 
-	private List<com.dianping.cat.home.monitorrules.entity.Config> getOrBuildRuleList(
-	      Map<String, List<com.dianping.cat.home.monitorrules.entity.Config>> map, String key) {
-		List<com.dianping.cat.home.monitorrules.entity.Config> configs = map.get(key);
-
-		if (configs == null) {
-			configs = new ArrayList<com.dianping.cat.home.monitorrules.entity.Config>();
-			map.put(key, configs);
-		}
-		return configs;
-	}
-
-	public List<com.dianping.cat.home.monitorrules.entity.Config> buildConfigs(String product, String domain, String key,
+	public List<com.dianping.cat.home.monitorrules.entity.Config> queryConfigs(String product, String domain, String key,
 	      String metricKey) {
 		List<com.dianping.cat.home.monitorrules.entity.Config> configs = new ArrayList<com.dianping.cat.home.monitorrules.entity.Config>();
 

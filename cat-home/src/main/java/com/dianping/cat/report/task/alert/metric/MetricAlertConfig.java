@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.metric;
+package com.dianping.cat.report.task.alert.metric;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -7,11 +7,13 @@ import java.util.Date;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.report.task.alert.BaseAlertConfig;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricAlertConfig extends BaseAlertConfig {
 
-	private String m_ID = "metric";
-	
+	private String m_id = "metric";
+
 	public Pair<Boolean, String> checkData(MetricItemConfig config, double[] value, double[] baseline, MetricType type) {
 		int length = value.length;
 		StringBuilder baselines = new StringBuilder();
@@ -55,9 +57,9 @@ public class MetricAlertConfig extends BaseAlertConfig {
 		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 		return new Pair<Boolean, String>(true, sb.toString());
 	}
-	
+
 	public String getID() {
-		return m_ID;
+		return m_id;
 	}
 
 }

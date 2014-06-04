@@ -23,6 +23,7 @@ import com.dianping.cat.report.baseline.BaselineConfigManager;
 import com.dianping.cat.report.baseline.BaselineCreator;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnabled {

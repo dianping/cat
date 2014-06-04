@@ -14,7 +14,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.task.metric.MetricType;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class NetworkGraphCreator extends MetricGraphCreator {
 
