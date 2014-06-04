@@ -36,11 +36,11 @@ public class PostTest {
 
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
-		conn.addRequestProperty("Referer", "http://www.dianping.com/photos/27002614/type");
+		conn.addRequestProperty("Referer", "http://www.dianping.com/");
 
 		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
-		String content = "v=1.0&error=Script error.&file=http://www.dianping.com/test11/test/001/002&line=0&timestamp="
+		String content = "v=1.0&error=Script error.&file=http://www.dianping.com/tt/ttt/tttt/001/002&line=0&timestamp="
 		      + System.currentTimeMillis();
 		writer.write(content);
 		writer.flush();

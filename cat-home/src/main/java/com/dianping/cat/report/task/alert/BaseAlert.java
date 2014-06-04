@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.metric;
+package com.dianping.cat.report.task.alert;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -99,7 +99,7 @@ public abstract class BaseAlert {
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-		
+
 		for (MetricItemConfig config : configs) {
 			try {
 				processMetricItemConfig(config, minute, productLine);

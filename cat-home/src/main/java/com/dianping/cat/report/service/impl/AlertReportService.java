@@ -28,7 +28,7 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
-import com.dianping.cat.report.task.exceptionAlert.AlertReportMerger;
+import com.dianping.cat.report.task.alert.exception.AlertReportMerger;
 
 public class AlertReportService extends AbstractReportService<AlertReport> {
 

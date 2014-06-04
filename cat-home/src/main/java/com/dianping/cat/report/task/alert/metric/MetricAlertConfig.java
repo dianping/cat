@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.metric;
+package com.dianping.cat.report.task.alert.metric;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -8,16 +8,18 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.report.task.alert.BaseAlertConfig;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricAlertConfig extends BaseAlertConfig {
 
 	private String m_id = "metric";
 
-	public String buildMailTitle(ProductLine productLine, MetricItemConfig config) {
+	public String buildMailTitle(ProductLine productLine, String configTitle) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
-		sb.append("[业务指标 ").append(config.getTitle()).append("]");
+		sb.append("[业务指标 ").append(configTitle).append("]");
 		return sb.toString();
 	}
 

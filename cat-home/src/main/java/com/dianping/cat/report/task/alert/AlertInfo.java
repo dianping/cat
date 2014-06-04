@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.metric;
+package com.dianping.cat.report.task.alert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,10 @@ public class AlertInfo implements Initializable {
 		m_alertInfos.put(config, value);
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+	}
+
 	public List<MetricItemConfig> queryLastestAlarmInfo(int minute) {
 		List<MetricItemConfig> config = new ArrayList<MetricItemConfig>();
 		long currentTimeMillis = System.currentTimeMillis();
@@ -37,9 +41,5 @@ public class AlertInfo implements Initializable {
 		}
 
 		return config;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
 	}
 }

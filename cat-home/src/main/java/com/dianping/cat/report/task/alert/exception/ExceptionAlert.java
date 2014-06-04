@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.exceptionAlert;
+package com.dianping.cat.report.task.alert.exception;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

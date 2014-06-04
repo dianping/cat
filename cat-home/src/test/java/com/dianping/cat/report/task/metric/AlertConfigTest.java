@@ -15,8 +15,14 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.home.monitorrules.entity.MonitorRules;
 import com.dianping.cat.home.monitorrules.entity.Rule;
 import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
+import com.dianping.cat.report.task.alert.DataChecker;
+import com.dianping.cat.report.task.alert.DefaultDataChecker;
+import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.task.alert.metric.MetricAlertConfig;
 
 public class AlertConfigTest {
+	
+	private DataChecker m_checker = new DefaultDataChecker();
 
 	private MonitorRules buildMonitorRuleFromFile(String path) {
 		try {
@@ -108,44 +114,44 @@ public class AlertConfigTest {
 
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
-		Pair<Boolean, String> result = DataChecker.checkData(value, baseline, MetricType.COUNT,
+		Pair<Boolean, String> result = m_checker.checkData(value, baseline,
 		      configMap.get("decreasePercentage"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline2 = { 200, 300 };
 		double[] value2 = { 100, 100 };
-		result = DataChecker.checkData(value2, baseline2, MetricType.COUNT, configMap.get("decreaseValue"));
+		result = m_checker.checkData(value2, baseline2,  configMap.get("decreaseValue"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline3 = { 200, 50 };
 		double[] value3 = { 400, 100 };
-		result = DataChecker.checkData(value3, baseline3, MetricType.COUNT, configMap.get("increasePercentage"));
+		result = m_checker.checkData(value3, baseline3,  configMap.get("increasePercentage"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline4 = { 200, 50 };
 		double[] value4 = { 400, 100 };
-		result = DataChecker.checkData(value4, baseline4, MetricType.COUNT, configMap.get("increaseValue"));
+		result = m_checker.checkData(value4, baseline4,  configMap.get("increaseValue"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline5 = { 200, 200 };
 		double[] value5 = { 500, 600 };
-		result = DataChecker.checkData(value5, baseline5, MetricType.COUNT, configMap.get("absoluteMaxValue"));
+		result = m_checker.checkData(value5, baseline5,  configMap.get("absoluteMaxValue"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline6 = { 200, 200 };
 		double[] value6 = { 50, 40 };
-		result = DataChecker.checkData(value6, baseline6, MetricType.COUNT, configMap.get("absoluteMinValue"));
+		result = m_checker.checkData(value6, baseline6,  configMap.get("absoluteMinValue"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
-		result = DataChecker
-		      .checkData(value7, baseline7, MetricType.COUNT, configMap.get("conditionCombination"));
+		result = m_checker
+		      .checkData(value7, baseline7,  configMap.get("conditionCombination"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = DataChecker.checkData(value8, baseline8, MetricType.COUNT,
+		result = m_checker.checkData(value8, baseline8, 
 		      configMap.get("subconditionCombination"));
 		Assert.assertEquals(result.getKey().booleanValue(), false);
 	}
@@ -158,7 +164,7 @@ public class AlertConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		Pair<Boolean, String> result = DataChecker.checkData(value, baseline, MetricType.COUNT,
+		Pair<Boolean, String> result = m_checker.checkData(value, baseline, 
 		      configMap.get("two-minute"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 	}

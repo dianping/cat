@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 
 public class ProblemReportURLFilter extends BaseVisitor {
 
-	private int m_maxUrlSize = 50;
+	private int m_maxUrlSize = 100;
 
 	public ProblemReportURLFilter() {
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.exceptionAlert;
+package com.dianping.cat.report.task.alert.exception;
 
 import com.dianping.cat.home.alertReport.entity.AlertReport;
 import com.dianping.cat.home.alertReport.entity.Domain;
