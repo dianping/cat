@@ -40,12 +40,15 @@
       <sample-model>src/main/resources/config/default-metric-aggregation-config.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.monitor-rules" name="monitor-rules">
-      <sample-model>/Users/leon/Documents/GitRepo/cat/rule.xml</sample-model>
+      <sample-model>src/test/resources/config/monitor-rule.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.netgraph" name="netgraph">
       <sample-model>src/main/resources/config/default-nettopology-config.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.alertReport" name="alert-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/exceptionAlert/alert-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.alertconfig" name="alertconfig">
+      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/alert-config.xml</sample-model>
    </model>
 </wizard>

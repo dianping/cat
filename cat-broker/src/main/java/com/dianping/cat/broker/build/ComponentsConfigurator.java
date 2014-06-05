@@ -10,7 +10,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.broker.api.page.IpService;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
-import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override

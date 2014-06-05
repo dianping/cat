@@ -24,9 +24,31 @@ public class PostTest {
 
 		String url2 = "1400656368280\thttp://m.api.dianping.com/searchshop.api\t300\t200\t300\n";
 
-		System.out.println("http://114.80.165.63/broker-service/api/batch?v=1&c="+URLEncoder.encode(url2, "utf-8"));
+		System.out.println("http://114.80.165.63/broker-service/api/batch?v=1&c=" + URLEncoder.encode(url2, "utf-8"));
 
 		System.out.println("http://114.80.165.63/broker-service/api/batch?" + URLEncoder.encode(url, "utf-8"));
+	}
+
+	@Test
+	public void testJs() throws Exception {
+		String url = "http://114.80.165.63/broker-service/api/js?";
+		URLConnection conn = new URL(url).openConnection();
+
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		conn.addRequestProperty("Referer", "http://www.dianping.com/");
+
+		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+		String content = "v=1.0&error=Script error.&file=http://www.dianping.com/tt/ttt/tttt/001/002&line=0&timestamp="
+		      + System.currentTimeMillis();
+		writer.write(content);
+		writer.flush();
+
+		InputStream in = conn.getInputStream();
+		String result = Files.forIO().readFrom(in, "utf-8");
+
+		System.out.println(result);
 	}
 
 	@Test
@@ -83,6 +105,7 @@ public class PostTest {
 
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
+
 		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
 		String content = "&c=1400037748182\\thttp\\t300\\t200\\t300\\n1400037748182\\thttp\\t300\\t200\\t300\\n1400037748182\\thttp\\t300\\t200\\t300\\n";

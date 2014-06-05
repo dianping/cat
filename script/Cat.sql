@@ -72,8 +72,13 @@ CREATE TABLE `graph` (
 CREATE TABLE `hostinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(50) NOT NULL COMMENT '部署机器IP',
+<<<<<<< HEAD
   `domain` varchar(50) NOT NULL COMMENT '部署机器对应的项目名',
   `hostname` varchar(50) DEFAULT NULL COMMENT '部署机器主机名',
+=======
+  `domain` varchar(256) NOT NULL COMMENT '部署机器对应的项目名',
+  `hostname` varchar(256) DEFAULT NULL COMMENT '机器域名',
+>>>>>>> de78a033907c4d608c802c354751ab5c87bb01ef
   `creation_date` datetime NOT NULL,
   `last_modified_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -234,6 +239,7 @@ CREATE TABLE `scheduledReportSubscription` (
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+<<<<<<< HEAD
   `domain` varchar(50) NOT NULL COMMENT '项目名称',
   `cmdb_domain` varchar(50) DEFAULT NULL COMMENT 'CMDB项目名称',
   `project_line` varchar(50)  DEFAULT NULL COMMENT '关联产品线名称',
@@ -241,6 +247,15 @@ CREATE TABLE `project` (
   `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
   `phone` varchar(20)  DEFAULT NULL COMMENT '项目组电话号码',
   `email` varchar(200)  DEFAULT NULL COMMENT '项目组邮件',
+=======
+  `domain` varchar(256) NOT NULL COMMENT '项目名称',
+  `cmdb_domain` varchar(256) DEFAULT  NULL COMMENT 'cmdb项目名称',
+  `project_line` varchar(50)  DEFAULT NULL COMMENT '关联产品线名称',
+  `department` varchar(50) DEFAULT NULL COMMENT '关联项目组名称',  
+  `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
+  `email` varchar(256)  DEFAULT NULL COMMENT '项目组邮件',
+  `phone` varchar(256)  DEFAULT NULL COMMENT '联系电话',
+>>>>>>> de78a033907c4d608c802c354751ab5c87bb01ef
   `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),

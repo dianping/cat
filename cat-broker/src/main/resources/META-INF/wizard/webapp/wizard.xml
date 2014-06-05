@@ -8,6 +8,12 @@
          <page name="batch" title="batch" default="true" path="batch" template="default">
             <description>batch api</description>
          </page>
+         <page name="js" title="Js" path="js" template="default">
+            <description>Js</description>
+         </page>
+         <page name="cdn" title="Cdn" path="cdn" template="default">
+            <description>Cdn</description>
+         </page>
       </module>
    </webapp>
 </wizard>

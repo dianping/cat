@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+	<rule id="F501InError">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s).*(?=inerrors$)
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="3">
+				<subcondition type="MaxVal">500</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="ErrorAndDiscard">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s).*(?=outerrors$)
+		</metric-item>
+		<metric-item type="regex">
+			f5-2400-2-dianping-com(s).+(s).*(?=errors$)
+		</metric-item>
+		<metric-item type="regex">
+			f5.*(s).+(s).*(?=discards$)
+		</metric-item>
+		<metric-item type="regex">
+			switch.*(s).+(s).*(?=errors$)
+		</metric-item>
+		<metric-item type="regex">
+			switch.*(s).+(s).*(?=discards$)
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="3">
+				<subcondition type="MaxVal">30</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CTC-QW_E8030-IN">
+		<metric-item type="regex">
+			switch-SH-HM-C3750G(s).+(s)GigabitEthernet[12]/0/[12]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">1179648000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CTC-QW_E8030-OUT">
+		<metric-item type="regex">
+			switch-SH-HM-C3750G(s).+(s)GigabitEthernet[12]/0/[12]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">2359296000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CTC-F5v2400-1-IN">
+		<metric-item type="regex">
+			switch-SH-HM-C3750G(s).+(s)GigabitEthernet1/0/[59]-in
+			switch-SH-HM-C3750G(s).+(s)GigabitEthernet2/0/[78]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">2359296000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CTC-F5v2400-1-OUT">
+		<metric-item type="regex">
+			switch-SH-HM-C3750G(s).+(s)GigabitEthernet1/0/[59]-out
+			switch-SH-HM-C3750G(s).+(s)GigabitEthernet2/0/[78]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">1179648000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CNC-CNC-IN">
+		<metric-item type="regex">
+			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/[12]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">786432000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CNC-CNC-OUT">
+		<metric-item type="regex">
+			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/[12]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">1966080000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CNC-F5v2400-1-IN">
+		<metric-item type="regex">
+			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/7-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">1966080000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="C3750CNC-F5v2400-1-OUT">
+		<metric-item type="regex">
+			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/7-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">786432000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="F5v2400-1-C3750CNC-IN">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s)1/1-7-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">786432000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="F5v2400-1-C3750CNC-OUT">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s)1/1-7-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">1966080000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="F5v2400-1-C3750CTC-IN">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s)1/1-[1268]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">3179648000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="F5v2400-1-C3750CTC-OUT">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s)1/1-[1268]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">2359296000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="F5v2400-1-N7K-1-IN">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s)1/1-[34]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">5505024000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="F5v2400-1-N7K-1-OUT">
+		<metric-item type="regex">
+			f5-2400-1-dianping-com(s).+(s)1/1-[34]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">3145728000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-F5v2400-1-IN">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/25-in
+			switch-SH-N7010-A(s).+(s)Ethernet3/26-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">3145728000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-F5v2400-1-OUT">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/25-out
+			switch-SH-N7010-A(s).+(s)Ethernet3/26-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">5505024000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-N7K-2-IN">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-in
+			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">6291456000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-N7K-2-OUT">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-out
+			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">393216000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-N5K-1-IN">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/32-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-N5K-1-OUT">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/32-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-HM-IN">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/16-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">13369344000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-1-HM-OUT">
+		<metric-item type="regex">
+			switch-SH-N7010-A(s).+(s)Ethernet3/16-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">13369344000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-2-N7K-1-IN">
+		<metric-item type="regex">
+			switch-SH-N7010-B(s).+(s)Ethernet3/[1234]-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">393216000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-2-N7K-1-OUT">
+		<metric-item type="regex">
+			switch-SH-N7010-B(s).+(s)Ethernet3/[1234]-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">6291456000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-2-N5K-2-IN">
+		<metric-item type="regex">
+			switch-SH-N7010-B(s).+(s)Ethernet3/32-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N7K-2-N5K-2-OUT">
+		<metric-item type="regex">
+			switch-SH-N7010-B(s).+(s)Ethernet3/32-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-1-N7K-1-IN">
+		<metric-item type="regex">
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/43-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-1-N7K-1-OUT">
+		<metric-item type="regex">
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/43-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-1-N5K-2-IN">
+		<metric-item type="regex">
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/45-in
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/46-in
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/47-in
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/48-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">393216000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-1-N5K-2-OUT">
+		<metric-item type="regex">
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/45-out
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/46-out
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/47-out
+			switch-SH-N5596UP-1(s).+(s)Ethernet1/48-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">393216000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-2-N5K-1-IN">
+		<metric-item type="regex">
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/45-in
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/46-in
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/47-in
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/48-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">393216000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-2-N5K-1-OUT">
+		<metric-item type="regex">
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/45-out
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/46-out
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/47-out
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/48-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">393216000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-2-N7K-2-IN">
+		<metric-item type="regex">
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/43-in
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+	<rule id="N5K-2-N7K-2-OUT">
+		<metric-item type="regex">
+			switch-SH-N5596UP-2(s).+(s)Ethernet1/43-out
+		</metric-item>
+		<config starttime="00:00" endtime="24:00">
+			<condition minute="1">
+				<subcondition type="MaxVal">27525120000</subcondition>
+			</condition>
+		</config>
+	</rule>
+</monitor-rules>

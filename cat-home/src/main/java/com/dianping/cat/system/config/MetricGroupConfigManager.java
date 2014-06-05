@@ -13,10 +13,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.metricGroup.entity.MetricGroup;
-import com.dianping.cat.home.metricGroup.entity.MetricGroupConfig;
-import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
-import com.dianping.cat.home.metricGroup.transform.DefaultSaxParser;
+import com.dianping.cat.home.metric.group.entity.MetricGroup;
+import com.dianping.cat.home.metric.group.entity.MetricGroupConfig;
+import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
+import com.dianping.cat.home.metric.group.transform.DefaultSaxParser;
 
 public class MetricGroupConfigManager implements Initializable {
 

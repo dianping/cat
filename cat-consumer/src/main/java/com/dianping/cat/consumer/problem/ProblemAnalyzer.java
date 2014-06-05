@@ -51,9 +51,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 
-			if (Constants.FRONT_END.equals(domain)) {
-				report = m_problemDelegate.rebuildFrontEndReport(report);
-			}
 			return report;
 		} else {
 			Map<String, ProblemReport> reports = m_reportManager.getHourlyReports(getStartTime());

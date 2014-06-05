@@ -12,6 +12,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
+import com.dianping.cat.consumer.problem.ProblemReportURLFilter;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -47,6 +48,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		try {
 			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period,
 			      TaskHelper.tomorrowZero(period));
+			
 			buildProblemDailyGraph(problemReport);
 
 			DailyReport report = new DailyReport();
@@ -95,6 +97,9 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
+	
+		new ProblemReportURLFilter().visitProblemReport(problemReport);
+		
 		MonthlyReport report = new MonthlyReport();
 
 		report.setContent("");

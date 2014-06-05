@@ -14,13 +14,12 @@ import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
-import com.dianping.cat.consumer.problem.AggregationConfigManagerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
-import com.dianping.cat.consumer.problem.ProblemReportAggregationTest;
 import com.dianping.cat.consumer.problem.ProblemReportAllBuilderTest;
 import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
+import com.dianping.cat.consumer.problem.ProblemURLFilterTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
 import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
@@ -73,7 +72,6 @@ TopAnalyzerTest.class,
 TopReportMergerTest.class,
 
 /* problem */
-ProblemReportAggregationTest.class,
 
 ProblemHandlerTest.class,
 
@@ -83,8 +81,6 @@ ProblemAnalyzerTest.class,
 
 ProblemReportMergerTest.class,
 
-AggregationConfigManagerTest.class,
-
 ProblemReportAllBuilderTest.class,
 
 CompositeFormatTest.class,
@@ -93,7 +89,9 @@ DefaultFormatTest.class,
 
 DumpAnalyzerTest.class,
 
-TransactionReportTypeAggergatorTest.class })
+TransactionReportTypeAggergatorTest.class,
+
+ProblemURLFilterTest.class })
 public class AllTests {
 
 }

@@ -48,21 +48,26 @@ import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.task.exceptionAlert.ExceptionAlert;
-import com.dianping.cat.report.task.metric.AlertInfo;
-import com.dianping.cat.report.task.metric.MetricAlert;
-import com.dianping.cat.report.task.metric.MetricAlertConfig;
-import com.dianping.cat.report.task.metric.RemoteMetricReportService;
-import com.dianping.cat.report.task.metric.SwitchAlert;
-import com.dianping.cat.report.task.metric.SwitchAlertConfig;
+import com.dianping.cat.report.task.alert.AlertInfo;
+import com.dianping.cat.report.task.alert.DataChecker;
+import com.dianping.cat.report.task.alert.DefaultDataChecker;
+import com.dianping.cat.report.task.alert.RemoteMetricReportService;
+import com.dianping.cat.report.task.alert.business.BusinessAlert;
+import com.dianping.cat.report.task.alert.business.BusinessAlertConfig;
+import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
+import com.dianping.cat.report.task.alert.network.NetworkAlert;
+import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
+import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.MetricRuleConfigManager;
+import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -103,7 +108,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(MetricRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
+
+		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
+
+		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -124,13 +133,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
 
-		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
-		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class, AlertInfo.class));
-		
-		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class, MetricDataFetcher.class)
-		      .req(BaselineService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		            MetricGroupConfigManager.class, AlertInfo.class));
+		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+
+		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 
 		all.add(C(UserMonitorGraphCreator.class, DefaultUserMonitGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
@@ -149,23 +158,27 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
 
-		all.add(C(MetricAlertConfig.class));
+		all.add(C(BusinessAlertConfig.class).req(AlertConfigManager.class));
 
-		all.add(C(SwitchAlertConfig.class));
+		all.add(C(NetworkAlertConfig.class).req(AlertConfigManager.class));
+
+		all.add(C(ExceptionAlertConfig.class).req(AlertConfigManager.class));
 
 		all.add(C(AlertInfo.class));
 
 		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 
-		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, MetricAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class));
+		all.add(C(DataChecker.class, DefaultDataChecker.class));
 
-		all.add(C(SwitchAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, SwitchAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class, MetricRuleConfigManager.class));
+		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class)//
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class));
 
-		all.add(C(ExceptionAlert.class).req(ProjectDao.class, MetricAlertConfig.class, MailSMS.class,
+		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
+
+		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
 		      ExceptionConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		// database
@@ -176,7 +189,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// update project database
 		all.add(C(ProjectUpdateTask.class)//
-				.req(ProjectDao.class, HostinfoDao.class));
+		      .req(ProjectDao.class, HostinfoDao.class));
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());

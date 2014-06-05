@@ -17,32 +17,28 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	@FieldMeta("v")
 	private String m_version;
 	
-	public String getVersion() {
-   	return m_version;
-   }
-
-	public void setVersion(String version) {
-   	m_version = version;
-   }
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
 
-	@Override
-	public ApiPage getPage() {
-		return m_page;
-	}
-	
 	public String getContent() {
    	return m_content;
    }
 
+	@Override
+	public ApiPage getPage() {
+		return m_page;
+	}
+
+	public String getVersion() {
+   	return m_version;
+   }
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+	
 	public void setContent(String content) {
    	m_content = content;
    }
@@ -51,6 +47,10 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	public void setPage(String page) {
 		m_page = ApiPage.getByName(page, ApiPage.BATCH);
 	}
+
+	public void setVersion(String version) {
+   	m_version = version;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

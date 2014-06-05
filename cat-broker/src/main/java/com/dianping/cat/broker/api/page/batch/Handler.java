@@ -9,11 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.broker.api.page.Constrants;
 import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
@@ -27,6 +29,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private RequestUtils m_util;
 
 	private Logger m_logger;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -50,17 +57,28 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				for (String line : lines) {
 					String[] tabs = line.split("\t");
-
-					if (tabs.length == 5) {
+					// timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
+					if (tabs.length == 5 && validate(tabs[3], tabs[4])) {
 						MonitorEntity entity = new MonitorEntity();
+						String httpStatus = tabs[3];
+						String errorCode = tabs[4];
 
+						if (StringUtils.isEmpty(errorCode)) {
+							errorCode = Constrants.NOT_SET;
+						}
+						if (StringUtils.isEmpty(httpStatus)) {
+							httpStatus = Constrants.NOT_SET;
+						}
 						entity.setTimestamp(Long.parseLong(tabs[0]));
 						entity.setTargetUrl(tabs[1]);
 						entity.setDuration(Double.parseDouble(tabs[2]));
-						entity.setErrorCode(tabs[3]);
-						entity.setHttpStatus(tabs[4]);
+						entity.setHttpStatus(httpStatus);
+						entity.setErrorCode(errorCode);
 						entity.setIp(userIp);
 
+						if (payload.getVersion().equals("1")) {
+							entity.setCount(10);
+						}
 						m_manager.offer(entity);
 					}
 				}
@@ -73,8 +91,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		response.getWriter().write("OK");
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
+	private boolean validate(String errorCode, String httpStatus) {
+		try {
+			if (StringUtils.isNotEmpty(errorCode) && !Constrants.NOT_SET.equals(errorCode)) {
+				Double.parseDouble(errorCode);
+			}
+			if (StringUtils.isNotEmpty(httpStatus) && !Constrants.NOT_SET.equals(httpStatus)) {
+				Double.parseDouble(httpStatus);
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
+
 }

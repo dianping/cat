@@ -7,7 +7,11 @@ public enum ApiPage implements Page {
 
    SINGLE("single", "single", "single", "single api", true),
 
-   BATCH("batch", "batch", "batch", "batch api", true);
+   BATCH("batch", "batch", "batch", "batch api", true),
+
+   JS("js", "js", "Js", "Js", true),
+
+   CDN("cdn", "cdn", "Cdn", "Cdn", true);
 
    private String m_name;
 

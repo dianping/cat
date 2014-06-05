@@ -18,7 +18,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.broker.api.page.IpService.IpInfo;
-import com.dianping.cat.config.UrlPatternConfigManager;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -42,15 +43,43 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
+	private void buildMessage(MonitorEntity entity, String url, IpInfo ipInfo) {
+		String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
+		String channel = ipInfo.getChannel();
+		String httpStatus = entity.getHttpStatus();
+		String errorCode = entity.getErrorCode();
+		long timestamp = entity.getTimestamp();
+		double duration = entity.getDuration();
+		String group = url;
+		int count = entity.getCount();
+
+		if (duration > 0) {
+			logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
+		}
+		if ("200".equals(httpStatus)) {
+			String key = city + ":" + channel + ":" + Monitor.HIT;
+
+			logMetricForCount(timestamp, group, key, count);
+		} else {
+			String key = city + ":" + channel + ":" + Monitor.ERROR;
+
+			logMetricForCount(timestamp, group, key, count);
+		}
+		if (!StringUtils.isEmpty(httpStatus)) {
+			String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
+
+			logMetricForCount(timestamp, group, key, count);
+		}
+		if (!StringUtils.isEmpty(errorCode)) {
+			String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
+
+			logMetricForCount(timestamp, group, key, count);
+		}
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	private String getFormatUrl(String url) {
-		String result = m_patternManger.handle(url);
-
-		return result;
 	}
 
 	@Override
@@ -63,6 +92,15 @@ public class MonitorManager implements Initializable, LogEnabled {
 		}
 	}
 
+	private void logMetricForAvg(long timestamp, double duration, String group, String key) {
+		Metric metric = Cat.getProducer().newMetric(group, key);
+		DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+		defaultMetric.setTimestamp(timestamp);
+		defaultMetric.setStatus("S,C");
+		defaultMetric.addData(String.format("%s,%.2f", 1, duration));
+	}
+
 	private void logMetricForCount(long timestamp, String group, String key, int count) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
@@ -71,15 +109,6 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 		defaultMetric.setStatus("C");
 		defaultMetric.addData(String.valueOf(count));
-	}
-	
-	private void logMetricForAvg(long timestamp, double duration, String group, String key) {
-		Metric metric = Cat.getProducer().newMetric(group, key);
-		DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-		defaultMetric.setTimestamp(timestamp);
-		defaultMetric.setStatus("S,C");
-		defaultMetric.addData(String.format("%s,%.2f", 1, duration));
 	}
 
 	public boolean offer(MonitorEntity entity) {
@@ -107,66 +136,34 @@ public class MonitorManager implements Initializable, LogEnabled {
 		return false;
 	}
 
+	private String parseFormatUrl(String url) {
+		String result = m_patternManger.handle(url);
+
+		return result;
+	}
+
 	private void processOneEntity(MonitorEntity entity) {
 		String targetUrl = entity.getTargetUrl();
-		String url = getFormatUrl(targetUrl);
+		String url = parseFormatUrl(targetUrl);
 
 		if (url != null) {
+			Transaction t = Cat.newTransaction("Monitor", url);
 			String ip = entity.getIp();
 			IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
 
-			if (ipInfo != null) {
-				Transaction t = Cat.newTransaction("Monitor", url);
-
-				try {
-					String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
-					String channel = ipInfo.getChannel();
-					String httpStatus = entity.getHttpStatus();
-					String errorCode = entity.getErrorCode();
-					long timestamp = entity.getTimestamp();
-					double duration = entity.getDuration();
-					String group = url;
-
-					if (duration > 0) {
-						logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
-					}
-					if ("200".equals(httpStatus) && "200".equals(errorCode)) {
-						String key = city + ":" + channel + ":" + Monitor.HIT;
-						
-						logMetricForCount(timestamp, group, key, 10);
-					} else {
-						String key = city + ":" + channel + ":" + Monitor.ERROR;
-						
-						logMetricForCount(timestamp, group, key, 1);
-					}
-
-					if (!StringUtils.isEmpty(httpStatus)) {
-						String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
-						int count = 1;
-
-						if ("200".equals(httpStatus)) {
-							count = 10;
-						}
-						logMetricForCount(timestamp, group, key, count);
-					}
-					if (!StringUtils.isEmpty(errorCode)) {
-						String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
-						int count = 1;
-
-						if ("200".equals(errorCode)) {
-							count = 10;
-						}
-						logMetricForCount(timestamp, group, key, count);
-					}
-					t.setStatus(Transaction.SUCCESS);
-				} catch (Exception e) {
-					Cat.logError(e);
-					t.setStatus(e);
-				} finally {
-					t.complete();
+			try {
+				if (ipInfo != null) {
+					buildMessage(entity, url, ipInfo);
+				} else {
+					Cat.logEvent("ip", "notFound", Event.SUCCESS, ip);
+					m_logger.error(String.format("can't find ip for %s", ip));
 				}
-			} else {
-				m_logger.error(String.format("can't find ip for %s", ip));
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				Cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
 		}
 	}

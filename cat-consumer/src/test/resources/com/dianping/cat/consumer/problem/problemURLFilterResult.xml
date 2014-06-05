@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<problem-report domain="Cat" startTime="2012-06-26 16:00:00" endTime="2012-06-26 16:59:59">
+   <domain>Cat</domain>
+   <ip>192.168.165.1</ip>
+   <machine ip="192.168.165.1">
+      <entry type="long-url" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+   </machine>
+   <machine ip="192.168.165.2">
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+   </machine>
+</problem-report>

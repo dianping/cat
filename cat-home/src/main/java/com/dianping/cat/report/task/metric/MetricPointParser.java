@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricPointParser {
 
