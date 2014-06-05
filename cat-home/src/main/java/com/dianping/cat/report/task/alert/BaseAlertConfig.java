@@ -35,7 +35,7 @@ public abstract class BaseAlertConfig {
 
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getID());
+		Receiver receiver = m_manager.getReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;
@@ -45,14 +45,6 @@ public abstract class BaseAlertConfig {
 
 			return mailReceivers;
 		}
-	}
-
-	public String buildMailTitle(ProductLine productLine, String title) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[业务告警] [产品线 ").append(productLine.getTitle()).append("]");
-		sb.append("[业务指标 ").append(title).append("]");
-		return sb.toString();
 	}
 
 	private List<String> buildProductlineMailReceivers(ProductLine productLine) {
@@ -65,7 +57,7 @@ public abstract class BaseAlertConfig {
 
 	public List<String> buildSMSReceivers(ProductLine productLine) {
 		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getID());
+		Receiver receiver = m_manager.getReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return smsReceivers;
@@ -77,7 +69,7 @@ public abstract class BaseAlertConfig {
 		}
 	}
 
-	public abstract String getID();
+	public abstract String getId();
 
 	protected List<String> split(String str) {
 		List<String> result = new ArrayList<String>();

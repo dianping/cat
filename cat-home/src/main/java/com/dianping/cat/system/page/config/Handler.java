@@ -45,12 +45,13 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.AlertConfigManager;
+import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
+import com.dianping.cat.system.config.DomainMetricRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.MetricRuleConfigManager;
+import com.dianping.cat.system.config.NetworkMetricRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -87,7 +88,10 @@ public class Handler implements PageHandler<Context> {
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
-	private MetricRuleConfigManager m_metricRuleConfigManager;
+	private DomainMetricRuleConfigManager m_domainMetricRuleConfigManager;
+
+	@Inject
+	private NetworkMetricRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
 	private AlertConfigManager m_alertConfigManager;
@@ -324,6 +328,15 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(m_metricConfigManager.deleteDomainConfig(m_metricConfigManager.buildMetricKey(
 			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
+			break;
+		case DOMAIN_METRIC_RULE_CONFIG_UPDATE:
+			String domainMetricRuleConfig = payload.getContent();
+			if (!StringUtils.isEmpty(domainMetricRuleConfig)) {
+				model.setOpState(m_domainMetricRuleConfigManager.insert(domainMetricRuleConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_domainMetricRuleConfigManager.getMonitorRules().toString());
 			break;
 		case METRIC_RULE_CONFIG_UPDATE:
 			String metricRuleConfig = payload.getContent();

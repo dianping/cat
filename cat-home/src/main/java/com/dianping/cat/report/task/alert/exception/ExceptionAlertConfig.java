@@ -13,7 +13,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 
 	public List<String> buildMailReceivers(Project project) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getID());
+		Receiver receiver = m_manager.getReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;
@@ -29,7 +29,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 		return split(project.getEmail());
 	}
 
-	public String getID() {
+	public String getId() {
 		return m_id;
 	}
 
