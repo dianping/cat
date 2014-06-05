@@ -39,11 +39,11 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private static final long DURATION = 60 * 60 * 1000L;
 
-	private static final String CMDB_DOMAIN_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
+	private static final String CMDB_DOMAIN_URL = "http://api.cmdb.dp/api/v0.1/projects/s?private_ip=%s";
 
-	private static final String CMDB_INFO_URL = "http://cmdb.dp/cmdb/device/s?q=app:%s&fl=rd_duty,project_email,project_owner_mobile&tidy=true";
+	private static final String CMDB_INFO_URL = "http://api.cmdb.dp/api/v0.1/projects/%s";
 
-	private static final String CMDB_HOSTNAME_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=hostname&tidy=true";
+	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server),private_ip:%s&fl=hostname";
 
 	private void buildDomainToIpMap() {
 		try {
@@ -65,35 +65,8 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		}
 	}
 
-	private String buildStringFromJsonArray(JsonArray array) {
-		int length = array.length();
-
-		if (length > 0) {
-			StringBuilder builder = new StringBuilder(256);
-
-			for (int i = 0; i < length; i++) {
-				String tmpString = extractStringFromJsonElement(array.getString(i));
-
-				if (checkIfValid(tmpString) && builder.indexOf(tmpString) < 0) {
-					builder.append(tmpString);
-					builder.append(",");
-				}
-			}
-
-			int builderLength = builder.length();
-
-			if (builderLength > 0) {
-				String result = builder.substring(0, builderLength - 1);
-
-				return result;
-			}
-		}
-
-		return null;
-	}
-
 	private boolean checkIfNullOrEqual(String source, String target) {
-		if (source == null) {
+		if (source == null || source.equals("null")) {
 			return true;
 		} else {
 			return source.equals(target);
@@ -113,12 +86,12 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private String extractStringFromJsonElement(String str) {
-		if(str != null && str.startsWith("[\"")){
+		if (str != null && str.startsWith("[\"")) {
 			return str.replace("[\"", "").replace("\"]", "");
-		}else{
+		} else {
 			return str;
 		}
-   }
+	}
 
 	@Override
 	public String getName() {
@@ -147,20 +120,22 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	public String parseDomain(String content) throws Exception {
 		JsonObject object = new JsonObject(content);
-		JsonArray array = object.getJSONArray("app");
+		JsonArray projectArray = object.getJSONArray("projects");
 
-		if (array.length() > 0) {
-			return array.getString(0);
+		if (projectArray.length() > 0) {
+			JsonObject firstProject = projectArray.getJSONObject(0);
+			return firstProject.get("project_name").toString();
 		}
 		return null;
 	}
 
 	public String parseHostname(String content) throws Exception {
 		JsonObject object = new JsonObject(content);
-		JsonArray array = object.getJSONArray("hostname");
+		JsonArray resultArray = object.getJSONArray("result");
 
-		if (array.length() > 0) {
-			return array.getString(0);
+		if (resultArray.length() > 0) {
+			JsonObject firstResult = resultArray.getJSONObject(0);
+			return firstResult.get("hostname").toString();
 		}
 		return null;
 	}
@@ -168,24 +143,34 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	private Map<String, String> parseInfos(String content) throws Exception {
 		Map<String, String> infosMap = new HashMap<String, String>();
 		JsonObject object = new JsonObject(content);
-		JsonArray owners = object.getJSONArray("rd_duty");
+		JsonObject project = object.getJSONObject("project");
 
-		if (owners.length() > 0) {
-			infosMap.put("owner", owners.getString(0));
+		if (project == null) {
+			return infosMap;
 		}
 
-		JsonArray emails = object.getJSONArray("project_email");
-		String email = buildStringFromJsonArray(emails);
+		Object owner = project.get("rd_duty");
+		Object email = project.get("project_email");
+		Object phone = project.get("rd_mobile");
+
 		if (email != null) {
-			infosMap.put("email", email);
+			infosMap.put("owner", owner.toString());
+		}else{
+			infosMap.put("owner", null);
 		}
 
-		JsonArray phones = object.getJSONArray("project_owner_mobile");
-		String phone = buildStringFromJsonArray(phones);
+		if (email != null) {
+			infosMap.put("email", email.toString());
+		}else{
+			infosMap.put("email", null);
+		}
 
 		if (phone != null) {
-			infosMap.put("phone", phone);
+			infosMap.put("phone", phone.toString());
+		}else{
+			infosMap.put("phone", null);
 		}
+		
 		return infosMap;
 	}
 
