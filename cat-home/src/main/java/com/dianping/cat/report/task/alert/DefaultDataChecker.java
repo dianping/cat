@@ -11,7 +11,7 @@ import com.dianping.cat.home.monitorrules.entity.Condition;
 import com.dianping.cat.home.monitorrules.entity.Config;
 import com.dianping.cat.home.monitorrules.entity.Subcondition;
 
-public class DefaultDataChecker implements DataChecker{
+public class DefaultDataChecker implements DataChecker {
 
 	private DecimalFormat m_df = new DecimalFormat("0.0");
 
@@ -43,7 +43,7 @@ public class DefaultDataChecker implements DataChecker{
 
 	public Pair<Boolean, String> checkData(double[] value, double[] baseline, List<Config> configs) {
 		for (Config con : configs) {
-			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline,  con);
+			Pair<Boolean, String> tmpResult = checkDataByConfig(value, baseline, con);
 
 			if (tmpResult.getKey() == true) {
 				return tmpResult;

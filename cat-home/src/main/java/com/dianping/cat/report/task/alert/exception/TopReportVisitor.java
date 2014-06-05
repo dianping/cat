@@ -22,13 +22,13 @@ public class TopReportVisitor extends BaseVisitor {
 
 	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
 
-	public TopReportVisitor setReport(AlertReport report) {
-		m_report = report;
+	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
+		m_exceptionConfigManager = exceptionConfigManager;
 		return this;
 	}
 
-	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
-		m_exceptionConfigManager = exceptionConfigManager;
+	public TopReportVisitor setReport(AlertReport report) {
+		m_report = report;
 		return this;
 	}
 
