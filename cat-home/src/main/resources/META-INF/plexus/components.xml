@@ -114,8 +114,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.NetworkRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -123,8 +123,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.DomainMetricRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.BusinessRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1664,8 +1664,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.metric.MetricAlertConfig</role>
-			<implementation>com.dianping.cat.report.task.alert.metric.MetricAlertConfig</implementation>
+			<role>com.dianping.cat.report.task.alert.business.BusinessAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.alert.business.BusinessAlertConfig</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -1708,8 +1708,8 @@
 			<implementation>com.dianping.cat.report.task.alert.DefaultDataChecker</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.metric.MetricAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.metric.MetricAlert</implementation>
+			<role>com.dianping.cat.report.task.alert.business.BusinessAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.business.BusinessAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -1724,13 +1724,16 @@
 					<role>com.dianping.cat.system.tool.MailSMS</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.metric.MetricAlertConfig</role>
+					<role>com.dianping.cat.report.task.alert.business.BusinessAlertConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -1763,7 +1766,7 @@
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -3504,10 +3507,10 @@
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -3551,8 +3554,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.DomainMetricRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.BusinessRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3560,8 +3563,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.NetworkRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

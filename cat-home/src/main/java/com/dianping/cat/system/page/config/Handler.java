@@ -48,10 +48,10 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.DomainMetricRuleConfigManager;
+import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.NetworkMetricRuleConfigManager;
+import com.dianping.cat.system.config.NetworkRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -88,10 +88,10 @@ public class Handler implements PageHandler<Context> {
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
-	private DomainMetricRuleConfigManager m_domainMetricRuleConfigManager;
+	private BusinessRuleConfigManager m_domainMetricRuleConfigManager;
 
 	@Inject
-	private NetworkMetricRuleConfigManager m_metricRuleConfigManager;
+	private NetworkRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
 	private AlertConfigManager m_alertConfigManager;

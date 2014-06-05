@@ -1,9 +1,9 @@
-package com.dianping.cat.report.task.alert.metric;
+package com.dianping.cat.report.task.alert.business;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.report.task.alert.BaseAlertConfig;
 
-public class MetricAlertConfig extends BaseAlertConfig {
+public class BusinessAlertConfig extends BaseAlertConfig {
 
 	private String m_id = "metric";
 
