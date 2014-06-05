@@ -167,7 +167,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, MetricAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, DomainMetricRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
