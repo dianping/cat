@@ -32,7 +32,7 @@ public class StatusInfoCollector extends BaseVisitor {
 	private String m_jars;
 
 	private String m_dataPath = "/data";
-
+	
 	public StatusInfoCollector(MessageStatistics statistics, String jars) {
 		m_statistics = statistics;
 		m_jars = jars;
