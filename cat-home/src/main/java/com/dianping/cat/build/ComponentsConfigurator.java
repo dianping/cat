@@ -51,10 +51,10 @@ import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
+import com.dianping.cat.report.task.alert.business.BusinessAlert;
+import com.dianping.cat.report.task.alert.business.BusinessAlertConfig;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
-import com.dianping.cat.report.task.alert.metric.MetricAlert;
-import com.dianping.cat.report.task.alert.metric.MetricAlertConfig;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
@@ -63,10 +63,10 @@ import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.DomainMetricRuleConfigManager;
+import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.NetworkMetricRuleConfigManager;
+import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -107,9 +107,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(NetworkMetricRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(DomainMetricRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 
@@ -153,7 +153,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
 
-		all.add(C(MetricAlertConfig.class).req(AlertConfigManager.class));
+		all.add(C(BusinessAlertConfig.class).req(AlertConfigManager.class));
 
 		all.add(C(NetworkAlertConfig.class).req(AlertConfigManager.class));
 
@@ -165,13 +165,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 
-		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, MetricAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class, DomainMetricRuleConfigManager.class, DataChecker.class));
+		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class)//
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class, NetworkMetricRuleConfigManager.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
 		      ExceptionConfigManager.class).req(ModelService.class, TopAnalyzer.ID));

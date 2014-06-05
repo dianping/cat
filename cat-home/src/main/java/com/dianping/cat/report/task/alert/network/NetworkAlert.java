@@ -20,7 +20,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	private NetworkAlertConfig m_alertConfig;
-	
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -30,7 +30,6 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 	public String getName() {
 		return "network-alert";
 	}
-
 
 	@Override
 	public void run() {

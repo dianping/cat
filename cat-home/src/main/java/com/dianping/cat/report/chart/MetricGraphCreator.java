@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.metricGroup.entity.MetricKeyConfig;
+import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.MetricType;
 

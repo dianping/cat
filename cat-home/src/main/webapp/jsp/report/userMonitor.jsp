@@ -126,7 +126,7 @@
 				</select> 查询类型 <select style="width: 120px;" name="type" id="type">
 						<option value="info">访问情况</option>
 						<option value="httpStatus">HttpStatus</option>
-						<option value="errorCode">ErrorCode</option>
+						<option value="errorCode">Code</option>
 				</select>
 				</th>
 			</tr>

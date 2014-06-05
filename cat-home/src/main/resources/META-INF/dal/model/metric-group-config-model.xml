@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.home.metricGroup" 
+<model model-package="com.dianping.cat.home.metric.group" 
    enable-merger="true"  enable-sax-parser="true"
 	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true" enable-native-parser="true"  enable-native-builder="true"
 	enable-xml-parser="false"  enable-xml-builder="false">

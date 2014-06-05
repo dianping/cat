@@ -65,10 +65,6 @@ public class DefaultDataChecker implements DataChecker{
 			valueSum = valueSum + value[i];
 			baselineSum = baselineSum + baseline[i];
 
-			if (baseline[i] <= 0) {
-				baseline[i] = 100;
-			}
-
 			if (!checkDataByMinute(condition, value[i], baseline[i])) {
 				return new Pair<Boolean, String>(false, "");
 			}

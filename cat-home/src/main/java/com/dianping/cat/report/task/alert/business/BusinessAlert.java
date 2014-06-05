@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.metric;
+package com.dianping.cat.report.task.alert.business;
 
 import java.util.Calendar;
 import java.util.List;
@@ -16,10 +16,12 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
 
-public class MetricAlert extends BaseAlert implements Task, LogEnabled {
+public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	private MetricAlertConfig m_alertConfig;
+	private BusinessAlertConfig m_alertConfig;
+
+	private Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -29,6 +31,15 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 	@Override
 	public String getName() {
 		return "metric-alert";
+	}
+
+	public boolean needAlert(MetricItemConfig config) {
+		if ((config.getAlarm() || config.isShowAvgDashboard() || config.isShowSumDashboard() || config
+		      .isShowCountDashboard())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -82,7 +93,7 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
+	public void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
 		String title = m_alertConfig.buildMailTitle(productLine, config.getTitle());

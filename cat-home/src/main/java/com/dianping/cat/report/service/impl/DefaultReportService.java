@@ -29,7 +29,7 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;

@@ -5,7 +5,7 @@ import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
-import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -63,10 +63,10 @@ public class TopReportVisitor extends BaseVisitor {
 
 		if (errorLimit > 0 & warnLimit > 0 & count >= Math.min(warnLimit, errorLimit)) {
 
-			com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
+			com.dianping.cat.home.alert.report.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
 			domain.setName(m_currentDomain);
 
-			com.dianping.cat.home.alertReport.entity.Exception exception = domain.findOrCreateException(error.getId());
+			com.dianping.cat.home.alert.report.entity.Exception exception = domain.findOrCreateException(error.getId());
 
 			if (errorLimit > 0 && count >= errorLimit) {
 				exception.incErrorNumber();
@@ -94,8 +94,8 @@ public class TopReportVisitor extends BaseVisitor {
 		}
 
 		if (errorLimit > 0 & warnLimit > 0 & m_totalSegmentException >= Math.min(warnLimit, errorLimit)) {
-			com.dianping.cat.home.alertReport.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
-			com.dianping.cat.home.alertReport.entity.Exception exception = domain
+			com.dianping.cat.home.alert.report.entity.Domain domain = m_report.findOrCreateDomain(m_currentDomain);
+			com.dianping.cat.home.alert.report.entity.Exception exception = domain
 			      .findOrCreateException(TOTAL_EXCEPTION_ALERT);
 
 			if (m_totalSegmentException >= errorLimit) {
