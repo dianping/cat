@@ -181,7 +181,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 	}
 
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport, metricConfigs);
+		Map<String, double[]> datas = m_pruductDataFetcher.buildAllGraphData(metricReport);
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 
 		for (MetricItemConfig config : metricConfigs) {

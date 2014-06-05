@@ -235,8 +235,8 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return productLines;
 	}
 
-	public String querySystemProductLineByDomain(String domain) {
-		return "System-" + domain;
+	public String querySystemProductLine(String domain) {
+		return SYSTEM_MONITOR_PREFIX + domain;
 	}
 
 	public String queryProductLineByDomain(String domain) {

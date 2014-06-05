@@ -17,6 +17,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.alibaba.cobar.parser.util.Pair;
+import com.dianping.cat.Constants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.config.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
@@ -77,6 +78,7 @@ public class Handler implements PageHandler<Context> {
 			url = new ArrayList<PatternItem>(rules).get(0).getName();
 		}
 
+		pars.put("metricType", Constants.METRIC_USER_MONITOR);
 		pars.put("type", type);
 		pars.put("channel", channel);
 		pars.put("city", city);

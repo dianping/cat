@@ -17,16 +17,16 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("domain")
-	private String m_domain;
+	private String m_domain = "Cat";
 
 	@FieldMeta("productLine")
 	private String m_productLine;
 
 	@FieldMeta("type")
-	private String m_type;
+	private String m_type = "system";
 
 	@FieldMeta("ipAddrs")
-	private String m_ipAddrs;
+	private String m_ipAddrs = "All";
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 

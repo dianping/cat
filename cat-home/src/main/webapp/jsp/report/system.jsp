@@ -19,9 +19,11 @@
 			var type = $("#type").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
+			var ipAddrs = '';
 			
-			var ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
-			
+			if("${model.ipAddrs}" != "[]") {
+				ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
+			}
 			for( var i=0; i<ipAddrs.length; i++){
 			 	var ip = "ip_" + ipAddrs[i];
 				if(document.getElementById(ip).checked == false){
@@ -31,14 +33,21 @@
 			}
 			
 			var curIpAddrs = '';
+			var num = 0;
 			if(document.getElementById("ipAll").checked == false) {
 				for( var i=0; i<ipAddrs.length; i++){
 				 	var ip = "ip_" + ipAddrs[i];
 					if(document.getElementById(ip).checked){
 						curIpAddrs += ipAddrs[i] + "_";
+						num ++;
 					} 
 				}
-				curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
+				if(num == ipAddrs.length) {
+					curIpAddrs = "All";
+					document.getElementById("ipAll").checked = true;
+				}else{
+					curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
+				}
 			}else{
 				curIpAddrs = "All";
 			}
@@ -54,8 +63,11 @@
 			var type = $("#type").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
+			var ipAddrs = '';
 			
-			var ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
+			if("${model.ipAddrs}" != "[]"){
+				var ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
+			}
 			
 			for( var i=0; i<ipAddrs.length; i++){
 			 	var ip = "ip_" + ipAddrs[i];
@@ -94,13 +106,14 @@
 					if("${payload.ipAddrs}" == ''){
 						document.getElementById("ipAll").checked = false;
 					}else if("${payload.ipAddrs}" == 'All'){
-						curIpAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
-						document.getElementById("ipAll").checked = true;
+						if("${model.ipAddrs}" != "[]"){
+							curIpAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
+							document.getElementById("ipAll").checked = true;
+						}
 					}else{
 						var curIpAddrStr = "${payload.ipAddrs}";
 						curIpAddrs = curIpAddrStr.split("_");
 					}
-					
 					for(var i=0; i<curIpAddrs.length; i++) {
 						document.getElementById("ip_" + curIpAddrs[i]).checked = true;
 					}
@@ -168,30 +181,30 @@
 	
 		<table>
 			<tr>
-				<th class="left">业务线 <select style="width: 200px;" name="productLine"
-					id="productLine">
-				</select> 项目 <select style="width: 200px;" name="domain" id="domain">
-				</select> 查询类型 <select style="width: 100px;" name="type" id="type">
-						<option value="system">系统</option>
-						<option value="JVM">JVM</option>
-						<option value="Niginx">Niginx</option>
-				</select>
+				<th class="left">
+					业务线
+					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()"></select>
+					项目
+					<select style="width: 200px;" name="domain" id="domain" onclick="query()"></select> 
+					查询类型
+					<select style="width: 100px;" name="type" id="type"  onclick="query()" >
+							<option value="system">系统</option>
+							<option value="JVM">JVM</option>
+							<option value="Niginx">Nginx</option>
+					</select>
 				</th>
 
 				<th class="right">开始时间
-					<div id="datetimepicker1" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime"
-							style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input>
-						<span class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
+					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
+						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onmouseout="query()">
+						</input>
+						<span class="add-on">
+							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 结束时间
-					<div id="datetimepicker2" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text"></input> 
-						<span class="add-on"> 
+					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
+						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onmouseout="query()"></input> 
+						<span class="add-on" ondragleave="query()"> 
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>
 					</div>
