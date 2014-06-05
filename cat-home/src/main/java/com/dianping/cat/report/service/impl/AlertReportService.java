@@ -19,8 +19,8 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.alertReport.entity.AlertReport;
-import com.dianping.cat.home.alertReport.transform.DefaultNativeParser;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
+import com.dianping.cat.home.alert.report.transform.DefaultNativeParser;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentEntity;
 import com.dianping.cat.home.dal.report.MonthlyReportContent;
@@ -55,7 +55,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 				String xml = report.getContent();
 
 				if (xml != null && xml.length() > 0) {
-					AlertReport reportModel = com.dianping.cat.home.alertReport.transform.DefaultSaxParser.parse(xml);
+					AlertReport reportModel = com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				} else {
 					AlertReport reportModel = queryFromDailyBinary(report.getId(), domain);
@@ -95,7 +95,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 
 					try {
 						if (xml != null && xml.length() > 0) {
-							AlertReport reportModel = com.dianping.cat.home.alertReport.transform.DefaultSaxParser.parse(xml);
+							AlertReport reportModel = com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(xml);
 							reportModel.accept(merger);
 						} else {
 							AlertReport reportModel = queryFromHourlyBinary(report.getId(), domain);
@@ -125,7 +125,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.home.alertReport.transform.DefaultSaxParser.parse(content);
+				return com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(content);
 			} else {
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
@@ -145,7 +145,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.home.alertReport.transform.DefaultSaxParser.parse(content);
+				return com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(content);
 			} else {
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}

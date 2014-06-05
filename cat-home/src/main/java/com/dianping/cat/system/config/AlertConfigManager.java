@@ -13,9 +13,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.alertconfig.entity.AlertConfig;
-import com.dianping.cat.home.alertconfig.entity.Receiver;
-import com.dianping.cat.home.alertconfig.transform.DefaultSaxParser;
+import com.dianping.cat.home.alert.config.entity.AlertConfig;
+import com.dianping.cat.home.alert.config.entity.Receiver;
+import com.dianping.cat.home.alert.config.transform.DefaultSaxParser;
 
 public class AlertConfigManager implements Initializable {
 

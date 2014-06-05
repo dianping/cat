@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.alertconfig.entity.Receiver;
+import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.task.alert.BaseAlertConfig;
 
 public class ExceptionAlertConfig extends BaseAlertConfig {

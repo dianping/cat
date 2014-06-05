@@ -10,7 +10,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.task.alert.exception.TopReportVisitor;
@@ -25,7 +25,7 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		TopReport topReport = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(topReportXml);
 
 		String expectedAlertReportXml = Files.forIO()
-		      .readFrom(getClass().getResourceAsStream("alertReport.xml"), "utf-8");
+		      .readFrom(getClass().getResourceAsStream("alert.report.xml"), "utf-8");
 
 		ExceptionConfigMock exceptionConfigManager = new ExceptionConfigMock();
 		AlertReport alertReport = new AlertReport(Constants.CAT);

@@ -1,9 +1,9 @@
 package com.dianping.cat.report.task.alert.exception;
 
-import com.dianping.cat.home.alertReport.entity.AlertReport;
-import com.dianping.cat.home.alertReport.entity.Domain;
-import com.dianping.cat.home.alertReport.entity.Exception;
-import com.dianping.cat.home.alertReport.transform.DefaultMerger;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
+import com.dianping.cat.home.alert.report.entity.Domain;
+import com.dianping.cat.home.alert.report.entity.Exception;
+import com.dianping.cat.home.alert.report.transform.DefaultMerger;
 
 public class AlertReportMerger extends DefaultMerger {
 	

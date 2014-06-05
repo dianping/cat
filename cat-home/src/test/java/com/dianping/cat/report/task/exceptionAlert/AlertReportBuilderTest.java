@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.home.alertReport.entity.AlertReport;
-import com.dianping.cat.home.alertReport.transform.DefaultSaxParser;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
+import com.dianping.cat.home.alert.report.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.alert.exception.AlertReportMerger;
 
 public class AlertReportBuilderTest  extends ComponentTestCase {

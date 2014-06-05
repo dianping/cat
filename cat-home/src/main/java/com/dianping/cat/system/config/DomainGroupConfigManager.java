@@ -13,10 +13,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.domainGroup.entity.Domain;
-import com.dianping.cat.home.domainGroup.entity.DomainGroup;
-import com.dianping.cat.home.domainGroup.entity.Group;
-import com.dianping.cat.home.domainGroup.transform.DefaultSaxParser;
+import com.dianping.cat.home.group.entity.DomainGroup;
+import com.dianping.cat.home.group.entity.Domain;
+import com.dianping.cat.home.group.entity.Group;
+import com.dianping.cat.home.group.transform.DefaultSaxParser;
 
 public class DomainGroupConfigManager implements Initializable {
 
