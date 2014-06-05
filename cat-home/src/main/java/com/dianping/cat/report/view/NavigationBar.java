@@ -44,6 +44,8 @@ public class NavigationBar {
 		ReportPage.DEPENDENCY,
 
 		ReportPage.NETWORK,
+		
+		ReportPage.SYSTEM,
 
 		ReportPage.ALTERATION,
 
@@ -52,8 +54,6 @@ public class NavigationBar {
 		ReportPage.STATISTICS,
 		
 		ReportPage.LOGVIEW,
-		
-		ReportPage.SYSTEM,
 
 		};
 	}
