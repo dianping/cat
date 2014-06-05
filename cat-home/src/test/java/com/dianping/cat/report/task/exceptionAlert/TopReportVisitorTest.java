@@ -25,7 +25,7 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		TopReport topReport = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(topReportXml);
 
 		String expectedAlertReportXml = Files.forIO()
-		      .readFrom(getClass().getResourceAsStream("alert.report.xml"), "utf-8");
+		      .readFrom(getClass().getResourceAsStream("alertReport.xml"), "utf-8");
 
 		ExceptionConfigMock exceptionConfigManager = new ExceptionConfigMock();
 		AlertReport alertReport = new AlertReport(Constants.CAT);
