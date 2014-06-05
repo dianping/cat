@@ -114,8 +114,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.MetricRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainMetricRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1754,7 +1763,7 @@
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -3495,7 +3504,10 @@
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -3539,8 +3551,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.MetricRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.MetricRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DomainMetricRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.NetworkMetricRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

@@ -31,6 +31,8 @@ public enum JspFile {
 
 	METRIC_CONFIG_LIST("/jsp/system/metric/metricConfigs.jsp"),
 	
+	DOMAIN_METRIC_RULE_CONFIG_UPDATE("/jsp/system/domainMetricRule/domainMetricRuleConfig.jsp"),
+	
 	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metricRule/metricRuleConfig.jsp"),
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),

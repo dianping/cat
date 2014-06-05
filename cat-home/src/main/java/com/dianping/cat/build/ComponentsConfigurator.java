@@ -63,9 +63,10 @@ import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
+import com.dianping.cat.system.config.DomainMetricRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.MetricRuleConfigManager;
+import com.dianping.cat.system.config.NetworkMetricRuleConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -106,7 +107,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(MetricRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(NetworkMetricRuleConfigManager.class).req(ConfigDao.class));
+
+		all.add(C(DomainMetricRuleConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 
@@ -164,11 +167,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, MetricAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, DomainMetricRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
-		      .req(RemoteMetricReportService.class, MetricRuleConfigManager.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, NetworkMetricRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
 		      ExceptionConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
