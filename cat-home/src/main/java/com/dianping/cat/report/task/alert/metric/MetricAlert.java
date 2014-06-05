@@ -189,7 +189,6 @@ public class MetricAlert extends BaseAlert implements Task, LogEnabled {
 
 		if (alert != null && alert.getKey()) {
 			m_alertInfo.addAlertInfo(config, new Date().getTime());
-
 			sendAlertInfo(productLine, config, alert.getValue());
 		}
 	}

@@ -51,7 +51,7 @@ import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.DomainMetricRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.MetricRuleConfigManager;
+import com.dianping.cat.system.config.NetworkMetricRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -91,7 +91,7 @@ public class Handler implements PageHandler<Context> {
 	private DomainMetricRuleConfigManager m_domainMetricRuleConfigManager;
 
 	@Inject
-	private MetricRuleConfigManager m_metricRuleConfigManager;
+	private NetworkMetricRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
 	private AlertConfigManager m_alertConfigManager;

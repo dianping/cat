@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -25,13 +26,13 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.system.config.MetricRuleConfigManager;
+import com.dianping.cat.system.config.BaseMetricRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	private MetricRuleConfigManager m_metricRuleConfigManager;
+	private BaseMetricRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
 	protected MailSMS m_mailSms;
@@ -41,7 +42,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	private AlertInfo m_alertInfo;
-	
+
 	@Inject
 	private DataChecker m_dataChecker;
 
@@ -49,14 +50,55 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
-		double[] value = null;
-		double[] baseline = null;
+	private Pair<Boolean, String> checkDataByAllTypes(int currentStart, int currentEnd, int lastStart, int lastEnd,
+	      String metricKey, MetricReport currentReport, MetricReport lastReport, Map<MetricType, List<Config>> configMap) {
+		for (Entry<MetricType, List<Config>> entry : configMap.entrySet()) {
+			MetricType type = entry.getKey();
+			List<Config> configs = entry.getValue();
+
+			double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
+			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
+			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+			double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
+			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
+			      new Date(ModelPeriod.LAST.getStartTime()), type);
+			double[] value = mergerArray(lastValue, currentValue);
+			double[] baseline = mergerArray(lastBaseline, currentBaseline);
+
+			Pair<Boolean, String> tmpResult = m_dataChecker.checkData(value, baseline, configs);
+
+			if (tmpResult.getKey()) {
+				return tmpResult;
+			}
+		}
+
+		return new Pair<Boolean, String>(false, "");
+	}
+
+	private Pair<Boolean, String> checkDataByAllTypes(int start, int end, String metricKey, MetricReport report,
+	      ModelPeriod period, Map<MetricType, List<Config>> configMap) {
+		for (Entry<MetricType, List<Config>> entry : configMap.entrySet()) {
+			MetricType type = entry.getKey();
+			List<Config> configs = entry.getValue();
+
+			double[] value = queryRealData(start, end, metricKey, report, type);
+			double[] baseline = queryBaseLine(start, end, metricKey, new Date(period.getStartTime()), type);
+			Pair<Boolean, String> tmpResult = m_dataChecker.checkData(value, baseline, configs);
+
+			if (tmpResult.getKey()) {
+				return tmpResult;
+			}
+		}
+
+		return new Pair<Boolean, String>(false, "");
+	}
+
+	private Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config) {
 		String domain = config.getDomain();
 		String key = config.getMetricKey();
 		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
-		List<Config> configs = m_metricRuleConfigManager.queryConfigs(product, domain, key, metricKey);
-		int maxMinute = queryCheckMinute(configs);
+		Map<MetricType, List<Config>> configMap = m_metricRuleConfigManager.queryConfigs(product, metricKey);
+		int maxMinute = queryCheckMinute(configMap);
 
 		if (minute >= maxMinute - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -65,10 +107,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 				int start = minute + 1 - maxMinute;
 				int end = minute;
 
-				value = queryRealData(start, end, metricKey, report, type);
-				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
-
-				return m_dataChecker.checkData(value, baseline,  configs);
+				return checkDataByAllTypes(start, end, metricKey, report, ModelPeriod.CURRENT, configMap);
 			}
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
@@ -77,9 +116,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 				int start = 60 + minute + 1 - (maxMinute);
 				int end = 60 + minute;
 
-				value = queryRealData(start, end, metricKey, lastReport, type);
-				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-				return m_dataChecker.checkData(value, baseline,  configs);
+				return checkDataByAllTypes(start, end, metricKey, lastReport, ModelPeriod.LAST, configMap);
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -87,19 +124,11 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 			if (currentReport != null && lastReport != null) {
 				int currentStart = 0, currentEnd = minute;
-				double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
-				double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
-				      new Date(ModelPeriod.CURRENT.getStartTime()), type);
-
 				int lastStart = 60 + 1 - (maxMinute - minute);
 				int lastEnd = 59;
-				double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
-				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
-				      new Date(ModelPeriod.LAST.getStartTime()), type);
 
-				value = mergerArray(lastValue, currentValue);
-				baseline = mergerArray(lastBaseline, currentBaseline);
-				return m_dataChecker.checkData(value, baseline,  configs);
+				return checkDataByAllTypes(currentStart, currentEnd, lastStart, lastEnd, metricKey, currentReport,
+				      lastReport, configMap);
 			}
 		}
 		return null;
@@ -117,17 +146,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	protected void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
 		String product = productLine.getId();
-		Pair<Boolean, String> alert = null;
-
-		if (config.isShowAvg()) {
-			alert = computeAlertInfo(minute, product, config, MetricType.AVG);
-		}
-		if (config.isShowCount()) {
-			alert = computeAlertInfo(minute, product, config, MetricType.COUNT);
-		}
-		if (config.isShowSum()) {
-			alert = computeAlertInfo(minute, product, config, MetricType.SUM);
-		}
+		Pair<Boolean, String> alert = computeAlertInfo(minute, product, config);
 
 		if (alert != null && alert.getKey()) {
 			m_alertInfo.addAlertInfo(config, new Date().getTime());
@@ -135,25 +154,29 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	private int queryCheckMinute(List<Config> configs) {
+	private int queryCheckMinute(Map<MetricType, List<Config>> configsMap) {
 		int maxMinute = 0;
 
-		for (Config config : configs) {
-			for (Condition con : config.getConditions()) {
-				int tmpMinute = con.getMinute();
+		for (Entry<MetricType, List<Config>> entry : configsMap.entrySet()) {
+			List<Config> configs = entry.getValue();
 
-				if (tmpMinute > maxMinute) {
-					maxMinute = tmpMinute;
+			for (Config config : configs) {
+				for (Condition con : config.getConditions()) {
+					int tmpMinute = con.getMinute();
+
+					if (tmpMinute > maxMinute) {
+						maxMinute = tmpMinute;
+					}
 				}
 			}
 		}
+
 		return maxMinute;
 	}
 
 	@Override
 	public void run() {
 		boolean active = true;
-
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {

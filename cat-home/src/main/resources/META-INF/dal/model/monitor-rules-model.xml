@@ -11,6 +11,9 @@
 	</entity>
 	<entity name="metric-item">
 		<attribute name="type" value-type="String" />
+		<attribute name="monitorCount" value-type="boolean" />
+		<attribute name="monitorSum" value-type="boolean" />
+		<attribute name="monitorAvg" value-type="boolean" />
 		<element name="text" value-type="String" text="true" />
 	</entity>
 	<entity name="config">
@@ -20,7 +23,7 @@
 	</entity>
 	<entity name="condition">
 		<attribute name="title" value-type="String" />
-		<attribute name="minute" value-type="int" default-value="3"/>
+		<attribute name="minute" value-type="int" default-value="3" />
 		<entity-ref name="subcondition" type="list" names="subconditions" />
 	</entity>
 	<entity name="subcondition">
