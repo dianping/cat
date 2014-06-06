@@ -90,6 +90,10 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+			
+			if(keyMapEntry.getValue().entrySet().isEmpty()){
+				lineChart.add("none", buildNoneData(startDate, endDate, 1));
+			}
 
 			for (Entry<String, String> ip2MetricKey : keyMapEntry.getValue().entrySet()) {
 				String key = ip2MetricKey.getValue();
