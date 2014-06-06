@@ -8,10 +8,10 @@ import org.unidal.helper.Files;
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.monitorrules.entity.MetricItem;
-import com.dianping.cat.home.monitorrules.entity.MonitorRules;
-import com.dianping.cat.home.monitorrules.entity.Rule;
-import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
+import com.dianping.cat.home.rule.entity.MetricItem;
+import com.dianping.cat.home.rule.entity.MonitorRules;
+import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class NetworkRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
