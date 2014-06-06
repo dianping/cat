@@ -226,30 +226,43 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
-		StringBuilder title = new StringBuilder();
-		title.append("[CAT异常告警] [项目: ").append(domain).append("]");
-		List<String> errorExceptions = new ArrayList<String>();
-		List<String> warnExceptions = new ArrayList<String>();
+		List<String> phones = m_alertConfig.buildSMSReceivers(project);
+		List<AlertException> errorExceptions = new ArrayList<AlertException>();
+		List<AlertException> warnExceptions = new ArrayList<AlertException>();
 
 		for (AlertException exception : exceptions) {
 			if (exception.getAlertFlag() == WARN_FLAG) {
-				warnExceptions.add(exception.getName());
+				warnExceptions.add(exception);
 			} else if (exception.getAlertFlag() == ERROR_FLAG) {
-				errorExceptions.add(exception.getName());
+				errorExceptions.add(exception);
 			}
 		}
+
+		StringBuilder mailTitle = new StringBuilder();
+		String mailContent = buildContent(exceptions.toString(), domain);
+
+		mailTitle.append("[CAT异常告警] [项目: ").append(domain).append("]");
+		m_logger.info(mailTitle + " " + mailContent + " " + emails);
+		m_mailSms.sendEmail(mailTitle.toString(), mailContent, emails);
+		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+
+		if (!errorExceptions.isEmpty()) {
+			String smsContent = buildContent(errorExceptions.toString(), domain);
+
+			m_logger.info(smsContent + " " + phones);
+			m_mailSms.sendSms(smsContent, null, phones);
+			Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, "[短信告警] " + smsContent);
+		}
+	}
+
+	private String buildContent(String exceptions, String domain) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT异常告警] [").append(domain).append("] : ");
-		sb.append(exceptions.toString()).append("[时间: ")
-		      .append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date())).append("]");
+		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
+		sb.append(exceptions).append("[时间: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()))
+		      .append("]");
 
-		String mailContent = sb.toString();
-
-		m_logger.info(title + " " + mailContent + " " + emails);
-		m_mailSms.sendEmail(title.toString(), mailContent, emails);
-
-		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, title + "  " + mailContent);
+		return sb.toString();
 	}
 
 	@Override

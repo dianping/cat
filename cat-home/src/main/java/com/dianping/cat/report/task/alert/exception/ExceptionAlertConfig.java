@@ -28,6 +28,24 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 	private List<String> buildProjectMailReceivers(Project project) {
 		return split(project.getEmail());
 	}
+	
+	public List<String> buildSMSReceivers(Project project) {
+		List<String> smsReceivers = new ArrayList<String>();
+		Receiver receiver = m_manager.getReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return smsReceivers;
+		} else {
+			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+			smsReceivers.addAll(buildProjectSMSReceivers(project));
+
+			return smsReceivers;
+		}
+	}
+	
+	private List<String> buildProjectSMSReceivers(Project project) {
+		return split(project.getPhone());
+	}
 
 	public String getId() {
 		return m_id;

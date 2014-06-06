@@ -24,7 +24,7 @@ public abstract class BaseAlertConfig {
 		return mailReceivers;
 	}
 
-	private List<String> buildDefaultSMSReceivers(Receiver receiver) {
+	protected List<String> buildDefaultSMSReceivers(Receiver receiver) {
 		List<String> smsReceivers = new ArrayList<String>();
 
 		if (receiver != null) {
