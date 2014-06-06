@@ -92,12 +92,19 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("content")
 	private String m_content;
 
+	@FieldMeta("allOnOrOff")
+	private String m_allOnOrOff;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
 			m_action = Action.PROJECT_ALL;
 		}
 		return m_action;
+	}
+
+	public String getAllOnOrOff() {
+		return m_allOnOrOff;
 	}
 
 	public String getBug() {
@@ -128,12 +135,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_exception;
 	}
 
-	public ExceptionLimit getExceptionLimit() {
-		return m_exceptionLimit;
-	}
-
 	public ExceptionExclude getExceptionExclude() {
 		return m_exceptionExclude;
+	}
+
+	public ExceptionLimit getExceptionLimit() {
+		return m_exceptionLimit;
 	}
 
 	public String getFrom() {
@@ -142,6 +149,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public int getId() {
 		return m_id;
+	}
+
+	public String getKey() {
+		return m_key;
 	}
 
 	public MetricItemConfig getMetricItemConfig() {
@@ -162,6 +173,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getPattern() {
 		return m_pattern;
+	}
+
+	public PatternItem getPatternItem() {
+		return m_patternItem;
 	}
 
 	public ProductLine getProductLine() {
@@ -198,6 +213,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
+	}
+
+	public void setAllOnOrOff(String allOnOrOff) {
+		m_allOnOrOff = allOnOrOff;
 	}
 
 	public void setBug(String bug) {
@@ -240,6 +259,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_id = id;
 	}
 
+	public void setKey(String key) {
+		m_key = key;
+	}
+
 	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
 		m_metricItemConfig = metricItemConfig;
 	}
@@ -255,6 +278,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setPattern(String pattern) {
 		m_pattern = pattern;
+	}
+
+	public void setPatternItem(PatternItem patternItem) {
+		m_patternItem = patternItem;
 	}
 
 	public void setProductLine(ProductLine productLine) {
@@ -280,14 +307,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setTo(String to) {
 		m_to = to;
 	}
-	
-	public PatternItem getPatternItem() {
-   	return m_patternItem;
-   }
-
-	public void setPatternItem(PatternItem patternItem) {
-   	m_patternItem = patternItem;
-   }
 
 	public void setType(String type) {
 		if (type.startsWith("Cache.")) {
@@ -306,12 +325,4 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void validate(ActionContext<?> ctx) {
 	}
 
-	public String getKey() {
-   	return m_key;
-   }
-
-	public void setKey(String key) {
-   	m_key = key;
-   }
-	
 }

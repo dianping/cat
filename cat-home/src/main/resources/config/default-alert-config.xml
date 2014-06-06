@@ -6,7 +6,7 @@
 	<receiver id="exception" enable="true">
 		<email>jialin.sun@dianping.com</email>
 	</receiver>
-	<receiver id="metric" enable="true">
+	<receiver id="business" enable="true">
 		<email>yong.you@dianping.com</email>
 		<email>argus@dianping.com</email>
 		<email>jialin.sun@dianping.com</email>

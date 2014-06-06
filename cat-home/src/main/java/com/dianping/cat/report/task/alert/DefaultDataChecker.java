@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.home.monitorrules.entity.Condition;
-import com.dianping.cat.home.monitorrules.entity.Config;
-import com.dianping.cat.home.monitorrules.entity.Subcondition;
+import com.dianping.cat.home.rule.entity.Condition;
+import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.home.rule.entity.Subcondition;
 
 public class DefaultDataChecker implements DataChecker {
 
