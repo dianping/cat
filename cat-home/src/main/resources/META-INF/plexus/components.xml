@@ -1733,6 +1733,9 @@
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DomainMetricRuleConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
 			</requirements>
