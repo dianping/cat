@@ -130,7 +130,9 @@ TopReportVisitorTest.class,
 
 RuleConfigTest.class,
 
-AlertConfigTest.class })
+AlertConfigTest.class,
+
+RuleConfigTest.class})
 public class AllTests {
 
 	@BeforeClass
