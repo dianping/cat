@@ -34,6 +34,10 @@
 <p> 1).logMetricForCount用于记录一个指标值出现的次数</p>
 <p> 2).logMetricForDuration用于记录一个指标出现的平均值</p>
 <p> 3).logMetricForSum用于记录一个指标出现的总和</p>
+
+<p class='text-error'>如果代码对于调用的API过于频繁，比如一天几千万或者上亿次，为了减少服务端压力，请考虑每10次，100次打一次点（取决你的项目的统计精度）。</p>
+<p class='text-error'>具体方法就是在内存中计数， if(count%10==0) { logMetricForCount("key",10) }</p>
+
 <p class='text-error'> 4).OrderCount，PayCount记录次数选用logMetricForCount这个API</p>
 <p> 5).集成代码可能是如下所示，下面描述了综合使用transction，event，metric这几个API，但这些指标都是独立的，可以单独使用，主要看业务场景。
 	如果仅仅是记录一个业务指标，只需要单独使用一个metric即可。
