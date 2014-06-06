@@ -13,7 +13,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 
 	public List<String> buildMailReceivers(Project project) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getId());
+		Receiver receiver = m_manager.queryReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;

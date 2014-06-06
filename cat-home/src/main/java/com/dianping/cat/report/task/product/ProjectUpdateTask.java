@@ -172,7 +172,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		} else {
 			infosMap.put("phone", null);
 		}
-
 		return infosMap;
 	}
 
@@ -188,40 +187,59 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private String queryDomainFromCMDB(String ip) {
+		Transaction t = Cat.newTransaction("CMDB", "queryDomain");
+
 		try {
 			String cmdb = String.format(CMDB_DOMAIN_URL, ip);
 			InputStream in = Urls.forIO().readTimeout(1000).connectTimeout(1000).openStream(cmdb);
 			String content = Files.forIO().readFrom(in, "utf-8");
 
+			t.setStatus(Transaction.SUCCESS);
+			t.addData(content);
 			return parseDomain(content.trim());
 		} catch (Exception e) {
 			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
 		return null;
 	}
 
 	private String queryHostnameFromCMDB(String ip) {
+		Transaction t = Cat.newTransaction("CMDB", "queryHostname");
 		try {
 			String cmdb = String.format(CMDB_HOSTNAME_URL, ip);
 			InputStream in = Urls.forIO().readTimeout(1000).connectTimeout(1000).openStream(cmdb);
 			String content = Files.forIO().readFrom(in, "utf-8");
 
+			t.setStatus(Transaction.SUCCESS);
+			t.addData(content);
 			return parseHostname(content.trim());
 		} catch (Exception e) {
 			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
 		return null;
 	}
 
 	private Map<String, String> queryProjectInfoFromCMDB(String cmdbDomain) {
+		Transaction t = Cat.newTransaction("CMDB", "queryProjectInfo");
 		try {
 			String cmdb = String.format(CMDB_INFO_URL, cmdbDomain);
 			InputStream in = Urls.forIO().readTimeout(1000).connectTimeout(1000).openStream(cmdb);
 			String content = Files.forIO().readFrom(in, "utf-8");
 
+			t.setStatus(Transaction.SUCCESS);
+			t.addData(content);
 			return parseInfos(content.trim());
 		} catch (Exception e) {
 			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
 		return null;
 	}
@@ -239,26 +257,26 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				hourStr = "0" + hourStr;
 			}
 
-			Transaction transactionForUpdateProject = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
+			Transaction t1 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
 			try {
 				updateProjectInfo();
-				transactionForUpdateProject.setStatus(Transaction.SUCCESS);
+				t1.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				transactionForUpdateProject.setStatus(e);
-			}finally{
-				transactionForUpdateProject.complete();
+				t1.setStatus(e);
+			} finally {
+				t1.complete();
 			}
-			
-			Transaction transactionForUpdateHostname = Cat.newTransaction("UpdateHostname", "H" + hourStr);
+
+			Transaction t2 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
 			try {
 				updateHostNameInfo();
-				transactionForUpdateHostname.setStatus(Transaction.SUCCESS);
+				t2.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				transactionForUpdateHostname.setStatus(e);
-			}finally{
-				transactionForUpdateHostname.complete();
+				t2.setStatus(e);
+			} finally {
+				t2.complete();
 			}
-			
+
 			try {
 				long executeMills = System.currentTimeMillis() - startMill;
 
@@ -304,26 +322,26 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		}
 	}
 
-	private boolean updateProject(Project proj) {
-		Map<String, String> infosMap = queryProjectInfoFromCMDB(proj.getCmdbDomain());
+	private boolean updateProject(Project pro) {
+		Map<String, String> infosMap = queryProjectInfoFromCMDB(pro.getCmdbDomain());
 		String cmdbOwner = infosMap.get("owner");
 		String cmdbEmail = infosMap.get("email");
 		String cmdbPhone = infosMap.get("phone");
-		String dbOwner = proj.getOwner();
-		String dbEmail = proj.getEmail();
-		String dbPhone = proj.getPhone();
+		String dbOwner = pro.getOwner();
+		String dbEmail = pro.getEmail();
+		String dbPhone = pro.getPhone();
 		boolean isProjChanged = false;
 
 		if (!checkIfNullOrEqual(cmdbOwner, dbOwner)) {
-			proj.setOwner(mergeAndBuildUniqueString(cmdbOwner, dbOwner));
+			pro.setOwner(mergeAndBuildUniqueString(cmdbOwner, dbOwner));
 			isProjChanged = true;
 		}
 		if (!checkIfNullOrEqual(cmdbEmail, dbEmail)) {
-			proj.setEmail(mergeAndBuildUniqueString(cmdbEmail, dbEmail));
+			pro.setEmail(mergeAndBuildUniqueString(cmdbEmail, dbEmail));
 			isProjChanged = true;
 		}
 		if (!checkIfNullOrEqual(cmdbPhone, dbPhone)) {
-			proj.setPhone(mergeAndBuildUniqueString(cmdbPhone, dbPhone));
+			pro.setPhone(mergeAndBuildUniqueString(cmdbPhone, dbPhone));
 			isProjChanged = true;
 		}
 

@@ -30,6 +30,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
+	
+	public String m_message;
 
 	private Segment m_segment;
 
@@ -235,4 +237,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_topReport = topReport;
 	}
 
+	public String getMessage() {
+   	return m_message;
+   }
+
+	public void setMessage(String message) {
+   	m_message = message;
+   }
+	
 }

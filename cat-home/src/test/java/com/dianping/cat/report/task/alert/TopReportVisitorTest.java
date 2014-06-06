@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.exceptionAlert;
+package com.dianping.cat.report.task.alert;
 
 import java.util.HashMap;
 import java.util.Map;

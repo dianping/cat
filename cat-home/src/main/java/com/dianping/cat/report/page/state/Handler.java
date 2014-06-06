@@ -72,7 +72,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
 		}
-
 	}
 
 	@Override
@@ -114,6 +113,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (action == Action.HOURLY || action == Action.HISTORY) {
 			StateShow show = new StateShow(payload.getIpAddress());
+			
 			show.setSortType(payload.getSort());
 			show.visitStateReport(report);
 			model.setState(show);

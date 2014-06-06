@@ -1,8 +1,5 @@
 package com.dianping.cat.system.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -29,22 +26,29 @@ public class AlertConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "alertConfig";
 
-	public Map<String, Receiver> buildIdToReceiverMap() {
-		Map<String, Receiver> map = new HashMap<String, Receiver>();
+	public String buildReceiverContentByOnOff(String originXml, String allOnOrOff) {
+		try {
+			if (StringUtils.isEmpty(allOnOrOff)) {
+				return originXml;
+			}
+			
+			AlertConfig tmpConfig = DefaultSaxParser.parse(originXml);
 
-		for (Receiver receiver : m_config.getReceivers()) {
-			map.put(receiver.getId(), receiver);
+			if (allOnOrOff.equals("on")) {
+				turnOnOrOffConfig(tmpConfig, true);
+			} else if (allOnOrOff.equals("off")) {
+				turnOnOrOffConfig(tmpConfig, false);
+			}
+			
+			return tmpConfig.toString();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return null;
 		}
-
-		return map;
-	}
+   }
 
 	public AlertConfig getAlertConfig() {
 		return m_config;
-	}
-
-	public Receiver getReceiverById(String id) {
-		return buildIdToReceiverMap().get(id);
 	}
 
 	@Override
@@ -78,23 +82,19 @@ public class AlertConfigManager implements Initializable {
 		}
 	}
 
-	public boolean insert(String xml, String allOnOrOff) {
+	public boolean insert(String xml) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
-			if (StringUtils.isEmpty(allOnOrOff)) {
-				return storeConfig();
-			}
-
-			if (allOnOrOff.equals("on")) {
-				turnOnOrOffConfig(m_config, true);
-			} else if (allOnOrOff.equals("off")) {
-				turnOnOrOffConfig(m_config, false);
-			}
+			
 			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public Receiver queryReceiverById(String id) {
+		return m_config.getReceivers().get(id);
 	}
 
 	private boolean storeConfig() {
@@ -116,7 +116,7 @@ public class AlertConfigManager implements Initializable {
 	}
 
 	private void turnOnOrOffConfig(AlertConfig config, boolean isOn) {
-		for (Receiver receiver : config.getReceivers()) {
+		for (Receiver receiver : config.getReceivers().values()) {
 			receiver.setEnable(isOn);
 		}
 	}

@@ -5,7 +5,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="3">
-				<subcondition type="MaxVal">500</subcondition>
+				<sub-condition type="MaxVal">500</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -27,7 +27,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="3">
-				<subcondition type="MaxVal">30</subcondition>
+				<sub-condition type="MaxVal">30</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -37,7 +37,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">1179648000</subcondition>
+				<sub-condition type="MaxVal">1179648000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -47,7 +47,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">2359296000</subcondition>
+				<sub-condition type="MaxVal">2359296000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -58,7 +58,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">2359296000</subcondition>
+				<sub-condition type="MaxVal">2359296000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -69,7 +69,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">1179648000</subcondition>
+				<sub-condition type="MaxVal">1179648000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -79,7 +79,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">786432000</subcondition>
+				<sub-condition type="MaxVal">786432000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -89,7 +89,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">1966080000</subcondition>
+				<sub-condition type="MaxVal">1966080000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -99,7 +99,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">1966080000</subcondition>
+				<sub-condition type="MaxVal">1966080000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -109,7 +109,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">786432000</subcondition>
+				<sub-condition type="MaxVal">786432000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -119,7 +119,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">786432000</subcondition>
+				<sub-condition type="MaxVal">786432000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -129,7 +129,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">1966080000</subcondition>
+				<sub-condition type="MaxVal">1966080000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -139,7 +139,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">3179648000</subcondition>
+				<sub-condition type="MaxVal">3179648000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -149,7 +149,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">2359296000</subcondition>
+				<sub-condition type="MaxVal">2359296000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -159,7 +159,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">5505024000</subcondition>
+				<sub-condition type="MaxVal">5505024000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -169,7 +169,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">3145728000</subcondition>
+				<sub-condition type="MaxVal">3145728000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -180,7 +180,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">3145728000</subcondition>
+				<sub-condition type="MaxVal">3145728000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -191,7 +191,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">5505024000</subcondition>
+				<sub-condition type="MaxVal">5505024000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -202,7 +202,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">6291456000</subcondition>
+				<sub-condition type="MaxVal">6291456000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -213,7 +213,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">393216000</subcondition>
+				<sub-condition type="MaxVal">393216000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -223,7 +223,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -233,7 +233,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -243,7 +243,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">13369344000</subcondition>
+				<sub-condition type="MaxVal">13369344000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -253,7 +253,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">13369344000</subcondition>
+				<sub-condition type="MaxVal">13369344000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -263,7 +263,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">393216000</subcondition>
+				<sub-condition type="MaxVal">393216000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -273,7 +273,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">6291456000</subcondition>
+				<sub-condition type="MaxVal">6291456000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -283,7 +283,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -293,7 +293,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -303,7 +303,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -313,7 +313,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -326,7 +326,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">393216000</subcondition>
+				<sub-condition type="MaxVal">393216000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -339,7 +339,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">393216000</subcondition>
+				<sub-condition type="MaxVal">393216000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -352,7 +352,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">393216000</subcondition>
+				<sub-condition type="MaxVal">393216000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -365,7 +365,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">393216000</subcondition>
+				<sub-condition type="MaxVal">393216000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -375,7 +375,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>
@@ -385,7 +385,7 @@
 		</metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<subcondition type="MaxVal">27525120000</subcondition>
+				<sub-condition type="MaxVal">27525120000</sub-condition>
 			</condition>
 		</config>
 	</rule>

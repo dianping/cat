@@ -22,9 +22,9 @@
   </entity>
   <entity name="condition">
     <attribute name="minute" value-type="int" />
-    <entity-ref name="subcondition" />
+    <entity-ref name="sub-condition" />
   </entity>
-  <entity name="subcondition">
+  <entity name="sub-condition">
     <attribute name="type" value-type="String" />
     <element name="text" value-type="String" text="true" />
   </entity>
