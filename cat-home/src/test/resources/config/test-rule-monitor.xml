@@ -2,96 +2,96 @@
 	<rule id="decreasePercentage">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="DescVal">200</subcondition>
+					<sub-condition type="DescVal">200</sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="decreaseValue">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">200</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">200</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="DescVal">95</subcondition>
+					<sub-condition type="DescVal">95</sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="increasePercentage">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">200</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">200</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="AscPer">49</subcondition>
+					<sub-condition type="AscPer">49</sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="increaseValue">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">200</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">200</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="AscVal">49</subcondition>
+					<sub-condition type="AscVal">49</sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="absoluteMaxValue">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">200</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">200</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="MaxVal">450</subcondition>
+					<sub-condition type="MaxVal">450</sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="absoluteMinValue">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">200</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">200</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="MinVal">51</subcondition>
+					<sub-condition type="MinVal">51</sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="conditionCombination">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">400</subcondition>
+					<sub-condition type="DescPer">400</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="DescPer">400</subcondition>
-					<subcondition type="DescVal">900</subcondition>
+					<sub-condition type="DescPer">400</sub-condition>
+					<sub-condition type="DescVal">900</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">100</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">100</sub-condition>
 			</condition>
 		</config>
 	</rule>
-	<rule id="subconditionCombination">
+	<rule id="sub-conditionCombination">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
-					<subcondition type="DescPer">400</subcondition>
+					<sub-condition type="DescPer">400</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="DescPer">400</subcondition>
-					<subcondition type="DescVal">900</subcondition>
+					<sub-condition type="DescPer">400</sub-condition>
+					<sub-condition type="DescVal">900</sub-condition>
 			</condition>
 			<condition>
-					<subcondition type="DescPer">40</subcondition>
-					<subcondition type="DescVal">200</subcondition>
-					<subcondition type="MinVal">10</subcondition>
+					<sub-condition type="DescPer">40</sub-condition>
+					<sub-condition type="DescVal">200</sub-condition>
+					<sub-condition type="MinVal">10</sub-condition>
 			</condition>
 		</config>
 	</rule>
