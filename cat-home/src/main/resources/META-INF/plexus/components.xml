@@ -2982,6 +2982,11 @@
 					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>state</role-hint>
+					<field-name>m_stateService</field-name>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
@@ -2992,6 +2997,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

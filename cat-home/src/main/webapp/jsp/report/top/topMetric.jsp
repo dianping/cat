@@ -12,6 +12,14 @@
 <script type="text/javascript">
 	$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 </script>
+
+<c:if test="${not empty model.message}">
+	<h3 class="text-center text-error">出问题CAT的服务端:${model.message}</h3>
+</c:if>
+<c:if test="${ empty model.message}">
+	<h3 class="text-center text-success">CAT服务端正常</h3>
+</c:if>
+
 <div class="tabbable tabs-left " id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs alert-info">
     <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top${payload.topCounts}</a></li>
