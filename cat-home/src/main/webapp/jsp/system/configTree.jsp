@@ -15,10 +15,11 @@
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
 	       <li class="text-right" id="metricGroupConfigUpdate"><a href="?op=metricGroupConfigUpdate"><strong>业务指标分组</strong></a></li>
 	       <li class="text-right" id="domainMetricRuleConfigUpdate"><a href="?op=domainMetricRuleConfigUpdate"><strong>业务告警配置</strong></a></li>
+           <li class='nav-header'><h4>网络监控配置</h4></li>
 	       <li class="text-right" id="metricRuleConfigUpdate"><a href="?op=metricRuleConfigUpdate"><strong>网络告警配置</strong></a></li>
-	        <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>告警默认发送人配置</strong></a></li>
-	       <li class='nav-header'><h4>报表展示配置</h4></li>
-	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>BugReport配置</strong></a></li>
+	       <li class='nav-header'><h4>系统默认配置</h4></li>
+	        <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>默认告警配置</strong></a></li>
+	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常类型配置</strong></a></li>
 	       <li class="text-right" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate"><strong>机器分组配置</strong></a></li>
          </ul>
 </div>
