@@ -31,7 +31,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 	
 	public List<String> buildSMSReceivers(Project project) {
 		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getId());
+		Receiver receiver = m_manager.queryReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return smsReceivers;
