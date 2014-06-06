@@ -43,7 +43,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("type")
 	private String m_type;
-
+	
+	@FieldMeta("metricType")
+	private String m_metricType;
+	
 	@FieldMeta("database")
 	private String m_database;
 
@@ -104,6 +107,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public String getType() {
 		return m_type;
 	}
+	
+	public String getMetricType() {
+		return m_metricType;
+	}
 
 	public boolean isWaterfall() {
 		return m_waterfall;
@@ -148,6 +155,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+	
+	public void setMeticType(String metricType) {
+		m_metricType = metricType;
 	}
 	
 	public String getCity() {

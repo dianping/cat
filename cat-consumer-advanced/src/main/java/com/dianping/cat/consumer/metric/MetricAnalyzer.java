@@ -170,7 +170,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (!StringUtils.isEmpty(group)) {
 			m_productLineConfigManager.insertIfNotExsit(group, domain);
 
-			if (Constants.BROKER_SERVICE.equals(domain)) {
+			if (!validateMetricType(domain, group)) {
 				report = findOrCreateReport(group);
 			}
 		}
@@ -184,15 +184,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-
-			insertDefaultConfig(metricName, domain, config);
+			if (validateMetricType(domain, group)) {
+				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+			}
 		}
 		return 0;
 	}
 
-	private void insertDefaultConfig(String metricName, String domain, ConfigItem config) {
-		if (!Constants.BROKER_SERVICE.equals(domain)) {
-			m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+	private boolean validateMetricType(String domain, String group) {
+		if (Constants.BROKER_SERVICE.equals(domain)
+		      || (!StringUtils.isEmpty(group) && group.startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX))) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 

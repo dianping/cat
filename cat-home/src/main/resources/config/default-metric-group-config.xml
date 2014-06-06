@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <metric-group-config>
 	<metric-group id="微信">
 		<metric-key-config metric-domain="MobileWapMWeb"  metric-type="metric"  metric-key="ReviewList_Default" display-type="count"></metric-key-config>

@@ -44,6 +44,8 @@ public class NavigationBar {
 		ReportPage.DEPENDENCY,
 
 		ReportPage.NETWORK,
+		
+		ReportPage.SYSTEM,
 
 		ReportPage.ALTERATION,
 

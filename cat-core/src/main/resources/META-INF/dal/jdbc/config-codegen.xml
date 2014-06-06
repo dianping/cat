@@ -2,7 +2,7 @@
 <entities>
   <entity name="config" table="config" alias="c">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="name" field="name" value-type="String" length="50" />
+    <member name="name" field="name" value-type="String" length="50" nullable="false" />
     <member name="content" field="content" value-type="String" length="2147483647" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="modify-date" field="modify_date" value-type="Date" nullable="false" />
