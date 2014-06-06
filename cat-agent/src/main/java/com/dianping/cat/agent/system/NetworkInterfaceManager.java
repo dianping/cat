@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.systemAgent;
+package com.dianping.cat.agent.system;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;

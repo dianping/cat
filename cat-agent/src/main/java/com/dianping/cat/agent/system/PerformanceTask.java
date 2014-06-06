@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.systemAgent;
+package com.dianping.cat.agent.system;
 
 import org.hyperic.sigar.Cpu;
 import org.hyperic.sigar.FileSystem;
