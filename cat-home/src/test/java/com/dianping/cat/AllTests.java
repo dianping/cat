@@ -26,6 +26,7 @@ import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
+import com.dianping.cat.report.task.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
@@ -132,7 +133,7 @@ RuleConfigTest.class,
 
 AlertConfigTest.class,
 
-RuleConfigTest.class})
+MetricIdAndRuleMappingTest.class})
 public class AllTests {
 
 	@BeforeClass
