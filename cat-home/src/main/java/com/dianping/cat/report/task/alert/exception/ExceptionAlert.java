@@ -73,67 +73,9 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return topMetric;
 	}
 
-	private TopReport queryTopReport(Date start) {
-		String domain = Constants.CAT;
-		String date = String.valueOf(start.getTime());
-		ModelRequest request = new ModelRequest(domain, start.getTime()).setProperty("date", date);
-
-		if (m_topService.isEligable(request)) {
-			ModelResponse<TopReport> response = m_topService.invoke(request);
-			TopReport report = response.getModel();
-
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
-		}
-	}
-
 	@Override
-	public void run() {
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		boolean active = true;
-		while (active) {
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
-			long current = System.currentTimeMillis();
-
-			try {
-				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
-				Collection<List<Item>> items = topMetric.getError().getResult().values();
-				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
-
-				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
-					try {
-						sendAlertForDomain(entry.getKey(), entry.getValue());
-					} catch (Exception e) {
-						m_logger.error(e.getMessage());
-					}
-				}
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(TimeUtil.ONE_MINUTE);
-				}
-			} catch (InterruptedException e) {
-				active = false;
-			}
-		}
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	private List<AlertException> findOrCreateDomain(Map<String, List<AlertException>> exceptions, String domain) {
@@ -203,6 +145,11 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return alertExceptions;
 	}
 
+	@Override
+	public String getName() {
+		return "exception-alert";
+	}
+
 	private Project queryProjectByDomain(String projectName) {
 		Project project = null;
 		try {
@@ -211,6 +158,69 @@ public class ExceptionAlert implements Task, LogEnabled {
 			Cat.logError(e);
 		}
 		return project;
+	}
+
+	private TopReport queryTopReport(Date start) {
+		String domain = Constants.CAT;
+		String date = String.valueOf(start.getTime());
+		ModelRequest request = new ModelRequest(domain, start.getTime()).setProperty("date", date);
+
+		if (m_topService.isEligable(request)) {
+			ModelResponse<TopReport> response = m_topService.invoke(request);
+			TopReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
+		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		boolean active = true;
+		while (active) {
+			int minute = Calendar.getInstance().get(Calendar.MINUTE);
+			String minuteStr = String.valueOf(minute);
+
+			if (minute < 10) {
+				minuteStr = '0' + minuteStr;
+			}
+			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
+			long current = System.currentTimeMillis();
+
+			try {
+				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
+				Collection<List<Item>> items = topMetric.getError().getResult().values();
+				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
+
+				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
+					try {
+						sendAlertForDomain(entry.getKey(), entry.getValue());
+					} catch (Exception e) {
+						m_logger.error(e.getMessage());
+					}
+				}
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+			} finally {
+				t.complete();
+			}
+			long duration = System.currentTimeMillis() - current;
+
+			try {
+				if (duration < DURATION) {
+					Thread.sleep(TimeUtil.ONE_MINUTE);
+				}
+			} catch (InterruptedException e) {
+				active = false;
+			}
+		}
 	}
 
 	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
@@ -243,16 +253,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public String getName() {
-		return "exception-alert";
-	}
-
-	@Override
 	public void shutdown() {
 	}
 
@@ -270,17 +270,17 @@ public class ExceptionAlert implements Task, LogEnabled {
 			m_count = count;
 		}
 
-		@Override
-		public String toString() {
-			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
-		}
-
 		public int getAlertFlag() {
 			return m_alertFlag;
 		}
 
 		public String getName() {
 			return m_name;
+		}
+
+		@Override
+		public String toString() {
+			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
 		}
 	}
 }

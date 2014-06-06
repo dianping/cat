@@ -47,8 +47,8 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		AlertReport alertReport = new AlertReport(Constants.CAT);
-		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport)
-		      .setExceptionConfigManager(m_exceptionConfigManager);
+		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
+		      m_exceptionConfigManager);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 
 		alertReport.setStartTime(start);
@@ -108,23 +108,6 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
-	private AlertReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		long startTime = period.getTime();
-		long endTime = endDate.getTime();
-		AlertReportMerger merger = new AlertReportMerger(new AlertReport(domain));
-
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
-			Date date = new Date(startTime);
-			AlertReport reportModel = m_reportService.queryAlertReport(domain, date, new Date(date.getTime()
-			      + TimeUtil.ONE_HOUR));
-
-			reportModel.accept(merger);
-		}
-		AlertReport alertReport = merger.getAlertReport();
-
-		return alertReport;
-	}
-
 	private AlertReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -142,6 +125,23 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		AlertReport alertReport = merger.getAlertReport();
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(end);
+		return alertReport;
+	}
+
+	private AlertReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
+		long startTime = period.getTime();
+		long endTime = endDate.getTime();
+		AlertReportMerger merger = new AlertReportMerger(new AlertReport(domain));
+
+		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+			Date date = new Date(startTime);
+			AlertReport reportModel = m_reportService.queryAlertReport(domain, date, new Date(date.getTime()
+			      + TimeUtil.ONE_HOUR));
+
+			reportModel.accept(merger);
+		}
+		AlertReport alertReport = merger.getAlertReport();
+
 		return alertReport;
 	}
 }

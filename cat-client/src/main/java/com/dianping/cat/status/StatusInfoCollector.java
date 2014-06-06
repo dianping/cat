@@ -32,7 +32,7 @@ public class StatusInfoCollector extends BaseVisitor {
 	private String m_jars;
 
 	private String m_dataPath = "/data";
-	
+
 	public StatusInfoCollector(MessageStatistics statistics, String jars) {
 		m_statistics = statistics;
 		m_jars = jars;
@@ -240,7 +240,7 @@ public class StatusInfoCollector extends BaseVisitor {
 		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-",
 		      "Client-ResponseProcessor"));
 
-		int jbossThreadsCount = countThreadsByPrefix(threads, "http-");
+		int jbossThreadsCount = countThreadsByPrefix(threads, "http-", "catalina-exec-");
 		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");
 
 		thread.setHttpThreadCount(jbossThreadsCount + jettyThreadsCount);
