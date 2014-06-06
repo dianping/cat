@@ -90,8 +90,8 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
-			
-			if(keyMapEntry.getValue().entrySet().isEmpty()){
+
+			if (keyMapEntry.getValue().entrySet().isEmpty()) {
 				lineChart.add("none", buildNoneData(startDate, endDate, 1));
 			}
 
@@ -134,7 +134,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/-usage:avg", "/boot-usage:avg",
 		      "/data-usage:avg", "/usr-usage:avg", "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg",
-		      "load:avg", "uptime:avg", "Md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
+		      "load:avg", "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
 
 		List<String> jvmKeys = new ArrayList<String>(Arrays.asList("jvm_edenUsage:avg", "jvm_oldUsage:avg",
 		      "jvm_permUsage:avg", "tomcatLive:avg", "catalinaLogSize:sum"));
@@ -156,21 +156,23 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		List<String> systemKeys = fetchSystemKeys(type);
 		Map<String, Map<String, String>> aggregationKeys = new LinkedHashMap<String, Map<String, String>>();
 
-		for (String key : systemKeys) {
-			String[] keyArray = key.split(":");
-			String realKey = keyArray[0];
-			String metricType = keyArray[1];
-			String des = queryMetricItemDes(metricType.toUpperCase());
-			String chartKey = realKey + des;
-			Map<String, String> ipMap = aggregationKeys.get(chartKey);
+		if (systemKeys != null) {
+			for (String key : systemKeys) {
+				String[] keyArray = key.split(":");
+				String realKey = keyArray[0];
+				String metricType = keyArray[1];
+				String des = queryMetricItemDes(metricType.toUpperCase());
+				String chartKey = realKey + des;
+				Map<String, String> ipMap = aggregationKeys.get(chartKey);
 
-			if (ipMap == null) {
-				ipMap = new HashMap<String, String>();
+				if (ipMap == null) {
+					ipMap = new HashMap<String, String>();
 
-				aggregationKeys.put(chartKey, ipMap);
-			}
-			for (String ip : ipAddrs) {
-				ipMap.put(ip, realKey + "_" + ip + ":" + metricType.toUpperCase());
+					aggregationKeys.put(chartKey, ipMap);
+				}
+				for (String ip : ipAddrs) {
+					ipMap.put(ip, realKey + "_" + ip + ":" + metricType.toUpperCase());
+				}
 			}
 		}
 
