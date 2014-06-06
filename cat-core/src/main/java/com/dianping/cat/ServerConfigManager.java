@@ -293,7 +293,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		if (m_config != null) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-			//TODO
+			// TODO
 			if ("10.1.6.128".equals(ip)) {
 				return true;
 			} else {
