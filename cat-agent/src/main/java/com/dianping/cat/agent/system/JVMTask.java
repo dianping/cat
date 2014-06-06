@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.systemAgent;
+package com.dianping.cat.agent.system;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,22 +53,22 @@ public class JVMTask extends AbstractTask {
 			String oldUsage = String.valueOf(Double.valueOf(metrics[3]) / 100);
 			String permUsage = String.valueOf(Double.valueOf(metrics[4]) / 100);
 
-			String edenUrl = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_edenUsage_" + m_ipAddr, "avg",
+			String edenUrl = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_edenUsage_" + m_ipAddr, "avg",
 			      String.valueOf(edenUsage));
-			String oldUrl = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_oldUsage_" + m_ipAddr, "avg",
+			String oldUrl = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_oldUsage_" + m_ipAddr, "avg",
 			      String.valueOf(oldUsage));
-			String permUrl = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_permUsage_" + m_ipAddr, "avg",
+			String permUrl = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_permUsage_" + m_ipAddr, "avg",
 			      String.valueOf(permUsage));
 
 			sendMetric(edenUrl);
 			sendMetric(oldUrl);
 			sendMetric(permUrl);
 			
-			String edenUrl2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_edenUsage_" + m_ipAddr2, "avg",
+			String edenUrl2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_edenUsage_" + m_ipAddr2, "avg",
 			      String.valueOf(edenUsage + 0.2));
-			String oldUrl2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_oldUsage_" + m_ipAddr2, "avg",
+			String oldUrl2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_oldUsage_" + m_ipAddr2, "avg",
 			      String.valueOf(oldUsage + 0.2));
-			String permUrl2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_permUsage_" + m_ipAddr2, "avg",
+			String permUrl2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_permUsage_" + m_ipAddr2, "avg",
 			      String.valueOf(permUsage + 0.2));
 
 			sendMetric(edenUrl2);

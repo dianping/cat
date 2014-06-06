@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.system.graph;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,14 +21,24 @@ import com.dianping.cat.report.page.LineChart;
 
 public class SystemGraphCreator extends AbstractGraphCreator {
 
+	public static final String SYSTEM_TYPE = "system";
+
+	public static final String JVM_TYPE = "jvm";
+
+	public static final String NGINX_TYPE = "nginx";
+
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Map<String, String> pars,
 	      Set<String> ipAddrs, Date startDate, Date endDate) {
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, pars, ipAddrs, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
-		Set<String> curIpAddrs = buildIpAddrs(pars.get("ip"), ipAddrs);
 
-		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures, curIpAddrs);
+		String type = pars.get("type");
+		Set<String> curIpAddrs = buildIpAddrs(pars.get("ip"), ipAddrs);
+		Map<String, Map<String, String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet(), curIpAddrs,
+		      type);
+
+		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures, aggregationKeys);
 	}
 
 	private Set<String> buildIpAddrs(String ipPar, Set<String> ipAll) {
@@ -51,7 +62,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			MetricReport report = m_metricReportService.querySystemReport(group, pars, new Date(start));
-			Map<String, double[]> currentValues = m_pruductDataFetcher.buildLeastGraphData(report);
+			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(report);
 
 			mergeMap(sourceValue, currentValues, totalSize, index);
 			index++;
@@ -66,8 +77,8 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 	}
 
 	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
-	      final Map<String, double[]> dataWithOutFutures, Set<String> ipAddrs) {
-		Map<String, Map<String, String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet(), ipAddrs);
+	      final Map<String, double[]> dataWithOutFutures, Map<String, Map<String, String>> aggregationKeys) {
+
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		int step = m_dataExtractor.getStep();
 
@@ -90,6 +101,8 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 					addLastMinuteData(current, all, m_lastMinute, endDate);
 					lineChart.add(lineTitle, current);
+				} else {
+					lineChart.add(lineTitle, buildNoneData(startDate, endDate, 1));
 				}
 			}
 			charts.put(chartTitle, lineChart);
@@ -97,28 +110,66 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	public Map<String, Map<String, String>> buildLineChartKeys(Set<String> keys, Set<String> ipAddrs) {
-		Set<String> chartKeys = new HashSet<String>();
+	private Map<Long, Double> buildNoneData(Date startDate, Date endDate, int step) {
+		int n = 0;
+		long current = System.currentTimeMillis();
+
+		if (endDate.getTime() > current) {
+			n = (int) ((current - startDate.getTime()) / 60000.0);
+		} else {
+			n = (int) ((endDate.getTime() - startDate.getTime()) / 60000.0);
+		}
+
+		double[] noneData = new double[n];
+		Map<Long, Double> currentData = convertToMap(noneData, startDate, step);
+
+		return currentData;
+	}
+
+	private List<String> fetchSystemKeys(String type) {
+
+		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/-usage:avg", "/boot-usage:avg",
+		      "/data-usage:avg", "/usr-usage:avg", "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg",
+		      "load:avg", "uptime:avg", "Md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
+
+		List<String> jvmKeys = new ArrayList<String>(Arrays.asList("jvm_edenUsage:avg", "jvm_oldUsage:avg",
+		      "jvm_permUsage:avg", "tomcatLive:avg", "catalinaLogSize:sum"));
+
+		List<String> nginxKeys = new ArrayList<String>();
+
+		if (SYSTEM_TYPE.equalsIgnoreCase(type)) {
+			return systemKeys;
+		} else if (JVM_TYPE.equalsIgnoreCase(type)) {
+			return jvmKeys;
+		} else if (NGINX_TYPE.equalsIgnoreCase(type)) {
+			return nginxKeys;
+		} else {
+			return null;
+		}
+	}
+
+	private Map<String, Map<String, String>> buildLineChartKeys(Set<String> keys, Set<String> ipAddrs, String type) {
+		List<String> systemKeys = fetchSystemKeys(type);
 		Map<String, Map<String, String>> aggregationKeys = new LinkedHashMap<String, Map<String, String>>();
 
-		for (String key : keys) {
-			String[] tmp = key.split("_");
+		for (String key : systemKeys) {
+			String[] keyArray = key.split(":");
+			String realKey = keyArray[0];
+			String metricType = keyArray[1];
+			String des = queryMetricItemDes(metricType.toUpperCase());
+			String chartKey = realKey + des;
+			Map<String, String> ipMap = aggregationKeys.get(chartKey);
 
-			chartKeys.add(tmp[0]);
-		}
+			if (ipMap == null) {
+				ipMap = new HashMap<String, String>();
 
-		for (String chartKey : chartKeys) {
-			Map<String, String> keyMap = aggregationKeys.get(chartKey);
-
-			if (keyMap == null) {
-				keyMap = new HashMap<String, String>();
-
-				aggregationKeys.put(chartKey, keyMap);
+				aggregationKeys.put(chartKey, ipMap);
 			}
 			for (String ip : ipAddrs) {
-				keyMap.put(ip, chartKey + "_" + ip);
+				ipMap.put(ip, realKey + "_" + ip + ":" + metricType.toUpperCase());
 			}
 		}
+
 		return aggregationKeys;
 	}
 

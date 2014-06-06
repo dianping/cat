@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.systemAgent;
+package com.dianping.cat.agent.system;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -86,7 +86,7 @@ public class StateTask extends AbstractTask {
 		if (logFile.exists()) {
 			double bytes = logFile.length();
 			double kilobytes = (bytes / 1024);
-			String url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_CatalinaLogSize_" + m_ipAddr, "sum",
+			String url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_catalinaLogSize_" + m_ipAddr, "sum",
 			      String.valueOf(kilobytes));
 
 			sendMetric(url);
@@ -100,9 +100,9 @@ public class StateTask extends AbstractTask {
 			String url;
 
 			if (pid == null) {
-				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_tomcatLive_" + m_ipAddr, "avg", String.valueOf(0));
+				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_tomcatLive_" + m_ipAddr, "avg", String.valueOf(0));
 			} else {
-				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "JVM_tomcatLive_" + m_ipAddr, "avg", String.valueOf(1));
+				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "jvm_tomcatLive_" + m_ipAddr, "avg", String.valueOf(1));
 			}
 			sendMetric(url);
 		} catch (Throwable e) {
@@ -140,9 +140,9 @@ public class StateTask extends AbstractTask {
 			}
 			String url;
 			if (m_md5String.equals(currMd5String)) {
-				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_Md5Change_" + m_ipAddr, "avg", String.valueOf(1));
+				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_md5Change_" + m_ipAddr, "avg", String.valueOf(1));
 			} else {
-				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_Md5Change_" + m_ipAddr, "avg", String.valueOf(0));
+				url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_md5Change_" + m_ipAddr, "avg", String.valueOf(0));
 			}
 			sendMetric(url);
 		} catch (IOException e) {

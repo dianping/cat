@@ -1,4 +1,4 @@
-package com.dianping.cat.report.chart;
+package com.dianping.cat.report.page.metric.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
+import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.MetricType;
 
@@ -147,19 +148,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return false;
 	}
 
-	protected String queryMetricItemDes(String type) {
-		String des = "";
-
-		if (MetricType.AVG.name().equals(type)) {
-			des = Chinese.Suffix_AVG;
-		} else if (MetricType.SUM.name().equals(type)) {
-			des = Chinese.Suffix_SUM;
-		} else if (MetricType.COUNT.name().equals(type)) {
-			des = Chinese.Suffix_COUNT;
-		}
-		return des;
-	}
-
 	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
@@ -181,7 +169,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 	}
 
 	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		Map<String, double[]> datas = m_pruductDataFetcher.buildAllGraphData(metricReport);
+		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport);
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 
 		for (MetricItemConfig config : metricConfigs) {
