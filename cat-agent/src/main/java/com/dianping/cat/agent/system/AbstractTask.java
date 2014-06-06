@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.systemAgent;
+package com.dianping.cat.agent.system;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

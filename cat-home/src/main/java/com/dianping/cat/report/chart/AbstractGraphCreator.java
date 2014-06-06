@@ -21,10 +21,12 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo;
+import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public abstract class AbstractGraphCreator implements LogEnabled {
@@ -147,6 +149,19 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 				}
 			}
 		}
+	}
+
+	protected String queryMetricItemDes(String type) {
+		String des = "";
+
+		if (MetricType.AVG.name().equals(type)) {
+			des = Chinese.Suffix_AVG;
+		} else if (MetricType.SUM.name().equals(type)) {
+			des = Chinese.Suffix_SUM;
+		} else if (MetricType.COUNT.name().equals(type)) {
+			des = Chinese.Suffix_COUNT;
+		}
+		return des;
 	}
 
 	protected Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
