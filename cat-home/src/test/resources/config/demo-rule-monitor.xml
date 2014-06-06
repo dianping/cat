@@ -32,7 +32,7 @@
 			</condition>
 		</config>
 	</rule>
-	<rule id="sub-conditionCombination">
+	<rule id="subconditionCombination">
 		<config starttime="00:00" endtime="24:00">
 			<condition>
 				<sub-condition type="DescPer">40</sub-condition>
