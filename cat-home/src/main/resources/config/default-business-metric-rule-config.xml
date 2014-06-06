@@ -3,15 +3,6 @@
    <rule id="default">
       <metric-item type="id">SearchShop:Metric:arts-shop-rt</metric-item>
       <metric-item type="id" monitorCount="true">SessionService:Metric:RequestId</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_wechat_premium_accesslog</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_wechat_notify_checkinlog</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_shop_hotel_log</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_ba_finance_shopbill_web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_search_tuangou</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_tg_rank_tracelog</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_hippo_log</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_search_artsshop</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_incremental_deal</metric-item>
       <metric-item type="id" monitorCount="true">PayOrder:Metric:order</metric-item>
       <metric-item type="id" monitorCount="true">Unipay:Metric:payment.success</metric-item>
       <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY.payment.success</metric-item>
@@ -32,17 +23,7 @@
       <metric-item type="id" monitorCount="true">Unipay:Metric:WEIXIN.payment.success</metric-item>
       <metric-item type="id">Unipay:Metric:TENPAY.payment.pedding</metric-item>
       <metric-item type="id">Unipay:Metric:DIANPING.payment.pedding</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_portal_accesslog</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_access_log_hour</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_search_tuangourec</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_mobile_log_m</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_reservation_feedback</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_cps_redirect_log</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_cps_third_party_log</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_cps_dealfeedback</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_openplatform_cps_direct_order_log</metric-item>
       <metric-item type="id" monitorCount="true">MobileMembercardMainServer:Metric:MainServerJoinedCardSuccess</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_mobile_log_wap</metric-item>
       <metric-item type="id">Unipay:Metric:TENPAY_MOBILEQQ.payment.pedding</metric-item>
       <metric-item type="id" monitorCount="true">UsercardWeb:Metric:UserWebJoinedCardSuccess</metric-item>
       <metric-item type="id" monitorCount="true">MobileMembercardMainApiWeb:Metric:MainWebJoinedCardFailed</metric-item>
@@ -61,7 +42,6 @@
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:User_Album</metric-item>
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesses_nearby</metric-item>
       <metric-item type="id">SearchTuanGouRec:Metric:arts-tuangourec-rt</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_bc-tuangou-web</metric-item>
       <metric-item type="id">SearchTuanGou:Metric:arts-tuangou-rt</metric-item>
       <metric-item type="id">TuanGouTracking:Metric:对外合作失败引流</metric-item>
       <metric-item type="id">SearchAd:Metric:arts-ad-rt</metric-item>
@@ -100,30 +80,11 @@
       <metric-item type="id">SearchDavinci:Metric:arts-wqtuangou-sc</metric-item>
       <metric-item type="id">SearchShop:Metric:arts-tuangou-rt</metric-item>
       <metric-item type="id">SearchShop:Metric:arts-tuangou-sc</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_pay-channel</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_pay-unipay</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_pay-order</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_user-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_group-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_shop-business-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_to-giftcard-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_account-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_mobile-account-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_mobile-wap-m-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_wap-account-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_shop-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_hotel-index-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_hotel-search-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_mobile-wap-web</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_pay-engine</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_destn-index-web</metric-item>
       <metric-item type="id">Unipay:Metric:UMPAY_PC.payment.pedding</metric-item>
       <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY_PC.payment.success</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_search_artstuangou</metric-item>
       <metric-item type="id">SearchShopwx:Metric:arts-shop-sc</metric-item>
       <metric-item type="id">SearchShopwx:Metric:arts-shop-rt</metric-item>
       <metric-item type="id">SearchShopwx:Metric:arts-shopwx-rt</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_search_open_wechat_accesslog</metric-item>
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/ucweb/find_businesses</metric-item>
       <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-tuangou-receipt-job</metric-item>
       <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:arts-tuangou-sc</metric-item>
@@ -143,189 +104,13 @@
       <metric-item type="id" monitorCount="true">TakeawayMWeb:Metric:OrderCount</metric-item>
       <metric-item type="id" monitorCount="true">TakeawayShopWeb:Metric:AcceptOrderCount</metric-item>
       <metric-item type="id" monitorCount="true">TakeawayShopWeb:Metric:ActiveRejectOrderCount</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet1/6-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet1/6-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet1/13-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet1/13-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet1/13-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet1/13-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet1/14-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet1/14-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/1-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/1-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/1-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/1-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/2-out</metric-item>
       <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:trip_common_order_call</metric-item>
-      <metric-item type="id">PhoenixAgent:Metric:dpods_nginx_log_open-platform-web</metric-item>
       <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY_WAP.payment.pedding</metric-item>
       <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY_WAP.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/0-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/0-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/1-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/1-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/3-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/3-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/4-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/4-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/5-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/5-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/6-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/6-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/7-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/7-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/5-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/5-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/8-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/8-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/9-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/9-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/12-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/12-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/5-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/5-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/7-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/7-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/8-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/8-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/9-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/9-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/1-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/1-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/3-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/3-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/4-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/4-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/16-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/16-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/25-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/25-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/26-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/26-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/32-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-A:Metric:Ethernet3/32-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/1-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/1-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/3-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/3-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/4-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/4-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/16-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/16-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/25-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/25-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/26-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/26-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/32-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N7010-B:Metric:Ethernet3/32-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/43-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/43-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/45-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/45-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/46-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/46-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/47-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/47-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/48-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/48-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/43-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/45-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/45-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/46-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/46-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/47-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/47-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/48-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/48-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-3-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-3-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-4-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-4-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-6-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-6-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-7-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-7-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-8-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-8-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-1-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-1-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-2-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-2-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-3-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-3-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-4-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-4-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-6-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-6-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-7-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-7-out</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-8-in</metric-item>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-2-dianping-com:Metric:1/1-8-out</metric-item>
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesse</metric-item>
       <metric-item type="id">SearchShop:Metric:arts-shopwx-rt</metric-item>
       <metric-item type="id" monitorCount="true">SearchShop:Metric:arts-shopwx-sc</metric-item>
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/wechat/find_businesses</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/11-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/11-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/11-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/11-out</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-1-in</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-1-out</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-3-in</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-3-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/3-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/3-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/4-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/4-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/32-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/32-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/45-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/45-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/47-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/47-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/48-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/48-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/3-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/3-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/4-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/4-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/32-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/32-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/45-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/45-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/47-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/47-out</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/48-in</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/48-out</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet3/0/52-in</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet3/0/52-out</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet4/0/52-in</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet4/0/52-out</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet1/0/51-in</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet1/0/51-out</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet2/0/51-in</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet2/0/51-out</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet3/0/51-in</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet3/0/51-out</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet4/0/51-in</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet4/0/51-out</metric-item>
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/qq/find_deals</metric-item>
       <metric-item type="id" monitorCount="true">MOPayService:Metric:Mopay-Order</metric-item>
       <metric-item type="id" monitorSum="true">MOPayService:Metric:Mopay-Order-Sum</metric-item>
@@ -370,401 +155,9 @@
       <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_www_freq</metric-item>
       <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_wap_fail_freq</metric-item>
       <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_www_fail_freq</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/1-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/1-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/5-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/5-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/8-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/8-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/9-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/9-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/12-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi1/0/12-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/1-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/1-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/5-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/5-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/7-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/7-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/8-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/8-out</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/9-in</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:Gi2/0/9-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi1/0/1-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi1/0/1-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi1/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi1/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi1/0/7-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi1/0/7-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi2/0/7-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:Gi2/0/7-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi1/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi1/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi1/0/11-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi1/0/11-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi2/0/2-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi2/0/2-out</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi2/0/11-in</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:Gi2/0/11-out</metric-item>
       <metric-item type="id" monitorCount="true">TakeawayMapiWeb:Metric:OrderCount</metric-item>
       <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-wishshop-sc</metric-item>
       <metric-item type="id">SearchDavinci:Metric:arts-wishshop-rt</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/0-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/0-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/5-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/5-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/6-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/6-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/7-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/7-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/5-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/5-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/8-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/8-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/9-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/9-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/12-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/12-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/5-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/5-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/7-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/7-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/8-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/8-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/9-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/9-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/7-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/7-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/7-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/7-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-6-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-6-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-7-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-7-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-8-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-8-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-6-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-6-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-7-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-7-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-8-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-8-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/16-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/16-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/25-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/25-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/26-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/26-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/32-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/32-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/16-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/16-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/25-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/25-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/26-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/26-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/32-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/32-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/43-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/43-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/45-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/45-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/46-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/46-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/47-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/47-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/48-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/48-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/43-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/43-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/45-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/45-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/46-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/46-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/47-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/47-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/48-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/48-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/11-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/11-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/2-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/2-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/11-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/11-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-1-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-1-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/32-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/32-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/45-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/45-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/47-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/47-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/48-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/48-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/3-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/3-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/4-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/4-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/32-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/32-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/45-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/45-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/47-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/47-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/48-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/48-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet3/0/52-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet3/0/52-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet4/0/52-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet4/0/52-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet1/0/51-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet1/0/51-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet2/0/51-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet2/0/51-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet3/0/51-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet3/0/51-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet4/0/51-indiscards</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet4/0/51-outdiscards</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/0-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/0-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/5-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/5-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/6-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/6-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/7-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">AntiDDoS:Metric:GigabitEthernet1/0/7-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/5-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/5-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/8-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/8-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/9-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/9-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/12-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/12-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/5-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/5-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/7-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/7-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/8-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/8-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/9-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/9-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/7-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/7-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/7-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/7-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-6-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-6-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-7-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-7-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-8-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-1-dianping-com:Metric:1/1-8-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-6-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-6-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-7-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-7-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-8-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">2400-2-dianping-com:Metric:1/1-8-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/16-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/16-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/25-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/25-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/26-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/26-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/32-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-A:Metric:Ethernet3/32-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/16-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/16-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/25-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/25-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/26-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/26-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/32-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N7010-B:Metric:Ethernet3/32-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/43-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/43-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/45-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/45-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/46-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/46-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/47-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/47-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/48-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-1:Metric:Ethernet1/48-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/43-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/43-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/45-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/45-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/46-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/46-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/47-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/47-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/48-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/48-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/11-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet1/0/11-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/2-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/2-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/11-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">SH-HM-C3750G:Metric:GigabitEthernet2/0/11-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-1-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-1-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">3600-1-dianping-com:Metric:1-3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/32-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet1/2/0/32-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/45-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/45-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/47-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/47-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/48-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet1/4/0/48-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/3-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/3-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/4-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/4-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/32-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:Ten-GigabitEthernet2/2/0/32-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/45-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/45-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/47-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/47-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/48-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S12508-1:Metric:GigabitEthernet2/4/0/48-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet3/0/52-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet3/0/52-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet4/0/52-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830_irf:Metric:Ten-GigabitEthernet4/0/52-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet1/0/51-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet1/0/51-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet2/0/51-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet2/0/51-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet3/0/51-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet3/0/51-outerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet4/0/51-inerrors</metric-item>
-      <metric-item type="id" monitorSum="true">S5830-IRF_2:Metric:Ten-GigabitEthernet4/0/51-outerrors</metric-item>
       <metric-item type="id" monitorCount="true">SearchPicasso:Metric:diary.FullIndex.DocCount</metric-item>
       <metric-item type="id" monitorCount="true">SearchPicasso:Metric:promo.FullIndex.DocCount</metric-item>
       <metric-item type="id" monitorCount="true">SearchPicasso:Metric:mtcaccount.FullIndex.DocCount</metric-item>
@@ -807,12 +200,6 @@
       <metric-item type="id" monitorCount="true">AccountServer:Metric:AcquireQzoneLock</metric-item>
       <metric-item type="id" monitorCount="true">AccountServer:Metric:ReleaseQzoneLock</metric-item>
       <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-fsReceiptSync_alpha2</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:client_connections</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:server_connections</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:client_connections</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:server_connections</metric-item>
-      <metric-item type="id">3600-1-dianping-com:Metric:client_connections</metric-item>
-      <metric-item type="id">3600-1-dianping-com:Metric:server_connections</metric-item>
       <metric-item type="id">test:Metric:client_connections</metric-item>
       <metric-item type="id" monitorSum="true">test1:Metric:client_connections</metric-item>
       <metric-item type="id" monitorSum="true">Unipay:Metric:DIANPING.payment.success</metric-item>
@@ -849,26 +236,6 @@
       <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_daily_deal_statistics</metric-item>
       <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/upload_daily_statictics</metric-item>
       <metric-item type="id" monitorCount="true">PartnerXiaomiAPI:Metric:/premium/xiaomi/refund</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core1</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core2</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core3</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core4</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core5</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core6</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core7</metric-item>
-      <metric-item type="id">2400-1-dianping-com:Metric:cpu-usage-core8</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core1</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core2</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core3</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core4</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core5</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core6</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core7</metric-item>
-      <metric-item type="id">2400-2-dianping-com:Metric:cpu-usage-core8</metric-item>
-      <metric-item type="id">3600-1-dianping-com:Metric:cpu-usage-core1</metric-item>
-      <metric-item type="id">3600-1-dianping-com:Metric:cpu-usage-core2</metric-item>
-      <metric-item type="id">3600-2-dianping-com:Metric:cpu-usage-core1</metric-item>
-      <metric-item type="id">3600-2-dianping-com:Metric:cpu-usage-core2</metric-item>
       <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_all_deal_id_list</metric-item>
       <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin</metric-item>
       <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_activity_result</metric-item>
@@ -1030,15 +397,6 @@
       </config>
    </rule>
    <rule>
-      <metric-item type="id" monitorCount="true">PhoenixAgent:Metric:dpods_nginx_log_tuangou-web</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
       <metric-item type="id">TuanGouMApiSubWeb:Metric:weixin_index</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -1102,150 +460,6 @@
       </config>
    </rule>
    <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/1-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/1-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/2-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet1/0/2-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/1-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/1-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/2-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">3750G-CTC:Metric:GigabitEthernet2/0/2-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/1-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/1-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/7-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet1/0/7-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/1-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/1-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/7-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorSum="true">SH-NH-CNC-C3750G:Metric:GigabitEthernet2/0/7-out</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureList_WeiXin_Ref</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -1292,33 +506,6 @@
    </rule>
    <rule>
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:MWap-AddReview</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorCount="true" monitorSum="true">SH-N5596UP-2-B03:Metric:Ethernet1/43-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-1-in</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
-   <rule>
-      <metric-item type="id" monitorCount="true" monitorSum="true">2400-1-dianping-com:Metric:1/1-1-out</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
             <subcondition type="DescVal">100.0</subcondition>
