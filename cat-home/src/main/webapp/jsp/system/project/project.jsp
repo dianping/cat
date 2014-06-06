@@ -37,7 +37,7 @@
 					<th width="15%">项目名称</th>
 					<th width="15%">CMDB名称</th>
 					<th width="10%">所属部门</th>
-					<th width="10%">二级分类（可按照产品线）</th>
+					<th width="10%">产品线</th>
 					<th width="15%">组邮件</th>
 					<th width="15%">组号码</th>
 					<th width="5%">负责人</th>
