@@ -9,7 +9,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.Subcondition;
+import com.dianping.cat.home.rule.entity.SubCondition;
 
 public class DefaultDataChecker implements DataChecker {
 
@@ -102,9 +102,9 @@ public class DefaultDataChecker implements DataChecker {
 	}
 
 	private boolean checkDataByMinute(Condition condition, double value, double baseline) {
-		for (Subcondition subCondition : condition.getSubconditions()) {
+		for (SubCondition subCondition : condition.getSubConditions()) {
 			String ruleType = subCondition.getType();
-			double ruleValue = Double.parseDouble(subCondition.getText());
+			double ruleValue = subCondition.getText();
 			RuleType rule = RuleType.getByTypeId(ruleType);
 
 			if (rule != null) {

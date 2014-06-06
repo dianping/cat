@@ -17,7 +17,7 @@ import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.entity.Subcondition;
+import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
@@ -54,8 +54,8 @@ public class AlertConfigTest {
 		List<Config> configs = new ArrayList<Config>();
 		Config config = new Config();
 		Condition condition = new Condition();
-		Subcondition descPerSubcon = new Subcondition();
-		Subcondition descValSubcon = new Subcondition();
+		SubCondition descPerSubcon = new SubCondition();
+		SubCondition descValSubcon = new SubCondition();
 
 		double decreasePercent = metricItemConfig.getDecreasePercentage();
 		double decreaseValue = metricItemConfig.getDecreaseValue();
@@ -67,10 +67,10 @@ public class AlertConfigTest {
 			decreaseValue = 100;
 		}
 
-		descPerSubcon.setType("DescPer").setText(String.valueOf(decreasePercent));
-		descValSubcon.setType("DescVal").setText(String.valueOf(decreaseValue));
+		descPerSubcon.setType("DescPer").setText(decreasePercent);
+		descValSubcon.setType("DescVal").setText(decreaseValue);
 
-		condition.addSubcondition(descPerSubcon).addSubcondition(descValSubcon);
+		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
 		config.addCondition(condition);
 		configs.add(config);
 		return configs;
