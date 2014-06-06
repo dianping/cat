@@ -8,6 +8,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
@@ -28,22 +29,22 @@ public class AlertConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "alertConfig";
 
-	public Map<String, Receiver> buildIdToReceiverMap(){
+	public Map<String, Receiver> buildIdToReceiverMap() {
 		Map<String, Receiver> map = new HashMap<String, Receiver>();
-		
-		for(Receiver receiver : m_config.getReceivers()){
+
+		for (Receiver receiver : m_config.getReceivers()) {
 			map.put(receiver.getId(), receiver);
 		}
-		
+
 		return map;
 	}
-	
-	public Receiver getReceiverById(String id){
-		return buildIdToReceiverMap().get(id);
-	}
-	
+
 	public AlertConfig getAlertConfig() {
 		return m_config;
+	}
+
+	public Receiver getReceiverById(String id) {
+		return buildIdToReceiverMap().get(id);
 	}
 
 	@Override
@@ -77,10 +78,18 @@ public class AlertConfigManager implements Initializable {
 		}
 	}
 
-	public boolean insert(String xml) {
+	public boolean insert(String xml, String allOnOrOff) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
+			if (StringUtils.isEmpty(allOnOrOff)) {
+				return storeConfig();
+			}
 
+			if (allOnOrOff.equals("on")) {
+				turnOnOrOffConfig(m_config, true);
+			} else if (allOnOrOff.equals("off")) {
+				turnOnOrOffConfig(m_config, false);
+			}
 			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -104,6 +113,12 @@ public class AlertConfigManager implements Initializable {
 			}
 		}
 		return true;
+	}
+
+	private void turnOnOrOffConfig(AlertConfig config, boolean isOn) {
+		for (Receiver receiver : config.getReceivers()) {
+			receiver.setEnable(isOn);
+		}
 	}
 
 }

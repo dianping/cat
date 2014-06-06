@@ -18,7 +18,7 @@ import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.task.alert.MetricType;
 
 public class NetworkGraphCreator extends MetricGraphCreator {
-
+	
 	@Override
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {

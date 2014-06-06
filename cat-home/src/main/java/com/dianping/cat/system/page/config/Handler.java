@@ -349,9 +349,10 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case ALERT_DEFAULT_RECEIVERS:
 			String alertDefaultReceivers = payload.getContent();
+			String allOnOrOff = payload.getAllOnOrOff();
 			
 			if (!StringUtils.isEmpty(alertDefaultReceivers)) {
-				model.setOpState(m_alertConfigManager.insert(alertDefaultReceivers));
+				model.setOpState(m_alertConfigManager.insert(alertDefaultReceivers, allOnOrOff));
 			} else {
 				model.setOpState(true);
 			}
