@@ -5,7 +5,7 @@ import com.dianping.cat.report.task.alert.BaseAlertConfig;
 
 public class BusinessAlertConfig extends BaseAlertConfig {
 
-	private String m_id = "metric";
+	private String m_id = "business";
 
 	public String buildMailTitle(ProductLine productLine, String configTitle) {
 		StringBuilder sb = new StringBuilder();
