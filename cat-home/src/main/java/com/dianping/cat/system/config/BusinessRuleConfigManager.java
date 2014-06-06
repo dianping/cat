@@ -12,7 +12,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Subcondition;
+import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.alert.MetricType;
 
@@ -31,12 +31,12 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		if (configs.size() == 0) {
 			com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();
 			Condition condition = new Condition();
-			Subcondition descPerSubcon = new Subcondition();
-			Subcondition descValSubcon = new Subcondition();
+			SubCondition descPerSubcon = new SubCondition();
+			SubCondition descValSubcon = new SubCondition();
 
-			descPerSubcon.setType("DescPer").setText("50");
-			descValSubcon.setType("DescVal").setText("100");
-			condition.addSubcondition(descPerSubcon).addSubcondition(descValSubcon);
+			descPerSubcon.setType("DescPer").setText(50.0);
+			descValSubcon.setType("DescVal").setText(100.0);
+			condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
 			config.addCondition(condition);
 			configs.add(config);
 		}

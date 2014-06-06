@@ -24,11 +24,11 @@
 	<entity name="condition">
 		<attribute name="title" value-type="String" />
 		<attribute name="minute" value-type="int" default-value="3" />
-		<entity-ref name="subcondition" type="list" names="subconditions" />
+		<entity-ref name="sub-condition" type="list" names="sub-conditions" />
 	</entity>
-	<entity name="subcondition">
+	<entity name="sub-condition">
 		<attribute name="type" value-type="String" />
-		<element name="text" value-type="String" text="true" />
+		<element name="text" value-type="double" text="true" />
 	</entity>
 </model>
 

@@ -1,272 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
-   <rule id="default">
-      <metric-item type="id">SearchShop:Metric:arts-shop-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SessionService:Metric:RequestId</metric-item>
-      <metric-item type="id" monitorCount="true">PayOrder:Metric:order</metric-item>
-      <metric-item type="id" monitorCount="true">Unipay:Metric:payment.success</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY.payment.success</metric-item>
-      <metric-item type="id">Unipay:Metric:payment.pedding</metric-item>
-      <metric-item type="id">Unipay:Metric:ALIPAY_WAP.payment.pedding</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:ALIPAY_WAP.payment.success</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:ALIPAY_APP.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true">BCTuangouWeb:Metric:batch verify count</metric-item>
-      <metric-item type="id" monitorCount="true">BCTuangouWeb:Metric:single verify count</metric-item>
-      <metric-item type="id">Unipay:Metric:WEIXIN.payment.pedding</metric-item>
-      <metric-item type="id">Unipay:Metric:ALIPAY.payment.pedding</metric-item>
-      <metric-item type="id">Unipay:Metric:ALIPAY_APP.payment.pedding</metric-item>
-      <metric-item type="id">Unipay:Metric:UMPAY.payment.pedding</metric-item>
-      <metric-item type="id">Unipay:Metric:WEIXIN_PUB.payment.pedding</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:TENPAY.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true">BCTuangouWeb:Metric:mobile verify count</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:ALIPAY.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true">Unipay:Metric:WEIXIN.payment.success</metric-item>
-      <metric-item type="id">Unipay:Metric:TENPAY.payment.pedding</metric-item>
-      <metric-item type="id">Unipay:Metric:DIANPING.payment.pedding</metric-item>
-      <metric-item type="id" monitorCount="true">MobileMembercardMainServer:Metric:MainServerJoinedCardSuccess</metric-item>
-      <metric-item type="id">Unipay:Metric:TENPAY_MOBILEQQ.payment.pedding</metric-item>
-      <metric-item type="id" monitorCount="true">UsercardWeb:Metric:UserWebJoinedCardSuccess</metric-item>
-      <metric-item type="id" monitorCount="true">MobileMembercardMainApiWeb:Metric:MainWebJoinedCardFailed</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ReviewList_Default</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:TENPAY_MOBILEQQ.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesses_nearby_for_checkin</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureList_All</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/notify_checkin</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ReviewList_All</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureList_Other</metric-item>
-      <metric-item type="id" monitorCount="true">UsercardWeb:Metric:UserWebJoinedCardFailed</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureList_Dish</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ReviewList_TuanGou</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:trip_ctrip_order_call</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureDetail</metric-item>
-      <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:User_Album</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesses_nearby</metric-item>
-      <metric-item type="id">SearchTuanGouRec:Metric:arts-tuangourec-rt</metric-item>
-      <metric-item type="id">SearchTuanGou:Metric:arts-tuangou-rt</metric-item>
-      <metric-item type="id">TuanGouTracking:Metric:对外合作失败引流</metric-item>
-      <metric-item type="id">SearchAd:Metric:arts-ad-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-shoppic-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-shoppic-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-mylist-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-mylist-rt</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-takeaway-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-usercenter-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-usercenter-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-pinyin-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-pinyin-rt</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-checkin-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-checkin-sc</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-shopalbum-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-shopalbum-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-mcrd-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-mcrd-rt</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-officialalbum-rt</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-officialalbum-sc</metric-item>
-      <metric-item type="id">SearchTuanGou:Metric:arts-tuangoux-rt</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:StorageStored-storage-tuangou2010</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:EventParsed-tuangou2010</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:StorageStored-storage-biz</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:EventParsed-biz</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-midas-binlog</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-midas-resource</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-fsReceiptSync</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-cpsReceipt</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:StorageStored-storage-dianping</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:EventParsed-dianping</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-SyncTask-c33938b4-c6a9-47f5-a2ef-3281e65597e2</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-com.dianping.columbus.booking.bookingconfig.dao.ShopServiceModificationListener</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-SyncTask-b3136926-8b2d-4f3d-a2fd-1ce7af7ee7c1</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-wqtuangou-rt</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-wqtuangou-sc</metric-item>
-      <metric-item type="id">SearchShop:Metric:arts-tuangou-rt</metric-item>
-      <metric-item type="id">SearchShop:Metric:arts-tuangou-sc</metric-item>
-      <metric-item type="id">Unipay:Metric:UMPAY_PC.payment.pedding</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY_PC.payment.success</metric-item>
-      <metric-item type="id">SearchShopwx:Metric:arts-shop-sc</metric-item>
-      <metric-item type="id">SearchShopwx:Metric:arts-shop-rt</metric-item>
-      <metric-item type="id">SearchShopwx:Metric:arts-shopwx-rt</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/ucweb/find_businesses</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-tuangou-receipt-job</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:arts-tuangou-sc</metric-item>
-      <metric-item type="id">SearchTuanGouRec:Metric:arts-tuangou-rt</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/qq/find_deals</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/qq/get_batch_deals_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/qq/get_all_coupon_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/qq/get_batch_coupons_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/qq/get_all_deal_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/qq/get_batch_businesses_by_id</metric-item>
-      <metric-item type="id">SearchShop:Metric:arts-shpp-rt</metric-item>
-      <metric-item type="id" monitorCount="true">TuanGouTracking:Metric:Open对外合作失败引流</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:trip_elong_order_call</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-DianPingMidas</metric-item>
-      <metric-item type="id" monitorCount="true">BCTuangouWeb:Metric:fast verify count</metric-item>
-      <metric-item type="id" monitorCount="true">BCTuangouSubWeb:Metric:fast verify count</metric-item>
-      <metric-item type="id" monitorCount="true">TakeawayMWeb:Metric:OrderCount</metric-item>
-      <metric-item type="id" monitorCount="true">TakeawayShopWeb:Metric:AcceptOrderCount</metric-item>
-      <metric-item type="id" monitorCount="true">TakeawayShopWeb:Metric:ActiveRejectOrderCount</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:trip_common_order_call</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY_WAP.payment.pedding</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:UMPAY_WAP.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesse</metric-item>
-      <metric-item type="id">SearchShop:Metric:arts-shopwx-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShop:Metric:arts-shopwx-sc</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/wechat/find_businesses</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/qq/find_deals</metric-item>
-      <metric-item type="id" monitorCount="true">MOPayService:Metric:Mopay-Order</metric-item>
-      <metric-item type="id" monitorSum="true">MOPayService:Metric:Mopay-Order-Sum</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:elong_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:tongcheng_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:qmango_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:booking_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:agoda_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:igh_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:agoda_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:qmango_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:igh_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:elong_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:booking_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:tongcheng_api_call_fail_frequency</metric-item>
-      <metric-item type="id">SearchShopRec:Metric:arts-shoprec-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShopRec:Metric:arts-shoprec-sc</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/qq/get_batch_coupons_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:elong_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:elong_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:booking_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:qmango_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:tongcheng_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:igh_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:agoda_api_call_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:agoda_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:booking_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:tongcheng_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">TakeawayWeb:Metric:OrderCount</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:qmango_api_call_fail_frequency</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric://premium/wechat/find_businesses_nearby_for_checkin</metric-item>
-      <metric-item type="id" monitorCount="true">BCTuangouSubWeb:Metric:single verify count</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-SyncTask-da3ab3f9-198a-45d9-80dc-a1afac114a70</metric-item>
-      <metric-item type="id" monitorCount="true">HotelSearchWeb:Metric:hotel_old_search_url_call</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPromo:Metric:arts-promo-sc</metric-item>
-      <metric-item type="id">SearchPromo:Metric:arts-promo-rt</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_www_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_wap_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_www_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_wap_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_wap_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_www_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_wap_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:ctrip_api_call_single_www_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">TakeawayMapiWeb:Metric:OrderCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-wishshop-sc</metric-item>
-      <metric-item type="id">SearchDavinci:Metric:arts-wishshop-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:diary.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:promo.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:mtcaccount.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:dishpic.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:dishpicsum.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShop:Metric:IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:ctrip_api_call_single_www_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:ctrip_api_call_single_www_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGouX:Metric:tuangoux.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:takeaway.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:wishshop.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:takeaway.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:checkin.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:shoppic.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:shopalbum.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:pinyin.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:officialalbum.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:mcrd.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:wqtuangou.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchDavinci:Metric:wishshop.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:wedding.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-DianPingMidasOnline</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:igh_api_call_fail_frequency</metric-item>
-      <metric-item type="id">SearchShop:Metric:arts-promo-rt</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShop:Metric:arts-promo-sc</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:wishmylist.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:wishmylist.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/notify_visit</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShop:Metric:shop.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShop:Metric:shop.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGou:Metric:tuangou.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchPicasso:Metric:wedding.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGou:Metric:tuangou.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchShopwx:Metric:shopwx.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorSum="true">cdn:Metric:Web-Web_X_PiccenterHaproxy-in</metric-item>
-      <metric-item type="id" monitorSum="true">cdn:Metric:Web-Web_X_PiccenterHaproxy-out</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:ctrip_api_call_single_wap_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">AccountServer:Metric:AcquireQzoneLock</metric-item>
-      <metric-item type="id" monitorCount="true">AccountServer:Metric:ReleaseQzoneLock</metric-item>
-      <metric-item type="id" monitorCount="true">PumaServer:Metric:ClientConsumed-fsReceiptSync_alpha2</metric-item>
-      <metric-item type="id">test:Metric:client_connections</metric-item>
-      <metric-item type="id" monitorSum="true">test1:Metric:client_connections</metric-item>
-      <metric-item type="id" monitorSum="true">Unipay:Metric:DIANPING.payment.success</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_recent_reviews</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_batch_businesses_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/find_businesses</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/apply_for_activity</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_batch_deals_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/find_deals</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerXiaomiAPI:Metric:/premium/xiaomi/get_batch_businesses_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">SearchVango:Metric:takeaway.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchWedding:Metric:arts-wedding-sc</metric-item>
-      <metric-item type="id">SearchWedding:Metric:arts-wedding-rt</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerXiaomiAPI:Metric:/premium/xiaomi/get_all_deal_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerXiaomiAPI:Metric:/premium/xiaomi/get_batch_deals_with_details</metric-item>
-      <metric-item type="id" monitorCount="true">SearchVango:Metric:takeaway.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">Auto-Complete:Metric:suggesttg.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">Auto-Complete:Metric:suggestshop.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">Auto-Complete:Metric:suggestshopcheckin.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">Auto-Complete:Metric:suggestshopcrossroad.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">Auto-Complete:Metric:suggestshoptg.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/issue_cash_coupon</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:ctrip_api_call_wap_freq</metric-item>
-      <metric-item type="id" monitorCount="true">ShopOtaHotelWeb:Metric:ctrip_api_call_wap_fail_freq</metric-item>
-      <metric-item type="id" monitorCount="true">SearchVango:Metric:pinyin.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_all_coupon_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_batch_coupons_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_daily_activity_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_batch_activities_by_id</metric-item>
-      <metric-item type="id" monitorCount="true">SearchVango:Metric:dishpic.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchVango:Metric:dishpicsum.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchVango:Metric:wedding.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">Auto-Complete:Metric:suggestpromo.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_daily_deal_statistics</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/upload_daily_statictics</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerXiaomiAPI:Metric:/premium/xiaomi/refund</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_all_deal_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_activity_result</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_businesses_by_group_id</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_deal_receipts</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_incremental_deal_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_recommended_business_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_recommended_deal_id_list</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_single_business_for_checkin</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/notify_checkin</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/notify_selected_deal</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/refund</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/v1/deal/get_deals_by_business_id</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/v1/business/find_businesses</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/business/find_businesses</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:tuangourec.IncIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:tuangourec.FullIndex.DocCount</metric-item>
-      <metric-item type="id" monitorCount="true">PartnerQQAPI:Metric:/premium/qq/get_single_business</metric-item>
-      <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
-         </condition>
-      </config>
-   </rule>
    <rule>
       <metric-item type="id" monitorCount="true">SearchShop:Metric:arts-shop-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">75.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">75.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -274,8 +13,8 @@
       <metric-item type="id" monitorCount="true">ReceiptVerifyService:Metric:Receipt Verify Success</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">70.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">70.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -283,8 +22,8 @@
       <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:trip_intime_price_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">800.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">800.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -292,8 +31,8 @@
       <metric-item type="id" monitorCount="true">HotelSearchWeb:Metric:trip_hotel_search_pv</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -301,8 +40,8 @@
       <metric-item type="id" monitorCount="true">Unipay:Metric:WEIXIN_PUB.payment.success</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -310,8 +49,8 @@
       <metric-item type="id" monitorCount="true">MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">70.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">70.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -319,8 +58,8 @@
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -328,8 +67,8 @@
       <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:arts-tuangourec-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -337,8 +76,8 @@
       <metric-item type="id" monitorCount="true">SearchTuanGou:Metric:arts-tuangou-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -346,8 +85,8 @@
       <metric-item type="id" monitorCount="true">TuanGouTracking:Metric:对外合作成功引流</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">800.0</subcondition>
-            <subcondition type="DescPer">70.0</subcondition>
+            <sub-condition type="DescVal">800.0</sub-condition>
+            <sub-condition type="DescPer">70.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -355,8 +94,8 @@
       <metric-item type="id" monitorCount="true">TuanGouTracking:Metric:Open对外合作成功引流</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -364,8 +103,8 @@
       <metric-item type="id" monitorCount="true">SearchAd:Metric:arts-ad-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">75.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">75.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -373,8 +112,8 @@
       <metric-item type="id" monitorCount="true">AccountMQ:Metric:WeiXinLogin</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">20000.0</subcondition>
-            <subcondition type="DescPer">200.0</subcondition>
+            <sub-condition type="DescVal">20000.0</sub-condition>
+            <sub-condition type="DescPer">200.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -382,8 +121,8 @@
       <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-takeaway-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -391,8 +130,8 @@
       <metric-item type="id">SearchTuanGou:Metric:arts-tuangoux-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -400,8 +139,8 @@
       <metric-item type="id">TuanGouMApiSubWeb:Metric:weixin_index</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -409,8 +148,8 @@
       <metric-item type="id">TuanGouMApiSubWeb:Metric:weixin_detail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -418,8 +157,8 @@
       <metric-item type="id" monitorCount="true">SearchShopwx:Metric:arts-shopwx-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -427,8 +166,8 @@
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ReviewList_WeiXin_Ref</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -436,8 +175,8 @@
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ajaxPictureDetail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -445,8 +184,8 @@
       <metric-item type="id" monitorCount="true">TuanGouMMWeb:Metric:weixin_detail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -454,8 +193,8 @@
       <metric-item type="id" monitorCount="true">TuanGouMMWeb:Metric:weixin_index</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">300.0</subcondition>
-            <subcondition type="DescPer">80.0</subcondition>
+            <sub-condition type="DescVal">300.0</sub-condition>
+            <sub-condition type="DescPer">80.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -463,8 +202,8 @@
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureList_WeiXin_Ref</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -472,8 +211,8 @@
       <metric-item type="id" monitorCount="true">ShoppicService:Metric:PCUploadPicCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -481,8 +220,8 @@
       <metric-item type="id" monitorCount="true">ShoppicService:Metric:MobileUploadPicCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -490,8 +229,8 @@
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:Mobile-AddReview</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -499,8 +238,8 @@
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:PC-AddReview</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -508,8 +247,8 @@
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:MWap-AddReview</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -517,8 +256,8 @@
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesses</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -526,8 +265,8 @@
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -535,8 +274,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -544,8 +283,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -553,8 +292,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTel_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -562,8 +301,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:updatePhoneRecord_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -571,8 +310,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:add_one_to_BookingUser_table</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -580,8 +319,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:updatePhoneRecord_fail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -589,8 +328,8 @@
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTel_fail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -598,8 +337,8 @@
       <metric-item type="id" monitorCount="true">AccountMQ:Metric:QQLogin</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">50.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">50.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -607,8 +346,8 @@
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -616,8 +355,8 @@
       <metric-item type="id" monitorCount="true">SearchPicasso:Metric:mtcorder.FullIndex.DocCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -625,8 +364,8 @@
       <metric-item type="id" monitorCount="true">SearchShop:Metric:FullIndex.DocCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -634,8 +373,8 @@
       <metric-item type="id" monitorCount="true">MOSSDpPushServer:Metric:dpPushOnlineCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -643,8 +382,8 @@
       <metric-item type="id" monitorCount="true">MOSSDpPushServer:Metric:dpPushReceivedCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
@@ -652,8 +391,8 @@
       <metric-item type="id" monitorCount="true">MOSSDpPushServer:Metric:dpPushCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
-            <subcondition type="DescVal">100.0</subcondition>
-            <subcondition type="DescPer">50.0</subcondition>
+            <sub-condition type="DescVal">100.0</sub-condition>
+            <sub-condition type="DescPer">50.0</sub-condition>
          </condition>
       </config>
    </rule>
