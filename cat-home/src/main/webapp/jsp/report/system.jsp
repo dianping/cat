@@ -9,6 +9,7 @@
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
@@ -94,8 +95,23 @@
 
 		$(document).ready(
 				function() {
-					$('#datetimepicker1').datetimepicker();
-					$('#datetimepicker2').datetimepicker();
+					$('#datetimepicker1').datetimepicker().on('hide', function(ev){
+						var timestamp = $("#datetimepicker2").data("datetimepicker").getDate().valueOf();
+						if (ev.date.valueOf() > timestamp){
+				        	alert("结束时间不能晚于结束时间！");
+				        	$("#startTime").val($("#endTime").val());
+				        	} 
+				    	query();
+					});
+					$('#datetimepicker2').datetimepicker().on('hide', function(ev){
+						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
+						if (ev.date.valueOf() < timestamp){
+				        	alert("结束时间不能早于开始时间！");
+				        	$("#endTime").val($("#startTime").val());
+				        	} 
+				    	query();
+					});
+					
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#type').val('${payload.type}');
@@ -201,7 +217,9 @@
 						<span class="add-on">
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>
-					</div> 结束时间
+					</div>
+           
+					结束时间
 					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
 						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onmouseout="query()"></input> 
 						<span class="add-on" ondragleave="query()"> 
