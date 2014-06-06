@@ -12,9 +12,9 @@
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}"
-		target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query(){

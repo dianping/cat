@@ -35,7 +35,7 @@ public abstract class BaseAlertConfig {
 
 	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getId());
+		Receiver receiver = m_manager.queryReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;
@@ -57,7 +57,7 @@ public abstract class BaseAlertConfig {
 
 	public List<String> buildSMSReceivers(ProductLine productLine) {
 		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.getReceiverById(getId());
+		Receiver receiver = m_manager.queryReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return smsReceivers;

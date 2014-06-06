@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.model;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
@@ -57,6 +59,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
+import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.userMonitor.UserMonitorConvert;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.ModelPeriod;
@@ -167,8 +170,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		// display only, no action here
 	}
 
-   @SuppressWarnings("unchecked")
-   @Override
+	@SuppressWarnings("unchecked")
+	@Override
 	@OutboundActionMeta(name = "model")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
@@ -220,16 +223,33 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else if (MetricAnalyzer.ID.equals(report)) {
 				response = m_metricService.invoke(request);
 
+				String metricType = payload.getMetricType();
 				String type = payload.getType();
-				String city =payload.getCity();
-				String channel =payload.getChannel();
 
-				if (type != null) { // for user monitor report
+				if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
+					String city = payload.getCity();
+					String channel = payload.getChannel();
 					UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
 					MetricReport metricReport = (MetricReport) response.getModel();
 
 					convert.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+
+				} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
+					String ipAddrsStr = payload.getIpAddress();
+					Set<String> ipAddrs = null;
+					
+					if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
+						String[] ipAddrsArray = ipAddrsStr.split("_");
+						ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
+					}
+					
+					SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
+					MetricReport metricReport = (MetricReport) response.getModel();
+					
+					convert.visitMetricReport(metricReport);
+					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+
 				}
 
 			} else if (DependencyAnalyzer.ID.equals(report)) {
@@ -245,7 +265,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				if (dataModel != null) {
 					xml = doFilter(payload, dataModel);
 				}
-
 				ServletOutputStream outputStream = httpResponse.getOutputStream();
 				byte[] compress = compress(xml);
 

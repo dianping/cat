@@ -1,10 +1,8 @@
 package com.dianping.cat.report.chart.impl;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -14,14 +12,8 @@ import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricDataFetcherImpl implements MetricDataFetcher {
 
-	private final String SUM = MetricType.SUM.name();
-
-	private final String COUNT = MetricType.COUNT.name();
-
-	private final String AVG = MetricType.AVG.name();
-
 	@Override
-	public Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
+	public Map<String, double[]> buildGraphData(MetricReport metricReport) {
 		MetricDataBuilder builder = new MetricDataBuilder();
 
 		builder.visitMetricReport(metricReport);
@@ -30,17 +22,21 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 	}
 
 	public class MetricDataBuilder extends BaseVisitor {
-		private Map<String, double[]> m_datas = new LinkedHashMap<String, double[]>();
 
-		private String m_metricKey;
+		private final String SUM = MetricType.SUM.name();
 
-		private String m_currentComputeType;
+		private final String COUNT = MetricType.COUNT.name();
+
+		private final String AVG = MetricType.AVG.name();
+
+		protected Map<String, double[]> m_datas = new LinkedHashMap<String, double[]>();
+
+		protected String m_metricKey;
 
 		public MetricDataBuilder() {
 		}
 
-		private double[] findOrCreateStatistic(String type, String metricKey, String computeType) {
-			String key = metricKey + ":" + computeType;
+		protected double[] findOrCreateStatistic(String key) {
 			double[] statisticItem = m_datas.get(key);
 
 			if (statisticItem == null) {
@@ -57,11 +53,10 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		@Override
 		public void visitMetricItem(MetricItem metricItem) {
 			m_metricKey = metricItem.getId();
-			m_currentComputeType = metricItem.getType();
-
-			double[] sum = findOrCreateStatistic(m_currentComputeType, m_metricKey, SUM);
-			double[] count = findOrCreateStatistic(m_currentComputeType, m_metricKey, COUNT);
-			double[] avg = findOrCreateStatistic(m_currentComputeType, m_metricKey, AVG);
+			
+			double[] sum = findOrCreateStatistic(m_metricKey + ":" + SUM);
+			double[] count = findOrCreateStatistic(m_metricKey + ":" + COUNT);
+			double[] avg = findOrCreateStatistic(m_metricKey + ":" + AVG);
 
 			for (Segment seg : metricItem.getSegments().values()) {
 				int index = seg.getId();
@@ -72,14 +67,9 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 			}
 		}
 
-		public void visitMetricReport(int index, MetricReport report) {
-			visitMetricReport(report);
-		}
-
 		@Override
 		public void visitMetricReport(MetricReport metricReport) {
 			super.visitMetricReport(metricReport);
 		}
 	}
-
 }

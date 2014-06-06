@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wizard package="com.dianping.cat.core">
+<wizard package="com.dianping.cat">
    <jdbc package="com.dianping.cat.core" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>

@@ -1,8 +1,5 @@
 package com.dianping.cat.system.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -29,16 +26,6 @@ public class AlertConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "alertConfig";
 
-	public Map<String, Receiver> buildIdToReceiverMap() {
-		Map<String, Receiver> map = new HashMap<String, Receiver>();
-
-		for (Receiver receiver : m_config.getReceivers()) {
-			map.put(receiver.getId(), receiver);
-		}
-
-		return map;
-	}
-
 	public String buildReceiverContentByOnOff(String originXml, String allOnOrOff) {
 		try {
 			if (StringUtils.isEmpty(allOnOrOff)) {
@@ -64,10 +51,6 @@ public class AlertConfigManager implements Initializable {
 		return m_config;
 	}
 
-	public Receiver getReceiverById(String id) {
-		return buildIdToReceiverMap().get(id);
-	}
-	
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -110,6 +93,10 @@ public class AlertConfigManager implements Initializable {
 		}
 	}
 
+	public Receiver queryReceiverById(String id) {
+		return m_config.getReceivers().get(id);
+	}
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -129,7 +116,7 @@ public class AlertConfigManager implements Initializable {
 	}
 
 	private void turnOnOrOffConfig(AlertConfig config, boolean isOn) {
-		for (Receiver receiver : config.getReceivers()) {
+		for (Receiver receiver : config.getReceivers().values()) {
 			receiver.setEnable(isOn);
 		}
 	}

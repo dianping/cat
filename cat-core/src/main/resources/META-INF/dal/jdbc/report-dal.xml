@@ -227,6 +227,14 @@
 				FROM <TABLE/>  WHERE binary(<FIELD name='domain'/>) = binary(${domain})
 				]]></statement>
 			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[
+				INSERT INTO <TABLE/>
+				(<FIELDS/>) VALUES(<VALUES/>) 
+				ON DUPLICATE KEY 
+				UPDATE <FIELD name='domain'/> = ${domain},
+            	<FIELD name='modify-date'/> = NOW()]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="report-content" table="report_content" alias="rc" class-name="HourlyReportContent">

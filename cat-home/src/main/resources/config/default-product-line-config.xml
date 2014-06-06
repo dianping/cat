@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <company>
    <product-line id="TuanGou" title="团购" order="1.0" dashbord="true">
       <domain id="TuanGou"/>

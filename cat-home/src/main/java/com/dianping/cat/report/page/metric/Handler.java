@@ -18,9 +18,9 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.chart.MetricGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -60,7 +60,7 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case METRIC:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
-
+			
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		case DASHBOARD:

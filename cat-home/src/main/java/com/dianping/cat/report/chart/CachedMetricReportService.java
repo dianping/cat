@@ -10,5 +10,7 @@ public interface CachedMetricReportService {
 	public MetricReport queryMetricReport(String product, Date date);
 
 	public MetricReport queryUserMonitorReport(String product, Map<String, String> properties, Date date);
+	
+	public MetricReport querySystemReport(String product, Map<String, String> properties, Date date);
 
 }

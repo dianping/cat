@@ -1,4 +1,4 @@
-package com.dianping.cat.report.chart;
+package com.dianping.cat.report.page.network.graph;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,10 +14,11 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.task.alert.MetricType;
 
 public class NetworkGraphCreator extends MetricGraphCreator {
-
+	
 	@Override
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {

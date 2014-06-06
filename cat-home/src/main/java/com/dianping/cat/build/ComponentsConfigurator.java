@@ -26,8 +26,6 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
 import com.dianping.cat.report.chart.MetricDataFetcher;
-import com.dianping.cat.report.chart.MetricGraphCreator;
-import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl;
 import com.dianping.cat.report.chart.impl.DataExtractorImpl;
 import com.dianping.cat.report.chart.impl.MetricDataFetcherImpl;
@@ -42,8 +40,11 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
+import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
 import com.dianping.cat.report.page.state.StateGraphs;
+import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
 import com.dianping.cat.report.service.ReportService;
@@ -133,6 +134,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
 
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+
+		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 

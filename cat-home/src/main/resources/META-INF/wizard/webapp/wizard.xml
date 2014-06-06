@@ -83,6 +83,9 @@
 				template="default">
 				<description>UserMonitor</description>
 			</page>
+			<page name="system" title="System" path="system" template="default">
+            	<description>System</description>
+         	</page>
 		</module>
 		<module name="system" path="s" default="false">
 			<page name="alarm" title="Alarm" default="true" path="alarm"
