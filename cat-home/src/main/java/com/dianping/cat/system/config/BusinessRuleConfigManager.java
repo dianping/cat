@@ -8,14 +8,12 @@ import org.unidal.helper.Files;
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.monitorrules.entity.MetricItem;
 import com.dianping.cat.home.monitorrules.entity.MonitorRules;
-import com.dianping.cat.home.monitorrules.entity.Rule;
 import com.dianping.cat.home.monitorrules.transform.DefaultSaxParser;
 
-public class NetworkMetricRuleConfigManager extends BaseMetricRuleConfigManager implements Initializable {
+public class BusinessRuleConfigManager extends BaseRuleConfigManager  implements Initializable {
 
-	private static final String CONFIG_NAME = "networkRulesConfig";
+	private static final String CONFIG_NAME = "domainRulesConfig";
 
 	@Override
    protected String getConfigName() {
@@ -33,7 +31,7 @@ public class NetworkMetricRuleConfigManager extends BaseMetricRuleConfigManager 
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-network-metric-rule-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-domain-metric-rule-config.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -50,28 +48,6 @@ public class NetworkMetricRuleConfigManager extends BaseMetricRuleConfigManager 
 		}
 		if (m_config == null) {
 			m_config = new MonitorRules();
-		}
-	}
-
-	public boolean insert(String xml) {
-		try {
-			m_config = DefaultSaxParser.parse(xml);
-			setSumTrueWhenAllFalse(m_config);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	private void setSumTrueWhenAllFalse(MonitorRules config) {
-		for (Rule rule : m_config.getRules()) {
-			for (MetricItem item : rule.getMetricItems()) {
-				if (!item.isMonitorAvg() && !item.isMonitorCount() && !item.isMonitorSum()) {
-					item.setMonitorSum(true);
-				}
-			}
 		}
 	}
 

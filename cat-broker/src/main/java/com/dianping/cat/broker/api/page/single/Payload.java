@@ -1,11 +1,13 @@
 package com.dianping.cat.broker.api.page.single;
 
-import com.dianping.cat.broker.api.ApiPage;
-import com.dianping.cat.broker.api.page.batch.Action;
-
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.broker.api.ApiPage;
+import com.dianping.cat.broker.api.page.Constrants;
+import com.dianping.cat.broker.api.page.batch.Action;
 
 public class Payload implements ActionPayload<ApiPage, Action> {
 	private ApiPage m_page;
@@ -26,10 +28,10 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	private double m_duration;
 
 	@FieldMeta("hs")
-	private String m_httpStatus = "200";
+	private String m_httpStatus = Constrants.NOT_SET;
 
 	@FieldMeta("ec")
-	private String m_errorCode = "not-set";
+	private String m_errorCode = Constrants.NOT_SET;
 
 	@Override
 	public Action getAction() {
@@ -74,11 +76,15 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	}
 
 	public void setErrorCode(String errorCode) {
-		m_errorCode = errorCode;
+		if (StringUtils.isNotEmpty(errorCode)) {
+			m_errorCode = errorCode;
+		}
 	}
 
 	public void setHttpStatus(String httpStatus) {
-		m_httpStatus = httpStatus;
+		if (StringUtils.isNotEmpty(httpStatus)) {
+			m_httpStatus = httpStatus;
+		}
 	}
 
 	@Override

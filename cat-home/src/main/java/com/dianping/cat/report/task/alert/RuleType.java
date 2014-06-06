@@ -8,7 +8,11 @@ public enum RuleType {
 	DecreasePercentage {
 		@Override
 		public boolean executeRule(double value, double baseline, double ruleValue) {
-			return value / baseline <= (1 - ruleValue / 100);
+			if (baseline > 0) {
+				return value / baseline <= (1 - ruleValue / 100);
+			} else {
+				return false;
+			}
 		}
 
 		@Override
@@ -32,7 +36,11 @@ public enum RuleType {
 	IncreasePercentage {
 		@Override
 		public boolean executeRule(double value, double baseline, double ruleValue) {
-			return value / baseline >= (1 + ruleValue / 100);
+			if (baseline > 0) {
+				return value / baseline >= (1 + ruleValue / 100);
+			} else {
+				return false;
+			}
 		}
 
 		@Override

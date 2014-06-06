@@ -6,7 +6,7 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.home.alertconfig.entity.Receiver;
+import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.site.helper.Splitters;
 

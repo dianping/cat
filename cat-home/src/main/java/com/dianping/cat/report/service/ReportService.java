@@ -17,7 +17,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.home.alertReport.entity.AlertReport;
+import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
