@@ -13,7 +13,7 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class BusinessRuleConfigManager extends BaseRuleConfigManager  implements Initializable {
 
-	private static final String CONFIG_NAME = "domainRulesConfig";
+	private static final String CONFIG_NAME = "businessRulesConfig";
 
 	@Override
    protected String getConfigName() {
@@ -31,7 +31,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager  implements
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-domain-metric-rule-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-business-metric-rule-config.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

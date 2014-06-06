@@ -2,6 +2,7 @@ package com.dianping.cat.report.task.product;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
+import com.dianping.cat.message.Transaction;
 import com.site.lookup.util.StringUtils;
 
 public class ProjectUpdateTask implements Task, LogEnabled {
@@ -155,22 +157,22 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 		if (email != null) {
 			infosMap.put("owner", owner.toString());
-		}else{
+		} else {
 			infosMap.put("owner", null);
 		}
 
 		if (email != null) {
 			infosMap.put("email", email.toString());
-		}else{
+		} else {
 			infosMap.put("email", null);
 		}
 
 		if (phone != null) {
 			infosMap.put("phone", phone.toString());
-		}else{
+		} else {
 			infosMap.put("phone", null);
 		}
-		
+
 		return infosMap;
 	}
 
@@ -230,9 +232,33 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 		while (active) {
 			long startMill = System.currentTimeMillis();
-			updateProjectInfo();
-			updateHostNameInfo();
+			int hour = Calendar.getInstance().get(Calendar.HOUR);
+			String hourStr = String.valueOf(hour);
 
+			if (hour < 10) {
+				hourStr = "0" + hourStr;
+			}
+
+			Transaction transactionForUpdateProject = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
+			try {
+				updateProjectInfo();
+				transactionForUpdateProject.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				transactionForUpdateProject.setStatus(e);
+			}finally{
+				transactionForUpdateProject.complete();
+			}
+			
+			Transaction transactionForUpdateHostname = Cat.newTransaction("UpdateHostname", "H" + hourStr);
+			try {
+				updateHostNameInfo();
+				transactionForUpdateHostname.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				transactionForUpdateHostname.setStatus(e);
+			}finally{
+				transactionForUpdateHostname.complete();
+			}
+			
 			try {
 				long executeMills = System.currentTimeMillis() - startMill;
 
