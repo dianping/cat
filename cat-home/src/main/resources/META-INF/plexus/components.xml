@@ -227,8 +227,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.MetricGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -317,8 +317,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.NetworkGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -2890,7 +2890,7 @@
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
+					<role>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2922,8 +2922,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.MetricGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.MetricGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -3223,7 +3223,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
+					<role>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
@@ -3240,8 +3240,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.chart.NetworkGraphCreator</role>
-			<implementation>com.dianping.cat.report.chart.NetworkGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>

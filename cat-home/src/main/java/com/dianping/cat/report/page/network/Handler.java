@@ -17,9 +17,9 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.chart.NetworkGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.service.ModelPeriod;
 

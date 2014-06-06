@@ -7,7 +7,6 @@ import com.dianping.cat.report.chart.MetricDataFetcher;
 
 public class MetricDataFetcherImpl implements MetricDataFetcher {
 
-
 	@Override
 	public Map<String, double[]> buildAllGraphData(MetricReport metricReport) {
 		AllMetricDataBuilder builder = new AllMetricDataBuilder();

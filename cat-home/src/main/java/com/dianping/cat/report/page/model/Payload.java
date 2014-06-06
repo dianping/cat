@@ -34,7 +34,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	private ReportPage m_page;
 
-	// /<report>/<domain>/<period>
 	@PathMeta("path")
 	private String[] m_path;
 
