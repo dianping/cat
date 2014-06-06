@@ -16,7 +16,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.TOPOLOGY.getPath();
 		case DEPENDENCY_DASHBOARD:
 			return JspFile.DEPENDENCY_DASHBOARD.getPath();
-		case METRIC_DASHBOARD:
+		case EXCEPTION_DASHBOARD:
 			return JspFile.METRIC_DASHBOARD.getPath();
 		}
 

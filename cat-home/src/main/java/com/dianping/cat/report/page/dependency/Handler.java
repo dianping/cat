@@ -4,26 +4,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
 import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
+import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.state.model.entity.Machine;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
@@ -45,6 +53,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_dependencyService;
 
+	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
+	private ModelService<StateReport> m_stateService;
+
 	@Inject
 	private TopologyGraphManager m_graphManager;
 
@@ -57,8 +68,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	public static final String TUAN_TOU = "TuanGou";
+	@Inject
+	private ServerConfigManager m_configManager;
 
+	public static final String TUAN_TOU = "TuanGou";
+	
 	private Segment buildAllSegmentsInfo(DependencyReport report) {
 		Segment result = new Segment();
 		Map<Integer, Segment> segments = report.getSegments();
@@ -80,6 +94,35 @@ public class Handler implements PageHandler<Context> {
 		}
 		return result;
 	}
+
+	private String buildCatInfoMessage(StateReport report) {
+		int realSize = report.getMachines().size();
+		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
+		int excepeted = servers.size();
+		Set<String> errorServers = new HashSet<String>();
+
+		if (realSize != excepeted) {
+			for (Pair<String, Integer> server : servers) {
+				String serverIp = server.getKey();
+
+				if (report.getMachines().get(serverIp) == null) {
+					errorServers.add(serverIp);
+				}
+			}
+		}
+		for (Machine machine : report.getMachines().values()) {
+			if (machine.getTotalLoss() > 100 * 10000) {
+				errorServers.add(machine.getIp());
+			}
+		}
+
+		if (errorServers.size() > 0) {
+			return errorServers.toString();
+		} else {
+			return null;
+		}
+	}
+
 
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
 		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
@@ -105,6 +148,12 @@ public class Handler implements PageHandler<Context> {
 		Map<String, List<String>> dependency = parseDependencies(segment);
 
 		model.setEvents(m_externalInfoBuilder.queryDependencyEvent(dependency, model.getDomain(), reportTime));
+	}
+
+	private void buildExceptionDashboard(Model model, Payload payload, long date) {
+		model.setReportStart(new Date(payload.getDate()));
+		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
+		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
 	private void buildHourlyLineGraph(DependencyReport report, Model model) {
@@ -146,12 +195,6 @@ public class Handler implements PageHandler<Context> {
 			result.put(temp.getKey(), buildLineChartGraph(temp.getValue()));
 		}
 		return result;
-	}
-
-	private void buildExceptionDashboard(Model model, Payload payload, long date) {
-		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
-		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
 	private void buildProjectTopology(Model model, Payload payload, Date reportTime) {
@@ -201,8 +244,11 @@ public class Handler implements PageHandler<Context> {
 		case DEPENDENCY_DASHBOARD:
 			buildDependencyDashboard(model, payload, reportTime);
 			break;
-		case METRIC_DASHBOARD:
+		case EXCEPTION_DASHBOARD:
 			buildExceptionDashboard(model, payload, date);
+			
+			StateReport report = queryHourlyReport(payload);
+			model.setMessage(buildCatInfoMessage(report));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -297,6 +343,20 @@ public class Handler implements PageHandler<Context> {
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable dependency service registered for " + request + "!");
+		}
+	}
+
+	private StateReport queryHourlyReport(Payload payload) {
+		String domain = Constants.CAT;
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
+		      .setProperty("ip", payload.getIpAddress());
+
+		if (m_stateService.isEligable(request)) {
+			ModelResponse<StateReport> response = m_stateService.invoke(request);
+
+			return response.getModel();
+		} else {
+			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
 		}
 	}
 
