@@ -39,6 +39,27 @@ public class AlertConfigManager implements Initializable {
 		return map;
 	}
 
+	public String buildReceiverContentByOnOff(String originXml, String allOnOrOff) {
+		try {
+			if (StringUtils.isEmpty(allOnOrOff)) {
+				return originXml;
+			}
+			
+			AlertConfig tmpConfig = DefaultSaxParser.parse(originXml);
+
+			if (allOnOrOff.equals("on")) {
+				turnOnOrOffConfig(tmpConfig, true);
+			} else if (allOnOrOff.equals("off")) {
+				turnOnOrOffConfig(tmpConfig, false);
+			}
+			
+			return tmpConfig.toString();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return null;
+		}
+   }
+
 	public AlertConfig getAlertConfig() {
 		return m_config;
 	}
@@ -46,7 +67,7 @@ public class AlertConfigManager implements Initializable {
 	public Receiver getReceiverById(String id) {
 		return buildIdToReceiverMap().get(id);
 	}
-
+	
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -78,18 +99,10 @@ public class AlertConfigManager implements Initializable {
 		}
 	}
 
-	public boolean insert(String xml, String allOnOrOff) {
+	public boolean insert(String xml) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
-			if (StringUtils.isEmpty(allOnOrOff)) {
-				return storeConfig();
-			}
-
-			if (allOnOrOff.equals("on")) {
-				turnOnOrOffConfig(m_config, true);
-			} else if (allOnOrOff.equals("off")) {
-				turnOnOrOffConfig(m_config, false);
-			}
+			
 			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);
