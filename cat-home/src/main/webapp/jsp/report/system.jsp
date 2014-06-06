@@ -212,7 +212,7 @@
 
 				<th class="right">开始时间
 					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onmouseout="query()">
+						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()">
 						</input>
 						<span class="add-on">
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
@@ -221,7 +221,7 @@
            
 					结束时间
 					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onmouseout="query()"></input> 
+						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()"></input> 
 						<span class="add-on" ondragleave="query()"> 
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>
