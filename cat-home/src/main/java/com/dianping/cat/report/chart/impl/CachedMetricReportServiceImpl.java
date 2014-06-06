@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.CachedMetricReportService;
@@ -129,11 +130,15 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			}
 		} else {
 			MetricReport report = getReportFromCache(product, time);
+			
 			String type = properties.get("type");
 			String ipAddrsStr = properties.get("ip");
+			Set<String> ipAddrs = null;
 			
-			String[] ipAddrsArray = ipAddrsStr.split("_");
-			Set<String> ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
+			if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
+				String[] ipAddrsArray = ipAddrsStr.split("_");
+				ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
+			}
 
 			SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
 
