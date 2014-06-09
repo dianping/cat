@@ -1120,6 +1120,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1822,6 +1828,15 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+			<implementation>com.dianping.cat.system.config.NetGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3293,6 +3308,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3307,6 +3328,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+			<implementation>com.dianping.cat.system.config.NetGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.userMonitor.Handler</role>
@@ -3618,6 +3648,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

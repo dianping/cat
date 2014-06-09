@@ -9,7 +9,8 @@
 			</anchors>
 			<switchs>
 				<switch name="QW-E8030" x="340" y="120" state="1" />
-				<switch name="C3750-CTC" x="340" y="240" />
+				<switch name="N6K-1" x="320" y="240" />
+				<switch name="N6K-2" x="450" y="240" />
 				<switch name="C3750-CNC" x="150" y="240" />
 				<switch name="F5v2400-1" x="340" y="360" />
 				<switch name="F5v2400-2" x="150" y="360" />
@@ -19,9 +20,9 @@
 				<switch name="N5K-2" x="150" y="600" />
 			</switchs>
 			<connections>
-				<connection from="QW-E8030" to="CTC" state="1">
+				<connection from="QW-E8030" to="CTC" instate="1" outstate="1">
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
-						key="GigabitEthernet1/0/0" state="1" />
+						key="GigabitEthernet1/0/0" instate="1" outstate="1" />
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/2" />
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
@@ -37,13 +38,15 @@
 					<interface group="switch-SH-N7010-A" domain="SH-N7010-A"
 						key="Ethernet3/16" />
 				</connection>
-				<connection from="QW-E8030" to="C3750-CTC">
+				<connection from="QW-E8030" to="N6K-2">
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/1" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/3" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
+				</connection>
+				<connection from="QW-E8030" to="N6K-1">
 					<interface group="switch-AntiDDoS" domain="AntiDDoS"
 						key="GigabitEthernet1/0/5" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
@@ -51,18 +54,20 @@
 						key="GigabitEthernet1/0/7" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
 				</connection>
-				<connection from="C3750-CTC" to="QW-E8030">
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet1/0/1" inwarnning="200M" inserious="400M"
+				<connection from="N6K-1" to="QW-E8030">
+					<interface group="switch-Nexus6001P-1" domain="Nexus6001P-1"
+						key="Ethernet1/1" inwarnning="200M" inserious="400M"
 						outwarnning="300M" outserious="600M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet1/0/2" inwarnning="200M" inserious="400M"
+					<interface group="switch-Nexus6001P-1" domain="Nexus6001P-1"
+						key="Ethernet1/2" inwarnning="200M" inserious="400M"
 						outwarnning="300M" outserious="600M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet2/0/1" inwarnning="200M" inserious="400M"
+				</connection>
+				<connection from="N6K-2" to="QW-E8030">
+					<interface group="switch-Nexus6001P-2" domain="Nexus6001P-2"
+						key="Ethernet1/1" inwarnning="200M" inserious="400M"
 						outwarnning="300M" outserious="600M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet2/0/2" inwarnning="200M" inserious="400M"
+					<interface group="switch-Nexus6001P-2" domain="Nexus6001P-2"
+						key="Ethernet1/2" inwarnning="200M" inserious="400M"
 						outwarnning="300M" outserious="600M" />
 				</connection>
 				<connection from="ADS-1600C3750-CNC" to="ADS-1600">
@@ -73,27 +78,31 @@
 						key="GigabitEthernet1/0/2" inwarnning="100M" inserious="200M"
 						outwarnning="300M" outserious="500M" />
 				</connection>
-				<connection from="C3750-CTC" to="F5v2400-1">
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet1/0/5" inwarnning="300M" inserious="600M"
+				<connection from="N6K-1" to="F5v2400-1">
+					<interface group="switch-Nexus6001P-1" domain="Nexus6001P-1"
+						key="Ethernet1/41" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet1/0/9" inwarnning="300M" inserious="600M"
-						outwarnning="200M" outserious="400M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet2/0/7" inwarnning="300M" inserious="600M"
-						outwarnning="200M" outserious="400M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet2/0/8" inwarnning="300M" inserious="600M"
+					<interface group="switch-Nexus6001P-1" domain="Nexus6001P-1"
+						key="Ethernet1/42" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
 				</connection>
-				<connection from="F5v2400-1" to="C3750-CTC">
+				<connection from="N6K-2" to="F5v2400-1">
+					<interface group="switch-Nexus6001P-2" domain="Nexus6001P-2"
+						key="Ethernet1/41" inwarnning="300M" inserious="600M"
+						outwarnning="200M" outserious="400M" />
+					<interface group="switch-Nexus6001P-2" domain="Nexus6001P-2"
+						key="Ethernet1/42" inwarnning="300M" inserious="600M"
+						outwarnning="200M" outserious="400M" />
+				</connection>
+				<connection from="F5v2400-1" to="N6K-1">
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-1" inwarnning="200M" inserious="400M" outwarnning="300M"
 						outserious="600M" />
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-2" inwarnning="200M" inserious="400M" outwarnning="300M"
 						outserious="600M" />
+				</connection>
+				<connection from="F5v2400-1" to="N6K-2">
 					<interface group="f5-2400-1-dianping-com" domain="2400-1-dianping-com"
 						key="1/1-6" inwarnning="200M" inserious="400M" outwarnning="300M"
 						outserious="600M" />
@@ -110,25 +119,29 @@
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-7" />
 				</connection>
-				<connection from="C3750-CTC" to="F5v2400-2">
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet1/0/8" inwarnning="300M" inserious="600M"
+				<connection from="N6K-1" to="F5v2400-2">
+					<interface group="switch-Nexus6001P-1" domain="Nexus6001P-1"
+						key="Ethernet1/43" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet1/0/12" inwarnning="300M" inserious="600M"
-						outwarnning="200M" outserious="400M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet2/0/5" inwarnning="300M" inserious="600M"
-						outwarnning="200M" outserious="400M" />
-					<interface group="switch-3750G-CTC" domain="3750G-CTC"
-						key="GigabitEthernet2/0/9" inwarnning="300M" inserious="600M"
+					<interface group="switch-Nexus6001P-1" domain="Nexus6001P-1"
+						key="Ethernet1/44" inwarnning="300M" inserious="600M"
 						outwarnning="200M" outserious="400M" />
 				</connection>
-				<connection from="F5v2400-2" to="C3750-CTC">
+				<connection from="N6K-2" to="F5v2400-2">
+					<interface group="switch-Nexus6001P-2" domain="Nexus6001P-2"
+						key="Ethernet1/43" inwarnning="300M" inserious="600M"
+						outwarnning="200M" outserious="400M" />
+					<interface group="switch-Nexus6001P-2" domain="Nexus6001P-2"
+						key="Ethernet1/44" inwarnning="300M" inserious="600M"
+						outwarnning="200M" outserious="400M" />
+				</connection>
+				<connection from="F5v2400-2" to="N6K-1">
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-1" />
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-2" />
+				</connection>
+				<connection from="F5v2400-2" to="N6K-2">
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
 						key="1/1-6" />
 					<interface group="f5-2400-2-dianping-com" domain="2400-2-dianping-com"
