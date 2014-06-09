@@ -24,7 +24,7 @@ var $_netgraph = {
             'warnning':'rgb(255,255,0)',
             'serious':'rgb(255,0,0)',
         },
-        'conn_tooltip_offset':10,
+        'conn_tooltip_offset':20,
 
         'anchor_text_size':16,
         'anchor_text_color':'rgb(100,100,100)',
@@ -32,6 +32,8 @@ var $_netgraph = {
         'focus_scale':2,
 
         'tooltip_width':275,
+        'tooltip_td_height': 20,
+        'tooltip_td_width': 80,
     },
 
     topos: {
@@ -125,10 +127,11 @@ var $_netgraph = {
                 sw[from]['domain'] = cn['interfaces'][0]['domain'];
             }
 
-            var inData, outData, state, fill, indiscards, outdiscards, inerrors, outerrors;
+            var inData, outData, instate, outstate, infill, outfill, indiscards, outdiscards, inerrors, outerrors;
             inData = cn['insum'];
             outData = cn['outsum'];
-            state = cn['state'];
+            instate = cn['instate'];
+            outstate = cn['outstate'];
             indiscards = cn['indiscards'];
             outdiscards = cn['outdiscards'];
             inerrors = cn['inerrors'];
@@ -139,14 +142,23 @@ var $_netgraph = {
             if (outData == undefined) {
                 outData = 0;
             }
-            if (state == 3) {
-                fill = this.setting.conn_color.serious;
+            if (instate == 3) {
+                infill = this.setting.conn_color.serious;
             }
-            else if (state == 2) {
-                fill = this.setting.conn_color.warnning;
+            else if (instate == 2) {
+                infill = this.setting.conn_color.warnning;
             }
             else {
-                fill = this.setting.conn_color.normal;
+                infill = this.setting.conn_color.normal;
+            }
+            if (outstate == 3) {
+                outfill = this.setting.conn_color.serious;
+            }
+            else if (outstate == 2) {
+                outfill = this.setting.conn_color.warnning;
+            }
+            else {
+                outfill = this.setting.conn_color.normal;
             }
             if (indiscards == undefined) {
                 indiscards = 0;
@@ -184,12 +196,50 @@ var $_netgraph = {
             }
 
             if(!f_anchor && !t_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2)/2,'y2':(y1+y2)/2,'data':[inData,outData,indiscards,outdiscards,inerrors,outerrors],'name':to,'fill':fill};
-                sw[from]['conn'].push(id);
+                if (y1 < y2)
+                {
+                    conn[id+'-in'] = {'type':'in','x1':x1-20,'y1':y1,'x2':(x1+x2-40)/2,'y2':(y1+y2)/2,'data':[inData,indiscards,inerrors],'name':to,'fill':infill};
+                    sw[from]['conn'].push(id+'-in');
+                    conn[id+'-out'] = {'type':'out','x1':x1+20,'y1':y1,'x2':(x1+x2+40)/2,'y2':(y1+y2)/2,'data':[outData,outdiscards,outerrors],'name':to,'fill':outfill};
+                    sw[from]['conn'].push(id+'-out');
+                }
+                else if (y1 > y2)
+                {
+                    conn[id+'-in'] = {'type':'in','x1':x1+20,'y1':y1,'x2':(x1+x2+40)/2,'y2':(y1+y2)/2,'data':[inData,indiscards,inerrors],'name':to,'fill':infill};
+                    sw[from]['conn'].push(id+'-in');
+                    conn[id+'-out'] = {'type':'out','x1':x1-20,'y1':y1,'x2':(x1+x2-40)/2,'y2':(y1+y2)/2,'data':[outData,outdiscards,outerrors],'name':to,'fill':outfill};
+                    sw[from]['conn'].push(id+'-out');
+                }
+                else if (x1 < x2)
+                {
+                    conn[id+'-in'] = {'type':'in','x1':x1,'y1':y1-10,'x2':(x1+x2)/2,'y2':(y1+y2-20)/2,'data':[inData,indiscards,inerrors],'name':to,'fill':infill};
+                    sw[from]['conn'].push(id+'-in');
+                    conn[id+'-out'] = {'type':'out','x1':x1,'y1':y1+10,'x2':(x1+x2)/2,'y2':(y1+y2+20)/2,'data':[outData,outdiscards,outerrors],'name':to,'fill':outfill};
+                    sw[from]['conn'].push(id+'-out');
+                }
+                else
+                {
+                    conn[id+'-in'] = {'type':'in','x1':x1,'y1':y1+10,'x2':(x1+x2)/2,'y2':(y1+y2+20)/2,'data':[inData,indiscards,inerrors],'name':to,'fill':infill};
+                    sw[from]['conn'].push(id+'-in');
+                    conn[id+'-out'] = {'type':'out','x1':x1,'y1':y1-10,'x2':(x1+x2)/2,'y2':(y1+y2-20)/2,'data':[outData,outdiscards,outerrors],'name':to,'fill':outfill};
+                    sw[from]['conn'].push(id+'-out');
+                }
             }
             else if(!f_anchor) {
-                conn[id] = {'x1':x1,'y1':y1,'x2':(x1+x2*2)/3,'y2':(y1+y2*2)/3,'data':[inData,outData,indiscards,outdiscards,inerrors,outerrors],'name':to,'fill':fill};
-                sw[from]['conn'].push(id);
+                if (y1 != y2)
+                {
+                    conn[id+'-in'] = {'type':'in','x1':x1-20,'y1':y1,'x2':(x1+x2*2-60)/3,'y2':(y1+y2*2)/3,'data':[inData,indiscards,inerrors],'name':to,'fill':infill};
+                    sw[from]['conn'].push(id+'-in');
+                    conn[id+'-out'] = {'type':'out','x1':x1+20,'y1':y1,'x2':(x1+x2*2+60)/3,'y2':(y1+y2*2)/3,'data':[outData,outdiscards,outerrors],'name':to,'fill':outfill};
+                    sw[from]['conn'].push(id+'-out');
+                }
+                else if (x1 != x2)
+                {
+                    conn[id+'-in'] = {'type':'in','x1':x1,'y1':y1-10,'x2':(x1+x2*2)/3,'y2':(y1+y2*2-30)/3,'data':[inData,indiscards,inerrors],'name':to,'fill':infill};
+                    sw[from]['conn'].push(id+'-in');
+                    conn[id+'-out'] = {'type':'out','x1':x1,'y1':y1+10,'x2':(x1+x2*2)/3,'y2':(y1+y2*2+30)/3,'data':[outData,outdiscards,outerrors],'name':to,'fill':outfill};
+                    sw[from]['conn'].push(id+'-out');
+                }
             }
         }
 
@@ -208,8 +258,10 @@ var $_netgraph = {
             x = mx - this.setting.tooltip_width - this.setting.conn_tooltip_offset;
         y = my - this.setting.conn_tooltip_offset;
         var tip = [];
-        tip.push('[from '+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]) + ', ' + this.decorateNumber(d['data'][2]) + ', ' + this.decorateNumber(d['data'][4]));
-        tip.push('[to '+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][1]) + ', ' + this.decorateNumber(d['data'][3]) + ', ' + this.decorateNumber(d['data'][5]));
+        if (d['type'] == 'in')
+            tip.push('[from '+d['name'] + ']-[in]: ' + this.decorateNumber(d['data'][0]) + ', ' + this.decorateNumber(d['data'][1]) + ', ' + this.decorateNumber(d['data'][2]));
+        else
+            tip.push('[to '+d['name'] + ']-[out]: ' + this.decorateNumber(d['data'][0]) + ', ' + this.decorateNumber(d['data'][1]) + ', ' + this.decorateNumber(d['data'][2]));
 		this.show_tooltip(wrapper,x,y,tip);
 
         var conn = document.getElementById(wrapper+'-'+id);
@@ -227,13 +279,30 @@ var $_netgraph = {
             x = x - this.setting.sw_width/2 - this.setting.sw_border_width - this.setting.tooltip_width - 4;
         y = y - this.setting.sw_height/2-this.setting.sw_border_width;
         var conn;
+        /*
         var tip = [];
         for(var i in topo.data['switchs'][id].conn) {
             conn = topo.data['conn'][topo.data['switchs'][id].conn[i]];
-            tip.push('[from '+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]) + ', ' + this.decorateNumber(conn['data'][2]) + ', ' + this.decorateNumber(conn['data'][4]));
-            tip.push('[to '+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][1]) + ', ' + this.decorateNumber(conn['data'][3]) + ', ' + this.decorateNumber(conn['data'][5]));
+            if (conn['type'] == 'in')
+            {
+                tip.push('[from '+conn['name'] + ']-[in]: ' + this.decorateNumber(conn['data'][0]) + ', ' + this.decorateNumber(conn['data'][1]) + ', ' + this.decorateNumber(conn['data'][2]));
+            }
+            else
+            {
+                tip.push('[to '+conn['name'] + ']-[out]: ' + this.decorateNumber(conn['data'][0]) + ', ' + this.decorateNumber(conn['data'][1]) + ', ' + this.decorateNumber(conn['data'][2]));
+            }
         }
 		this.show_tooltip(wrapper,x,y,tip);
+        */
+        var data = {};
+        for (var i in topo.data['switchs'][id].conn) {
+            conn = topo.data['conn'][topo.data['switchs'][id].conn[i]];
+            var to = topo.data['switchs'][id].conn[i].split('=>')[1].split('-'+conn['type'])[0];
+            if (data[to] == undefined)
+                data[to] = {};
+            data[to][conn['type']] = [this.decorateNumber(conn['data'][0]), this.decorateNumber(conn['data'][1]), this.decorateNumber(conn['data'][2])];
+        }
+        this.show_tooltip_table(wrapper, x, y, data);
 
         var sw = document.getElementById(wrapper+'-'+id).firstChild;
         var w = Math.round(sw.getAttribute('stroke-width'))+this.setting.focus_scale;
@@ -260,6 +329,119 @@ var $_netgraph = {
 		var g = document.getElementById(wrapper+'-svg-tooltip');
         this.setAttrValues(g, {'visibility':'hidden','opacity':0,'data-cur':''});
 	},
+
+    show_tooltip_table: function(wrapper, x, y, data) {
+		var g = document.getElementById(wrapper+"-svg-tooltip");
+		var childs = g.childNodes;
+		for(var i = childs.length-1; i >= 0; i--) {
+			g.removeChild(childs[i]);
+		}
+
+        var length = 0;
+        for (var to in data) {
+            length++;
+        }
+        var height = length * (this.setting.tooltip_td_height * 2 + 10) + 30;
+        if (height < 30) {
+            height = 30;
+        }
+		var rect1 = document.createElementNS(this.NS, "rect");
+		var rect2 = document.createElementNS(this.NS, "rect");
+		var rect3 = document.createElementNS(this.NS, "rect");
+		var rect4 = document.createElementNS(this.NS, "rect");
+		this.setAttrValues([rect1,rect2,rect3,rect4], {
+					'rx':3,
+					'ry':3,
+					'fill':'none',
+					'x':0.5,
+					'y':0.5,
+					'width':this.setting.tooltip_width,
+					'height':height,
+					'fill-opacity':0.85,
+					'isShadow':'true',
+					'stroke':'black',
+					'stroke-width':1,
+					'transform':'translate(1, 1)'
+				});
+		this.setAttrValues(rect1, {'stroke-opacity':0.05,'stroke-width':5});
+		this.setAttrValues(rect2, {'stroke-opacity':0.1,'stroke-width':2});
+		this.setAttrValues(rect3, {'stroke-opacity':0.15});
+		this.setAttrValues(rect4, {'stroke':'#2f7ed8','fill':'rgb(255,255,255)'});
+		g.appendChild(rect1);
+		g.appendChild(rect2);
+		g.appendChild(rect3);
+		g.appendChild(rect4);
+
+
+        var ty = 0;
+        this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 120,
+                       ty + 24,
+                       60, this.setting.tooltip_td_height, 'flow');
+        this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 160,
+                       ty + 24,
+                       60, this.setting.tooltip_td_height, 'd');
+        this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 200,
+                       ty + 24,
+                       60, this.setting.tooltip_td_height, 'e');
+        ty += 20;
+        for (var to in data) {
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10,
+                      ty + this.setting.tooltip_td_height * 2,
+                      this.setting.tooltip_td_width,
+                      this.setting.tooltip_td_height, to);
+
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 60,
+                           ty + this.setting.tooltip_td_height + 10,
+                           60, this.setting.tooltip_td_height, 'in');
+
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 60,
+                           ty + this.setting.tooltip_td_height * 2 + 10,
+                           60, this.setting.tooltip_td_height, 'out');
+
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 120,
+                           ty + this.setting.tooltip_td_height + 10,
+                           40, this.setting.tooltip_td_height, data[to]['in'][0]);
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 160,
+                           ty + this.setting.tooltip_td_height + 10,
+                           40, this.setting.tooltip_td_height, data[to]['in'][1]);
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 200,
+                           ty + this.setting.tooltip_td_height + 10,
+                           40, this.setting.tooltip_td_height, data[to]['in'][2]);
+
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 120,
+                           ty + this.setting.tooltip_td_height * 2 + 10,
+                           40, this.setting.tooltip_td_height, data[to]['out'][0]);
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 160,
+                           ty + this.setting.tooltip_td_height * 2 + 10,
+                           40, this.setting.tooltip_td_height, data[to]['out'][1]);
+            this.show_text(g, this.setting.tooltip_td_width / 2 + 10 + 200,
+                           ty + this.setting.tooltip_td_height * 2 + 10,
+                           40, this.setting.tooltip_td_height, data[to]['out'][2]);
+
+            ty += this.setting.tooltip_td_height * 2 + 10;
+        }
+
+
+		this.setAttrValues(g, {'visibility':'visible','transform':'translate('+x+','+y+')','opacity':1});
+    },
+
+    show_text: function(g, x, y, w, h, text) {
+        var textNode = document.createElementNS(this.NS, "text");
+        this.setAttrValues(textNode, {
+            'x': x,
+            'y': y,
+            'rx': 3,
+            'ry': 3,
+            'width': w,
+            'height': h,
+            'text-anchor':'middle',
+            'color': 'rgb(1,1,1)',
+            'opacity': '1',
+        });
+        textString = document.createTextNode(text);
+        textNode.appendChild(textString);
+        g.appendChild(textNode);
+    },
 
 	show_tooltip: function(wrapper,x,y,text) {
 		var g = document.getElementById(wrapper+"-svg-tooltip");
