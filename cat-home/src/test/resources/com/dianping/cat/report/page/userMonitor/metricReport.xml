@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-report product="userMonitor">
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:httpStatus|200">
+      <segment id="0" count="18" sum="948.961873966952" avg="0.46458613946417704"/>
+      <segment id="1" count="97" sum="703.8961095989779" avg="8.775814765529175"/>
+      <segment id="2" count="81" sum="795.9697811671045" avg="4.856732662984956"/>
+      <segment id="3" count="59" sum="623.5220857599252" avg="4.119253949087458"/>
+      <segment id="4" count="50" sum="11.244082926519905" avg="6.5218328311764795"/>
+      <segment id="5" count="82" sum="307.4889186501252" avg="1.538927218662971"/>
+      <segment id="6" count="13" sum="926.7495605059376" avg="9.988635669585237"/>
+      <segment id="7" count="52" sum="958.81742616619" avg="6.469185888597105"/>
+      <segment id="8" count="9" sum="4.828719093270428" avg="2.5041772743356914"/>
+      <segment id="9" count="91" sum="754.0921531088974" avg="2.9491539563903735"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:hit">
+      <segment id="0" count="80" sum="326.89395739774574" avg="0.31243346637973013"/>
+      <segment id="1" count="74" sum="280.0046533787307" avg="6.294376588004416"/>
+      <segment id="2" count="25" sum="64.244671206661" avg="5.088843022344171"/>
+      <segment id="3" count="76" sum="365.3047211165081" avg="8.586258253717968"/>
+      <segment id="4" count="5" sum="282.67121334170673" avg="0.5566275672519783"/>
+      <segment id="5" count="76" sum="63.66185443722949" avg="2.2428155289626615"/>
+      <segment id="6" count="87" sum="850.5236058558629" avg="5.523763287630369"/>
+      <segment id="7" count="35" sum="110.12703944696867" avg="1.027252627791243"/>
+      <segment id="8" count="63" sum="762.7626335337906" avg="1.773996022077945"/>
+      <segment id="9" count="6" sum="807.7351799459004" avg="6.591722308887716"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:errorCode|200">
+      <segment id="0" count="6" sum="17.646383283486887" avg="3.5129604116798996"/>
+      <segment id="1" count="39" sum="979.4495961894327" avg="4.6370392547039625"/>
+      <segment id="2" count="35" sum="352.5784090787907" avg="9.157313921746901"/>
+      <segment id="3" count="15" sum="810.7565146878028" avg="5.811422440646008"/>
+      <segment id="4" count="76" sum="654.8739691902416" avg="9.023403570093977"/>
+      <segment id="5" count="99" sum="467.98283031096054" avg="5.799920233871228"/>
+      <segment id="6" count="91" sum="402.7675913384729" avg="2.8685087300297187"/>
+      <segment id="7" count="48" sum="335.0030524912229" avg="3.049571603143124"/>
+      <segment id="8" count="50" sum="469.2969621209652" avg="4.217367654825654"/>
+      <segment id="9" count="53" sum="207.79336421484152" avg="3.5167278318574957"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:avg">
+      <segment id="0" count="38" sum="608.7419479932403" avg="8.259023444648792"/>
+      <segment id="1" count="37" sum="926.1551535872088" avg="3.0327569252501583"/>
+      <segment id="2" count="35" sum="897.9965401358075" avg="5.351502177919906"/>
+      <segment id="3" count="54" sum="251.02473119976975" avg="2.6269699848189743"/>
+      <segment id="4" count="80" sum="623.9773644281634" avg="0.37468980862286005"/>
+      <segment id="5" count="66" sum="290.5239205701382" avg="5.148365558681428"/>
+      <segment id="6" count="45" sum="608.3047460954314" avg="8.156545399612297"/>
+      <segment id="7" count="59" sum="809.0413278213433" avg="5.947100769104418"/>
+      <segment id="8" count="44" sum="174.67514085769753" avg="5.398534259601692"/>
+      <segment id="9" count="26" sum="921.821065461087" avg="5.266729312274895"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:httpStatus|300">
+      <segment id="0" count="53" sum="880.9022270553851" avg="2.83257985596678"/>
+      <segment id="1" count="77" sum="459.3859986303911" avg="2.8871558889093873"/>
+      <segment id="2" count="48" sum="172.239752818928" avg="0.4055406685498719"/>
+      <segment id="3" count="85" sum="960.4742991733274" avg="0.048225728589413874"/>
+      <segment id="4" count="32" sum="832.3260836161026" avg="2.8478118604677727"/>
+      <segment id="5" count="65" sum="79.60820165308036" avg="6.998863720521072"/>
+      <segment id="6" count="79" sum="186.62404085785678" avg="0.035481058835692414"/>
+      <segment id="7" count="9" sum="132.46992262635783" avg="5.231983425549886"/>
+      <segment id="8" count="65" sum="973.9644998403062" avg="3.6651809591877447"/>
+      <segment id="9" count="45" sum="158.3002446687528" avg="0.5993752252690465"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:errorCode|300">
+      <segment id="0" count="26" sum="617.6750650092343" avg="7.560093097624599"/>
+      <segment id="1" count="94" sum="368.5147787650842" avg="9.374207960390173"/>
+      <segment id="2" count="27" sum="917.2959126671185" avg="4.776661069138078"/>
+      <segment id="3" count="32" sum="962.9415683183437" avg="7.942832382070763"/>
+      <segment id="4" count="63" sum="900.4537774621807" avg="0.6951197887949834"/>
+      <segment id="5" count="48" sum="911.4236224516959" avg="8.671024113367022"/>
+      <segment id="6" count="85" sum="101.35191753687" avg="4.64616593988909"/>
+      <segment id="7" count="86" sum="71.23706183311884" avg="8.060813087910093"/>
+      <segment id="8" count="17" sum="433.0926654573193" avg="8.326277002589505"/>
+      <segment id="9" count="65" sum="609.679312818083" avg="2.6962115543087464"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:httpStatus|400">
+      <segment id="0" count="91" sum="204.41574123359297" avg="0.5478966613141467"/>
+      <segment id="1" count="44" sum="876.9799828597605" avg="7.978691726992613"/>
+      <segment id="2" count="8" sum="515.0623519464433" avg="3.9554694311659966"/>
+      <segment id="3" count="79" sum="860.9193433073076" avg="4.733251633957173"/>
+      <segment id="4" count="91" sum="135.12022839120652" avg="7.925224967922108"/>
+      <segment id="5" count="50" sum="874.782859926042" avg="2.1542765961389287"/>
+      <segment id="6" count="83" sum="372.60960476613604" avg="1.6899293852481856"/>
+      <segment id="7" count="93" sum="741.37086849879" avg="8.25813699580808"/>
+      <segment id="8" count="67" sum="256.5556329545648" avg="8.429634757186207"/>
+      <segment id="9" count="40" sum="842.3221013237805" avg="9.455930261681289"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:error">
+      <segment id="0" count="98" sum="129.0669515622629" avg="7.366089126655023"/>
+      <segment id="1" count="40" sum="30.576896931387544" avg="2.339349081182961"/>
+      <segment id="2" count="48" sum="230.09857255411504" avg="1.4078936711297207"/>
+      <segment id="3" count="77" sum="135.33966771673934" avg="2.226863907045973"/>
+      <segment id="4" count="29" sum="158.1882833693372" avg="1.289683625815985"/>
+      <segment id="5" count="31" sum="483.4506149903686" avg="7.6631807158075045"/>
+      <segment id="6" count="1" sum="991.2621695826626" avg="1.2833210766513958"/>
+      <segment id="7" count="98" sum="688.2437118841509" avg="9.325072747822853"/>
+      <segment id="8" count="49" sum="131.7447143604882" avg="9.316237319269986"/>
+      <segment id="9" count="29" sum="503.8018940465845" avg="9.439768279281406"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国移动:errorCode|400">
+      <segment id="0" count="99" sum="557.6899033758252" avg="7.0886040815328"/>
+      <segment id="1" count="26" sum="102.96350173148616" avg="4.2294390501322985"/>
+      <segment id="2" count="40" sum="58.8556865471882" avg="1.007636080967207"/>
+      <segment id="3" count="15" sum="114.8092765171761" avg="4.762031047347105"/>
+      <segment id="4" count="76" sum="390.33107163934886" avg="8.518513810474426"/>
+      <segment id="5" count="4" sum="914.3611040671852" avg="8.463570752586206"/>
+      <segment id="6" count="51" sum="747.6267941766407" avg="3.865333897419724"/>
+      <segment id="7" count="95" sum="365.9211236787655" avg="4.322724956659092"/>
+      <segment id="8" count="4" sum="951.5662647855945" avg="3.2141283408251518"/>
+      <segment id="9" count="17" sum="713.3213080516849" avg="4.231111960403263"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:httpStatus|200">
+      <segment id="0" count="10" sum="936.1356811314506" avg="8.748790758162572"/>
+      <segment id="1" count="10" sum="381.28123501478564" avg="50.1100255716398"/>
+      <segment id="2" count="10" sum="173.11401113220782" avg="49.31897733043874"/>
+      <segment id="3" count="10" sum="696.3032973946334" avg="26.58458634136779"/>
+      <segment id="4" count="10" sum="159.61541902877195" avg="82.77102004823293"/>
+      <segment id="5" count="10" sum="46.23485683980966" avg="62.26350222807952"/>
+      <segment id="6" count="10" sum="97.83276648948258" avg="63.36940521194322"/>
+      <segment id="7" count="10" sum="945.8062787681994" avg="39.24197525975297"/>
+      <segment id="8" count="10" sum="216.99852635600524" avg="66.71237139648369"/>
+      <segment id="9" count="10" sum="791.1427840654915" avg="11.104141603548412"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:error">
+      <segment id="0" count="10" sum="721.8881932290996" avg="22.415261094596296"/>
+      <segment id="1" count="10" sum="329.3158538605417" avg="22.830472289153214"/>
+      <segment id="2" count="10" sum="884.2270588678953" avg="93.3282913491704"/>
+      <segment id="3" count="10" sum="716.1867638468117" avg="14.442061965107445"/>
+      <segment id="4" count="10" sum="149.46724378504638" avg="34.60482632727573"/>
+      <segment id="5" count="10" sum="392.9196796690576" avg="20.84824651891328"/>
+      <segment id="6" count="10" sum="948.7850256078011" avg="28.14318900805157"/>
+      <segment id="7" count="10" sum="657.0487059473287" avg="12.883511130883807"/>
+      <segment id="8" count="10" sum="629.7811589647384" avg="15.757151689151671"/>
+      <segment id="9" count="10" sum="855.7423925213894" avg="72.66417707786847"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:errorCode|200">
+      <segment id="0" count="10" sum="549.2493090705875" avg="47.88718889820044"/>
+      <segment id="1" count="10" sum="586.9158729102452" avg="60.16489580678598"/>
+      <segment id="2" count="10" sum="907.5113970321271" avg="23.74670723361142"/>
+      <segment id="3" count="10" sum="158.0993184267965" avg="7.309516068022958"/>
+      <segment id="4" count="10" sum="346.20050954744386" avg="23.50441957470395"/>
+      <segment id="5" count="10" sum="823.4787715356954" avg="70.89038251196641"/>
+      <segment id="6" count="10" sum="680.0056801009918" avg="23.43609805708855"/>
+      <segment id="7" count="10" sum="996.2837302534688" avg="86.27470919891331"/>
+      <segment id="8" count="10" sum="387.77489060201" avg="40.935966233698664"/>
+      <segment id="9" count="10" sum="716.7029458966987" avg="90.12618057022047"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:avg">
+      <segment id="0" count="10" sum="882.4207873396861" avg="58.8197303345685"/>
+      <segment id="1" count="10" sum="951.6548418480091" avg="87.06920066451964"/>
+      <segment id="2" count="10" sum="916.1009636612487" avg="15.099458843169145"/>
+      <segment id="3" count="10" sum="704.7756812723326" avg="95.49870728983034"/>
+      <segment id="4" count="10" sum="767.1349768915574" avg="48.28588952676167"/>
+      <segment id="5" count="10" sum="712.8767945751148" avg="65.77003120954578"/>
+      <segment id="6" count="10" sum="586.3833691135252" avg="75.98050552580501"/>
+      <segment id="7" count="10" sum="335.1727471336545" avg="84.4828980818874"/>
+      <segment id="8" count="10" sum="281.13746521114666" avg="16.505679909248805"/>
+      <segment id="9" count="10" sum="263.4138904827967" avg="48.72742846601324"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:httpStatus|300">
+      <segment id="0" count="10" sum="829.4228129376035" avg="56.770894260493954"/>
+      <segment id="1" count="10" sum="607.4840516229727" avg="89.9296595500436"/>
+      <segment id="2" count="10" sum="901.8729514412508" avg="24.836561683885538"/>
+      <segment id="3" count="10" sum="640.1582547123211" avg="80.0553724406713"/>
+      <segment id="4" count="10" sum="201.4020714314221" avg="99.69964361525079"/>
+      <segment id="5" count="10" sum="833.0991511009953" avg="41.28790476155376"/>
+      <segment id="6" count="10" sum="593.9975156772188" avg="89.85802315424765"/>
+      <segment id="7" count="10" sum="511.5413713511685" avg="66.34033807448822"/>
+      <segment id="8" count="10" sum="280.3917240756598" avg="29.6576981161618"/>
+      <segment id="9" count="10" sum="883.491889230012" avg="22.904438604986034"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:hit">
+      <segment id="0" count="10" sum="338.0866613305049" avg="74.58751860532719"/>
+      <segment id="1" count="10" sum="32.734348513185466" avg="46.936020291052536"/>
+      <segment id="2" count="10" sum="82.55120720411024" avg="80.6571742033007"/>
+      <segment id="3" count="10" sum="871.7073010263339" avg="45.507317061433774"/>
+      <segment id="4" count="10" sum="635.6834335538152" avg="90.23701682114441"/>
+      <segment id="5" count="10" sum="50.25907731791368" avg="35.755241588084694"/>
+      <segment id="6" count="10" sum="407.012759595626" avg="58.945243838386816"/>
+      <segment id="7" count="10" sum="961.7888755520155" avg="28.974018648790768"/>
+      <segment id="8" count="10" sum="416.7491765422685" avg="36.00008433000957"/>
+      <segment id="9" count="10" sum="540.0419233052892" avg="67.04518041490815"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-南京:中国联通:errorCode|300">
+      <segment id="0" count="10" sum="519.670806753654" avg="53.91159071078254"/>
+      <segment id="1" count="10" sum="497.8346763257062" avg="32.167438516995006"/>
+      <segment id="2" count="10" sum="624.9723914554978" avg="92.4697236156231"/>
+      <segment id="3" count="10" sum="23.243163299984214" avg="80.24350512780065"/>
+      <segment id="4" count="10" sum="949.5810854314869" avg="56.69241023831801"/>
+      <segment id="5" count="10" sum="719.2958822459639" avg="93.30043611092813"/>
+      <segment id="6" count="10" sum="191.07848138804295" avg="48.729310640993894"/>
+      <segment id="7" count="10" sum="749.9701949474164" avg="6.9646252731971"/>
+      <segment id="8" count="10" sum="261.2507151549395" avg="19.67405331618688"/>
+      <segment id="9" count="10" sum="738.2994111954783" avg="45.28208115083009"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:httpStatus|200">
+      <segment id="0" count="845" sum="496886.3834630534" avg="271.1162191548023"/>
+      <segment id="1" count="485" sum="35306.7210285527" avg="493.316537689468"/>
+      <segment id="2" count="246" sum="410556.35632469854" avg="166.39094737998806"/>
+      <segment id="3" count="253" sum="16821.293234383305" avg="298.1904856715574"/>
+      <segment id="4" count="779" sum="48353.29370077257" avg="514.3185081823137"/>
+      <segment id="5" count="402" sum="708846.7778185306" avg="127.62723814676058"/>
+      <segment id="6" count="759" sum="549757.0226968413" avg="907.7190075701019"/>
+      <segment id="7" count="434" sum="290176.50997003017" avg="149.0583279660379"/>
+      <segment id="8" count="668" sum="800400.6559309292" avg="36.624782268610105"/>
+      <segment id="9" count="980" sum="632066.1770800264" avg="765.8147978488985"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:hit">
+      <segment id="0" count="724" sum="833499.192178091" avg="661.0644931215745"/>
+      <segment id="1" count="435" sum="284014.9418597863" avg="390.3005505527706"/>
+      <segment id="2" count="240" sum="730001.4686658274" avg="647.5546646346709"/>
+      <segment id="3" count="144" sum="970712.5175120524" avg="356.2062092269405"/>
+      <segment id="4" count="944" sum="737485.1121353669" avg="249.86871395207234"/>
+      <segment id="5" count="527" sum="291945.47284183494" avg="410.3604664124989"/>
+      <segment id="6" count="415" sum="641707.0396584938" avg="617.7739054995612"/>
+      <segment id="7" count="984" sum="252822.08457221257" avg="423.29116915345645"/>
+      <segment id="8" count="31" sum="946072.9798920508" avg="385.91414866013884"/>
+      <segment id="9" count="877" sum="110030.95760946436" avg="73.46283182054836"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:errorCode|200">
+      <segment id="0" count="369" sum="851106.1093783154" avg="16.569496265087302"/>
+      <segment id="1" count="987" sum="844942.0280817949" avg="79.60337500121861"/>
+      <segment id="2" count="854" sum="70661.99076012136" avg="841.7094653360494"/>
+      <segment id="3" count="853" sum="519505.4876815537" avg="599.0398897941732"/>
+      <segment id="4" count="289" sum="100909.19172437295" avg="828.0235323584925"/>
+      <segment id="5" count="216" sum="348805.825349753" avg="182.41261629218064"/>
+      <segment id="6" count="987" sum="83109.24461274371" avg="439.2778653303068"/>
+      <segment id="7" count="895" sum="656848.4012529046" avg="915.7865871734207"/>
+      <segment id="8" count="933" sum="17488.639011777774" avg="418.6095170903592"/>
+      <segment id="9" count="799" sum="951145.8495821664" avg="313.66360264465885"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:avg">
+      <segment id="0" count="568" sum="459544.2655512342" avg="323.17552680178886"/>
+      <segment id="1" count="75" sum="303276.06174259994" avg="471.2764120616111"/>
+      <segment id="2" count="571" sum="181787.46689015478" avg="43.1152695445618"/>
+      <segment id="3" count="87" sum="140775.317858974" avg="992.8257806526115"/>
+      <segment id="4" count="303" sum="90178.63720015607" avg="802.2374110058773"/>
+      <segment id="5" count="977" sum="821747.4407134745" avg="145.71034013377437"/>
+      <segment id="6" count="332" sum="551028.0818400203" avg="948.5011098962119"/>
+      <segment id="7" count="106" sum="313793.1374522572" avg="96.61428788953708"/>
+      <segment id="8" count="64" sum="693092.3955941554" avg="661.7907856629174"/>
+      <segment id="9" count="3" sum="125016.36744511224" avg="559.1491260194293"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:httpStatus|300">
+      <segment id="0" count="841" sum="106753.92832460185" avg="125.72681828459852"/>
+      <segment id="1" count="428" sum="597044.7781628596" avg="578.3844920327607"/>
+      <segment id="2" count="500" sum="635166.8606655872" avg="322.7750855653102"/>
+      <segment id="3" count="57" sum="991109.5186095231" avg="781.9997676336528"/>
+      <segment id="4" count="347" sum="736199.5926988164" avg="357.4652553797889"/>
+      <segment id="5" count="641" sum="109721.65765071652" avg="472.3664652509361"/>
+      <segment id="6" count="904" sum="85162.00472014779" avg="105.20958873677122"/>
+      <segment id="7" count="583" sum="450453.85529269424" avg="842.5494812463843"/>
+      <segment id="8" count="816" sum="384260.6234542295" avg="179.06388463839406"/>
+      <segment id="9" count="376" sum="86251.34870447282" avg="215.17237210159578"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:error">
+      <segment id="0" count="617" sum="815255.4272284327" avg="506.0394701799484"/>
+      <segment id="1" count="835" sum="268245.3617174444" avg="883.9313894328953"/>
+      <segment id="2" count="909" sum="524397.8728842409" avg="982.7353785810974"/>
+      <segment id="3" count="480" sum="828970.5907191637" avg="298.3570300403663"/>
+      <segment id="4" count="371" sum="592856.2005631702" avg="280.1039096157608"/>
+      <segment id="5" count="509" sum="964594.4659483142" avg="495.8624999804969"/>
+      <segment id="6" count="877" sum="452602.57793901616" avg="934.7709590841786"/>
+      <segment id="7" count="621" sum="542174.8882100653" avg="822.9748314201553"/>
+      <segment id="8" count="945" sum="820514.8716317757" avg="94.13204025101885"/>
+      <segment id="9" count="784" sum="977068.1834752806" avg="525.9904008083496"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:errorCode|300">
+      <segment id="0" count="227" sum="492039.2046367923" avg="3.2208264773546658"/>
+      <segment id="1" count="325" sum="479795.8785722305" avg="889.9908492222503"/>
+      <segment id="2" count="572" sum="20831.91595478928" avg="898.6784125868804"/>
+      <segment id="3" count="92" sum="916037.7210223542" avg="821.1224147864789"/>
+      <segment id="4" count="749" sum="748175.5714486815" avg="59.381932769190236"/>
+      <segment id="5" count="620" sum="727606.1736580327" avg="510.4582717396294"/>
+      <segment id="6" count="975" sum="780140.7813345579" avg="754.9980667884564"/>
+      <segment id="7" count="170" sum="649341.7703259387" avg="986.3120016604021"/>
+      <segment id="8" count="540" sum="499769.4869884033" avg="51.970131044639544"/>
+      <segment id="9" count="861" sum="827326.7196400323" avg="39.37265507767218"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:httpStatus|400">
+      <segment id="0" count="683" sum="703446.4131885603" avg="704.2353664869789"/>
+      <segment id="1" count="812" sum="574565.3139835647" avg="587.0009484368408"/>
+      <segment id="2" count="703" sum="419996.4860362979" avg="265.2468861269803"/>
+      <segment id="3" count="375" sum="99818.01812831825" avg="199.33272260251823"/>
+      <segment id="4" count="183" sum="135614.78037090035" avg="764.5963836305535"/>
+      <segment id="5" count="689" sum="152712.96287985382" avg="617.3851384704226"/>
+      <segment id="6" count="698" sum="929345.5817266583" avg="892.5088617477226"/>
+      <segment id="7" count="521" sum="167142.3418588357" avg="562.3396046343915"/>
+      <segment id="8" count="296" sum="147090.37753767916" avg="71.4903172235316"/>
+      <segment id="9" count="4" sum="578574.0205967656" avg="244.46523169903355"/>
+   </metric-item>
+   <metric-item id="broker-service:Metric:江苏-扬州:中国联通:errorCode|400">
+      <segment id="0" count="105" sum="535943.1301884381" avg="653.8052456038536"/>
+      <segment id="1" count="510" sum="290167.24849451013" avg="878.4552436952922"/>
+      <segment id="2" count="281" sum="152219.9630773895" avg="827.5552068161818"/>
+      <segment id="3" count="373" sum="986925.9747128306" avg="326.7890484958236"/>
+      <segment id="4" count="442" sum="892397.9710826246" avg="584.6263105724279"/>
+      <segment id="5" count="643" sum="882187.0770375965" avg="415.63790758414143"/>
+      <segment id="6" count="549" sum="329119.1543502912" avg="980.323590146401"/>
+      <segment id="7" count="719" sum="755287.2029737096" avg="813.5503430754133"/>
+      <segment id="8" count="402" sum="770640.9227303215" avg="625.4257148118456"/>
+      <segment id="9" count="925" sum="747885.9719920068" avg="291.66422693831817"/>
+   </metric-item>
+</metric-report>
