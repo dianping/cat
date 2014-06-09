@@ -9,8 +9,8 @@
 			</anchors>
 			<switchs>
 				<switch name="QW-E8030" x="340" y="120" state="1" />
-				<switch name="N6K-1" x="320" y="240" />
-				<switch name="N6K-2" x="450" y="240" />
+				<switch name="N6K-1" x="280" y="240" />
+				<switch name="N6K-2" x="410" y="240" />
 				<switch name="C3750-CNC" x="150" y="240" />
 				<switch name="F5v2400-1" x="340" y="360" />
 				<switch name="F5v2400-2" x="150" y="360" />
