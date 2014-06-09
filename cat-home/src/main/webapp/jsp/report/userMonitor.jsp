@@ -18,6 +18,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query(){
+			var group = $("#group").val();
 			var url = $("#url").val();
 			var city = $("#city").val();
 			var type = $("#type").val();
@@ -25,7 +26,7 @@
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
 			
-			window.location.href="?url="+url +"&city="+city+"&type="+type+"&channel="+channel+"&startDate="+start+"&endDate="+end;
+			window.location.href="?url="+url +"&group="+group+ "&city="+city+"&type="+type+"&channel="+channel+"&startDate="+start+"&endDate="+end;
 		}
 		
 		$(document).ready(function() {
@@ -39,7 +40,26 @@
 			
 			var cityData = ${model.cityInfo};
 			var select = $('#province');
-			function change(){
+			
+			var urlData = ${model.items};
+			var group = $('#group');
+			
+			function groupChange(){
+				var key = $("#group").val();
+				var value = urlData[key];
+				var url = document.getElementById("url");
+				url.length=0;
+				for (var prop in value) {
+				    var opt = $('<option />');
+			  		
+			  		opt.html(value[prop].pattern);
+				  	opt.val(value[prop].name);
+			  		opt.appendTo(url);
+				}
+			}
+			group.on('change',groupChange);
+			
+			function provinceChange(){
 				var key = $("#province").val();
 				var value = cityData[key];
 				
@@ -62,7 +82,7 @@
 			  		opt.appendTo(select);
 				}
 			}
-			select.on('change',change);
+			select.on('change',provinceChange);
 			
 			for (var prop in cityData) {
 			  	if (cityData.hasOwnProperty(prop)) { 
@@ -78,15 +98,29 @@
 			  }
 			}
 			
+			for (var prop in urlData) {
+			  	if (urlData.hasOwnProperty(prop)) { 
+			  		var opt = $('<option />');
+			  		
+			  		opt.val(prop);
+			  		opt.html(prop);
+			  		opt.appendTo(group);
+			  }
+			}
+			
 			var city = '${payload.city}';
 			var array = city.split('-');
 			
 			$('#province').val(array[0]);
-			change();
+			provinceChange();
 			
 			if(array.length==2){
 				$("#city").val(city);
 			}
+			
+			$('#group').val('${payload.group}');
+			groupChange();
+			$("#url").val(url);
 			
 			<c:choose>
 			<c:when test="${payload.type eq 'info'}">
@@ -109,12 +143,10 @@
 	<div class="report">
 		<table>
 			<tr>
-				<th class="left">URL: <select name="url" id="url"
-					style="width: 400px;">
-						<c:forEach var="item" items="${model.pattermItems}">
-							<option value="${item.name}">${item.pattern}</option>
-						</c:forEach>
-				</select> 省份 <select style="width: 100px;" name="province" id="province">
+				<th class="left">
+				组<select style="width: 100px;" name="group" id="group">
+				</select> URL <select style="width: 400px;" name="url" id="url"></select>
+				省份 <select style="width: 100px;" name="province" id="province">
 				</select> 城市 <select style="width: 100px;" name="city" id="city">
 				</select> 运营商 <select style="width: 120px;" name="channel" id="channel">
 						<option value="">ALL</option>
