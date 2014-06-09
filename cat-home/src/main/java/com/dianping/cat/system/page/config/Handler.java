@@ -51,6 +51,7 @@ import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
+import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -101,6 +102,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ReportService m_reportService;
+	
+	@Inject
+	private NetGraphConfigManager m_netGraphConfigManager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -426,6 +430,13 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(true);
 			}
 			model.setContent(m_metricGroupConfigManager.getMetricGroupConfig().toString());
+			break;
+		case NET_GRAPH_CONFIG_UPDATE:
+			String netGraphConfig = payload.getContent();
+			if (!StringUtils.isEmpty(netGraphConfig)) {
+				model.setOpState(m_netGraphConfigManager.insert(netGraphConfig));
+			}
+			model.setContent(m_netGraphConfigManager.getConfig().toString());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
