@@ -21,6 +21,8 @@ public class LineChart {
 
 	private String m_title;
 	
+	private String m_unit;
+	
 	private String m_id;
 
 	private String m_htmlTitle;
@@ -68,6 +70,10 @@ public class LineChart {
 		} else {
 			return m_htmlTitle;
 		}
+	}
+	
+	public String getUnit(){
+		return m_unit;
 	}
 
 	public String getId() {
@@ -149,6 +155,11 @@ public class LineChart {
 
 	public LineChart setTitle(String title) {
 		m_title = title;
+		return this;
+	}
+	
+	public LineChart setUnit(String unit){
+		m_unit = unit;
 		return this;
 	}
 

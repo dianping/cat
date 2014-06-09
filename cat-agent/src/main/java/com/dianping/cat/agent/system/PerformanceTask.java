@@ -94,12 +94,12 @@ public class PerformanceTask extends AbstractTask {
 			for (FileSystem fs : fileSystems) {
 				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK) {
 					FileSystemUsage usage = m_sigar.getFileSystemUsage(fs.getDirName());
-					String url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_" + fs.getDirName() + "_usage_" + m_ipAddr,
+					String url = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_" + fs.getDirName() + "-usage_" + m_ipAddr,
 					      "avg", String.valueOf(usage.getUsePercent()));
 
 					sendMetric(url);
 					
-					String url2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_" + fs.getDirName() + "_usage_" + m_ipAddr2,
+					String url2 = String.format(m_catUrl, System.currentTimeMillis(), m_domain, "system_" + fs.getDirName() + "-usage_" + m_ipAddr2,
 					      "avg", String.valueOf(usage.getUsePercent() + 0.2));
 
 					sendMetric(url2);

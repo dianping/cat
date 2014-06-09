@@ -191,9 +191,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return 0;
 	}
 
+	private boolean validateGroup(String group) {
+		if (!StringUtils.isEmpty(group)
+		      && (group.toLowerCase().startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX)
+		            || group.toLowerCase().startsWith(ProductLineConfigManager.NETWORK_F5_PREFIX) || group.toLowerCase()
+		            .startsWith(ProductLineConfigManager.NETWORK_SWITCH_PREFIX))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private boolean validateMetricType(String domain, String group) {
-		if (Constants.BROKER_SERVICE.equals(domain)
-		      || (!StringUtils.isEmpty(group) && group.startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX))) {
+		if (Constants.BROKER_SERVICE.equals(domain) || validateGroup(group)) {
 			return false;
 		} else {
 			return true;

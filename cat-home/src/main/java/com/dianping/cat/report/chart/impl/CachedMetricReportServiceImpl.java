@@ -17,7 +17,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
-import com.dianping.cat.report.page.userMonitor.UserMonitorConvert;
+import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -104,7 +104,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			String channel = properties.get("channel");
 			String type = properties.get("type");
 
-			UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
+			UserMonitorReportConvertor convert = new UserMonitorReportConvertor(type, city, channel);
 
 			convert.visitMetricReport(report);
 			return convert.getReport();

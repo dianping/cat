@@ -12,7 +12,7 @@ import com.dianping.cat.report.task.alert.exception.AlertReportMerger;
 public class AlertReportBuilderTest  extends ComponentTestCase {
 	
 	@Test
-	public void testMerge() throws Exception {
+	public void test() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("old.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("new.xml"), "utf-8");
 		AlertReport reportOld = DefaultSaxParser.parse(oldXml);
@@ -24,7 +24,7 @@ public class AlertReportBuilderTest  extends ComponentTestCase {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 		
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getAlertReport().toString()
+		Assert.assertEquals("Check the build result!", expected.replace("\r", ""), merger.getAlertReport().toString()
 		      .replace("\r", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
 

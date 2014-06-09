@@ -59,12 +59,13 @@ public class SystemReportConvertor extends BaseVisitor {
 
 	private boolean validate(String id) {
 		try {
-			String[] idSplit = id.split(":");
-			String realKey = idSplit[2];
-			String[] realKeySplit = realKey.split("_");
-			String type = realKeySplit[0];
-			String chartKey = realKeySplit[1];
-			String ip = realKeySplit[2];
+			int index = id.indexOf(":", id.indexOf(":") + 1);
+			String realKey = id.substring(index + 1);
+			int typeIndex = realKey.indexOf("_");
+			String type = realKey.substring(0, typeIndex);
+			int ipIndex = realKey.lastIndexOf("_");
+			String chartKey = realKey.substring(typeIndex + 1, ipIndex);
+			String ip = realKey.substring(ipIndex + 1);
 
 			m_report.findOrCreateStatistic(IP_LIST_KEY).findOrCreateStatisticsItem(ip);
 

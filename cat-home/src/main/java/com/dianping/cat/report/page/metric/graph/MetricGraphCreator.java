@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.metric.graph;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,6 +57,57 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
+	
+	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
+		long start = startDate.getTime(), end = endDate.getTime();
+		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
+		int index = 0;
+
+		for (; start < end; start += TimeUtil.ONE_HOUR) {
+			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
+
+			mergeMap(oldCurrentValues, currentValues, totalSize, index);
+			index++;
+		}
+		return oldCurrentValues;
+	}
+	
+
+	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
+		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
+
+		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
+			@Override
+			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
+				return (int) (o1.getViewOrder() * 100 - o2.getViewOrder() * 100);
+			}
+		});
+		Map<String, double[]> currentValues = buildGraphData(metricReport, metricConfigs);
+		double sum = 0;
+
+		for (Entry<String, double[]> entry : currentValues.entrySet()) {
+			double[] value = entry.getValue();
+			int length = value.length;
+
+			for (int i = 0; i < length; i++) {
+				sum = sum + value[i];
+			}
+		}
+		// if current report is not exist, use last day value replace it.
+		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
+			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start
+			      - TimeUtil.ONE_DAY));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+
+			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
+			      + sdf.format(new Date(start)));
+			return buildGraphData(lastMetricReport, metricConfigs);
+		}
+		return currentValues;
+	}
 
 	public Map<String, LineChart> buildDashboard(Date start, Date end) {
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
@@ -95,7 +147,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return result;
 	}
 
-	protected boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
+	private boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(domains);
 
@@ -148,7 +200,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return false;
 	}
 
-	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
+	private void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
@@ -168,7 +220,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
+	private Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
 		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport);
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 
