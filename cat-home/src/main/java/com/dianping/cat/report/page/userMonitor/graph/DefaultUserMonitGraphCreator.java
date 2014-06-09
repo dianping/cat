@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 
 import com.alibaba.cobar.parser.util.Pair;
 import com.dianping.cat.Monitor;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -78,11 +77,6 @@ public class DefaultUserMonitGraphCreator extends AbstractGraphCreator implement
 			items.add(new Item().setTitle(entry.getKey()).setNumber(sum));
 		}
 		return new Pair<LineChart, PieChart>(lineChart, pieChart);
-	}
-
-	@Override
-	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		throw new RuntimeException("unsupport in user monitor graph!");
 	}
 
 	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,

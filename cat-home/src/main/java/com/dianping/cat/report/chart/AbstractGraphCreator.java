@@ -1,13 +1,9 @@
 package com.dianping.cat.report.chart;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -16,11 +12,9 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -95,9 +89,6 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		}
 	}
 
-	protected abstract Map<String, double[]> buildGraphData(MetricReport metricReport,
-	      List<MetricItemConfig> metricConfigs);
-
 	protected double[] convert(double[] value, int removeLength) {
 		int length = value.length;
 		int newLength = length - removeLength;
@@ -164,21 +155,6 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		return des;
 	}
 
-	protected Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
-		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
-		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
-		int index = 0;
-
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
-
-			mergeMap(oldCurrentValues, currentValues, totalSize, index);
-			index++;
-		}
-		return oldCurrentValues;
-	}
-
 	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
 		LineChart value = charts.get(key);
 
@@ -212,41 +188,6 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 			index++;
 		}
 		return result;
-	}
-
-	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
-		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
-
-		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {
-			@Override
-			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
-				return (int) (o1.getViewOrder() * 100 - o2.getViewOrder() * 100);
-			}
-		});
-		Map<String, double[]> currentValues = buildGraphData(metricReport, metricConfigs);
-		double sum = 0;
-
-		for (Entry<String, double[]> entry : currentValues.entrySet()) {
-			double[] value = entry.getValue();
-			int length = value.length;
-
-			for (int i = 0; i < length; i++) {
-				sum = sum + value[i];
-			}
-		}
-		// if current report is not exist, use last day value replace it.
-		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
-			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start
-			      - TimeUtil.ONE_DAY));
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
-
-			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
-			      + sdf.format(new Date(start)));
-			return buildGraphData(lastMetricReport, metricConfigs);
-		}
-		return currentValues;
 	}
 
 	protected Map<String, double[]> removeFutureData(Date endDate, final Map<String, double[]> allCurrentValues) {
