@@ -12,7 +12,6 @@ public class SystemAgent {
 		ExecutorService executorService = Executors.newFixedThreadPool(THREAD_NUM);
 
 		String filePath = System.getProperty("config.file");
-		System.out.println(filePath);
 		Configuration config = new Configuration();
 		config.load(filePath);
 		

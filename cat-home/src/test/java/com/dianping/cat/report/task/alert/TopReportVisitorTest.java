@@ -19,7 +19,7 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 public class TopReportVisitorTest extends ComponentTestCase {
 
 	@Test
-	public void testMerge() throws Exception {
+	public void test() throws Exception {
 
 		String topReportXml = Files.forIO().readFrom(getClass().getResourceAsStream("topReport.xml"), "utf-8");
 		TopReport topReport = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(topReportXml);
@@ -36,7 +36,7 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		alertReport.setEndTime(topReport.getEndTime());
 		visitor.visitTopReport(topReport);
 
-		Assert.assertEquals("Check the merge result!", expectedAlertReportXml.replace("\r", ""), alertReport.toString()
+		Assert.assertEquals("Check the report result!", expectedAlertReportXml.replace("\r", ""), alertReport.toString()
 		      .replace("\r", ""));
 	}
 
