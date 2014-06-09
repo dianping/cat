@@ -13,6 +13,10 @@
 		}
 		});
 		
+		if("${payload.action.name}" == "exceptionThresholdUpdate") {
+			$('#smsSending').val("${model.exceptionLimit.smsSending}");
+		}
+		
 		function setWidth(){
 			var sel =  document.getElementById("domainId");
 			sel.style.width = ((sel.offsetWidth < 200) ? '200' : 'auto');
@@ -42,8 +46,6 @@
 			</c:choose>
 			</td>
 		</tr>
-	  
-
 		<tr>
 			<td style="text-align:right" class="text-success">异常名称</td>
 			<td>
@@ -61,6 +63,16 @@
 		</tr>
 		
 		<tr>
+			<td style="text-align:right" class="text-success">短信告警</td>
+			<td>
+				<select name="exceptionLimit.smsSending" id="smsSending" style="width:200px;">
+                	<option value="true">是</option>
+                	<option value="false">否</option> 							
+            	</select>
+			</td>
+		</tr>
+		
+		<tr>
 			<td style="text-align: right" class="text-success">warning阈值</td>
 			<td><input id="warningThreshold" name="exceptionLimit.warning"
 				value="${model.exceptionLimit.warning}" required /></td>
@@ -71,7 +83,6 @@
 			<td><input id="errorThreshold" name="exceptionLimit.error"
 				value="${model.exceptionLimit.error}" required /></td>
 		</tr>
-
 		<tr>
 			<td colspan='2'  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
 				name="submit" value="提交"/></td>
