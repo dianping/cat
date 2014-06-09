@@ -120,7 +120,7 @@
 			
 			$('#group').val('${payload.group}');
 			groupChange();
-			$("#url").val(url);
+			$("#url").val('${payload.url}');
 			
 			<c:choose>
 			<c:when test="${payload.type eq 'info'}">
