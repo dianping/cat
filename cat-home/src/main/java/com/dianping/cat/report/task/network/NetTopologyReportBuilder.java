@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.network;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +12,13 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
@@ -24,6 +27,9 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
+	
+	@Inject
+	private NetGraphConfigManager m_netGraphConfigManager;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -41,7 +47,8 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 			reports.put(group, report);
 		}
-		NetGraphSet netGraphSet = m_netGraphBuilder.buildGraphSet(reports);
+		NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
+		NetGraphSet netGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, reports, new ArrayList<String>());
 		HourlyReport hourlyReport = new HourlyReport();
 
 		hourlyReport.setType(1);
