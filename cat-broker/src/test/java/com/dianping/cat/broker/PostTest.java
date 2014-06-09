@@ -18,7 +18,7 @@ public class PostTest {
 	public String m_online = "114.80.165.63";
 
 	@Test
-	public void test1() throws UnsupportedEncodingException {
+	public void testBatch2() throws UnsupportedEncodingException {
 		System.err.println(System.currentTimeMillis() - 60 * 1000 * 2);
 		String url = "v=1&c=1400650097	http://m.api.dianping.com/searchshop.api	0	200	0";
 
@@ -99,8 +99,8 @@ public class PostTest {
 	}
 
 	@Test
-	public void test() throws Exception {
-		String url = "http://localhost:2765/broker-service/api/singel?v=1.0";
+	public void testBatch() throws Exception {
+		String url = "http://localhost:2765/broker-service/api/batch?v=1.0";
 		URLConnection conn = new URL(url).openConnection();
 
 		conn.setDoOutput(true);
@@ -108,7 +108,32 @@ public class PostTest {
 
 		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
-		String content = "&c=1400037748182\\thttp\\t300\\t200\\t300\\n1400037748182\\thttp\\t300\\t200\\t300\\n1400037748182\\thttp\\t300\\t200\\t300\\n";
+		String content = "&c=1400037748182\thttp\t300\t200\t300\n1400037748182\thttp\t300\t200\t300\n1400037748182\thttp\t300\t200\t300\n";
+		writer.write(content);
+		writer.flush();
+
+		InputStream in = conn.getInputStream();
+		String result = Files.forIO().readFrom(in, "utf-8");
+
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testCdn() throws Exception {
+		String url = "http://localhost:2765/broker-service/api/cdn?v=1";
+		URLConnection conn = new URL(url).openConnection();
+
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+
+		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+		String content = "&c=1400037748182\thttp\t300\t200\t300\t300\n1400037748182\thttp\t300\t200\t300\t300\n1400037748182\thttp\t300\t200\t300\t300\n";
+		
+		String[] tabs = content.split("\n");
+		for(int i=0;i<tabs.length;i++){
+			System.out.println(tabs[i]);
+		}
 		writer.write(content);
 		writer.flush();
 
