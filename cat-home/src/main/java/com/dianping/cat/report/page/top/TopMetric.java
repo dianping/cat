@@ -162,12 +162,6 @@ public class TopMetric extends BaseVisitor {
 
 		private double m_value;
 
-		@Override
-      public String toString() {
-	      return "Item [m_domain=" + m_domain + ", m_value=" + m_value + ", m_alert=" + m_alert + ", m_configManager="
-	            + m_configManager + ", m_exceptions=" + m_exceptions + "]";
-      }
-
 		private int m_alert;
 
 		private ExceptionConfigManager m_configManager;
