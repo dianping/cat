@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
@@ -34,30 +33,15 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
-			if (chartTitle.endsWith("-flow")) {
-				lineChart.setUnit("流量(MB/分钟)");
-			} else {
-				lineChart.setUnit("value/分钟");
-			}
+			lineChart.setUnit(buildUnit(keyMapEntry.getKey()));
 
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 					Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
-					Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 
 					addLastMinuteData(current, all, m_lastMinute, endDate);
-					
-					if (chartTitle.endsWith("-flow")) {
-						for (Entry<Long, Double> currentEntry : current.entrySet()) {
-							double result = currentEntry.getValue() / 1000.0;
-
-							convertedData.put(currentEntry.getKey(), result);
-						}
-						lineChart.add(buildLineTitle(key), convertedData);
-					} else {
-						lineChart.add(buildLineTitle(key), current);
-					}
+					convertLineChartData(lineChart, current, key);
 				}
 			}
 			charts.put(chartTitle, lineChart);
@@ -65,10 +49,27 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
+	private void convertLineChartData(LineChart lineChart, Map<Long, Double> current, String key) {
+		
+		if (isFlowMetric(lineChart.getId())) {
+			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
+
+			for (Entry<Long, Double> currentEntry : current.entrySet()) {
+				double result = currentEntry.getValue() / 1000.0;
+
+				convertedData.put(currentEntry.getKey(), result);
+			}
+			lineChart.add(buildLineTitle(key), convertedData);
+		} else {
+			lineChart.add(buildLineTitle(key), current);
+		}
+	}
+
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
@@ -87,31 +88,9 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		return oldCurrentValues;
 	}
 
-	private Map<String, double[]> buildGraphData(MetricReport metricReport) {
-		Map<String, double[]> datas = m_pruductDataFetcher.buildGraphData(metricReport);
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-
-		for (Entry<String, MetricItem> metricItem : metricReport.getMetricItems().entrySet()) {
-			String key = metricItem.getKey();
-			String type = metricItem.getValue().getType();
-
-			if ("S,C".equalsIgnoreCase(type)) {
-				String avgKey = key + ":" + MetricType.SUM.name();
-				putKey(datas, values, avgKey);
-			} else if ("S".equalsIgnoreCase(type)) {
-				String avgKey = key + ":" + MetricType.COUNT.name();
-				putKey(datas, values, avgKey);
-			} else if ("T".equalsIgnoreCase(type)) {
-				String avgKey = key + ":" + MetricType.AVG.name();
-				putKey(datas, values, avgKey);
-			}
-		}
-		return values;
-	}
-
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
-		Map<String, double[]> currentValues = buildGraphData(metricReport);
+		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport);
 		double sum = 0;
 
 		for (Entry<String, double[]> entry : currentValues.entrySet()) {
@@ -130,29 +109,38 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 
 			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
 			      + sdf.format(new Date(start)));
-			return buildGraphData(lastMetricReport);
+			return m_pruductDataFetcher.buildGraphData(lastMetricReport);
 		}
 		return currentValues;
 	}
 
-	public String buildLineTitle(String lineKey) {
-		int colonIndex = lineKey.lastIndexOf(":");
-		String tmp = lineKey.substring(0, colonIndex > -1 ? colonIndex : 0);
+	private String buildLineTitle(String lineKey) {
 
-		return tmp.substring(tmp.lastIndexOf("-") + 1);
+		return lineKey.substring(lineKey.lastIndexOf("-") + 1, lineKey.lastIndexOf(":"));
 	}
 
-	private Map<String, List<String>> buildLineChartKeys(Set<String> keys) {
+	private Set<String> buildKeysWithoutType(Set<String> keys) {
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (String key : keys) {
+			int index = key.lastIndexOf(":");
+			String frontKey = key.substring(0, index);
+
+			result.add(frontKey);// domain:Metric:groupName-lineKey
+		}
+		return result;
+	}
+
+	private Map<String, List<String>> buildLineChartKeys(Set<String> originKeys) {
 		Set<String> groupSet = new LinkedHashSet<String>();
 		Map<String, List<String>> aggregationKeys = new LinkedHashMap<String, List<String>>();
+		Set<String> keys = buildKeysWithoutType(originKeys);
 
-		// key = domain:Metric:groupName-lineKey:SUM
+		// key = domain:Metric:groupName-lineKey
 		for (String key : keys) {
 			try {
-				int colonIndex = key.lastIndexOf(":");
-				String tmp = key.substring(0, colonIndex); // domain:Metric:groupName-lineKey
-				int hyphenIndex = tmp.lastIndexOf("-");
-				String groupName = tmp.substring(0, hyphenIndex); // domain:Metric:groupName
+				int hyphenIndex = key.lastIndexOf("-");
+				String groupName = key.substring(0, hyphenIndex); // domain:Metric:groupName
 
 				groupSet.add(groupName);
 			} catch (Exception exception) {
@@ -164,7 +152,11 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			List<String> keyList = new ArrayList<String>();
 			for (String key : keys) {
 				if (key.startsWith(group)) {
-					keyList.add(key);
+					if (isSumTypeMetric(group)) {
+						keyList.add(key + ":" + MetricType.SUM);
+					} else {
+						keyList.add(key + ":" + MetricType.AVG);
+					}
 				}
 			}
 			String groupName = group.substring(group.lastIndexOf(":") + 1); // groupName
@@ -174,4 +166,27 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		return aggregationKeys;
 	}
 
+	private boolean isFlowMetric(String title) {
+		if (title.endsWith("-flow")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isSumTypeMetric(String group) {
+		if (isFlowMetric(group) || group.toLowerCase().endsWith("-discard/error")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private String buildUnit(String chartTitle) {
+		if (isFlowMetric(chartTitle)) {
+			return "流量(MB/分钟)";
+		} else {
+			return "value/分钟";
+		}
+	}
 }
