@@ -1,12 +1,15 @@
-package com.dianping.cat.agent.system;
+package com.dianping.cat.agent.jvm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class JVMTask extends AbstractTask {
+import com.dianping.cat.agent.AbstractTask;
+import com.dianping.cat.agent.Configuration;
 
-	public JVMTask(Configuration config) {
+public class jvmTask extends AbstractTask {
+
+	public jvmTask(Configuration config) {
 		super(config);
 		m_domain = config.getJvmDomain();
 	}

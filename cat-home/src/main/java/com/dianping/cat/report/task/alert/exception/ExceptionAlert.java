@@ -14,6 +14,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -78,68 +79,96 @@ public class ExceptionAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	private List<AlertException> findOrCreateDomain(Map<String, List<AlertException>> exceptions, String domain) {
-		if (exceptions.get(domain) == null) {
-			List<AlertException> exception = new ArrayList<AlertException>();
+	private Pair<Double, Double> queryDomainTotalLimit(String domain) {
+		ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(domain);
+		Pair<Double, Double> limits = new Pair<Double, Double>();
+		double totalWarnLimit = -1;
+		double totalErrorLimit = -1;
 
-			exceptions.put(domain, exception);
-			return exception;
+		if (totalExceptionLimit != null) {
+			totalWarnLimit = totalExceptionLimit.getWarning();
+			totalErrorLimit = totalExceptionLimit.getError();
 		}
-		return exceptions.get(domain);
+		limits.setKey(totalWarnLimit);
+		limits.setValue(totalErrorLimit);
+
+		return limits;
 	}
 
-	private Map<String, List<AlertException>> getAlertExceptions(Collection<List<Item>> items) {
+	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exceptionName);
+		Pair<Double, Double> limits = new Pair<Double, Double>();
+		double warnLimit = -1;
+		double errorLimit = -1;
+
+		if (exceptionLimit != null) {
+			warnLimit = exceptionLimit.getWarning();
+			errorLimit = exceptionLimit.getError();
+		}
+		limits.setKey(warnLimit);
+		limits.setValue(errorLimit);
+
+		return limits;
+	}
+
+	private boolean isExcludedException(String domain, String exceptionName) {
+		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
+
+		if (result != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private List<AlertException> buildDomainAlertExceptionList(Item item) {
+		String domain = item.getDomain();
+		List<AlertException> alertExceptions = new ArrayList<AlertException>();
+		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
+		double totalWarnLimit = totalLimitPair.getKey();
+		double totalErrorLimit = totalLimitPair.getValue();
+		double totalException = 0;
+
+		// different exception -> numbers
+		for (Entry<String, Double> entry : item.getException().entrySet()) {
+			String exceptionName = entry.getKey();
+
+			if (isExcludedException(domain, exceptionName)) {
+				continue;
+			}
+
+			double value = entry.getValue().doubleValue();
+			Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
+			double warnLimit = limitPair.getKey();
+			double errorLimit = limitPair.getValue();
+
+			totalException += value;
+
+			if (errorLimit > 0 && value > errorLimit) {
+				alertExceptions.add(new AlertException(exceptionName, ERROR_FLAG, value));
+			} else if (warnLimit > 0 && value > warnLimit) {
+				alertExceptions.add(new AlertException(exceptionName, WARN_FLAG, value));
+			}
+		}
+
+		if (totalErrorLimit > 0 && totalException > totalErrorLimit) {
+			alertExceptions.add(new AlertException(TOTAL_EXCEPTION_NAME, ERROR_FLAG, totalException));
+		} else if (totalWarnLimit > 0 && totalException > totalWarnLimit) {
+			alertExceptions.add(new AlertException(TOTAL_EXCEPTION_NAME, WARN_FLAG, totalException));
+		}
+
+		return alertExceptions;
+	}
+
+	private Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
-		for (List<Item> item : items) {
-			for (Item i : item) {
-				String domain = i.getDomain();
-				ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(domain);
-				int totalWarnLimit = -1;
-				int totalErrorLimit = -1;
-				int totalException = 0;
 
-				if (totalExceptionLimit != null) {
-					totalWarnLimit = totalExceptionLimit.getWarning();
-					totalErrorLimit = totalExceptionLimit.getError();
-				}
-
-				for (Entry<String, Double> entry : i.getException().entrySet()) {
-					String exceptionName = entry.getKey();
-					ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
-
-					if (result != null) {
-						continue;
-					}
-
-					double value = entry.getValue().doubleValue();
-					double warnLimit = -1;
-					double errorLimit = -1;
-					ExceptionLimit exceptionLimit = m_exceptionConfigManager
-					      .queryDomainExceptionLimit(domain, exceptionName);
-
-					totalException += entry.getValue();
-
-					if (exceptionLimit != null) {
-						warnLimit = exceptionLimit.getWarning();
-						errorLimit = exceptionLimit.getError();
-
-						if (errorLimit > 0 && value > errorLimit) {
-							findOrCreateDomain(alertExceptions, domain).add(
-							      new AlertException(exceptionName, ERROR_FLAG, value));
-						} else if (warnLimit > 0 && value > warnLimit) {
-							findOrCreateDomain(alertExceptions, domain).add(
-							      new AlertException(exceptionName, WARN_FLAG, value));
-						}
-					}
-				}
-
-				if (totalErrorLimit > 0 && totalException > totalErrorLimit) {
-					findOrCreateDomain(alertExceptions, domain).add(
-					      new AlertException(TOTAL_EXCEPTION_NAME, ERROR_FLAG, totalException));
-				} else if (totalWarnLimit > 0 && totalException > totalWarnLimit) {
-					findOrCreateDomain(alertExceptions, domain).add(
-					      new AlertException(TOTAL_EXCEPTION_NAME, WARN_FLAG, totalException));
-				}
+		// different domain -> [excepitons:numbers]
+		for (Item item : items) {
+			List<AlertException> domainAlertExceptions = buildDomainAlertExceptionList(item);
+			
+			if (!domainAlertExceptions.isEmpty()) {
+				alertExceptions.put(item.getDomain(), domainAlertExceptions);
 			}
 		}
 		return alertExceptions;
@@ -196,7 +225,8 @@ public class ExceptionAlert implements Task, LogEnabled {
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
-				Map<String, List<AlertException>> alertExceptions = getAlertExceptions(items);
+				List<Item> item = items.iterator().next();
+				Map<String, List<AlertException>> alertExceptions = buildAlertExceptions(item);
 
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {

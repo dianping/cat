@@ -155,4 +155,25 @@ function showOpNav() {
 </c:choose>
 
 </script>
+<style type="text/css">
+.row-fluid .span2{
+	width:10%;
+}
+.row-fluid .span10{
+	width:87%;
+}
+.well {
+padding: 10px 10px 10px 19p;
+}
+.nav-list  li  a{
+	padding:2px 15px;
+}
+
+.nav li  +.nav-header{
+	margin-top:2px;
+}
+.nav-header{
+	padding:5px 3px;
+}
+</style>
 

@@ -97,6 +97,8 @@
 		       				<div id="${item.id}" class="metricGraph"></div>
 		       			</div>
 					</c:forEach>
+				</div>
+			</div>
 		</div>
 		</a:body>
 	</c:otherwise></c:choose>
