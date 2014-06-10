@@ -129,6 +129,14 @@
 		<component>
 			<role>com.dianping.cat.broker.api.page.cdn.Handler</role>
 			<implementation>com.dianping.cat.broker.api.page.cdn.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>
