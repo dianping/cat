@@ -1,9 +1,12 @@
-package com.dianping.cat.agent.system;
+package com.dianping.cat.agent;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SystemAgent {
+import com.dianping.cat.agent.jvm.jvmTask;
+import com.dianping.cat.agent.system.PerformanceTask;
+
+public class Agent {
 
 	public static final int THREAD_NUM = 3;
 
@@ -17,7 +20,7 @@ public class SystemAgent {
 		
 		executorService.execute(new PerformanceTask(config));
 		executorService.execute(new StateTask(config));
-		executorService.execute(new JVMTask(config));
+		executorService.execute(new jvmTask(config));
 		executorService.shutdown();
 	}
 }
