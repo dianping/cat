@@ -155,9 +155,6 @@ public class ExceptionConfigManager implements Initializable {
 				result = queryDefaultExceptionExclude(exceptionName);
 			}
 		}
-		if (domain.equalsIgnoreCase("PromoServer") && result == null) {
-			System.out.println(m_exceptionConfig.getDomainConfigs());
-		}
 		return result;
 	}
 
