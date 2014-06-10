@@ -396,7 +396,6 @@ public class Handler implements PageHandler<Context> {
 		case EXCEPTION_EXCLUDE_ADD:
 			List<String> exceptionExcludeList = queryExceptionList();
 
-			exceptionExcludeList.add(ExceptionConfigManager.ALL_STRING);
 			model.setExceptionList(exceptionExcludeList);
 			model.setDomainList(queryDoaminList());
 			break;

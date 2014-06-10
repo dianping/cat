@@ -8,6 +8,9 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Swap;
 
+import com.dianping.cat.agent.AbstractTask;
+import com.dianping.cat.agent.Configuration;
+
 public class PerformanceTask extends AbstractTask {
 
 	private Sigar m_sigar;

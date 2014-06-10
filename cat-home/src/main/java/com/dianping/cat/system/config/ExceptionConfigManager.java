@@ -34,8 +34,6 @@ public class ExceptionConfigManager implements Initializable {
 
 	public static String TOTAL_STRING = "Total";
 
-	public static String ALL_STRING = "All";
-
 	public boolean deleteExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
 		domainConfig.removeExceptionLimit(exceptionName);
@@ -131,19 +129,34 @@ public class ExceptionConfigManager implements Initializable {
 		return result;
 	}
 
+	private ExceptionExclude queryDefaultExceptionExclude(String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
+		ExceptionExclude result = null;
+
+		if (domainConfig != null) {
+			result = domainConfig.getExceptionExcludes().get(exceptionName);
+		}
+		return result;
+	}
+
 	public ExceptionExclude queryDomainExceptionExclude(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
 		ExceptionExclude result = null;
 
+		// has no this domain config
 		if (domainConfig == null) {
-			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
+			result = queryDefaultExceptionExclude(exceptionName);
 		}
+
 		if (domainConfig != null) {
 			result = domainConfig.getExceptionExcludes().get(exceptionName);
-
+			// domain config has no exclude for exception, check default exclude config
 			if (result == null) {
-				result = domainConfig.getExceptionExcludes().get(ALL_STRING);
+				result = queryDefaultExceptionExclude(exceptionName);
 			}
+		}
+		if (domain.equalsIgnoreCase("PromoServer") && result == null) {
+			System.out.println(m_exceptionConfig.getDomainConfigs());
 		}
 		return result;
 	}
