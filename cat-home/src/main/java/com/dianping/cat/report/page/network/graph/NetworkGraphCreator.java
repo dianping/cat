@@ -37,7 +37,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			if (chartTitle.endsWith("-flow")) {
 				lineChart.setUnit("流量(MB/分钟)");
 			} else {
-				lineChart.setUnit("value");
+				lineChart.setUnit("value/分钟");
 			}
 
 			for (String key : keyMapEntry.getValue()) {
@@ -171,7 +171,6 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 
 			aggregationKeys.put(groupName, keyList); // [groupName:[domain:Metric:groupName-lineKey:SUM]...]
 		}
-
 		return aggregationKeys;
 	}
 

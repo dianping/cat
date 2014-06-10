@@ -25,6 +25,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("channel")
 	private String m_channel;
+	
+	@FieldMeta("group")
+	private String m_group;
 
 	@FieldMeta("type")
 	private String m_type = Monitor.TYPE_INFO;
@@ -110,6 +113,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setUrl(String url) {
 		m_url = url;
 	}
+	
+	public String getGroup() {
+   	return m_group;
+   }
+
+	public void setGroup(String group) {
+   	m_group = group;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
