@@ -67,8 +67,8 @@ public class AlertConfigTest {
 			decreaseValue = 100;
 		}
 
-		descPerSubcon.setType("DescPer").setText(decreasePercent);
-		descValSubcon.setType("DescVal").setText(decreaseValue);
+		descPerSubcon.setType("DescPer").setText(String.valueOf(decreasePercent));
+		descValSubcon.setType("DescVal").setText(String.valueOf(decreaseValue));
 
 		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
 		config.addCondition(condition);

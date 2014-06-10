@@ -33,7 +33,7 @@ public class NetworkRuleConfigManager extends BaseRuleConfigManager implements I
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-network-metric-rule-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-network-metric-rule-config-unit.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

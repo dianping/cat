@@ -34,8 +34,8 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 			SubCondition descPerSubcon = new SubCondition();
 			SubCondition descValSubcon = new SubCondition();
 
-			descPerSubcon.setType("DescPer").setText(50.0);
-			descValSubcon.setType("DescVal").setText(100.0);
+			descPerSubcon.setType("DescPer").setText("50");
+			descValSubcon.setType("DescVal").setText("100");
 			condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
 			config.addCondition(condition);
 			configs.add(config);
