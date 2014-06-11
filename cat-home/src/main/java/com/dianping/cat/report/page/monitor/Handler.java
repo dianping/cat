@@ -84,7 +84,7 @@ public class Handler implements PageHandler<Context> {
 			String group = payload.getGroup();
 			String key = payload.getKey();
 			long time = payload.getTimestamp();
-			int count = payload.getCount();
+			long count = payload.getCount();
 			boolean invalid = time < TimeUtil.getCurrentHour().getTime();
 
 			if (invalid) {

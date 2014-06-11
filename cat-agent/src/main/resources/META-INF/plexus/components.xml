@@ -1,0 +1,35 @@
+<plexus>
+	<components>
+		<component>
+			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
+			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
+			<configuration>
+				<modules>
+					<module default="true">com.dianping.cat.agent.core.CoreModule</module>
+				</modules>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.core.CoreModule</role>
+			<implementation>com.dianping.cat.agent.core.CoreModule</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.core.page.index.Handler</role>
+			<implementation>com.dianping.cat.agent.core.page.index.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.core.page.index.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.core.page.index.JspViewer</role>
+			<implementation>com.dianping.cat.agent.core.page.index.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+	</components>
+</plexus>
