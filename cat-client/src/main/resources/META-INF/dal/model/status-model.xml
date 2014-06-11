@@ -2,6 +2,14 @@
 <model model-package="com.dianping.cat.status.model" enable-sax-parser="true" enable-xml-schema="true"
 	enable-merger="true" enable-model-test="true" enable-base-visitor="true">
 	<entity name="status" class-name="StatusInfo" dynamic-attributes="true">
+		<attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
+	    <entity-ref name="runtime" />
+	    <entity-ref name="os" />
+	    <entity-ref name="disk" />
+	    <entity-ref name="memory" />
+	    <entity-ref name="thread" />
+	    <entity-ref name="message" />
+		<entity-ref name="extension" names ="extensions" type="map" method-find-or-create="true"/>
 	</entity>
 	<entity name="runtime" class-name="RuntimeInfo">
 		<attribute name="start-time" value-type="long" primitive="true" />
@@ -53,4 +61,8 @@
 		<attribute name="overflowed" value-type="long" primitive="true" />
 		<attribute name="bytes" value-type="long" primitive="true" />
 	</entity>
+	<entity name="extension" dynamic-attributes="true">
+		<attribute name="id" value-type="String" key="true"/>
+		<attribute name="description" value-type="String"/>
+	</entity>	
 </model>

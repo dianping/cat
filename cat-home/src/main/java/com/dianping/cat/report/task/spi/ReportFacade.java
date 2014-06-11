@@ -84,7 +84,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private UtilizationReportBuilder m_utilizationReportBuilder;
 	
 	@Inject
-	private NetTopologyReportBuilder m_netTopologyHistoryReportBuilder;
+	private NetTopologyReportBuilder m_netTopologyReportBuilder;
 	
 	private Logger m_logger;
 
@@ -160,7 +160,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put(Constants.REPORT_HEAVY, m_heavyReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_ALERT, m_alertReportBuilder);
 		m_reportBuilders.put(Constants.REPORT_UTILIZATION, m_utilizationReportBuilder);
-		m_reportBuilders.put(Constants.REPORT_NET_TOPOLOGY, m_netTopologyHistoryReportBuilder);
+		m_reportBuilders.put(Constants.REPORT_NET_TOPOLOGY, m_netTopologyReportBuilder);
 	}
 
 }
