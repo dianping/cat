@@ -1,7 +1,7 @@
 package com.dianping.cat.agent.monitor;
 
 public class DataEntity {
-
+	
 	private String m_key;
 
 	private String m_op;
