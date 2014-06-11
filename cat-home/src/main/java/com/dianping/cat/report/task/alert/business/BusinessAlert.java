@@ -93,10 +93,11 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	public void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content) {
+	@Override
+	public void sendAlertInfo(ProductLine productLine, String metricTitle, String content) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
 		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-		String title = m_alertConfig.buildMailTitle(productLine, config.getTitle());
+		String title = m_alertConfig.buildMailTitle(productLine, metricTitle);
 
 		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);

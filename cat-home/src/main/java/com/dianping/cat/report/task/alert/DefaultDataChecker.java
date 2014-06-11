@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.SubCondition;
@@ -103,19 +104,40 @@ public class DefaultDataChecker implements DataChecker {
 
 	private boolean checkDataByMinute(Condition condition, double value, double baseline) {
 		for (SubCondition subCondition : condition.getSubConditions()) {
-			String ruleType = subCondition.getType();
-			double ruleValue = subCondition.getText();
-			RuleType rule = RuleType.getByTypeId(ruleType);
+			try {
+				String ruleType = subCondition.getType();
+				double ruleValue = parseSubConditionText(subCondition.getText());
+				RuleType rule = RuleType.getByTypeId(ruleType);
 
-			if (rule != null) {
 				boolean isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
 
 				if (!isSubRuleTriggered) {
 					return false;
 				}
+			} catch (Exception ex) {
+				Cat.logError(condition.toString(), ex);
+				return false;
 			}
 		}
 		return true;
+	}
+
+	private double parseSubConditionText(String text) {
+		if (text.contains("Mb")) {
+			double value = Double.parseDouble(text.replaceAll("Mb", ""));
+			return value * 1024 * 1024 / 8;
+		} else if (text.contains("Gb")) {
+			double value = Double.parseDouble(text.replaceAll("Gb", ""));
+			return value * 1024 * 1024 * 1024 / 8;
+		} else if (text.contains("Mb/s")) {
+			double value = Double.parseDouble(text.replaceAll("Mb/s", ""));
+			return value * 60 * 1024 * 1024 / 8;
+		} else if (text.contains("Gb/s")) {
+			double value = Double.parseDouble(text.replaceAll("Gb/s", ""));
+			return value * 60 * 1024 * 1024 * 1024 / 8;
+		}
+
+		return Double.parseDouble(text);
 	}
 
 	private boolean judgeCurrentNotInConfigRange(Config config) {
