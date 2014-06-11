@@ -88,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
-	private BusinessRuleConfigManager m_domainMetricRuleConfigManager;
+	private BusinessRuleConfigManager m_businessRuleConfigManager;
 
 	@Inject
 	private NetworkRuleConfigManager m_metricRuleConfigManager;
@@ -106,12 +106,12 @@ public class Handler implements PageHandler<Context> {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
 	}
 
-	private void deleteExceptionLimit(Payload payload) {
-		m_exceptionConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
-	}
-
 	private void deleteExceptionExclude(Payload payload) {
 		m_exceptionConfigManager.deleteExceptionExclude(payload.getDomain(), payload.getException());
+	}
+
+	private void deleteExceptionLimit(Payload payload) {
+		m_exceptionConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
 	}
 
 	private void deleteProject(Payload payload) {
@@ -321,6 +321,13 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(metricConfigAddSubmit(payload, model));
 			metricConfigList(payload, model);
 			break;
+		case METRIC_RULE_ADD_OR_UPDATE:
+			metricRuleAdd(payload, model);
+			break;
+		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(metricRuleAddSubmit(payload, model));
+			metricConfigList(payload, model);
+			break;
 		case METRIC_CONFIG_LIST:
 			metricConfigList(payload, model);
 			break;
@@ -332,11 +339,11 @@ public class Handler implements PageHandler<Context> {
 		case DOMAIN_METRIC_RULE_CONFIG_UPDATE:
 			String domainMetricRuleConfig = payload.getContent();
 			if (!StringUtils.isEmpty(domainMetricRuleConfig)) {
-				model.setOpState(m_domainMetricRuleConfigManager.insert(domainMetricRuleConfig));
+				model.setOpState(m_businessRuleConfigManager.insert(domainMetricRuleConfig));
 			} else {
 				model.setOpState(true);
 			}
-			model.setContent(m_domainMetricRuleConfigManager.getMonitorRules().toString());
+			model.setContent(m_businessRuleConfigManager.getMonitorRules().toString());
 			break;
 		case METRIC_RULE_CONFIG_UPDATE:
 			String metricRuleConfig = payload.getContent();
@@ -351,7 +358,7 @@ public class Handler implements PageHandler<Context> {
 			String alertDefaultReceivers = payload.getContent();
 			String allOnOrOff = payload.getAllOnOrOff();
 			String xmlContent = m_alertConfigManager.buildReceiverContentByOnOff(alertDefaultReceivers, allOnOrOff);
-			
+
 			if (!StringUtils.isEmpty(alertDefaultReceivers)) {
 				model.setOpState(m_alertConfigManager.insert(xmlContent));
 			} else {
@@ -480,6 +487,21 @@ public class Handler implements PageHandler<Context> {
 		model.setProductMetricConfigs(metricConfigs);
 	}
 
+	private void metricRuleAdd(Payload payload, Model model) {
+		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
+
+		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(key).toString());
+	}
+	
+	private boolean metricRuleAddSubmit(Payload payload, Model model) {
+		try{
+			String xmlContent = m_businessRuleConfigManager.addOrReplaceRule(payload.getContent());
+			return m_businessRuleConfigManager.insert(xmlContent);
+		}catch(Exception ex){
+			return false;
+		}
+	}
+
 	private List<Project> queryAllProjects() {
 		List<Project> projects = new ArrayList<Project>();
 
@@ -531,11 +553,6 @@ public class Handler implements PageHandler<Context> {
 		m_aggreationConfigManager.insertAggregationRule(proto);
 	}
 
-	private void updateExceptionLimit(Payload payload) {
-		ExceptionLimit limit = payload.getExceptionLimit();
-		m_exceptionConfigManager.insertExceptionLimit(limit);
-	}
-
 	private void updateExceptionExclude(Payload payload) {
 		ExceptionExclude exclude = payload.getExceptionExclude();
 		String domain = payload.getDomain();
@@ -545,6 +562,11 @@ public class Handler implements PageHandler<Context> {
 			m_exceptionConfigManager.deleteExceptionExclude(domain, exception);
 		}
 		m_exceptionConfigManager.insertExceptionExclude(exclude);
+	}
+
+	private void updateExceptionLimit(Payload payload) {
+		ExceptionLimit limit = payload.getExceptionLimit();
+		m_exceptionConfigManager.insertExceptionLimit(limit);
 	}
 
 	private void updateProject(Payload payload) {
