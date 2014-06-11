@@ -6,8 +6,8 @@
       <version>1.0.5</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
-   <artifactId>cat-home</artifactId>
-   <name>cat-home</name>
+   <artifactId>cat-agent</artifactId>
+   <name>cat-agent</name>
    <packaging>war</packaging>
    <dependencies>
       <dependency>
@@ -89,7 +89,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.0.13</version>
+            <version>2.0.9</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>
