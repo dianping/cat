@@ -126,7 +126,7 @@
 								<tr>
 								<c:forEach var="item" items="${model.projects}" varStatus="status">
 									<c:choose>
-										<c:when test="${status.index mod 4 ne 0}">
+										<c:when test="${status.index mod 3 ne 0}">
 											<td>
 												<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
 											</td>

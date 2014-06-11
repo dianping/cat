@@ -16,6 +16,7 @@
 		<module>cat-consumer-advanced</module>
 		<module>cat-home</module>
 		<module>cat-broker</module>
+		<module>cat-agent</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
