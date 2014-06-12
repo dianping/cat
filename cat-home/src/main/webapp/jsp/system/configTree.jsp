@@ -14,7 +14,6 @@
            <li class='nav-header'><h4>业务监控配置</h4></li>
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList"><strong>业务监控规则</strong></a></li>
 	       <li class="text-right" id="metricGroupConfigUpdate"><a href="?op=metricGroupConfigUpdate"><strong>业务指标分组</strong></a></li>
-	       <li class="text-right" id="domainMetricRuleConfigUpdate"><a href="?op=domainMetricRuleConfigUpdate"><strong>业务告警配置</strong></a></li>
            <li class='nav-header'><h4>网络监控配置</h4></li>
 	       <li class="text-right" id="metricRuleConfigUpdate"><a href="?op=metricRuleConfigUpdate"><strong>网络告警配置</strong></a></li>
 	       <li class="text-right" id="netGraphConfigUpdate"><a href="?op=netGraphConfigUpdate"><strong>网络拓扑配置</strong></a></li>

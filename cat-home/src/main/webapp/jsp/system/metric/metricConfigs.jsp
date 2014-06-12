@@ -51,8 +51,9 @@
 					}
 				});
 			});
+			
 			var action = '${payload.action.name}';
-			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'){
+			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'||action=='metricRuleAddSubmit'){
 				var state = '${model.opState}';
 				if(state=='Success'){
 					$('#state').html('操作成功');
@@ -134,9 +135,10 @@
 				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				     				</c:if>
 				     			</td>
-					     		<td style="text-align:center">
+					     		<td style="text-align:center;white-space: nowrap">
 					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn update btn-primary btn-small">修改</a>
 						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small btn-danger delete">删除</a>
+					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn update btn-primary btn-small">修改规则</a>
 						     	</td>
 					     		</tr>
 					     	</c:forEach>

@@ -28,7 +28,7 @@
 	</entity>
 	<entity name="sub-condition">
 		<attribute name="type" value-type="String" />
-		<element name="text" value-type="double" text="true" />
+		<element name="text" value-type="String" text="true" />
 	</entity>
 </model>
 
