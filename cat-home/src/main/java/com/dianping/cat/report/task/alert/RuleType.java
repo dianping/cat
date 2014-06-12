@@ -191,7 +191,7 @@ public enum RuleType {
 		}
 	},
 
-	absoluteMaxValue {
+	AbsoluteMaxValue {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			StringBuilder sb = new StringBuilder();
@@ -223,7 +223,7 @@ public enum RuleType {
 		}
 	},
 
-	absoluteMinValue {
+	AbsoluteMinValue {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			StringBuilder sb = new StringBuilder();
@@ -252,6 +252,108 @@ public enum RuleType {
 		@Override
 		public String getId() {
 			return "MinVal";
+		}
+	},
+
+	FluctuateIncreasePercentage {
+		private double[] buildFlucAscPers(double[] values) {
+			int length = values.length;
+			double[] ascPers = new double[length - 1];
+			double baseVal = values[length - 1];
+
+			for (int i = 0; i <= length - 2; i++) {
+				ascPers[i] = (baseVal / values[i] - 1) * 100;
+			}
+
+			return ascPers;
+		}
+
+		@Override
+		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
+			sb.append("[波动上升百分比:").append(convertPercentsToString(buildFlucAscPers(values))).append("] ");
+			sb.append("[波动上升百分比阈值: " + m_df.format(ruleValue) + "% ]");
+			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+
+			return sb.toString();
+		}
+
+		@Override
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+			int length = values.length;
+
+			if (length <= 1) {
+				return new Pair<Boolean, String>(false, "");
+			}
+
+			double baseVal = values[length - 1];
+
+			for (int i = 0; i <= length - 2; i++) {
+				if (baseVal / values[i] - 1 < ruleValue / 100) {
+					return new Pair<Boolean, String>(false, "");
+				}
+			}
+
+			return new Pair<Boolean, String>(true, buildRuleMessage(values, baselines, ruleValue));
+		}
+
+		@Override
+		public String getId() {
+			return "FluAscPer";
+		}
+	},
+
+	FluctuateDecreasePercentage {
+		private double[] buildFlucDescPers(double[] values) {
+			int length = values.length;
+			double[] descPers = new double[length - 1];
+			double baseVal = values[length - 1];
+
+			for (int i = 0; i <= length - 2; i++) {
+				descPers[i] = (1 - baseVal / values[i]) * 100;
+			}
+
+			return descPers;
+		}
+
+		@Override
+		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
+			sb.append("[波动下降百分比:").append(convertPercentsToString(buildFlucDescPers(values))).append("] ");
+			sb.append("[波动下降百分比阈值: " + m_df.format(ruleValue) + "% ]");
+			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+
+			return sb.toString();
+		}
+
+		@Override
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+			int length = values.length;
+
+			if (length <= 1) {
+				return new Pair<Boolean, String>(false, "");
+			}
+
+			double baseVal = values[length - 1];
+
+			for (int i = 0; i <= length - 2; i++) {
+				if (1 - baseVal / values[i] < ruleValue / 100) {
+					return new Pair<Boolean, String>(false, "");
+				}
+			}
+
+			return new Pair<Boolean, String>(true, buildRuleMessage(values, baselines, ruleValue));
+		}
+
+		@Override
+		public String getId() {
+			return "FluDescPer";
 		}
 	};
 
