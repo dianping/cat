@@ -31,5 +31,10 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.Executor</role>
+			<role-hint>JVMMemoryExecutor</role-hint>
+			<implementation>com.dianping.cat.agent.monitor.jvm.JVMMemoryExecutor</implementation>
+		</component>
 	</components>
 </plexus>
