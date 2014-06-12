@@ -33,7 +33,7 @@ public class AlertConfigTest {
 
 		Map<String, List<com.dianping.cat.home.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
 
-		for (Rule rule : monitorRules.getRules()) {
+		for (Rule rule : monitorRules.getRules().values()) {
 			map.put(rule.getId(), rule.getConfigs());
 		}
 
