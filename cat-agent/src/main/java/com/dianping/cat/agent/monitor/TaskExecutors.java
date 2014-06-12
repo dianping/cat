@@ -29,10 +29,9 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 
 			try {
 				long current = System.currentTimeMillis();
-				
+
 				for (Executor executor : m_executors) {
 					Transaction t2 = Cat.newTransaction("Executor", executor.getId());
-				
 					try {
 						List<DataEntity> entities = executor.execute();
 
@@ -65,6 +64,12 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 	}
 
 	@Override
+	public void initialize() throws InitializationException {
+		Map<String, Executor> map = lookupMap(Executor.class);
+		m_executors = map.values();
+	}
+
+	@Override
 	public String getName() {
 		return "data-fetcher";
 	}
@@ -72,13 +77,6 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 	@Override
 	public void shutdown() {
 
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Map<String, Executor> map = lookupMap(Executor.class);
-
-		m_executors = map.values();
 	}
 
 }

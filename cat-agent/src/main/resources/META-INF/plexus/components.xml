@@ -1,6 +1,68 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.Executor</role>
+			<role-hint>JVMMemoryExecutor</role-hint>
+			<implementation>com.dianping.cat.agent.monitor.jvm.JVMMemoryExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.Executor</role>
+			<role-hint>JVMStateExecutor</role-hint>
+			<implementation>com.dianping.cat.agent.monitor.jvm.JVMStateExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.Executor</role>
+			<role-hint>PerformanceExecutor</role-hint>
+			<implementation>com.dianping.cat.agent.monitor.system.SystemPerformanceExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.Executor</role>
+			<role-hint>SystemStateExecutor</role-hint>
+			<implementation>com.dianping.cat.agent.monitor.system.SystemStateExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.DataSender</role>
+			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.TaskExecutors</role>
+			<implementation>com.dianping.cat.agent.monitor.TaskExecutors</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
@@ -20,6 +82,12 @@
 				<requirement>
 					<role>com.dianping.cat.agent.core.page.index.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.TaskExecutors</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -30,6 +98,33 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.DataSender</role>
+			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.TaskExecutors</role>
+			<implementation>com.dianping.cat.agent.monitor.TaskExecutors</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.initialization.Module</role>
+			<role-hint>cat-agent</role-hint>
+			<implementation>com.dianping.cat.agent.CatAgentModule</implementation>
 		</component>
 	</components>
 </plexus>

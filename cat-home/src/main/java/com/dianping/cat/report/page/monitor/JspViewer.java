@@ -12,6 +12,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case COUNT_API:
 		case AVG_API:
 		case SUM_API:
+		case BATCH_API:
 			return JspFile.VIEW.getPath();
 		default:
 			break;

@@ -6,17 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.AbstractExecutor;
 import com.dianping.cat.agent.monitor.DataEntity;
-import com.dianping.cat.agent.monitor.Executor;
 
-public class JVMMemoryExecutor implements Executor {
+public class JVMMemoryExecutor extends AbstractExecutor {
 
-	public static String ID = "JVMMemoryExecutor";
+	public static final String ID = "JVMMemoryExecutor";
 
 	@Override
 	public List<DataEntity> execute() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+		entities.addAll(buildJVMMemoryInfo());
+
+		return new ArrayList<DataEntity>();
+	}
+
+	private List<DataEntity> buildJVMMemoryInfo() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+
 		try {
-			String pid = "";
+			String pid = findPidOfTomcat();
 			Process process = Runtime.getRuntime().exec("jstat -gcutil " + pid);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -24,28 +33,53 @@ public class JVMMemoryExecutor implements Executor {
 
 			String output = reader.readLine();
 			String[] metrics = output.split(" +");
-			List<DataEntity> entities = new ArrayList<DataEntity>();
 
 			DataEntity eden = new DataEntity();
-
-			eden.setKey("jvm_edenUsage_").setOp("avg").setValue(Double.valueOf(metrics[2]) / 100);
+			eden.setId(buildJVMDataEntityId("edenUsage")).setType(AVG_TYPE).setValue(Double.valueOf(metrics[2]) / 100);
+			entities.add(eden);
 
 			DataEntity old = new DataEntity();
-			old.setKey("jvm_oldUsage_").setOp("avg").setValue(Double.valueOf(metrics[3]) / 100);
+			old.setId(buildJVMDataEntityId("oldUsage")).setType(AVG_TYPE).setValue(Double.valueOf(metrics[3]) / 100);
+			entities.add(old);
 
 			DataEntity perm = new DataEntity();
-			perm.setKey("jvm_permUsage_").setOp("avg").setValue(Double.valueOf(metrics[4]) / 100);
+			perm.setId(buildJVMDataEntityId("permUsage")).setType(AVG_TYPE).setValue(Double.valueOf(metrics[4]) / 100);
+			entities.add(perm);
 
 			return entities;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+		return entities;
+	}
 
-		return new ArrayList<DataEntity>();
+	public static String findPidOfTomcat() {
+		String pid = null;
+
+		try {
+			Process process = Runtime.getRuntime().exec(
+			      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep" });
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String output = reader.readLine();
+
+			if (output != null) {
+				if (reader.readLine() != null) {
+					Cat.logError(new RuntimeException("More than one tomcat is running"));
+				}
+				reader.close();
+				String[] outputs = output.split(" +");
+				pid = outputs[1];
+			} else {
+				Cat.logError(new RuntimeException("No tomcat is running"));
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return pid;
 	}
 
 	@Override
-   public String getId() {
+	public String getId() {
 		return ID;
 	}
 
