@@ -27,13 +27,27 @@ public class Payload extends AbstractReportPayload<Action> {
 	private long m_timestamp;
 
 	@FieldMeta("count")
-	private int m_count = 1;
+	private long m_count = 1;
 
 	@FieldMeta("avg")
 	private double m_avg;
 
 	@FieldMeta("sum")
 	private double m_sum;
+
+	@FieldMeta("value")
+	private double m_value;
+
+	public double getValue() {
+		return m_value;
+	}
+
+	public void setValue(double value) {
+		m_value = value;
+		m_count = (long)value;
+		m_avg = value;
+		m_sum = value;
+	}
 
 	public Payload() {
 		super(ReportPage.MONITOR);
@@ -48,7 +62,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_avg;
 	}
 
-	public int getCount() {
+	public long getCount() {
 		return m_count;
 	}
 
@@ -113,10 +127,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	@Override
-   public String toString() {
-	   return "Payload [m_group=" + m_group + ", m_key=" + m_key + ", m_type=" + m_type + ", m_domain=" + m_domain
-	         + ", m_timestamp=" + m_timestamp + "]";
-   }
+	public String toString() {
+		return "Payload [m_group=" + m_group + ", m_key=" + m_key + ", m_type=" + m_type + ", m_domain=" + m_domain
+		      + ", m_timestamp=" + m_timestamp + "]";
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
@@ -124,5 +138,5 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.COUNT_API;
 		}
 	}
-	
+
 }

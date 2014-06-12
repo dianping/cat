@@ -21,10 +21,11 @@
    			 	<li class="text-right"><a href="#tab1" data-toggle="tab"><strong>版本说明</strong></a></li>
    			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>集成文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>业务监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab12" data-toggle="tab"><strong>规则设置</strong></a></li>
+   			 	<li class="text-right"><a href="#tab12" data-toggle="tab"><strong>业务告警</strong></a></li>
    			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>变更监控</strong></a></li>
    			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>网络监控</strong></a></li>
    			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>异常监控</strong></a></li>
+   			 	<li class="text-right"><a href="#tab13" data-toggle="tab"><strong>用户端监控</strong></a></li>
    			 	<li class="text-right"><a href="#tab7" data-toggle="tab"><strong>开发者文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>设计文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab9" data-toggle="tab"><strong>用户文档</strong></a></li>
@@ -45,6 +46,7 @@
 	    		<div class="tab-pane" id="tab10"><%@ include file="problem.jsp"%></div>
 	    		<div class="tab-pane" id="tab11"><%@ include file="plugin.jsp"%></div>
 	    		<div class="tab-pane" id="tab12"><%@ include file="monitorRule.jsp"%></div>
+	    		<div class="tab-pane" id="tab13"><%@ include file="userMonitor.jsp"%></div>
 			</div>
 	</div>
 </div>

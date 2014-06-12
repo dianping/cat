@@ -95,6 +95,7 @@
 		       			</div>
 					</c:forEach>
 				</div>
+			</div>
 		</div>
 		</a:body>
 	</c:otherwise></c:choose>
@@ -131,6 +132,12 @@
 		}
 	</script>
 <style type="text/css">
+.row-fluid .span2{
+	width:10%;
+}
+.row-fluid .span10{
+	width:87%;
+}
 .well {
 padding: 10px 10px 10px 19p;
 }
