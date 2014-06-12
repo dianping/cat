@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
-   <rule>
+   <rule id="SearchShop:Metric:arts-shop-sc">
       <metric-item type="id" monitorCount="true">SearchShop:Metric:arts-shop-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -9,7 +9,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ReceiptVerifyService:Metric:Receipt Verify Success">
       <metric-item type="id" monitorCount="true">ReceiptVerifyService:Metric:Receipt Verify Success</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -18,7 +18,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ShopHotelServer:Metric:trip_intime_price_count">
       <metric-item type="id" monitorCount="true">ShopHotelServer:Metric:trip_intime_price_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -27,7 +27,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="HotelSearchWeb:Metric:trip_hotel_search_pv">
       <metric-item type="id" monitorCount="true">HotelSearchWeb:Metric:trip_hotel_search_pv</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -36,7 +36,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="Unipay:Metric:WEIXIN_PUB.payment.success">
       <metric-item type="id" monitorCount="true">Unipay:Metric:WEIXIN_PUB.payment.success</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -45,7 +45,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess">
       <metric-item type="id" monitorCount="true">MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -54,7 +54,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail">
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -63,7 +63,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchTuanGouRec:Metric:arts-tuangourec-sc">
       <metric-item type="id" monitorCount="true">SearchTuanGouRec:Metric:arts-tuangourec-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -72,7 +72,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchTuanGou:Metric:arts-tuangou-sc">
       <metric-item type="id" monitorCount="true">SearchTuanGou:Metric:arts-tuangou-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -81,7 +81,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="TuanGouTracking:Metric:对外合作成功引流">
       <metric-item type="id" monitorCount="true">TuanGouTracking:Metric:对外合作成功引流</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -90,7 +90,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="TuanGouTracking:Metric:Open对外合作成功引流">
       <metric-item type="id" monitorCount="true">TuanGouTracking:Metric:Open对外合作成功引流</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -99,7 +99,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchAd:Metric:arts-ad-sc">
       <metric-item type="id" monitorCount="true">SearchAd:Metric:arts-ad-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -108,7 +108,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="AccountMQ:Metric:WeiXinLogin">
       <metric-item type="id" monitorCount="true">AccountMQ:Metric:WeiXinLogin</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -117,7 +117,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchDavinci:Metric:arts-takeaway-sc">
       <metric-item type="id" monitorCount="true">SearchDavinci:Metric:arts-takeaway-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -126,7 +126,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchTuanGou:Metric:arts-tuangoux-sc">
       <metric-item type="id">SearchTuanGou:Metric:arts-tuangoux-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -135,7 +135,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="TuanGouMApiSubWeb:Metric:weixin_index">
       <metric-item type="id">TuanGouMApiSubWeb:Metric:weixin_index</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -144,7 +144,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="TuanGouMApiSubWeb:Metric:weixin_detail">
       <metric-item type="id">TuanGouMApiSubWeb:Metric:weixin_detail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -153,7 +153,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchShopwx:Metric:arts-shopwx-sc">
       <metric-item type="id" monitorCount="true">SearchShopwx:Metric:arts-shopwx-sc</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -162,7 +162,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MobileWapMWeb:Metric:ReviewList_WeiXin_Ref">
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ReviewList_WeiXin_Ref</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -171,7 +171,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MobileWapMWeb:Metric:ajaxPictureDetail">
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:ajaxPictureDetail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -180,7 +180,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="TuanGouMMWeb:Metric:weixin_detail">
       <metric-item type="id" monitorCount="true">TuanGouMMWeb:Metric:weixin_detail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -189,7 +189,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="TuanGouMMWeb:Metric:weixin_index">
       <metric-item type="id" monitorCount="true">TuanGouMMWeb:Metric:weixin_index</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -198,7 +198,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MobileWapMWeb:Metric:PictureList_WeiXin_Ref">
       <metric-item type="id" monitorCount="true">MobileWapMWeb:Metric:PictureList_WeiXin_Ref</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -207,7 +207,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ShoppicService:Metric:PCUploadPicCount">
       <metric-item type="id" monitorCount="true">ShoppicService:Metric:PCUploadPicCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -216,7 +216,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ShoppicService:Metric:MobileUploadPicCount">
       <metric-item type="id" monitorCount="true">ShoppicService:Metric:MobileUploadPicCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -225,7 +225,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ReviewServer:Metric:Mobile-AddReview">
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:Mobile-AddReview</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -234,7 +234,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ReviewServer:Metric:PC-AddReview">
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:PC-AddReview</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -243,7 +243,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="ReviewServer:Metric:MWap-AddReview">
       <metric-item type="id" monitorCount="true">ReviewServer:Metric:MWap-AddReview</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -252,7 +252,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/find_businesses">
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/find_businesses</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -261,7 +261,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby">
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -270,7 +270,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -279,7 +279,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -288,7 +288,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTel_count">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTel_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -297,7 +297,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:updatePhoneRecord_count">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:updatePhoneRecord_count</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -306,7 +306,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:add_one_to_BookingUser_table">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:add_one_to_BookingUser_table</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -315,7 +315,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:updatePhoneRecord_fail">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:updatePhoneRecord_fail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -324,7 +324,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTel_fail">
       <metric-item type="id" monitorCount="true">weddingMarketingWeb:Metric:getPhoneByTel_fail</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -333,7 +333,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="AccountMQ:Metric:QQLogin">
       <metric-item type="id" monitorCount="true">AccountMQ:Metric:QQLogin</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -342,7 +342,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin">
       <metric-item type="id" monitorCount="true">OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -351,7 +351,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchPicasso:Metric:mtcorder.FullIndex.DocCount">
       <metric-item type="id" monitorCount="true">SearchPicasso:Metric:mtcorder.FullIndex.DocCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -360,7 +360,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="SearchPicasso:Metric:mtcorder.FullIndex.DocCount">
       <metric-item type="id" monitorCount="true">SearchShop:Metric:FullIndex.DocCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -369,7 +369,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushOnlineCount">
       <metric-item type="id" monitorCount="true">MOSSDpPushServer:Metric:dpPushOnlineCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -378,7 +378,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushReceivedCount">
       <metric-item type="id" monitorCount="true">MOSSDpPushServer:Metric:dpPushReceivedCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">
@@ -387,7 +387,7 @@
          </condition>
       </config>
    </rule>
-   <rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushCount">
       <metric-item type="id" monitorCount="true">MOSSDpPushServer:Metric:dpPushCount</metric-item>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3">

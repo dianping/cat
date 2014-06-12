@@ -505,7 +505,7 @@ public class Handler implements PageHandler<Context> {
 	
 	private boolean metricRuleAddSubmit(Payload payload, Model model) {
 		try{
-			String xmlContent = m_businessRuleConfigManager.addOrReplaceRule(payload.getContent());
+			String xmlContent = m_businessRuleConfigManager.updateRule(payload.getContent());
 			return m_businessRuleConfigManager.insert(xmlContent);
 		}catch(Exception ex){
 			return false;
