@@ -1,6 +1,7 @@
 package com.dianping.cat.system.config;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -27,10 +28,10 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	public String addOrReplaceRule(String ruleContent) throws SAXException, IOException {
 		Rule rule = DefaultSaxParser.parseEntity(Rule.class, ruleContent);
 		String metricKey = queryMetricKey(rule);
-		
+
 		removeRule(metricKey);
 		m_config.getRules().add(rule);
-
+		
 		return m_config.toString();
 	}
 
@@ -142,10 +143,13 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 
 	private void removeRule(String metricKey) {
 		List<Rule> configRules = m_config.getRules();
+		Iterator<Rule> it = configRules.iterator();
 
-		for (Rule rule : configRules) {
-			if (containKey(rule, metricKey)) {
-				configRules.remove(rule);
+		while (it.hasNext()) {
+			Rule tmpRule = it.next();
+
+			if (containKey(tmpRule, metricKey)) {
+				it.remove();
 			}
 		}
 	}
