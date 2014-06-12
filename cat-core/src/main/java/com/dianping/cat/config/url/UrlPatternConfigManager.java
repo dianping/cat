@@ -51,10 +51,9 @@ public class UrlPatternConfigManager implements Initializable {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
 
-			m_UrlPattern = DefaultSaxParser.parse(content);
 			m_configId = config.getId();
+			m_UrlPattern = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
-
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
@@ -64,8 +63,8 @@ public class UrlPatternConfigManager implements Initializable {
 				config.setName(CONFIG_NAME);
 				config.setContent(content);
 				m_configDao.insert(config);
-				m_UrlPattern = DefaultSaxParser.parse(content);
 				m_configId = config.getId();
+				m_UrlPattern = DefaultSaxParser.parse(content);
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}

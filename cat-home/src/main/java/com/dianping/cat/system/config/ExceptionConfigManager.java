@@ -48,8 +48,8 @@ public class ExceptionConfigManager implements Initializable {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
 
-			m_exceptionConfig = DefaultSaxParser.parse(content);
 			m_configId = config.getId();
+			m_exceptionConfig = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
@@ -60,8 +60,8 @@ public class ExceptionConfigManager implements Initializable {
 				config.setContent(content);
 				m_configDao.insert(config);
 
-				m_exceptionConfig = DefaultSaxParser.parse(content);
 				m_configId = config.getId();
+				m_exceptionConfig = DefaultSaxParser.parse(content);
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
