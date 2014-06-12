@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.network.nettopology;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,12 +32,14 @@ public class NetGraphBuilder implements Initializable {
 		return m_requireGroups;
 	}
 
-	public NetGraphSet buildGraphSet(Map<String, MetricReport> reports) {
+	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports, List<String> alertKeys) {
 		NetGraphSet netGraphSet = new NetGraphSet();
 
 		for (int i = 0; i <= 59; i++) {
-			NetGraph netGraph = copyBaseInfoFromTemplate(m_netGraphTemplate);
+			NetGraph netGraph = copyBaseInfoFromTemplate(netGraphTemplate);
 			for (NetTopology netTopology : netGraph.getNetTopologies()) {
+				List<String> alertSwitchs = new ArrayList<String>();
+				
 				for (Connection connection : netTopology.getConnections()) {
 					try {
 						double insum = 0;
@@ -44,12 +48,28 @@ public class NetGraphBuilder implements Initializable {
 						double outDiscardsSum = 0;
 						double inErrorsSum = 0;
 						double outErrorsSum = 0;
+						int inState = 0;
+						int outState = 0;
 
 						for (Interface inter : connection.getInterfaces()) {
 							String group = inter.getGroup();
 							MetricReport report = reports.get(group);
 
 							updateInterface(inter, report, i);
+							
+							if (alertKeys.contains(inter.getKey() + "-flow-in") || 
+									alertKeys.contains(inter.getKey() + "-discard/error-indiscards") ||
+									alertKeys.contains(inter.getKey() + "-discard/error-inerrors")) {
+								inter.setInstate(3);
+								inState = 3;
+							}
+							if (alertKeys.contains(inter.getKey() + "-flow-out") ||
+									alertKeys.contains(inter.getKey() + "-discard/error-outdiscards") ||
+									alertKeys.contains(inter.getKey() + "-discard/error-outerrors")) {
+								inter.setOutstate(3);
+								outState = 3;
+							}
+							
 							insum += inter.getIn();
 							outsum += inter.getOut();
 							inDiscardsSum += inter.getIndiscards();
@@ -63,8 +83,19 @@ public class NetGraphBuilder implements Initializable {
 						connection.setOutdiscards(outDiscardsSum);
 						connection.setInerrors(inErrorsSum);
 						connection.setOuterrors(outErrorsSum);
+						connection.setInstate(inState);
+						connection.setOutstate(outState);
+						if (inState == 3 || outState == 3) {
+							alertSwitchs.add(connection.getFrom());
+						}
 					} catch (Exception e) {
 						Cat.logError(e);
+					}
+				}
+				
+				for (Switch sw : netTopology.getSwitchs()) {
+					if (alertSwitchs.contains(sw.getName())) {
+						sw.setState(3);
 					}
 				}
 			}
@@ -93,6 +124,7 @@ public class NetGraphBuilder implements Initializable {
 				switchB.setName(switchA.getName());
 				switchB.setX(switchA.getX());
 				switchB.setY(switchA.getY());
+				switchB.setState(switchA.getState());
 				netTopologyB.addSwitch(switchB);
 			}
 
@@ -105,14 +137,18 @@ public class NetGraphBuilder implements Initializable {
 					interB.setKey(interA.getKey());
 					interB.setIn(interA.getIn());
 					interB.setOut(interA.getOut());
-					interB.setState(interA.getState());
+					interB.setInstate(interA.getInstate());
+					interB.setOutstate(interA.getOutstate());
+					interB.setInstate(interA.getInstate());
+					interB.setOutstate(interA.getOutstate());
 					connectionB.addInterface(interB);
 				}
 				connectionB.setInsum(connectionA.getInsum());
 				connectionB.setOutsum(connectionA.getOutsum());
 				connectionB.setFrom(connectionA.getFrom());
 				connectionB.setTo(connectionA.getTo());
-				connectionB.setState(connectionA.getState());
+				connectionB.setInstate(connectionA.getInstate());
+				connectionB.setOutstate(connectionA.getOutstate());
 				netTopologyB.addConnection(connectionB);
 			}
 

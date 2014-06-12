@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.network.graph;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -10,143 +10,183 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.helper.Chinese;
+import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.task.alert.MetricType;
 
-public class NetworkGraphCreator extends MetricGraphCreator {
-	
-	@Override
+public class NetworkGraphCreator extends AbstractGraphCreator {
+
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<MetricItemConfig> alertItems = m_alertInfo.queryLastestAlarmInfo(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
-			String keyTitle = keyMapEntry.getKey();
-			String chartTitle = keyTitle.substring(keyTitle.lastIndexOf(":") + 1);
+			String chartTitle = keyMapEntry.getKey();
 			LineChart lineChart = new LineChart();
 			lineChart.setTitle(chartTitle);
 			lineChart.setHtmlTitle(chartTitle);
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+			lineChart.setUnit(buildUnit(keyMapEntry.getKey()));
 
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
-					buildLineChartTitle(alertItems, lineChart, key, chartTitle);
-
-					double[] baselines = queryBaseline(key, startDate, endDate);
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 					Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
 					addLastMinuteData(current, all, m_lastMinute, endDate);
-					lineChart.add(buildLineTitle(key) + Chinese.CURRENT_VALUE, current);
-					lineChart.add(buildLineTitle(key) + Chinese.BASELINE_VALUE,
-					      convertToMap(m_dataExtractor.extract(baselines), startDate, step));
+					convertLineChartData(lineChart, current, key);
 				}
 			}
-			charts.put(keyTitle, lineChart);
+			charts.put(chartTitle, lineChart);
 		}
 		return charts;
 	}
 
-	protected void buildLineChartTitle(List<MetricItemConfig> alertItems, LineChart chart, String key, String title) {
-		int index = key.lastIndexOf(":");
-		String metricId = key.substring(0, index);
-		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
+	private void convertLineChartData(LineChart lineChart, Map<Long, Double> current, String key) {
+		
+		if (isFlowMetric(lineChart.getId())) {
+			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 
-		chart.setTitle(title);
+			for (Entry<Long, Double> currentEntry : current.entrySet()) {
+				double result = currentEntry.getValue() / 1000.0;
 
-		if (alertItems.contains(config)) {
-			chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+				convertedData.put(currentEntry.getKey(), result);
+			}
+			lineChart.add(buildLineTitle(key), convertedData);
 		} else {
-			chart.setHtmlTitle(title);
+			lineChart.add(buildLineTitle(key), current);
 		}
 	}
 
-	public String buildLineTitle(String lineKey) {
-		int colonIndex = lineKey.lastIndexOf(":");
-		String tmp = lineKey.substring(0, colonIndex > -1 ? colonIndex : 0);
+	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
+		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
+		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
+		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 
-		return tmp.substring(tmp.lastIndexOf("-") + 1);
+		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
-	public List<String> findOrCreate(Map<String, List<String>> map, String key) {
-		if (map.get(key) == null) {
-			List<String> list = new ArrayList<String>();
-			map.put(key, list);
+	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
+		long start = startDate.getTime(), end = endDate.getTime();
+		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
+		int index = 0;
+
+		for (; start < end; start += TimeUtil.ONE_HOUR) {
+			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
+
+			mergeMap(oldCurrentValues, currentValues, totalSize, index);
+			index++;
 		}
-		return map.get(key);
+		return oldCurrentValues;
 	}
 
-	public Map<String, List<String>> buildKeys(String keyTitle, List<String> keys) {
-		Map<String, List<String>> aggregationKeys = new LinkedHashMap<String, List<String>>();
+	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
+		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
+		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport);
+		double sum = 0;
 
-		for (String key : keys) {
-			MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(key);
-			String avgTitle = keyTitle + Chinese.Suffix_AVG;
+		for (Entry<String, double[]> entry : currentValues.entrySet()) {
+			double[] value = entry.getValue();
+			int length = value.length;
 
-			if (config != null && config.getShowAvg()) {
-				List<String> keyList = findOrCreate(aggregationKeys, avgTitle);
-				String avgKey = key + ":" + MetricType.AVG.name();
-				keyList.add(avgKey);
+			for (int i = 0; i < length; i++) {
+				sum = sum + value[i];
 			}
 		}
+		// if current report is not exist, use last day value replace it.
+		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
+			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start
+			      - TimeUtil.ONE_DAY));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 
-		for (String key : keys) {
-			MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(key);
-			String sumTitle = keyTitle + Chinese.Suffix_SUM;
-
-			if (config != null && config.getShowSum()) {
-				List<String> keyList = findOrCreate(aggregationKeys, sumTitle);
-				String sumKey = key + ":" + MetricType.SUM.name();
-				keyList.add(sumKey);
-			}
+			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
+			      + sdf.format(new Date(start)));
+			return m_pruductDataFetcher.buildGraphData(lastMetricReport);
 		}
-
-		for (String key : keys) {
-			MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(key);
-			String countTitle = keyTitle + Chinese.Suffix_COUNT;
-
-			if (config != null && config.getShowCount()) {
-				List<String> keyList = findOrCreate(aggregationKeys, countTitle);
-				String countKey = key + ":" + MetricType.COUNT.name();
-				keyList.add(countKey);
-			}
-		}
-		return aggregationKeys;
+		return currentValues;
 	}
 
-	public Map<String, List<String>> buildLineChartKeys(Set<String> keys) {
+	private String buildLineTitle(String lineKey) {
+
+		return lineKey.substring(lineKey.lastIndexOf("-") + 1, lineKey.lastIndexOf(":"));
+	}
+
+	private Set<String> buildKeysWithoutType(Set<String> keys) {
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (String key : keys) {
+			int index = key.lastIndexOf(":");
+			String frontKey = key.substring(0, index);
+
+			result.add(frontKey);// domain:Metric:groupName-lineKey
+		}
+		return result;
+	}
+
+	private Map<String, List<String>> buildLineChartKeys(Set<String> originKeys) {
 		Set<String> groupSet = new LinkedHashSet<String>();
-		Set<String> keySet = new HashSet<String>();
 		Map<String, List<String>> aggregationKeys = new LinkedHashMap<String, List<String>>();
+		Set<String> keys = buildKeysWithoutType(originKeys);
 
+		// key = domain:Metric:groupName-lineKey
 		for (String key : keys) {
-			int colonIndex = key.lastIndexOf(":");
-			String tmp = key.substring(0, colonIndex > -1 ? colonIndex : 0);
-			keySet.add(tmp);
+			try {
+				int hyphenIndex = key.lastIndexOf("-");
+				String groupName = key.substring(0, hyphenIndex); // domain:Metric:groupName
 
-			int hyphenIndex = tmp.lastIndexOf("-");
-			groupSet.add(tmp.substring(0, hyphenIndex > -1 ? hyphenIndex : 0));
+				groupSet.add(groupName);
+			} catch (Exception exception) {
+				Cat.logError(new RuntimeException("network agent send metric [" + key + "]  error"));
+			}
 		}
 
 		for (String group : groupSet) {
 			List<String> keyList = new ArrayList<String>();
-			for (String key : keySet) {
+			for (String key : keys) {
 				if (key.startsWith(group)) {
-					keyList.add(key);
+					if (isSumTypeMetric(group)) {
+						keyList.add(key + ":" + MetricType.SUM);
+					} else {
+						keyList.add(key + ":" + MetricType.AVG);
+					}
 				}
-				aggregationKeys.putAll(buildKeys(group, keyList));
 			}
-		}
+			String groupName = group.substring(group.lastIndexOf(":") + 1); // groupName
 
+			aggregationKeys.put(groupName, keyList); // [groupName:[domain:Metric:groupName-lineKey:SUM]...]
+		}
 		return aggregationKeys;
+	}
+
+	private boolean isFlowMetric(String title) {
+		if (title.endsWith("-flow")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isSumTypeMetric(String group) {
+		if (isFlowMetric(group) || group.toLowerCase().endsWith("-discard/error")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private String buildUnit(String chartTitle) {
+		if (isFlowMetric(chartTitle)) {
+			return "流量(MB/分钟)";
+		} else {
+			return "value/分钟";
+		}
 	}
 }

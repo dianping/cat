@@ -144,10 +144,14 @@
 
 						for ( var prop in projects) {
 							var opt = $('<option />');
-							var domain = projects[prop].cmdbDomain;
-
-							opt.html(domain);
-							opt.val(projects[prop].domain);
+							var cmdbDomain = projects[prop].cmdbDomain;
+							var domain = projects[prop].domain;
+							if(typeof cmdbDomain != "undefined" && cmdbDomain.length > 0 ) {
+								opt.html(cmdbDomain);
+							}else{
+								opt.html(domain);
+							}
+							opt.val(domain);
 							opt.appendTo(select);
 						}
 						$("#domain").select2();

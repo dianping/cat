@@ -28,8 +28,10 @@ import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class NetGraphManager implements Initializable, LogEnabled {
 
@@ -44,7 +46,13 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
-
+	
+	@Inject
+	private AlertInfo m_alertInfo;
+	
+	@Inject
+	private NetGraphConfigManager m_netGraphConfigManager;
+	
 	private NetGraphSet m_currentNetGraphSet;
 
 	private NetGraphSet m_lastNetGraphSet;
@@ -130,16 +138,18 @@ public class NetGraphManager implements Initializable, LogEnabled {
 					minuteStr = '0' + minuteStr;
 				}
 				Transaction t = Cat.newTransaction("NetGraph", "M" + minuteStr);
-
+				
 				try {
 					Map<String, MetricReport> currentMetricReports = queryMetricReports(TimeUtil.getCurrentHour());
-
-					m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(currentMetricReports);
+					List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
+					
+					m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, currentMetricReports, alertKeys);
 
 					Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
 					Map<String, MetricReport> lastHourReports = queryMetricReports(lastHour);
 
-					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(lastHourReports);
+					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports, new ArrayList<String>());
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
 					t.setStatus(e);

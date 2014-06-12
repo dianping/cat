@@ -1,12 +1,12 @@
 <alert-config>
-	<receiver id="network" enable="true">
+	<receiver id="network" enable="false">
 		<email>leon.li@dianping.com</email>
 		<phone>18662513308</phone>
 	</receiver>
-	<receiver id="exception" enable="true">
+	<receiver id="exception" enable="false">
 		<email>jialin.sun@dianping.com</email>
 	</receiver>
-	<receiver id="business" enable="true">
+	<receiver id="business" enable="false">
 		<email>yong.you@dianping.com</email>
 		<email>argus@dianping.com</email>
 		<email>jialin.sun@dianping.com</email>

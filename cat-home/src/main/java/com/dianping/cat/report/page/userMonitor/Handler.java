@@ -75,7 +75,11 @@ public class Handler implements PageHandler<Context> {
 		String url = payload.getUrl();
 
 		if (url == null && rules.size() > 0) {
-			url = new ArrayList<PatternItem>(rules).get(0).getName();
+			PatternItem patternItem = new ArrayList<PatternItem>(rules).get(0);
+
+			url = patternItem.getName();
+			payload.setGroup(patternItem.getGroup());
+			payload.setUrl(url);
 		}
 
 		pars.put("metricType", Constants.METRIC_USER_MONITOR);

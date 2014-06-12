@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.helper.TimeUtil;
@@ -158,9 +157,9 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 		if (systemKeys != null) {
 			for (String key : systemKeys) {
-				String[] keyArray = key.split(":");
-				String realKey = keyArray[0];
-				String metricType = keyArray[1];
+				int typeIndex = key.lastIndexOf(":");
+				String realKey = key.substring(0, typeIndex);
+				String metricType = key.substring(typeIndex + 1);
 				String des = queryMetricItemDes(metricType.toUpperCase());
 				String chartKey = realKey + des;
 				Map<String, String> ipMap = aggregationKeys.get(chartKey);
@@ -175,13 +174,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 				}
 			}
 		}
-
 		return aggregationKeys;
-	}
-
-	@Override
-	protected Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
-		throw new RuntimeException("unsupport in system monitor graph!");
 	}
 
 }

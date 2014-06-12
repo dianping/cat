@@ -34,7 +34,7 @@ public class Handler implements PageHandler<Context> {
 	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	private NetworkGraphCreator m_defaultAggGraphCreator;
+	private NetworkGraphCreator m_networkGraphCreator;
 
 	@Inject
 	private NetGraphManager m_netGraphManager;
@@ -60,7 +60,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_defaultAggGraphCreator.buildChartsByProductLine(payload.getProduct(), start,
+			Map<String, LineChart> charts = m_networkGraphCreator.buildChartsByProductLine(payload.getProduct(), start,
 			      end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));

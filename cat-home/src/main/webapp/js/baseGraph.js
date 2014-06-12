@@ -120,7 +120,10 @@ function graphMetricChart(container, data) {
 					}
 				},
 				yAxis : {
-					min : ylabelMin
+					min : ylabelMin,
+	                title: {
+	                    text: data.unit,
+	                }
 				},
 				credits : {
 					enabled : false

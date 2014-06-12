@@ -88,6 +88,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case EXCEPTION_THRESHOLD_UPDATE:
 		case EXCEPTION_THRESHOLD_ADD:
 			return JspFile.EXCEPTION_THRESHOLD_CONFIG.getPath();
+		case NET_GRAPH_CONFIG_UPDATE:
+			return JspFile.NET_GRAPH_CONFIG_UPDATE.getPath();
 			// Exception Exclude Config
 		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
 		case EXCEPTION_EXCLUDE_DELETE:

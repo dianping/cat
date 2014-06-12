@@ -60,7 +60,7 @@ import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
-import com.dianping.cat.report.page.userMonitor.UserMonitorConvert;
+import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -229,7 +229,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
 					String city = payload.getCity();
 					String channel = payload.getChannel();
-					UserMonitorConvert convert = new UserMonitorConvert(type, city, channel);
+					UserMonitorReportConvertor convert = new UserMonitorReportConvertor(type, city, channel);
 					MetricReport metricReport = (MetricReport) response.getModel();
 
 					convert.visitMetricReport(metricReport);

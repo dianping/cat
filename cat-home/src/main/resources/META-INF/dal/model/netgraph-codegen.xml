@@ -27,7 +27,8 @@
   <entity name="connection">
     <attribute name="from" value-type="String" />
     <attribute name="to" value-type="String" />
-    <attribute name="state" value-type="int" />
+    <attribute name="instate" value-type="int" />
+    <attribute name="outstate" value-type="int" />
     <entity-ref name="interface" type="list" names="interfaces" />
     <attribute name="insum" value-type="double" />
     <attribute name="outsum" value-type="double" />
@@ -36,7 +37,8 @@
     <attribute name="group" value-type="String" />
     <attribute name="domain" value-type="String" />
     <attribute name="key" value-type="String" />
-    <attribute name="state" value-type="int" />
+    <attribute name="instate" value-type="int" />
+    <attribute name="outstate" value-type="int" />
     <attribute name="in" value-type="double" />
     <attribute name="out" value-type="double" />
   </entity>

@@ -16,6 +16,7 @@
 	       <li class="text-right" id="metricGroupConfigUpdate"><a href="?op=metricGroupConfigUpdate"><strong>业务指标分组</strong></a></li>
            <li class='nav-header'><h4>网络监控配置</h4></li>
 	       <li class="text-right" id="metricRuleConfigUpdate"><a href="?op=metricRuleConfigUpdate"><strong>网络告警配置</strong></a></li>
+	       <li class="text-right" id="netGraphConfigUpdate"><a href="?op=netGraphConfigUpdate"><strong>网络拓扑配置</strong></a></li>
 	       <li class='nav-header'><h4>系统默认配置</h4></li>
 	        <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>默认告警配置</strong></a></li>
 	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常类型配置</strong></a></li>

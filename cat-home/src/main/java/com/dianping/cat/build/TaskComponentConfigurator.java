@@ -26,6 +26,7 @@ import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.report.task.alert.exception.AlertReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
@@ -52,6 +53,7 @@ import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -118,9 +120,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetGraphBuilder.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
-		      ReportService.class, NetGraphBuilder.class));
+		      ReportService.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
-		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetGraphBuilder.class));
+		all.add(C(NetTopologyReportBuilder.class).req(ReportService.class, NetGraphBuilder.class, 
+				NetGraphConfigManager.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,

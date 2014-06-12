@@ -65,6 +65,7 @@
 						$('#myModal').html(response);
 						$('#myModal').modal();
  						$("#domainId").select2();
+ 						$("#smsSending").select2();
  						exceptionValidate();
 					}
 				});

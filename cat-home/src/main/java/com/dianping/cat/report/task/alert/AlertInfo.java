@@ -28,6 +28,21 @@ public class AlertInfo implements Initializable {
 	public void initialize() throws InitializationException {
 	}
 
+	public List<String> queryLastestAlarmKey(int minute) {
+		List<String> keys = new ArrayList<String>();
+		long currentTimeMillis = System.currentTimeMillis();
+
+		for (Entry<MetricItemConfig, Long> entry : m_alertInfos.entrySet()) {
+			Long value = entry.getValue();
+
+			if (currentTimeMillis - value < TimeUtil.ONE_MINUTE * minute) {
+				keys.add(entry.getKey().getId());
+			}
+		}
+		
+		return keys;
+	}
+
 	public List<MetricItemConfig> queryLastestAlarmInfo(int minute) {
 		List<MetricItemConfig> config = new ArrayList<MetricItemConfig>();
 		long currentTimeMillis = System.currentTimeMillis();
