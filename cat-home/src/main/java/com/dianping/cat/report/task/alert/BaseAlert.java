@@ -189,7 +189,7 @@ public abstract class BaseAlert {
 			}
 
 			if (alert != null && alert.getKey()) {
-				m_alertInfo.addAlertInfo(config, new Date().getTime());
+				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
 				sendAlertInfo(productLine, config.getTitle(), alert.getValue());
 			}

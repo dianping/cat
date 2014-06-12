@@ -9,19 +9,18 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 
 public class AlertInfo implements Initializable {
 
-	private ConcurrentHashMap<MetricItemConfig, Long> m_alertInfos = new ConcurrentHashMap<MetricItemConfig, Long>();
+	private ConcurrentHashMap<String, Long> m_alertInfos = new ConcurrentHashMap<String, Long>();
 
 	@Inject
 	protected MetricConfigManager m_manager;
 
-	public void addAlertInfo(MetricItemConfig config, long value) {
-		m_alertInfos.put(config, value);
+	public void addAlertInfo(String metricId, long value) {
+		m_alertInfos.put(metricId, value);
 	}
 
 	@Override
@@ -32,29 +31,15 @@ public class AlertInfo implements Initializable {
 		List<String> keys = new ArrayList<String>();
 		long currentTimeMillis = System.currentTimeMillis();
 
-		for (Entry<MetricItemConfig, Long> entry : m_alertInfos.entrySet()) {
+		for (Entry<String, Long> entry : m_alertInfos.entrySet()) {
 			Long value = entry.getValue();
 
 			if (currentTimeMillis - value < TimeUtil.ONE_MINUTE * minute) {
-				keys.add(entry.getKey().getId());
+				keys.add(entry.getKey());
 			}
 		}
 		
 		return keys;
 	}
 
-	public List<MetricItemConfig> queryLastestAlarmInfo(int minute) {
-		List<MetricItemConfig> config = new ArrayList<MetricItemConfig>();
-		long currentTimeMillis = System.currentTimeMillis();
-
-		for (Entry<MetricItemConfig, Long> entry : m_alertInfos.entrySet()) {
-			Long value = entry.getValue();
-
-			if (currentTimeMillis - value < TimeUtil.ONE_MINUTE * minute) {
-				config.add(entry.getKey());
-			}
-		}
-
-		return config;
-	}
 }
