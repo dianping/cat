@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
    <xs:element name="status" type="StatusType"/>
    <xs:complexType name="StatusType">
       <xs:sequence>
@@ -9,7 +8,6 @@
          <xs:element name="memory" type="MemoryType" minOccurs="0" maxOccurs="1"/>
          <xs:element name="thread" type="ThreadType" minOccurs="0" maxOccurs="1"/>
          <xs:element name="message" type="MessageType" minOccurs="0" maxOccurs="1"/>
-         <xs:element name="extension" type="ExtensionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="timestamp" type="xs:string"/>
       <xs:anyAttribute processContents="lax"/>
@@ -93,15 +91,6 @@
             <xs:attribute name="name" type="xs:string"/>
             <xs:attribute name="count" type="xs:long"/>
             <xs:attribute name="time" type="xs:long"/>
-         </xs:extension>
-      </xs:simpleContent>
-   </xs:complexType>
-   <xs:complexType name="ExtensionType">
-      <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="id" type="xs:string" use="required"/>
-            <xs:attribute name="description" type="xs:string"/>
-            <xs:anyAttribute processContents="lax"/>
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
