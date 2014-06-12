@@ -135,6 +135,18 @@ public class DefaultDataChecker implements DataChecker {
 		} else if (text.contains("Gb/s")) {
 			double value = Double.parseDouble(text.replaceAll("Gb/s", ""));
 			return value * 60 * 1024 * 1024 * 1024 / 8;
+		} else if (text.contains("MB")) {
+			double value = Double.parseDouble(text.replaceAll("MB", ""));
+			return value * 1024 * 1024;
+		} else if (text.contains("GB")) {
+			double value = Double.parseDouble(text.replaceAll("GB", ""));
+			return value * 1024 * 1024 * 1024;
+		} else if (text.contains("MB/s")) {
+			double value = Double.parseDouble(text.replaceAll("MB/s", ""));
+			return value * 60 * 1024 * 1024;
+		} else if (text.contains("GB/s")) {
+			double value = Double.parseDouble(text.replaceAll("GB/s", ""));
+			return value * 60 * 1024 * 1024 * 1024;
 		}
 
 		return Double.parseDouble(text);
