@@ -51,8 +51,8 @@ public class RuleConfigTest {
 
 		Assert.assertNotNull(configMap);
 
-		double baseline[] = { 200, 200 };
-		double value[] = { 100, 100 };
+		double baseline[] = { 200, 350 };
+		double value[] = { 100, 50 };
 		Pair<Boolean, String> result = m_check.checkData(value, baseline, configMap.get("demo1"));
 		Assert.assertEquals(result.getKey().booleanValue(), true);
 	}
