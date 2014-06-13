@@ -234,7 +234,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 					convert.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-
 				} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
 					String ipAddrsStr = payload.getIpAddress();
 					Set<String> ipAddrs = null;
@@ -249,7 +248,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					
 					convert.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-
 				}
 
 			} else if (DependencyAnalyzer.ID.equals(report)) {

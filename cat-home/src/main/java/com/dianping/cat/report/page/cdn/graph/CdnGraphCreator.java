@@ -18,7 +18,7 @@ import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 
 public class CdnGraphCreator extends AbstractGraphCreator {
-	private static final String GROUP = "system-cdn";
+	private static final String GROUP = "network-cdn";
 
 	private static final Map<String, String> CDNS = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
@@ -31,9 +31,8 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 	@Inject
 	private IpService m_ipService;
 
-	private Map<String, LineChart> buildInfoChartData(
-			final Map<String, double[]> datas, Date startDate, Date endDate,
-			final Map<String, double[]> dataWithOutFutures) {
+	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
+	      final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 
 		int step = m_dataExtractor.getStep();
@@ -50,8 +49,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
-			Map<Long, Double> current = convertToMap(
-					dataWithOutFutures.get(key), startDate, step);
+			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
 			addLastMinuteData(current, all, m_lastMinute, endDate);
 			lineChart.add(entry.getKey(), current);
@@ -133,8 +131,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		return data;
 	}
 
-	private Map<String, double[]> fetchCityData(MetricReport report,
-			String cdn, String province, String city) {
+	private Map<String, double[]> fetchCityData(MetricReport report, String cdn, String province, String city) {
 		Map<String, double[]> data = new LinkedHashMap<String, double[]>();
 
 		Map<String, MetricItem> items = report.getMetricItems();
@@ -151,8 +148,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 			}
 
 			IpInfo ipInfo = m_ipService.findIpInfoByString(sip);
-			if (ipInfo == null || ipInfo.getProvince().compareTo(province) != 0
-					|| ipInfo.getCity().compareTo(city) != 0)
+			if (ipInfo == null || ipInfo.getProvince().compareTo(province) != 0 || ipInfo.getCity().compareTo(city) != 0)
 				continue;
 
 			if (!data.containsKey(sip)) {
@@ -174,8 +170,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		return data;
 	}
 
-	private Map<String, double[]> fetchProvinceData(MetricReport report,
-			String cdn, String province) {
+	private Map<String, double[]> fetchProvinceData(MetricReport report, String cdn, String province) {
 		Map<String, double[]> data = new LinkedHashMap<String, double[]>();
 
 		Map<String, MetricItem> items = report.getMetricItems();
@@ -216,8 +211,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		return data;
 	}
 
-	public Map<String, double[]> prepareAllData(Date startDate, Date endDate,
-			String cdn, String province, String city) {
+	public Map<String, double[]> prepareAllData(Date startDate, Date endDate, String cdn, String province, String city) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
 
@@ -225,10 +219,9 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			MetricReport report = m_metricReportService.queryMetricReport(
-					GROUP, new Date(start));
+			MetricReport report = m_metricReportService.queryMetricReport(GROUP, new Date(start));
 			Map<String, double[]> currentValues;
-			
+
 			if (cdn.compareTo("ALL") == 0) {
 				currentValues = fetchAllData(report);
 			} else if (province.compareTo("ALL") == 0) {
@@ -245,17 +238,12 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		return sourceValue;
 	}
 
-	public Map<String, LineChart> queryBaseInfo(Date startDate, Date endDate,
-			String cdn, String province, String city) {
-		Map<String, double[]> oldCurrentValues = prepareAllData(startDate,
-				endDate, cdn, province, city);
-		Map<String, double[]> allCurrentValues = m_dataExtractor
-				.extract(oldCurrentValues);
-		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate,
-				allCurrentValues);
-
-		Map<String, LineChart> lineCharts = buildInfoChartData(
-				oldCurrentValues, startDate, endDate, dataWithOutFutures);
+	public Map<String, LineChart> queryBaseInfo(Date startDate, Date endDate, String cdn, String province, String city) {
+		Map<String, double[]> oldCurrentValues = prepareAllData(startDate, endDate, cdn, province, city);
+		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
+		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+		Map<String, LineChart> lineCharts = buildInfoChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		
 		return lineCharts;
 	}
 }
