@@ -33,8 +33,6 @@ public enum ReportPage implements Page {
 
    METRIC("metric", "metric", "Metric", "Metric", true),
 
-   JSERROR("jsError", "jsError", "JsError", "jsError", true),
-
    DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true),
 
    EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true),
@@ -49,7 +47,9 @@ public enum ReportPage implements Page {
 
    USERMONITOR("userMonitor", "userMonitor", "Monitor", "UserMonitor", true),
 
-   SYSTEM("system", "system", "System", "System", true);
+   SYSTEM("system", "system", "System", "System", true),
+
+   CDN("cdn", "cdn", "Cdn", "Cdn", true);
 
    private String m_name;
 

@@ -56,6 +56,7 @@ var $_netgraph = {
         this.builddata(wrapper);
 
         topo.svg = document.createElementNS(this.NS, 'svg');
+        this.setAttrValues(topo.svg, {'width':500,'height':800});
         wrapperEle.appendChild(topo.svg);
 
         topo.content = document.createElementNS(this.NS, 'g');
@@ -274,10 +275,10 @@ var $_netgraph = {
 		var x = topo.data['switchs'][id].x;
 		var y = topo.data['switchs'][id].y;
         if (x <= 300)
-            x = x + this.setting.sw_width/2 + this.setting.sw_border_width;
+            x = x - this.setting.sw_width/2 - 2;
         else
-            x = x - this.setting.sw_width/2 - this.setting.sw_border_width - this.setting.tooltip_width - 4;
-        y = y - this.setting.sw_height/2-this.setting.sw_border_width;
+            x = x + this.setting.sw_width/2 - this.setting.tooltip_width - 2;
+        y = y + this.setting.sw_height/2;
         var conn;
         /*
         var tip = [];
@@ -421,6 +422,9 @@ var $_netgraph = {
             ty += this.setting.tooltip_td_height * 2 + 10;
         }
 
+        if (y > 400) {
+            y -= this.setting.sw_height + height + 4;
+        }
 
 		this.setAttrValues(g, {'visibility':'visible','transform':'translate('+x+','+y+')','opacity':1});
     },
