@@ -93,11 +93,9 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	public List<DataEntity> buildUptimeInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		System.out.println("uptime: " + m_sigarUtil.getSigar());
+
 		try {
-
 			Uptime uptime = m_sigarUtil.getSigar().getUptime();
-
 			double time = uptime.getUptime() / 60;
 
 			DataEntity entity = new DataEntity();

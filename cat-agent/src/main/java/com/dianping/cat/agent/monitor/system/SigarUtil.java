@@ -1,13 +1,11 @@
 package com.dianping.cat.agent.monitor.system;
 
-import com.dianping.cat.Cat;
-import com.google.common.io.Resources;
+import java.io.File;
+import java.io.IOException;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.hyperic.sigar.Sigar;
-
-import java.io.File;
 
 public class SigarUtil implements Initializable {
 
@@ -20,19 +18,24 @@ public class SigarUtil implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		try {
-			String file = Resources.getResource("META-INF/lib/libsigar-x86-linux.so").getFile();
-			File classPath = new File(file).getParentFile();
+			String root = System.getProperty("user.dir");
+			File libDir = new File(root + "/lib");
 
-			String path = System.getProperty("java.library.path");
-			if (OsCheck.getOperatingSystemType() == OsCheck.OSType.WINDOWS) {
-				path += ";" + classPath.getCanonicalPath();
+			if (libDir.exists() && libDir.isDirectory()) {
+				String path = System.getProperty("java.library.path");
+
+				if (OsCheck.getOperatingSystemType() == OsCheck.OSType.WINDOWS) {
+					path += ";" + libDir.getCanonicalPath();
+				} else {
+					path += ":" + libDir.getCanonicalPath();
+				}
+				System.setProperty("java.library.path", path);
+				m_sigar = new Sigar();
 			} else {
-				path += ":" + classPath.getCanonicalPath();
+				m_sigar = new Sigar();
 			}
-			System.setProperty("java.library.path", path);
-			m_sigar = new Sigar();
-		} catch (Exception e) {
-			Cat.logError(new RuntimeException("can't init sigar"));
+		} catch (IOException e) {
+			throw new RuntimeException("Can't init sigar", e);
 		}
 	}
 
