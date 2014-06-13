@@ -30,6 +30,18 @@ public enum NetworkInterfaceManager {
 	}
 
 	private void load() {
+		String ip = System.getProperty("host.ip");
+
+		if (ip != null) {
+			try {
+				m_local = InetAddress.getByName(ip);
+				return;
+			} catch (Exception e) {
+				System.err.println(e);
+				// ignore
+			}
+		}
+
 		try {
 			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
 			InetAddress local = null;
