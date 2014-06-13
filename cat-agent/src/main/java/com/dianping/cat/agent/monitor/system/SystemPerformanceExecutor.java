@@ -8,9 +8,9 @@ import org.hyperic.sigar.Cpu;
 import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
 import org.hyperic.sigar.NetInterfaceStat;
-import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Swap;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.AbstractExecutor;
@@ -18,13 +18,14 @@ import com.dianping.cat.agent.monitor.DataEntity;
 
 public class SystemPerformanceExecutor extends AbstractExecutor {
 
+	@Inject
+	private SigarUtil m_sigarUtil;
+
 	public static final String ID = "PerformanceExecutor";
 
 	private static final String ETH_NAME = "en0";
 
 	private static final List<String> DISK_LIST = new ArrayList<String>(Arrays.asList("/data", "/usr", "/var"));
-
-	private Sigar m_sigar = new Sigar();
 
 	private Cpu m_preCpu;
 
@@ -54,7 +55,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 			double cpuUsage = 0.0;
 
 			if (m_preCpu != null) {
-				m_curCpu = m_sigar.getCpu();
+				m_curCpu = m_sigarUtil.getSigar().getCpu();
 				long totalIdle = m_curCpu.getIdle() - m_preCpu.getIdle();
 				long totalTime = m_curCpu.getTotal() - m_preCpu.getTotal();
 
@@ -64,10 +65,11 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 				}
 				DataEntity entity = new DataEntity();
 
-				entity.setId(buildSystemDataEntityId("cpu")).setType(AVG_TYPE).setValue(cpuUsage);
+				entity.setId(buildSystemDataEntityId("cpu")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
+				      .setValue(cpuUsage);
 				entities.add(entity);
 			} else {
-				m_preCpu = m_sigar.getCpu();
+				m_preCpu = m_sigarUtil.getSigar().getCpu();
 			}
 		} catch (SigarException e) {
 			Cat.logError(e);
@@ -79,14 +81,15 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			FileSystem[] fileSystems = m_sigar.getFileSystemList();
+			FileSystem[] fileSystems = m_sigarUtil.getSigar().getFileSystemList();
+			long current = System.currentTimeMillis();
 
 			for (FileSystem fs : fileSystems) {
 				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK && DISK_LIST.contains(fs.getDirName())) {
-					FileSystemUsage usage = m_sigar.getFileSystemUsage(fs.getDirName());
+					FileSystemUsage usage = m_sigarUtil.getSigar().getFileSystemUsage(fs.getDirName());
 					DataEntity entity = new DataEntity();
 
-					entity.setId(buildSystemDataEntityId(fs.getDirName() + "-usage")).setType(AVG_TYPE)
+					entity.setId(buildSystemDataEntityId(fs.getDirName() + "-usage")).setType(AVG_TYPE).setTime(current)
 					      .setValue(usage.getUsePercent());
 					entities.add(entity);
 				}
@@ -102,20 +105,24 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 		try {
 			if (m_preIfStat != null) {
-				m_curIfStat = m_sigar.getNetInterfaceStat(ETH_NAME);
+				m_curIfStat = m_sigarUtil.getSigar().getNetInterfaceStat(ETH_NAME);
 				long totalRxBytes = m_curIfStat.getRxBytes() - m_preIfStat.getRxBytes();
 				long totalTxBytes = m_curIfStat.getTxBytes() - m_preIfStat.getTxBytes();
 				m_preIfStat = m_curIfStat;
 
+				long current = System.currentTimeMillis();
 				DataEntity inFlow = new DataEntity();
-				inFlow.setId(buildSystemDataEntityId(ETH_NAME + "-in-flow")).setType(SUM_TYPE).setValue(totalRxBytes);
+
+				inFlow.setId(buildSystemDataEntityId(ETH_NAME + "-in-flow")).setType(SUM_TYPE).setTime(current)
+				      .setValue(totalRxBytes);
 				entities.add(inFlow);
 
 				DataEntity outFlow = new DataEntity();
-				outFlow.setId(buildSystemDataEntityId(ETH_NAME + "-out-flow")).setType(SUM_TYPE).setValue(totalTxBytes);
+				outFlow.setId(buildSystemDataEntityId(ETH_NAME + "-out-flow")).setType(SUM_TYPE).setTime(current)
+				      .setValue(totalTxBytes);
 				entities.add(outFlow);
 			} else {
-				m_preIfStat = m_sigar.getNetInterfaceStat(ETH_NAME);
+				m_preIfStat = m_sigarUtil.getSigar().getNetInterfaceStat(ETH_NAME);
 			}
 		} catch (SigarException e) {
 			Cat.logError(e);
@@ -127,11 +134,12 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			Swap curSwap = m_sigar.getSwap();
+			Swap curSwap = m_sigarUtil.getSigar().getSwap();
 			double swapUsage = 1.0 * curSwap.getUsed() / curSwap.getTotal();
 			DataEntity entity = new DataEntity();
 
-			entity.setId(buildSystemDataEntityId("swap")).setType(AVG_TYPE).setValue(swapUsage);
+			entity.setId(buildSystemDataEntityId("swap")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
+			      .setValue(swapUsage);
 			entities.add(entity);
 		} catch (SigarException e) {
 			Cat.logError(e);
@@ -143,10 +151,11 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			double[] loadAverages = m_sigar.getLoadAverage();
+			double[] loadAverages = m_sigarUtil.getSigar().getLoadAverage();
 			DataEntity entity = new DataEntity();
 
-			entity.setId(buildSystemDataEntityId("load")).setType(AVG_TYPE).setValue(loadAverages[0]);
+			entity.setId(buildSystemDataEntityId("load")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
+			      .setValue(loadAverages[0]);
 			entities.add(entity);
 		} catch (SigarException e) {
 			Cat.logError(e);

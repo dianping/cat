@@ -98,16 +98,16 @@ public class Handler implements PageHandler<Context> {
 
 			switch (action) {
 			case COUNT_API:
-				buildMetric(group, key, MetricType.COUNT.name(), count, time);
+				buildMetric(group, key, MetricType.COUNT.name(), time, count);
 				break;
 			case AVG_API:
-				buildMetric(group, key, MetricType.AVG.name(), payload.getAvg(), time);
+				buildMetric(group, key, MetricType.AVG.name(), time, payload.getAvg());
 				break;
 			case SUM_API:
-				buildMetric(group, key, MetricType.SUM.name(), payload.getSum(), time);
+				buildMetric(group, key, MetricType.SUM.name(), time, payload.getSum());
 				break;
 			case BATCH_API:
-				buildBatchMetric(group, payload.getBatch(), time);
+				buildBatchMetric(group, payload.getBatch());
 				break;
 			default:
 				throw new RuntimeException("Unknown action: " + action);
@@ -125,7 +125,7 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private Metric buildMetric(String group, String key, String type, double value, long time) {
+	private Metric buildMetric(String group, String key, String type, long time, double value) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
 
@@ -145,30 +145,34 @@ public class Handler implements PageHandler<Context> {
 		return defaultMetric;
 	}
 
-	private boolean validateDouble(String value) {
+	private boolean validateNumber(String longNumber, String doubleNumber) {
 		try {
-			if (StringUtils.isNotEmpty(value)) {
-				Double.parseDouble(value);
+			if (StringUtils.isNotEmpty(longNumber) && StringUtils.isNotEmpty(doubleNumber)) {
+				Long.parseLong(longNumber);
+				Double.parseDouble(doubleNumber);
 				return true;
 			} else {
 				return false;
 			}
+
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	private void buildBatchMetric(String group, String content, long time) {
+	private void buildBatchMetric(String group, String content) {
 		String[] lines = content.split("\n");
+
 		for (String line : lines) {
 			String[] tabs = line.split("\t");
 
-			if (tabs.length == 3 & validateDouble(tabs[2])) {
+			if (tabs.length == 4 & validateNumber(tabs[2], tabs[3])) {
 				String key = tabs[0];
 				String type = tabs[1];
-				double value = Double.parseDouble(tabs[2]);
+				long time = Long.parseLong(tabs[2]);
+				double value = Double.parseDouble(tabs[3]);
 
-				buildMetric(group, key, type, value, time);
+				buildMetric(group, key, type, time, value);
 			} else {
 				Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
 			}

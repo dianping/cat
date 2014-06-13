@@ -10,15 +10,18 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.hyperic.sigar.NetInterfaceConfig;
-import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Uptime;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.AbstractExecutor;
 import com.dianping.cat.agent.monitor.DataEntity;
 
-public class SystemStateExecutor extends AbstractExecutor implements Initializable{
+public class SystemStateExecutor extends AbstractExecutor implements Initializable {
+
+	@Inject
+	private SigarUtil m_sigarUtil;
 
 	public static final String ID = "SystemStateExecutor";
 
@@ -31,7 +34,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 	private String m_ipAddr;
 
 	@Override
-	public void initialize() throws InitializationException{
+	public void initialize() throws InitializationException {
 		m_hostName = tellHostName();
 		m_ipAddr = m_environmentConfig.getIp();
 
@@ -48,8 +51,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			hostname = InetAddress.getLocalHost().getHostName();
 		} catch (Exception exc) {
 			try {
-				Sigar sigar = new Sigar();
-				hostname = sigar.getNetInfo().getHostName();
+				hostname = m_sigarUtil.getSigar().getNetInfo().getHostName();
 			} catch (SigarException e) {
 				Cat.logError(e);
 			}
@@ -91,14 +93,16 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	public List<DataEntity> buildUptimeInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-
+		System.out.println("uptime: " + m_sigarUtil.getSigar());
 		try {
-			Sigar sigar = new Sigar();
-			Uptime uptime = sigar.getUptime();
+
+			Uptime uptime = m_sigarUtil.getSigar().getUptime();
+
 			double time = uptime.getUptime() / 60;
 
 			DataEntity entity = new DataEntity();
-			entity.setId(buildSystemDataEntityId("uptime")).setType(AVG_TYPE).setValue(time);
+			entity.setId(buildSystemDataEntityId("uptime")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
+			      .setValue(time);
 			entities.add(entity);
 		} catch (SigarException e) {
 			Cat.logError(e);
@@ -108,12 +112,11 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	public boolean hostIpAddrChanged() {
 		try {
-			Sigar sigar = new Sigar();
-			String ifNames[] = sigar.getNetInterfaceList();
+			String ifNames[] = m_sigarUtil.getSigar().getNetInterfaceList();
 
 			for (int i = 0; i < ifNames.length; i++) {
 				String name = ifNames[i];
-				NetInterfaceConfig ifconfig = sigar.getNetInterfaceConfig(name);
+				NetInterfaceConfig ifconfig = m_sigarUtil.getSigar().getNetInterfaceConfig(name);
 				String currentIp = ifconfig.getAddress();
 
 				if (currentIp.equals(m_ipAddr)) {
@@ -130,7 +133,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		DataEntity entity = new DataEntity();
 
-		entity.setId(buildSystemDataEntityId("hostIpChange")).setType(AVG_TYPE);
+		entity.setId(buildSystemDataEntityId("hostIpChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
 
 		if (!hostIpAddrChanged()) {
 			entity.setValue(1);
@@ -146,7 +149,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		DataEntity entity = new DataEntity();
 		String hostName = tellHostName();
 
-		entity.setId(buildSystemDataEntityId("hostNameChange")).setType(AVG_TYPE);
+		entity.setId(buildSystemDataEntityId("hostNameChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
 
 		if (m_hostName.equals(hostName)) {
 			entity.setValue(1);
@@ -164,7 +167,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			String currMd5String = readFileContent(MD5_PATH);
 			DataEntity entity = new DataEntity();
 
-			entity.setId(buildSystemDataEntityId("md5Change")).setType(AVG_TYPE);
+			entity.setId(buildSystemDataEntityId("md5Change")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
 
 			if (m_md5String != null && m_md5String.equals(currMd5String)) {
 				entity.setValue(1);

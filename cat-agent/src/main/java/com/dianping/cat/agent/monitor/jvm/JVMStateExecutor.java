@@ -32,7 +32,8 @@ public class JVMStateExecutor extends AbstractExecutor {
 			double kilobytes = (bytes / 1024);
 			DataEntity entity = new DataEntity();
 
-			entity.setId(buildJVMDataEntityId("catalinaLogSize")).setType(SUM_TYPE).setValue(kilobytes);
+			entity.setId(buildJVMDataEntityId("catalinaLogSize")).setType(SUM_TYPE).setTime(System.currentTimeMillis())
+			      .setValue(kilobytes);
 			entities.add(entity);
 		}
 		return entities;
@@ -42,8 +43,10 @@ public class JVMStateExecutor extends AbstractExecutor {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		DataEntity entity = new DataEntity();
 		String pid = JVMMemoryExecutor.findPidOfTomcat();
-		entity.setId(buildJVMDataEntityId("tomcatLive")).setType(AVG_TYPE);
-		
+		long current = System.currentTimeMillis();
+
+		entity.setId(buildJVMDataEntityId("tomcatLive")).setType(AVG_TYPE).setTime(current);
+
 		if (pid == null) {
 			entity.setValue(0);
 		} else {

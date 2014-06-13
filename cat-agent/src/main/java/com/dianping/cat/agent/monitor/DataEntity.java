@@ -8,14 +8,20 @@ public class DataEntity {
 
 	private double m_value;
 
+	private long m_time;
+
+	public long getTime() {
+		return m_time;
+	}
+
+	public DataEntity setTime(long time) {
+		m_time = time;
+		return this;
+	}
+
 	public String getId() {
 		return m_id;
 	}
-
-	@Override
-   public String toString() {
-	   return "DataEntity [m_id=" + m_id + ", m_type=" + m_type + ", m_value=" + m_value + "]";
-   }
 
 	public DataEntity setId(String id) {
 		m_id = id;

@@ -7,55 +7,47 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import com.dianping.cat.Cat;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 
-public class EnvironmentConfig {
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+
+public class EnvironmentConfig implements Initializable {
 
 	private static final String CONFIG_FILE = "/data/webapps/server.properties";
 
-	private String m_ip = "10.128.120.53";
+	private static final String URL_FORMAT = "http://%1$s/cat/r/monitor?op=batch&timestamp=%2$s&group=%3$s&domain=%4$s";
 
-	private String m_domain = "Cat";
+	private static final List<String> m_servers = Arrays.asList("localhost:2281", "10.1.110.57:8080",
+	      "10.1.110.23:8080", "10.1.110.21:8080");
 
-	public EnvironmentConfig() {
-		initialize();
-	}
+	private String m_ip;
 
-	private void initialize() {
-		try {
-			Properties properties = new Properties();
-			InputStream in = new BufferedInputStream(new FileInputStream(CONFIG_FILE));
-			properties.load(in);
+	private String m_domain;
 
-			String hostName = properties.getProperty("host.name", "Cat01.nh");
-			m_domain = buildDomain(hostName);
-			m_ip = properties.getProperty("host.ip", "10.10.1.1");
-
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	// [**01.nh0] [**01.beta] [**-ppe01.hm]
+	// host.name 配置规则:
+	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
 	private String buildDomain(String hostName) {
 		String domain = "";
 
-		try {
-			if (hostName.endsWith(".nh") || hostName.endsWith(".beta")) {
-				domain = hostName.substring(0, hostName.lastIndexOf(".") - 2);
-			} else if (hostName.endsWith("hm")) {
-				domain = hostName.substring(0, hostName.lastIndexOf(".") - 6);
-			} else {
-				Cat.logError(new RuntimeException("Unrecognized hostName [" + hostName + "] occurs"));
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
+		if (hostName.endsWith(".nh") || hostName.endsWith(".beta")) {
+			domain = hostName.substring(0, hostName.lastIndexOf(".") - 2);
+		} else if (hostName.endsWith("hm")) {
+			domain = hostName.substring(0, hostName.lastIndexOf(".") - 6);
+		} else if (hostName.contains("-sl-")) {
+			domain = hostName.substring(0, hostName.lastIndexOf("-sl-"));
+		} else if (hostName.contains("-gp-")) {
+			domain = hostName.substring(0, hostName.lastIndexOf("-gp-"));
+		} else {
+			throw new RuntimeException("Unrecognized hostName [" + hostName + "] occurs");
 		}
 		return domain;
 	}
 
-	public String getIp() {
-		return m_ip;
+	public String buildUrl(String server) {
+		String group = getGroup();
+		long current = System.currentTimeMillis();
+
+		return String.format(URL_FORMAT, server, current, group, m_domain);
 	}
 
 	public String getDomain() {
@@ -66,7 +58,35 @@ public class EnvironmentConfig {
 		return "system-" + m_domain;
 	}
 
+	public String getIp() {
+		return m_ip;
+	}
+
 	public List<String> getServers() {
-		return Arrays.asList("127.0.0.1");
+		return m_servers;
+	}
+
+	@Override
+	public void initialize() {
+		try {
+			Properties properties = new Properties();
+			InputStream in = new BufferedInputStream(new FileInputStream(CONFIG_FILE));
+			properties.load(in);
+
+			String hostName = properties.getProperty("host.name");
+
+			if (hostName == null) {
+				hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
+			}
+
+			m_domain = buildDomain(hostName);
+			m_ip = properties.getProperty("host.ip");
+
+			if (m_ip == null) {
+				m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error when init environment info ", e);
+		}
 	}
 }

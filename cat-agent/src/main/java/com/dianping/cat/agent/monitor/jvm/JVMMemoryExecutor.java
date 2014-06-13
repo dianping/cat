@@ -13,46 +13,6 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 
 	public static final String ID = "JVMMemoryExecutor";
 
-	@Override
-	public List<DataEntity> execute() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-		entities.addAll(buildJVMMemoryInfo());
-
-		return new ArrayList<DataEntity>();
-	}
-
-	private List<DataEntity> buildJVMMemoryInfo() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			String pid = findPidOfTomcat();
-			Process process = Runtime.getRuntime().exec("jstat -gcutil " + pid);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-			reader.readLine();
-
-			String output = reader.readLine();
-			String[] metrics = output.split(" +");
-
-			DataEntity eden = new DataEntity();
-			eden.setId(buildJVMDataEntityId("edenUsage")).setType(AVG_TYPE).setValue(Double.valueOf(metrics[2]) / 100);
-			entities.add(eden);
-
-			DataEntity old = new DataEntity();
-			old.setId(buildJVMDataEntityId("oldUsage")).setType(AVG_TYPE).setValue(Double.valueOf(metrics[3]) / 100);
-			entities.add(old);
-
-			DataEntity perm = new DataEntity();
-			perm.setId(buildJVMDataEntityId("permUsage")).setType(AVG_TYPE).setValue(Double.valueOf(metrics[4]) / 100);
-			entities.add(perm);
-
-			return entities;
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return entities;
-	}
-
 	public static String findPidOfTomcat() {
 		String pid = null;
 
@@ -76,6 +36,50 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 			Cat.logError(e);
 		}
 		return pid;
+	}
+
+	private List<DataEntity> buildJVMMemoryInfo() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			String pid = findPidOfTomcat();
+			Process process = Runtime.getRuntime().exec("jstat -gcutil " + pid);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+			reader.readLine();
+
+			String output = reader.readLine();
+			String[] metrics = output.split(" +");
+			long current = System.currentTimeMillis();
+
+			DataEntity eden = new DataEntity();
+			eden.setId(buildJVMDataEntityId("edenUsage")).setType(AVG_TYPE).setTime(current)
+			      .setValue(Double.valueOf(metrics[2]) / 100);
+			entities.add(eden);
+
+			DataEntity old = new DataEntity();
+			old.setId(buildJVMDataEntityId("oldUsage")).setType(AVG_TYPE).setTime(current)
+			      .setValue(Double.valueOf(metrics[3]) / 100);
+			entities.add(old);
+
+			DataEntity perm = new DataEntity();
+			perm.setId(buildJVMDataEntityId("permUsage")).setType(AVG_TYPE).setTime(current)
+			      .setValue(Double.valueOf(metrics[4]) / 100);
+			entities.add(perm);
+
+			return entities;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	@Override
+	public List<DataEntity> execute() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+		entities.addAll(buildJVMMemoryInfo());
+
+		return new ArrayList<DataEntity>();
 	}
 
 	@Override

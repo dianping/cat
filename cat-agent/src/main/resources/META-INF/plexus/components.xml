@@ -5,6 +5,10 @@
 			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.agent.monitor.system.SigarUtil</role>
+			<implementation>com.dianping.cat.agent.monitor.system.SigarUtil</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.agent.monitor.Executor</role>
 			<role-hint>JVMMemoryExecutor</role-hint>
 			<implementation>com.dianping.cat.agent.monitor.jvm.JVMMemoryExecutor</implementation>
@@ -32,6 +36,9 @@
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.system.SigarUtil</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -41,6 +48,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.system.SigarUtil</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -120,11 +130,6 @@
 					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.initialization.Module</role>
-			<role-hint>cat-agent</role-hint>
-			<implementation>com.dianping.cat.agent.CatAgentModule</implementation>
 		</component>
 	</components>
 </plexus>

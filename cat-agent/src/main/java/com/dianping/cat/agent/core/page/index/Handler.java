@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -17,10 +16,10 @@ import com.dianping.cat.agent.monitor.TaskExecutors;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
-	private JspViewer m_jspViewer;
+	protected JspViewer m_jspViewer;
 
 	@Inject
-	private DataSender m_dataSender;
+	protected DataSender m_dataSender;
 
 	@Inject
 	private TaskExecutors m_taskExecutors;
@@ -39,9 +38,6 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(Action.VIEW);
 		model.setPage(CorePage.INDEX);
 		
-		Threads.forGroup("Cat").start(m_dataSender);
-		Threads.forGroup("Cat").start(m_taskExecutors);
-
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
