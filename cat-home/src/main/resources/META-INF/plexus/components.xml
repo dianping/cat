@@ -1138,6 +1138,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1837,6 +1840,43 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.IpService</role>
+			<implementation>com.dianping.cat.service.IpService</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3443,6 +3483,67 @@
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cdn.Handler</role>
+			<implementation>com.dianping.cat.report.page.cdn.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.cdn.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cdn.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.cdn.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.IpService</role>
+			<implementation>com.dianping.cat.service.IpService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
