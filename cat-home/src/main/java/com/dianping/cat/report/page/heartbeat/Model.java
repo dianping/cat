@@ -1,7 +1,10 @@
 package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -62,6 +65,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_systemLoadAverageGraph;
 
 	private String m_totalThreadGraph;
+
+	private Map<String, Map<String, String>> m_dalGraph = new HashMap<String, Map<String, String>>();
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -133,6 +138,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 			return StringSortHelper.sortDomain(domainNames);
 		}
+	}
+
+	public Map<String, Map<String, String>> getDalGraph() {
+		return m_dalGraph;
+	}
+
+	public int getDalTableHeight() {
+		int size = 0;
+		for (Entry<String, Map<String, String>> entry : m_dalGraph.entrySet()) {
+			size = entry.getValue().size();
+			break;
+		}
+
+		return ((size / 3) + 1) * 190 + 20;
 	}
 
 	public String getHeapUsageGraph() {
@@ -240,6 +259,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_disksGraph = disksGraph;
 	}
 
+	public void setExtensionGraph(Map<String, Map<String, String>> dalGraph) {
+		m_dalGraph = dalGraph;
+	}
+
 	public void setHeapUsageGraph(String heapUsageGraph) {
 		m_heapUsageGraph = heapUsageGraph;
 	}
@@ -300,5 +323,4 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTotalThreadGraph(String totalThreadGraph) {
 		m_totalThreadGraph = totalThreadGraph;
 	}
-
 }

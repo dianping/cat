@@ -101,6 +101,20 @@
 		</svg>
 	</td>
 </tr>
+<c:forEach items="${model.dalGraph}" var="entry">
+	<tr>
+		<th>Dal ${entry.key} Info</th>
+	</tr>
+	<tr>
+		<td>
+			<svg version="1.1" width="1400" height="${model.dalTableHeight}" xmlns="http://www.w3.org/2000/svg">
+				<c:forEach items="${entry.value}" var="kv">
+					${kv.value }
+				</c:forEach>
+			</svg>
+		</td>
+	</tr>
+</c:forEach>
 </table>
 <table class="heartbeat">
 	<tr>

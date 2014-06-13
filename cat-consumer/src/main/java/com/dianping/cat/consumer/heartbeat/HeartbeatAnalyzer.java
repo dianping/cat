@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -9,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -20,6 +22,7 @@ import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
+import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.GcInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
@@ -111,6 +114,17 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					disk.setFree(volumeInfo.getFree());
 					disk.setUsable(volumeInfo.getUsable());
 					period.addDisk(disk);
+				}
+			}
+
+			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
+				String id = entry.getKey();
+				Extension ext = entry.getValue();
+
+				com.dianping.cat.consumer.heartbeat.model.entity.Extension extension = period.findOrCreateExtension(id);
+				for (Entry<String, String> kv : ext.getDynamicAttributes().entrySet()) {
+					double value = Double.valueOf(kv.getValue());
+					extension.getDetails().put(kv.getKey(), new Detail(kv.getKey()).setValue(value));
 				}
 			}
 		} catch (Exception e) {

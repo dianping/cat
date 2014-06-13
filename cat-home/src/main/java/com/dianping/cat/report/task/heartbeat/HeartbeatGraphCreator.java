@@ -11,7 +11,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
+import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.core.dal.Graph;
@@ -119,6 +121,14 @@ public class HeartbeatGraphCreator  {
 				key = "HttpThread";
 				value = period.getHttpThreadCount();
 				cacheHeartbeatColumn(detailCache, minute, value, key);
+				
+				for(Extension ext : period.getExtensions().values()){
+					for(Entry<String,Detail> detail : ext.getDetails().entrySet()){
+						key = detail.getValue().getId();
+						value = detail.getValue().getValue();
+						cacheHeartbeatColumn(detailCache, minute, value, key);
+					}
+				}
 			}
 
 			for (Entry<String, GraphLine> entry : detailCache.entrySet()) {
