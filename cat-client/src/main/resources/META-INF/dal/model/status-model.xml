@@ -63,6 +63,6 @@
 	</entity>
 	<entity name="extension" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true"/>
-		<attribute name="description" value-type="String"/>
+		<element name="description" value-type="String" escape="false"/>
 	</entity>	
 </model>
