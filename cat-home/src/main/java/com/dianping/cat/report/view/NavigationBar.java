@@ -45,6 +45,8 @@ public class NavigationBar {
 
 		ReportPage.NETWORK,
 		
+		ReportPage.CDN,
+		
 		ReportPage.SYSTEM,
 
 		ReportPage.ALTERATION,

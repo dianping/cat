@@ -63,13 +63,10 @@ public abstract class BaseAlert {
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
-	protected Pair<Boolean, String> computeAlertInfo(int minute, String product, MetricItemConfig config, MetricType type) {
+	protected Pair<Boolean, String> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		String domain = config.getDomain();
-		String key = config.getMetricKey();
-		String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), key);
-		List<Config> configs = m_metricRuleConfigManager.queryConfigs(config.getId(), type);
+		List<Config> configs = m_metricRuleConfigManager.queryConfigs(metricKey, type);
 		int maxMinute = queryCheckMinute(configs);
 
 		if (minute >= maxMinute - 1) {
@@ -119,7 +116,7 @@ public abstract class BaseAlert {
 		return null;
 	}
 
-	private MetricReport fetchMetricReport(String product, ModelPeriod period) {
+	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
 		if (period == ModelPeriod.CURRENT) {
 			MetricReport report = m_currentReports.get(product);
 
@@ -178,22 +175,23 @@ public abstract class BaseAlert {
 	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
 		if (needAlert(config)) {
 			String product = productLine.getId();
+			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey());
 
 			Pair<Boolean, String> alert = null;
 			if (config.isShowAvg()) {
-				alert = computeAlertInfo(minute, product, config, MetricType.AVG);
+				alert = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
 			}
 			if (config.isShowCount()) {
-				alert = computeAlertInfo(minute, product, config, MetricType.COUNT);
+				alert = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
 			}
 			if (config.isShowSum()) {
-				alert = computeAlertInfo(minute, product, config, MetricType.SUM);
+				alert = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
 			}
 
 			if (alert != null && alert.getKey()) {
-				m_alertInfo.addAlertInfo(config, new Date().getTime());
+				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
-				sendAlertInfo(productLine, config, alert.getValue());
+				sendAlertInfo(productLine, config.getTitle(), alert.getValue());
 			}
 		}
 	}
@@ -260,6 +258,6 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected abstract void sendAlertInfo(ProductLine productLine, MetricItemConfig config, String content);
+	protected abstract void sendAlertInfo(ProductLine productLine, String metricTitle, String content);
 
 }

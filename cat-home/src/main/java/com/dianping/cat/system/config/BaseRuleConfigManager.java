@@ -46,7 +46,7 @@ public abstract class BaseRuleConfigManager {
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String metricKey, MetricType type) {
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
 
-		for (Rule rule : m_config.getRules()) {
+		for (Rule rule : m_config.getRules().values()) {
 			List<MetricItem> items = rule.getMetricItems();
 
 			for (MetricItem item : items) {

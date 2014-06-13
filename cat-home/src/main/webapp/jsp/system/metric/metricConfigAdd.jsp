@@ -53,14 +53,6 @@
 			<td ><input  name="metricItemConfig.viewOrder" value="${model.metricItemConfig.viewOrder}" required/></td>
 		</tr>
 		<tr>
-			<td colspan='4'>
-				<p class='text-error'>1、默认配置在业务大盘都进行告警。如果需要告警，请自行配置是否告警true。</p>
-				<p class='text-error'>2、目前告警仅仅在次数曲线上，平均和总和暂不支持告警，平均和总和波动较大，比如销售额。</p>
-				<p class='text-error'>3、有一些为Fail，比如加卡失败，建议抛出业务异常，这不作为一个业务指标，加卡成功已经能反映业务状态了。</p>
-				<p class='text-error'>4、告警阈值配置需满足基线下降百分比和阈值下降绝对值两个条件，两个条件都满足才发出告警。</p>
-			</td>
-		</tr>
-		<tr>
 			<td  style="text-align:right" class="text-success">显示标题</td>
 			<td ><input name="metricItemConfig.title" value="${model.metricItemConfig.title}" required/></td>
 			<td style="text-align:right" class="text-success">是否告警</td>
@@ -73,34 +65,6 @@
 					<c:otherwise>
 				    	<input type="radio" name="metricItemConfig.alarm" value="true" />是
 						<input type="radio" name="metricItemConfig.alarm" value="false" checked />否
-					</c:otherwise>
-				</c:choose>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'  style="text-align:right" class="text-success">Count告警阈值
-				<span class="text-error">[和基线比下降百分比，50%填写50]</span></td>
-			<td colspan='2'>
-				<c:choose>
-					<c:when test="${model.metricItemConfig.decreasePercentage eq 0}">
-						<input name="metricItemConfig.decreasePercentage" value="50" required/>
-					</c:when>
-					<c:otherwise>
-						<input name="metricItemConfig.decreasePercentage" value="${model.metricItemConfig.decreasePercentage}" required/>
-					</c:otherwise>
-				</c:choose>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'  style="text-align:right" class="text-success">Count告警阈值<span class="text-error">[和基线比下降绝对值，比如100]</span></td>
-			<td colspan='2'>
-				
-				<c:choose>
-					<c:when test="${model.metricItemConfig.decreasePercentage eq 0}">
-						<input name="metricItemConfig.decreaseValue" value="100" required/>
-					</c:when>
-					<c:otherwise>
-						<input name="metricItemConfig.decreaseValue" value="${model.metricItemConfig.decreaseValue}" required/>
 					</c:otherwise>
 				</c:choose>
 			</td>

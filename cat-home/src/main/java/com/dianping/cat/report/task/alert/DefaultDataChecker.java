@@ -1,19 +1,15 @@
 package com.dianping.cat.report.task.alert;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.SubCondition;
 
 public class DefaultDataChecker implements DataChecker {
-
-	private DecimalFormat m_df = new DecimalFormat("0.0");
 
 	private static final Long ONE_MINUTE_MILLSEC = 60000L;
 
@@ -53,32 +49,27 @@ public class DefaultDataChecker implements DataChecker {
 	}
 
 	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
-		int length = value.length;
-		StringBuilder baselines = new StringBuilder();
-		StringBuilder values = new StringBuilder();
-		double valueSum = 0;
-		double baselineSum = 0;
+		StringBuilder builder = new StringBuilder();
+		
+		for (SubCondition subCondition : condition.getSubConditions()) {
+			try {
+				String ruleType = subCondition.getType();
+				double ruleValue = parseSubConditionText(subCondition.getText());
+				RuleType rule = RuleType.getByTypeId(ruleType);
 
-		for (int i = 0; i < length; i++) {
-			baselines.append(m_df.format(baseline[i])).append(" ");
-			values.append(m_df.format(value[i])).append(" ");
-			valueSum = valueSum + value[i];
-			baselineSum = baselineSum + baseline[i];
+				Pair<Boolean, String> subResult = rule.executeRule(value, baseline, ruleValue);
 
-			if (!checkDataByMinute(condition, value[i], baseline[i])) {
+				if (!subResult.getKey()) {
+					return new Pair<Boolean, String>(false, "");
+				}
+				builder.append(subResult.getValue()).append("\n");
+			} catch (Exception ex) {
+				Cat.logError(condition.toString(), ex);
 				return new Pair<Boolean, String>(false, "");
 			}
 		}
 
-		double percent = (1 - valueSum / baselineSum) * 100;
-		StringBuilder sb = new StringBuilder();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		sb.append("[基线值:").append(baselines.toString()).append("] ");
-		sb.append("[实际值:").append(values.toString()).append("] ");
-		sb.append("[下降:").append(m_df.format(percent)).append("%").append("]");
-		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
-		return new Pair<Boolean, String>(true, sb.toString());
+		return new Pair<Boolean, String>(true, builder.toString());
 	}
 
 	private Pair<Boolean, String> checkDataByConfig(double[] value, double[] baseline, Config config) {
@@ -101,21 +92,34 @@ public class DefaultDataChecker implements DataChecker {
 		return new Pair<Boolean, String>(false, "");
 	}
 
-	private boolean checkDataByMinute(Condition condition, double value, double baseline) {
-		for (SubCondition subCondition : condition.getSubConditions()) {
-			String ruleType = subCondition.getType();
-			double ruleValue = subCondition.getText();
-			RuleType rule = RuleType.getByTypeId(ruleType);
-
-			if (rule != null) {
-				boolean isSubRuleTriggered = rule.executeRule(value, baseline, ruleValue);
-
-				if (!isSubRuleTriggered) {
-					return false;
-				}
-			}
+	private double parseSubConditionText(String text) {
+		if (text.contains("Mb")) {
+			double value = Double.parseDouble(text.replaceAll("Mb", ""));
+			return value * 1024 * 1024 / 8;
+		} else if (text.contains("Gb")) {
+			double value = Double.parseDouble(text.replaceAll("Gb", ""));
+			return value * 1024 * 1024 * 1024 / 8;
+		} else if (text.contains("Mb/s")) {
+			double value = Double.parseDouble(text.replaceAll("Mb/s", ""));
+			return value * 60 * 1024 * 1024 / 8;
+		} else if (text.contains("Gb/s")) {
+			double value = Double.parseDouble(text.replaceAll("Gb/s", ""));
+			return value * 60 * 1024 * 1024 * 1024 / 8;
+		} else if (text.contains("MB")) {
+			double value = Double.parseDouble(text.replaceAll("MB", ""));
+			return value * 1024 * 1024;
+		} else if (text.contains("GB")) {
+			double value = Double.parseDouble(text.replaceAll("GB", ""));
+			return value * 1024 * 1024 * 1024;
+		} else if (text.contains("MB/s")) {
+			double value = Double.parseDouble(text.replaceAll("MB/s", ""));
+			return value * 60 * 1024 * 1024;
+		} else if (text.contains("GB/s")) {
+			double value = Double.parseDouble(text.replaceAll("GB/s", ""));
+			return value * 60 * 1024 * 1024 * 1024;
 		}
-		return true;
+
+		return Double.parseDouble(text);
 	}
 
 	private boolean judgeCurrentNotInConfigRange(Config config) {

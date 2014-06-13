@@ -28,20 +28,20 @@ public class NetworkRuleConfigManager extends BaseRuleConfigManager implements I
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
 
-			m_config = DefaultSaxParser.parse(content);
 			m_configId = config.getId();
+			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-network-metric-rule-config.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-network-metric-rule-config-unit.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
 				config.setContent(content);
 				m_configDao.insert(config);
 
-				m_config = DefaultSaxParser.parse(content);
 				m_configId = config.getId();
+				m_config = DefaultSaxParser.parse(content);
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -66,7 +66,7 @@ public class NetworkRuleConfigManager extends BaseRuleConfigManager implements I
 	}
 
 	private void setSumTrueWhenAllFalse(MonitorRules config) {
-		for (Rule rule : m_config.getRules()) {
+		for (Rule rule : m_config.getRules().values()) {
 			for (MetricItem item : rule.getMetricItems()) {
 				if (!item.isMonitorAvg() && !item.isMonitorCount() && !item.isMonitorSum()) {
 					item.setMonitorSum(true);

@@ -57,6 +57,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricId);
 		String metricDomain = metricConfig.getDomain();
 		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
+		
 		for (MetricType type : MetricType.values()) {
 			String key = metricId + ":" + type;
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
