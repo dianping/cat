@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.agent.monitor.puppet.util.CreatDir;

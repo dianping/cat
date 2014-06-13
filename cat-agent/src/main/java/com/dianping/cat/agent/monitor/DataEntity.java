@@ -10,17 +10,20 @@ public class DataEntity {
 
 	private long m_time;
 
+	public String getId() {
+		return m_id;
+	}
+
 	public long getTime() {
 		return m_time;
 	}
 
-	public DataEntity setTime(long time) {
-		m_time = time;
-		return this;
+	public String getType() {
+		return m_type;
 	}
 
-	public String getId() {
-		return m_id;
+	public double getValue() {
+		return m_value;
 	}
 
 	public DataEntity setId(String id) {
@@ -28,8 +31,9 @@ public class DataEntity {
 		return this;
 	}
 
-	public String getType() {
-		return m_type;
+	public DataEntity setTime(long time) {
+		m_time = time;
+		return this;
 	}
 
 	public DataEntity setType(String type) {
@@ -37,13 +41,14 @@ public class DataEntity {
 		return this;
 	}
 
-	public double getValue() {
-		return m_value;
-	}
-
 	public DataEntity setValue(double value) {
 		m_value = value;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "DataEntity [m_id=" + m_id + ", m_type=" + m_type + ", m_value=" + m_value + ", m_time=" + m_time + "]";
 	}
 
 }

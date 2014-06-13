@@ -106,7 +106,7 @@ public class DataSender implements Task, Initializable {
 				try {
 					while (m_entities.size() > 0 && maxSize > 0) {
 						DataEntity entity = m_entities.poll(5, TimeUnit.MILLISECONDS);
-
+						
 						m_dataEntities.add(entity);
 						maxSize--;
 					}

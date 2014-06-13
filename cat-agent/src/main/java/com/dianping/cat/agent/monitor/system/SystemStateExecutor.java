@@ -10,9 +10,9 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.hyperic.sigar.NetInterfaceConfig;
+import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Uptime;
-import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.AbstractExecutor;
@@ -20,12 +20,11 @@ import com.dianping.cat.agent.monitor.DataEntity;
 
 public class SystemStateExecutor extends AbstractExecutor implements Initializable {
 
-	@Inject
-	private SigarUtil m_sigarUtil;
-
 	public static final String ID = "SystemStateExecutor";
 
 	private static final String MD5_PATH = "/usr/sbin/sshd";
+
+	private Sigar m_sigar = new Sigar();
 
 	private String m_md5String;
 
@@ -51,7 +50,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			hostname = InetAddress.getLocalHost().getHostName();
 		} catch (Exception exc) {
 			try {
-				hostname = m_sigarUtil.getSigar().getNetInfo().getHostName();
+				hostname = m_sigar.getNetInfo().getHostName();
 			} catch (SigarException e) {
 				Cat.logError(e);
 			}
@@ -95,7 +94,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			Uptime uptime = m_sigarUtil.getSigar().getUptime();
+			Uptime uptime = m_sigar.getUptime();
 			double time = uptime.getUptime() / 60;
 
 			DataEntity entity = new DataEntity();
@@ -110,11 +109,11 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	public boolean hostIpAddrChanged() {
 		try {
-			String ifNames[] = m_sigarUtil.getSigar().getNetInterfaceList();
+			String ifNames[] = m_sigar.getNetInterfaceList();
 
 			for (int i = 0; i < ifNames.length; i++) {
 				String name = ifNames[i];
-				NetInterfaceConfig ifconfig = m_sigarUtil.getSigar().getNetInterfaceConfig(name);
+				NetInterfaceConfig ifconfig = m_sigar.getNetInterfaceConfig(name);
 				String currentIp = ifconfig.getAddress();
 
 				if (currentIp.equals(m_ipAddr)) {

@@ -79,7 +79,7 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		entities.addAll(buildJVMMemoryInfo());
 
-		return new ArrayList<DataEntity>();
+		return entities;
 	}
 
 	@Override

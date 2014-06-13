@@ -1,22 +1,10 @@
-package com.dianping.cat.agent.monitor.system;
+package com.dianping.cat.agent;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.hyperic.sigar.Sigar;
+public class NativeLibPathBuilder {
 
-public class SigarUtil implements Initializable {
-
-	private Sigar m_sigar;
-
-	public Sigar getSigar() {
-		return m_sigar;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
+	public static void build() {
 		try {
 			String root = System.getProperty("user.dir");
 			File libDir = new File(root + "/lib");
@@ -30,12 +18,11 @@ public class SigarUtil implements Initializable {
 					path += ":" + libDir.getCanonicalPath();
 				}
 				System.setProperty("java.library.path", path);
-				m_sigar = new Sigar();
 			} else {
-				m_sigar = new Sigar();
+				throw new RuntimeException("There exists no sigar native library");
 			}
-		} catch (IOException e) {
-			throw new RuntimeException("Can't init sigar", e);
+		} catch (Exception e) {
+			throw new RuntimeException("Can't set java.library.path for sigar", e);
 		}
 	}
 

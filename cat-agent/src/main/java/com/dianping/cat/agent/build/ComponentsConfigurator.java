@@ -12,7 +12,6 @@ import com.dianping.cat.agent.monitor.Executor;
 import com.dianping.cat.agent.monitor.TaskExecutors;
 import com.dianping.cat.agent.monitor.jvm.JVMMemoryExecutor;
 import com.dianping.cat.agent.monitor.jvm.JVMStateExecutor;
-import com.dianping.cat.agent.monitor.system.SigarUtil;
 import com.dianping.cat.agent.monitor.system.SystemPerformanceExecutor;
 import com.dianping.cat.agent.monitor.system.SystemStateExecutor;
 
@@ -23,14 +22,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EnvironmentConfig.class));
 
-		all.add(C(SigarUtil.class));
-
 		all.add(C(Executor.class, JVMMemoryExecutor.ID, JVMMemoryExecutor.class).req(EnvironmentConfig.class));
 		all.add(C(Executor.class, JVMStateExecutor.ID, JVMStateExecutor.class).req(EnvironmentConfig.class));
 		all.add(C(Executor.class, SystemPerformanceExecutor.ID, SystemPerformanceExecutor.class).req(
-		      EnvironmentConfig.class, SigarUtil.class));
-		all.add(C(Executor.class, SystemStateExecutor.ID, SystemStateExecutor.class).req(EnvironmentConfig.class,
-		      SigarUtil.class));
+		      EnvironmentConfig.class));
+		all.add(C(Executor.class, SystemStateExecutor.ID, SystemStateExecutor.class).req(EnvironmentConfig.class));
 
 		all.add(C(DataSender.class).req(EnvironmentConfig.class));
 
