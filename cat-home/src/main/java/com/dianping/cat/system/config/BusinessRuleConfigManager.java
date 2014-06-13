@@ -1,7 +1,7 @@
 package com.dianping.cat.system.config;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -25,23 +25,12 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 
 	private static final String CONFIG_NAME = "businessRulesConfig";
 
-	public String addOrReplaceRule(String ruleContent) throws SAXException, IOException {
+	public String updateRule(String ruleContent) throws SAXException, IOException {
 		Rule rule = DefaultSaxParser.parseEntity(Rule.class, ruleContent);
-		String metricKey = queryMetricKey(rule);
+		String metricKey = rule.getId();
 
-		removeRule(metricKey);
-		m_config.getRules().add(rule);
-		
+		m_config.getRules().put(metricKey, rule);
 		return m_config.toString();
-	}
-
-	private String queryMetricKey(Rule rule) {
-		List<MetricItem> items = rule.getMetricItems();
-		if (items.size() > 0) {
-			return items.get(0).getText();
-		} else {
-			return null;
-		}
 	}
 
 	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
@@ -59,7 +48,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	}
 
 	private Rule buildDefaultRule(String metricKey) {
-		Rule rule = new Rule();
+		Rule rule = new Rule(metricKey);
 		MetricItem item = new MetricItem();
 
 		item.setType("id");
@@ -68,22 +57,6 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		rule.addMetricItem(item);
 		rule.addConfig(buildDefaultConfig());
 		return rule;
-	}
-
-	private boolean containKey(Rule rule, String metricKey) {
-		for (MetricItem item : rule.getMetricItems()) {
-			String type = item.getType();
-			if (type == null || !type.equals("id")) {
-				continue;
-			}
-
-			String text = item.getText();
-			if (text != null && text.equals(metricKey)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	@Override
@@ -122,8 +95,23 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		}
 	}
 
+	@Override
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String metricKey, MetricType type) {
-		List<com.dianping.cat.home.rule.entity.Config> configs = super.queryConfigs(metricKey, type);
+		Rule rule = m_config.getRules().get(metricKey);
+		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+		for (MetricItem item : rule.getMetricItems()) {
+			if (type == MetricType.COUNT && item.isMonitorCount()) {
+				configs.addAll(rule.getConfigs());
+				break;
+			} else if (type == MetricType.AVG && item.isMonitorAvg()) {
+				configs.addAll(rule.getConfigs());
+				break;
+			} else if (type == MetricType.SUM && item.isMonitorSum()) {
+				configs.addAll(rule.getConfigs());
+				break;
+			}
+		}
 
 		if (configs.size() == 0) {
 			configs.add(buildDefaultConfig());
@@ -132,25 +120,13 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	}
 
 	public Rule queryRule(String metricKey) {
-		for (Rule rule : m_config.getRules()) {
-			if (containKey(rule, metricKey)) {
-				return rule;
-			}
-		}
+		Rule rule = m_config.getRules().get(metricKey);
 
-		return buildDefaultRule(metricKey);
-	}
-
-	private void removeRule(String metricKey) {
-		List<Rule> configRules = m_config.getRules();
-		Iterator<Rule> it = configRules.iterator();
-
-		while (it.hasNext()) {
-			Rule tmpRule = it.next();
-
-			if (containKey(tmpRule, metricKey)) {
-				it.remove();
-			}
+		if (rule != null) {
+			return rule;
+		} else {
+			return buildDefaultRule(metricKey);
 		}
 	}
+
 }

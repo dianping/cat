@@ -13,7 +13,6 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -53,7 +52,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 			if (alert != null && alert.getKey()) {
 				String metricTitle = buildMetricTitle(metricKey);
-				m_alertInfo.addAlertInfo(new MetricItemConfig(metricKey), new Date().getTime());
+				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
 				sendAlertInfo(productLine, metricTitle, alert.getValue());
 			}

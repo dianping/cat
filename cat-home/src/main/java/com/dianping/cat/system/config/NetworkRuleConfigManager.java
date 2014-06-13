@@ -66,7 +66,7 @@ public class NetworkRuleConfigManager extends BaseRuleConfigManager implements I
 	}
 
 	private void setSumTrueWhenAllFalse(MonitorRules config) {
-		for (Rule rule : m_config.getRules()) {
+		for (Rule rule : m_config.getRules().values()) {
 			for (MetricItem item : rule.getMetricItems()) {
 				if (!item.isMonitorAvg() && !item.isMonitorCount() && !item.isMonitorSum()) {
 					item.setMonitorSum(true);
