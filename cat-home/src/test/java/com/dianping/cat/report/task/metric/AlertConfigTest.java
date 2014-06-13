@@ -33,7 +33,7 @@ public class AlertConfigTest {
 
 		Map<String, List<com.dianping.cat.home.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
 
-		for (Rule rule : monitorRules.getRules()) {
+		for (Rule rule : monitorRules.getRules().values()) {
 			map.put(rule.getId(), rule.getConfigs());
 		}
 
@@ -67,8 +67,8 @@ public class AlertConfigTest {
 			decreaseValue = 100;
 		}
 
-		descPerSubcon.setType("DescPer").setText(decreasePercent);
-		descValSubcon.setType("DescVal").setText(decreaseValue);
+		descPerSubcon.setType("DescPer").setText(String.valueOf(decreasePercent));
+		descValSubcon.setType("DescVal").setText(String.valueOf(decreaseValue));
 
 		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
 		config.addCondition(condition);
