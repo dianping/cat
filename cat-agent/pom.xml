@@ -77,6 +77,11 @@
          <version>2.0.4</version>
          <scope>test</scope>
       </dependency>
+	  <dependency>
+		<groupId>org.fusesource</groupId>
+  		<artifactId>sigar</artifactId>
+  		<version>1.6.4</version>
+	  </dependency>
    </dependencies>
    <build>
       <resources>
@@ -86,6 +91,26 @@
          </resource>
       </resources>
       <plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+	                <webResources>
+	                    <resource>
+	                        <directory>${basedir}/lib</directory>
+	                        <targetPath>WEB-INF/lib</targetPath>
+	                        <filtering>false</filtering>
+	                        <includes>
+	                            <include>**/*.so</include>
+	                            <include>**/*.sl</include>
+	                            <include>**/*.dylib</include>
+	                            <include>**/*.dll</include>
+	                            <include>**/*.lib</include>
+	                        </includes>
+	                    </resource>
+	                </webResources>
+	            </configuration>
+		</plugin>
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>

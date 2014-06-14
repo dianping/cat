@@ -131,12 +131,12 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 	private List<String> fetchSystemKeys(String type) {
 
-		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/-usage:avg", "/boot-usage:avg",
-		      "/data-usage:avg", "/usr-usage:avg", "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg",
-		      "load:avg", "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
+		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/data-usage:avg", "/usr-usage:avg",
+		      "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg", "load:avg", "uptime:avg",
+		      "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
 
-		List<String> jvmKeys = new ArrayList<String>(Arrays.asList("jvm_edenUsage:avg", "jvm_oldUsage:avg",
-		      "jvm_permUsage:avg", "tomcatLive:avg", "catalinaLogSize:sum"));
+		List<String> jvmKeys = new ArrayList<String>(Arrays.asList("edenUsage:avg", "oldUsage:avg",
+		      "permUsage:avg", "tomcatLive:avg", "catalinaLogSize:sum"));
 
 		List<String> nginxKeys = new ArrayList<String>();
 
