@@ -62,7 +62,7 @@ public class DefaultDataChecker implements DataChecker {
 				if (!subResult.getKey()) {
 					return new Pair<Boolean, String>(false, "");
 				}
-				builder.append(subResult.getValue()).append("\n");
+				builder.append(subResult.getValue()).append("<br/>");
 			} catch (Exception ex) {
 				Cat.logError(condition.toString(), ex);
 				return new Pair<Boolean, String>(false, "");
