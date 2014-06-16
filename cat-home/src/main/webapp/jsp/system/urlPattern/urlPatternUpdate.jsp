@@ -18,11 +18,11 @@
 		<div class="span10">
 		</br>
 			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit">
-				<table style='width:80%' class='table table-striped table-bordered'>
+				<table style='width:100%' class='table table-striped table-bordered'>
 					<tr>
-						<th>唯一ID</th>
-						<td><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
-						<td><span class="text-error">不能有特殊字符，仅限于英文字母和-</span></td>
+						<th width="10%">唯一ID</th>
+						<td width="50%"><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
+						<td width="40%"><span class="text-error">不能有特殊字符，仅限于英文字母和-</span></td>
 					</tr>
 					<tr>
 						<th>所属组</th>

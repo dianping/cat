@@ -145,7 +145,7 @@
 			<tr>
 				<th class="left">
 				组<select style="width: 100px;" name="group" id="group">
-				</select> URL <select style="width: 400px;" name="url" id="url"></select>
+				</select> URL <select style="width: 600px;" name="url" id="url"></select>
 				省份 <select style="width: 100px;" name="province" id="province">
 				</select> 城市 <select style="width: 100px;" name="city" id="city">
 				</select> 运营商 <select style="width: 120px;" name="channel" id="channel">
