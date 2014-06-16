@@ -47,6 +47,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
@@ -100,6 +101,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction-local")
 	private LocalTransactionService m_transactionService;
+	
+	@Inject
+	private CdnReportConvertor m_cdnReportConvertor;
 
 	private static final int DEFAULT_SIZE = 32 * 1024;
 
@@ -250,6 +254,15 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					convert.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
 
+				} else if (Constants.METRIC_CDN.equals(metricType)) {
+					String cdn = payload.getCdn();
+					String province = payload.getProvince();
+					String city = payload.getCity();
+					MetricReport metricReport = (MetricReport) response.getModel();
+					
+					m_cdnReportConvertor.SetConventorParameter(cdn, province, city);
+					m_cdnReportConvertor.visitMetricReport(metricReport);
+					((ModelResponse<MetricReport>) response).setModel(m_cdnReportConvertor.getReport());
 				}
 
 			} else if (DependencyAnalyzer.ID.equals(report)) {
