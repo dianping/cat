@@ -164,6 +164,10 @@ public class NetGraphBuilder {
 		} catch (Exception e) {
 			inter.setIn(0.0);
 			inter.setOut(0.0);
+			inter.setIndiscards(0.0);
+			inter.setOutdiscards(0.0);
+			inter.setInerrors(0.0);
+			inter.setOuterrors(0.0);
 			Cat.logError(e);
 		}
 	}
