@@ -93,6 +93,7 @@ public class NetGraphBuilder {
 
 	private NetGraph copyBaseInfoFromTemplate(NetGraph netGraph) {
 		NetGraph to = new NetGraph();
+		
 		for (NetTopology netTopologyA : netGraph.getNetTopologies()) {
 			NetTopology netTopologyB = new NetTopology();
 
