@@ -132,6 +132,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return null;
 	}
 
+	public String getMetricType() {
+		return "";
+	}
+
 	@Override
 	public Transaction getPeekTransaction() {
 		Context ctx = getContext();
@@ -223,6 +227,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		m_context.remove();
+	}
+
+	public void setMetricType(String metricType) {
 	}
 
 	public void setTraceMode(boolean traceMode) {
