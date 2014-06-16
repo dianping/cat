@@ -371,6 +371,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 						}
 					}
 				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		} catch (Throwable e) {
