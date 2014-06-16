@@ -1,38 +1,54 @@
 package com.dianping.cat.agent.monitor;
 
 public class DataEntity {
-	
-	private String m_key;
 
-	private String m_op;
+	private String m_id;
+
+	private String m_type;
 
 	private double m_value;
 
-	public String getKey() {
-		return m_key;
+	private long m_time;
+
+	public String getId() {
+		return m_id;
 	}
 
-	public DataEntity setKey(String key) {
-		m_key = key;
-		return this;
+	public long getTime() {
+		return m_time;
 	}
 
-	public String getOp() {
-		return m_op;
-	}
-
-	public DataEntity setOp(String op) {
-		m_op = op;
-		return this;
+	public String getType() {
+		return m_type;
 	}
 
 	public double getValue() {
 		return m_value;
 	}
 
+	public DataEntity setId(String id) {
+		m_id = id;
+		return this;
+	}
+
+	public DataEntity setTime(long time) {
+		m_time = time;
+		return this;
+	}
+
+	public DataEntity setType(String type) {
+		m_type = type;
+		return this;
+	}
+
 	public DataEntity setValue(double value) {
 		m_value = value;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "DataEntity [m_id=" + m_id + ", m_type=" + m_type + ", m_value=" + m_value + ", m_time=" + m_time + "]";
 	}
 
 }

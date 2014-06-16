@@ -13,7 +13,7 @@
     <attribute name="ip" value-type="String" key="true"/>
     <entity-ref name="period" type="list" names="periods" />
   </entity>
-  <entity name="period">
+  <entity name="period" dynamic-attributes="true">
     <attribute name="minute" value-type="int" primitive="true" key="true" />
     <attribute name="thread-count" value-type="int" primitive="true" />
     <attribute name="daemon-count" value-type="int" primitive="true" />
@@ -31,12 +31,21 @@
     <attribute name="cat-message-overflow" value-type="long" primitive="true" />
     <attribute name="cat-message-size" value-type="double" primitive="true" format="0.00"/>
     <entity-ref name="disk" type="list" names="disks"/>
+	<entity-ref name="extension" type="map" names="extensions" method-find-or-create="true"/>
   </entity>
   <entity name="disk">
     <attribute name="path" value-type="String" key="true"/>
     <attribute name="total" value-type="long" primitive="true" />
     <attribute name="free" value-type="long" primitive="true" />
     <attribute name="usable" value-type="long" primitive="true" />
+  </entity>
+  <entity name="extension">
+    <attribute name="id" value-type="String" key="true"/>
+	<entity-ref name="detail" type="map" names="details" method-find-or-create="true"/>
+  </entity>
+  <entity name="detail">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="value" value-type="double" primitive="true"/>
   </entity>
 </model>
 

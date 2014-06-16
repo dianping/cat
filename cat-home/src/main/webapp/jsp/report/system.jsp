@@ -209,8 +209,8 @@
 					查询类型
 					<select style="width: 100px;" name="type" id="type"  onclick="query()" >
 							<option value="system">系统</option>
-							<option value="JVM">JVM</option>
-							<option value="Niginx">Nginx</option>
+							<option value="jvm">JVM</option>
+							<option value="nginx">Nginx</option>
 					</select>
 				</th>
 

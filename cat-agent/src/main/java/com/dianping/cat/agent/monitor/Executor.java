@@ -7,4 +7,5 @@ public interface Executor {
 	public String getId();
 	
 	public List<DataEntity> execute();
+	
 }

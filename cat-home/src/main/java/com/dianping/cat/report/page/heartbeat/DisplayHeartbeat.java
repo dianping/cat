@@ -2,17 +2,31 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
+import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.site.helper.Splitters;
 
 public class DisplayHeartbeat {
 	private static final int K = 1024;
+
+	private static final String DAL = "dal";
+
+	private static final Map<String, Integer> DAL_INDEX = new HashMap<String, Integer>();
+
+	private static final AtomicInteger DAL_INDEX_COUNTER = new AtomicInteger(0);
 
 	private double[] m_activeThreads = new double[60];
 
@@ -59,6 +73,8 @@ public class DisplayHeartbeat {
 	private double[] m_systemLoadAverage = new double[60];
 
 	private double[] m_totalThreads = new double[60];
+
+	private Map<String, Map<String, double[]>> m_extensions = new HashMap<String, Map<String, double[]>>();
 
 	public DisplayHeartbeat() {
 	}
@@ -107,6 +123,26 @@ public class DisplayHeartbeat {
 			m_memoryFree[minute] = period.getMemoryFree();
 
 			m_systemLoadAverage[minute] = period.getSystemLoadAverage();
+
+			for (Entry<String, Extension> entry : period.getExtensions().entrySet()) {
+				Map<String, double[]> groups = m_extensions.get(entry.getKey());
+
+				if (groups == null) {
+					groups = new LinkedHashMap<String, double[]>();
+
+					m_extensions.put(entry.getKey(), groups);
+				}
+				for (Entry<String, Detail> detail : entry.getValue().getDetails().entrySet()) {
+					double[] doubles = groups.get(detail.getKey());
+
+					if (doubles == null) {
+						doubles = new double[60];
+						groups.put(detail.getKey(), doubles);
+					}
+
+					doubles[minute] = detail.getValue().getValue();
+				}
+			}
 		}
 
 		m_newThreads = getAddedCount(m_totalThreads);
@@ -366,6 +402,39 @@ public class DisplayHeartbeat {
 
 	public double[] getTotalThreads() {
 		return m_totalThreads;
+	}
+
+	public Map<String, Map<String, String>> getDalGraph() {
+		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
+		Map<String, double[]> dalData = m_extensions.get(DAL);
+
+		if (dalData == null) {
+			return graphs;
+		}
+
+		for (Entry<String, double[]> entry : dalData.entrySet()) {
+			String key = entry.getKey();
+
+			List<String> split = Splitters.by('-').trim().split(key);
+			if (split != null && split.size() == 2) {
+				String db = split.get(0);
+				String title = split.get(1);
+
+				Map<String, String> map = graphs.get(db);
+				if (map == null) {
+					map = new HashMap<String, String>();
+					graphs.put(split.get(0), map);
+				}
+				if (!DAL_INDEX.containsKey(title)) {
+					DAL_INDEX.put(title, DAL_INDEX_COUNTER.getAndIncrement());
+				}
+
+				map.put(title, m_builder.build(new HeartbeatPayload(DAL_INDEX.get(title), title, "Minute", "Count", entry
+				      .getValue())));
+			}
+		}
+
+		return graphs;
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {
