@@ -101,7 +101,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction-local")
 	private LocalTransactionService m_transactionService;
-	
+
 	@Inject
 	private CdnReportConvertor m_cdnReportConvertor;
 
@@ -238,28 +238,26 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 					convert.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-
 				} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
 					String ipAddrsStr = payload.getIpAddress();
 					Set<String> ipAddrs = null;
-					
+
 					if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
 						String[] ipAddrsArray = ipAddrsStr.split("_");
 						ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
 					}
-					
+
 					SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
 					MetricReport metricReport = (MetricReport) response.getModel();
-					
+
 					convert.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-
 				} else if (Constants.METRIC_CDN.equals(metricType)) {
 					String cdn = payload.getCdn();
 					String province = payload.getProvince();
 					String city = payload.getCity();
 					MetricReport metricReport = (MetricReport) response.getModel();
-					
+
 					m_cdnReportConvertor.SetConventorParameter(cdn, province, city);
 					m_cdnReportConvertor.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(m_cdnReportConvertor.getReport());

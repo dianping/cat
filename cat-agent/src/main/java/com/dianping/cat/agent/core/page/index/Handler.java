@@ -22,7 +22,7 @@ public class Handler implements PageHandler<Context> {
 	protected DataSender m_dataSender;
 
 	@Inject
-	private TaskExecutors m_taskExecutors;
+	protected TaskExecutors m_taskExecutors;
 
 	@Override
 	@PayloadMeta(Payload.class)
