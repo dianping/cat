@@ -5,7 +5,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	AVG_API("avg"),
 	
-	SUM_API("sum");
+	SUM_API("sum"),
+	
+	BATCH_API("batch");
 
 	private String m_name;
 

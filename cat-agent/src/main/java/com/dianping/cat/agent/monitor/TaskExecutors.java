@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
@@ -23,19 +24,31 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 	private static final long DURATION = 5 * 1000;
 
 	@Override
+	public String getName() {
+		return "data-fetcher";
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Map<String, Executor> map = lookupMap(Executor.class);
+		m_executors = map.values();
+
+		Threads.forGroup("Cat").start(this);
+	}
+
+	@Override
 	public void run() {
 		while (true) {
 			Transaction t = Cat.newTransaction("Data", "Fetch");
 
 			try {
 				long current = System.currentTimeMillis();
-				
+
 				for (Executor executor : m_executors) {
 					Transaction t2 = Cat.newTransaction("Executor", executor.getId());
-				
 					try {
 						List<DataEntity> entities = executor.execute();
-
+						
 						m_sender.put(entities);
 						t2.setStatus(Transaction.SUCCESS);
 					} catch (Exception e) {
@@ -65,20 +78,8 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 	}
 
 	@Override
-	public String getName() {
-		return "data-fetcher";
-	}
-
-	@Override
 	public void shutdown() {
 
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Map<String, Executor> map = lookupMap(Executor.class);
-
-		m_executors = map.values();
 	}
 
 }
