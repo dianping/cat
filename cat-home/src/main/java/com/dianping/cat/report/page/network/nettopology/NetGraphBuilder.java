@@ -1,14 +1,8 @@
 package com.dianping.cat.report.page.network.nettopology;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
@@ -20,17 +14,8 @@ import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.home.nettopo.entity.Switch;
-import com.dianping.cat.home.nettopo.transform.DefaultSaxParser;
 
-public class NetGraphBuilder implements Initializable {
-
-	private NetGraph m_netGraphTemplate;
-
-	private Set<String> m_requireGroups;
-
-	public Set<String> buildRequireGroups() {
-		return m_requireGroups;
-	}
+public class NetGraphBuilder {
 
 	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports, List<String> alertKeys) {
 		NetGraphSet netGraphSet = new NetGraphSet();
@@ -179,31 +164,12 @@ public class NetGraphBuilder implements Initializable {
 		} catch (Exception e) {
 			inter.setIn(0.0);
 			inter.setOut(0.0);
+			inter.setIndiscards(0.0);
+			inter.setOutdiscards(0.0);
+			inter.setInerrors(0.0);
+			inter.setOuterrors(0.0);
 			Cat.logError(e);
 		}
 	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		InputStream is = NetGraphManager.class.getResourceAsStream("/config/default-nettopology-config.xml");
-		NetGraphSet netGraphSet = null;
-
-		try {
-			netGraphSet = DefaultSaxParser.parse(is);
-			m_netGraphTemplate = netGraphSet.getNetGraphs().get(0);
-			is.close();
-
-			m_requireGroups = new HashSet<String>();
-
-			for (NetTopology netTopology : m_netGraphTemplate.getNetTopologies()) {
-				for (Connection connection : netTopology.getConnections()) {
-					for (Interface inter : connection.getInterfaces()) {
-						m_requireGroups.add(inter.getGroup());
-					}
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
 }

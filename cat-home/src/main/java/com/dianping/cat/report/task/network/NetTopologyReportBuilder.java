@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.network;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,8 +13,11 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.nettopo.entity.Connection;
+import com.dianping.cat.home.nettopo.entity.Interface;
 import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
+import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.home.nettopo.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
@@ -38,7 +42,17 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		Set<String> groups = m_netGraphBuilder.buildRequireGroups();
+		NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
+		Set<String> groups = new HashSet<String>();
+
+		for (NetTopology netTopology : netGraphTemplate.getNetTopologies()) {
+			for (Connection connection : netTopology.getConnections()) {
+				for (Interface inter : connection.getInterfaces()) {
+					groups.add(inter.getGroup());
+				}
+			}
+		}
+		
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groups) {
@@ -47,7 +61,7 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 			reports.put(group, report);
 		}
-		NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
+		
 		NetGraphSet netGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, reports, new ArrayList<String>());
 		HourlyReport hourlyReport = new HourlyReport();
 
