@@ -32,5 +32,7 @@ public class Constants {
 	public static final String METRIC_USER_MONITOR = "userMonitor";
 	
 	public static final String METRIC_SYSTEM_MONITOR = "systemMonitor";
+	
+	public static final String METRIC_CDN = "cdn";
 
 }
