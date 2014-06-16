@@ -2,10 +2,10 @@
 <model model-package="com.dianping.cat.home.rule"
 	enable-sax-parser="true" enable-xml-parser="true" enable-xml-builder="true">
 	<entity name="monitor-rules" root="true">
-		<entity-ref name="rule" type="list" names="rules" />
+		<entity-ref name="rule" type="map" names="rules" method-find-or-create='true' />
 	</entity>
 	<entity name="rule">
-		<attribute name="id" value-type="String" />
+		<attribute name="id" value-type="String" key="true" />
 		<entity-ref name="metric-item" type="list" names="metric-items" />
 		<entity-ref name="config" type="list" names="configs" />
 	</entity>
@@ -28,7 +28,7 @@
 	</entity>
 	<entity name="sub-condition">
 		<attribute name="type" value-type="String" />
-		<element name="text" value-type="double" text="true" />
+		<element name="text" value-type="String" text="true" />
 	</entity>
 </model>
 

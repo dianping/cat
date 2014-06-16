@@ -21,6 +21,7 @@ import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.task.alert.MetricType;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +38,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String group = payload.getGroup();
 		String key = payload.getKey();
+		String action = payload.getAction().getName();
 		HttpStatus httpStatus = new HttpStatus();
 		boolean error = false;
 
@@ -48,7 +50,7 @@ public class Handler implements PageHandler<Context> {
 			sb.append("group ");
 			error = true;
 		}
-		if (StringUtils.isEmpty(key)) {
+		if (StringUtils.isEmpty(key) && !Action.BATCH_API.getName().equalsIgnoreCase(action)) {
 			sb.append("key ");
 			error = true;
 		}
@@ -94,24 +96,18 @@ public class Handler implements PageHandler<Context> {
 				time = System.currentTimeMillis();
 			}
 
-			Metric metric = Cat.getProducer().newMetric(group, key);
-			DefaultMetric defaultMetric = (DefaultMetric) metric;
-			
-			if (defaultMetric != null) {
-				defaultMetric.setTimestamp(time);
-			}
 			switch (action) {
 			case COUNT_API:
-				defaultMetric.setStatus("C");
-				defaultMetric.addData(String.valueOf(count));
+				buildMetric(group, key, MetricType.COUNT.name(), time, count);
 				break;
 			case AVG_API:
-				defaultMetric.setStatus("T");
-				defaultMetric.addData(String.format("%.2f", payload.getAvg()));
+				buildMetric(group, key, MetricType.AVG.name(), time, payload.getAvg());
 				break;
 			case SUM_API:
-				defaultMetric.setStatus("S,C");
-				defaultMetric.addData(String.format("%s,%.2f", count, payload.getSum()));
+				buildMetric(group, key, MetricType.SUM.name(), time, payload.getSum());
+				break;
+			case BATCH_API:
+				buildBatchMetric(group, payload.getBatch());
 				break;
 			default:
 				throw new RuntimeException("Unknown action: " + action);
@@ -127,6 +123,61 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		model.setPage(ReportPage.MONITOR);
 		m_jspViewer.view(ctx, model);
+	}
+
+	private Metric buildMetric(String group, String key, String type, long time, double value) {
+		Metric metric = Cat.getProducer().newMetric(group, key);
+		DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+		if (defaultMetric != null) {
+			defaultMetric.setTimestamp(time);
+			if (MetricType.SUM.name().equalsIgnoreCase(type)) {
+				defaultMetric.setStatus("S,C");
+				defaultMetric.addData(String.format("%s,%.2f", 1, value));
+			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
+				defaultMetric.setStatus("T");
+				defaultMetric.addData(String.format("%.2f", value));
+			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
+				defaultMetric.setStatus("C");
+				defaultMetric.addData(String.valueOf(value));
+			}
+		}
+		return defaultMetric;
+	}
+
+	private boolean validateNumber(String longNumber, String doubleNumber) {
+		try {
+			if (StringUtils.isNotEmpty(longNumber) && StringUtils.isNotEmpty(doubleNumber)) {
+				Long.parseLong(longNumber);
+				Double.parseDouble(doubleNumber);
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private void buildBatchMetric(String group, String content) {
+		String[] lines = content.split("\n");
+
+		for (String line : lines) {
+			String[] tabs = line.split("\t");
+
+			if (tabs.length == 4 & validateNumber(tabs[2], tabs[3])) {
+				String key = tabs[0];
+				String type = tabs[1];
+				long time = Long.parseLong(tabs[2]);
+				double value = Double.parseDouble(tabs[3]);
+
+				buildMetric(group, key, type, time, value);
+			} else {
+				Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
+			}
+
+		}
 	}
 
 }

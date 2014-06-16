@@ -38,13 +38,24 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("value")
 	private double m_value;
 
+	@FieldMeta("batch")
+	private String m_batch;
+
+	public String getBatch() {
+		return m_batch;
+	}
+
+	public void setBatch(String batch) {
+		m_batch = batch;
+	}
+
 	public double getValue() {
 		return m_value;
 	}
 
 	public void setValue(double value) {
 		m_value = value;
-		m_count = (long)value;
+		m_count = (long) value;
 		m_avg = value;
 		m_sum = value;
 	}

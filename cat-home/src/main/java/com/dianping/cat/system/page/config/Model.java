@@ -68,6 +68,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_bug;
 
 	private String m_content;
+	
+	private String m_metricItemConfigRule; 
 
 	private Map<String, Domain> m_productLineToDomains;
 
@@ -78,7 +80,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public static final String SUCCESS = "Success";
 
 	public static final String FAIL = "Fail";
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -136,6 +138,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_domainConfig;
 	}
 
+	public List<String> getDomainList() {
+		return domainList;
+	}
+
 	public List<String> getDomains() {
 		return Collections.emptyList();
 	}
@@ -148,6 +154,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_edgeConfigs;
 	}
 
+	public ExceptionExclude getExceptionExclude() {
+		return m_exceptionExclude;
+	}
+
+	public List<ExceptionExclude> getExceptionExcludes() {
+		return m_exceptionExcludes;
+	}
+
 	public ExceptionLimit getExceptionLimit() {
 		return m_exceptionLimit;
 	}
@@ -156,12 +170,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_exceptionLimits;
 	}
 
-	public ExceptionExclude getExceptionExclude() {
-		return m_exceptionExclude;
-	}
-
-	public List<ExceptionExclude> getExceptionExcludes() {
-		return m_exceptionExcludes;
+	public List<String> getExceptionList() {
+		return exceptionList;
 	}
 
 	public String getIpAddress() {
@@ -172,8 +182,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_metricItemConfig;
 	}
 
+	public String getMetricItemConfigRule() {
+		return m_metricItemConfigRule;
+	}
+
 	public String getOpState() {
 		return m_opState;
+	}
+
+	public PatternItem getPatternItem() {
+		return m_patternItem;
+	}
+
+	public Collection<PatternItem> getPatternItems() {
+		return m_patternItems;
 	}
 
 	public ProductLine getProductLine() {
@@ -186,22 +208,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<String, Domain> getProductLineToDomains() {
 		return m_productLineToDomains;
-	}
-
-	public List<String> getDomainList() {
-		return domainList;
-	}
-
-	public void setDomainList(List<String> domainList) {
-		this.domainList = domainList;
-	}
-
-	public List<String> getExceptionList() {
-		return exceptionList;
-	}
-
-	public void setExceptionList(List<String> exceptionList) {
-		this.exceptionList = exceptionList;
 	}
 
 	public Map<ProductLine, List<MetricItemConfig>> getProductMetricConfigs() {
@@ -218,6 +224,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getReportType() {
 		return "";
+	}
+
+	public Map<String, List<ProductLine>> getTypeToProductLines() {
+		return m_typeToProductLines;
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -244,16 +254,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_domainConfig = domainConfig;
 	}
 
+	public void setDomainList(List<String> domainList) {
+		this.domainList = domainList;
+	}
+
 	public void setEdgeConfig(EdgeConfig edgeConfig) {
 		m_edgeConfig = edgeConfig;
-	}
-
-	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
-		m_exceptionLimit = exceptionLimit;
-	}
-
-	public void setExceptionLimits(List<ExceptionLimit> exceptionLimits) {
-		m_exceptionLimits = exceptionLimits;
 	}
 
 	public void setExceptionExclude(ExceptionExclude exceptionExclude) {
@@ -264,6 +270,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_exceptionExcludes = exceptionExcludes;
 	}
 
+	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
+		m_exceptionLimit = exceptionLimit;
+	}
+
+	public void setExceptionLimits(List<ExceptionLimit> exceptionLimits) {
+		m_exceptionLimits = exceptionLimits;
+	}
+
+	public void setExceptionList(List<String> exceptionList) {
+		this.exceptionList = exceptionList;
+	}
+
 	public void setGraphConfig(TopologyGraphConfig config) {
 		m_config = config;
 	}
@@ -272,12 +290,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_metricItemConfig = metricItemConfig;
 	}
 
+	public void setMetricItemConfigRule(String metricItemConfigRule) {
+		this.m_metricItemConfigRule = metricItemConfigRule;
+	}
+
 	public void setOpState(boolean result) {
 		if (result) {
 			m_opState = SUCCESS;
 		} else {
 			m_opState = FAIL;
 		}
+	}
+
+	public void setPatternItem(PatternItem patternItem) {
+		m_patternItem = patternItem;
+	}
+
+	public void setPatternItems(Collection<PatternItem> patternItems) {
+		m_patternItems = patternItems;
 	}
 
 	public void setProductLine(ProductLine productLine) {
@@ -304,28 +334,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_projects = projects;
 	}
 
-	public Map<String, List<ProductLine>> getTypeToProductLines() {
-		return m_typeToProductLines;
-	}
-
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
 		m_typeToProductLines = typeToProductLines;
-	}
-
-	public PatternItem getPatternItem() {
-		return m_patternItem;
-	}
-
-	public void setPatternItem(PatternItem patternItem) {
-		m_patternItem = patternItem;
-	}
-
-	public Collection<PatternItem> getPatternItems() {
-		return m_patternItems;
-	}
-
-	public void setPatternItems(Collection<PatternItem> patternItems) {
-		m_patternItems = patternItems;
 	}
 
 	public static class Edge {

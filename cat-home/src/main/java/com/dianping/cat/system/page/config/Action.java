@@ -6,7 +6,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	PROJECT_UPDATE("update"),
 
 	PROJECT_UPDATE_SUBMIT("updateSubmit"),
-	
+
 	PROJECT_DELETE("projectDelete"),
 
 	AGGREGATION_ALL("aggregations"),
@@ -55,38 +55,42 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("metricConfigAddSumbit"),
 
+	METRIC_RULE_ADD_OR_UPDATE("metricRuleAdd"),
+
+	METRIC_RULE_ADD_OR_UPDATE_SUBMIT("metricRuleAddSubmit"),
+
 	METRIC_CONFIG_DELETE("metricConfigDelete"),
-	
+
 	DOMAIN_METRIC_RULE_CONFIG_UPDATE("domainMetricRuleConfigUpdate"),
 
 	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
-	
+
 	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 
 	EXCEPTION("exception"),
 
 	EXCEPTION_THRESHOLD_UPDATE("exceptionThresholdUpdate"),
-	
+
 	EXCEPTION_THRESHOLD_ADD("exceptionThresholdAdd"),
 
 	EXCEPTION_THRESHOLD_UPDATE_SUBMIT("exceptionThresholdUpdateSubmit"),
 
 	EXCEPTION_THRESHOLD_DELETE("exceptionThresholdDelete"),
-	
+
 	EXCEPTION_EXCLUDE_UPDATE("exceptionExcludeUpdate"),
-	
+
 	EXCEPTION_EXCLUDE_ADD("exceptionExcludeAdd"),
-	
+
 	EXCEPTION_EXCLUDE_UPDATE_SUBMIT("exceptionExcludeUpdateSubmit"),
-	
+
 	EXCEPTION_EXCLUDE_DELETE("exceptionExcludeDelete"),
 
 	BUG_CONFIG_UPDATE("bugConfigUpdate"),
 
 	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
-	
+
 	METRIC_GROUP_CONFIG_UPDATE("metricGroupConfigUpdate"),
-	
+
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate");
 	
 	private String m_name;

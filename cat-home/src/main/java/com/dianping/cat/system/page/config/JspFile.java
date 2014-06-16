@@ -29,20 +29,24 @@ public enum JspFile {
 
 	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("/jsp/system/metric/metricConfigs.jsp"),
 
+	METRIC_RULE_ADD_OR_UPDATE("/jsp/system/metric/metricRuleAdd.jsp"),
+
+	METRIC_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/metric/metricConfigs.jsp"),
+
 	METRIC_CONFIG_LIST("/jsp/system/metric/metricConfigs.jsp"),
-	
+
 	DOMAIN_METRIC_RULE_CONFIG_UPDATE("/jsp/system/domainMetricRule/domainMetricRuleConfig.jsp"),
-	
+
 	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metricRule/metricRuleConfig.jsp"),
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
-	
+
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 
 	EXCEPTION("/jsp/system/exception/exception.jsp"),
 
 	EXCEPTION_THRESHOLD_CONFIG("/jsp/system/exception/exceptionThresholdConfig.jsp"),
-	
+
 	EXCEPTION_EXCLUDE_CONFIG("/jsp/system/exception/exceptionExcludeConfig.jsp"),
 
 	BUG_CONFIG_UPDATE("/jsp/system/bug/bugConfig.jsp"),

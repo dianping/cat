@@ -129,25 +129,22 @@ public class ExceptionAlert implements Task, LogEnabled {
 		double totalErrorLimit = totalLimitPair.getValue();
 		double totalException = 0;
 
-		// different exception -> numbers
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 
-			if (isExcludedException(domain, exceptionName)) {
-				continue;
-			}
+			if (!isExcludedException(domain, exceptionName)) {
+				double value = entry.getValue().doubleValue();
+				Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
+				double warnLimit = limitPair.getKey();
+				double errorLimit = limitPair.getValue();
 
-			double value = entry.getValue().doubleValue();
-			Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
-			double warnLimit = limitPair.getKey();
-			double errorLimit = limitPair.getValue();
+				totalException += value;
 
-			totalException += value;
-
-			if (errorLimit > 0 && value > errorLimit) {
-				alertExceptions.add(new AlertException(exceptionName, ERROR_FLAG, value));
-			} else if (warnLimit > 0 && value > warnLimit) {
-				alertExceptions.add(new AlertException(exceptionName, WARN_FLAG, value));
+				if (errorLimit > 0 && value > errorLimit) {
+					alertExceptions.add(new AlertException(exceptionName, ERROR_FLAG, value));
+				} else if (warnLimit > 0 && value > warnLimit) {
+					alertExceptions.add(new AlertException(exceptionName, WARN_FLAG, value));
+				}
 			}
 		}
 
@@ -166,7 +163,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		// different domain -> [excepitons:numbers]
 		for (Item item : items) {
 			List<AlertException> domainAlertExceptions = buildDomainAlertExceptionList(item);
-			
+
 			if (!domainAlertExceptions.isEmpty()) {
 				alertExceptions.put(item.getDomain(), domainAlertExceptions);
 			}
