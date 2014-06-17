@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.system;
+package com.dianping.cat.agent.monitor.executors.system;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,8 +13,8 @@ import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Swap;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemPerformanceExecutor extends AbstractExecutor {
 

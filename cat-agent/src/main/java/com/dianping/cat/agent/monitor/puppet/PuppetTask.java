@@ -3,43 +3,46 @@ package com.dianping.cat.agent.monitor.puppet;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.agent.monitor.puppet.util.CreatDir;
-import com.dianping.cat.agent.monitor.puppet.util.GetReaderPostion;
-import com.dianping.cat.agent.monitor.puppet.util.Parse;
-import com.dianping.cat.agent.monitor.puppet.util.RunSysCmd;
-import com.dianping.cat.agent.monitor.puppet.util.SendHttp;
-import com.dianping.cat.agent.monitor.puppet.util.SetReaderPostion;
+import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.EnvironmentConfig;
+import com.dianping.cat.message.Transaction;
 
 public class PuppetTask implements Task, Initializable {
 
-	private static String m_logFile;
+	@Inject
+	private EnvironmentConfig m_environmentConfig;
 
-	private static String m_lineFile;
+	private DataSender m_dataSender;
 
-	private static Logger puppetLogger = Logger.getLogger("myLogger");
+	private AlterationParser m_alterationParser;
+
+	private static final String LOG_FILE = "/var/log/messages";
+
+	private static final int DURATION = 60 * 1000;
+
+	private ReaderManager m_readerManager = new ReaderManager();
 
 	@Override
 	public void run() {
-		SendHttp sendhttp = new SendHttp();
-		Parse parse = new Parse();
-		GetReaderPostion getreaderpostion = new GetReaderPostion();
-		SetReaderPostion setreaderpostion = new SetReaderPostion();
 		boolean active = true;
 		Long end_position = 0L;
-		RunSysCmd runsyscmd = new RunSysCmd();
+		Transaction t = Cat.newTransaction("Puppet", "Task");
 
 		while (active) {
-			Alertation alertation = null;
-			Long position = getreaderpostion.getReaderPostion(m_lineFile);
+			long current = System.currentTimeMillis();
+			Alteration alertation = null;
+			Long position = m_readerManager.queryPointer();
 			RandomAccessFile reader = null;
+
 			try {
-				reader = new RandomAccessFile(m_logFile, "r");
+				reader = new RandomAccessFile(LOG_FILE, "r");
+
 				reader.seek(position);
 				// 判断日志是否切割了,一定要放在while((line=reader.readLine())!=null)之前，否则回导致反复读取
 				if (position >= 2) {
@@ -48,54 +51,50 @@ public class PuppetTask implements Task, Initializable {
 						reader.readChar();
 						reader.seek(position);
 					} catch (IOException e) {
-						setreaderpostion.setReaderPostion(m_lineFile, 0L);
+						m_readerManager.updatePointer(0L);
 						reader.seek(0L);
-						puppetLogger.error(e.getMessage(), e);
+						Cat.logError(e);
 					}
 				}
 
 				String line = null;
 				while ((line = reader.readLine()) != null) {
-					alertation = parse.parse(line);
+					alertation = m_alterationParser.parse(line);
+
 					if (alertation != null) {
-						sendhttp.sendHttp(alertation);
-					} else {
-						continue;
+						m_dataSender.send(alertation);
 					}
 				}
 				end_position = reader.getFilePointer();
 
-			} catch (IOException e) {
-				puppetLogger.error("读文件异常:" + m_logFile);
-				puppetLogger.error(e.getMessage(), e);
-			} finally {
 				if (end_position > position) {
-					setreaderpostion.setReaderPostion(m_lineFile, end_position);
+					m_readerManager.updatePointer(end_position);
 				}
+				t.setStatus(Transaction.SUCCESS);
+			} catch (IOException e) {
+				Cat.logError("读文件异常:" + LOG_FILE, e);
+			} finally {
 				try {
-					reader.close();
+					if (reader != null) {
+						reader.close();
+					}
 				} catch (IOException e) {
-					puppetLogger.error(e.getMessage(), e);
+					Cat.logError(e);
 				}
-				puppetLogger.info("本次读取的开始偏移量:" + position + " 末尾偏移量:" + end_position);
-			}
-			try {
-				Thread.sleep(1000 * 5);
-			} catch (InterruptedException e) {
-				puppetLogger.error(e.getMessage(), e);
+
+				long duration = System.currentTimeMillis() - current;
+
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
+
+				t.complete();
 			}
 		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_logFile = "/var/log/messages";
-		m_lineFile = "/var/log/line_random.log";
-
-		CreatDir creatdir = new CreatDir();
-		creatdir.creatDir("/data/applogs/monitor");
-		PropertyConfigurator.configure("log4j.properties");
-//		Threads.forGroup("Cat").start(this);
 	}
 
 	@Override
@@ -106,5 +105,12 @@ public class PuppetTask implements Task, Initializable {
 	@Override
 	public void shutdown() {
 
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_dataSender = new DataSender(m_environmentConfig);
+		m_alterationParser = new AlterationParser(m_environmentConfig);
+		Threads.forGroup("Cat").start(this);
 	}
 }

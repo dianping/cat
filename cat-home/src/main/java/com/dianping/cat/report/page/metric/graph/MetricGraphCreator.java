@@ -35,6 +35,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			LineChart lineChart = new LineChart();
 
 			buildLineChartTitle(alertKeys, lineChart, key);
+			lineChart.setUnit("Value/分钟");
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);

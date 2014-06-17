@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.jvm;
+package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMMemoryExecutor extends AbstractExecutor {
 
