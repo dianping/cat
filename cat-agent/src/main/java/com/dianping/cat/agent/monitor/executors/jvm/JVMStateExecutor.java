@@ -1,11 +1,11 @@
-package com.dianping.cat.agent.monitor.jvm;
+package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMStateExecutor extends AbstractExecutor {
 

@@ -1,6 +1,8 @@
-package com.dianping.cat.agent.monitor;
+package com.dianping.cat.agent.monitor.executors;
 
 import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.agent.monitor.EnvironmentConfig;
 
 public abstract class AbstractExecutor implements Executor {
 

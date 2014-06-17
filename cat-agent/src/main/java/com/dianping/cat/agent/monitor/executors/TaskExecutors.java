@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor;
+package com.dianping.cat.agent.monitor.executors;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +38,9 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 
 	@Override
 	public void run() {
-		while (true) {
+		boolean active = true;
+
+		while (active) {
 			Transaction t = Cat.newTransaction("Data", "Fetch");
 
 			try {
@@ -48,7 +50,7 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 					Transaction t2 = Cat.newTransaction("Executor", executor.getId());
 					try {
 						List<DataEntity> entities = executor.execute();
-						
+
 						m_sender.put(entities);
 						t2.setStatus(Transaction.SUCCESS);
 					} catch (Exception e) {
@@ -59,14 +61,13 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 					}
 				}
 				long duration = System.currentTimeMillis() - current;
-				long sleeptime = DURATION - duration;
 
-				if (sleeptime > 0) {
-					try {
-						Thread.sleep(sleeptime);
-					} catch (InterruptedException e) {
-						break;
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
 					}
+				} catch (InterruptedException e) {
+					active = false;
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {

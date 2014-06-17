@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.system;
+package com.dianping.cat.agent.monitor.executors.system;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,8 +15,8 @@ import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Uptime;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemStateExecutor extends AbstractExecutor implements Initializable {
 
