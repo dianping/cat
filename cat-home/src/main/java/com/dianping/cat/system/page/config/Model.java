@@ -73,9 +73,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<String, Domain> m_productLineToDomains;
 
-	private List<String> domainList;
+	private List<String> m_domainList;
 
-	private List<String> exceptionList;
+	private List<String> m_exceptionList;
 
 	public static final String SUCCESS = "Success";
 
@@ -139,7 +139,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public List<String> getDomainList() {
-		return domainList;
+		return m_domainList;
 	}
 
 	public List<String> getDomains() {
@@ -171,7 +171,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public List<String> getExceptionList() {
-		return exceptionList;
+		return m_exceptionList;
 	}
 
 	public String getIpAddress() {
@@ -255,7 +255,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setDomainList(List<String> domainList) {
-		this.domainList = domainList;
+		m_domainList = domainList;
 	}
 
 	public void setEdgeConfig(EdgeConfig edgeConfig) {
@@ -279,7 +279,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setExceptionList(List<String> exceptionList) {
-		this.exceptionList = exceptionList;
+		m_exceptionList = exceptionList;
 	}
 
 	public void setGraphConfig(TopologyGraphConfig config) {
@@ -291,7 +291,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setMetricItemConfigRule(String metricItemConfigRule) {
-		this.m_metricItemConfigRule = metricItemConfigRule;
+		m_metricItemConfigRule = metricItemConfigRule;
 	}
 
 	public void setOpState(boolean result) {

@@ -1,392 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
-	<rule id="F501InError">
-		<metric-item type="regex" monitorCount="false" monitorSum="false" monitorAvg="true">
-			f5-2400-1-dianping-com(s).+(s).*(?=inerrors$)
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="3">
-				<sub-condition type="MaxVal">500</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="ErrorAndDiscard">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s).*(?=outerrors$)
-		</metric-item>
-		<metric-item type="regex">
-			f5-2400-2-dianping-com(s).+(s).*(?=errors$)
-		</metric-item>
-		<metric-item type="regex">
-			f5.*(s).+(s).*(?=discards$)
-		</metric-item>
-		<metric-item type="regex">
-			switch.*(s).+(s).*(?=errors$)
-		</metric-item>
-		<metric-item type="regex">
-			switch.*(s).+(s).*(?=discards$)
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="3">
-				<sub-condition type="MaxVal">30</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CTC-QW_E8030-IN">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G(s).+(s)GigabitEthernet[12]/0/[12]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">1179648000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CTC-QW_E8030-OUT">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G(s).+(s)GigabitEthernet[12]/0/[12]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">2359296000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CTC-F5v2400-1-IN">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G(s).+(s)GigabitEthernet1/0/[59]-in
-			switch-SH-HM-C3750G(s).+(s)GigabitEthernet2/0/[78]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">2359296000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CTC-F5v2400-1-OUT">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G(s).+(s)GigabitEthernet1/0/[59]-out
-			switch-SH-HM-C3750G(s).+(s)GigabitEthernet2/0/[78]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">1179648000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CNC-CNC-IN">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/[12]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">786432000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CNC-CNC-OUT">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/[12]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">1966080000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CNC-F5v2400-1-IN">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/7-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">1966080000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="C3750CNC-F5v2400-1-OUT">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G(s).+(s)GigabitEthernet1/0/7-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">786432000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="F5v2400-1-C3750CNC-IN">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s)1/1-7-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">786432000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="F5v2400-1-C3750CNC-OUT">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s)1/1-7-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">1966080000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="F5v2400-1-C3750CTC-IN">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s)1/1-[1268]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">3179648000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="F5v2400-1-C3750CTC-OUT">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s)1/1-[1268]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">2359296000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="F5v2400-1-N7K-1-IN">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s)1/1-[34]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">5505024000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="F5v2400-1-N7K-1-OUT">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com(s).+(s)1/1-[34]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">3145728000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-F5v2400-1-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/25-in
-			switch-SH-N7010-A(s).+(s)Ethernet3/26-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">3145728000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-F5v2400-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/25-out
-			switch-SH-N7010-A(s).+(s)Ethernet3/26-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">5505024000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-N7K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-in
-			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">6291456000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-N7K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-out
-			switch-SH-N7010-A(s).+(s)Ethernet3/[1234]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">393216000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-N5K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/32-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-N5K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/32-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-HM-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/16-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">13369344000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-1-HM-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A(s).+(s)Ethernet3/16-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">13369344000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-2-N7K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-B(s).+(s)Ethernet3/[1234]-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">393216000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-2-N7K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-B(s).+(s)Ethernet3/[1234]-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">6291456000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-2-N5K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-B(s).+(s)Ethernet3/32-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N7K-2-N5K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-B(s).+(s)Ethernet3/32-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-1-N7K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/43-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-1-N7K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/43-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-1-N5K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/45-in
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/46-in
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/47-in
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/48-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">393216000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-1-N5K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/45-out
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/46-out
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/47-out
-			switch-SH-N5596UP-1(s).+(s)Ethernet1/48-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">393216000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-2-N5K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/45-in
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/46-in
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/47-in
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/48-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">393216000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-2-N5K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/45-out
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/46-out
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/47-out
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/48-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">393216000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-2-N7K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/43-in
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
-	<rule id="N5K-2-N7K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2(s).+(s)Ethernet1/43-out
-		</metric-item>
-		<config starttime="00:00" endtime="24:00">
-			<condition minute="1">
-				<sub-condition type="MaxVal">27525120000</sub-condition>
-			</condition>
-		</config>
-	</rule>
+   <rule id="SearchShop:Metric:arts-shop-sc">
+      <metric-item type="id" monitorCount="true" monitorSum="true" monitorAvg="true" text="SearchShop:Metric:arts-shop-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="75.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReceiptVerifyService:Metric:Receipt Verify Success">
+      <metric-item type="id" monitorCount="true" text="ReceiptVerifyService:Metric:Receipt Verify Success"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100Mb.s"></sub-condition>
+            <sub-condition type="DescPer" text="70.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ShopHotelServer:Metric:trip_intime_price_count">
+      <metric-item type="id" monitorCount="true" text="ShopHotelServer:Metric:trip_intime_price_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="800.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="HotelSearchWeb:Metric:trip_hotel_search_pv">
+      <metric-item type="id" monitorCount="true" text="HotelSearchWeb:Metric:trip_hotel_search_pv"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="Unipay:Metric:WEIXIN_PUB.payment.success">
+      <metric-item type="id" monitorCount="true" text="Unipay:Metric:WEIXIN_PUB.payment.success"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess">
+      <metric-item type="id" monitorCount="true" text="MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="70.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail">
+      <metric-item type="id" monitorCount="true" text="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchTuanGouRec:Metric:arts-tuangourec-sc">
+      <metric-item type="id" monitorCount="true" text="SearchTuanGouRec:Metric:arts-tuangourec-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchTuanGou:Metric:arts-tuangou-sc">
+      <metric-item type="id" monitorCount="true" text="SearchTuanGou:Metric:arts-tuangou-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouTracking:Metric:对外合作成功引流">
+      <metric-item type="id" monitorCount="true" text="TuanGouTracking:Metric:对外合作成功引流"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="800.0"></sub-condition>
+            <sub-condition type="DescPer" text="70.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouTracking:Metric:Open对外合作成功引流">
+      <metric-item type="id" monitorCount="true" text="TuanGouTracking:Metric:Open对外合作成功引流"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchAd:Metric:arts-ad-sc">
+      <metric-item type="id" monitorCount="true" text="SearchAd:Metric:arts-ad-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="75.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="AccountMQ:Metric:WeiXinLogin">
+      <metric-item type="id" monitorCount="true" text="AccountMQ:Metric:WeiXinLogin"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="20000.0"></sub-condition>
+            <sub-condition type="DescPer" text="200.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchDavinci:Metric:arts-takeaway-sc">
+      <metric-item type="id" monitorCount="true" text="SearchDavinci:Metric:arts-takeaway-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchTuanGou:Metric:arts-tuangoux-sc">
+      <metric-item type="id" text="SearchTuanGou:Metric:arts-tuangoux-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMApiSubWeb:Metric:weixin_index">
+      <metric-item type="id" text="TuanGouMApiSubWeb:Metric:weixin_index"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMApiSubWeb:Metric:weixin_detail">
+      <metric-item type="id" text="TuanGouMApiSubWeb:Metric:weixin_detail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchShopwx:Metric:arts-shopwx-sc">
+      <metric-item type="id" monitorCount="true" text="SearchShopwx:Metric:arts-shopwx-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileWapMWeb:Metric:ReviewList_WeiXin_Ref">
+      <metric-item type="id" monitorCount="true" text="MobileWapMWeb:Metric:ReviewList_WeiXin_Ref"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileWapMWeb:Metric:ajaxPictureDetail">
+      <metric-item type="id" monitorCount="true" text="MobileWapMWeb:Metric:ajaxPictureDetail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMMWeb:Metric:weixin_detail">
+      <metric-item type="id" monitorCount="true" text="TuanGouMMWeb:Metric:weixin_detail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMMWeb:Metric:weixin_index">
+      <metric-item type="id" monitorCount="true" text="TuanGouMMWeb:Metric:weixin_index"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="300.0"></sub-condition>
+            <sub-condition type="DescPer" text="80.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileWapMWeb:Metric:PictureList_WeiXin_Ref">
+      <metric-item type="id" monitorCount="true" text="MobileWapMWeb:Metric:PictureList_WeiXin_Ref"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ShoppicService:Metric:PCUploadPicCount">
+      <metric-item type="id" monitorCount="true" text="ShoppicService:Metric:PCUploadPicCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ShoppicService:Metric:MobileUploadPicCount">
+      <metric-item type="id" monitorCount="true" text="ShoppicService:Metric:MobileUploadPicCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReviewServer:Metric:Mobile-AddReview">
+      <metric-item type="id" monitorCount="true" text="ReviewServer:Metric:Mobile-AddReview"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReviewServer:Metric:PC-AddReview">
+      <metric-item type="id" monitorCount="true" text="ReviewServer:Metric:PC-AddReview"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReviewServer:Metric:MWap-AddReview">
+      <metric-item type="id" monitorCount="true" text="ReviewServer:Metric:MWap-AddReview"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/find_businesses">
+      <metric-item type="id" monitorCount="true" text="OpenPremiumAPI:Metric:/premium/wechat/find_businesses"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby">
+      <metric-item type="id" monitorCount="true" text="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTel_count">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:getPhoneByTel_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:updatePhoneRecord_count">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:updatePhoneRecord_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:add_one_to_BookingUser_table">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:add_one_to_BookingUser_table"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:updatePhoneRecord_fail">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:updatePhoneRecord_fail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTel_fail">
+      <metric-item type="id" monitorCount="true" text="weddingMarketingWeb:Metric:getPhoneByTel_fail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="AccountMQ:Metric:QQLogin">
+      <metric-item type="id" monitorCount="true" text="AccountMQ:Metric:QQLogin"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="50.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin">
+      <metric-item type="id" monitorCount="true" text="OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchPicasso:Metric:mtcorder.FullIndex.DocCount">
+      <metric-item type="id" monitorCount="true" text="SearchPicasso:Metric:mtcorder.FullIndex.DocCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchShop:Metric:FullIndex.DocCount">
+      <metric-item type="id" monitorCount="true" text="SearchShop:Metric:FullIndex.DocCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushOnlineCount">
+      <metric-item type="id" monitorCount="true" text="MOSSDpPushServer:Metric:dpPushOnlineCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushReceivedCount">
+      <metric-item type="id" monitorCount="true" text="MOSSDpPushServer:Metric:dpPushReceivedCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushCount">
+      <metric-item type="id" monitorCount="true" text="MOSSDpPushServer:Metric:dpPushCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
 </monitor-rules>
