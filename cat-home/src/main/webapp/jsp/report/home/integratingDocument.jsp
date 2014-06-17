@@ -98,7 +98,7 @@
       </config>
   </xmp>
   </dd>
-  <dt><h5 class="text-success">5.CAT的Log4j集成</h5></dt>
+  <dt><h5 class="text-success">5.CAT的Log4j集成 【建议所有Log都打到CAT，这样才能更快发现问题】</h5></dt>
   <dd><p class="detailContent text-error">业务程序的所有异常都通过记录到CAT中，方便看到业务程序的问题，建议在Root节点中添加次appendar</p>
   <p>a）在Log4j的xml中，加入Cat的Appender></p>
   <xmp class="well">
