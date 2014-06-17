@@ -151,7 +151,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 			break;
 		}
 
-		return ((size / 3) + 1) * 190 + 20;
+		if (size % 3 == 0) {
+			return (size / 3) * 190;
+		} else {
+			return ((size / 3) + 1) * 190;
+		}
 	}
 
 	public String getHeapUsageGraph() {
