@@ -13,7 +13,7 @@
     <attribute name="monitorCount" value-type="boolean" />
     <attribute name="monitorSum" value-type="boolean" />
     <attribute name="monitorAvg" value-type="boolean" />
-    <element name="text" value-type="String" text="true" />
+    <attribute name="text" value-type="String" />
   </entity>
   <entity name="config">
     <attribute name="starttime" value-type="String" />
@@ -26,7 +26,7 @@
   </entity>
   <entity name="sub-condition">
     <attribute name="type" value-type="String" />
-    <element name="text" value-type="String" text="true" />
+    <attribute name="text" value-type="String" />
   </entity>
 </model>
 

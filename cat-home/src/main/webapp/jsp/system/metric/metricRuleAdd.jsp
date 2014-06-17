@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
@@ -14,7 +15,7 @@
 	<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
 	<table class="table table-striped table-bordered table-condensed table-hover">
 		<tr>
-			<td><textarea name="content" style="width:auto" rows="20" cols="100">${model.metricItemConfigRule}</textarea></td>
+			<td><textarea name="content" style="width:auto" rows="20" cols="100">${fn:escapeXml(model.metricItemConfigRule)}</textarea></td>
 		</tr>
 		<tr>
 			<td style="text-align:center">
