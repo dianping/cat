@@ -161,7 +161,6 @@ public class IpService implements Initializable {
 				m_areaIds[i] = Integer.parseInt(strs[2]);
 				m_corpIds[i] = Integer.parseInt(strs[3]);
 			}
-
 		} catch (IOException e) {
 			Cat.logError(e);
 		} finally {
