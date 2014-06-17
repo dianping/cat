@@ -63,8 +63,6 @@ public class PuppetTask implements Task, Initializable {
 
 					if (alertation != null) {
 						m_dataSender.send(alertation);
-					} else {
-						continue;
 					}
 				}
 				end_position = reader.getFilePointer();
@@ -76,7 +74,6 @@ public class PuppetTask implements Task, Initializable {
 			} catch (IOException e) {
 				Cat.logError("读文件异常:" + LOG_FILE, e);
 			} finally {
-
 				try {
 					if (reader != null) {
 						reader.close();
