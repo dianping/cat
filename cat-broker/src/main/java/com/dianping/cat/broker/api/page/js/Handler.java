@@ -46,24 +46,24 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		long timestamp = payload.getTimestamp();
 		String error = payload.getError();
-		String file = payload.getFile();
+		String url = payload.getUrl();
 		String host = parseHost();
 		HttpServletResponse response = ctx.getHttpServletResponse();
 
 		if (host.contains("dianping")) {
-			if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
+			if (url == null || url.length() == 0 || (!url.startsWith("http:"))) {
 				if (m_referer != null) {
-					file = m_referer;
+					url = m_referer;
 				} else {
-					file = "unknown";
+					url = "unknown";
 				}
 			}
 
-			int index = file.indexOf('?');
+			int index = url.indexOf('?');
 			if (index > -1) {
-				file = file.substring(0, index);
+				url = url.substring(0, index);
 			}
-			Cat.logEvent("Error", parseFile(file), "Error", error);
+			Cat.logEvent("Error", parseFile(url), "Error", error);
 			Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 			      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 

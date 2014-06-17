@@ -27,9 +27,20 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	@FieldMeta("data")
 	private String m_data;
 	
+	@FieldMeta("url")
+	private String m_url;
+	
 	@FieldMeta("v")
 	private String m_version;
 	
+	public String getUrl() {
+   	return m_url;
+   }
+
+	public void setUrl(String url) {
+   	m_url = url;
+   }
+
 	@Override
 	public Action getAction() {
 		return m_action;
