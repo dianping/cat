@@ -100,23 +100,28 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		Rule rule = m_config.getRules().get(metricKey);
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
 
-		for (MetricItem item : rule.getMetricItems()) {
-			if (type == MetricType.COUNT && item.isMonitorCount()) {
-				configs.addAll(rule.getConfigs());
-				break;
-			} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-				configs.addAll(rule.getConfigs());
-				break;
-			} else if (type == MetricType.SUM && item.isMonitorSum()) {
-				configs.addAll(rule.getConfigs());
-				break;
-			}
-		}
-
-		if (configs.size() == 0) {
+		if (rule == null) {
 			configs.add(buildDefaultConfig());
+			return configs;
+		} else {
+			for (MetricItem item : rule.getMetricItems()) {
+				if (type == MetricType.COUNT && item.isMonitorCount()) {
+					configs.addAll(rule.getConfigs());
+					break;
+				} else if (type == MetricType.AVG && item.isMonitorAvg()) {
+					configs.addAll(rule.getConfigs());
+					break;
+				} else if (type == MetricType.SUM && item.isMonitorSum()) {
+					configs.addAll(rule.getConfigs());
+					break;
+				}
+			}
+
+			if (configs.size() == 0) {
+				configs.add(buildDefaultConfig());
+			}
+			return configs;
 		}
-		return configs;
 	}
 
 	public Rule queryRule(String metricKey) {
