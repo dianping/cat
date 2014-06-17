@@ -23,7 +23,7 @@ import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
-	private static final String CONFIG_NAME = "businessRulesConfig";
+	private static final String CONFIG_NAME = "businessRuleConfig";
 
 	public String updateRule(String ruleContent) throws SAXException, IOException {
 		Rule rule = DefaultSaxParser.parseEntity(Rule.class, ruleContent);

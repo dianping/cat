@@ -1,392 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
 	<rule id="F501InError">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=inerrors$)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=inerrors$)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="3">
-				<sub-condition type="MaxVal">500</sub-condition>
+				<sub-condition type="MaxVal" text="500"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="ErrorAndDiscard">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=outerrors$)
-		</metric-item>
-		<metric-item type="regex">
-			f5-2400-2-dianping-com.*(?=errors$)
-		</metric-item>
-		<metric-item type="regex">
-			f5.*(?=discards$)
-		</metric-item>
-		<metric-item type="regex">
-			switch.*(?=errors$)
-		</metric-item>
-		<metric-item type="regex">
-			switch.*(?=discards$)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=outerrors$)"></metric-item>
+		<metric-item type="regex" text="f5-2400-2-dianping-com.*(?=errors$)"></metric-item>
+		<metric-item type="regex" text="f5.*(?=discards$)"></metric-item>
+		<metric-item type="regex" text="switch.*(?=errors$)"></metric-item>
+		<metric-item type="regex" text="switch.*(?=discards$)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="3">
-				<sub-condition type="MaxVal">30</sub-condition>
+				<sub-condition type="MaxVal" text="30"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CTC-QW_E8030-IN">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G.*(?=GigabitEthernet[12]/0/[12]-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-HM-C3750G.*(?=GigabitEthernet[12]/0/[12]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">150Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="150Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CTC-QW_E8030-OUT">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G.*(?=GigabitEthernet[12]/0/[12]-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-HM-C3750G.*(?=GigabitEthernet[12]/0/[12]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">300Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="300Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CTC-F5v2400-1-IN">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G.*(?=GigabitEthernet1/0/[59]-in)
-			switch-SH-HM-C3750G.*(?=GigabitEthernet2/0/[78]-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-HM-C3750G.*(?=GigabitEthernet1/0/[59]-in)
+			switch-SH-HM-C3750G.*(?=GigabitEthernet2/0/[78]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">300Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="300Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CTC-F5v2400-1-OUT">
-		<metric-item type="regex">
-			switch-SH-HM-C3750G.*(?=GigabitEthernet1/0/[59]-out)
-			switch-SH-HM-C3750G.*(?=GigabitEthernet2/0/[78]-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-HM-C3750G.*(?=GigabitEthernet1/0/[59]-out)
+			switch-SH-HM-C3750G.*(?=GigabitEthernet2/0/[78]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">150Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="150Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CNC-CNC-IN">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/[12]-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/[12]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">100Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="100Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CNC-CNC-OUT">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/[12]-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/[12]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">250Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="250Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CNC-F5v2400-1-IN">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/7-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/7-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">250Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="250Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="C3750CNC-F5v2400-1-OUT">
-		<metric-item type="regex">
-			switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/7-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/7-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">100Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="100Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="F5v2400-1-C3750CNC-IN">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=:1/1-7-in)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=:1/1-7-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">100Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="100Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="F5v2400-1-C3750CNC-OUT">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=:1/1-7-out)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=:1/1-7-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">250Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="250Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="F5v2400-1-C3750CTC-IN">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=:1/1-[1268]-in)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=:1/1-[1268]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">150Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="150Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="F5v2400-1-C3750CTC-OUT">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=:1/1-[1268]-out)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=:1/1-[1268]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">300Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="300Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="F5v2400-1-N7K-1-IN">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=:1/1-[34]-in)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=:1/1-[34]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">700Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="700Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="F5v2400-1-N7K-1-OUT">
-		<metric-item type="regex">
-			f5-2400-1-dianping-com.*(?=:1/1-[34]-out)
-		</metric-item>
+		<metric-item type="regex" text="f5-2400-1-dianping-com.*(?=:1/1-[34]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">400Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="400Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-F5v2400-1-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/25-in)
-			switch-SH-N7010-A.*(?=Ethernet3/26-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/25-in)
+			switch-SH-N7010-A.*(?=Ethernet3/26-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">400Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="400Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-F5v2400-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/25-out)
-			switch-SH-N7010-A.*(?=Ethernet3/26-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/25-out)
+			switch-SH-N7010-A.*(?=Ethernet3/26-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">700Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="700Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-N7K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/[1234]-in)
-			switch-SH-N7010-A.*(?=Ethernet3/[1234]-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/[1234]-in)
+			switch-SH-N7010-A.*(?=Ethernet3/[1234]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">800Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="800Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-N7K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/[1234]-out)
-			switch-SH-N7010-A.*(?=Ethernet3/[1234]-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/[1234]-out)
+			switch-SH-N7010-A.*(?=Ethernet3/[1234]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">50Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="50Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-N5K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/32-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/32-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-N5K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/32-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/32-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-HM-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/16-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/16-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">1.7Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="1.7Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-1-HM-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-A.*(?=Ethernet3/16-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-A.*(?=Ethernet3/16-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">1.7Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="1.7Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-2-N7K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-B.*(?=Ethernet3/[1234]-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-B.*(?=Ethernet3/[1234]-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">50Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="50Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-2-N7K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-B.*(?=Ethernet3/[1234]-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-B.*(?=Ethernet3/[1234]-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">800Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="800Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-2-N5K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N7010-B.*(?=Ethernet3/32-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-B.*(?=Ethernet3/32-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N7K-2-N5K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N7010-B.*(?=Ethernet3/32-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N7010-B.*(?=Ethernet3/32-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-1-N7K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1.*(?=Ethernet1/43-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N5596UP-1.*(?=Ethernet1/43-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-1-N7K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1.*(?=Ethernet1/43-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N5596UP-1.*(?=Ethernet1/43-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-1-N5K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1.*(?=Ethernet1/45-in)
+		<metric-item type="regex" text="switch-SH-N5596UP-1.*(?=Ethernet1/45-in)
 			switch-SH-N5596UP-1.*(?=Ethernet1/46-in)
 			switch-SH-N5596UP-1.*(?=Ethernet1/47-in)
-			switch-SH-N5596UP-1.*(?=Ethernet1/48-in)
-		</metric-item>
+			switch-SH-N5596UP-1.*(?=Ethernet1/48-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">50Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="50Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-1-N5K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-1.*(?=Ethernet1/45-out)
+		<metric-item type="regex" text="switch-SH-N5596UP-1.*(?=Ethernet1/45-out)
 			switch-SH-N5596UP-1.*(?=Ethernet1/46-out)
 			switch-SH-N5596UP-1.*(?=Ethernet1/47-out)
-			switch-SH-N5596UP-1.*(?=Ethernet1/48-out)
-		</metric-item>
+			switch-SH-N5596UP-1.*(?=Ethernet1/48-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">50Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="50Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-2-N5K-1-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2.*(?=Ethernet1/45-in)
+		<metric-item type="regex" text="switch-SH-N5596UP-2.*(?=Ethernet1/45-in)
 			switch-SH-N5596UP-2.*(?=Ethernet1/46-in)
 			switch-SH-N5596UP-2.*(?=Ethernet1/47-in)
-			switch-SH-N5596UP-2.*(?=Ethernet1/48-in)
-		</metric-item>
+			switch-SH-N5596UP-2.*(?=Ethernet1/48-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">50Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="50Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-2-N5K-1-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2.*(?=Ethernet1/45-out)
+		<metric-item type="regex" text="switch-SH-N5596UP-2.*(?=Ethernet1/45-out)
 			switch-SH-N5596UP-2.*(?=Ethernet1/46-out)
 			switch-SH-N5596UP-2.*(?=Ethernet1/47-out)
-			switch-SH-N5596UP-2.*(?=Ethernet1/48-out)
-		</metric-item>
+			switch-SH-N5596UP-2.*(?=Ethernet1/48-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">50Mb/s</sub-condition>
+				<sub-condition type="MaxVal" text="50Mb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-2-N7K-2-IN">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2.*(?=Ethernet1/43-in)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N5596UP-2.*(?=Ethernet1/43-in)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>
 	<rule id="N5K-2-N7K-2-OUT">
-		<metric-item type="regex">
-			switch-SH-N5596UP-2.*(?=Ethernet1/43-out)
-		</metric-item>
+		<metric-item type="regex" text="switch-SH-N5596UP-2.*(?=Ethernet1/43-out)"></metric-item>
 		<config starttime="00:00" endtime="24:00">
 			<condition minute="1">
-				<sub-condition type="MaxVal">3.5Gb/s</sub-condition>
+				<sub-condition type="MaxVal" text="3.5Gb/s"></sub-condition>
 			</condition>
 		</config>
 	</rule>

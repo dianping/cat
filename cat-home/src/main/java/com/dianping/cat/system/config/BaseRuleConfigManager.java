@@ -89,9 +89,7 @@ public abstract class BaseRuleConfigManager {
 		return true;
 	}
 
-	public boolean validate(String type, String con, String key) {
-		String context = con.trim();
-		String metricKey = key.trim();
+	public boolean validate(String type, String context, String metricKey) {
 		if (type.equals("id")) {
 			if (context.equals(metricKey)) {
 				return true;
