@@ -55,7 +55,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 
 			for (Entry<Long, Double> currentEntry : current.entrySet()) {
-				double result = currentEntry.getValue() / 1000.0;
+				double result = currentEntry.getValue() / 1000000.0 / 60;
 
 				convertedData.put(currentEntry.getKey(), result);
 			}
@@ -184,7 +184,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 
 	private String buildUnit(String chartTitle) {
 		if (isFlowMetric(chartTitle)) {
-			return "流量(MB/分钟)";
+			return "流量(MB/秒)";
 		} else {
 			return "value/分钟";
 		}

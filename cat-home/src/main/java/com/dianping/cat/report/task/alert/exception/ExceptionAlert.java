@@ -210,6 +210,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		}
 		boolean active = true;
 		while (active) {
+			long current = System.currentTimeMillis();
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
 			String minuteStr = String.valueOf(minute);
 
@@ -217,12 +218,15 @@ public class ExceptionAlert implements Task, LogEnabled {
 				minuteStr = '0' + minuteStr;
 			}
 			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
-			long current = System.currentTimeMillis();
 
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
 				Collection<List<Item>> items = topMetric.getError().getResult().values();
-				List<Item> item = items.iterator().next();
+				List<Item> item = new ArrayList<Item>();
+
+				if (!items.isEmpty()) {
+					item = items.iterator().next();
+				}
 				Map<String, List<AlertException>> alertExceptions = buildAlertExceptions(item);
 
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
@@ -242,7 +246,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 			try {
 				if (duration < DURATION) {
-					Thread.sleep(TimeUtil.ONE_MINUTE);
+					Thread.sleep(DURATION - duration);
 				}
 			} catch (InterruptedException e) {
 				active = false;

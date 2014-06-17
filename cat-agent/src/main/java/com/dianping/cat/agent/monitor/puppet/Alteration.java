@@ -1,6 +1,13 @@
 package com.dianping.cat.agent.monitor.puppet;
 
-public class Alertation {
+public class Alteration {
+	@Override
+   public String toString() {
+	   return "Alteration [type=" + type + ", ip=" + ip + ", hostname=" + hostname + ", user=" + user + ", url=" + url
+	         + ", op=" + op + ", date=" + date + ", title=" + title + ", content=" + content + ", domain=" + domain
+	         + ", group=" + group + "]";
+   }
+
 	private String type;
 
 	private String ip;

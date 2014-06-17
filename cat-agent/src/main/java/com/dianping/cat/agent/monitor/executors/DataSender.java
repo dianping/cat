@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor;
+package com.dianping.cat.agent.monitor.executors;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -18,6 +18,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.EnvironmentConfig;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
@@ -26,7 +27,7 @@ public class DataSender implements Task, Initializable {
 	@Inject
 	private EnvironmentConfig m_environmentConfig;
 
-	private BlockingQueue<DataEntity> m_entities = new ArrayBlockingQueue<DataEntity>(5000);
+	private static BlockingQueue<DataEntity> m_entities = new ArrayBlockingQueue<DataEntity>(5000);
 
 	private List<DataEntity> m_dataEntities = new ArrayList<DataEntity>();
 
@@ -37,14 +38,19 @@ public class DataSender implements Task, Initializable {
 	public boolean put(List<DataEntity> entities) {
 		boolean result = true;
 
-		for (DataEntity entity : entities) {
-			boolean temp = m_entities.offer(entity);
+		try {
+			for (DataEntity entity : entities) {
+				boolean temp = m_entities.offer(entity, 5, TimeUnit.MILLISECONDS);
 
-			if (!temp) {
-				result = temp;
+				if (!temp) {
+					result = temp;
+				}
 			}
+			return result;
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		return result;
+		return false;
 	}
 
 	private String buildBatchEntities(List<DataEntity> entities) {
@@ -85,7 +91,7 @@ public class DataSender implements Task, Initializable {
 		List<String> servers = m_environmentConfig.getServers();
 
 		for (String server : servers) {
-			String url = m_environmentConfig.buildUrl(server);
+			String url = m_environmentConfig.buildSystemUrl(server);
 			String entityContent = buildBatchEntities(m_dataEntities);
 			String content = "&batch=" + entityContent;
 
@@ -96,17 +102,19 @@ public class DataSender implements Task, Initializable {
 
 	@Override
 	public void run() {
-		while (true) {
+		boolean active = true;
+		
+		while (active) {
 			Transaction t = Cat.newTransaction("Data", "Send");
+			long current = System.currentTimeMillis();
 
 			try {
-				long current = System.currentTimeMillis();
 				int maxSize = MAX_ENTITIES;
 
 				try {
 					while (m_entities.size() > 0 && maxSize > 0) {
 						DataEntity entity = m_entities.poll(5, TimeUnit.MILLISECONDS);
-						
+
 						m_dataEntities.add(entity);
 						maxSize--;
 					}
@@ -122,14 +130,13 @@ public class DataSender implements Task, Initializable {
 					Cat.logError(e);
 				}
 				long duration = System.currentTimeMillis() - current;
-				long sleeptime = DURATION - duration;
 
-				if (sleeptime > 0) {
-					try {
-						Thread.sleep(sleeptime);
-					} catch (InterruptedException e) {
-						break;
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
 					}
+				} catch (InterruptedException e) {
+					active = false;
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
