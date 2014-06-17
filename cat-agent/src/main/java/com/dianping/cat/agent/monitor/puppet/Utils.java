@@ -31,7 +31,7 @@ public class Utils {
 				result.append(lineStr + "\n");
 			}
 			if (p.waitFor() != 0) {
-				if (p.exitValue() != 0) // p.exitValue()==0表示正常结束，1：非正常结束
+				if (p.exitValue() != 0)  // p.exitValue()==0表示正常结束，1：非正常结束
 					Cat.logEvent("Puppet", "命令执行失败?: " + cmd);
 			}
 			inBr.close();
