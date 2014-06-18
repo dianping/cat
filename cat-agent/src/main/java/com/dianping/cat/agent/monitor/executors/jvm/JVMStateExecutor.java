@@ -34,6 +34,7 @@ public class JVMStateExecutor extends AbstractExecutor {
 
 			entity.setId(buildJVMDataEntityId("catalinaLogSize")).setType(SUM_TYPE).setTime(System.currentTimeMillis())
 			      .setValue(kilobytes);
+			addGroupDomainInfo(entity);
 			entities.add(entity);
 		}
 		return entities;
@@ -46,6 +47,7 @@ public class JVMStateExecutor extends AbstractExecutor {
 		long current = System.currentTimeMillis();
 
 		entity.setId(buildJVMDataEntityId("tomcatLive")).setType(AVG_TYPE).setTime(current);
+		addGroupDomainInfo(entity);
 
 		if (pid == null) {
 			entity.setValue(0);

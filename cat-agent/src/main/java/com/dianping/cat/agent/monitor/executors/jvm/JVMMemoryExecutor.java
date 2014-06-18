@@ -55,16 +55,19 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 			DataEntity eden = new DataEntity();
 			eden.setId(buildJVMDataEntityId("edenUsage")).setType(AVG_TYPE).setTime(current)
 			      .setValue(Double.valueOf(metrics[2]) / 100);
+			addGroupDomainInfo(eden);
 			entities.add(eden);
 
 			DataEntity old = new DataEntity();
 			old.setId(buildJVMDataEntityId("oldUsage")).setType(AVG_TYPE).setTime(current)
 			      .setValue(Double.valueOf(metrics[3]) / 100);
+			addGroupDomainInfo(old);
 			entities.add(old);
 
 			DataEntity perm = new DataEntity();
 			perm.setId(buildJVMDataEntityId("permUsage")).setType(AVG_TYPE).setTime(current)
 			      .setValue(Double.valueOf(metrics[4]) / 100);
+			addGroupDomainInfo(perm);
 			entities.add(perm);
 
 			return entities;

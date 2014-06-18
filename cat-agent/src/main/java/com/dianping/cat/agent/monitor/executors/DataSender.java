@@ -57,8 +57,9 @@ public class DataSender implements Task, Initializable {
 		StringBuilder sb = new StringBuilder();
 
 		for (DataEntity entity : entities) {
-			sb.append(entity.getId()).append("\t").append(entity.getType()).append("\t").append(entity.getTime())
-			      .append("\t").append(entity.getValue()).append("\n");
+			sb.append(entity.getGroup()).append("\t").append(entity.getDomain()).append("\t").append(entity.getId())
+			      .append("\t").append(entity.getType()).append("\t").append(entity.getTime()).append("\t")
+			      .append(entity.getValue()).append("\n");
 		}
 		return sb.toString();
 	}
@@ -95,7 +96,9 @@ public class DataSender implements Task, Initializable {
 			String entityContent = buildBatchEntities(m_dataEntities);
 			String content = "&batch=" + entityContent;
 
-			return sendData(url, content);
+			if (sendData(url, content)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -103,7 +106,7 @@ public class DataSender implements Task, Initializable {
 	@Override
 	public void run() {
 		boolean active = true;
-		
+
 		while (active) {
 			Transaction t = Cat.newTransaction("Data", "Send");
 			long current = System.currentTimeMillis();
