@@ -3303,6 +3303,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.monitor.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.JsonBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
