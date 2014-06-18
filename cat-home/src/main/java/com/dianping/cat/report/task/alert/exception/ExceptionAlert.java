@@ -55,8 +55,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
-	private static final String TOTAL_EXCEPTION_NAME = "TotalException";
-
 	private static final int ALERT_PERIOD = 1;
 
 	private static final int WARN_FLAG = 1;
@@ -112,13 +110,13 @@ public class ExceptionAlert implements Task, LogEnabled {
 	}
 
 	private boolean isExcludedException(String domain, String exceptionName) {
+		boolean excluded = false;
 		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
 
 		if (result != null) {
-			return true;
-		} else {
-			return false;
+			excluded = true;
 		}
+		return excluded;
 	}
 
 	private List<AlertException> buildDomainAlertExceptionList(Item item) {
@@ -140,7 +138,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				totalException += value;
 
-				if (errorLimit > 0 && value > errorLimit) {
+				if (errorLimit > 0 && value > errorLimit && sendSms(domain, exceptionName)) {
 					alertExceptions.add(new AlertException(exceptionName, ERROR_FLAG, value));
 				} else if (warnLimit > 0 && value > warnLimit) {
 					alertExceptions.add(new AlertException(exceptionName, WARN_FLAG, value));
@@ -148,13 +146,24 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 		}
 
-		if (totalErrorLimit > 0 && totalException > totalErrorLimit) {
-			alertExceptions.add(new AlertException(TOTAL_EXCEPTION_NAME, ERROR_FLAG, totalException));
+		if (totalErrorLimit > 0 && totalException > totalErrorLimit
+		      && sendSms(domain, ExceptionConfigManager.TOTAL_STRING)) {
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, ERROR_FLAG, totalException));
 		} else if (totalWarnLimit > 0 && totalException > totalWarnLimit) {
-			alertExceptions.add(new AlertException(TOTAL_EXCEPTION_NAME, WARN_FLAG, totalException));
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, WARN_FLAG, totalException));
 		}
 
 		return alertExceptions;
+	}
+
+	private boolean sendSms(String domain, String exception) {
+		boolean send = false;
+		ExceptionLimit limit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exception);
+
+		if (limit != null) {
+			send = limit.getSmsSending();
+		}
+		return send;
 	}
 
 	private Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
