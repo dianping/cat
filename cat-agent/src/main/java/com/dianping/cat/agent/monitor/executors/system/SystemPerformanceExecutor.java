@@ -66,6 +66,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 				entity.setId(buildSystemDataEntityId("cpu")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
 				      .setValue(cpuUsage);
+				addGroupDomainInfo(entity);
 				entities.add(entity);
 			} else {
 				m_preCpu = m_sigar.getCpu();
@@ -90,6 +91,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 					entity.setId(buildSystemDataEntityId(fs.getDirName() + "-usage")).setType(AVG_TYPE).setTime(current)
 					      .setValue(usage.getUsePercent());
+					addGroupDomainInfo(entity);
 					entities.add(entity);
 				}
 			}
@@ -114,11 +116,13 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 				inFlow.setId(buildSystemDataEntityId(ETH_NAME + "-in-flow")).setType(SUM_TYPE).setTime(current)
 				      .setValue(totalRxBytes);
+				addGroupDomainInfo(inFlow);
 				entities.add(inFlow);
 
 				DataEntity outFlow = new DataEntity();
 				outFlow.setId(buildSystemDataEntityId(ETH_NAME + "-out-flow")).setType(SUM_TYPE).setTime(current)
 				      .setValue(totalTxBytes);
+				addGroupDomainInfo(outFlow);
 				entities.add(outFlow);
 			} else {
 				m_preIfStat = m_sigar.getNetInterfaceStat(ETH_NAME);
@@ -139,6 +143,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 			entity.setId(buildSystemDataEntityId("swap")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
 			      .setValue(swapUsage);
+			addGroupDomainInfo(entity);
 			entities.add(entity);
 		} catch (SigarException e) {
 			Cat.logError(e);
@@ -155,6 +160,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 			entity.setId(buildSystemDataEntityId("load")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
 			      .setValue(loadAverages[0]);
+			addGroupDomainInfo(entity);
 			entities.add(entity);
 		} catch (SigarException e) {
 			Cat.logError(e);

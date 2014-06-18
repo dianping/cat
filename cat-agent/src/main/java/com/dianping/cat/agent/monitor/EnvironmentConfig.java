@@ -15,11 +15,11 @@ public class EnvironmentConfig implements Initializable {
 
 	private static final String CONFIG_FILE = "/data/webapps/server.properties";
 
-	private static final String SYSTEM_URL = "http://%1$s/cat/r/monitor?op=batch&timestamp=%2$s&group=%3$s&domain=%4$s";
+	private static final String SYSTEM_URL = "http://%1$s/cat/r/monitor?op=batch";
 
 	private static final String ALTERATION_URL = "http://%1$s/cat/r/alteration";
 
-	private static final List<String> CAT_SERVERS = Arrays.asList("10.128.120.60:2281", "10.1.110.57:8080",
+	private static final List<String> CAT_SERVERS = Arrays.asList("localhost:2281", "10.1.110.57:8080",
 	      "10.1.110.23:8080", "10.1.110.21:8080");
 
 	private String m_ip;
@@ -48,10 +48,7 @@ public class EnvironmentConfig implements Initializable {
 	}
 
 	public String buildSystemUrl(String server) {
-		String group = getGroup();
-		long current = System.currentTimeMillis();
-
-		return String.format(SYSTEM_URL, server, current, group, m_domain);
+		return String.format(SYSTEM_URL, server);
 	}
 
 	public String buildAlterationUrl(String server) {
