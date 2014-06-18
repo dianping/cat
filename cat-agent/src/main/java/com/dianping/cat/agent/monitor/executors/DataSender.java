@@ -57,8 +57,9 @@ public class DataSender implements Task, Initializable {
 		StringBuilder sb = new StringBuilder();
 
 		for (DataEntity entity : entities) {
-			sb.append(entity.getId()).append("\t").append(entity.getType()).append("\t").append(entity.getTime())
-			      .append("\t").append(entity.getValue()).append("\n");
+			sb.append(entity.getGroup()).append("\t").append(entity.getDomain()).append("\t").append(entity.getId())
+			      .append("\t").append(entity.getType()).append("\t").append(entity.getTime()).append("\t")
+			      .append(entity.getValue()).append("\n");
 		}
 		return sb.toString();
 	}

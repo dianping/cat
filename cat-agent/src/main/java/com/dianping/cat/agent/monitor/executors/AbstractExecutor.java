@@ -33,4 +33,8 @@ public abstract class AbstractExecutor implements Executor {
 		return NGINX_TYPE + "_" + id + "_" + m_environmentConfig.getIp();
 	}
 
+	protected void addGroupDomainInfo(DataEntity entity) {
+		entity.setGroup(m_environmentConfig.getGroup()).setDomain(m_environmentConfig.getDomain());
+	}
+
 }
