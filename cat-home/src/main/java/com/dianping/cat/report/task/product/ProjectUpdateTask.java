@@ -359,15 +359,18 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 					List<String> ips = m_domainToIpMap.get(pro.getDomain());
 					String orginalDomain = pro.getCmdbDomain();
 					String cmdbDomain = queryCmdbName(ips);
-					boolean isChange = !cmdbDomain.equals(orginalDomain);
 
-					if (checkIfValid(cmdbDomain)) {
-						pro.setCmdbDomain(cmdbDomain);
+					if (cmdbDomain != null) {
+						boolean isChange = !cmdbDomain.equals(orginalDomain);
 
-						boolean isProjectInfoChange = updateProject(pro);
+						if (checkIfValid(cmdbDomain)) {
+							pro.setCmdbDomain(cmdbDomain);
 
-						if (isProjectInfoChange || isChange) {
-							m_projectDao.updateByPK(pro, ProjectEntity.UPDATESET_FULL);
+							boolean isProjectInfoChange = updateProject(pro);
+
+							if (isProjectInfoChange || isChange) {
+								m_projectDao.updateByPK(pro, ProjectEntity.UPDATESET_FULL);
+							}
 						}
 					}
 				} catch (Exception e) {
