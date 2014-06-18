@@ -21,18 +21,17 @@ import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.MetricType;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-
-	private Gson m_gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
-
+	
+	@Inject
+	private JsonBuilder m_builder;
+	
 	public HttpStatus checkPars(Payload payload) {
 		StringBuilder sb = new StringBuilder();
 		String domain = payload.getDomain();
@@ -79,8 +78,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		HttpStatus status = checkPars(payload);
 
-		model.setPage(ReportPage.MONITOR);
-		model.setStatus(m_gson.toJson(status));
+		model.setStatus(m_builder.toJson(status));
 		if (status.getStatusCode().equals(String.valueOf(HttpStatus.SUCCESS))) {
 			String domain = payload.getDomain();
 			String group = payload.getGroup();
@@ -176,7 +174,6 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
 			}
-
 		}
 	}
 
