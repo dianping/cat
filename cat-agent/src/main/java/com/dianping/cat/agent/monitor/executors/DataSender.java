@@ -95,7 +95,9 @@ public class DataSender implements Task, Initializable {
 			String entityContent = buildBatchEntities(m_dataEntities);
 			String content = "&batch=" + entityContent;
 
-			return sendData(url, content);
+			if (sendData(url, content)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -103,7 +105,7 @@ public class DataSender implements Task, Initializable {
 	@Override
 	public void run() {
 		boolean active = true;
-		
+
 		while (active) {
 			Transaction t = Cat.newTransaction("Data", "Send");
 			long current = System.currentTimeMillis();
