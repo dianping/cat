@@ -50,7 +50,7 @@ public class DefaultDataChecker implements DataChecker {
 
 	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
 		StringBuilder builder = new StringBuilder();
-		
+
 		for (SubCondition subCondition : condition.getSubConditions()) {
 			try {
 				String ruleType = subCondition.getType();
@@ -93,30 +93,30 @@ public class DefaultDataChecker implements DataChecker {
 	}
 
 	private double parseSubConditionText(String text) {
-		if (text.contains("Mb")) {
-			double value = Double.parseDouble(text.replaceAll("Mb", ""));
-			return value * 1024 * 1024 / 8;
-		} else if (text.contains("Gb")) {
-			double value = Double.parseDouble(text.replaceAll("Gb", ""));
-			return value * 1024 * 1024 * 1024 / 8;
-		} else if (text.contains("Mb/s")) {
+		if (text.endsWith("Mb/s")) {
 			double value = Double.parseDouble(text.replaceAll("Mb/s", ""));
 			return value * 60 * 1024 * 1024 / 8;
-		} else if (text.contains("Gb/s")) {
+		} else if (text.endsWith("Gb/s")) {
 			double value = Double.parseDouble(text.replaceAll("Gb/s", ""));
 			return value * 60 * 1024 * 1024 * 1024 / 8;
-		} else if (text.contains("MB")) {
-			double value = Double.parseDouble(text.replaceAll("MB", ""));
-			return value * 1024 * 1024;
-		} else if (text.contains("GB")) {
-			double value = Double.parseDouble(text.replaceAll("GB", ""));
-			return value * 1024 * 1024 * 1024;
-		} else if (text.contains("MB/s")) {
+		} else if (text.endsWith("MB/s")) {
 			double value = Double.parseDouble(text.replaceAll("MB/s", ""));
 			return value * 60 * 1024 * 1024;
-		} else if (text.contains("GB/s")) {
+		} else if (text.endsWith("GB/s")) {
 			double value = Double.parseDouble(text.replaceAll("GB/s", ""));
 			return value * 60 * 1024 * 1024 * 1024;
+		} else if (text.endsWith("Mb")) {
+			double value = Double.parseDouble(text.replaceAll("Mb", ""));
+			return value * 1024 * 1024 / 8;
+		} else if (text.endsWith("Gb")) {
+			double value = Double.parseDouble(text.replaceAll("Gb", ""));
+			return value * 1024 * 1024 * 1024 / 8;
+		} else if (text.endsWith("MB")) {
+			double value = Double.parseDouble(text.replaceAll("MB", ""));
+			return value * 1024 * 1024;
+		} else if (text.endsWith("GB")) {
+			double value = Double.parseDouble(text.replaceAll("GB", ""));
+			return value * 1024 * 1024 * 1024;
 		}
 
 		return Double.parseDouble(text);

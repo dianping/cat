@@ -176,6 +176,10 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private String queryCmdbName(List<String> ips) {
+		if(ips==null){
+			return null;
+		}
+		
 		for (String ip : ips) {
 			String cmdbDomain = queryDomainFromCMDB(ip);
 
@@ -359,9 +363,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 					List<String> ips = m_domainToIpMap.get(pro.getDomain());
 					String orginalDomain = pro.getCmdbDomain();
 					String cmdbDomain = queryCmdbName(ips);
-					boolean isChange = !cmdbDomain.equals(orginalDomain);
 
 					if (checkIfValid(cmdbDomain)) {
+						boolean isChange = !cmdbDomain.equals(orginalDomain);
 						pro.setCmdbDomain(cmdbDomain);
 
 						boolean isProjectInfoChange = updateProject(pro);
