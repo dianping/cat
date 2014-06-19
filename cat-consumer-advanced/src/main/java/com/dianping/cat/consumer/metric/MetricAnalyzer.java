@@ -170,9 +170,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (!StringUtils.isEmpty(group)) {
 			m_productLineConfigManager.insertIfNotExsit(group, domain);
 
-			if (!isBussinessMonitor(domain, group)) {
-				report = findOrCreateReport(group);
-			}
+			report = findOrCreateReport(group);
 		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
