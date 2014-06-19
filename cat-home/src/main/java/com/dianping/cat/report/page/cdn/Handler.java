@@ -26,6 +26,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private CdnGraphCreator m_cdnGraphCreator;
 	
+	private static final String ALL = "ALL";
+	
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "cdn")
@@ -50,6 +52,13 @@ public class Handler implements PageHandler<Context> {
 		String province = payload.getProvince();
 		String city = payload.getCity();
 		String cdn = payload.getCdn();
+		if (province == ALL) {
+			city = ALL;
+		}
+		if (cdn == ALL) {
+			province = ALL;
+			city = ALL;
+		}
 		
 		model.setLineCharts(m_cdnGraphCreator.queryBaseInfo(startDate, endDate, cdn, province, city));
 		model.setStart(startDate);
