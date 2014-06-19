@@ -10,31 +10,57 @@ import com.dianping.cat.service.IpService.IpInfo;
 
 public class CdnReportConvertor extends BaseVisitor {
 	private CdnConfig m_cdnConfig;
-	
+
 	private IpService m_ipService;
-	
+
 	private MetricReport m_report;
 
-	private String m_cdn;
-
-	private String m_province;
-
-	private String m_city;
-
-	public void SetConventorParameter(CdnConfig cdnConfig, IpService ipService, String cdn, String province, String city) {
+	private String m_cdn; 
+ 
+	private String m_province; 
+ 
+	private String m_city; 
+	
+	private static final String ALL = "ALL";
+	
+	public CdnReportConvertor(CdnConfig cdnConfig, IpService ipService) {
 		m_cdnConfig = cdnConfig;
 		m_ipService = ipService;
-		m_cdn = cdn;
-		m_province = province;
-		m_city = city;
-		
-		if (province == "ALL") {
-			m_city = "ALL";
+	}
+
+	private String filterAndConvert(String vip, String sip) {
+		String keyCdn, keyProvince, keyCity;
+		String cdn = m_cdnConfig.queryCdnName(vip);
+
+		if (!m_cdn.equals(ALL) && !m_cdn.equals(cdn)) {
+			return null;
 		}
-		if (cdn == "ALL") {
-			m_province = "ALL";
-			m_city = "ALL";
+
+		IpInfo ipInfo = m_ipService.findIpInfoByString(sip);
+		String province, city;
+		if (ipInfo == null) {
+			province = "未知";
+			city = "未知";
+		} else {
+			province = ipInfo.getProvince();
+			city = ipInfo.getCity();
+			if (city.equals("")) {
+				city = "未知";
+			}
 		}
+
+		if (!m_province.equals(ALL) && !m_province.equals(province)) {
+			return null;
+		}
+		if (!m_province.equals(ALL) && !m_city.equals(ALL) && !m_city.equals(city)) {
+			return null;
+		}
+
+		keyCdn = cdn;
+		keyProvince = province;
+		keyCity = city;
+
+		return keyCdn + ":" + keyProvince + ":" + keyCity + ":" + sip;
 	}
 
 	public MetricReport getReport() {
@@ -57,39 +83,27 @@ public class CdnReportConvertor extends BaseVisitor {
 		}
 	}
 
-	private String filterAndConvert(String vip, String sip) {
-		String keyCdn, keyProvince, keyCity;
-		String cdn = m_cdnConfig.getCdnName(vip);
-		
-		if (!m_cdn.equals("ALL") && !m_cdn.equals(cdn)) {
-			return null;
+	public CdnReportConvertor setCdn(String cdn) {
+		m_cdn = cdn;
+		if (cdn == ALL) {
+			m_province = ALL;
+			m_city = ALL;
 		}
-		
-		IpInfo ipInfo = m_ipService.findIpInfoByString(sip);
-		String province, city;
-		if (ipInfo == null) {
-			province = "未知";
-			city = "未知";
-		} else {
-			province = ipInfo.getProvince();
-			city = ipInfo.getCity();
-			if (city.equals("")) {
-				city = "未知";
-			}
+		return this;
+	}
+
+	public CdnReportConvertor setCity(String city) {
+		m_city = city;
+		return this;
+	}
+
+	public CdnReportConvertor setProvince(String province) {
+		m_province = province;
+
+		if (province == ALL) {
+			m_city = ALL;
 		}
-		
-		if (!m_province.equals("ALL") && !m_province.equals(province)) {
-			return null;
-		}
-		if (!m_province.equals("ALL") && !m_city.equals("ALL") && !m_city.equals(city)) {
-			return null;
-		}
-		
-		keyCdn = cdn;
-		keyProvince = province;
-		keyCity = city;
-		
-		return keyCdn + ":" + keyProvince + ":" + keyCity + ":" + sip;
+		return this;
 	}
 
 	@Override
@@ -100,7 +114,7 @@ public class CdnReportConvertor extends BaseVisitor {
 			String vip = temp[2];
 			String sip = temp[3];
 			String key = filterAndConvert(vip, sip);
-			
+
 			if (key != null) {
 				MetricItem item = m_report.findOrCreateMetricItem(key);
 

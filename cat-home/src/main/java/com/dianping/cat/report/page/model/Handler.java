@@ -106,7 +106,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject
 	private CdnConfig m_cdnConfig;
-	
+
 	@Inject
 	private IpService m_ipService;
 
@@ -262,9 +262,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					String province = payload.getProvince();
 					String city = payload.getCity();
 					MetricReport metricReport = (MetricReport) response.getModel();
-					CdnReportConvertor cdnReportConvertor = new CdnReportConvertor();
+					CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_cdnConfig, m_ipService);
 
-					cdnReportConvertor.SetConventorParameter(m_cdnConfig, m_ipService, cdn, province, city);
+					cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
 					cdnReportConvertor.visitMetricReport(metricReport);
 					((ModelResponse<MetricReport>) response).setModel(cdnReportConvertor.getReport());
 				}

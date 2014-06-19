@@ -17,84 +17,20 @@ import com.dianping.cat.home.nettopo.entity.Switch;
 
 public class NetGraphBuilder {
 
+	private static final int ERROR = 3;
+
 	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports, List<String> alertKeys) {
 		NetGraphSet netGraphSet = new NetGraphSet();
 
-		for (int i = 0; i <= 59; i++) {
+		for (int minute = 0; minute <= 59; minute++) {
 			NetGraph netGraph = copyBaseInfoFromTemplate(netGraphTemplate);
+
 			for (NetTopology netTopology : netGraph.getNetTopologies()) {
 				List<String> alertSwitchs = new ArrayList<String>();
 
 				for (Connection connection : netTopology.getConnections()) {
 					try {
-						double insum = 0;
-						double outsum = 0;
-						double inDiscardsSum = 0;
-						double outDiscardsSum = 0;
-						double inErrorsSum = 0;
-						double outErrorsSum = 0;
-						int inState = 0;
-						int outState = 0;
-						int inDiscardsState = 0;
-						int outDiscardsState = 0;
-						int inErrorsState = 0;
-						int outErrorsState = 0;
-
-						for (Interface inter : connection.getInterfaces()) {
-							String group = inter.getGroup();
-							MetricReport report = reports.get(group);
-
-							updateInterface(inter, report, i);
-
-							String domain = inter.getDomain();
-							String key = inter.getKey();
-
-							if (inAlert(alertKeys, domain, key)) {
-								inter.setInstate(3);
-								inState = 3;
-							}
-							if (inDiscardsAlert(alertKeys, domain, key)) {
-								inter.setInDiscardsState(3);
-								inDiscardsState = 3;
-							}if (inErrorsAlert(alertKeys, domain, key)) {
-								inter.setInErrorsState(3);
-								inErrorsState = 3;
-							}
-							if (outAlert(alertKeys, domain, key)) {
-								inter.setOutstate(3);
-								outState = 3;
-							}
-							if (outDiscardsAlert(alertKeys, domain, key)) {
-								inter.setOutDiscardsState(3);
-								outDiscardsState = 3;
-							}if (outErrorsAlert(alertKeys, domain, key)) {
-								inter.setOutErrorsState(3);
-								outErrorsState = 3;
-							}
-
-							insum += inter.getIn();
-							outsum += inter.getOut();
-							inDiscardsSum += inter.getInDiscards();
-							outDiscardsSum += inter.getOutDiscards();
-							inErrorsSum += inter.getInErrors();
-							outErrorsSum += inter.getOutErrors();
-						}
-						connection.setInsum(insum);
-						connection.setOutsum(outsum);
-						connection.setInDiscards(inDiscardsSum);
-						connection.setOutDiscards(outDiscardsSum);
-						connection.setInErrors(inErrorsSum);
-						connection.setOutErrors(outErrorsSum);
-						connection.setInstate(inState);
-						connection.setOutstate(outState);
-						connection.setInDiscardsState(inDiscardsState);
-						connection.setOutDiscardsState(outDiscardsState);
-						connection.setInErrorsState(inErrorsState);
-						connection.setOutErrorsState(outErrorsState);
-						if (inState == 3 || outState == 3 || inDiscardsState == 3 || outDiscardsState == 3 ||
-								inErrorsState == 3 || outErrorsState == 3) {
-							alertSwitchs.add(connection.getFrom());
-						}
+						buildConnectionInfo(reports, alertKeys, minute, alertSwitchs, connection);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -102,37 +38,101 @@ public class NetGraphBuilder {
 
 				for (Switch sw : netTopology.getSwitchs()) {
 					if (alertSwitchs.contains(sw.getName())) {
-						sw.setState(3);
+						sw.setState(ERROR);
 					}
 				}
 			}
-			netGraph.setMinute(i);
+			netGraph.setMinute(minute);
 			netGraphSet.addNetGraph(netGraph);
 		}
 
 		return netGraphSet;
 	}
 
+	private void buildConnectionInfo(Map<String, MetricReport> reports, List<String> alertKeys, int minute,
+	      List<String> alertSwitchs, Connection connection) {
+		double insum = 0, outsum = 0, inDiscardsSum = 0, outDiscardsSum = 0, inErrorsSum = 0, outErrorsSum = 0;
+		int inState = 0, outState = 0, inDiscardsState = 0, outDiscardsState = 0, inErrorsState = 0, outErrorsState = 0;
+
+		for (Interface inter : connection.getInterfaces()) {
+			String group = inter.getGroup();
+			MetricReport report = reports.get(group);
+			String domain = inter.getDomain();
+			String key = inter.getKey();
+
+			updateInterface(inter, report, minute);
+
+			if (inAlert(alertKeys, domain, key)) {
+				inter.setInstate(ERROR);
+				inState = ERROR;
+			}
+			if (inDiscardsAlert(alertKeys, domain, key)) {
+				inter.setInDiscardsState(ERROR);
+				inDiscardsState = ERROR;
+			}
+			if (inErrorsAlert(alertKeys, domain, key)) {
+				inter.setInErrorsState(ERROR);
+				inErrorsState = ERROR;
+			}
+			if (outAlert(alertKeys, domain, key)) {
+				inter.setOutstate(ERROR);
+				outState = ERROR;
+			}
+			if (outDiscardsAlert(alertKeys, domain, key)) {
+				inter.setOutDiscardsState(ERROR);
+				outDiscardsState = ERROR;
+			}
+			if (outErrorsAlert(alertKeys, domain, key)) {
+				inter.setOutErrorsState(ERROR);
+				outErrorsState = ERROR;
+			}
+
+			insum += inter.getIn();
+			outsum += inter.getOut();
+			inDiscardsSum += inter.getInDiscards();
+			outDiscardsSum += inter.getOutDiscards();
+			inErrorsSum += inter.getInErrors();
+			outErrorsSum += inter.getOutErrors();
+		}
+		connection.setInsum(insum);
+		connection.setOutsum(outsum);
+		connection.setInDiscards(inDiscardsSum);
+		connection.setOutDiscards(outDiscardsSum);
+		connection.setInErrors(inErrorsSum);
+		connection.setOutErrors(outErrorsSum);
+		connection.setInstate(inState);
+		connection.setOutstate(outState);
+		connection.setInDiscardsState(inDiscardsState);
+		connection.setOutDiscardsState(outDiscardsState);
+		connection.setInErrorsState(inErrorsState);
+		connection.setOutErrorsState(outErrorsState);
+		
+		if (inState == ERROR || outState == ERROR || inDiscardsState == ERROR || outDiscardsState == ERROR
+		      || inErrorsState == ERROR || outErrorsState == ERROR) {
+			alertSwitchs.add(connection.getFrom());
+		}
+	}
+
 	private boolean inAlert(List<String> alertKeys, String domain, String key) {
 		return alertKeys.contains(domain + ":Metric:" + key + "-flow-in");
 	}
-	
+
 	private boolean inDiscardsAlert(List<String> alertKeys, String domain, String key) {
 		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-indiscards");
 	}
-	
+
 	private boolean inErrorsAlert(List<String> alertKeys, String domain, String key) {
 		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-inerrors");
 	}
-	
+
 	private boolean outAlert(List<String> alertKeys, String domain, String key) {
 		return alertKeys.contains(domain + ":Metric:" + key + "-flow-out");
 	}
-	
+
 	private boolean outDiscardsAlert(List<String> alertKeys, String domain, String key) {
 		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-outdiscards");
 	}
-	
+
 	private boolean outErrorsAlert(List<String> alertKeys, String domain, String key) {
 		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-outerrors");
 	}
@@ -219,12 +219,6 @@ public class NetGraphBuilder {
 			inter.setInErrors(inErrorsItem.findOrCreateSegment(minute).getSum() / 60);
 			inter.setOutErrors(outErrorsItem.findOrCreateSegment(minute).getSum() / 60);
 		} catch (Exception e) {
-			inter.setIn(0.0);
-			inter.setOut(0.0);
-			inter.setInDiscards(0.0);
-			inter.setOutDiscards(0.0);
-			inter.setInErrors(0.0);
-			inter.setOutErrors(0.0);
 			Cat.logError(e);
 		}
 	}

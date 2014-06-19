@@ -61,7 +61,7 @@ public class IpService implements Initializable {
 
 		return null;
 	}
-
+	
 	public IpInfo findIpInfoByString(String ip) {
 		try {
 			String[] segments = ip.split("\\.");
