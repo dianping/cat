@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.cdn.graph;
 
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -11,10 +9,8 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
 
 public class CdnReportConvertor extends BaseVisitor {
-	@Inject
 	private CdnConfig m_cdnConfig;
 	
-	@Inject
 	private IpService m_ipService;
 	
 	private MetricReport m_report;
@@ -25,7 +21,9 @@ public class CdnReportConvertor extends BaseVisitor {
 
 	private String m_city;
 
-	public void SetConventorParameter(String cdn, String province, String city) {
+	public void SetConventorParameter(CdnConfig cdnConfig, IpService ipService, String cdn, String province, String city) {
+		m_cdnConfig = cdnConfig;
+		m_ipService = ipService;
 		m_cdn = cdn;
 		m_province = province;
 		m_city = city;

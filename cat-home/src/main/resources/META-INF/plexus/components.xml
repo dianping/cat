@@ -238,18 +238,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.cdn.graph.CdnReportConvertor</role>
-			<implementation>com.dianping.cat.report.page.cdn.graph.CdnReportConvertor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.cdn.graph.CdnConfig</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
@@ -261,7 +249,10 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.cdn.graph.CdnReportConvertor</role>
+					<role>com.dianping.cat.report.page.cdn.graph.CdnConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2554,7 +2545,10 @@
 					<field-name>m_transactionService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.cdn.graph.CdnReportConvertor</role>
+					<role>com.dianping.cat.report.page.cdn.graph.CdnConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2692,18 +2686,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cdn.graph.CdnReportConvertor</role>
-			<implementation>com.dianping.cat.report.page.cdn.graph.CdnReportConvertor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.cdn.graph.CdnConfig</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
