@@ -33,10 +33,10 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 
 	@Inject
 	private ModelService<MetricReport> m_service;
-	
+
 	@Inject
 	private IpService m_ipService;
-	
+
 	@Inject
 	private CdnConfig m_cdnConfig;
 
@@ -139,23 +139,22 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			}
 		} else {
 			MetricReport report = getReportFromCache(product, time);
-			
+
 			String type = properties.get("type");
 			String ipAddrsStr = properties.get("ip");
 			Set<String> ipAddrs = null;
-			
+
 			if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
 				String[] ipAddrsArray = ipAddrsStr.split("_");
 				ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
 			}
-
 			SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
 
 			convert.visitMetricReport(report);
 			return convert.getReport();
 		}
 	}
-	
+
 	@Override
 	public MetricReport queryCdnReport(String product, Map<String, String> properties, Date start) {
 		long time = start.getTime();
@@ -179,11 +178,11 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			String cdn = properties.get("cdn");
 			String province = properties.get("province");
 			String city = properties.get("city");
-			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor();
+			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_cdnConfig, m_ipService);
 
-			cdnReportConvertor.SetConventorParameter(m_cdnConfig, m_ipService, cdn, province, city);
+			cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
 			cdnReportConvertor.visitMetricReport(report);
-			
+
 			return cdnReportConvertor.getReport();
 		}
 	}

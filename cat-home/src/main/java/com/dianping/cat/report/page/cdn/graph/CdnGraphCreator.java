@@ -50,7 +50,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 	private Map<String, double[]> fetchAllData(MetricReport report) {
 		Map<String, double[]> data = new LinkedHashMap<String, double[]>();
 
-		for (String cdn : m_cdnConfig.getAllCdnNames()) {
+		for (String cdn : m_cdnConfig.queryAllCdnNames()) {
 			double[] values = new double[60];
 			for (int i = 0; i < 60; i++)
 				values[i] = 0;
@@ -88,7 +88,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 				String temp[] = key.split(":");
 				keyCdn = temp[0];
 				keyProvince = temp[1];
-				
+
 				if (!keyCdn.equals(cdn)) {
 					continue;
 				}
@@ -130,8 +130,9 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 				keyCity = temp[2];
 				sip = temp[3];
 
-				if (!keyCdn.equals(cdn) || !keyProvince.equals(province) || !keyCity.equals(city))
+				if (!keyCdn.equals(cdn) || !keyProvince.equals(province) || !keyCity.equals(city)){
 					continue;
+				}
 			} catch (Exception e) {
 				continue;
 			}
@@ -209,7 +210,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			MetricReport report = m_metricReportService.queryCdnReport(m_cdnConfig.GROUP, properties, new Date(start));
+			MetricReport report = m_metricReportService.queryCdnReport(CdnConfig.GROUP, properties, new Date(start));
 			Map<String, double[]> currentValues;
 
 			if (province.equals("未知")) {
@@ -236,8 +237,8 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> oldCurrentValues = prepareAllData(startDate, endDate, cdn, province, city);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
-
 		Map<String, LineChart> lineCharts = buildInfoChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+
 		return lineCharts;
 	}
 }
