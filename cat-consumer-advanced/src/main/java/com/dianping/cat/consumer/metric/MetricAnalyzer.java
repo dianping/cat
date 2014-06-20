@@ -182,19 +182,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-			if (isBussinessMonitor(domain, group)) {
+			if (StringUtils.isEmpty(group)) {
 				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 			}
 		}
 		return 0;
-	}
-
-	private boolean isBussinessMonitor(String domain, String group) {
-		if (Constants.BROKER_SERVICE.equals(domain) || StringUtils.isNotEmpty(group)) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {
