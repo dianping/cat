@@ -75,7 +75,8 @@
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>timestamp</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>error</td><td>error</td><td>错误的类型</td><td>String</td></tr>
-		<tr><td>file</td><td>file</td><td>错误的发生的html页面</td><td>String</td></tr>
+		<tr><td>file</td><td>file</td><td>错误的发生的js文件</td><td>String</td></tr>
+		<tr><td>url</td><td>url</td><td>错误的发生的html页面</td><td>String</td></tr>
 		<tr><td>line</td><td>line</td><td>错误的行数</td><td>int</td></tr>
 		<tr><td>data</td><td>data</td><td>data类型</td><td>String，如果没有的话，传空串</td></tr>
 	</table>

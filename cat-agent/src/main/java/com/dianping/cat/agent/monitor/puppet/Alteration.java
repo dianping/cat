@@ -1,114 +1,115 @@
 package com.dianping.cat.agent.monitor.puppet;
 
-public class Alertation {
-	private String type;
+public class Alteration {
 
-	private String ip;
+	private String m_type;
 
-	private String hostname;
+	private String m_ip;
 
-	private String user;
+	private String m_hostname;
 
-	private String url;
+	private String m_user;
 
-	private String op;
+	private String m_url;
 
-	private String date;
+	private String m_op;
 
-	private String title;
+	private String m_date;
 
-	private String content;
+	private String m_title;
 
-	private String domain;
+	private String m_content;
 
-	private String group;
+	private String m_domain;
+
+	private String m_group;
 
 	public String getType() {
-		return type;
+		return m_type;
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		m_type = type;
 	}
 
 	public String getIp() {
-		return ip;
+		return m_ip;
 	}
 
 	public void setIp(String ip) {
-		this.ip = ip;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getOp() {
-		return op;
-	}
-
-	public void setOp(String op) {
-		this.op = op;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
+		m_ip = ip;
 	}
 
 	public String getHostname() {
-		return hostname;
+		return m_hostname;
 	}
 
 	public void setHostname(String hostname) {
-		this.hostname = hostname;
+		m_hostname = hostname;
+	}
+
+	public String getUser() {
+		return m_user;
+	}
+
+	public void setUser(String user) {
+		m_user = user;
+	}
+
+	public String getUrl() {
+		return m_url;
+	}
+
+	public void setUrl(String url) {
+		m_url = url;
+	}
+
+	public String getOp() {
+		return m_op;
+	}
+
+	public void setOp(String op) {
+		m_op = op;
+	}
+
+	public String getDate() {
+		return m_date;
+	}
+
+	public void setDate(String date) {
+		m_date = date;
+	}
+
+	public String getTitle() {
+		return m_title;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
+	}
+
+	public String getContent() {
+		return m_content;
+	}
+
+	public void setContent(String content) {
+		m_content = content;
+	}
+
+	public String getDomain() {
+		return m_domain;
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	public String getGroup() {
-		return group;
+		return m_group;
 	}
 
 	public void setGroup(String group) {
-		this.group = group;
+		m_group = group;
 	}
 
 }

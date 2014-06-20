@@ -1,6 +1,8 @@
-package com.dianping.cat.agent.monitor;
+package com.dianping.cat.agent.monitor.executors;
 
 import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.agent.monitor.EnvironmentConfig;
 
 public abstract class AbstractExecutor implements Executor {
 
@@ -29,6 +31,10 @@ public abstract class AbstractExecutor implements Executor {
 
 	protected String buildNginxDataEntityId(String id) {
 		return NGINX_TYPE + "_" + id + "_" + m_environmentConfig.getIp();
+	}
+
+	protected void addGroupDomainInfo(DataEntity entity) {
+		entity.setGroup(m_environmentConfig.getGroup()).setDomain(m_environmentConfig.getDomain());
 	}
 
 }

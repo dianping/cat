@@ -1,11 +1,11 @@
-package com.dianping.cat.agent.monitor.jvm;
+package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMStateExecutor extends AbstractExecutor {
 
@@ -34,6 +34,7 @@ public class JVMStateExecutor extends AbstractExecutor {
 
 			entity.setId(buildJVMDataEntityId("catalinaLogSize")).setType(SUM_TYPE).setTime(System.currentTimeMillis())
 			      .setValue(kilobytes);
+			addGroupDomainInfo(entity);
 			entities.add(entity);
 		}
 		return entities;
@@ -46,6 +47,7 @@ public class JVMStateExecutor extends AbstractExecutor {
 		long current = System.currentTimeMillis();
 
 		entity.setId(buildJVMDataEntityId("tomcatLive")).setType(AVG_TYPE).setTime(current);
+		addGroupDomainInfo(entity);
 
 		if (pid == null) {
 			entity.setValue(0);

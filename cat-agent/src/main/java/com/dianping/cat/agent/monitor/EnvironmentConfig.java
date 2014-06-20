@@ -15,14 +15,18 @@ public class EnvironmentConfig implements Initializable {
 
 	private static final String CONFIG_FILE = "/data/webapps/server.properties";
 
-	private static final String URL_FORMAT = "http://%1$s/cat/r/monitor?op=batch&timestamp=%2$s&group=%3$s&domain=%4$s";
+	private static final String SYSTEM_URL = "http://%1$s/cat/r/monitor?op=batch";
 
-	private static final List<String> m_servers = Arrays.asList("localhost:2281", "10.1.110.57:8080",
+	private static final String ALTERATION_URL = "http://%1$s/cat/r/alteration";
+
+	private static final List<String> CAT_SERVERS = Arrays.asList("localhost:2281", "10.1.110.57:8080",
 	      "10.1.110.23:8080", "10.1.110.21:8080");
 
 	private String m_ip;
 
 	private String m_domain;
+
+	private String m_hostName;
 
 	// host.name 配置规则:
 	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
@@ -43,11 +47,12 @@ public class EnvironmentConfig implements Initializable {
 		return domain;
 	}
 
-	public String buildUrl(String server) {
-		String group = getGroup();
-		long current = System.currentTimeMillis();
+	public String buildSystemUrl(String server) {
+		return String.format(SYSTEM_URL, server);
+	}
 
-		return String.format(URL_FORMAT, server, current, group, m_domain);
+	public String buildAlterationUrl(String server) {
+		return String.format(ALTERATION_URL, server);
 	}
 
 	public String getDomain() {
@@ -63,7 +68,11 @@ public class EnvironmentConfig implements Initializable {
 	}
 
 	public List<String> getServers() {
-		return m_servers;
+		return CAT_SERVERS;
+	}
+
+	public String getHostName() {
+		return m_hostName;
 	}
 
 	@Override
@@ -73,13 +82,13 @@ public class EnvironmentConfig implements Initializable {
 			InputStream in = new BufferedInputStream(new FileInputStream(CONFIG_FILE));
 			properties.load(in);
 
-			String hostName = properties.getProperty("host.name");
+			m_hostName = properties.getProperty("host.name");
 
-			if (hostName == null) {
-				hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
+			if (m_hostName == null) {
+				m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 			}
 
-			m_domain = buildDomain(hostName);
+			m_domain = buildDomain(m_hostName);
 			m_ip = properties.getProperty("host.ip");
 
 			if (m_ip == null) {

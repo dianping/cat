@@ -23,7 +23,7 @@ public class AggregationConfigManagerTest {
 
 	@Test
 	public void test() {
-		AggregationConfigManager manager = new MockAggregationConfigManager();
+		MockAggregationConfigManager manager = new MockAggregationConfigManager();
 
 		((MockAggregationConfigManager) manager).setAggregationHandler(new MockAggregationHandler());
 		((MockAggregationConfigManager) manager).setConfigDao(new MockConfigDao1());

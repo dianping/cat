@@ -15,11 +15,13 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.CachedMetricReportService;
+import com.dianping.cat.report.page.cdn.graph.CdnConfig;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -31,9 +33,12 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 
 	@Inject
 	private ModelService<MetricReport> m_service;
-	
+
 	@Inject
-	private CdnReportConvertor m_cdnReportConvertor;
+	private IpService m_ipService;
+
+	@Inject
+	private CdnConfig m_cdnConfig;
 
 	private final Map<String, MetricReport> m_metricReports = new LinkedHashMap<String, MetricReport>() {
 
@@ -134,23 +139,22 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			}
 		} else {
 			MetricReport report = getReportFromCache(product, time);
-			
+
 			String type = properties.get("type");
 			String ipAddrsStr = properties.get("ip");
 			Set<String> ipAddrs = null;
-			
+
 			if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
 				String[] ipAddrsArray = ipAddrsStr.split("_");
 				ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
 			}
-
 			SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
 
 			convert.visitMetricReport(report);
 			return convert.getReport();
 		}
 	}
-	
+
 	@Override
 	public MetricReport queryCdnReport(String product, Map<String, String> properties, Date start) {
 		long time = start.getTime();
@@ -174,11 +178,12 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			String cdn = properties.get("cdn");
 			String province = properties.get("province");
 			String city = properties.get("city");
+			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_cdnConfig, m_ipService);
 
-			m_cdnReportConvertor.SetConventorParameter(cdn, province, city);
-			m_cdnReportConvertor.visitMetricReport(report);
-			
-			return m_cdnReportConvertor.getReport();
+			cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
+			cdnReportConvertor.visitMetricReport(report);
+
+			return cdnReportConvertor.getReport();
 		}
 	}
 

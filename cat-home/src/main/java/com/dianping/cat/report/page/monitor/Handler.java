@@ -21,38 +21,110 @@ import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.MetricType;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	private Gson m_gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+	@Inject
+	private JsonBuilder m_builder;
+
+	private void buildBatchMetric(String content) {
+		String[] lines = content.split("\n");
+
+		// group, domain, key, type, time, value
+		for (String line : lines) {
+			String[] tabs = line.split("\t");
+
+			if (tabs.length >= 6) {
+				try {
+					String group = tabs[0];
+					String domain = tabs[1];
+					String key = tabs[2];
+					String type = tabs[3];
+					long time = Long.parseLong(tabs[4]);
+					double value = Double.parseDouble(tabs[5]);
+					buildMetric(group, domain, key, type, time, value);
+				} catch (Exception e) {
+					Cat.logError("Unrecognized batch data: " + line, e);
+				}
+			} else {
+				Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
+			}
+		}
+	}
+
+	private Metric buildMetric(Payload payload, String type, double value) {
+		String group = payload.getGroup();
+		String domain = payload.getDomain();
+		String key = payload.getKey();
+		long time = payload.getTimestamp();
+
+		return buildMetric(group, domain, key, type, time, value);
+
+	}
+
+	private Metric buildMetric(String group, String domain, String key, String type, long time, double value) {
+		boolean invalid = time < TimeUtil.getCurrentHour().getTime();
+
+		if (invalid) {
+			Cat.logError(new RuntimeException("Error timestamp in metric api, time"
+			      + new SimpleDateFormat("yyyy-MM-dd HH:ss").format(new Date(time))));
+
+			time = System.currentTimeMillis();
+		}
+		Metric metric = Cat.getProducer().newMetric(group, key);
+		DefaultMetric defaultMetric = (DefaultMetric) metric;
+
+		if (defaultMetric != null) {
+			defaultMetric.setTimestamp(time);
+			if (MetricType.SUM.name().equalsIgnoreCase(type)) {
+				defaultMetric.setStatus("S,C");
+				defaultMetric.addData(String.format("%s,%.2f", 1, value));
+			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
+				defaultMetric.setStatus("T");
+				defaultMetric.addData(String.format("%.2f", value));
+			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
+				defaultMetric.setStatus("C");
+				defaultMetric.addData(String.valueOf(value));
+			}
+		}
+
+		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		tree.setDomain(domain);
+
+		Message message = tree.getMessage();
+		if (message instanceof Transaction) {
+			((DefaultTransaction) message).setTimestamp(time);
+		}
+		return defaultMetric;
+	}
 
 	public HttpStatus checkPars(Payload payload) {
 		StringBuilder sb = new StringBuilder();
 		String domain = payload.getDomain();
 		String group = payload.getGroup();
 		String key = payload.getKey();
-		String action = payload.getAction().getName();
+		Action action = payload.getAction();
 		HttpStatus httpStatus = new HttpStatus();
 		boolean error = false;
 
-		if (StringUtils.isEmpty(domain)) {
-			sb.append("domain ");
-			error = true;
-		}
-		if (StringUtils.isEmpty(group)) {
-			sb.append("group ");
-			error = true;
-		}
-		if (StringUtils.isEmpty(key) && !Action.BATCH_API.getName().equalsIgnoreCase(action)) {
-			sb.append("key ");
-			error = true;
+		if (!Action.BATCH_API.equals(action)) {
+			if (StringUtils.isEmpty(domain)) {
+				sb.append("domain ");
+				error = true;
+			}
+			if (StringUtils.isEmpty(group)) {
+				sb.append("group ");
+				error = true;
+			}
+			if (StringUtils.isEmpty(key)) {
+				sb.append("key ");
+				error = true;
+			}
 		}
 		if (error) {
 			httpStatus.setErrorMsg("invalid field: " + sb.toString());
@@ -79,105 +151,30 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		HttpStatus status = checkPars(payload);
 
-		model.setPage(ReportPage.MONITOR);
-		model.setStatus(m_gson.toJson(status));
+		model.setStatus(m_builder.toJson(status));
 		if (status.getStatusCode().equals(String.valueOf(HttpStatus.SUCCESS))) {
-			String domain = payload.getDomain();
-			String group = payload.getGroup();
-			String key = payload.getKey();
-			long time = payload.getTimestamp();
-			long count = payload.getCount();
-			boolean invalid = time < TimeUtil.getCurrentHour().getTime();
-
-			if (invalid) {
-				Cat.logError(new RuntimeException("Error timestamp in metric api, time"
-				      + new SimpleDateFormat("yyyy-MM-dd HH:ss").format(new Date(time)) + payload.toString()));
-
-				time = System.currentTimeMillis();
-			}
 
 			switch (action) {
 			case COUNT_API:
-				buildMetric(group, key, MetricType.COUNT.name(), time, count);
+				buildMetric(payload, MetricType.COUNT.name(), payload.getCount());
 				break;
 			case AVG_API:
-				buildMetric(group, key, MetricType.AVG.name(), time, payload.getAvg());
+				buildMetric(payload, MetricType.AVG.name(), payload.getAvg());
 				break;
 			case SUM_API:
-				buildMetric(group, key, MetricType.SUM.name(), time, payload.getSum());
+				buildMetric(payload, MetricType.SUM.name(), payload.getSum());
 				break;
 			case BATCH_API:
-				buildBatchMetric(group, payload.getBatch());
+				buildBatchMetric(payload.getBatch());
 				break;
 			default:
 				throw new RuntimeException("Unknown action: " + action);
 			}
-			DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-			tree.setDomain(domain);
 
-			Message message = tree.getMessage();
-			if (message instanceof Transaction) {
-				((DefaultTransaction) message).setTimestamp(time);
-			}
 		}
 		model.setAction(action);
 		model.setPage(ReportPage.MONITOR);
 		m_jspViewer.view(ctx, model);
-	}
-
-	private Metric buildMetric(String group, String key, String type, long time, double value) {
-		Metric metric = Cat.getProducer().newMetric(group, key);
-		DefaultMetric defaultMetric = (DefaultMetric) metric;
-
-		if (defaultMetric != null) {
-			defaultMetric.setTimestamp(time);
-			if (MetricType.SUM.name().equalsIgnoreCase(type)) {
-				defaultMetric.setStatus("S,C");
-				defaultMetric.addData(String.format("%s,%.2f", 1, value));
-			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
-				defaultMetric.setStatus("T");
-				defaultMetric.addData(String.format("%.2f", value));
-			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
-				defaultMetric.setStatus("C");
-				defaultMetric.addData(String.valueOf(value));
-			}
-		}
-		return defaultMetric;
-	}
-
-	private boolean validateNumber(String longNumber, String doubleNumber) {
-		try {
-			if (StringUtils.isNotEmpty(longNumber) && StringUtils.isNotEmpty(doubleNumber)) {
-				Long.parseLong(longNumber);
-				Double.parseDouble(doubleNumber);
-				return true;
-			} else {
-				return false;
-			}
-
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	private void buildBatchMetric(String group, String content) {
-		String[] lines = content.split("\n");
-
-		for (String line : lines) {
-			String[] tabs = line.split("\t");
-
-			if (tabs.length == 4 & validateNumber(tabs[2], tabs[3])) {
-				String key = tabs[0];
-				String type = tabs[1];
-				long time = Long.parseLong(tabs[2]);
-				double value = Double.parseDouble(tabs[3]);
-
-				buildMetric(group, key, type, time, value);
-			} else {
-				Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
-			}
-
-		}
 	}
 
 }

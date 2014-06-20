@@ -170,7 +170,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (!StringUtils.isEmpty(group)) {
 			m_productLineConfigManager.insertIfNotExsit(group, domain);
 
-			if (!validateMetricType(domain, group)) {
+			if (!isBussinessMonitor(domain, group)) {
 				report = findOrCreateReport(group);
 			}
 		}
@@ -184,26 +184,15 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-			if (validateMetricType(domain, group)) {
+			if (isBussinessMonitor(domain, group)) {
 				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 			}
 		}
 		return 0;
 	}
 
-	private boolean validateGroup(String group) {
-		if (!StringUtils.isEmpty(group)
-		      && (group.toLowerCase().startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX)
-		            || group.toLowerCase().startsWith(ProductLineConfigManager.NETWORK_F5_PREFIX) || group.toLowerCase()
-		            .startsWith(ProductLineConfigManager.NETWORK_SWITCH_PREFIX))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateMetricType(String domain, String group) {
-		if (Constants.BROKER_SERVICE.equals(domain) || validateGroup(group)) {
+	private boolean isBussinessMonitor(String domain, String group) {
+		if (Constants.BROKER_SERVICE.equals(domain) || StringUtils.isNotEmpty(group)) {
 			return false;
 		} else {
 			return true;

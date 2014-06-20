@@ -74,11 +74,13 @@ public class ExceptionConfigManager implements Initializable {
 	public boolean insertExceptionLimit(ExceptionLimit limit) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
 		domainConfig.getExceptionLimits().put(limit.getId(), limit);
+		
 		return storeConfig();
 	}
 
 	public List<ExceptionLimit> queryAllExceptionLimits() {
 		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
+		
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionLimits().values());
 		}
@@ -88,6 +90,7 @@ public class ExceptionConfigManager implements Initializable {
 	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
 		ExceptionLimit result = null;
+		
 		if (domainConfig == null) {
 			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
 		}

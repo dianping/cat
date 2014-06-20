@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.jvm;
+package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMMemoryExecutor extends AbstractExecutor {
 
@@ -55,16 +55,19 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 			DataEntity eden = new DataEntity();
 			eden.setId(buildJVMDataEntityId("edenUsage")).setType(AVG_TYPE).setTime(current)
 			      .setValue(Double.valueOf(metrics[2]) / 100);
+			addGroupDomainInfo(eden);
 			entities.add(eden);
 
 			DataEntity old = new DataEntity();
 			old.setId(buildJVMDataEntityId("oldUsage")).setType(AVG_TYPE).setTime(current)
 			      .setValue(Double.valueOf(metrics[3]) / 100);
+			addGroupDomainInfo(old);
 			entities.add(old);
 
 			DataEntity perm = new DataEntity();
 			perm.setId(buildJVMDataEntityId("permUsage")).setType(AVG_TYPE).setTime(current)
 			      .setValue(Double.valueOf(metrics[4]) / 100);
+			addGroupDomainInfo(perm);
 			entities.add(perm);
 
 			return entities;

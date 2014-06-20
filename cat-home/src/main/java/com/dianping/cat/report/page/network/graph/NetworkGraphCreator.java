@@ -23,6 +23,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 	      final Map<String, double[]> dataWithOutFutures) {
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
+		List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
@@ -40,6 +41,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 					Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
+					buildLineChartTitle(lineChart, key, alertKeys);
 					addLastMinuteData(current, all, m_lastMinute, endDate);
 					convertLineChartData(lineChart, current, key);
 				}
@@ -49,13 +51,25 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
+	private void buildLineChartTitle(LineChart lineChart, String key, List<String> alertKeys) {
+		String title = lineChart.getHtmlTitle();
+		String realKey = key.substring(0, key.lastIndexOf(":"));
+
+		// alertKeys格式 = [domain:Metric:key]
+		if (alertKeys.contains(realKey) && !title.startsWith("<span style='color:red'>")) {
+			lineChart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+		} else {
+			lineChart.setHtmlTitle(title);
+		}
+	}
+
 	private void convertLineChartData(LineChart lineChart, Map<Long, Double> current, String key) {
-		
+
 		if (isFlowMetric(lineChart.getId())) {
 			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 
 			for (Entry<Long, Double> currentEntry : current.entrySet()) {
-				double result = currentEntry.getValue() / 1000.0;
+				double result = currentEntry.getValue() / 1000000.0 / 60;
 
 				convertedData.put(currentEntry.getKey(), result);
 			}
@@ -184,7 +198,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 
 	private String buildUnit(String chartTitle) {
 		if (isFlowMetric(chartTitle)) {
-			return "流量(MB/分钟)";
+			return "流量(MB/秒)";
 		} else {
 			return "value/分钟";
 		}

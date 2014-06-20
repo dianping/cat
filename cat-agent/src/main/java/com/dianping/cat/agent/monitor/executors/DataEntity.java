@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor;
+package com.dianping.cat.agent.monitor.executors;
 
 public class DataEntity {
 
@@ -9,6 +9,18 @@ public class DataEntity {
 	private double m_value;
 
 	private long m_time;
+	
+	private String m_group;
+	
+	private String m_domain;
+
+	public String getDomain() {
+		return m_domain;
+	}
+
+	public String getGroup() {
+		return m_group;
+	}
 
 	public String getId() {
 		return m_id;
@@ -24,6 +36,16 @@ public class DataEntity {
 
 	public double getValue() {
 		return m_value;
+	}
+
+	public DataEntity setDomain(String domain) {
+		m_domain = domain;
+		return this;
+	}
+
+	public DataEntity setGroup(String group) {
+		m_group = group;
+		return this;
 	}
 
 	public DataEntity setId(String id) {

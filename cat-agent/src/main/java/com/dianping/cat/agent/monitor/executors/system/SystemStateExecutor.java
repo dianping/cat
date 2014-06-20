@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.system;
+package com.dianping.cat.agent.monitor.executors.system;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,8 +15,8 @@ import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Uptime;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.AbstractExecutor;
-import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemStateExecutor extends AbstractExecutor implements Initializable {
 
@@ -100,6 +100,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			DataEntity entity = new DataEntity();
 			entity.setId(buildSystemDataEntityId("uptime")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
 			      .setValue(time);
+			addGroupDomainInfo(entity);
 			entities.add(entity);
 		} catch (SigarException e) {
 			Cat.logError(e);
@@ -131,7 +132,8 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		DataEntity entity = new DataEntity();
 
 		entity.setId(buildSystemDataEntityId("hostIpChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
-
+		addGroupDomainInfo(entity);
+		
 		if (!hostIpAddrChanged()) {
 			entity.setValue(1);
 		} else {
@@ -147,7 +149,8 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		String hostName = tellHostName();
 
 		entity.setId(buildSystemDataEntityId("hostNameChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
-
+		addGroupDomainInfo(entity);
+		
 		if (m_hostName.equals(hostName)) {
 			entity.setValue(1);
 		} else {
@@ -165,7 +168,8 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			DataEntity entity = new DataEntity();
 
 			entity.setId(buildSystemDataEntityId("md5Change")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
-
+			addGroupDomainInfo(entity);
+			
 			if (m_md5String != null && m_md5String.equals(currMd5String)) {
 				entity.setValue(1);
 			} else {
