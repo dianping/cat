@@ -29,11 +29,12 @@ public class DataSender implements Task, Initializable {
 
 	private static BlockingQueue<DataEntity> m_entities = new ArrayBlockingQueue<DataEntity>(5000);
 
-	private List<DataEntity> m_dataEntities = new ArrayList<DataEntity>();
+	private static final int MAX_ENTITIES = 20;
 
-	private static final long DURATION = 20 * 1000;
-
-	private static final int MAX_ENTITIES = 30;
+	public DataSender setEnvironmentConfig(EnvironmentConfig environmentConfig) {
+		m_environmentConfig = environmentConfig;
+		return this;
+	}
 
 	public boolean put(List<DataEntity> entities) {
 		boolean result = true;
@@ -93,7 +94,7 @@ public class DataSender implements Task, Initializable {
 
 		for (String server : servers) {
 			String url = m_environmentConfig.buildSystemUrl(server);
-			String entityContent = buildBatchEntities(m_dataEntities);
+			String entityContent = buildBatchEntities(entities);
 			String content = "&batch=" + entityContent;
 
 			if (sendData(url, content)) {
@@ -108,44 +109,37 @@ public class DataSender implements Task, Initializable {
 		boolean active = true;
 
 		while (active) {
-			Transaction t = Cat.newTransaction("Data", "Send");
-			long current = System.currentTimeMillis();
-
 			try {
 				int maxSize = MAX_ENTITIES;
+				List<DataEntity> dataEntities = new ArrayList<DataEntity>();
 
-				try {
-					while (m_entities.size() > 0 && maxSize > 0) {
-						DataEntity entity = m_entities.poll(5, TimeUnit.MILLISECONDS);
+				while (m_entities.size() > 0 && maxSize > 0) {
+					DataEntity entity = m_entities.poll(5, TimeUnit.MILLISECONDS);
 
-						m_dataEntities.add(entity);
-						maxSize--;
-					}
-					if (!m_dataEntities.isEmpty()) {
-						boolean success = sendBatchEntities(m_dataEntities);
-
-						if (!success) {
-							Cat.logEvent("DataSender", "Failed", Event.SUCCESS, m_dataEntities.toString());
-						}
-					}
-					maxSize = MAX_ENTITIES;
-				} catch (Exception e) {
-					Cat.logError(e);
+					dataEntities.add(entity);
+					maxSize--;
 				}
-				long duration = System.currentTimeMillis() - current;
 
-				try {
-					if (duration < DURATION) {
-						Thread.sleep(DURATION - duration);
+				if (!dataEntities.isEmpty()) {
+					Transaction t = Cat.newTransaction("Data", "Send");
+
+					boolean success = false;
+					try {
+						success = sendBatchEntities(dataEntities);
+					} catch (Exception e) {
+						Cat.logError(e);
+					} finally {
+						t.setStatus(Transaction.SUCCESS);
+						t.complete();
 					}
-				} catch (InterruptedException e) {
-					active = false;
+					if (!success) {
+						Cat.logEvent("DataSender", "Failed", Event.SUCCESS, dataEntities.toString());
+					}
+				} else {
+					Thread.sleep(5);
 				}
-				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				Cat.logError(e);
-			} finally {
-				t.complete();
 			}
 		}
 	}
@@ -163,5 +157,4 @@ public class DataSender implements Task, Initializable {
 	public void initialize() throws InitializationException {
 		Threads.forGroup("Cat").start(this);
 	}
-
 }

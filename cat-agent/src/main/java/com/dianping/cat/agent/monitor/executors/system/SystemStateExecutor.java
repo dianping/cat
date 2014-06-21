@@ -11,7 +11,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.hyperic.sigar.NetInterfaceConfig;
 import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Uptime;
 
 import com.dianping.cat.Cat;
@@ -51,7 +50,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		} catch (Exception exc) {
 			try {
 				hostname = m_sigar.getNetInfo().getHostName();
-			} catch (SigarException e) {
+			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
@@ -102,7 +101,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			      .setValue(time);
 			addGroupDomainInfo(entity);
 			entities.add(entity);
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;
@@ -121,7 +120,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 					return false;
 				}
 			}
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return true;
@@ -176,7 +175,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 				entity.setValue(0);
 			}
 			entities.add(entity);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;
