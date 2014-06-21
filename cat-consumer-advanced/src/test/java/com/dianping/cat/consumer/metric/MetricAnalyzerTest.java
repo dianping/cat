@@ -86,8 +86,8 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 
 		m_analyzer.storeReports(true);
 
-		Assert.assertEquals(1, m_businessReportDao.m_count);
-		Assert.assertEquals(1, m_bucketCount);
+		Assert.assertEquals(2, m_businessReportDao.m_count);
+		Assert.assertEquals(2, m_bucketCount);
 	}
 
 	protected MessageTree generateMessageTree(int i) {
@@ -118,7 +118,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			t.setTimestamp(m_timestamp + i * MINITE);
 			DefaultEvent event = new DefaultEvent("URL", "ABTest");
 
-			DefaultMetric metric = new DefaultMetric("City", "/nanjing");
+			DefaultMetric metric = new DefaultMetric("", "/nanjing");
 
 			metric.setTimestamp(m_timestamp + i * MINITE);
 			metric.setStatus("S,C");
@@ -129,7 +129,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		} else {
 			t = new DefaultTransaction("Metric", "TuanGouWeb", null);
 			t.setTimestamp(m_timestamp + 1000);
-			DefaultMetric metric = new DefaultMetric("City", "/shanghai");
+			DefaultMetric metric = new DefaultMetric("", "/shanghai");
 
 			metric.setTimestamp(m_timestamp + i * MINITE);
 			metric.setStatus("C");
@@ -137,7 +137,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 
 			t.addChild(metric);
 
-			DefaultMetric durationMetric = new DefaultMetric("City", "/shenzhen");
+			DefaultMetric durationMetric = new DefaultMetric("", "/shenzhen");
 
 			durationMetric.setTimestamp(m_timestamp + i * MINITE);
 			durationMetric.setStatus("T");

@@ -108,6 +108,20 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		}
 	}
 
+	private Set<String> queryAllGroups(NetGraph netGraphTemplate) {
+      Set<String> groups = new HashSet<String>();
+
+      for (NetTopology netTopology : netGraphTemplate.getNetTopologies()) {
+      	for (Connection connection : netTopology.getConnections()) {
+      		for (Interface inter : connection.getInterfaces()) {
+      			groups.add(inter.getGroup());
+      		}
+      	}
+      }
+      return groups;
+   }
+	
+
 	private Map<String, MetricReport> queryMetricReports(Set<String> groups, Date date) {
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
@@ -143,16 +157,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 				
 				try {
 					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
-					Set<String> groups = new HashSet<String>();
-
-					for (NetTopology netTopology : netGraphTemplate.getNetTopologies()) {
-						for (Connection connection : netTopology.getConnections()) {
-							for (Interface inter : connection.getInterfaces()) {
-								groups.add(inter.getGroup());
-							}
-						}
-					}
-					
+					Set<String> groups = queryAllGroups(netGraphTemplate);
 					Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, TimeUtil.getCurrentHour());
 					List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 					

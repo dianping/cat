@@ -69,27 +69,4 @@
       <segment id="56" count="1" sum="10.0" avg="10.0"/>
       <segment id="59" count="1" sum="10.0" avg="10.0"/>
    </metric-item>
-   <metric-item id="group:Metric:/beijing" type="S">
-      <domain>group</domain>
-      <segment id="3" count="1" sum="10.0" avg="10.0"/>
-      <segment id="6" count="1" sum="10.0" avg="10.0"/>
-      <segment id="9" count="1" sum="10.0" avg="10.0"/>
-      <segment id="12" count="1" sum="10.0" avg="10.0"/>
-      <segment id="15" count="1" sum="10.0" avg="10.0"/>
-      <segment id="18" count="1" sum="10.0" avg="10.0"/>
-      <segment id="21" count="1" sum="10.0" avg="10.0"/>
-      <segment id="24" count="1" sum="10.0" avg="10.0"/>
-      <segment id="27" count="1" sum="10.0" avg="10.0"/>
-      <segment id="30" count="1" sum="10.0" avg="10.0"/>
-      <segment id="33" count="1" sum="10.0" avg="10.0"/>
-      <segment id="36" count="1" sum="10.0" avg="10.0"/>
-      <segment id="39" count="1" sum="10.0" avg="10.0"/>
-      <segment id="42" count="1" sum="10.0" avg="10.0"/>
-      <segment id="45" count="1" sum="10.0" avg="10.0"/>
-      <segment id="48" count="1" sum="10.0" avg="10.0"/>
-      <segment id="51" count="1" sum="10.0" avg="10.0"/>
-      <segment id="54" count="1" sum="10.0" avg="10.0"/>
-      <segment id="57" count="1" sum="10.0" avg="10.0"/>
-      <segment id="0" count="1" sum="10.0" avg="10.0"/>
-   </metric-item>
 </metric-report>
