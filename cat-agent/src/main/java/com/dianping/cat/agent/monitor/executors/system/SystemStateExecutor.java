@@ -33,7 +33,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_hostName = tellHostName();
+		m_hostName = fetchHostName();
 		m_ipAddr = m_environmentConfig.getIp();
 
 		try {
@@ -43,7 +43,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		}
 	}
 
-	public String tellHostName() {
+	public String fetchHostName() {
 		String hostname = "";
 		try {
 			hostname = InetAddress.getLocalHost().getHostName();
@@ -145,7 +145,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 	public List<DataEntity> buildHostNameInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		DataEntity entity = new DataEntity();
-		String hostName = tellHostName();
+		String hostName = fetchHostName();
 
 		entity.setId(buildSystemDataEntityId("hostNameChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
 		addGroupDomainInfo(entity);
