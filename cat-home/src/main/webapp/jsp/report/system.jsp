@@ -138,21 +138,28 @@
 					var productSelect = $('#productLine');
 					function change() {
 						var productLine = $("#productLine").val();
-						var projects = projectsInfo[productLine];
+						var projects;
+						if(productLine == 'All') {
+							projects = new Array();
+							for(var key in projectsInfo) {
+								for(var subKey in projectsInfo[key]) {
+									projects.push(projectsInfo[key][subKey]);
+								}
+							}
+						} else {
+							projects = projectsInfo[productLine];
+						}
 						select = document.getElementById("domain");
 						select.length = 0;
 
 						for ( var prop in projects) {
-							var opt = $('<option />');
-							var cmdbDomain = projects[prop].cmdbDomain;
-							var domain = projects[prop].domain;
-							if(typeof cmdbDomain != "undefined" && cmdbDomain.length > 0 ) {
-								opt.html(cmdbDomain);
-							}else{
+							if (projects.hasOwnProperty(prop)) {
+								var opt = $('<option />');
+								var domain = projects[prop];
 								opt.html(domain);
+								opt.val(domain);
+								opt.appendTo(select);
 							}
-							opt.val(domain);
-							opt.appendTo(select);
 						}
 						$("#domain").select2();
 					}
@@ -203,7 +210,9 @@
 			<tr>
 				<th class="left">
 					业务线
-					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()"></select>
+					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()">
+					<option value="All">All</option>
+					</select>
 					项目
 					<select style="width: 200px;" name="domain" id="domain" onclick="query()"></select> 
 					查询类型

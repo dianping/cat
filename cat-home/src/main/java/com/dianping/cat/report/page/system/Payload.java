@@ -20,7 +20,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_domain = "Cat";
 
 	@FieldMeta("productLine")
-	private String m_productLine = "中间件";
+	private String m_productLine = "All";
 
 	@FieldMeta("type")
 	private String m_type = "system";

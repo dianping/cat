@@ -29,6 +29,7 @@ import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
+import com.dianping.cat.message.Event;
 import com.site.lookup.util.StringUtils;
 
 public class DomainManager implements Initializable, LogEnabled {
@@ -109,15 +110,35 @@ public class DomainManager implements Initializable, LogEnabled {
 	}
 
 	public boolean insertDomain(String domain) {
+		Project queryProject = null;
+		String projectLine = null;
+		String department = null;
+
+		// system monitor domain = cmdbdomain
+		try {
+			queryProject = m_projectDao.findByCmdbDomain(domain, ProjectEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logEvent("Query", "Table[Project]", Event.SUCCESS, e.getMessage());
+		}
+
+		if (queryProject != null) {
+			projectLine = queryProject.getProjectLine();
+			department = queryProject.getDepartment();
+		} else {
+			projectLine = "Default";
+			department = "Default";
+		}
+
 		Project project = m_projectDao.createLocal();
 
 		project.setDomain(domain);
-		project.setProjectLine("Default");
-		project.setDepartment("Default");
+		project.setCmdbDomain(domain);
+		project.setProjectLine(projectLine);
+		project.setDepartment(department);
+
 		try {
 			m_projectDao.insert(project);
 			m_domainsInCat.add(domain);
-
 			return true;
 		} catch (Exception ex) {
 			Cat.logError(ex);

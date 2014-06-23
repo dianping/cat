@@ -57,10 +57,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private static final int ALERT_PERIOD = 1;
 
-	private static final int WARN_FLAG = 1;
-
-	private static final int ERROR_FLAG = 2;
-
 	private Logger m_logger;
 
 	private TopMetric buildTopMetric(Date date) {
@@ -138,19 +134,21 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				totalException += value;
 
-				if (errorLimit > 0 && value > errorLimit && sendSms(domain, exceptionName)) {
-					alertExceptions.add(new AlertException(exceptionName, ERROR_FLAG, value));
-				} else if (warnLimit > 0 && value > warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, WARN_FLAG, value));
+				if (errorLimit > 0 && value >= errorLimit && sendSms(domain, exceptionName)) {
+					alertExceptions.add(new AlertException(exceptionName, AlertException.ERROR_EXCEPTION, value));
+				} else if (warnLimit > 0 && value >= warnLimit) {
+					alertExceptions.add(new AlertException(exceptionName, AlertException.WARN_EXCEPTION, value));
 				}
 			}
 		}
 
-		if (totalErrorLimit > 0 && totalException > totalErrorLimit
+		if (totalErrorLimit > 0 && totalException >= totalErrorLimit
 		      && sendSms(domain, ExceptionConfigManager.TOTAL_STRING)) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, ERROR_FLAG, totalException));
-		} else if (totalWarnLimit > 0 && totalException > totalWarnLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, WARN_FLAG, totalException));
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.ERROR_EXCEPTION,
+			      totalException));
+		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.WARN_EXCEPTION,
+			      totalException));
 		}
 
 		return alertExceptions;
@@ -268,39 +266,36 @@ public class ExceptionAlert implements Task, LogEnabled {
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
 		List<AlertException> errorExceptions = new ArrayList<AlertException>();
-		List<AlertException> warnExceptions = new ArrayList<AlertException>();
-
-		for (AlertException exception : exceptions) {
-			if (exception.getAlertFlag() == WARN_FLAG) {
-				warnExceptions.add(exception);
-			} else if (exception.getAlertFlag() == ERROR_FLAG) {
-				errorExceptions.add(exception);
-			}
-		}
 
 		StringBuilder mailTitle = new StringBuilder();
-		String mailContent = buildContent(exceptions.toString(), domain);
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+		String mailContent = buildContent(exceptions.toString(), domain, time);
 
 		mailTitle.append("[CAT异常告警] [项目: ").append(domain).append("]");
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		m_mailSms.sendEmail(mailTitle.toString(), mailContent, emails);
-		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+
+		for (AlertException exception : exceptions) {
+			if (AlertException.ERROR_EXCEPTION.equals(exception.getType())) {
+				errorExceptions.add(exception);
+			}
+		}
 
 		if (!errorExceptions.isEmpty()) {
-			String smsContent = buildContent(errorExceptions.toString(), domain);
+			String smsContent = buildContent(errorExceptions.toString(), domain, time);
 
 			m_logger.info(smsContent + " " + phones);
-			m_mailSms.sendSms(smsContent, null, phones);
-			Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, "[短信告警] " + smsContent);
+			m_mailSms.sendSms(smsContent, smsContent, phones);
+			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
 		}
 	}
 
-	private String buildContent(String exceptions, String domain) {
+	private String buildContent(String exceptions, String domain, String time) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exceptions).append("[时间: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()))
-		      .append("]");
+		sb.append(exceptions).append("[时间: ").append(time).append("]");
 
 		return sb.toString();
 	}
@@ -311,20 +306,24 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	public class AlertException {
 
+		public static final String WARN_EXCEPTION = "warn";
+
+		public static final String ERROR_EXCEPTION = "error";
+
 		private String m_name;
 
-		private int m_alertFlag;
+		private String m_type;
 
 		private double m_count;
 
-		public AlertException(String name, int alertFlag, double count) {
+		public AlertException(String name, String type, double count) {
 			m_name = name;
-			m_alertFlag = alertFlag;
+			m_type = type;
 			m_count = count;
 		}
 
-		public int getAlertFlag() {
-			return m_alertFlag;
+		public String getType() {
+			return m_type;
 		}
 
 		public String getName() {
