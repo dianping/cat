@@ -9,7 +9,6 @@ import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
 import org.hyperic.sigar.NetInterfaceStat;
 import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Swap;
 
 import com.dianping.cat.Cat;
@@ -71,7 +70,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 			} else {
 				m_preCpu = m_sigar.getCpu();
 			}
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;
@@ -95,7 +94,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 					entities.add(entity);
 				}
 			}
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;
@@ -127,7 +126,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 			} else {
 				m_preIfStat = m_sigar.getNetInterfaceStat(ETH_NAME);
 			}
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;
@@ -138,14 +137,15 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 		try {
 			Swap curSwap = m_sigar.getSwap();
-			double swapUsage = 1.0 * curSwap.getUsed() / curSwap.getTotal();
+			long totalSwap = curSwap.getTotal();
+			double swapUsage = totalSwap > 0 ? 1.0 * curSwap.getUsed() / totalSwap : 0.0;
 			DataEntity entity = new DataEntity();
 
 			entity.setId(buildSystemDataEntityId("swap")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
 			      .setValue(swapUsage);
 			addGroupDomainInfo(entity);
 			entities.add(entity);
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;
@@ -162,7 +162,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 			      .setValue(loadAverages[0]);
 			addGroupDomainInfo(entity);
 			entities.add(entity);
-		} catch (SigarException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return entities;

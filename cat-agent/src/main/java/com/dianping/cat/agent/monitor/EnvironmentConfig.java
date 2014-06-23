@@ -19,8 +19,8 @@ public class EnvironmentConfig implements Initializable {
 
 	private static final String ALTERATION_URL = "http://%1$s/cat/r/alteration";
 
-	private static final List<String> CAT_SERVERS = Arrays.asList("localhost:2281", "10.1.110.57:8080",
-	      "10.1.110.23:8080", "10.1.110.21:8080");
+	private static final List<String> CAT_SERVERS = Arrays.asList("10.1.110.57:8080", "10.1.110.23:8080",
+	      "10.1.110.21:8080");
 
 	private String m_ip;
 
