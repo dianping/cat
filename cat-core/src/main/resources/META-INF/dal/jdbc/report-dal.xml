@@ -227,13 +227,6 @@
 				FROM <TABLE/>  WHERE binary(<FIELD name='domain'/>) = binary(${domain})
 				]]></statement>
 			</query>
-			<query name="find-by-cmdb-domain" type="SELECT">
-				<param name="cmdb-domain" />
-				<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/>  WHERE binary(<FIELD name='cmdb-domain'/>) = binary(${cmdb-domain})
-				]]></statement>
-			</query>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
 				INSERT INTO <TABLE/>
