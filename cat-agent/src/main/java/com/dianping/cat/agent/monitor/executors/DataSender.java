@@ -65,7 +65,10 @@ public class DataSender implements Task, Initializable {
 		return sb.toString();
 	}
 
-	private boolean sendData(String url, String content) {
+	private boolean sendData(String server, String content) {
+		boolean flag = false;
+		String url = m_environmentConfig.buildSystemUrl(server);
+
 		try {
 			URLConnection conn = new URL(url).openConnection();
 
@@ -81,23 +84,22 @@ public class DataSender implements Task, Initializable {
 			String result = Files.forIO().readFrom(in, "utf-8");
 
 			if (result.contains("{\"statusCode\":\"0\"}")) {
-				return true;
+				flag = true;
 			}
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logEvent("DataSender", "Failed", Event.SUCCESS, "server [" + server + "] is not reachable.");
 		}
-		return false;
+		return flag;
 	}
 
 	private boolean sendBatchEntities(List<DataEntity> entities) {
 		List<String> servers = m_environmentConfig.getServers();
 
 		for (String server : servers) {
-			String url = m_environmentConfig.buildSystemUrl(server);
 			String entityContent = buildBatchEntities(entities);
 			String content = "&batch=" + entityContent;
 
-			if (sendData(url, content)) {
+			if (sendData(server, content)) {
 				return true;
 			}
 		}
@@ -133,7 +135,9 @@ public class DataSender implements Task, Initializable {
 						t.complete();
 					}
 					if (!success) {
-						Cat.logEvent("DataSender", "Failed", Event.SUCCESS, dataEntities.toString());
+						Cat.logEvent("DataSender", "Failed", Event.SUCCESS,
+						      "All cat servers: " + m_environmentConfig.getServers() + "are unreachable. DataEntity: "
+						            + dataEntities.toString());
 					}
 				} else {
 					Thread.sleep(5);
