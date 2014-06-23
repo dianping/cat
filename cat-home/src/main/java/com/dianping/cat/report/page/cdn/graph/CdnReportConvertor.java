@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.cdn.graph;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -9,8 +8,6 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
 
 public class CdnReportConvertor extends BaseVisitor {
-	private CdnConfig m_cdnConfig;
-
 	private IpService m_ipService;
 
 	private MetricReport m_report;
@@ -23,14 +20,11 @@ public class CdnReportConvertor extends BaseVisitor {
 	
 	private static final String ALL = "ALL";
 	
-	public CdnReportConvertor(CdnConfig cdnConfig, IpService ipService) {
-		m_cdnConfig = cdnConfig;
+	public CdnReportConvertor(IpService ipService) {
 		m_ipService = ipService;
 	}
 
-	private String filterAndConvert(String vip, String sip) {
-		String cdn = m_cdnConfig.queryCdnName(vip);
-
+	private String filterAndConvert(String cdn, String sip) {
 		if (m_cdn.equals(ALL)) {
 			return cdn;
 		} else if (!m_cdn.equals(cdn)) {
@@ -96,9 +90,9 @@ public class CdnReportConvertor extends BaseVisitor {
 		try {
 			String id = metricItem.getId();
 			String[] temp = id.split(":");
-			String vip = temp[2];
+			String cdn = temp[2];
 			String sip = temp[3];
-			String key = filterAndConvert(vip, sip);
+			String key = filterAndConvert(cdn, sip);
 
 			if (key != null) {
 				MetricItem item = m_report.findOrCreateMetricItem(key);
@@ -106,7 +100,6 @@ public class CdnReportConvertor extends BaseVisitor {
 				mergeMetricItem(item, metricItem);
 			}
 		} catch (Exception e) {
-			Cat.logError(e);
 		}
 	}
 

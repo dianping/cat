@@ -35,7 +35,6 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.cdn.graph.CdnConfig;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -129,12 +128,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
 		all.add(C(IpService.class));
-		all.add(C(CdnConfig.class));
 		all.add(C(CdnGraphCreator.class).req(BaselineService.class, DataExtractor.class,
 				MetricDataFetcher.class, CachedMetricReportService.class, MetricConfigManager.class,
-				ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, CdnConfig.class));
+				ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class).req(ModelService.class,
-		      MetricAnalyzer.ID).req(ReportService.class).req(CdnConfig.class, IpService.class));
+		      MetricAnalyzer.ID).req(ReportService.class).req(IpService.class));
 
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 
