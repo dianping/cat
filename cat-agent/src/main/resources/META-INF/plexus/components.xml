@@ -63,15 +63,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.puppet.PuppetTask</role>
-			<implementation>com.dianping.cat.agent.monitor.puppet.PuppetTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
@@ -96,9 +87,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.agent.monitor.puppet.PuppetTask</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -130,15 +118,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.agent.monitor.puppet.PuppetTask</role>
-			<implementation>com.dianping.cat.agent.monitor.puppet.PuppetTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
 				</requirement>
 			</requirements>
 		</component>

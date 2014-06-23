@@ -210,13 +210,13 @@
 			<tr>
 				<th class="left">
 					业务线
-					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()">
+					<select style="width: 200px;" name="productLine" id="productLine" >
 					<option value="All">All</option>
 					</select>
 					项目
-					<select style="width: 200px;" name="domain" id="domain" onclick="query()"></select> 
+					<select style="width: 200px;" name="domain" id="domain" ></select> 
 					查询类型
-					<select style="width: 100px;" name="type" id="type"  onclick="query()" >
+					<select style="width: 100px;" name="type" id="type" >
 							<option value="system">系统</option>
 							<option value="jvm">JVM</option>
 							<option value="nginx">Nginx</option>
@@ -225,7 +225,7 @@
 
 				<th class="right">开始时间
 					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()">
+						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" >
 						</input>
 						<span class="add-on">
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
@@ -234,7 +234,7 @@
            
 					结束时间
 					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()"></input> 
+						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" ></input> 
 						<span class="add-on" ondragleave="query()"> 
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>

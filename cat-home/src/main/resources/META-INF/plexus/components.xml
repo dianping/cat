@@ -1860,6 +1860,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
+			<implementation>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.exception.ExceptionAlert</role>
 			<implementation>com.dianping.cat.report.task.alert.exception.ExceptionAlert</implementation>
 			<requirements>
@@ -1874,6 +1883,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>

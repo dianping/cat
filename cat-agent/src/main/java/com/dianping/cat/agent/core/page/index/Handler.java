@@ -13,7 +13,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.agent.core.CorePage;
 import com.dianping.cat.agent.monitor.executors.DataSender;
 import com.dianping.cat.agent.monitor.executors.TaskExecutors;
-import com.dianping.cat.agent.monitor.puppet.PuppetTask;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -24,9 +23,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	protected TaskExecutors m_taskExecutors;
-
-	@Inject
-	private PuppetTask m_puppetTask;
 
 	@Override
 	@PayloadMeta(Payload.class)

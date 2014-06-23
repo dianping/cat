@@ -14,24 +14,70 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 
 	public static final String ID = "JVMMemoryExecutor";
 
+	public static boolean checkSingleTomcat() {
+		boolean result = false;
+		BufferedReader reader = null;
+
+		try {
+			Process process = Runtime.getRuntime().exec(
+			      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep  | wc -l" });
+			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String output = reader.readLine();
+
+			if (output != null) {
+				String outputs[] = output.split(" +");
+				int length = outputs.length;
+				int n = 0;
+
+				if (length == 1) {
+					n = Integer.parseInt(outputs[0]);
+				} else if (length > 1) {
+					n = Integer.parseInt(outputs[1]);
+				}
+
+				if (n == 1) {
+					result = true;
+				} else if (n > 1) {
+					Cat.logError(new RuntimeException("More than one tomcat is running on machine"));
+				} else if (n == 0) {
+					Cat.logError(new RuntimeException("No tomcat is running on machine"));
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					Cat.logError(e);
+				}
+			}
+		}
+		return result;
+	}
+
 	public static String findPidOfTomcat() {
 		String pid = null;
 		BufferedReader reader = null;
 
 		try {
-			Process process = Runtime.getRuntime().exec(
-			      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep" });
-			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String output = reader.readLine();
+			if (checkSingleTomcat()) {
+				Process process = Runtime.getRuntime().exec(
+				      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep" });
+				reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				String output = reader.readLine();
 
-			if (output != null) {
-				if (reader.readLine() != null) {
-					Cat.logError(new RuntimeException("More than one tomcat is running on machine"));
+				if (output != null) {
+					String out = reader.readLine();
+					if (out != null) {
+						Cat.logError(new RuntimeException("[ ps aux | grep tomcat | grep -v grep ] 2nd line output: " + out));
+					}
+					String[] outputs = output.split(" +");
+					pid = outputs[1];
+				} else {
+					Cat.logError(new RuntimeException("[ ps aux | grep tomcat | grep -v grep ] 1st line no output"));
 				}
-				String[] outputs = output.split(" +");
-				pid = outputs[1];
-			} else {
-				Cat.logError(new RuntimeException("No tomcat is running on machine"));
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -68,8 +114,6 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 				reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				reader.readLine();
 				String output = reader.readLine();
-				reader.close();
-
 				String[] metrics = output.split(" +");
 				long current = System.currentTimeMillis();
 

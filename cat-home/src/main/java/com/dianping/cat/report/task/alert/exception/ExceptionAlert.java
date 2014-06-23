@@ -1,11 +1,9 @@
 package com.dianping.cat.report.task.alert.exception;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,7 +12,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -24,13 +21,12 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
+import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -49,6 +45,9 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;
+
+	@Inject
+	private AlertExceptionBuilder m_alertBuilder;
 
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_topService;
@@ -71,111 +70,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	private Pair<Double, Double> queryDomainTotalLimit(String domain) {
-		ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(domain);
-		Pair<Double, Double> limits = new Pair<Double, Double>();
-		double totalWarnLimit = -1;
-		double totalErrorLimit = -1;
-
-		if (totalExceptionLimit != null) {
-			totalWarnLimit = totalExceptionLimit.getWarning();
-			totalErrorLimit = totalExceptionLimit.getError();
-		}
-		limits.setKey(totalWarnLimit);
-		limits.setValue(totalErrorLimit);
-
-		return limits;
-	}
-
-	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
-		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exceptionName);
-		Pair<Double, Double> limits = new Pair<Double, Double>();
-		double warnLimit = -1;
-		double errorLimit = -1;
-
-		if (exceptionLimit != null) {
-			warnLimit = exceptionLimit.getWarning();
-			errorLimit = exceptionLimit.getError();
-		}
-		limits.setKey(warnLimit);
-		limits.setValue(errorLimit);
-
-		return limits;
-	}
-
-	private boolean isExcludedException(String domain, String exceptionName) {
-		boolean excluded = false;
-		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
-
-		if (result != null) {
-			excluded = true;
-		}
-		return excluded;
-	}
-
-	private List<AlertException> buildDomainAlertExceptionList(Item item) {
-		String domain = item.getDomain();
-		List<AlertException> alertExceptions = new ArrayList<AlertException>();
-		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
-		double totalWarnLimit = totalLimitPair.getKey();
-		double totalErrorLimit = totalLimitPair.getValue();
-		double totalException = 0;
-
-		for (Entry<String, Double> entry : item.getException().entrySet()) {
-			String exceptionName = entry.getKey();
-
-			if (!isExcludedException(domain, exceptionName)) {
-				double value = entry.getValue().doubleValue();
-				Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
-				double warnLimit = limitPair.getKey();
-				double errorLimit = limitPair.getValue();
-
-				totalException += value;
-
-				if (errorLimit > 0 && value >= errorLimit && sendSms(domain, exceptionName)) {
-					alertExceptions.add(new AlertException(exceptionName, AlertException.ERROR_EXCEPTION, value));
-				} else if (warnLimit > 0 && value >= warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertException.WARN_EXCEPTION, value));
-				}
-			}
-		}
-
-		if (totalErrorLimit > 0 && totalException >= totalErrorLimit
-		      && sendSms(domain, ExceptionConfigManager.TOTAL_STRING)) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.ERROR_EXCEPTION,
-			      totalException));
-		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.WARN_EXCEPTION,
-			      totalException));
-		}
-
-		return alertExceptions;
-	}
-
-	private boolean sendSms(String domain, String exception) {
-		boolean send = false;
-		ExceptionLimit limit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exception);
-
-		if (limit != null) {
-			send = limit.getSmsSending();
-		}
-		return send;
-	}
-
-	private Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
-		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
-
-		// different domain -> [excepitons:numbers]
-		for (Item item : items) {
-			List<AlertException> domainAlertExceptions = buildDomainAlertExceptionList(item);
-
-			if (!domainAlertExceptions.isEmpty()) {
-				alertExceptions.put(item.getDomain(), domainAlertExceptions);
-			}
-		}
-		return alertExceptions;
 	}
 
 	@Override
@@ -234,7 +128,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 				if (!items.isEmpty()) {
 					item = items.iterator().next();
 				}
-				Map<String, List<AlertException>> alertExceptions = buildAlertExceptions(item);
+				Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(item);
 
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
@@ -265,74 +159,25 @@ public class ExceptionAlert implements Task, LogEnabled {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
-		List<AlertException> errorExceptions = new ArrayList<AlertException>();
+		String mailTitle = m_alertBuilder.buildMailTitle(domain);
+		String mailContent = m_alertBuilder.buildContent(exceptions.toString(), domain);
 
-		StringBuilder mailTitle = new StringBuilder();
-		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
-		String mailContent = buildContent(exceptions.toString(), domain, time);
-
-		mailTitle.append("[CAT异常告警] [项目: ").append(domain).append("]");
+		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
-		m_mailSms.sendEmail(mailTitle.toString(), mailContent, emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
 
-		for (AlertException exception : exceptions) {
-			if (AlertException.ERROR_EXCEPTION.equals(exception.getType())) {
-				errorExceptions.add(exception);
-			}
-		}
+		List<AlertException> errorExceptions = m_alertBuilder.buildErrorException(exceptions);
 
 		if (!errorExceptions.isEmpty()) {
-			String smsContent = buildContent(errorExceptions.toString(), domain, time);
+			String smsContent = m_alertBuilder.buildContent(errorExceptions.toString(), domain);
 
-			m_logger.info(smsContent + " " + phones);
 			m_mailSms.sendSms(smsContent, smsContent, phones);
+			m_logger.info(smsContent + " " + phones);
 			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
 		}
 	}
 
-	private String buildContent(String exceptions, String domain, String time) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exceptions).append("[时间: ").append(time).append("]");
-
-		return sb.toString();
-	}
-
 	@Override
 	public void shutdown() {
-	}
-
-	public class AlertException {
-
-		public static final String WARN_EXCEPTION = "warn";
-
-		public static final String ERROR_EXCEPTION = "error";
-
-		private String m_name;
-
-		private String m_type;
-
-		private double m_count;
-
-		public AlertException(String name, String type, double count) {
-			m_name = name;
-			m_type = type;
-			m_count = count;
-		}
-
-		public String getType() {
-			return m_type;
-		}
-
-		public String getName() {
-			return m_name;
-		}
-
-		@Override
-		public String toString() {
-			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
-		}
 	}
 }
