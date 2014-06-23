@@ -210,7 +210,11 @@
 			<tr>
 				<th class="left">
 					业务线
+<<<<<<< HEAD
 					<select style="width: 200px;" name="productLine" id="productLine" >
+=======
+					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()">
+>>>>>>> FETCH_HEAD
 					<option value="All">All</option>
 					</select>
 					项目
