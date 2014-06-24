@@ -8,7 +8,7 @@ local javaclass=$1
 /usr/local/jdk/bin/jps -lvm | awk -v javaclass=$javaclass '$2==javaclass{cmd=sprintf("kill -s TERM %s; sleep 1; kill -9 %s", $1, $1);system(cmd)}'
 }
 
-agent_class="com.dianping.cat.agent.monitor.SystemAgent"
+agent_class="com.dianping.cat.agent.monitor.CatAgent"
 port=2436
 
 if [ $# -gt 1 ];then

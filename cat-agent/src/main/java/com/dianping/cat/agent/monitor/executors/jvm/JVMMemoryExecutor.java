@@ -14,37 +14,31 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 
 	public static final String ID = "JVMMemoryExecutor";
 
-	public static boolean checkSingleTomcat() {
-		boolean result = false;
+	public static String findPidOfTomcat() {
+		String pid = null;
 		BufferedReader reader = null;
 
 		try {
-			Process process = Runtime.getRuntime().exec(
-			      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep  | wc -l" });
+			String cmd = "/etc/init.d/tomcat status";
+			Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd });
 			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String output = reader.readLine();
+			String output = reader.readLine(); // The process of tomcat ( pid=9923 ) is running...
 
 			if (output != null) {
-				String outputs[] = output.split(" +");
-				int length = outputs.length;
-				int n = 0;
+				if (output.contains("running")) {
+					String endOutput = output.split("(")[1];
+					String pidOutput = endOutput.split("")[0].trim();
+					pid = pidOutput.split("=")[1];
 
-				if (length == 1) {
-					n = Integer.parseInt(outputs[0]);
-				} else if (length > 1) {
-					n = Integer.parseInt(outputs[1]);
+					Integer.parseInt(pid);
+				} else {
+					Cat.logError(new RuntimeException("No tomcat running on machine, [ " + cmd + " ] output: " + output));
 				}
-
-				if (n == 1) {
-					result = true;
-				} else if (n > 1) {
-					Cat.logError(new RuntimeException("More than one tomcat is running on machine"));
-				} else if (n == 0) {
-					Cat.logError(new RuntimeException("No tomcat is running on machine"));
-				}
+			} else {
+				pid = findPidByLocalWay();
 			}
 		} catch (Exception e) {
-			Cat.logError(e);
+			pid = findPidByLocalWay();
 		} finally {
 			if (reader != null) {
 				try {
@@ -54,30 +48,37 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 				}
 			}
 		}
-		return result;
+		return pid;
 	}
 
-	public static String findPidOfTomcat() {
+	public static String findPidByLocalWay() {
 		String pid = null;
 		BufferedReader reader = null;
 
 		try {
-			if (checkSingleTomcat()) {
-				Process process = Runtime.getRuntime().exec(
-				      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep" });
-				reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				String output = reader.readLine();
+			String cmd = "ps aux | grep java | grep tomcat | grep 'catalina.startup.Bootstrap start' | grep -v grep";
+			Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd });
+			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String output = reader.readLine();
 
-				if (output != null) {
-					String out = reader.readLine();
-					if (out != null) {
-						Cat.logError(new RuntimeException("[ ps aux | grep tomcat | grep -v grep ] 2nd line output: " + out));
+			if (output != null) {
+				String[] outputs = output.split(" +");
+				pid = outputs[1];
+				String out = reader.readLine();
+
+				if (out != null) {
+					String o = null;
+					StringBuilder sb = new StringBuilder();
+					sb.append(output).append("\n").append(out).append("\n");
+
+					while ((o = reader.readLine()) != null) {
+						sb.append(o).append("\n");
 					}
-					String[] outputs = output.split(" +");
-					pid = outputs[1];
-				} else {
-					Cat.logError(new RuntimeException("[ ps aux | grep tomcat | grep -v grep ] 1st line no output"));
+					Cat.logError(new RuntimeException("Fetch tomcat pid: [ " + pid
+					      + " ], but more than one tomcat is running on machine, [ " + cmd + " ] output: \n" + sb.toString()));
 				}
+			} else {
+				Cat.logError(new RuntimeException("No tomcat running on machine, [ " + cmd + " ]  no output"));
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
