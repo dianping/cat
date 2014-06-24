@@ -15,7 +15,6 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.CachedMetricReportService;
-import com.dianping.cat.report.page.cdn.graph.CdnConfig;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
@@ -36,9 +35,6 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 
 	@Inject
 	private IpService m_ipService;
-
-	@Inject
-	private CdnConfig m_cdnConfig;
 
 	private final Map<String, MetricReport> m_metricReports = new LinkedHashMap<String, MetricReport>() {
 
@@ -178,7 +174,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			String cdn = properties.get("cdn");
 			String province = properties.get("province");
 			String city = properties.get("city");
-			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_cdnConfig, m_ipService);
+			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
 
 			cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
 			cdnReportConvertor.visitMetricReport(report);
