@@ -15,7 +15,13 @@ import org.unidal.lookup.util.StringUtils;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Metric;
 
-public class CndFilter implements Filter {
+public class CdnFilter implements Filter {
+
+	private static final String DI_LIAN = "DiLian";
+
+	private static final String WANG_SU = "WangSu";
+
+	private static final String TENG_XUN = "TengXun";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -26,11 +32,11 @@ public class CndFilter implements Filter {
 	      ServletException {
 		try {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-			String souceIp = querySourceIp(httpServletRequest);
 			String vip = queryVip(httpServletRequest);
+			String sourceIp = querySourceIp(httpServletRequest);
 
-			if (StringUtils.isNotEmpty(souceIp) && StringUtils.isNotEmpty(vip)) {
-				Metric metric = Cat.getProducer().newMetric("cnd", vip + ":" + souceIp);
+			if (StringUtils.isNotEmpty(sourceIp) && StringUtils.isNotEmpty(vip)) {
+				Metric metric = Cat.getProducer().newMetric("cdn", vip + ":" + sourceIp);
 
 				metric.setStatus("C");
 			}
@@ -45,7 +51,28 @@ public class CndFilter implements Filter {
 	}
 
 	private String queryVip(HttpServletRequest request) {
-		return request.getHeader("x-cdn-for");
+		String serverName = request.getServerName();
+
+		if (serverName != null) {
+			if (serverName.contains("s1.dpfile.com")) {
+				return DI_LIAN;
+			}
+			if (serverName.contains("i1.dpfile.com") || serverName.contains("i3.dpfile.com")
+			      || serverName.contains("t2.dpfile.com")) {
+				return DI_LIAN;
+			}
+			if (serverName.contains("s2.dpfile.com")) {
+				return WANG_SU;
+			}
+			if (serverName.contains("i2.dpfile.com") || serverName.contains("t1.dpfile.com")
+			      || serverName.contains("t3.dpfile.com")) {
+				return WANG_SU;
+			}
+			if (serverName.contains("s3.dpfile.com")) {
+				return TENG_XUN;
+			}
+		}
+		return null;
 	}
 
 	private String filterXForwardedForIP(String ip) {

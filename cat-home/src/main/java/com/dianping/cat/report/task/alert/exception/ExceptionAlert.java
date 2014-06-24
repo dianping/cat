@@ -89,8 +89,8 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return limits;
 	}
 
-	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
-		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exceptionName);
+	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exception) {
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exception);
 		Pair<Double, Double> limits = new Pair<Double, Double>();
 		double warnLimit = -1;
 		double errorLimit = -1;
@@ -105,9 +105,9 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return limits;
 	}
 
-	private boolean isExcludedException(String domain, String exceptionName) {
+	private boolean isExcludedException(String domain, String exception) {
 		boolean excluded = false;
-		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
+		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exception);
 
 		if (result != null) {
 			excluded = true;
@@ -134,7 +134,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				totalException += value;
 
-				if (errorLimit > 0 && value >= errorLimit && sendSms(domain, exceptionName)) {
+				if (errorLimit > 0 && value >= errorLimit && needSendSms(domain, exceptionName)) {
 					alertExceptions.add(new AlertException(exceptionName, AlertException.ERROR_EXCEPTION, value));
 				} else if (warnLimit > 0 && value >= warnLimit) {
 					alertExceptions.add(new AlertException(exceptionName, AlertException.WARN_EXCEPTION, value));
@@ -143,7 +143,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		}
 
 		if (totalErrorLimit > 0 && totalException >= totalErrorLimit
-		      && sendSms(domain, ExceptionConfigManager.TOTAL_STRING)) {
+		      && needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)) {
 			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.ERROR_EXCEPTION,
 			      totalException));
 		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
@@ -154,7 +154,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return alertExceptions;
 	}
 
-	private boolean sendSms(String domain, String exception) {
+	private boolean needSendSms(String domain, String exception) {
 		boolean send = false;
 		ExceptionLimit limit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exception);
 
@@ -167,7 +167,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 	private Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
 
-		// different domain -> [excepitons:numbers]
 		for (Item item : items) {
 			List<AlertException> domainAlertExceptions = buildDomainAlertExceptionList(item);
 
@@ -266,7 +265,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
 		List<AlertException> errorExceptions = new ArrayList<AlertException>();
-
+		
 		StringBuilder mailTitle = new StringBuilder();
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
 		String mailContent = buildContent(exceptions.toString(), domain, time);
@@ -329,7 +328,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		public String getName() {
 			return m_name;
 		}
-
+		
 		@Override
 		public String toString() {
 			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
