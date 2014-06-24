@@ -55,6 +55,7 @@ import com.dianping.cat.report.task.alert.DefaultDataChecker;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlertConfig;
+import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
@@ -185,9 +186,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class)//
 		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
 
+		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
+
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class).req(ModelService.class, TopAnalyzer.ID));
-		
+		      ExceptionConfigManager.class, AlertExceptionBuilder.class).req(ModelService.class, TopAnalyzer.ID));
+
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 
 		// database
