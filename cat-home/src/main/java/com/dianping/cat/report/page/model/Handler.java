@@ -47,7 +47,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.cdn.graph.CdnConfig;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
@@ -103,9 +102,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction-local")
 	private LocalTransactionService m_transactionService;
-
-	@Inject
-	private CdnConfig m_cdnConfig;
 
 	@Inject
 	private IpService m_ipService;
@@ -262,7 +258,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					String province = payload.getProvince();
 					String city = payload.getCity();
 					MetricReport metricReport = (MetricReport) response.getModel();
-					CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_cdnConfig, m_ipService);
+					CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
 
 					cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
 					cdnReportConvertor.visitMetricReport(metricReport);

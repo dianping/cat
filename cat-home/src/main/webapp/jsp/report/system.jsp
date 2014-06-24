@@ -138,21 +138,28 @@
 					var productSelect = $('#productLine');
 					function change() {
 						var productLine = $("#productLine").val();
-						var projects = projectsInfo[productLine];
+						var projects;
+						if(productLine == 'All') {
+							projects = new Array();
+							for(var key in projectsInfo) {
+								for(var subKey in projectsInfo[key]) {
+									projects.push(projectsInfo[key][subKey]);
+								}
+							}
+						} else {
+							projects = projectsInfo[productLine];
+						}
 						select = document.getElementById("domain");
 						select.length = 0;
 
 						for ( var prop in projects) {
-							var opt = $('<option />');
-							var cmdbDomain = projects[prop].cmdbDomain;
-							var domain = projects[prop].domain;
-							if(typeof cmdbDomain != "undefined" && cmdbDomain.length > 0 ) {
-								opt.html(cmdbDomain);
-							}else{
+							if (projects.hasOwnProperty(prop)) {
+								var opt = $('<option />');
+								var domain = projects[prop];
 								opt.html(domain);
+								opt.val(domain);
+								opt.appendTo(select);
 							}
-							opt.val(domain);
-							opt.appendTo(select);
 						}
 						$("#domain").select2();
 					}
@@ -203,11 +210,13 @@
 			<tr>
 				<th class="left">
 					业务线
-					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()"></select>
+					<select style="width: 200px;" name="productLine" id="productLine" >
+					<option value="All">All</option>
+					</select>
 					项目
-					<select style="width: 200px;" name="domain" id="domain" onclick="query()"></select> 
+					<select style="width: 200px;" name="domain" id="domain" ></select> 
 					查询类型
-					<select style="width: 100px;" name="type" id="type"  onclick="query()" >
+					<select style="width: 100px;" name="type" id="type" >
 							<option value="system">系统</option>
 							<option value="jvm">JVM</option>
 							<option value="nginx">Nginx</option>
@@ -216,7 +225,7 @@
 
 				<th class="right">开始时间
 					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()">
+						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" >
 						</input>
 						<span class="add-on">
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
@@ -225,7 +234,7 @@
            
 					结束时间
 					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()"></input> 
+						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" ></input> 
 						<span class="add-on" ondragleave="query()"> 
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>

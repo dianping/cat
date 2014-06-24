@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -17,8 +15,8 @@ import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 
 public class CdnGraphCreator extends AbstractGraphCreator {
-	@Inject
-	private CdnConfig m_cdnConfig;
+	
+	private final static String CDN = "cdn";
 
 	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
@@ -86,7 +84,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 		int index = 0;
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
-			MetricReport report = m_metricReportService.queryCdnReport(CdnConfig.GROUP, properties, new Date(start));
+			MetricReport report = m_metricReportService.queryCdnReport(CDN, properties, new Date(start));
 			Map<String, double[]> currentValues;
 			currentValues = fetchData(report);
 			
