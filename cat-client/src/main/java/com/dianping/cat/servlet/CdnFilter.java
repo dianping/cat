@@ -39,6 +39,7 @@ public class CdnFilter implements Filter {
 				Metric metric = Cat.getProducer().newMetric("cdn", vip + ":" + sourceIp);
 
 				metric.setStatus("C");
+				metric.addData(String.valueOf(1));
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
