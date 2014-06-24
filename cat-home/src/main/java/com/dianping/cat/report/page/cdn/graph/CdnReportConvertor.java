@@ -8,6 +8,7 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
 
 public class CdnReportConvertor extends BaseVisitor {
+	
 	private IpService m_ipService;
 
 	private MetricReport m_report;
