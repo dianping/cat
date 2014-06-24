@@ -63,7 +63,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	DOMAIN_METRIC_RULE_CONFIG_UPDATE("domainMetricRuleConfigUpdate"),
 
-	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
+	NETWORK_RULE_CONFIG_UPDATE("networkRuleConfigUpdate"),
+
+	SYSTEM_RULE_CONFIG_UPDATE("systemRuleConfigUpdate"),
 
 	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 

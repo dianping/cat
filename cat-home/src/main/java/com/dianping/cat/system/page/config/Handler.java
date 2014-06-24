@@ -47,12 +47,13 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
-import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
+import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.system.config.SystemRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -93,6 +94,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private NetworkRuleConfigManager m_metricRuleConfigManager;
+
+	@Inject
+	private SystemRuleConfigManager m_systemRuleConfigManager;
 
 	@Inject
 	private AlertConfigManager m_alertConfigManager;
@@ -349,14 +353,23 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_businessRuleConfigManager.getMonitorRules().toString());
 			break;
-		case METRIC_RULE_CONFIG_UPDATE:
-			String metricRuleConfig = payload.getContent();
-			if (!StringUtils.isEmpty(metricRuleConfig)) {
-				model.setOpState(m_metricRuleConfigManager.insert(metricRuleConfig));
+		case NETWORK_RULE_CONFIG_UPDATE:
+			String networkRuleConfig = payload.getContent();
+			if (!StringUtils.isEmpty(networkRuleConfig)) {
+				model.setOpState(m_metricRuleConfigManager.insert(networkRuleConfig));
 			} else {
 				model.setOpState(true);
 			}
 			model.setContent(m_metricRuleConfigManager.getMonitorRules().toString());
+			break;
+		case SYSTEM_RULE_CONFIG_UPDATE:
+			String systemRuleConfig = payload.getContent();
+			if (!StringUtils.isEmpty(systemRuleConfig)) {
+				model.setOpState(m_systemRuleConfigManager.insert(systemRuleConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_systemRuleConfigManager.getMonitorRules().toString());
 			break;
 		case ALERT_DEFAULT_RECEIVERS:
 			String alertDefaultReceivers = payload.getContent();
