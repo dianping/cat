@@ -14,7 +14,6 @@ import com.dianping.cat.agent.monitor.executors.jvm.JVMMemoryExecutor;
 import com.dianping.cat.agent.monitor.executors.jvm.JVMStateExecutor;
 import com.dianping.cat.agent.monitor.executors.system.SystemPerformanceExecutor;
 import com.dianping.cat.agent.monitor.executors.system.SystemStateExecutor;
-import com.dianping.cat.agent.monitor.puppet.PuppetTask;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -30,8 +29,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Executor.class, SystemStateExecutor.ID, SystemStateExecutor.class).req(EnvironmentConfig.class));
 		all.add(C(DataSender.class).req(EnvironmentConfig.class));
 		all.add(C(TaskExecutors.class).req(DataSender.class));
-
-		all.add(C(PuppetTask.class).req(EnvironmentConfig.class));
 
 		// Please keep it as last
 		all.addAll(new WebComponentConfigurator().defineComponents());
