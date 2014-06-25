@@ -24,6 +24,7 @@
 	<entity name="condition">
 		<attribute name="title" value-type="String" />
 		<attribute name="minute" value-type="int" default-value="3" />
+		<attribute name="alertType" value-type="String" default-value="error" />
 		<entity-ref name="sub-condition" type="list" names="sub-conditions" />
 	</entity>
 	<entity name="sub-condition">

@@ -82,14 +82,17 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	protected void sendAlertInfo(ProductLine productLine, String metricTitle, String content) {
+	protected void sendAlertInfo(ProductLine productLine, String metricTitle, String content, String alertType) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
 		String title = m_alertConfig.buildMailTitle(productLine, metricTitle);
 
 		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);
-		m_mailSms.sendSms(title + " " + content, content, phones);
+
+		if (alertType != null && alertType.equals("error")) {
+			List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
+			m_mailSms.sendSms(title + " " + content, content, phones);
+		}
 
 		Cat.logEvent("NetworkAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
