@@ -81,7 +81,10 @@ public class CdnFilter implements Filter {
 			return null;
 		} else {
 			String[] subIps = ip.split(",");
-			for (int i = 0; i < subIps.length; i++) {
+			int length = subIps.length;
+			int index = -1;
+
+			for (int i = 0; i < length; i++) {
 				String subIp = subIps[i];
 				if (subIp == null || subIp.trim().length() == 0) {
 					continue;
@@ -96,15 +99,23 @@ public class CdnFilter implements Filter {
 						if (tab2 >= 16 && tab2 <= 31) {
 							continue;
 						} else {
-							return subIp;
+							index = i;
+							break;
 						}
 					} else {
-						return subIp;
+						index = i;
+						break;
 					}
 				}
 			}
-			return null;
+
+			if (index > -1 && index + 1 <= length) {
+				return subIps[index + 1];
+			} else {
+				return null;
+			}
 		}
+
 	}
 
 	@Override
