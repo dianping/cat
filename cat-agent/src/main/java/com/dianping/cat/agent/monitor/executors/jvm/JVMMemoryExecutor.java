@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMMemoryExecutor extends AbstractExecutor {
 

@@ -12,8 +12,8 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.Swap;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemPerformanceExecutor extends AbstractExecutor {
 

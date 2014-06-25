@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.executors;
+package com.dianping.cat.agent.monitor;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -15,26 +15,16 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.EnvironmentConfig;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
 public class DataSender implements Task, Initializable {
 
-	@Inject
-	private EnvironmentConfig m_environmentConfig;
-
 	private static BlockingQueue<DataEntity> m_entities = new ArrayBlockingQueue<DataEntity>(5000);
 
 	private static final int MAX_ENTITIES = 20;
-
-	public DataSender setEnvironmentConfig(EnvironmentConfig environmentConfig) {
-		m_environmentConfig = environmentConfig;
-		return this;
-	}
 
 	public boolean put(List<DataEntity> entities) {
 		boolean result = true;
@@ -67,7 +57,7 @@ public class DataSender implements Task, Initializable {
 
 	private boolean sendData(String server, String content) {
 		boolean flag = false;
-		String url = m_environmentConfig.buildSystemUrl(server);
+		String url = CatServers.buildSystemUrl(server);
 
 		try {
 			URLConnection conn = new URL(url).openConnection();
@@ -93,7 +83,7 @@ public class DataSender implements Task, Initializable {
 	}
 
 	private boolean sendBatchEntities(List<DataEntity> entities) {
-		List<String> servers = m_environmentConfig.getServers();
+		List<String> servers = CatServers.getServers();
 
 		for (String server : servers) {
 			String entityContent = buildBatchEntities(entities);
@@ -136,7 +126,7 @@ public class DataSender implements Task, Initializable {
 					}
 					if (!success) {
 						Cat.logEvent("DataSender", "Failed", Event.SUCCESS,
-						      "All cat servers: " + m_environmentConfig.getServers() + "are unreachable. DataEntity: "
+						      "All cat servers: " + CatServers.getServers() + "are unreachable. DataEntity: "
 						            + dataEntities.toString());
 					}
 				} else {

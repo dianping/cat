@@ -132,7 +132,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 	private List<String> fetchSystemKeys(String type) {
 
-		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/data-usage:avg", "/usr-usage:avg",
+		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/-usage:avg", "/data-usage:avg", "/usr-usage:avg",
 		      "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg", "load:avg", "uptime:avg",
 		      "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
 

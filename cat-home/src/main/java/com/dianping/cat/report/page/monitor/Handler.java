@@ -68,7 +68,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private Metric buildMetric(String group, String domain, String key, String type, long time, double value) {
-		boolean invalid = time < TimeUtil.getCurrentHour().getTime();
+		boolean invalid = time < TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_MINUTE * 3;
 
 		if (invalid) {
 			Cat.logError(new RuntimeException("Error timestamp in metric api, time"

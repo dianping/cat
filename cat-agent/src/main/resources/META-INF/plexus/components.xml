@@ -1,8 +1,12 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
+			<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.DataFetcher</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.DataFetcher</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.Executor</role>
@@ -10,7 +14,7 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.jvm.JVMMemoryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -20,7 +24,7 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.jvm.JVMStateExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -30,7 +34,7 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.system.SystemPerformanceExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -40,16 +44,7 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.system.SystemStateExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
-			<implementation>com.dianping.cat.agent.monitor.executors.DataSender</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -58,7 +53,19 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.TaskExecutors</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.PaasTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.paas.DataFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -83,10 +90,13 @@
 					<role>com.dianping.cat.agent.core.page.index.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -100,26 +110,33 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
-			<implementation>com.dianping.cat.agent.monitor.executors.DataSender</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
+			<role>com.dianping.cat.agent.monitor.DataSender</role>
+			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
 			<implementation>com.dianping.cat.agent.monitor.executors.TaskExecutors</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.PaasTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.paas.DataFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.DataFetcher</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.DataFetcher</implementation>
 		</component>
 	</components>
 </plexus>

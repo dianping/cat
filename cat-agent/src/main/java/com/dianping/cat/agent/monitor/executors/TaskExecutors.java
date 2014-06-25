@@ -12,6 +12,8 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.DataSender;
 import com.dianping.cat.message.Transaction;
 
 public class TaskExecutors extends ContainerHolder implements Task, Initializable {
@@ -60,6 +62,8 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 						t2.complete();
 					}
 				}
+				t.setStatus(Transaction.SUCCESS);
+
 				long duration = System.currentTimeMillis() - current;
 
 				try {
@@ -69,7 +73,7 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 				} catch (InterruptedException e) {
 					active = false;
 				}
-				t.setStatus(Transaction.SUCCESS);
+
 			} catch (Exception e) {
 				Cat.logError(e);
 			} finally {

@@ -14,8 +14,8 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.Uptime;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemStateExecutor extends AbstractExecutor implements Initializable {
 
@@ -34,7 +34,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 	@Override
 	public void initialize() throws InitializationException {
 		m_hostName = fetchHostName();
-		m_ipAddr = m_environmentConfig.getIp();
+		m_ipAddr = m_envConfig.getIp();
 
 		try {
 			m_md5String = readFileContent(MD5_PATH);
