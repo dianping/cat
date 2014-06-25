@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.alert.business;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -15,6 +17,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
@@ -39,6 +42,47 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
+		if (needAlert(config)) {
+			String product = productLine.getId();
+			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
+			      config.getMetricKey());
+
+			Pair<Boolean, String> alert = null;
+			if (config.isShowAvg()) {
+				alert = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
+			}
+			if (config.isShowCount()) {
+				alert = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
+			}
+			if (config.isShowSum()) {
+				alert = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
+			}
+
+			if (alert != null && alert.getKey()) {
+				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
+
+				sendAlertInfo(productLine, config.getTitle(), alert.getValue());
+			}
+		}
+	}
+
+	@Override
+	protected void processProductLine(ProductLine productLine) {
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
+		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		for (MetricItemConfig config : configs) {
+			try {
+				processMetricItemConfig(config, minute, productLine);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 
@@ -109,5 +153,4 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	@Override
 	public void shutdown() {
 	}
-
 }

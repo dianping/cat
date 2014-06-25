@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.network;
+package com.dianping.cat.report.task.alert.system;
 
 import java.util.Calendar;
 import java.util.List;
@@ -15,10 +15,10 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
 
-public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
+public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	private NetworkAlertConfig m_alertConfig;
+	private SystemAlertConfig m_alertConfig;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -27,7 +27,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "network-alert";
+		return "system-alert";
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("NetworkAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("SystemAlert", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			try {
@@ -53,7 +53,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						if (productLine.isNetworkDashboard()) {
+						if (productLine.isSystemMonitorDashboard()) {
 							processProductLine(productLine);
 						}
 					} catch (Exception e) {
@@ -91,7 +91,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 		m_mailSms.sendEmail(title, content, emails);
 		m_mailSms.sendSms(title + " " + content, content, phones);
 
-		Cat.logEvent("NetworkAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
+		Cat.logEvent("SystemAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
 
 	@Override

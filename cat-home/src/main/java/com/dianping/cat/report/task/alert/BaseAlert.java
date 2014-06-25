@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
@@ -62,6 +63,15 @@ public abstract class BaseAlert {
 	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
+
+	private String buildMetricTitle(String metricKey) {
+		try {
+			return metricKey.split(":")[2];
+		} catch (Exception ex) {
+			Cat.logError("get metric title error:" + metricKey, ex);
+			return null;
+		}
+	}
 
 	protected Pair<Boolean, String> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
@@ -172,39 +182,28 @@ public abstract class BaseAlert {
 		return true;
 	}
 
-	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
-		if (needAlert(config)) {
-			String product = productLine.getId();
-			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey());
-
-			Pair<Boolean, String> alert = null;
-			if (config.isShowAvg()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
-			}
-			if (config.isShowCount()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
-			}
-			if (config.isShowSum()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
-			}
+	private void processMetricItem(int minute, ProductLine productLine, String metricKey) {
+		for (MetricType type : MetricType.values()) {
+			Pair<Boolean, String> alert = computeAlertInfo(minute, productLine.getId(), metricKey, type);
 
 			if (alert != null && alert.getKey()) {
+				String metricTitle = buildMetricTitle(metricKey);
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
-				sendAlertInfo(productLine, config.getTitle(), alert.getValue());
+				sendAlertInfo(productLine, metricTitle, alert.getValue());
 			}
 		}
 	}
 
 	protected void processProductLine(ProductLine productLine) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
-		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		String product = productLine.getId();
+		MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
-		for (MetricItemConfig config : configs) {
+		for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
 			try {
-				processMetricItemConfig(config, minute, productLine);
+				processMetricItem(minute, productLine, entry.getKey());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -259,5 +258,4 @@ public abstract class BaseAlert {
 	}
 
 	protected abstract void sendAlertInfo(ProductLine productLine, String metricTitle, String content);
-
 }
