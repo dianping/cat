@@ -105,8 +105,9 @@
 				<th class="left">
 				cdn服务商 <select style="width: 120px;" name="cdn" id="cdn">
 						<option value="ALL">ALL</option>
-						<option value="网宿">网宿</option>
-						<option value="帝联">帝联</option>
+						<option value="WangSu">网宿</option>
+						<option value="DiLian">帝联</option>
+						<option value="TengXun">腾讯</option>
 						</select>
 				省份 <select style="width: 100px;" name="province" id="province">
 				</select> 城市 <select style="width: 100px;" name="city" id="city">

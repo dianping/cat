@@ -28,7 +28,7 @@ public class EnvironmentConfig implements Initializable {
 
 	// host.name 配置规则:
 	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
-	private String buildDomain(String hostName) {
+	private static String  buildDomain(String hostName) {
 		String domain = "";
 
 		if (hostName.endsWith(".nh") || hostName.endsWith(".beta")) {
@@ -45,6 +45,11 @@ public class EnvironmentConfig implements Initializable {
 		return domain;
 	}
 
+	
+	public static void main(String args[]){
+		
+		System.out.println(buildDomain("tuangou-tracking-web-ppe01.hm"));
+	}
 	public String buildSystemUrl(String server) {
 		return String.format(SYSTEM_URL, server);
 	}
