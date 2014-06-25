@@ -245,13 +245,13 @@
 		</table>
 	
 		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary">
-		    		<input type="checkbox" id="ipAll" onclick="queryAll()" unchecked>All
+			<label class="btn btn-info">
+		    		<input type="checkbox" id="ipAll"  unchecked>All
 		  	</label>
 	    	
 	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
-      			<label class="btn btn-primary">
-		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="query()" unchecked>${item}
+      			<label class="btn btn-info">
+		    		<input type="checkbox" id="ip_${item}" value="${item}" unchecked>${item}
 		  		</label>
 			</c:forEach>
 		</div>

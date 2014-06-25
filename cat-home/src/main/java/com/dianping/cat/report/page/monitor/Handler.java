@@ -19,7 +19,7 @@ import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.MetricType;
@@ -93,10 +93,9 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 
-		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-		tree.setDomain(domain);
-
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		Message message = tree.getMessage();
+
 		if (message instanceof Transaction) {
 			((DefaultTransaction) message).setTimestamp(time);
 		}
