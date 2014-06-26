@@ -113,9 +113,9 @@ public class DataSender implements Task, Initializable {
 				}
 
 				if (!dataEntities.isEmpty()) {
-					Transaction t = Cat.newTransaction("Data", "Send");
-
+					Transaction t = Cat.newTransaction("Sender", "Send");
 					boolean success = false;
+
 					try {
 						success = sendBatchEntities(dataEntities);
 					} catch (Exception e) {
@@ -124,10 +124,10 @@ public class DataSender implements Task, Initializable {
 						t.setStatus(Transaction.SUCCESS);
 						t.complete();
 					}
+
 					if (!success) {
-						Cat.logEvent("DataSender", "Failed", Event.SUCCESS,
-						      "All cat servers: " + CatServers.getServers() + "are unreachable. DataEntity: "
-						            + dataEntities.toString());
+						Cat.logError(new RuntimeException("All cat servers: " + CatServers.getServers()
+						      + "are unreachable. DataEntity: " + dataEntities.toString()));
 					}
 				} else {
 					Thread.sleep(5);
@@ -140,7 +140,7 @@ public class DataSender implements Task, Initializable {
 
 	@Override
 	public String getName() {
-		return "system-data-sender";
+		return "data-sender";
 	}
 
 	@Override

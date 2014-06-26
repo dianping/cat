@@ -25,8 +25,8 @@ public abstract class AbstractExecutor implements Executor {
 		return SYSTEM_TYPE + "_" + id + "_" + m_envConfig.getIp();
 	}
 
-	protected String buildJVMDataEntityId(String id) {
-		return JVM_TYPE + "_" + id + "_" + m_envConfig.getIp();
+	protected String buildJVMDataEntityId(String id, String pid) {
+		return JVM_TYPE + "_" + id + "@" + pid + "_" + m_envConfig.getIp();
 	}
 
 	protected String buildNginxDataEntityId(String id) {

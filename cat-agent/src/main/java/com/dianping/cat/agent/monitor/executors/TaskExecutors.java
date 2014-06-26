@@ -27,15 +27,19 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 
 	@Override
 	public String getName() {
-		return "data-fetcher";
+		return "executors-task";
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		Map<String, Executor> map = lookupMap(Executor.class);
-		m_executors = map.values();
+		String agent = System.getProperty("agent", "executors");
 
-		Threads.forGroup("Cat").start(this);
+		if ("executors".equalsIgnoreCase(agent)) {
+			Map<String, Executor> map = lookupMap(Executor.class);
+			m_executors = map.values();
+
+			Threads.forGroup("Cat").start(this);
+		}
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 		boolean active = true;
 
 		while (active) {
-			Transaction t = Cat.newTransaction("Data", "Fetch");
+			Transaction t = Cat.newTransaction("Agent", "Executors");
 
 			try {
 				long current = System.currentTimeMillis();

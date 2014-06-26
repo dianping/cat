@@ -19,13 +19,17 @@ public class PaasTask implements Task, Initializable {
 	private DataSender m_dataSender;
 
 	@Inject
-	private DataFetcher m_dataFetcher;
+	private DataProducer m_dataProducer;
 
 	private static final int DURATION = 5 * 1000;
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(this);
+		String agent = System.getProperty("agent", "executors");
+
+		if ("paas".equalsIgnoreCase(agent)) {
+			Threads.forGroup("Cat").start(this);
+		}
 	}
 
 	@Override
@@ -34,12 +38,12 @@ public class PaasTask implements Task, Initializable {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-			Transaction t = Cat.newTransaction("Paas", "Agent");
+			Transaction t = Cat.newTransaction("Agent", "Paas");
 
 			try {
-				List<String> instances = m_dataFetcher.buildInstances();
+				List<String> instances = m_dataProducer.queryInstances();
 				for (String instance : instances) {
-					List<DataEntity> entities = m_dataFetcher.buildData(instance);
+					List<DataEntity> entities = m_dataProducer.produceData(instance);
 
 					m_dataSender.put(entities);
 				}
@@ -65,7 +69,7 @@ public class PaasTask implements Task, Initializable {
 
 	@Override
 	public String getName() {
-		return "phoenix-task";
+		return "paas-task";
 	}
 
 	@Override

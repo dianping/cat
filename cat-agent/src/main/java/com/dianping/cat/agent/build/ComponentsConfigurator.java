@@ -14,7 +14,7 @@ import com.dianping.cat.agent.monitor.executors.jvm.JVMMemoryExecutor;
 import com.dianping.cat.agent.monitor.executors.jvm.JVMStateExecutor;
 import com.dianping.cat.agent.monitor.executors.system.SystemPerformanceExecutor;
 import com.dianping.cat.agent.monitor.executors.system.SystemStateExecutor;
-import com.dianping.cat.agent.monitor.paas.DataFetcher;
+import com.dianping.cat.agent.monitor.paas.DataProducer;
 import com.dianping.cat.agent.monitor.paas.PaasTask;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -24,7 +24,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EnvConfig.class));
 
-		all.add(C(DataFetcher.class));
+		all.add(C(DataProducer.class));
 
 		all.add(C(Executor.class, JVMMemoryExecutor.ID, JVMMemoryExecutor.class).req(EnvConfig.class));
 		all.add(C(Executor.class, JVMStateExecutor.ID, JVMStateExecutor.class).req(EnvConfig.class));
@@ -32,7 +32,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Executor.class, SystemStateExecutor.ID, SystemStateExecutor.class).req(EnvConfig.class));
 		all.add(C(TaskExecutors.class).req(DataSender.class));
 
-		all.add(C(PaasTask.class).req(DataSender.class).req(DataFetcher.class));
+		all.add(C(PaasTask.class).req(DataSender.class).req(DataProducer.class));
 
 		// Please keep it as last
 		all.addAll(new WebComponentConfigurator().defineComponents());

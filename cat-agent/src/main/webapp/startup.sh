@@ -11,9 +11,11 @@ local javaclass=$1
 agent_class="com.dianping.cat.agent.monitor.CatAgent"
 port=2436
 
-if [ $# -gt 1 ];then
-agent_class=$1
-port=$2
+#agent="paas" or "executors"
+agent="executors"
+
+if [ $# -ge 1 ];then
+agent=$1
 fi
 
 kill_by_javaclass $agent_class
@@ -32,6 +34,6 @@ if [ ! -x $java ];then
 java=java
 fi
 
-echo "Starting phoenix-agent $agent_class $port `pwd`"
-nohup $java -Xms128m -Xmx128m -classpath classes:"lib/*" $agent_class $port /agent `pwd` >>/data/applogs/cat/agent-startup.log 2>&1 &
+echo "Starting cat-agent $agent_class $port `pwd`"
+nohup $java -Xms128m -Xmx128m -classpath classes:"lib/*" -Dagent=$agent $agent_class $port /agent `pwd` >>/data/applogs/cat/agent-startup.log 2>&1 &
 echo "Started"

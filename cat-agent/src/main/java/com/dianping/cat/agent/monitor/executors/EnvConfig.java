@@ -22,7 +22,7 @@ public class EnvConfig implements Initializable {
 
 	// host.name 配置规则:
 	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
-	private static String buildDomain(String hostName) {
+	private String buildDomain(String hostName) {
 		String domain = "";
 
 		if (hostName.endsWith(".nh") || hostName.endsWith(".beta")) {

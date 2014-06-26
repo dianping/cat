@@ -21,7 +21,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 	private static final String ETH_NAME = "eth0";
 
-	private static final List<String> DISK_LIST = new ArrayList<String>(Arrays.asList("/data", "/usr", "/var"));
+	private static final List<String> DISK_LIST = new ArrayList<String>(Arrays.asList("/", "/data", "/usr", "/var"));
 
 	private Sigar m_sigar = new Sigar();
 

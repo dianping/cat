@@ -1,11 +1,7 @@
 package com.dianping.cat.agent.monitor.paas;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +10,9 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.DataEntity;
+import com.dianping.cat.agent.monitor.Utils;
 
-public class DataFetcher {
+public class DataProducer {
 
 	private static final String PAAS_MONINTOR = System.getProperty("user.dir") + "/paas-monitor.py";
 
@@ -42,33 +39,6 @@ public class DataFetcher {
 			m_ip2Md5.put(ip, md5Info);
 		}
 		return md5Info;
-	}
-
-	private List<String> runShell(String cmd) {
-		List<String> result = new LinkedList<String>();
-		BufferedReader reader = null;
-
-		try {
-			Process process = Runtime.getRuntime().exec(cmd);
-			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line = null;
-
-			while ((line = reader.readLine()) != null && StringUtils.isNotEmpty(line)) {
-				result.add(line);
-			}
-
-		} catch (Exception e) {
-			Cat.logError(e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					Cat.logError(e);
-				}
-			}
-		}
-		return result;
 	}
 
 	private List<DataEntity> convert2DataEntities(List<String> lines) {
@@ -183,16 +153,27 @@ public class DataFetcher {
 		return "system-" + domain;
 	}
 
-	public List<String> buildInstances() {
+	public List<String> queryInstances() {
 		String cmd = "/usr/bin/python " + PAAS_MONINTOR + " instance_ids";
-		List<String> outputs = runShell(cmd);
+		List<String> outputs = null;
 
+		try {
+			outputs = Utils.runShell(cmd);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 		return outputs;
 	}
 
-	public List<DataEntity> buildData(String id) {
+	public List<DataEntity> produceData(String id) {
 		String cmd = "/usr/bin/python " + PAAS_MONINTOR + " " + id;
-		List<String> outputs = runShell(cmd);
+		List<String> outputs = null;
+
+		try {
+			outputs = Utils.runShell(cmd);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 		List<DataEntity> dataEntities = convert2DataEntities(outputs);
 
 		return dataEntities;

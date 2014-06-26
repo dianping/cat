@@ -101,7 +101,6 @@
 				        	alert("结束时间不能晚于结束时间！");
 				        	$("#startTime").val($("#endTime").val());
 				        	} 
-				    	query();
 					});
 					$('#datetimepicker2').datetimepicker().on('hide', function(ev){
 						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
@@ -109,7 +108,6 @@
 				        	alert("结束时间不能早于开始时间！");
 				        	$("#endTime").val($("#startTime").val());
 				        	} 
-				    	query();
 					});
 					
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
