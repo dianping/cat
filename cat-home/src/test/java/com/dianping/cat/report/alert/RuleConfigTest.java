@@ -1,5 +1,6 @@
 package com.dianping.cat.report.alert;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.unidal.helper.Files;
-import org.unidal.tuple.Pair;
+import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.home.rule.entity.Condition;
+import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
@@ -20,6 +23,38 @@ import com.dianping.cat.report.task.alert.DefaultDataChecker;
 public class RuleConfigTest {
 
 	private DataChecker m_check = new DefaultDataChecker();
+
+	private List<Condition> buildConditions(List<Config> configs) {
+		List<Condition> conditions = new ArrayList<Condition>();
+		
+		for(Config config : configs){
+			conditions.addAll(config.getConditions());
+		}
+		
+		return conditions;
+   }
+
+	private Map<String, List<Condition>> buildConfigMap(MonitorRules monitorRules) {
+		if (monitorRules == null || monitorRules.getRules().size() == 0) {
+			return null;
+		}
+
+		Map<String, List<Condition>> map = new HashMap<String, List<Condition>>();
+
+		for (Rule rule : monitorRules.getRules().values()) {
+			String id = rule.getId();
+			List<Condition> ruleConditions = buildConditions(rule.getConfigs());
+			List<Condition> conditions = map.get(id);
+			
+			if (conditions == null) {
+				map.put(id, ruleConditions);
+			}else{
+				conditions.addAll(ruleConditions);
+			}
+		}
+
+		return map;
+	}
 
 	private MonitorRules buildMonitorRuleFromFile(String path) {
 		try {
@@ -31,59 +66,45 @@ public class RuleConfigTest {
 		}
 	}
 
-	private Map<String, List<com.dianping.cat.home.rule.entity.Config>> buildConfigMap(MonitorRules monitorRules) {
-		if (monitorRules == null || monitorRules.getRules().size() == 0) {
-			return null;
-		}
-
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
-
-		for (Rule rule : monitorRules.getRules().values()) {
-			map.put(rule.getId(), rule.getConfigs());
-		}
-
-		return map;
-	}
-
-	@Test
-	public void testRule() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
-
-		Assert.assertNotNull(configMap);
-
-		double baseline[] = { 200, 350 };
-		double value[] = { 100, 50 };
-		Pair<Boolean, String> result = m_check.checkData(value, baseline, configMap.get("demo1"));
-		Assert.assertEquals(result.getKey().booleanValue(), true);
-	}
-
 	@Test
 	public void testCondition() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
-		Pair<Boolean, String> result;
+		Map<String, List<Condition>> conditionsMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
+		Triple<Boolean, String, String> result;
 
-		Assert.assertNotNull(configMap);
+		Assert.assertNotNull(conditionsMap);
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
-		result = m_check.checkData(value7, baseline7, configMap.get("conditionCombination"));
-		Assert.assertEquals(result.getKey().booleanValue(), true);
+		result = m_check.checkData(value7, baseline7, conditionsMap.get("conditionCombination"));
+		Assert.assertEquals(result.getFirst().booleanValue(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = m_check.checkData(value8, baseline8, configMap.get("subconditionCombination"));
-		Assert.assertEquals(result.getKey().booleanValue(), false);
+		result = m_check.checkData(value8, baseline8, conditionsMap.get("subconditionCombination"));
+		Assert.assertEquals(result.getFirst().booleanValue(), false);
 	}
 
 	@Test
 	public void testMinute() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
+		Map<String, List<Condition>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		Pair<Boolean, String> result = m_check.checkData(value, baseline, configMap.get("two-minute"));
-		Assert.assertEquals(result.getKey().booleanValue(), true);
+		Triple<Boolean, String, String> result = m_check.checkData(value, baseline, configMap.get("two-minute"));
+		Assert.assertEquals(result.getFirst().booleanValue(), true);
+	}
+
+	@Test
+	public void testRule() {
+		Map<String, List<Condition>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
+
+		Assert.assertNotNull(configMap);
+
+		double baseline[] = { 200, 350 };
+		double value[] = { 100, 50 };
+		Triple<Boolean, String, String> result = m_check.checkData(value, baseline, configMap.get("demo1"));
+		Assert.assertEquals(result.getFirst().booleanValue(), true);
 	}
 }
