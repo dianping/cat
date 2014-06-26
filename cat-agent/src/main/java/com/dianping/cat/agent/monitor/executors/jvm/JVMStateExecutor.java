@@ -3,11 +3,14 @@ package com.dianping.cat.agent.monitor.executors.jvm;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-public class JVMStateExecutor extends AbstractExecutor {
+import com.dianping.cat.agent.monitor.DataEntity;
+
+public class JVMStateExecutor extends AbstractJVMExecutor implements Initializable {
 
 	public static final String ID = "JVMStateExecutor";
 
@@ -32,8 +35,8 @@ public class JVMStateExecutor extends AbstractExecutor {
 			double kilobytes = (bytes / 1024);
 			DataEntity entity = new DataEntity();
 
-			entity.setId(buildJVMDataEntityId("catalinaLogSize")).setType(SUM_TYPE).setTime(System.currentTimeMillis())
-			      .setValue(kilobytes);
+			entity.setId(JVM_TYPE + "_catalinaLogSize_" + m_envConfig.getIp()).setType(SUM_TYPE)
+			      .setTime(System.currentTimeMillis()).setValue(kilobytes);
 			addGroupDomainInfo(entity);
 			entities.add(entity);
 		}
@@ -42,19 +45,22 @@ public class JVMStateExecutor extends AbstractExecutor {
 
 	public List<DataEntity> buildTomcatLiveInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		DataEntity entity = new DataEntity();
-		String pid = JVMMemoryExecutor.findPidOfTomcat();
+		Set<String> currentPids = findPidOfTomcat();
 		long current = System.currentTimeMillis();
 
-		entity.setId(buildJVMDataEntityId("tomcatLive")).setType(AVG_TYPE).setTime(current);
-		addGroupDomainInfo(entity);
+		for (String pid : m_pidsOfTomcat) {
+			DataEntity entity = new DataEntity();
 
-		if (pid == null) {
-			entity.setValue(0);
-		} else {
-			entity.setValue(1);
+			entity.setId(buildJVMDataEntityId("tomcatLive", pid)).setType(AVG_TYPE).setTime(current);
+			addGroupDomainInfo(entity);
+
+			if (currentPids.contains(pid)) {
+				entity.setValue(1);
+			} else {
+				entity.setValue(0);
+			}
+			entities.add(entity);
 		}
-		entities.add(entity);
 		return entities;
 	}
 
@@ -63,4 +69,10 @@ public class JVMStateExecutor extends AbstractExecutor {
 		return ID;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		if (m_pidsOfTomcat.isEmpty()) {
+			m_pidsOfTomcat.addAll(findPidOfTomcat());
+		}
+	}
 }

@@ -1,24 +1,18 @@
-package com.dianping.cat.agent.monitor;
+package com.dianping.cat.agent.monitor.executors;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 
-public class EnvironmentConfig implements Initializable {
+public class EnvConfig implements Initializable {
 
 	private static final String CONFIG_FILE = "/data/webapps/server.properties";
-
-	private static final String SYSTEM_URL = "http://%1$s/cat/r/monitor?op=batch";
-
-	private static final List<String> CAT_SERVERS = Arrays.asList("10.1.110.57:8080", "10.1.110.23:8080",
-	      "10.1.110.21:8080");
 
 	private String m_ip;
 
@@ -28,7 +22,7 @@ public class EnvironmentConfig implements Initializable {
 
 	// host.name 配置规则:
 	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
-	private static String  buildDomain(String hostName) {
+	private String buildDomain(String hostName) {
 		String domain = "";
 
 		if (hostName.endsWith(".nh") || hostName.endsWith(".beta")) {
@@ -45,15 +39,6 @@ public class EnvironmentConfig implements Initializable {
 		return domain;
 	}
 
-	
-	public static void main(String args[]){
-		
-		System.out.println(buildDomain("tuangou-tracking-web-ppe01.hm"));
-	}
-	public String buildSystemUrl(String server) {
-		return String.format(SYSTEM_URL, server);
-	}
-
 	public String getDomain() {
 		return m_domain;
 	}
@@ -66,10 +51,6 @@ public class EnvironmentConfig implements Initializable {
 		return m_ip;
 	}
 
-	public List<String> getServers() {
-		return CAT_SERVERS;
-	}
-
 	public String getHostName() {
 		return m_hostName;
 	}
@@ -77,21 +58,25 @@ public class EnvironmentConfig implements Initializable {
 	@Override
 	public void initialize() {
 		try {
-			Properties properties = new Properties();
-			InputStream in = new BufferedInputStream(new FileInputStream(CONFIG_FILE));
-			properties.load(in);
+			File file = new File(CONFIG_FILE);
 
-			m_hostName = properties.getProperty("host.name");
+			if (file.exists()) {
+				Properties properties = new Properties();
+				InputStream in = new BufferedInputStream(new FileInputStream(CONFIG_FILE));
+				properties.load(in);
 
-			if (m_hostName == null) {
-				m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
-			}
+				m_hostName = properties.getProperty("host.name");
 
-			m_domain = buildDomain(m_hostName);
-			m_ip = properties.getProperty("host.ip");
+				if (m_hostName == null) {
+					m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
+				}
 
-			if (m_ip == null) {
-				m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				m_domain = buildDomain(m_hostName);
+				m_ip = properties.getProperty("host.ip");
+
+				if (m_ip == null) {
+					m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				}
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Error when init environment info ", e);

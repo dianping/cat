@@ -17,7 +17,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("domain")
-	private String m_domain = "Cat";
+	private String m_domain = "cat";
 
 	@FieldMeta("productLine")
 	private String m_productLine = "All";
