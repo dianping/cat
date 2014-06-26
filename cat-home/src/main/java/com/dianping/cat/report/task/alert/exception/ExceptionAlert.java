@@ -160,7 +160,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
 		String mailTitle = m_alertBuilder.buildMailTitle(domain);
-		String mailContent = m_alertBuilder.buildContent(exceptions.toString(), domain);
+		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
 
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);

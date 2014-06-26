@@ -511,7 +511,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			MessageTree tree = ctx.m_tree;
 			Stack<Transaction> stack = ctx.m_stack;
 			Message message = tree.getMessage();
-
+			
 			if (message instanceof DefaultTransaction) {
 				String id = tree.getMessageId();
 				String rootId = tree.getRootMessageId();
@@ -544,12 +544,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				t.setMessage(target);
 
-				flush(t);
-				t.setMessageId(childId);
-				t.setParentMessageId(id);
-				t.setRootMessageId(rootId != null ? rootId : id);
+				ctx.m_tree.setMessageId(childId);
+				ctx.m_tree.setParentMessageId(id);
+				ctx.m_tree.setRootMessageId(rootId != null ? rootId : id);
+				
 				ctx.m_length = stack.size();
 				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
+				flush(t);
 			}
 		}
 

@@ -130,11 +130,11 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		return currentData;
 	}
 
-	private List<String> fetchSystemKeys(String type) {
+	private List<String> fetchExpectedKeys(String type) {
 
-		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/data-usage:avg", "/usr-usage:avg",
-		      "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg", "load:avg", "uptime:avg",
-		      "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
+		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/-usage:avg", "/data-usage:avg",
+		      "/usr-usage:avg", "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg", "load:avg",
+		      "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
 
 		List<String> jvmKeys = new ArrayList<String>(Arrays.asList("edenUsage:avg", "oldUsage:avg", "permUsage:avg",
 		      "tomcatLive:avg", "catalinaLogSize:sum"));
@@ -152,28 +152,51 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	private Map<String, Map<String, String>> buildLineChartKeys(Set<String> keys, Set<String> ipAddrs, String type) {
-		List<String> systemKeys = fetchSystemKeys(type);
+	private Map<String, Map<String, String>> buildLineChartKeys(Set<String> Allkeys, Set<String> ipAddrs, String type) {
+		List<String> expectedKeys = fetchExpectedKeys(type);
 		Map<String, Map<String, String>> aggregationKeys = new LinkedHashMap<String, Map<String, String>>();
 
-		for (String key : systemKeys) {
-			int typeIndex = key.lastIndexOf(":");
-			String realKey = key.substring(0, typeIndex);
-			String metricType = key.substring(typeIndex + 1);
+		for (String expectedKey : expectedKeys) {
+			int typeIndex = expectedKey.lastIndexOf(":");
+			String metricType = expectedKey.substring(typeIndex + 1);
 			String des = queryMetricItemDes(metricType.toUpperCase());
-			String chartKey = realKey + des;
-			Map<String, String> ipMap = aggregationKeys.get(chartKey);
+			String headKey = expectedKey.substring(0, typeIndex);
+			String chartKey = headKey + des;
+			Set<String> pidSuffixs = new HashSet<String>();
 
-			if (ipMap == null) {
-				ipMap = new HashMap<String, String>();
-
-				aggregationKeys.put(chartKey, ipMap);
+			if (JVM_TYPE.equalsIgnoreCase(type)) {
+				for (String key : Allkeys) {
+					String prefix = headKey + "@";
+					if (key.startsWith(prefix)) {
+						String pid = key.substring(key.indexOf("@") + 1, key.lastIndexOf("_"));
+						String pidSuffix = "@" + pid;
+						pidSuffixs.add(pidSuffix);
+					}
+				}
 			}
+			Map<String, String> ipMap = findOrCreate(chartKey, aggregationKeys);
+
 			for (String ip : ipAddrs) {
-				ipMap.put(ip, realKey + "_" + ip + ":" + metricType.toUpperCase());
+				if (pidSuffixs.size() <= 1) {
+					ipMap.put(ip, headKey + "_" + ip + ":" + metricType.toUpperCase());
+				} else {
+					for (String suffix : pidSuffixs) {
+						ipMap.put(ip + suffix, headKey + suffix + "_" + ip + ":" + metricType.toUpperCase());
+					}
+				}
 			}
 		}
 		return aggregationKeys;
 	}
 
+	private Map<String, String> findOrCreate(String key, Map<String, Map<String, String>> aggregationKeys) {
+		Map<String, String> ipMap = aggregationKeys.get(key);
+
+		if (ipMap == null) {
+			ipMap = new HashMap<String, String>();
+
+			aggregationKeys.put(key, ipMap);
+		}
+		return ipMap;
+	}
 }

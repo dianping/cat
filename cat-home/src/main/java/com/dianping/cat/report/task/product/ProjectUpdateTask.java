@@ -176,15 +176,13 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private String queryCmdbName(List<String> ips) {
-		if(ips==null){
-			return null;
-		}
-		
-		for (String ip : ips) {
-			String cmdbDomain = queryDomainFromCMDB(ip);
+		if (ips != null) {
+			for (String ip : ips) {
+				String cmdbDomain = queryDomainFromCMDB(ip);
 
-			if (checkIfValid(cmdbDomain)) {
-				return cmdbDomain;
+				if (checkIfValid(cmdbDomain)) {
+					return cmdbDomain;
+				}
 			}
 		}
 		return null;

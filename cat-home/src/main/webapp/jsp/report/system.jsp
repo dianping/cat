@@ -101,7 +101,6 @@
 				        	alert("结束时间不能晚于结束时间！");
 				        	$("#startTime").val($("#endTime").val());
 				        	} 
-				    	query();
 					});
 					$('#datetimepicker2').datetimepicker().on('hide', function(ev){
 						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
@@ -109,7 +108,6 @@
 				        	alert("结束时间不能早于开始时间！");
 				        	$("#endTime").val($("#startTime").val());
 				        	} 
-				    	query();
 					});
 					
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
@@ -245,13 +243,13 @@
 		</table>
 	
 		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary">
-		    		<input type="checkbox" id="ipAll" onclick="queryAll()" unchecked>All
+			<label class="btn btn-info">
+		    		<input type="checkbox" id="ipAll"  unchecked>All
 		  	</label>
 	    	
 	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
-      			<label class="btn btn-primary">
-		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="query()" unchecked>${item}
+      			<label class="btn btn-info">
+		    		<input type="checkbox" id="ip_${item}" value="${item}" unchecked>${item}
 		  		</label>
 			</c:forEach>
 		</div>

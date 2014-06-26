@@ -1,8 +1,6 @@
 package com.dianping.cat.report.page.monitor;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 
@@ -13,13 +11,12 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.MetricType;
@@ -68,14 +65,6 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private Metric buildMetric(String group, String domain, String key, String type, long time, double value) {
-		boolean invalid = time < TimeUtil.getCurrentHour().getTime();
-
-		if (invalid) {
-			Cat.logError(new RuntimeException("Error timestamp in metric api, time"
-			      + new SimpleDateFormat("yyyy-MM-dd HH:ss").format(new Date(time))));
-
-			time = System.currentTimeMillis();
-		}
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
 
@@ -93,10 +82,9 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 
-		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
-		tree.setDomain(domain);
-
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		Message message = tree.getMessage();
+
 		if (message instanceof Transaction) {
 			((DefaultTransaction) message).setTimestamp(time);
 		}
