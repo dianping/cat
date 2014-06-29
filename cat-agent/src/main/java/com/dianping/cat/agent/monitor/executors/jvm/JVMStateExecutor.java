@@ -2,7 +2,9 @@ package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -32,13 +34,10 @@ public class JVMStateExecutor extends AbstractJVMExecutor implements Initializab
 
 		if (logFile.exists()) {
 			double bytes = logFile.length();
-			double kilobytes = (bytes / 1024);
-			DataEntity entity = new DataEntity();
+			Map<String, Double> values = new HashMap<String, Double>();
 
-			entity.setId(JVM_TYPE + "_catalinaLogSize_" + m_envConfig.getIp()).setType(SUM_TYPE)
-			      .setTime(System.currentTimeMillis()).setValue(kilobytes);
-			addGroupDomainInfo(entity);
-			entities.add(entity);
+			values.put(JVM_TYPE + "_catalinaLogSize_" + m_envConfig.getIp(), bytes);
+			entities.addAll(buildEntities(values, AVG_TYPE));
 		}
 		return entities;
 	}
@@ -46,20 +45,16 @@ public class JVMStateExecutor extends AbstractJVMExecutor implements Initializab
 	public List<DataEntity> buildTomcatLiveInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		Set<String> currentPids = findPidOfTomcat();
-		long current = System.currentTimeMillis();
+		Map<String, Double> values = new HashMap<String, Double>();
 
 		for (String pid : m_pidsOfTomcat) {
-			DataEntity entity = new DataEntity();
-
-			entity.setId(buildJVMDataEntityId("tomcatLive", pid)).setType(AVG_TYPE).setTime(current);
-			addGroupDomainInfo(entity);
+			double value = 0;
 
 			if (currentPids.contains(pid)) {
-				entity.setValue(1);
-			} else {
-				entity.setValue(0);
+				value = 1;
 			}
-			entities.add(entity);
+			values.put(buildJVMId("tomcatLive", pid), value);
+			entities.addAll(buildEntities(values, AVG_TYPE));
 		}
 		return entities;
 	}

@@ -26,6 +26,22 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 	public static final String NGINX_TYPE = "nginx";
 
+	private static final List<String> SYSTEM_KEY_LIST = new ArrayList<String>(Arrays.asList("sysCpu:avg",
+	      "iowaitCpu:avg", "niceCpu:avg", "stealCpu:avg", "userCpu:avg", "softirqCpu:avg", "idleCpu:avg", "irqCpu:avg",
+	      "/-usage:avg", "/-freeInodes:avg", "/-read:sum", "/-write:sum", "/data-usage:avg", "/data-freeInodes:avg",
+	      "/data-read:sum", "/data-write:sum", "/usr-usage:avg", "/usr-freeInodes:avg", "/usr-read:sum",
+	      "/usr-write:sum", "/var-usage:avg", "/var-freeInodes:avg", "/var-read:sum", "/var-write:sum",
+	      "eth0-inFlow:sum", "eth0-outFlow:sum", "eth0-dropped:sum", "eth0-errors:sum", "lo-inFlow:sum",
+	      "lo-outFlow:sum", "lo-dropped:sum", "lo-errors:sum", "swapUsage:avg", "loadAvg1:avg", "loadAvg5:avg",
+	      "totalMem:avg", "usedMem:avg", "freeMem:avg", "sharedMem:avg", "buffersMem:avg", "cachedMem:avg",
+	      "totalProcess:avg", "runningProcess:avg", "swapUsage:avg", "establishedTcp:avg", "loginUsers:avg",
+	      "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
+
+	private static final List<String> JVM_KEY_LIST = new ArrayList<String>(Arrays.asList("edenUsage:avg",
+	      "oldUsage:avg", "permUsage:avg", "tomcatLive:avg", "catalinaLogSize:sum"));
+
+	private static final List<String> NGINX_KEY_LIST = new ArrayList<String>();
+
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Map<String, String> pars,
 	      Set<String> ipAddrs, Date startDate, Date endDate) {
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, pars, ipAddrs, startDate, endDate);
@@ -132,21 +148,12 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 	private List<String> fetchExpectedKeys(String type) {
 
-		List<String> systemKeys = new ArrayList<String>(Arrays.asList("cpu:avg", "/-usage:avg", "/data-usage:avg",
-		      "/usr-usage:avg", "/var-usage:avg", "eth0-in-flow:sum", "eth0-out-flow:sum", "swap:avg", "load:avg",
-		      "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
-
-		List<String> jvmKeys = new ArrayList<String>(Arrays.asList("edenUsage:avg", "oldUsage:avg", "permUsage:avg",
-		      "tomcatLive:avg", "catalinaLogSize:sum"));
-
-		List<String> nginxKeys = new ArrayList<String>();
-
 		if (SYSTEM_TYPE.equalsIgnoreCase(type)) {
-			return systemKeys;
+			return SYSTEM_KEY_LIST;
 		} else if (JVM_TYPE.equalsIgnoreCase(type)) {
-			return jvmKeys;
+			return JVM_KEY_LIST;
 		} else if (NGINX_TYPE.equalsIgnoreCase(type)) {
-			return nginxKeys;
+			return NGINX_KEY_LIST;
 		} else {
 			return new ArrayList<String>();
 		}

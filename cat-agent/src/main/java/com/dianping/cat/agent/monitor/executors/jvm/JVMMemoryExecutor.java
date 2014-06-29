@@ -1,8 +1,10 @@
 package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -37,26 +39,14 @@ public class JVMMemoryExecutor extends AbstractJVMExecutor implements Initializa
 				iterator.next();
 				String line = iterator.next();
 				String[] metrics = line.split(" +");
-				long current = System.currentTimeMillis();
 
 				try {
-					DataEntity eden = new DataEntity();
-					eden.setId(buildJVMDataEntityId("edenUsage", pid)).setType(AVG_TYPE).setTime(current)
-					      .setValue(Double.valueOf(metrics[2]) / 100);
-					addGroupDomainInfo(eden);
-					entities.add(eden);
+					Map<String, Double> values = new HashMap<String, Double>();
 
-					DataEntity old = new DataEntity();
-					old.setId(buildJVMDataEntityId("oldUsage", pid)).setType(AVG_TYPE).setTime(current)
-					      .setValue(Double.valueOf(metrics[3]) / 100);
-					addGroupDomainInfo(old);
-					entities.add(old);
-
-					DataEntity perm = new DataEntity();
-					perm.setId(buildJVMDataEntityId("permUsage", pid)).setType(AVG_TYPE).setTime(current)
-					      .setValue(Double.valueOf(metrics[4]) / 100);
-					addGroupDomainInfo(perm);
-					entities.add(perm);
+					values.put(buildJVMId("edenUsage", pid), Double.valueOf(metrics[2]) / 100);
+					values.put(buildJVMId("oldUsage", pid), Double.valueOf(metrics[3]) / 100);
+					values.put(buildJVMId("permUsage", pid), Double.valueOf(metrics[4]) / 100);
+					entities.addAll(buildEntities(values, AVG_TYPE));
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
