@@ -21,7 +21,7 @@ public class LineChart {
 
 	private String m_title;
 	
-	private String m_unit;
+	private String m_unit = "Value/分钟";
 	
 	private String m_id;
 

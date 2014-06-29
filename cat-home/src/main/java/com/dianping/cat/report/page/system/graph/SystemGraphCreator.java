@@ -104,7 +104,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 			lineChart.setHtmlTitle(chartTitle);
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
-			lineChart.setUnit("value/分钟");
+			lineChart.setUnit(buildUnit(chartTitle));
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
 			if (keyMapEntry.getValue().entrySet().isEmpty()) {
@@ -121,6 +121,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 					addLastMinuteData(current, all, m_lastMinute, endDate);
 					lineChart.add(lineTitle, current);
+					convertFlowMetric(lineChart, current, lineTitle);
 				} else {
 					lineChart.add(lineTitle, buildNoneData(startDate, endDate, 1));
 				}
@@ -128,22 +129,6 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 			charts.put(chartTitle, lineChart);
 		}
 		return charts;
-	}
-
-	private Map<Long, Double> buildNoneData(Date startDate, Date endDate, int step) {
-		int n = 0;
-		long current = System.currentTimeMillis();
-
-		if (endDate.getTime() > current) {
-			n = (int) ((current - startDate.getTime()) / 60000.0);
-		} else {
-			n = (int) ((endDate.getTime() - startDate.getTime()) / 60000.0);
-		}
-
-		double[] noneData = new double[n];
-		Map<Long, Double> currentData = convertToMap(noneData, startDate, step);
-
-		return currentData;
 	}
 
 	private List<String> fetchExpectedKeys(String type) {
