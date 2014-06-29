@@ -221,8 +221,8 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 		try {
 			Swap curSwap = m_sigar.getSwap();
-			long totalSwap = curSwap.getTotal();
-			double swapUsage = totalSwap > 0 ? 1.0 * curSwap.getFree() / totalSwap : 0.0;
+			double totalSwap = curSwap.getTotal();
+			double swapUsage = totalSwap > 0.0 ? curSwap.getFree() / totalSwap : 0.0;
 			Map<String, Double> values = new HashMap<String, Double>();
 
 			values.put(buildSystemId("swapUsage"), swapUsage);

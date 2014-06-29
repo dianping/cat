@@ -166,9 +166,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		for (String expectedKey : expectedKeys) {
 			int typeIndex = expectedKey.lastIndexOf(":");
 			String metricType = expectedKey.substring(typeIndex + 1);
-			String des = queryMetricItemDes(metricType.toUpperCase());
 			String headKey = expectedKey.substring(0, typeIndex);
-			String chartKey = headKey + des;
 			Set<String> pidSuffixs = new HashSet<String>();
 
 			if (JVM_TYPE.equalsIgnoreCase(type)) {
@@ -181,7 +179,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 					}
 				}
 			}
-			Map<String, String> ipMap = findOrCreate(chartKey, aggregationKeys);
+			Map<String, String> ipMap = findOrCreate(headKey, aggregationKeys);
 
 			for (String ip : ipAddrs) {
 				if (pidSuffixs.size() <= 1) {
