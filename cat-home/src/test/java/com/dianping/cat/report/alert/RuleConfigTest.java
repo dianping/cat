@@ -16,7 +16,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.alert.AlertEntity;
+import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
 
@@ -69,7 +69,7 @@ public class RuleConfigTest {
 	@Test
 	public void testCondition() {
 		Map<String, List<Condition>> conditionsMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
-		AlertEntity result;
+		AlertResultEntity result;
 
 		Assert.assertNotNull(conditionsMap);
 
@@ -92,7 +92,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertEntity result = m_check.checkData(value, baseline, configMap.get("two-minute"));
+		AlertResultEntity result = m_check.checkData(value, baseline, configMap.get("two-minute"));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -104,7 +104,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 200, 350 };
 		double value[] = { 100, 50 };
-		AlertEntity result = m_check.checkData(value, baseline, configMap.get("demo1"));
+		AlertResultEntity result = m_check.checkData(value, baseline, configMap.get("demo1"));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 }

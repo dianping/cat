@@ -18,7 +18,7 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.alert.AlertEntity;
+import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
 
@@ -94,7 +94,7 @@ public class AlertConfigTest {
 
 		double baseline[] = { 100, 100 };
 		double value[] = { 200, 200 };
-		AlertEntity result = alertConfig.checkData(value, baseline, conditions);
+		AlertResultEntity result = alertConfig.checkData(value, baseline, conditions);
 		Assert.assertEquals(result.isTriggered(), false);
 
 		double[] baseline2 = { 100, 100 };
@@ -159,7 +159,7 @@ public class AlertConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertEntity result = m_checker.checkData(value, baseline, buildConditions(configMap.get("two-minute")));
+		AlertResultEntity result = m_checker.checkData(value, baseline, buildConditions(configMap.get("two-minute")));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -171,7 +171,7 @@ public class AlertConfigTest {
 
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
-		AlertEntity result = m_checker.checkData(value, baseline, buildConditions(configMap.get("decreasePercentage")));
+		AlertResultEntity result = m_checker.checkData(value, baseline, buildConditions(configMap.get("decreasePercentage")));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline2 = { 200, 300 };

@@ -86,7 +86,7 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected AlertEntity computeAlertInfo(int minute, String product, String metricKey,
+	protected AlertResultEntity computeAlertInfo(int minute, String product, String metricKey,
 	      MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
@@ -220,7 +220,7 @@ public abstract class BaseAlert {
 
 	private void processMetricItem(int minute, ProductLine productLine, String metricKey) {
 		for (MetricType type : MetricType.values()) {
-			AlertEntity alert = computeAlertInfo(minute, productLine.getId(), metricKey, type);
+			AlertResultEntity alert = computeAlertInfo(minute, productLine.getId(), metricKey, type);
 
 			if (alert != null && alert.isTriggered()) {
 				String metricTitle = buildMetricTitle(metricKey);

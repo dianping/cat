@@ -5,6 +5,6 @@ import java.util.List;
 import com.dianping.cat.home.rule.entity.Condition;
 
 public interface DataChecker {
-	public AlertEntity checkData(double[] value, double[] baseline, List<Condition> conditions);
+	public AlertResultEntity checkData(double[] value, double[] baseline, List<Condition> conditions);
 
 }

@@ -1,19 +1,19 @@
 package com.dianping.cat.report.task.alert;
 
-public class AlertEntity {
+public class AlertResultEntity {
 	private boolean m_isTriggered;
 
 	private String m_content;
 
 	private String m_alertType;
 	
-	public AlertEntity(){
+	public AlertResultEntity(){
 		this.m_isTriggered = false;
 		this.m_content = "";
 		this.m_alertType = "";
 	}
 	
-	public AlertEntity(boolean result, String content, String alertType){
+	public AlertResultEntity(boolean result, String content, String alertType){
 		this.m_isTriggered = result;
 		this.m_content = content;
 		this.m_alertType = alertType;

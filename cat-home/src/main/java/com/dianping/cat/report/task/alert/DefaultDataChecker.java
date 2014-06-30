@@ -25,8 +25,8 @@ public class DefaultDataChecker implements DataChecker {
 		return result;
 	}
 
-	public AlertEntity checkData(double[] value, double[] baseline, List<Condition> conditions) {
-		AlertEntity result = new AlertEntity();
+	public AlertResultEntity checkData(double[] value, double[] baseline, List<Condition> conditions) {
+		AlertResultEntity result = new AlertResultEntity();
 
 		for (Condition condition : conditions) {
 			int conditionMinute = condition.getMinute();
@@ -38,9 +38,9 @@ public class DefaultDataChecker implements DataChecker {
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
 				if (alertType != null && alertType.equals("error")) {
-					return new AlertEntity(condResult.getKey(), condResult.getValue(), alertType);
+					return new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType);
 				} else {
-					result = new AlertEntity(condResult.getKey(), condResult.getValue(), alertType);
+					result = new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType);
 				}
 			}
 		}
