@@ -15,12 +15,10 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo;
-import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public abstract class AbstractGraphCreator implements LogEnabled {
@@ -142,19 +140,6 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		}
 	}
 
-	protected String queryMetricItemDes(String type) {
-		String des = "";
-
-		if (MetricType.AVG.name().equals(type)) {
-			des = Chinese.Suffix_AVG;
-		} else if (MetricType.SUM.name().equals(type)) {
-			des = Chinese.Suffix_SUM;
-		} else if (MetricType.COUNT.name().equals(type)) {
-			des = Chinese.Suffix_COUNT;
-		}
-		return des;
-	}
-
 	protected void put(Map<String, LineChart> charts, Map<String, LineChart> result, String key) {
 		LineChart value = charts.get(key);
 
@@ -211,5 +196,53 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 			return newCurrentValues;
 		}
 		return allCurrentValues;
+	}
+
+	protected boolean isFlowMetric(String title) {
+		if (title.toLowerCase().contains("flow")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	protected String buildUnit(String chartTitle) {
+		if (isFlowMetric(chartTitle)) {
+			return "流量(MB/秒)";
+		} else {
+			return "value/分钟";
+		}
+	}
+
+	protected void convertFlowMetric(LineChart lineChart, Map<Long, Double> current, String key) {
+
+		if (isFlowMetric(lineChart.getId())) {
+			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
+
+			for (Entry<Long, Double> currentEntry : current.entrySet()) {
+				double result = currentEntry.getValue() / 1000000.0 / 60;
+
+				convertedData.put(currentEntry.getKey(), result);
+			}
+			lineChart.add(key, convertedData);
+		} else {
+			lineChart.add(key, current);
+		}
+	}
+
+	protected Map<Long, Double> buildNoneData(Date startDate, Date endDate, int step) {
+		int n = 0;
+		long current = System.currentTimeMillis();
+
+		if (endDate.getTime() > current) {
+			n = (int) ((current - startDate.getTime()) / 60000.0);
+		} else {
+			n = (int) ((endDate.getTime() - startDate.getTime()) / 60000.0);
+		}
+
+		double[] noneData = new double[n];
+		Map<Long, Double> currentData = convertToMap(noneData, startDate, step);
+
+		return currentData;
 	}
 }

@@ -1,7 +1,6 @@
 package com.dianping.cat.agent.monitor.executors;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
@@ -58,9 +57,9 @@ public class EnvConfig implements Initializable {
 	@Override
 	public void initialize() {
 		try {
-			File file = new File(CONFIG_FILE);
+			String agent = System.getProperty("agent", "executors");
 
-			if (file.exists()) {
+			if ("executors".equals(agent)) {
 				Properties properties = new Properties();
 				InputStream in = new BufferedInputStream(new FileInputStream(CONFIG_FILE));
 				properties.load(in);

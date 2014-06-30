@@ -5,8 +5,8 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.paas.DataProducer</role>
-			<implementation>com.dianping.cat.agent.monitor.paas.DataProducer</implementation>
+			<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.DataBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.Executor</role>
@@ -65,7 +65,7 @@
 					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.paas.DataProducer</role>
+					<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -130,13 +130,13 @@
 					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.paas.DataProducer</role>
+					<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.paas.DataProducer</role>
-			<implementation>com.dianping.cat.agent.monitor.paas.DataProducer</implementation>
+			<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.DataBuilder</implementation>
 		</component>
 	</components>
 </plexus>
