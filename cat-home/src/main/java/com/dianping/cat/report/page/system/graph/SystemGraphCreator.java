@@ -120,7 +120,6 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 					Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
 					addLastMinuteData(current, all, m_lastMinute, endDate);
-					lineChart.add(lineTitle, current);
 					convertFlowMetric(lineChart, current, lineTitle);
 				} else {
 					lineChart.add(lineTitle, buildNoneData(startDate, endDate, 1));
