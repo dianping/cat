@@ -23,8 +23,6 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	public static final String ID = "SystemStateExecutor";
 
-	private static final String MD5_PATH = "/usr/sbin/sshd";
-
 	private Sigar m_sigar = new Sigar();
 
 	private String m_md5String;
@@ -39,7 +37,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		m_ipAddr = m_envConfig.getIp();
 
 		try {
-			m_md5String = readFileContent(MD5_PATH);
+			m_md5String = readFileContent(m_envConfig.getMd5Path());
 		} catch (IOException e) {
 			Cat.logError(e);
 		}
@@ -158,7 +156,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			String currMd5String = readFileContent(MD5_PATH);
+			String currMd5String = readFileContent(m_envConfig.getMd5Path());
 			double value = 0;
 
 			if (m_md5String.equals(currMd5String)) {

@@ -1,7 +1,6 @@
 package com.dianping.cat.agent.monitor.executors.system;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,18 +21,11 @@ import org.hyperic.sigar.Who;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.DataEntity;
-import com.dianping.cat.agent.monitor.Utils;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
 
 public class SystemPerformanceExecutor extends AbstractExecutor {
 
 	public static final String ID = "PerformanceExecutor";
-
-	private static final List<String> TRAFFIC_INTERFACE_LIST = new ArrayList<String>(Arrays.asList("eth0", "lo"));
-
-	private static final String PACKAGE_INTERFACE = "eth0";
-
-	private static final List<String> DISK_LIST = new ArrayList<String>(Arrays.asList("/", "/data", "/usr", "/var"));
 
 	private Sigar m_sigar = new Sigar();
 
@@ -81,7 +73,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 			for (FileSystem fs : fileSystems) {
 				String dirName = fs.getDirName();
 
-				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK && DISK_LIST.contains(dirName)) {
+				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK && m_envConfig.getDiskList().contains(dirName)) {
 					Map<String, Double> values = new HashMap<String, Double>();
 					FileSystemUsage usage = m_sigar.getFileSystemUsage(dirName);
 					double usedPerc = usage.getUsePercent();
@@ -134,7 +126,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			List<String> lines = Utils.runShell("free");
+			List<String> lines = m_commandUtils.runShell("free");
 			Iterator<String> iterator = lines.iterator();
 
 			if (lines.size() >= 2) {
@@ -166,7 +158,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 	private List<DataEntity> buildNetworkInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 
-		for (String netInterface : TRAFFIC_INTERFACE_LIST) {
+		for (String netInterface : m_envConfig.getTrafficInterfaceList()) {
 			try {
 				NetInterfaceStat curIfStat = m_sigar.getNetInterfaceStat(netInterface);
 				NetInterfaceStat preIfStat = m_preIfStatMap.get(netInterface);
@@ -179,7 +171,7 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 					values.put(buildSystemId(netInterface + "-inFlow"), totalRxBytes);
 					values.put(buildSystemId(netInterface + "-outFlow"), totalTxBytes);
 
-					if (PACKAGE_INTERFACE.equals(netInterface)) {
+					if (m_envConfig.getPackageInterface().equals(netInterface)) {
 						double txDropped = curIfStat.getTxDropped() - preIfStat.getTxDropped();
 						double txErrors = curIfStat.getTxErrors() - preIfStat.getTxErrors();
 						double txCollisions = curIfStat.getTxCollisions() - preIfStat.getTxCollisions();

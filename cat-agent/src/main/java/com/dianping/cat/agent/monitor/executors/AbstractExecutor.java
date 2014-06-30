@@ -7,12 +7,16 @@ import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.agent.monitor.CommandUtils;
 import com.dianping.cat.agent.monitor.DataEntity;
 
 public abstract class AbstractExecutor implements Executor {
 
 	@Inject
 	protected EnvConfig m_envConfig;
+	
+	@Inject
+	protected CommandUtils m_commandUtils;
 
 	public static final String SUM_TYPE = "sum";
 

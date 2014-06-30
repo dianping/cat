@@ -7,29 +7,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.DataEntity;
-import com.dianping.cat.agent.monitor.Utils;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
 
-public class JVMMemoryExecutor extends AbstractJVMExecutor implements Initializable {
+public class JVMMemoryExecutor extends AbstractExecutor {
+
+	@Inject
+	private TomcatPidManager m_manager;
 
 	public static final String ID = "JVMMemoryExecutor";
 
 	private List<DataEntity> buildJVMMemoryInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		Set<String> pids = findPidOfTomcat();
+		Set<String> pids = m_manager.findPidOfTomcat();
 
 		for (String pid : pids) {
 			List<String> lines = null;
 
 			try {
-				lines = Utils.runShell("/usr/local/jdk/bin/jstat -gcutil " + pid);
+				lines = m_commandUtils.runShell("/usr/local/jdk/bin/jstat -gcutil " + pid);
 			} catch (Exception e) {
 				try {
-					lines = Utils.runShell("jstat -gcutil " + pid);
+					lines = m_commandUtils.runShell("jstat -gcutil " + pid);
 				} catch (Exception cause) {
 					Cat.logError("Maybe cat agent doesn't know path of jstat ", cause);
 				}
@@ -68,12 +70,5 @@ public class JVMMemoryExecutor extends AbstractJVMExecutor implements Initializa
 	@Override
 	public String getId() {
 		return ID;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		if (m_pidsOfTomcat.isEmpty()) {
-			m_pidsOfTomcat.addAll(findPidOfTomcat());
-		}
 	}
 }

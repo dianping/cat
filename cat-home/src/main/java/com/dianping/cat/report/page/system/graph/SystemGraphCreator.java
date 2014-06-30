@@ -38,7 +38,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 	      "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
 
 	private static final List<String> JVM_KEY_LIST = new ArrayList<String>(Arrays.asList("edenUsage:avg",
-	      "oldUsage:avg", "permUsage:avg", "tomcatLive:avg", "catalinaLogSize:sum"));
+	      "oldUsage:avg", "permUsage:avg", "catalinaLogSize:sum"));
 
 	private static final List<String> NGINX_KEY_LIST = new ArrayList<String>();
 
@@ -130,7 +130,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	private List<String> fetchExpectedKeys(String type) {
+	protected List<String> fetchExpectedKeys(String type) {
 
 		if (SYSTEM_TYPE.equalsIgnoreCase(type)) {
 			return SYSTEM_KEY_LIST;
