@@ -12,7 +12,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.Utils;
 
-public class DataProducer {
+public class DataBuilder {
 
 	private static final String PAAS_MONINTOR = System.getProperty("user.dir") + "/paas-monitor.py";
 
@@ -165,7 +165,7 @@ public class DataProducer {
 		return outputs;
 	}
 
-	public List<DataEntity> produceData(String id) {
+	public List<DataEntity> buildData(String id) {
 		String cmd = "/usr/bin/python " + PAAS_MONINTOR + " " + id;
 		List<String> outputs = null;
 

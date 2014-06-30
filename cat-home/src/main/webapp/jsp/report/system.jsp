@@ -25,30 +25,17 @@
 			if("${model.ipAddrs}" != "[]") {
 				ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
 			}
-			for( var i=0; i<ipAddrs.length; i++){
-			 	var ip = "ip_" + ipAddrs[i];
-				if(document.getElementById(ip).checked == false){
-					document.getElementById("ipAll").checked = false;
-					break;
-				} 
-			}
 			
 			var curIpAddrs = '';
 			var num = 0;
-			if(document.getElementById("ipAll").checked == false) {
+			if(document.getElementById("ipAll").checked == false && ipAddrs.length > 0) {
 				for( var i=0; i<ipAddrs.length; i++){
 				 	var ip = "ip_" + ipAddrs[i];
 					if(document.getElementById(ip).checked){
 						curIpAddrs += ipAddrs[i] + "_";
-						num ++;
 					} 
 				}
-				if(num == ipAddrs.length) {
-					curIpAddrs = "All";
-					document.getElementById("ipAll").checked = true;
-				}else{
-					curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
-				}
+				curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
 			}else{
 				curIpAddrs = "All";
 			}
@@ -58,12 +45,7 @@
 					+ end; 
 		}
 		
-		function queryAll() {
-			var productLine = $("#productLine").val();
-			var domain = $("#domain").val();
-			var type = $("#type").val();
-			var start = $("#startTime").val();
-			var end = $("#endTime").val();
+		function clickAll() {
 			var ipAddrs = '';
 			
 			if("${model.ipAddrs}" != "[]"){
@@ -74,23 +56,26 @@
 			 	var ip = "ip_" + ipAddrs[i];
 				document.getElementById(ip).checked = document.getElementById("ipAll").checked;
 			}
-			
-			var curIpAddrs = '';
-			if(document.getElementById("ipAll").checked == true) {
-				curIpAddrs = "All";
-			}else{
-				for( var i=0; i<ipAddrs.length; i++){
-				 	var ip = "ip_" + ipAddrs[i];
-					if(document.getElementById(ip).checked){
-						curIpAddrs += ipAddrs[i] + "_";
-					} 
-				}
-				curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
+		}
+		
+		function clickIp() {
+			var ipAddrs = '';
+			if("${model.ipAddrs}" != "[]") {
+				ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
 			}
-			
-			window.location.href = "?productLine=" + productLine + "&domain=" + domain + "&type=" + type 
-					+ "&ipAddrs=" + curIpAddrs + "&startDate=" + start + "&endDate="
-					+ end; 
+			var num = 0;
+			for( var i=0; i<ipAddrs.length; i++){
+			 	var ip = "ip_" + ipAddrs[i];
+				if(document.getElementById(ip).checked){
+					num ++;
+				}else{
+					document.getElementById("ipAll").checked = false;
+					break;
+				} 
+			}
+			if(num == ipAddrs.length) {
+				document.getElementById("ipAll").checked = true;
+			}
 		}
 
 		$(document).ready(
@@ -244,12 +229,12 @@
 	
 		<div class="btn-group" data-toggle="buttons">
 			<label class="btn btn-info">
-		    		<input type="checkbox" id="ipAll"  unchecked>All
+		    		<input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All
 		  	</label>
 	    	
 	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
       			<label class="btn btn-info">
-		    		<input type="checkbox" id="ip_${item}" value="${item}" unchecked>${item}
+		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}
 		  		</label>
 			</c:forEach>
 		</div>

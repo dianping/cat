@@ -19,7 +19,7 @@ public class PaasTask implements Task, Initializable {
 	private DataSender m_dataSender;
 
 	@Inject
-	private DataProducer m_dataProducer;
+	private DataBuilder m_dataBuilder;
 
 	private static final int DURATION = 5 * 1000;
 
@@ -41,9 +41,9 @@ public class PaasTask implements Task, Initializable {
 			Transaction t = Cat.newTransaction("Agent", "Paas");
 
 			try {
-				List<String> instances = m_dataProducer.queryInstances();
+				List<String> instances = m_dataBuilder.queryInstances();
 				for (String instance : instances) {
-					List<DataEntity> entities = m_dataProducer.produceData(instance);
+					List<DataEntity> entities = m_dataBuilder.buildData(instance);
 
 					m_dataSender.put(entities);
 				}
