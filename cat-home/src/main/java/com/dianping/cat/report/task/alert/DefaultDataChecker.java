@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.alert;
 import java.util.List;
 
 import org.unidal.tuple.Pair;
-import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -26,8 +25,8 @@ public class DefaultDataChecker implements DataChecker {
 		return result;
 	}
 
-	public Triple<Boolean, String, String> checkData(double[] value, double[] baseline, List<Condition> conditions) {
-		Triple<Boolean, String, String> result = new Triple<Boolean, String, String>(false, "", "");
+	public AlertEntity checkData(double[] value, double[] baseline, List<Condition> conditions) {
+		AlertEntity result = new AlertEntity();
 
 		for (Condition condition : conditions) {
 			int conditionMinute = condition.getMinute();
@@ -39,9 +38,9 @@ public class DefaultDataChecker implements DataChecker {
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
 				if (alertType != null && alertType.equals("error")) {
-					return new Triple<Boolean, String, String>(condResult.getKey(), condResult.getValue(), alertType);
+					return new AlertEntity(condResult.getKey(), condResult.getValue(), alertType);
 				} else {
-					result = new Triple<Boolean, String, String>(condResult.getKey(), condResult.getValue(), alertType);
+					result = new AlertEntity(condResult.getKey(), condResult.getValue(), alertType);
 				}
 			}
 		}

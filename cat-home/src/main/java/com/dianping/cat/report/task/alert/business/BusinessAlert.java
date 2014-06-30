@@ -9,13 +9,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
 
@@ -51,7 +51,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
 			      config.getMetricKey());
 
-			Triple<Boolean, String, String> alert = null;
+			AlertEntity alert = null;
 			if (config.isShowAvg()) {
 				alert = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
 			}
@@ -62,10 +62,10 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				alert = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
 			}
 
-			if (alert != null && alert.getFirst()) {
+			if (alert != null && alert.isTriggered()) {
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
-				sendAlertInfo(productLine, config.getTitle(), alert.getMiddle(), alert.getLast());
+				sendAlertInfo(productLine, config.getTitle(), alert.getContent(), alert.getAlertType());
 			}
 		}
 	}

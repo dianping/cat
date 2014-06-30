@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
-import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -34,7 +33,7 @@ import com.dianping.cat.system.tool.MailSMS;
 public abstract class BaseAlert {
 
 	@Inject
-	protected BaseRuleConfigManager m_metricRuleConfigManager;
+	protected BaseRuleConfigManager m_ruleConfigManager;
 
 	@Inject
 	protected MailSMS m_mailSms;
@@ -87,11 +86,11 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected Triple<Boolean, String, String> computeAlertInfo(int minute, String product, String metricKey,
+	protected AlertEntity computeAlertInfo(int minute, String product, String metricKey,
 	      MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		List<Config> configs = m_metricRuleConfigManager.queryConfigs(metricKey, type);
+		List<Config> configs = m_ruleConfigManager.queryConfigs(metricKey, type);
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
@@ -221,13 +220,13 @@ public abstract class BaseAlert {
 
 	private void processMetricItem(int minute, ProductLine productLine, String metricKey) {
 		for (MetricType type : MetricType.values()) {
-			Triple<Boolean, String, String> alert = computeAlertInfo(minute, productLine.getId(), metricKey, type);
+			AlertEntity alert = computeAlertInfo(minute, productLine.getId(), metricKey, type);
 
-			if (alert != null && alert.getFirst()) {
+			if (alert != null && alert.isTriggered()) {
 				String metricTitle = buildMetricTitle(metricKey);
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
-				sendAlertInfo(productLine, metricTitle, alert.getMiddle(), alert.getLast());
+				sendAlertInfo(productLine, metricTitle, alert.getContent(), alert.getAlertType());
 			}
 		}
 	}

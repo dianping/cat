@@ -9,7 +9,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.unidal.helper.Files;
-import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -17,6 +16,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.report.task.alert.AlertEntity;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
 
@@ -26,13 +26,13 @@ public class RuleConfigTest {
 
 	private List<Condition> buildConditions(List<Config> configs) {
 		List<Condition> conditions = new ArrayList<Condition>();
-		
-		for(Config config : configs){
+
+		for (Config config : configs) {
 			conditions.addAll(config.getConditions());
 		}
-		
+
 		return conditions;
-   }
+	}
 
 	private Map<String, List<Condition>> buildConfigMap(MonitorRules monitorRules) {
 		if (monitorRules == null || monitorRules.getRules().size() == 0) {
@@ -45,10 +45,10 @@ public class RuleConfigTest {
 			String id = rule.getId();
 			List<Condition> ruleConditions = buildConditions(rule.getConfigs());
 			List<Condition> conditions = map.get(id);
-			
+
 			if (conditions == null) {
 				map.put(id, ruleConditions);
-			}else{
+			} else {
 				conditions.addAll(ruleConditions);
 			}
 		}
@@ -69,19 +69,19 @@ public class RuleConfigTest {
 	@Test
 	public void testCondition() {
 		Map<String, List<Condition>> conditionsMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
-		Triple<Boolean, String, String> result;
+		AlertEntity result;
 
 		Assert.assertNotNull(conditionsMap);
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
 		result = m_check.checkData(value7, baseline7, conditionsMap.get("conditionCombination"));
-		Assert.assertEquals(result.getFirst().booleanValue(), true);
+		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
 		result = m_check.checkData(value8, baseline8, conditionsMap.get("subconditionCombination"));
-		Assert.assertEquals(result.getFirst().booleanValue(), false);
+		Assert.assertEquals(result.isTriggered(), false);
 	}
 
 	@Test
@@ -92,8 +92,8 @@ public class RuleConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		Triple<Boolean, String, String> result = m_check.checkData(value, baseline, configMap.get("two-minute"));
-		Assert.assertEquals(result.getFirst().booleanValue(), true);
+		AlertEntity result = m_check.checkData(value, baseline, configMap.get("two-minute"));
+		Assert.assertEquals(result.isTriggered(), true);
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 200, 350 };
 		double value[] = { 100, 50 };
-		Triple<Boolean, String, String> result = m_check.checkData(value, baseline, configMap.get("demo1"));
-		Assert.assertEquals(result.getFirst().booleanValue(), true);
+		AlertEntity result = m_check.checkData(value, baseline, configMap.get("demo1"));
+		Assert.assertEquals(result.isTriggered(), true);
 	}
 }
