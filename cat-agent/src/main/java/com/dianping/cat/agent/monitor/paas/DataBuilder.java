@@ -6,19 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.CommandUtils;
 import com.dianping.cat.agent.monitor.DataEntity;
-import com.dianping.cat.agent.monitor.Utils;
 
 public class DataBuilder {
 
-	private static final String PAAS_MONINTOR = System.getProperty("user.dir") + "/paas-monitor.py";
+	@Inject
+	private CommandUtils m_commandUtils;
 
-	private static Map<String, String> m_ip2Md5 = new HashMap<String, String>();
+	private Map<String, String> m_ip2Md5 = new HashMap<String, String>();
 
-	private static Map<String, Pair<Double, Double>> m_lastFlow = new HashMap<String, Pair<Double, Double>>();
+	private Map<String, Pair<Double, Double>> m_lastFlow = new HashMap<String, Pair<Double, Double>>();
+
+	public String getPaasMonintor() {
+		return System.getProperty("user.dir") + "/paas-monitor.py";
+	}
 
 	private Pair<Double, Double> findOrCreateFlow(String ip) {
 		Pair<Double, Double> flow = m_lastFlow.get(ip);
@@ -154,11 +160,11 @@ public class DataBuilder {
 	}
 
 	public List<String> queryInstances() {
-		String cmd = "/usr/bin/python " + PAAS_MONINTOR + " instance_ids";
+		String cmd = "/usr/bin/python " + getPaasMonintor() + " instance_ids";
 		List<String> outputs = null;
 
 		try {
-			outputs = Utils.runShell(cmd);
+			outputs = m_commandUtils.runShell(cmd);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -166,11 +172,11 @@ public class DataBuilder {
 	}
 
 	public List<DataEntity> buildData(String id) {
-		String cmd = "/usr/bin/python " + PAAS_MONINTOR + " " + id;
+		String cmd = "/usr/bin/python " + getPaasMonintor() + " " + id;
 		List<String> outputs = null;
 
 		try {
-			outputs = Utils.runShell(cmd);
+			outputs = m_commandUtils.runShell(cmd);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

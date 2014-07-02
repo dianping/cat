@@ -8,9 +8,9 @@ import java.util.List;
 
 import org.codehaus.plexus.util.StringUtils;
 
-public class Utils {
+public class CommandUtils {
 
-	public static List<String> runShell(String cmd) throws Exception {
+	public List<String> runShell(String cmd) throws Exception {
 		List<String> result = new LinkedList<String>();
 		BufferedReader reader = null;
 
