@@ -1,12 +1,43 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
-			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
+			<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+			<implementation>com.dianping.cat.agent.monitor.CommandUtils</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
 			<implementation>com.dianping.cat.agent.monitor.paas.DataBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.CatServers</role>
+			<implementation>com.dianping.cat.agent.monitor.CatServers</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.DataSender</role>
+			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CatServers</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.executors.jvm.TomcatPidManager</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.jvm.TomcatPidManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.Executor</role>
@@ -15,6 +46,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.executors.jvm.TomcatPidManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -26,6 +63,9 @@
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -36,6 +76,9 @@
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -45,6 +88,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -112,6 +158,15 @@
 		<component>
 			<role>com.dianping.cat.agent.monitor.DataSender</role>
 			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CatServers</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.CatServers</role>
+			<implementation>com.dianping.cat.agent.monitor.CatServers</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
@@ -137,6 +192,15 @@
 		<component>
 			<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
 			<implementation>com.dianping.cat.agent.monitor.paas.DataBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+			<implementation>com.dianping.cat.agent.monitor.CommandUtils</implementation>
 		</component>
 	</components>
 </plexus>
