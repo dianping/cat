@@ -61,7 +61,6 @@ public class Handler implements PageHandler<Context> {
 		long time = payload.getTimestamp();
 
 		return buildMetric(group, domain, key, type, time, value);
-
 	}
 
 	private Metric buildMetric(String group, String domain, String key, String type, long time, double value) {
