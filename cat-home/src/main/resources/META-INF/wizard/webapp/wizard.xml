@@ -71,6 +71,9 @@
          <page name="cdn" title="Cdn" path="cdn" template="default">
             <description>Cdn</description>
          </page>
+         <page name="app" title="App" path="app" template="default">
+            <description>App</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">

@@ -26,6 +26,8 @@ public class NavigationBar {
 		ReportPage.METRIC,
 		
 		ReportPage.USERMONITOR,
+		
+		ReportPage.APP,
 
 		ReportPage.TRANSACTION,
 
