@@ -1,0 +1,8 @@
+<app-config>
+	<config-item id="网络类型">
+		<item id="1" name="2G" des="2G网络"></item>
+		<item id="2" name="3G" des="3G网络"></item>
+		<item id="3" name="4G" des="4G网络"></item>
+	</config-item>
+	<config-item></config-item>
+</app-config>

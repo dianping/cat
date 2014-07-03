@@ -27,6 +27,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -102,11 +103,14 @@ public class Handler implements PageHandler<Context> {
 	private AlertConfigManager m_alertConfigManager;
 
 	@Inject
+	private AppConfigManager m_appConfigManager;
+
+	@Inject
 	private DomainNavManager m_manager;
 
 	@Inject
 	private ReportService m_reportService;
-	
+
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
 
@@ -457,6 +461,13 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_netGraphConfigManager.getConfig().toString());
 			break;
+		case APP_CONFIG_UPDATE:
+			String appConfig = payload.getContent();
+			if (!StringUtils.isEmpty(appConfig)) {
+				model.setOpState(m_appConfigManager.insert(appConfig));
+			}
+			model.setContent(m_appConfigManager.getConfig().toString());
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -515,12 +526,12 @@ public class Handler implements PageHandler<Context> {
 
 		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(key).toString());
 	}
-	
+
 	private boolean metricRuleAddSubmit(Payload payload, Model model) {
-		try{
+		try {
 			String xmlContent = m_businessRuleConfigManager.updateRule(payload.getContent());
 			return m_businessRuleConfigManager.insert(xmlContent);
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			return false;
 		}
 	}
