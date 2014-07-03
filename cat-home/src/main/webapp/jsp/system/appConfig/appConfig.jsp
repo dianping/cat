@@ -17,7 +17,7 @@
 		</div>
 		<div class="span10">
 			<form name="appConfigUpdate" id="form" method="post"
-				action="${model.pageUri}?op=netGraphConfigUpdate">
+				action="${model.pageUri}?op=appConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
 				<h4 class="text-center text-error">手机端配置</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
@@ -35,7 +35,7 @@
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#appConfig').addClass('active');
+			$('#appConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');
