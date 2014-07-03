@@ -50,10 +50,9 @@ public class EventReportBuilder implements ReportTaskBuilder {
 
 			buildEventDailyGraph(eventReport);
 
-			String content = eventReport.toString();
 			DailyReport report = new DailyReport();
 
-			report.setContent(content);
+			report.setContent("");
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
