@@ -133,11 +133,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
 		all.add(C(IpService.class));
-		all.add(C(CdnGraphCreator.class).req(BaselineService.class, DataExtractor.class,
-				MetricDataFetcher.class, CachedMetricReportService.class, MetricConfigManager.class,
-				ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
-		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class).req(ModelService.class,
-		      MetricAnalyzer.ID).req(ReportService.class).req(IpService.class));
+		all.add(C(CdnGraphCreator.class).req(BaselineService.class, DataExtractor.class, MetricDataFetcher.class,
+		      CachedMetricReportService.class, MetricConfigManager.class, ProductLineConfigManager.class,
+		      MetricGroupConfigManager.class, AlertInfo.class));
+		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class)
+		      .req(ModelService.class, MetricAnalyzer.ID).req(ReportService.class).req(IpService.class));
 
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 
@@ -193,13 +193,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(SystemAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-				BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
-				.req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class));
+		      BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
+		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class, AlertExceptionBuilder.class).req(ModelService.class, TopAnalyzer.ID));
+		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
+		      TopAnalyzer.ID));
 
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 

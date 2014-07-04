@@ -1929,6 +1929,9 @@
 					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
