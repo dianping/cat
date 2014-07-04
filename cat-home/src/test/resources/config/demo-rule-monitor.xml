@@ -1,8 +1,8 @@
 <monitor-rules>
 	<rule id="demo1">
-		<metric-item type="id" text="f5-2400-1-dianping-com:2400-1-dianping-com:1/1-1-in">
+		<metric-item metricItemText="f5-2400-1-dianping-com:2400-1-dianping-com:1/1-1-in">
 		</metric-item>
-		<metric-item type="regex" text="switch\w*:\w*:\w*in\w*">
+		<metric-item metricItemText="switch\w*:\w*:\w*in\w*">
 		</metric-item>
 		
 		<config starttime="00:00" endtime="24:00">

@@ -106,7 +106,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ReportService m_reportService;
-	
+
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
 
@@ -513,14 +513,14 @@ public class Handler implements PageHandler<Context> {
 	private void metricRuleAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 
-		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(key).toString());
+		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key).toString());
 	}
-	
+
 	private boolean metricRuleAddSubmit(Payload payload, Model model) {
-		try{
+		try {
 			String xmlContent = m_businessRuleConfigManager.updateRule(payload.getContent());
 			return m_businessRuleConfigManager.insert(xmlContent);
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			return false;
 		}
 	}

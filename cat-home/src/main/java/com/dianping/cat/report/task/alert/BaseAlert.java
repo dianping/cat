@@ -108,7 +108,7 @@ public abstract class BaseAlert {
 	protected AlertResultEntity computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		List<Config> configs = m_ruleConfigManager.queryConfigs(metricKey, type);
+		List<Config> configs = m_ruleConfigManager.queryConfigs(product, metricKey, type);
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();

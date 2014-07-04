@@ -47,12 +47,12 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		return config;
 	}
 
-	private Rule buildDefaultRule(String metricKey) {
+	private Rule buildDefaultRule(String product, String metricKey) {
 		Rule rule = new Rule(metricKey);
 		MetricItem item = new MetricItem();
 
-		item.setType("id");
-		item.setText(metricKey);
+		item.setProductText(product);
+		item.setMetricItemText(metricKey);
 
 		rule.addMetricItem(item);
 		rule.addConfig(buildDefaultConfig());
@@ -96,7 +96,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	}
 
 	@Override
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String metricKey, MetricType type) {
+	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
 		Rule rule = m_config.getRules().get(metricKey);
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
 
@@ -124,13 +124,13 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		}
 	}
 
-	public Rule queryRule(String metricKey) {
+	public Rule queryRule(String product, String metricKey) {
 		Rule rule = m_config.getRules().get(metricKey);
 
 		if (rule != null) {
 			return rule;
 		} else {
-			return buildDefaultRule(metricKey);
+			return buildDefaultRule(product, metricKey);
 		}
 	}
 

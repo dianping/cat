@@ -39,7 +39,7 @@ public class MetricIdAndRuleMappingTest {
 		boolean tmpResult = false;
 
 		for (String pattern : patterns) {
-			tmpResult = m_manager.validate("regex", pattern, text);
+			tmpResult = m_manager.validate(null, pattern, null, text);
 
 			if (tmpResult) {
 				return tmpResult;
