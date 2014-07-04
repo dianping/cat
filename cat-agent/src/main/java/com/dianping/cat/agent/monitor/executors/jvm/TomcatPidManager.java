@@ -5,20 +5,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.Utils;
-import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
+import com.dianping.cat.agent.monitor.CommandUtils;
 
-public abstract class AbstractJVMExecutor extends AbstractExecutor {
+public class TomcatPidManager {
 
-	protected static Set<String> m_pidsOfTomcat = new HashSet<String>();
+	@Inject
+	private CommandUtils m_commandUtils;
 
-	protected Set<String> findPidOfTomcat() {
+	public Set<String> findPidOfTomcat() {
 		Set<String> pids = new HashSet<String>();
 
 		try {
 			String cmd = "/etc/init.d/tomcat status";
-			List<String> outputs = Utils.runShell(cmd); // The process of tomcat ( pid=9923 ) is running...
+			List<String> outputs = m_commandUtils.runShell(cmd); // The process of tomcat ( pid=9923 ) is running...
 
 			if (!outputs.isEmpty()) {
 				Iterator<String> iterator = outputs.iterator();
@@ -43,12 +45,12 @@ public abstract class AbstractJVMExecutor extends AbstractExecutor {
 		return pids;
 	}
 
-	protected static Set<String> findPidByLocalWay() {
+	private Set<String> findPidByLocalWay() {
 		Set<String> pids = new HashSet<String>();
 		String cmd = "ps -ef | grep java | grep tomcat | grep 'catalina.startup.Bootstrap start' | grep -v grep | awk '{print $2}' | tr '\n' ' '";
 
 		try {
-			List<String> lines = Utils.runShell(cmd);
+			List<String> lines = m_commandUtils.runShell(cmd);
 			if (!lines.isEmpty()) {
 				String line = lines.iterator().next();
 				String[] outputs = line.trim().split(" +");
@@ -60,7 +62,6 @@ public abstract class AbstractJVMExecutor extends AbstractExecutor {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
 		return pids;
 	}
 }

@@ -34,7 +34,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
-			lineChart.setUnit(buildUnit(keyMapEntry.getKey()));
+			lineChart.setUnit(buildUnit(chartTitle));
 
 			for (String key : keyMapEntry.getValue()) {
 				if (dataWithOutFutures.containsKey(key)) {
@@ -43,7 +43,9 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 
 					buildLineChartTitle(lineChart, key, alertKeys);
 					addLastMinuteData(current, all, m_lastMinute, endDate);
-					convertLineChartData(lineChart, current, key);
+					convertFlowMetric(lineChart, current, buildLineTitle(key));
+				} else {
+					lineChart.add(chartTitle, buildNoneData(startDate, endDate, 1));
 				}
 			}
 			charts.put(chartTitle, lineChart);
@@ -60,22 +62,6 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			lineChart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
 		} else {
 			lineChart.setHtmlTitle(title);
-		}
-	}
-
-	private void convertLineChartData(LineChart lineChart, Map<Long, Double> current, String key) {
-
-		if (isFlowMetric(lineChart.getId())) {
-			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
-
-			for (Entry<Long, Double> currentEntry : current.entrySet()) {
-				double result = currentEntry.getValue() / 1000000.0 / 60;
-
-				convertedData.put(currentEntry.getKey(), result);
-			}
-			lineChart.add(buildLineTitle(key), convertedData);
-		} else {
-			lineChart.add(buildLineTitle(key), current);
 		}
 	}
 
@@ -180,27 +166,11 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		return aggregationKeys;
 	}
 
-	private boolean isFlowMetric(String title) {
-		if (title.endsWith("-flow")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private boolean isSumTypeMetric(String group) {
 		if (isFlowMetric(group) || group.toLowerCase().endsWith("-discard/error")) {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	private String buildUnit(String chartTitle) {
-		if (isFlowMetric(chartTitle)) {
-			return "流量(MB/秒)";
-		} else {
-			return "value/分钟";
 		}
 	}
 }

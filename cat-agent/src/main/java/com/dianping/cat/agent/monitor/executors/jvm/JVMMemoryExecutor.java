@@ -1,33 +1,37 @@
 package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.DataEntity;
-import com.dianping.cat.agent.monitor.Utils;
+import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
 
-public class JVMMemoryExecutor extends AbstractJVMExecutor implements Initializable {
+public class JVMMemoryExecutor extends AbstractExecutor {
+
+	@Inject
+	private TomcatPidManager m_manager;
 
 	public static final String ID = "JVMMemoryExecutor";
 
 	private List<DataEntity> buildJVMMemoryInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		Set<String> pids = findPidOfTomcat();
+		Set<String> pids = m_manager.findPidOfTomcat();
 
 		for (String pid : pids) {
 			List<String> lines = null;
 
 			try {
-				lines = Utils.runShell("/usr/local/jdk/bin/jstat -gcutil " + pid);
+				lines = m_commandUtils.runShell("/usr/local/jdk/bin/jstat -gcutil " + pid);
 			} catch (Exception e) {
 				try {
-					lines = Utils.runShell("jstat -gcutil " + pid);
+					lines = m_commandUtils.runShell("jstat -gcutil " + pid);
 				} catch (Exception cause) {
 					Cat.logError("Maybe cat agent doesn't know path of jstat ", cause);
 				}
@@ -37,26 +41,14 @@ public class JVMMemoryExecutor extends AbstractJVMExecutor implements Initializa
 				iterator.next();
 				String line = iterator.next();
 				String[] metrics = line.split(" +");
-				long current = System.currentTimeMillis();
 
 				try {
-					DataEntity eden = new DataEntity();
-					eden.setId(buildJVMDataEntityId("edenUsage", pid)).setType(AVG_TYPE).setTime(current)
-					      .setValue(Double.valueOf(metrics[2]) / 100);
-					addGroupDomainInfo(eden);
-					entities.add(eden);
+					Map<String, Double> values = new HashMap<String, Double>();
 
-					DataEntity old = new DataEntity();
-					old.setId(buildJVMDataEntityId("oldUsage", pid)).setType(AVG_TYPE).setTime(current)
-					      .setValue(Double.valueOf(metrics[3]) / 100);
-					addGroupDomainInfo(old);
-					entities.add(old);
-
-					DataEntity perm = new DataEntity();
-					perm.setId(buildJVMDataEntityId("permUsage", pid)).setType(AVG_TYPE).setTime(current)
-					      .setValue(Double.valueOf(metrics[4]) / 100);
-					addGroupDomainInfo(perm);
-					entities.add(perm);
+					values.put(buildJVMId("edenUsage", pid), Double.valueOf(metrics[2]) / 100);
+					values.put(buildJVMId("oldUsage", pid), Double.valueOf(metrics[3]) / 100);
+					values.put(buildJVMId("permUsage", pid), Double.valueOf(metrics[4]) / 100);
+					entities.addAll(buildEntities(values, AVG_TYPE));
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -78,12 +70,5 @@ public class JVMMemoryExecutor extends AbstractJVMExecutor implements Initializa
 	@Override
 	public String getId() {
 		return ID;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		if (m_pidsOfTomcat.isEmpty()) {
-			m_pidsOfTomcat.addAll(findPidOfTomcat());
-		}
 	}
 }
