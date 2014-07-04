@@ -132,7 +132,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
-						sendAlertForDomain(entry.getKey(), entry.getValue());
+						sendAndStoreAlert(entry.getKey(), entry.getValue());
 					} catch (Exception e) {
 						m_logger.error(e.getMessage());
 					}
@@ -154,17 +154,19 @@ public class ExceptionAlert implements Task, LogEnabled {
 			}
 		}
 	}
-
-	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
+	
+	private void sendAndStoreAlert(String domain, List<AlertException> exceptions) {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
-		String mailTitle = m_alertBuilder.buildMailTitle(domain);
+		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
 		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
 
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+		
+		storeAlert(domain, exceptions, mailTitle+"<br/>"+mailContent);
 
 		List<AlertException> errorExceptions = m_alertBuilder.buildErrorException(exceptions);
 
@@ -175,6 +177,10 @@ public class ExceptionAlert implements Task, LogEnabled {
 			m_logger.info(smsContent + " " + phones);
 			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
 		}
+	}
+	
+	private void storeAlert(String domain, List<AlertException> exceptions, String mailContent) {
+		
 	}
 
 	@Override

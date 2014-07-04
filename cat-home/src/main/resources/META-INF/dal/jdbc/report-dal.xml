@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.home.dal.report" gen="true">
+	<entity name="alert" table="alert" alias="al">
+		<member name="creation-date" insert-expr="NOW()" />
+	</entity>
 	<entity name="alteration" table="alteration" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-time" value-type="Date" />

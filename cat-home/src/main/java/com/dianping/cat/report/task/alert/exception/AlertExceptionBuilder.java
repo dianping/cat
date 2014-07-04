@@ -125,13 +125,6 @@ public class AlertExceptionBuilder {
 		return limits;
 	}
 
-	public String buildMailTitle(String domain) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("]");
-		return sb.toString();
-	}
-
 	public String buildMailContent(String exceptions, String domain) {
 		String content = buildContent(exceptions, domain);
 		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
