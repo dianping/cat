@@ -1,18 +1,19 @@
 package com.dianping.cat.report.page.app;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
+
 import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
+public class Payload extends AbstractReportPayload<Action> {
    private ReportPage m_page;
 
-   @FieldMeta("op")
+	@FieldMeta("op")
    private Action m_action;
 
-   public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
+   public Payload() {
+   	super(ReportPage.APP);
    }
 
    @Override
@@ -23,6 +24,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
    @Override
    public ReportPage getPage() {
       return m_page;
+   }
+
+   public void setAction(String action) {
+      m_action = Action.getByName(action, Action.VIEW);
    }
 
    @Override

@@ -1,9 +1,11 @@
 package com.dianping.cat.report.page.app;
 
-import com.dianping.cat.report.ReportPage;
-import org.unidal.web.mvc.ViewModel;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class Model extends ViewModel<ReportPage, Action, Context> {
+import com.dianping.cat.report.page.AbstractReportModel;
+
+public class Model extends AbstractReportModel<Action, Context> {
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -11,5 +13,15 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
+	}
+
+	@Override
+	public String getDomain() {
+		return getDisplayDomain();
+	}
+
+	@Override
+	public Collection<String> getDomains() {
+		return new ArrayList<String>();
 	}
 }
