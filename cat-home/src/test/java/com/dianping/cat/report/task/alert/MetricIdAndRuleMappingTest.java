@@ -24,6 +24,11 @@ public class MetricIdAndRuleMappingTest {
 		protected String getConfigName() {
 			return null;
 		}
+
+		@Override
+      protected String getCategoryName() {
+	      return null;
+      }
 	};
 
 	private List<String> buildPatternList(String path) {
