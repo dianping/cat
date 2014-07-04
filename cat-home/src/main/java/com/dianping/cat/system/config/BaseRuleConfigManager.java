@@ -15,6 +15,7 @@ import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.site.lookup.util.StringUtils;
 
@@ -26,6 +27,8 @@ public abstract class BaseRuleConfigManager {
 	protected int m_configId;
 
 	protected MonitorRules m_config;
+
+	protected abstract String getCategoryName();
 
 	protected abstract String getConfigName();
 
@@ -65,6 +68,8 @@ public abstract class BaseRuleConfigManager {
 
 				if (validate) {
 					configs.addAll(rule.getConfigs());
+					Cat.logEvent("FindRule", getCategoryName(), Event.SUCCESS,
+					      "find rule for " + metricKey + ": " + rule.toString());
 					break;
 				}
 			}

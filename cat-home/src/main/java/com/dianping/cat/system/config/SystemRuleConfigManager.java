@@ -13,12 +13,19 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class SystemRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
+	private static final String CATEGORY_NAME = "system";
+
 	private static final String CONFIG_NAME = "systemRuleConfig";
 
 	@Override
-   protected String getConfigName() {
-	   return CONFIG_NAME;
-   }
+	protected String getCategoryName() {
+		return CATEGORY_NAME;
+	}
+
+	@Override
+	protected String getConfigName() {
+		return CONFIG_NAME;
+	}
 
 	@Override
 	public void initialize() throws InitializationException {
