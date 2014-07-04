@@ -16,6 +16,7 @@
          <table name="daily_report_content"/>
          <table name="monthly_report_content"/>
          <table name="weekly_report_content"/>
+         <table name="alert"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="mailRecord"/>

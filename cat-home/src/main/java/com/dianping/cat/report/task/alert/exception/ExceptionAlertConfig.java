@@ -25,10 +25,18 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 		}
 	}
 
+	@Override
+	public String buildMailTitle(String domain, String configTitle) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[CAT异常告警] [项目: ").append(domain).append("]");
+		return sb.toString();
+	}
+
 	private List<String> buildProjectMailReceivers(Project project) {
 		return split(project.getEmail());
 	}
-	
+
 	public List<String> buildSMSReceivers(Project project) {
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_manager.queryReceiverById(getId());
@@ -42,7 +50,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 			return smsReceivers;
 		}
 	}
-	
+
 	private List<String> buildProjectSMSReceivers(Project project) {
 		return split(project.getPhone());
 	}

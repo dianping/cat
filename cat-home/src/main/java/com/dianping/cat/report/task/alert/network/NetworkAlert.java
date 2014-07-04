@@ -14,6 +14,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
+import com.dianping.cat.report.task.alert.BaseAlertConfig;
 
 public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
@@ -28,6 +29,11 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 	@Override
 	public String getName() {
 		return "network-alert";
+	}
+	
+	@Override
+	public BaseAlertConfig getAlertConfig() {
+		return m_alertConfig;
 	}
 
 	@Override
@@ -82,9 +88,8 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	protected void sendAlertInfo(ProductLine productLine, String metricTitle, String content, String alertType) {
+	protected void sendAlertInfo(ProductLine productLine, String title, String content, String alertType) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		String title = m_alertConfig.buildMailTitle(productLine, metricTitle);
 
 		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);
