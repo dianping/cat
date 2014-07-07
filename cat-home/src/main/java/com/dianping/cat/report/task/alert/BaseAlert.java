@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
-import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -23,6 +23,8 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.Alert;
+import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -34,10 +36,13 @@ import com.dianping.cat.system.tool.MailSMS;
 public abstract class BaseAlert {
 
 	@Inject
-	protected BaseRuleConfigManager m_metricRuleConfigManager;
+	protected BaseRuleConfigManager m_ruleConfigManager;
 
 	@Inject
 	protected MailSMS m_mailSms;
+
+	@Inject
+	protected AlertDao m_alertDao;
 
 	@Inject
 	protected AlertInfo m_alertInfo;
@@ -69,6 +74,19 @@ public abstract class BaseAlert {
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
+	private Alert buildAlert(String domainName, String metricTitle, String mailTitle, AlertResultEntity alertResult) {
+		Alert alert = new Alert();
+
+		alert.setDomain(domainName);
+		alert.setAlertTime(alertResult.getAlertTime());
+		alert.setCategory(getName());
+		alert.setType(alertResult.getAlertType());
+		alert.setContent(mailTitle + "<br/>" + alertResult.getContent());
+		alert.setMetric(metricTitle);
+
+		return alert;
+	}
+
 	private String buildMetricTitle(String metricKey) {
 		try {
 			return metricKey.split(":")[2];
@@ -87,11 +105,10 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected Triple<Boolean, String, String> computeAlertInfo(int minute, String product, String metricKey,
-	      MetricType type) {
+	protected AlertResultEntity computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		List<Config> configs = m_metricRuleConfigManager.queryConfigs(metricKey, type);
+		List<Config> configs = m_ruleConfigManager.queryConfigs(product, metricKey, type);
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
@@ -221,13 +238,16 @@ public abstract class BaseAlert {
 
 	private void processMetricItem(int minute, ProductLine productLine, String metricKey) {
 		for (MetricType type : MetricType.values()) {
-			Triple<Boolean, String, String> alert = computeAlertInfo(minute, productLine.getId(), metricKey, type);
+			String productlineName = productLine.getId();
+			AlertResultEntity alertResult = computeAlertInfo(minute, productlineName, metricKey, type);
 
-			if (alert != null && alert.getFirst()) {
+			if (alertResult != null && alertResult.isTriggered()) {
 				String metricTitle = buildMetricTitle(metricKey);
+				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
-				sendAlertInfo(productLine, metricTitle, alert.getMiddle(), alert.getLast());
+				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
+				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());
 			}
 		}
 	}
@@ -304,5 +324,23 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected abstract void sendAlertInfo(ProductLine productLine, String metricTitle, String content, String alertType);
+	protected void storeAlert(String domainName, String metricTitle, String mailTitle, AlertResultEntity alertResult) {
+		Alert alert = buildAlert(domainName, metricTitle, mailTitle, alertResult);
+
+		try {
+			int count = m_alertDao.insert(alert);
+
+			if (count != 1) {
+				Cat.logError("insert alert error: " + alert.toString(), new RuntimeException());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
+
+	protected abstract String getName();
+	
+	protected abstract BaseAlertConfig getAlertConfig();
+
+	protected abstract void sendAlertInfo(ProductLine productLine, String mailTitle, String content, String alertType);
 }

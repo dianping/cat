@@ -311,3 +311,14 @@ CREATE TABLE `alteration` (
   KEY `ind_date_domain_host` (`date`,`domain`,`hostname`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COMMENT='变更表';
 
+CREATE TABLE `alert` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `domain` varchar(128) NOT NULL COMMENT '告警项目',
+  `alert_time` datetime NOT NULL COMMENT '告警时间',
+  `category` varchar(64) NOT NULL COMMENT '告警分类:network/business/system/exception -alert',
+  `type` varchar(64) NOT NULL COMMENT '告警类型:error/warning',
+  `content` text NOT NULL COMMENT '告警内容',
+  `metric` varchar(128) NOT NULL COMMENT '告警指标',
+  `creation_date` datetime NOT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='存储告警信息';

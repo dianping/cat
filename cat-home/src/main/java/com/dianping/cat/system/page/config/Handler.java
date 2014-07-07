@@ -524,7 +524,7 @@ public class Handler implements PageHandler<Context> {
 	private void metricRuleAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 
-		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(key).toString());
+		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key).toString());
 	}
 
 	private boolean metricRuleAddSubmit(Payload payload, Model model) {

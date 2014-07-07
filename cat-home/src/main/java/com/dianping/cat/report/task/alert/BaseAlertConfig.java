@@ -68,6 +68,8 @@ public abstract class BaseAlertConfig {
 			return smsReceivers;
 		}
 	}
+	
+	protected abstract String buildMailTitle(String artifactName, String configTitle);
 
 	public abstract String getId();
 

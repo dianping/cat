@@ -9,20 +9,21 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Triple;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
+import com.dianping.cat.report.task.alert.BaseAlertConfig;
 import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	private BusinessAlertConfig m_alertConfig;
+	protected BusinessAlertConfig m_alertConfig;
 
 	private Logger m_logger;
 
@@ -34,6 +35,11 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	@Override
 	public String getName() {
 		return "metric-alert";
+	}
+	
+	@Override
+	public BaseAlertConfig getAlertConfig() {
+		return m_alertConfig;
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
@@ -48,24 +54,27 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
 		if (needAlert(config)) {
 			String product = productLine.getId();
-			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-			      config.getMetricKey());
+			String domain = config.getDomain();
+			String metric = config.getMetricKey();
+			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
 
-			Triple<Boolean, String, String> alert = null;
+			AlertResultEntity alertResult = null;
 			if (config.isShowAvg()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
+				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
 			}
 			if (config.isShowCount()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
+				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
 			}
 			if (config.isShowSum()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
+				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
 			}
 
-			if (alert != null && alert.getFirst()) {
+			if (alertResult != null && alertResult.isTriggered()) {
+				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
-				sendAlertInfo(productLine, config.getTitle(), alert.getMiddle(), alert.getLast());
+				storeAlert(domain, metric, mailTitle, alertResult);
+				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());
 			}
 		}
 	}
@@ -138,9 +147,8 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	public void sendAlertInfo(ProductLine productLine, String metricTitle, String content, String alertType) {
+	public void sendAlertInfo(ProductLine productLine, String title, String content, String alertType) {
 		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		String title = m_alertConfig.buildMailTitle(productLine, metricTitle);
 
 		m_logger.info(title + " " + content + " " + emails);
 		m_mailSms.sendEmail(title, content, emails);
