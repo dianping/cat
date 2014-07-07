@@ -11,6 +11,12 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("op")
    private Action m_action;
+	
+	@FieldMeta("query1")
+   private String m_query1;
+	
+	@FieldMeta("query2")
+   private String m_query2;
 
    public Payload() {
    	super(ReportPage.APP);
@@ -34,8 +40,24 @@ public class Payload extends AbstractReportPayload<Action> {
    public void setPage(String page) {
       m_page = ReportPage.getByName(page, ReportPage.APP);
    }
+   
+   public String getQuery1() {
+   	return m_query1;
+   }
 
-   @Override
+	public void setQuery1(String query1) {
+   	m_query1 = query1;
+   }
+
+	public String getQuery2() {
+   	return m_query2;
+   }
+
+	public void setQuery2(String query2) {
+   	m_query2 = query2;
+   }
+
+	@Override
    public void validate(ActionContext<?> ctx) {
       if (m_action == null) {
          m_action = Action.VIEW;
