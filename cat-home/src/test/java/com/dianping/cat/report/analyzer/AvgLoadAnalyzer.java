@@ -113,7 +113,7 @@ public class AvgLoadAnalyzer extends ComponentTestCase {
 		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeUtil.ONE_HOUR),
 		      TransactionAnalyzer.ID);
 	}
-
+	
 	public static class MachineInfo {
 
 		private String m_ip;

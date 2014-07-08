@@ -60,6 +60,9 @@ public class Handler implements PageHandler<Context> {
 		String key = payload.getKey();
 		long time = payload.getTimestamp();
 
+		if (time <= 0) {
+			time = System.currentTimeMillis();
+		}
 		return buildMetric(group, domain, key, type, time, value);
 	}
 

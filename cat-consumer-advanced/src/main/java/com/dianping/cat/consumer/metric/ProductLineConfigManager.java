@@ -132,7 +132,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		boolean userMonitor = false;
 		boolean networkMonitor = false;
 		boolean systemMonitor = false;
-		boolean bussinessMonitor = false;
+		boolean metricDashboard = false;
 
 		if (Constants.BROKER_SERVICE.equals(domain)) {
 			userMonitor = true;
@@ -142,13 +142,14 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
 		} else {
-			bussinessMonitor = true;
+			metricDashboard = true;
 		}
 
 		productLine.setNetworkDashboard(networkMonitor);
 		productLine.setUserMonitorDashboard(userMonitor);
 		productLine.setSystemMonitorDashboard(systemMonitor);
-		productLine.setDashboard(bussinessMonitor);
+		productLine.setMetricDashboard(metricDashboard);
+		productLine.setDashboard(metricDashboard);
 	}
 
 	public boolean insertIfNotExsit(String line, String domain) {
