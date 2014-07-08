@@ -42,13 +42,14 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		}
 		DailyReport report = new DailyReport();
 
-		report.setContent(bugReport.toString());
+		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
+		
 		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
 		return m_reportService.insertDailyReport(report, binaryContent);
 	}

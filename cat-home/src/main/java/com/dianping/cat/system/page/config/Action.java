@@ -93,7 +93,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	METRIC_GROUP_CONFIG_UPDATE("metricGroupConfigUpdate"),
 
-	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate");
+	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
+	
+	APP_CONFIG_UPDATE("appConfigUpdate");
 	
 	private String m_name;
 
