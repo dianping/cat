@@ -63,22 +63,30 @@ public class Handler implements PageHandler<Context> {
 		return buildMetric(group, domain, key, type, time, value);
 	}
 
+	private boolean isNetwork(String group) {
+		return group.startsWith("f5") || group.startsWith("switch");
+	}
+
+	private boolean isSystem(String group) {
+		return group.startsWith("system");
+	}
+
 	private Metric buildMetric(String group, String domain, String key, String type, long time, double value) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
 
-		if (defaultMetric != null) {
-			defaultMetric.setTimestamp(time);
-			if (MetricType.SUM.name().equalsIgnoreCase(type)) {
-				defaultMetric.setStatus("S,C");
-				defaultMetric.addData(String.format("%s,%.2f", 1, value));
-			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
-				defaultMetric.setStatus("T");
-				defaultMetric.addData(String.format("%.2f", value));
-			} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
-				defaultMetric.setStatus("C");
-				defaultMetric.addData(String.valueOf(value));
-			}
+		defaultMetric.setTimestamp(time);
+		if (MetricType.SUM.name().equalsIgnoreCase(type)) {
+			defaultMetric.setStatus("S,C");
+			defaultMetric.addData(String.format("%s,%.2f", 1, value));
+		} else if (MetricType.AVG.name().equalsIgnoreCase(type)) {
+			defaultMetric.setStatus("T");
+			defaultMetric.addData(String.format("%.2f", value));
+		} else if (MetricType.COUNT.name().equalsIgnoreCase(type)) {
+			defaultMetric.setStatus("C");
+			defaultMetric.addData(String.valueOf(value));
+		} else {
+			throw new RuntimeException("Error type in metric api, type: " + type);
 		}
 
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -86,6 +94,9 @@ public class Handler implements PageHandler<Context> {
 
 		if (message instanceof Transaction) {
 			((DefaultTransaction) message).setTimestamp(time);
+		}
+		if (!isNetwork(group) && !isSystem(group)) {
+			tree.setDomain(domain);
 		}
 		return defaultMetric;
 	}
