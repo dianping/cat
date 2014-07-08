@@ -1,362 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
    <rule id="ErrorAndDiscard">
-      <metric-item type="regex" monitorSum="true" text="^(?!(2400-1-dianping-com|SH-N6001P-1|SH-N6001P-2)).*(?=errors$)"/>
-      <metric-item type="regex" monitorSum="true" text=".*(?=discards$)"/>
+      <metric-item monitorSum="true" productText="^(?!(f5-2400-1-dianping-com|switch-SH-N6001P-1|switch-SH-N6001P-2))" metricItemText=".*(?=errors$)"/>
+      <metric-item monitorSum="true" productText="" metricItemText=".*(?=discards$)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
+         <condition minute="3" alertType="error">
             <sub-condition type="MaxVal" text="400"/>
          </condition>
       </config>
    </rule>
    <rule id="F501InError">
-      <metric-item type="regex" monitorSum="true" text="(2400-1-dianping-com|SH-N6001P-1|SH-N6001P-2).*(?=errors$)"/>
+      <metric-item monitorSum="true" productText="(2400-1-dianping-com|SH-N6001P-1|SH-N6001P-2)" metricItemText=".*(?=errors$)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="3">
+         <condition minute="3" alertType="error">
             <sub-condition type="MaxVal" text="2000"/>
          </condition>
       </config>
    </rule>
    <rule id="F5CpuUsage">
-      <metric-item type="regex" monitorAvg="true" text="(2400|3600)-[12]-dianping-com:Metric:cpu-core"/>
+      <metric-item monitorAvg="true" productText="(2400|3600)-[12]-dianping-com" metricItemText=".*cpu-core"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="80"/>
          </condition>
       </config>
    </rule>
    <rule id="QW_E8030-CTC-IN">
-      <metric-item type="regex" monitorSum="true" text="AntiDDoS.*(?=GigabitEthernet1/0/[02]-flow-in)"/>
+      <metric-item monitorSum="true" productText="AntiDDoS" metricItemText=".*(?=GigabitEthernet1/0/[02]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="9Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="QW_E8030-CTC-IN-1/0/[46]">
-      <metric-item type="regex" monitorSum="true" text="AntiDDoS.*(?=GigabitEthernet1/0/[46]-flow-in)"/>
+      <metric-item monitorSum="true" productText="AntiDDoS" metricItemText=".*(?=GigabitEthernet1/0/[46]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="QW_E8030-CTC-OUT">
-      <metric-item type="regex" monitorSum="true" text="AntiDDoS.*(?=GigabitEthernet1/0/[0246]-flow-out)"/>
+      <metric-item monitorSum="true" productText="AntiDDoS" metricItemText=".*(?=GigabitEthernet1/0/[0246]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="QW_E8030-N6K-IN">
-      <metric-item type="regex" monitorSum="true" text="AntiDDoS.*(?=GigabitEthernet1/0/[1357]-flow-in)"/>
+      <metric-item monitorSum="true" productText="AntiDDoS" metricItemText=".*(?=GigabitEthernet1/0/[1357]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="QW_E8030-N6K-OUT">
-      <metric-item type="regex" monitorSum="true" text="AntiDDoS.*(?=GigabitEthernet1/0/[13]-flow-out)"/>
+      <metric-item monitorSum="true" productText="AntiDDoS" metricItemText=".*(?=GigabitEthernet1/0/[13]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="9Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="QW_E8030-N6K-OUT-1/0/[57]">
-      <metric-item type="regex" monitorSum="true" text="AntiDDoS.*(?=GigabitEthernet1/0/[57]-flow-out)"/>
+      <metric-item monitorSum="true" productText="AntiDDoS" metricItemText=".*(?=GigabitEthernet1/0/[57]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N6K-QW_E8030-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N6001P-2.*(?=Ethernet1/2-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N6001P-2" metricItemText=".*(?=Ethernet1/2-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N6K-QW_E8030-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N6001P-[12].*(?=Ethernet1/[12]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N6001P-[12]" metricItemText=".*(?=Ethernet1/[12]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N6K-F5v2400-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N6001P-[12].*(?=Ethernet1/4[1234]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N6001P-[12]" metricItemText=".*(?=Ethernet1/4[1234]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N6K-F5v2400-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N6001P-[12].*(?=Ethernet1/4[34]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N6001P-[12]" metricItemText=".*(?=Ethernet1/4[34]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="9Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N6K-F5v2400-OUT-1/4[12]">
-      <metric-item type="regex" monitorSum="true" text="SH-N6001P-[12].*(?=Ethernet1/4[12]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N6001P-[12]" metricItemText=".*(?=Ethernet1/4[12]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="C3750CNC-CNC-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/[12]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-NH-CNC-C3750G" metricItemText=".*(?=GigabitEthernet1/0/[12]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="6Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="C3750CNC-CNC-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-NH-CNC-C3750G.*(?=GigabitEthernet1/0/[12]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-NH-CNC-C3750G" metricItemText=".*(?=GigabitEthernet1/0/[12]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="15Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="C3750CNC-F5v2400-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-NH-CNC-C3750G.*(?=GigabitEthernet[12]/0/7-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-NH-CNC-C3750G" metricItemText=".*(?=GigabitEthernet[12]/0/7-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="15Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="C3750CNC-F5v2400-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-NH-CNC-C3750G.*(?=GigabitEthernet[12]/0/7-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-NH-CNC-C3750G" metricItemText=".*(?=GigabitEthernet[12]/0/7-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="6Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-C3750CNC-IN">
-      <metric-item type="regex" monitorSum="true" text="2400-[12]-dianping-com.*(?=1/1-7-flow-in)"/>
+      <metric-item monitorSum="true" productText="2400-[12]-dianping-com" metricItemText=".*(?=1/1-7-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="6Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-C3750CNC-OUT">
-      <metric-item type="regex" monitorSum="true" text="2400-[12]-dianping-com.*(?=1/1-7-flow-out)"/>
+      <metric-item monitorSum="true" productText="2400-[12]-dianping-com" metricItemText=".*(?=1/1-7-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="15Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-N6K-IN-1/1-[28]">
-      <metric-item type="regex" monitorSum="true" text="2400-[12]-dianping-com.*(?=1/1-[28]-flow-in)"/>
+      <metric-item monitorSum="true" productText="2400-[12]-dianping-com" metricItemText=".*(?=1/1-[28]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-N6K-IN">
-      <metric-item type="regex" monitorSum="true" text="2400-[12]-dianping-com.*(?=1/1-[16]-flow-in)"/>
+      <metric-item monitorSum="true" productText="2400-[12]-dianping-com" metricItemText=".*(?=1/1-[16]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="9Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-N6K-OUT">
-      <metric-item type="regex" monitorSum="true" text="2400-[12]-dianping-com.*(?=1/1-[1268]-flow-out)"/>
+      <metric-item monitorSum="true" productText="2400-[12]-dianping-com" metricItemText=".*(?=1/1-[1268]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="18Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-1-N7K-1-IN">
-      <metric-item type="regex" monitorSum="true" text="2400-1-dianping-com.*(?=1/1-[34]-flow-in)"/>
+      <metric-item monitorSum="true" productText="2400-1-dianping-com" metricItemText=".*(?=1/1-[34]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="42Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="F5v2400-1-N7K-1-OUT">
-      <metric-item type="regex" monitorSum="true" text="2400-1-dianping-com.*(?=1/1-[34]-flow-out)"/>
+      <metric-item monitorSum="true" productText="2400-1-dianping-com" metricItemText=".*(?=1/1-[34]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="24Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-F5v2400-1-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/2[56]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/2[56]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="24Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-F5v2400-1-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/2[56]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/2[56]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="42Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-N7K-2-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/[1234]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/[1234]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="48Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-N7K-2-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/[1234]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/[1234]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="3Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-N5K-1-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/32-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/32-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="270Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-N5K-1-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/32-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/32-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="270Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-HM-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/16-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/16-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="102Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-1-HM-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-A.*(?=Ethernet3/16-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-A" metricItemText=".*(?=Ethernet3/16-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="102Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-2-N7K-1-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-B.*(?=Ethernet3/[1234]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-B" metricItemText=".*(?=Ethernet3/[1234]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="3Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-2-N7K-1-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-B.*(?=Ethernet3/[1234]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-B" metricItemText=".*(?=Ethernet3/[1234]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="48Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-2-N5K-2-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-B.*(?=Ethernet3/32-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-B" metricItemText=".*(?=Ethernet3/32-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="210Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N7K-2-N5K-2-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N7010-B.*(?=Ethernet3/32-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N7010-B" metricItemText=".*(?=Ethernet3/32-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="210Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-1-N7K-1-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-1.*(?=Ethernet1/43-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-1" metricItemText=".*(?=Ethernet1/43-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="270Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-1-N7K-1-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-1.*(?=Ethernet1/43-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-1" metricItemText=".*(?=Ethernet1/43-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="270Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-1-N5K-2-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-1.*(?=Ethernet1/4[5678]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-1" metricItemText=".*(?=Ethernet1/4[5678]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="3Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-1-N5K-2-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-1.*(?=Ethernet1/4[5678]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-1" metricItemText=".*(?=Ethernet1/4[5678]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="3Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-2-N5K-1-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-2.*(?=Ethernet1/4[5678]-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-2" metricItemText=".*(?=Ethernet1/4[5678]-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="3Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-2-N5K-1-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-2.*(?=Ethernet1/4[5678]-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-2" metricItemText=".*(?=Ethernet1/4[5678]-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="3Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-2-N7K-2-IN">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-2.*(?=Ethernet1/43-flow-in)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-2" metricItemText=".*(?=Ethernet1/43-flow-in)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="210Gb"/>
          </condition>
       </config>
    </rule>
    <rule id="N5K-2-N7K-2-OUT">
-      <metric-item type="regex" monitorSum="true" text="SH-N5596UP-2.*(?=Ethernet1/43-flow-out)"/>
+      <metric-item monitorSum="true" productText="SH-N5596UP-2" metricItemText=".*(?=Ethernet1/43-flow-out)"/>
       <config starttime="00:00" endtime="24:00">
-         <condition minute="1">
+         <condition minute="1" alertType="error">
             <sub-condition type="MaxVal" text="210Gb"/>
          </condition>
       </config>

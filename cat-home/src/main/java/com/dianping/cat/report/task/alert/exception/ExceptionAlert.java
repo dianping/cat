@@ -66,16 +66,16 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private Alert buildAlert(String domainName, AlertException exception, String mailContent) {
 		Alert alert = new Alert();
-		
+
 		alert.setDomain(domainName);
 		alert.setAlertTime(new Date());
 		alert.setCategory(getName());
 		alert.setType(exception.getType());
 		alert.setContent(mailContent);
 		alert.setMetric(exception.getName());
-		
-	   return alert;
-   }
+
+		return alert;
+	}
 
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
@@ -91,7 +91,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	@Override
 	public String getName() {
 		return "exception-alert";
 	}
