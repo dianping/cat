@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -190,9 +191,15 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	@Override
 	public boolean sendWeiXin(String title, String content, String domain, String weixins) {
-		String urlParameters = "domain=" + domain + "&email=" + weixins + "&title=" + title + "&content=" + content;
+		String rawParameters = "domain=" + domain + "&email=" + weixins + "&title=" + title + "&content=" + content;
+		String urlParameters = null;
 
-		Cat.logEvent("WeiXinSend", "sendstart", Event.SUCCESS, "begin");
+		try {
+			urlParameters = URLEncoder.encode(rawParameters, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			Cat.logError("transfer weixin parameters error:" + rawParameters, e);
+			return false;
+		}
 
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(WEIXIN_URL).openConnection();
@@ -218,29 +225,25 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 				reader.close();
 
 				String responseText = builder.toString();
-				
+
 				if (responseText.equals(SUCCESS_TEXT)) {
-					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + urlParameters + " "
+					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + rawParameters + " "
 					      + responseText);
 					return true;
 				} else {
-					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + urlParameters + " " + responseText);
+					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + rawParameters + " " + responseText);
 					return false;
 				}
 			} else {
-				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + urlParameters);
+				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + rawParameters);
 				return false;
 			}
 		} catch (Exception ex) {
-			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + urlParameters);
-			Cat.logError("send weixin error:" + urlParameters, ex);
+			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + rawParameters);
+			Cat.logError("send weixin error:" + rawParameters, ex);
 			return false;
 		}
 
-	}
-
-	public static void main(String[] args) {
-		boolean result = new DefaultMailImpl().sendWeiXin("test", "test", "test", "tianwen.zhou@dianping.com");
 	}
 
 	public static class Item {
