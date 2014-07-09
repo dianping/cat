@@ -184,11 +184,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-			if (StringUtils.isEmpty(group)) {
+			if (!isNetwork(group) && !isSystem(group)) {
 				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 			}
 		}
 		return 0;
+	}
+
+	private boolean isNetwork(String group) {
+		return group.startsWith("f5") || group.startsWith("switch");
+	}
+
+	private boolean isSystem(String group) {
+		return group.startsWith("system");
 	}
 
 	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {

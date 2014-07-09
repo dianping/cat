@@ -59,7 +59,9 @@ public enum JspFile {
 
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
 	
-	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp");
+	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
+	
+	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp");
 
 	private String m_path;
 
