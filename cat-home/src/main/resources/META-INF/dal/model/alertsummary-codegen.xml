@@ -14,6 +14,7 @@
     <attribute name="type" value-type="String" />
     <attribute name="metric" value-type="String" />
     <attribute name="context" value-type="String" />
+    <attribute name="domain" value-type="String" />
   </entity>
 </model>
 
