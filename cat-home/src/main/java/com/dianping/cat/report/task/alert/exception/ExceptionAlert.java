@@ -180,11 +180,11 @@ public class ExceptionAlert implements Task, LogEnabled {
 		String weixins = m_alertConfig.buildWeiXinReceivers(project);
 		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
 		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
-
+		
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
-
+		
 		m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
 		m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain

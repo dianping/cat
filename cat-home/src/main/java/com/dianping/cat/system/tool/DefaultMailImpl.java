@@ -192,6 +192,8 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 	public boolean sendWeiXin(String title, String content, String domain, String weixins) {
 		String urlParameters = "domain=" + domain + "&email=" + weixins + "&title=" + title + "&content=" + content;
 
+		Cat.logEvent("WeiXinSend", "sendstart", Event.SUCCESS, "begin");
+
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(WEIXIN_URL).openConnection();
 
@@ -216,25 +218,22 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 				reader.close();
 
 				String responseText = builder.toString();
-
+				
 				if (responseText.equals(SUCCESS_TEXT)) {
-					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + domain + " " + title + " "
-					      + content + " " + weixins + " " + responseText);
+					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + urlParameters + " "
+					      + responseText);
 					return true;
 				} else {
-					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + domain + " " + title + " "
-					      + content + " " + weixins + " " + responseText);
+					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + urlParameters + " " + responseText);
 					return false;
 				}
 			} else {
-				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + domain + " " + title + " "
-				      + content + " " + weixins);
+				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + urlParameters);
 				return false;
 			}
 		} catch (Exception ex) {
-			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + domain + " " + title + " " + content + " "
-			      + weixins);
-			Cat.logError("send weixin error:" + domain + " " + title + " " + content + " " + weixins, ex);
+			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + urlParameters);
+			Cat.logError("send weixin error:" + urlParameters, ex);
 			return false;
 		}
 
@@ -242,7 +241,6 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	public static void main(String[] args) {
 		boolean result = new DefaultMailImpl().sendWeiXin("test", "test", "test", "tianwen.zhou@dianping.com");
-		System.out.println(result);
 	}
 
 	public static class Item {

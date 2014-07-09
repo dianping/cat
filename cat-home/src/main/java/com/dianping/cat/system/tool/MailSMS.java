@@ -10,6 +10,6 @@ public interface MailSMS {
 	
 	public boolean sendSms(String title,String content,List<String> phones);
 	
-	public boolean sendWeiXin(String title, String content, String domain, String emails);
+	public boolean sendWeiXin(String title, String content, String domain, String weixins);
 
 }
