@@ -129,14 +129,12 @@
   <entity name="baseline" table="baseline" alias="b">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-name" field="report_name" value-type="String" length="100" />
-    <member name="index-key" field="index_key" value-type="String" length="100" />
+	<member name="index-key" field="index_key" value-type="String" length="256" nullable="false" />
     <member name="report-period" field="report_period" value-type="Date" />
     <member name="data" field="data" value-type="byte[]" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="ix_indexkey_reportperiod" members="index_key ASC, report_period ASC" />
-    <index name="ix_reportperiod" members="report_period ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -215,7 +213,6 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="ix_date_domain" members="date ASC, domain ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -279,6 +276,58 @@
         <param name="key-report-id" />
         <statement><![CDATA[DELETE FROM <TABLE/>
         WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="sqlreport" table="sqlreport" alias="s">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
+    <member name="name" field="name" value-type="String" length="100" nullable="false" />
+    <member name="statement" field="statement" value-type="String" length="3000" nullable="false" />
+    <member name="total-count" field="total_count" value-type="int" length="10" nullable="false" />
+    <member name="failure-count" field="failure_count" value-type="int" length="10" nullable="false" />
+    <member name="long-sqls" field="long_sqls" value-type="int" length="10" nullable="false" />
+    <member name="min-value" field="min_value" value-type="double" length="22" nullable="false" />
+    <member name="max-value" field="max_value" value-type="double" length="22" nullable="false" />
+    <member name="avg2-value" field="avg2_value" value-type="double" length="22" nullable="false" />
+    <member name="sum-value" field="sum_value" value-type="double" length="22" nullable="false" />
+    <member name="sum2-value" field="sum2_value" value-type="double" length="22" nullable="false" />
+    <member name="sample-link" field="sample_link" value-type="String" length="64" nullable="false" />
+    <member name="transaction-date" field="transaction_date" value-type="Date" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <member name="duration-distribution" field="duration_distribution" value-type="String" length="512" nullable="false" />
+    <member name="hits-over-time" field="hits_over_time" value-type="String" length="512" nullable="false" />
+    <member name="duration-over-time" field="duration_over_time" value-type="String" length="512" nullable="false" />
+    <member name="failure-over-time" field="failure_over_time" value-type="String" length="512" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
       </query>
     </query-defs>
   </entity>
