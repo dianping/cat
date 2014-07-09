@@ -188,18 +188,26 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 			return false;
 		}
 	}
-
+	
 	@Override
 	public boolean sendWeiXin(String title, String content, String domain, String weixins) {
-		String rawParameters = "domain=" + domain + "&email=" + weixins + "&title=" + title + "&content=" + content;
-		String urlParameters = null;
+		String urlDomain = null;
+		String urlTitle = null;
+		String urlContent = null;
+		String urlWeixins = null;
 
 		try {
-			urlParameters = URLEncoder.encode(rawParameters, "UTF-8");
+			urlDomain = URLEncoder.encode(domain, "UTF-8");
+			urlTitle = URLEncoder.encode(title, "UTF-8");
+			urlContent = URLEncoder.encode(content.replaceAll("<a href.*(?=</a>)</a>", ""), "UTF-8");
+			urlWeixins = URLEncoder.encode(weixins, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			Cat.logError("transfer weixin parameters error:" + rawParameters, e);
+			Cat.logError("transfer weixin content error:" + title + " " + content + " " + domain + " " + weixins, e);
 			return false;
 		}
+
+		String urlParameters = "domain=" + urlDomain + "&email=" + urlWeixins + "&title=" + urlTitle + "&content="
+		      + urlContent;
 
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(WEIXIN_URL).openConnection();
@@ -227,20 +235,23 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 				String responseText = builder.toString();
 
 				if (responseText.equals(SUCCESS_TEXT)) {
-					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + rawParameters + " "
-					      + responseText);
+					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + domain + " " + title + " "
+					      + content + " " + weixins + " " + responseText);
 					return true;
 				} else {
-					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + rawParameters + " " + responseText);
+					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + domain + " " + title + " "
+					      + content + " " + weixins + " " + responseText);
 					return false;
 				}
 			} else {
-				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + rawParameters);
+				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + domain + " " + title + " "
+				      + content + " " + weixins);
 				return false;
 			}
 		} catch (Exception ex) {
-			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + rawParameters);
-			Cat.logError("send weixin error:" + rawParameters, ex);
+			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + domain + " " + title + " " + content + " "
+			      + weixins);
+			Cat.logError("send weixin error:" + domain + " " + title + " " + content + " " + weixins, ex);
 			return false;
 		}
 
