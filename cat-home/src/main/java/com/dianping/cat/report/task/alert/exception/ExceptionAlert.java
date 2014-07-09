@@ -177,12 +177,18 @@ public class ExceptionAlert implements Task, LogEnabled {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
+		String weixins = m_alertConfig.buildWeiXinReceivers(project);
 		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
 		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
 
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+
+		m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
+		m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
+		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
+		      + " " + weixins);
 
 		storeAlerts(domain, exceptions, mailTitle + "<br/>" + mailContent);
 

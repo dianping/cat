@@ -25,6 +25,38 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 		}
 	}
 
+	public String buildWeiXinReceivers(Project project) {
+		StringBuilder builder = new StringBuilder();
+		Receiver receiver = m_manager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return null;
+		} else {
+			builder.append(buildDefaultWeixinReceivers(receiver));
+			builder.append(project.getEmail());
+
+			String result = builder.toString();
+
+			if (result.endsWith(",")) {
+				return result.substring(0, result.length() - 1);
+			} else {
+				return result;
+			}
+		}
+	}
+
+	private String buildDefaultWeixinReceivers(Receiver receiver) {
+		StringBuilder builder = new StringBuilder();
+
+		if (receiver != null) {
+			for (String weixin : receiver.getWeixins()) {
+				builder.append(weixin + ",");
+			}
+		}
+
+		return builder.toString();
+	}
+
 	@Override
 	public String buildMailTitle(String domain, String configTitle) {
 		StringBuilder sb = new StringBuilder();
