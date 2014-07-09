@@ -322,3 +322,12 @@ CREATE TABLE `alert` (
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='存储告警信息';
+
+CREATE TABLE `alert_summary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `domain` varchar(128) NOT NULL COMMENT '告警项目',
+  `alert_time` datetime NOT NULL COMMENT '告警时间',
+  `content` text NOT NULL COMMENT '统一告警内容',
+  `creation_date` datetime NOT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统一告警信息';

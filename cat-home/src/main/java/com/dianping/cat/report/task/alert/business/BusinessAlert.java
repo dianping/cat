@@ -34,7 +34,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "metric-alert";
+		return "business-alert";
 	}
 	
 	@Override
