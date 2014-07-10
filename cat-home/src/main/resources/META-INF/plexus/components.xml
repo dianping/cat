@@ -1938,6 +1938,45 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 			<implementation>com.dianping.cat.system.config.NetGraphConfigManager</implementation>
 			<requirements>
@@ -1960,6 +1999,16 @@
 			<configuration>
 				<logical-table-name>alert</logical-table-name>
 				<physical-table-name>alert</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>alert-summary</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>alert-summary</logical-table-name>
+				<physical-table-name>alert_summary</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -2046,6 +2095,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.AlertDao</role>
 			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertSummaryDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -3645,6 +3703,24 @@
 		<component>
 			<role>com.dianping.cat.report.page.app.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.app.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.summary.Handler</role>
+			<implementation>com.dianping.cat.report.page.summary.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.summary.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.summary.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.summary.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
