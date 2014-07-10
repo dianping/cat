@@ -1,6 +1,9 @@
 package com.dianping.cat.config.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -15,9 +18,12 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.app.entity.AppConfig;
-import com.dianping.cat.home.app.entity.ConfigItem;
-import com.dianping.cat.home.app.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.app.entity.AppConfig;
+import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.configuration.app.entity.ConfigItem;
+import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.app.entity.Url;
+import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
 
 public class AppConfigManager implements Initializable {
 	@Inject
@@ -30,6 +36,22 @@ public class AppConfigManager implements Initializable {
 	private AppConfig m_config;
 
 	private long m_modifyTime;
+
+	public static String NETWORK = "网络类型";
+
+	public static String OPERATOR = "运营商";
+
+	public static String VERSION = "版本";
+
+	public static String PLATFORM = "平台";
+
+	public static String CITY = "城市";
+
+	public static String CHANNEL = "渠道";
+
+	public AppConfig getConfig() {
+		return m_config;
+	}
 
 	@Override
 	public void initialize() {
@@ -74,12 +96,32 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public AppConfig getConfig() {
-		return m_config;
+	public Collection<Code> queryCodeByCommand(int command) {
+		Url url = m_config.findUrl(command);
+
+		if (url != null) {
+			return url.getCodes().values();
+		} else {
+			return null;
+		}
+	}
+
+	public Collection<Url> queryCommands() {
+		return m_config.getUrls().values();
 	}
 
 	public ConfigItem queryConfigItem(String name) {
 		return m_config.findConfigItem(name);
+	}
+
+	public Collection<Item> queryConfigItems(String key) {
+		ConfigItem configs = m_config.findConfigItem(key);
+
+		if (configs != null) {
+			return configs.getItems().values();
+		} else {
+			return new ArrayList<Item>();
+		}
 	}
 
 	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {

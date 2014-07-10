@@ -583,4 +583,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 	}
+
+	@Override
+   public String getDomain() {
+	   return m_domain.getId();
+   }
 }

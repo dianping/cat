@@ -103,7 +103,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			if (StringUtils.isEmpty(data)) {
 				data = "1";
 			}
-			int count = Integer.parseInt(data);
+			int count = (int) Double.parseDouble(data);
 
 			config.setCount(count);
 			config.setValue((double) count);
