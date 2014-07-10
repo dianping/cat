@@ -44,6 +44,9 @@
 			</query>
 		</query-defs>
 	</entity>
+	<entity name="alert-summary" table="alert_summary" alias="as">
+		<member name="creation-date" insert-expr="NOW()" />
+	</entity>
 	<entity name="alteration" table="alteration" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-time" value-type="Date" />

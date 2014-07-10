@@ -47,15 +47,12 @@ public class AlertSummaryExecutor {
 
 	public String execute(String domain, Date date, String receiverStr) {
 		try {
-			System.out.println("begin");
 			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
-			System.out.println("---" + alertSummary.toString());
 			m_alertSummaryManager.insert(alertSummary);
 			String title = buildMailTitle(domain, date);
 			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
 			List<String> receivers = builderReceivers(receiverStr);
 			m_mailSms.sendEmail(title, content, receivers);
-			System.out.println(title + "---" + content + "---" + receivers);
 
 			return content;
 		} catch (Exception e) {
