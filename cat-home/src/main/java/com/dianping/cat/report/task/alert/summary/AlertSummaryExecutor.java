@@ -46,11 +46,10 @@ public class AlertSummaryExecutor {
 	}
 
 	public String execute(String domain, Date date, String receiverStr) {
-		String title = buildMailTitle(domain, date);
-
 		try {
 			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
 			m_alertSummaryManager.insert(alertSummary);
+			String title = buildMailTitle(domain, date);
 			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
 			List<String> receivers = builderReceivers(receiverStr);
 			m_mailSms.sendEmail(title, content, receivers);

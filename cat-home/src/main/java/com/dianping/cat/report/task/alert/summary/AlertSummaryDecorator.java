@@ -46,7 +46,7 @@ public class AlertSummaryDecorator {
 		      dependencyEdgeHeaders));
 		builder.append(generateCategoryHtml(alertSummary.findCategory("dependency-exception"), "依赖异常告警",
 		      dependencyExceptionHeaders));
-		builder.append(generateCategoryHtml(alertSummary.findCategory("system"), "网络告警", systemHeaders));
+		builder.append(generateCategoryHtml(alertSummary.findCategory("system"), "系统告警", systemHeaders));
 		builder.append(tableTail);
 
 		return builder.toString();
@@ -75,9 +75,18 @@ public class AlertSummaryDecorator {
 
 		builder.append("<tr> <td class=\"text-success\" rowspan=\"").append(rowspan).append("\"");
 		builder.append("<strong>").append(categoryName).append("</strong></td>");
-		for (String header : headers) {
-			builder.append("<th>").append(header).append("</th>");
+
+		int length = headers.length;
+
+		if (length == 5) {
+			builder.append("<th>").append(headers[0]).append("</th>");
+		} else if (length == 4) {
+			builder.append("<th colspan=\"2\">").append(headers[0]).append("</th>");
 		}
+		for (int i = 1; i < length; i++) {
+			builder.append("<th>").append(headers[i]).append("</th>");
+		}
+
 		builder.append("</tr>");
 
 		return builder.toString();
@@ -86,17 +95,16 @@ public class AlertSummaryDecorator {
 	private String generateDataRow(Alert alert) {
 		StringBuilder builder = new StringBuilder();
 		String domain = alert.getDomain();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		builder.append("<tr>");
 
 		if (StringUtils.isEmpty(domain)) {
 			builder.append(generateTd(alert.getMetric(), null, 2));
 		} else {
-			builder.append(generateTd(alert.getDomain(), null, 1));
+			builder.append(generateTd(domain, null, 1));
 			builder.append(generateTd(alert.getMetric(), null, 1));
 		}
-		builder.append(generateTd(dateFormat.format(alert.getAlertTime()), null, 1));
+		builder.append(generateTd(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(alert.getAlertTime()), null, 1));
 		builder.append(generateTd(alert.getType(), null, 1));
 		builder.append(generateTd(alert.getContext(), "alert-content", 1));
 
@@ -110,12 +118,12 @@ public class AlertSummaryDecorator {
 
 		builder.append("<td");
 
-		if (colspan > 1) {
-			builder.append(" colspan=\"").append(colspan).append("\"");
-		}
-
 		if (!StringUtils.isEmpty(className)) {
 			builder.append(" class=\"").append(className).append("\"");
+		}
+		
+		if (colspan > 1) {
+			builder.append(" colspan=\"").append(colspan).append("\"");
 		}
 
 		builder.append(">").append(content).append("</td>");

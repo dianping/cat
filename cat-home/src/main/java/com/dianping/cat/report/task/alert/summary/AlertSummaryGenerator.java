@@ -25,7 +25,7 @@ public class AlertSummaryGenerator {
 	@Inject
 	private TopologyGraphManager m_topologyManager;
 
-	// fetch alerts during this period, time unit is ms, default value is 1 hour
+	// fetch alerts during this period, time unit is ms, default value is 5 minnutes
 	private final long DURATION = 5 * 60 * 1000L;
 
 	private com.dianping.cat.home.alert.summary.entity.Alert convertToAlert(TopologyEdge edge, Date date) {

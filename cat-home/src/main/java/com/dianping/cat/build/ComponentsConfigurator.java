@@ -21,6 +21,7 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.AlertDao;
+import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -61,6 +62,10 @@ import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlertConfig;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
@@ -201,6 +206,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
 		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
 		      TopAnalyzer.ID));
+
+		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class,
+		      AlertSummaryDecorator.class, MailSMS.class));
+
+		all.add(C(AlertSummaryGenerator.class).req(AlertDao.class, TopologyGraphManager.class));
+
+		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 
