@@ -48,7 +48,7 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private static final String WEIXIN_URL = "http://dpoa-monitorapp-web01.beta/app/monitor/cat/push";
+	private static final String WEIXIN_URL = "http://dpoa.api.dianping.com/app/monitor/cat/push";
 
 	private static final String SUCCESS_TEXT = "{\"success\":\"1\"}";
 
