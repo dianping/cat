@@ -24,9 +24,9 @@
 		<item id="1" name="360"></item>
 		<item id="2" name="apple"></item>
 	</config-item>
-	<url id="1" name="http://www.dianping.com/">
+	<command id="1" name="http://www.dianping.com/">
 		 <code id="1" name="成功返回" status="0"></code>
 		 <code id="2" name="参数错误" status="1"></code>
 		 <code id="3" name="非常字符" status="1"></code>
-	</url>
+	</command>
 </app-config>

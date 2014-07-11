@@ -3,7 +3,7 @@
 	enable-base-visitor="false"  enable-xml-parser="false"  enable-xml-builder="false">
   <entity name="app-config">
     <entity-ref name="config-item" type="map" names="config-items" method-find-or-create="true"/>
-    <entity-ref name="url" type="map" names="urls" method-find-or-create="true"/>
+    <entity-ref name="command" type="map" names="commands" method-find-or-create="true"/>
   </entity>
   <entity name="config-item">
     <attribute name="id" value-type="String" key="true"/>
@@ -13,7 +13,7 @@
     <attribute name="id" value-type="int" key="true"/>
     <attribute name="name" value-type="String" />
   </entity>
-  <entity name="url">
+  <entity name="command">
     <attribute name="id" value-type="int" key="true"/>
     <attribute name="name" value-type="String" />
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>

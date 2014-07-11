@@ -15,15 +15,15 @@ import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.core.config.Config;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.configuration.app.entity.AppConfig;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.configuration.app.entity.Url;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
 
 public class AppConfigManager implements Initializable {
 	@Inject
@@ -97,21 +97,28 @@ public class AppConfigManager implements Initializable {
 	}
 
 	public Collection<Code> queryCodeByCommand(int command) {
-		Url url = m_config.findUrl(command);
+		Command c = m_config.findCommand(command);
 
-		if (url != null) {
-			return url.getCodes().values();
+		if (c != null) {
+			return c.getCodes().values();
 		} else {
 			return null;
 		}
 	}
 
-	public Collection<Url> queryCommands() {
-		return m_config.getUrls().values();
+	public List<Command> queryCommands() {
+		return new ArrayList<Command>(m_config.getCommands().values());
 	}
 
-	public ConfigItem queryConfigItem(String name) {
-		return m_config.findConfigItem(name);
+	public List<Item> queryConfigItem(String name) {
+		ConfigItem config = m_config.findConfigItem(name);
+
+		if (config != null) {
+			return new ArrayList<Item>(config.getItems().values());
+		} else {
+			System.out.println(name);
+			return new ArrayList<Item>();
+		}
 	}
 
 	public Collection<Item> queryConfigItems(String key) {

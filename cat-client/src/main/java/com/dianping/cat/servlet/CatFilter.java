@@ -586,6 +586,11 @@ public class CatFilter implements Filter {
 
 		@Override
 		public void addHeader(String name, String value) {
+			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":SetHead", name);
+
+			event.setStatus(Event.SUCCESS);
+			event.addData("value", value);
+			event.complete();
 			super.addHeader(name, value);
 		}
 	}

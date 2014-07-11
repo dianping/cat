@@ -3640,6 +3640,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3648,6 +3651,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3927,15 +3939,6 @@
 		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
