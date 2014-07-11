@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.CommandUtils;
@@ -18,40 +17,38 @@ public class DataBuilder {
 	@Inject
 	private CommandUtils m_commandUtils;
 
-	private Map<String, String> m_ip2Md5 = new HashMap<String, String>();
+	private Map<String, Double> m_lastValues = new HashMap<String, Double>();
 
-	private Map<String, Pair<Double, Double>> m_lastFlow = new HashMap<String, Pair<Double, Double>>();
+	private Map<String, String> m_ip2Md5 = new HashMap<String, String>();
 
 	public String getPaasMonintor() {
 		return System.getProperty("user.dir") + "/paas-monitor.py";
 	}
 
-	private Pair<Double, Double> findOrCreateFlow(String ip) {
-		Pair<Double, Double> flow = m_lastFlow.get(ip);
+	private double findOrCreateSumValue(String key) {
+		Double value = m_lastValues.get(key);
 
-		if (flow == null) {
-			flow = new Pair<Double, Double>(-1D, -1D);
-			m_lastFlow.put(ip, flow);
+		if (value == null) {
+			value = new Double(-1D);
+			m_lastValues.put(key, value);
 		}
-		return flow;
+		return value;
 	}
 
-	private String findOrCreateMd5Info(String ip) {
-		String md5Info = m_ip2Md5.get(ip);
+	private String findOrCreateMd5Info(String key) {
+		String md5Info = m_ip2Md5.get(key);
 
 		if (md5Info == null) {
 			md5Info = "";
 
-			m_ip2Md5.put(ip, md5Info);
+			m_ip2Md5.put(key, md5Info);
 		}
 		return md5Info;
 	}
 
 	private List<DataEntity> convert2DataEntities(List<String> lines) {
 		List<DataEntity> dataEntities = new ArrayList<DataEntity>();
-		Pair<Double, Double> flow = null;
 		String domain = null;
-		String ip = null;
 
 		for (String line : lines) {
 			try {
@@ -64,21 +61,15 @@ public class DataBuilder {
 
 				if (line.startsWith("domain")) {
 					domain = value;
-					ip = key.substring(key.lastIndexOf("_"));
-					flow = findOrCreateFlow(ip);
-				} else if (line.startsWith("system_eth0-in-flow")) {
-					DataEntity inFlow = buildInFlowData(domain, type, realKey, flow, value);
+				} else if ("sum".equals(type)) {
+					DataEntity inFlow = buildSumEntity(domain, type, realKey, key, value);
 
 					add2Entities(dataEntities, inFlow);
-				} else if (line.startsWith("system_eth0-out-flow")) {
-					DataEntity outFlow = buildOutFlowData(domain, type, realKey, flow, value);
-
-					add2Entities(dataEntities, outFlow);
 				} else if (line.startsWith("system_md5Change")) {
-					DataEntity md5Info = buildMd5Info(domain, type, realKey, ip, value);
+					DataEntity md5Info = buildMd5Info(domain, type, realKey, key, value);
 
 					add2Entities(dataEntities, md5Info);
-				} else {
+				} else if ("avg".equals(type)) {
 					DataEntity entity = new DataEntity();
 
 					entity.setGroup("system-" + domain).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
@@ -98,21 +89,21 @@ public class DataBuilder {
 		}
 	}
 
-	private DataEntity buildInFlowData(String domain, String type, String key, Pair<Double, Double> flow, String value) {
+	private DataEntity buildSumEntity(String domain, String type, String realKey, String key, String value) {
 		DataEntity entity = null;
 
 		try {
-			double flowValue = Double.parseDouble(value);
-			double lastInFlow = flow.getKey();
+			double currentValue = Double.parseDouble(value);
+			double lastValue = findOrCreateSumValue(key);
 
-			if (lastInFlow >= 0) {
-				double gap = flowValue - lastInFlow;
+			if (lastValue >= 0) {
+				double gap = currentValue - lastValue;
 				entity = new DataEntity();
 
-				entity.setGroup(buildGroup(domain)).setDomain(domain).setId(key).setTime(System.currentTimeMillis())
+				entity.setGroup(buildGroup(domain)).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
 				      .setType(type).setValue(gap);
 			}
-			flow.setKey(flowValue);
+			m_lastValues.put(key, currentValue);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -120,29 +111,13 @@ public class DataBuilder {
 		return entity;
 	}
 
-	private DataEntity buildOutFlowData(String domain, String type, String key, Pair<Double, Double> flow, String value) {
-		DataEntity entity = null;
-		double flowValue = Double.parseDouble(value);
-		double lastFlow = flow.getValue();
-
-		if (lastFlow >= 0) {
-			double gap = flowValue - lastFlow;
-			entity = new DataEntity();
-
-			entity.setGroup(buildGroup(domain)).setDomain(domain).setId(key).setTime(System.currentTimeMillis())
-			      .setType(type).setValue(gap);
-		}
-		flow.setValue(flowValue);
-		return entity;
-	}
-
-	private DataEntity buildMd5Info(String domain, String type, String key, String ip, String value) {
-		String md5Info = findOrCreateMd5Info(ip);
+	private DataEntity buildMd5Info(String domain, String type, String realKey, String key, String value) {
+		String md5Info = findOrCreateMd5Info(key);
 		DataEntity entity = null;
 
 		if (StringUtils.isNotEmpty(md5Info)) {
 			entity = new DataEntity();
-			entity.setGroup(buildGroup(domain)).setDomain(domain).setId(key).setTime(System.currentTimeMillis())
+			entity.setGroup(buildGroup(domain)).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
 			      .setType(type);
 			if (md5Info.equals(value)) {
 				entity.setValue(1);
@@ -150,7 +125,7 @@ public class DataBuilder {
 				entity.setValue(0);
 			}
 		} else {
-			m_ip2Md5.put(ip, value);
+			m_ip2Md5.put(key, value);
 		}
 		return entity;
 	}
