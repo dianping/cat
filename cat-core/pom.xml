@@ -83,6 +83,7 @@
                      <manifest>
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
 						${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml, 
+						${basedir}/src/main/resources/META-INF/dal/jdbc/app-manifest.xml, 
 					 </manifest>
                   </configuration>
                </execution>
