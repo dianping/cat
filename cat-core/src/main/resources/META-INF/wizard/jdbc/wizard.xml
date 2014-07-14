@@ -32,7 +32,7 @@
          <password>password</password>
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
-      <group name="data" package="com.dianping.cat.core.dal">
+      <group name="app" package="com.dianping.cat.app">
          <table name="app_data_command"/>
       </group>
    </jdbc>

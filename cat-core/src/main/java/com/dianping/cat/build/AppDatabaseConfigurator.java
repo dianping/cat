@@ -13,8 +13,8 @@ final class AppDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
 
       // all.add(defineJdbcDataSourceComponent("app", "com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1:3306/app", "root", "***", "<![CDATA[useUnicode=true&autoReconnect=true]]>"));
 
-      defineSimpleTableProviderComponents(all, "app", com.dianping.cat.core.dal._INDEX.getEntityClasses());
-      defineDaoComponents(all, com.dianping.cat.core.dal._INDEX.getDaoClasses());
+      defineSimpleTableProviderComponents(all, "app", com.dianping.cat.app._INDEX.getEntityClasses());
+      defineDaoComponents(all, com.dianping.cat.app._INDEX.getDaoClasses());
 
       return all;
    }

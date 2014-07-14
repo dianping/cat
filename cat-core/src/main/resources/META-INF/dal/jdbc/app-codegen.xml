@@ -4,6 +4,7 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
+    <member name="status" field="status" value-type="int" length="5" nullable="false" />
     <member name="city" field="city" value-type="int" length="5" nullable="false" />
     <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
     <member name="network" field="network" value-type="int" length="3" nullable="false" />
@@ -11,6 +12,10 @@
     <member name="connnect-type" field="connnect_type" value-type="int" length="3" nullable="false" />
     <member name="code" field="code" value-type="int" length="5" nullable="false" />
     <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
+    <member name="access-number" field="access_number" value-type="String" length="16777215" nullable="false" />
+    <member name="response-sum-time" field="response_sum_time" value-type="String" length="16777215" nullable="false" />
+    <member name="request-package" field="request_package" value-type="String" length="16777215" nullable="false" />
+    <member name="response-package" field="response_package" value-type="String" length="16777215" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
