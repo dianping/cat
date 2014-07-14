@@ -7,10 +7,6 @@
 		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
 	</filter>
 	<filter>
-		<filter-name>cookie-filter</filter-name>
-		<filter-class>com.dianping.cat.CookieFilter</filter-class>
-	</filter>
-	<filter>
 		<filter-name>domain-filter</filter-name>
 		<filter-class>com.dianping.cat.servlet.DomainFilter</filter-class>
 	</filter>
@@ -39,11 +35,6 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>domain-filter</filter-name>
-		<url-pattern>/r/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>cookie-filter</filter-name>
 		<url-pattern>/r/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
