@@ -46,12 +46,12 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		long timestamp = payload.getTimestamp();
 		String error = payload.getError();
-		String url = payload.getUrl();
 		String host = parseHost();
+		String url = payload.getUrl();
 		HttpServletResponse response = ctx.getHttpServletResponse();
 
 		if (host.contains("dianping")) {
-			if (url == null || url.length() == 0 || (!url.startsWith("http:"))) {
+			if (url == null || url.length() == 0) {
 				if (m_referer != null) {
 					url = m_referer;
 				} else {
@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 			if (index > -1) {
 				url = url.substring(0, index);
 			}
-			Cat.logEvent("Error", parseFile(url), "Error", error);
+			Cat.logEvent("Error", parseUrl(url), "Error", error);
 			Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 			      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 
@@ -76,11 +76,11 @@ public class Handler implements PageHandler<Context> {
 		response.getWriter().write("OK");
 	}
 
-	private String parseFile(String file) {
-		String result = m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, file);
+	private String parseUrl(String url) {
+		String result = m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, url);
 
-		if (result.equals(file)) {
-			return subUrl(file);
+		if (result.equals(url)) {
+			return subUrl(url);
 		} else {
 			return result;
 		}

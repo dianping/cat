@@ -1,8 +1,36 @@
 <app-config>
 	<config-item id="网络类型">
-		<item id="1" name="2G" des="2G网络"></item>
-		<item id="2" name="3G" des="3G网络"></item>
-		<item id="3" name="4G" des="4G网络"></item>
+		<item id="1" name="2G"></item>
+		<item id="2" name="3G"></item>
+		<item id="3" name="4G"></item>
 	</config-item>
-	<config-item></config-item>
+	<config-item id="运营商">
+		<item id="1" name="移动"></item>
+		<item id="2" name="联通"></item>
+	</config-item>
+	<config-item id="版本">
+		<item id="1" name="1.0"></item>
+		<item id="2" name="1.1"></item>
+	</config-item>
+	<config-item id="平台">
+		<item id="1" name="andriod"></item>
+		<item id="2" name="ios"></item>
+	</config-item>
+	<config-item id="城市">
+		<item id="1" name="上海"></item>
+		<item id="2" name="北京"></item>
+	</config-item>
+	<config-item id="渠道">
+		<item id="1" name="360"></item>
+		<item id="2" name="apple"></item>
+	</config-item>
+	<config-item id="类型">
+		<item id="1" name="长连接"></item>
+		<item id="2" name="短连接"></item>
+	</config-item>
+	<command id="1" name="http://www.dianping.com/">
+		 <code id="1" name="成功返回" status="0"></code>
+		 <code id="2" name="参数错误" status="1"></code>
+		 <code id="3" name="非常字符" status="1"></code>
+	</command>
 </app-config>
