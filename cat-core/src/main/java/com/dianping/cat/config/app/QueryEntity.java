@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.app;
+package com.dianping.cat.config.app;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,4 +117,11 @@ public class QueryEntity {
 		m_operator = operator;
 	}
 
+	@Override
+   public String toString() {
+	   return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
+	         + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
+	         + ", m_city=" + m_city + ", m_operator=" + m_operator + "]";
+   }
+	
 }

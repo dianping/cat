@@ -24,4 +24,16 @@
          <table name="config"/>
       </group>
    </jdbc>
+   <jdbc package="com.dianping.cat.app" name="app">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/app</url>
+         <user>root</user>
+         <password>password</password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="data" package="com.dianping.cat.core.dal">
+         <table name="app_data_command"/>
+      </group>
+   </jdbc>
 </wizard>
