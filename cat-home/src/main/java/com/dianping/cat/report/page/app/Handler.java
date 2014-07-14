@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;

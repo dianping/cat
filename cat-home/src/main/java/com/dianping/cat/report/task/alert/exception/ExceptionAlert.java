@@ -198,7 +198,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 		
 			m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
 			m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
-			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
+			Cat.logEvent("WeiXinAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
 			      + " " + weixins);
 		}
 	}

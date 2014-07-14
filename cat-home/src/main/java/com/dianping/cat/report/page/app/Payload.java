@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.app;
 
+import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
