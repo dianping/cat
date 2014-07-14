@@ -2207,7 +2207,7 @@
 			<configuration>
 				<logical-table-name>dailygraph</logical-table-name>
 				<physical-table-name>dailygraph</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2217,7 +2217,7 @@
 			<configuration>
 				<logical-table-name>dailyreport</logical-table-name>
 				<physical-table-name>dailyreport</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2227,7 +2227,7 @@
 			<configuration>
 				<logical-table-name>graph</logical-table-name>
 				<physical-table-name>graph</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2237,7 +2237,7 @@
 			<configuration>
 				<logical-table-name>hostinfo</logical-table-name>
 				<physical-table-name>hostinfo</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2247,7 +2247,7 @@
 			<configuration>
 				<logical-table-name>monthreport</logical-table-name>
 				<physical-table-name>monthreport</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2257,7 +2257,7 @@
 			<configuration>
 				<logical-table-name>project</logical-table-name>
 				<physical-table-name>project</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2267,7 +2267,7 @@
 			<configuration>
 				<logical-table-name>report</logical-table-name>
 				<physical-table-name>report</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2277,7 +2277,7 @@
 			<configuration>
 				<logical-table-name>report-content</logical-table-name>
 				<physical-table-name>report_content</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2287,7 +2287,7 @@
 			<configuration>
 				<logical-table-name>task</logical-table-name>
 				<physical-table-name>task</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -2297,7 +2297,7 @@
 			<configuration>
 				<logical-table-name>weeklyreport</logical-table-name>
 				<physical-table-name>weeklyreport</physical-table-name>
-				<data-source-name>app</data-source-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
