@@ -47,6 +47,7 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -66,6 +67,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	AlertSummaryExecutor m_executor;
 
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
@@ -172,7 +176,8 @@ public class Handler implements PageHandler<Context> {
 		com.dianping.cat.home.alert.report.entity.Domain domain = report.getDomains().get(domainName);
 
 		if (domain != null && !domain.getExceptions().isEmpty()) {
-			exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>(domain.getExceptions().values());
+			exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>(domain.getExceptions()
+			      .values());
 			Comparator<com.dianping.cat.home.alert.report.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Exception>() {
 
 				@Override
@@ -256,6 +261,10 @@ public class Handler implements PageHandler<Context> {
 		case ALERT_REPORT_DETAIL:
 		case ALERT_HISTORY_REPORT_DETAIL:
 			builAlertDetails(model, payload);
+			break;
+		case ALERT_SUMMARY:
+			String summaryContent = m_executor.execute(payload.getSummarydomain(), payload.getSummarytime(), payload.getSummaryemails());
+			model.setSummaryContent(summaryContent);
 			break;
 		}
 		model.setPage(ReportPage.STATISTICS);

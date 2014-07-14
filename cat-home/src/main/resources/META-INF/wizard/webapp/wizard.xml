@@ -74,9 +74,6 @@
          <page name="app" title="App" path="app" template="default">
             <description>App</description>
          </page>
-         <page name="summary" title="Summary" path="summary" template="default">
-            <description>Summary</description>
-         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">

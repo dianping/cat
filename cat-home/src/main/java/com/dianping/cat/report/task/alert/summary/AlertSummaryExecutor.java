@@ -11,6 +11,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.system.tool.MailSMS;
 import com.site.helper.Splitters;
+import com.site.lookup.util.StringUtils;
 
 public class AlertSummaryExecutor {
 
@@ -46,6 +47,10 @@ public class AlertSummaryExecutor {
 	}
 
 	public String execute(String domain, Date date, String receiverStr) {
+		if (StringUtils.isEmpty(domain) || date == null) {
+			return null;
+		}
+
 		try {
 			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
 			m_alertSummaryManager.insert(alertSummary);
