@@ -1,17 +1,14 @@
-<%@ page session="false" language="java" pageEncoding="UTF-8"%>
-<%@ page contentType="text/html; charset=utf-8"%>
+<%@ page contentType="text/html; charset=utf-8" %>
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.summary.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.summary.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.report.page.summary.Model" scope="request"/>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.summary.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.summary.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.summary.Model" scope="request" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-<a:report title="Alert Summary Report" navUrlPrefix="">
-	<jsp:body>
 		<form id="form" method="post" action="summary?op=view">
 			警告时间
 			<input type="text" name="time" id="time" value="<fmt:formatDate value="${payload.time}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="height:auto" class="input-medium" placeholder="格式如：2014-07-01 00:00:00">
@@ -22,5 +19,3 @@
 			<input class="btn btn-primary  btn-small"  value="查询" type="submit">
 		</form>
 		${model.summaryContent}
-	</jsp:body>
-</a:report>

@@ -13,7 +13,7 @@ public class AlertSummaryDecorator {
 
 	private static final String css = "<style> th, .alert-content { white-space: nowrap; } </style>";
 
-	private static final String tableHead = " <table class=\"table table-bordered table-striped table-hover\"> <thead> <tr> <th>告警类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> <th>详细警告信息</th> </tr> </thead> <tbody>";
+	private static final String tableHead = " <table class=\"table table-bordered table-striped table-hover\"> <thead> <tr> <th>告警类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> <th colspan=\"5\">详细警告信息</th> </tr> </thead> <tbody>";
 
 	private static final String tableTail = " </tbody></table>";
 

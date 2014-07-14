@@ -4,13 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
-import com.dianping.cat.report.page.summary.Action;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload implements ActionPayload<ReportPage, Action> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -26,10 +25,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_emails;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	public Payload(ReportPage defaultPage) {
-		super(ReportPage.SUMMARY);
-	}
 
 	@Override
 	public Action getAction() {

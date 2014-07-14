@@ -15,15 +15,15 @@
 				<statement><![CDATA[
 					SELECT <FIELDS/>
 			        FROM <TABLE/>
-			        WHERE <FIELD name='alert_time'/> >= ${start-time}
-					AND <FIELD name='alert_time'/> <= ${end-time} 
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
 					<IF type='NOT_NULL' field='category'>
 						AND <FIELD name='category'/> = ${category} 
 					</IF>
 					<IF type='NOT_NULL' field='domain'>
 						AND <FIELD name='domain'/> = ${domain} 
 					</IF>
-					ORDER BY <FIELD name='alert_time'/> asc		
+					ORDER BY <FIELD name='alert-time'/> asc		
 					]]></statement>
 			</query>
 			<query name="query-alerts-by-time-category" type="SELECT"
@@ -34,15 +34,18 @@
 				<statement><![CDATA[
 					SELECT <FIELDS/>
 			        FROM <TABLE/>
-			        WHERE <FIELD name='alert_time'/> >= ${start-time}
-					AND <FIELD name='alert_time'/> <= ${end-time} 
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
 					<IF type='NOT_NULL' field='category'>
 						AND <FIELD name='category'/> = ${category} 
 					</IF>
-					ORDER BY <FIELD name='alert_time'/> asc		
+					ORDER BY <FIELD name='alert-time'/> asc		
 					]]></statement>
 			</query>
 		</query-defs>
+	</entity>
+	<entity name="alert-summary" table="alert_summary" alias="as">
+		<member name="creation-date" insert-expr="NOW()" />
 	</entity>
 	<entity name="alteration" table="alteration" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />

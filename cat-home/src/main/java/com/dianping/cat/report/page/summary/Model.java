@@ -1,15 +1,12 @@
 package com.dianping.cat.report.page.summary;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.dianping.cat.report.ReportPage;
+import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.Constants;
-import com.dianping.cat.report.page.AbstractReportModel;
-
-public class Model extends AbstractReportModel<Action, Context> {
-
+public class Model extends ViewModel<ReportPage, Action, Context> {
+	
 	private String m_summaryContent;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -17,16 +14,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
-	}
-
-	@Override
-	public String getDomain() {
-		return Constants.CAT;
-	}
-
-	@Override
-	public Collection<String> getDomains() {
-		return new ArrayList<String>();
 	}
 
 	public String getSummaryContent() {

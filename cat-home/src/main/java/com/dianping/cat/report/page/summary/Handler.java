@@ -17,8 +17,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-//	@Inject
-//	AlertSummaryExecutor m_executor;
+	@Inject
+	AlertSummaryExecutor m_executor;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -34,12 +34,12 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
-//		switch (action) {
-//		case VIEW:
-//			String summaryContent = m_executor.execute(payload.getDomain(), payload.getTime(), payload.getEmails());
-//			model.setSummaryContent(summaryContent);
-//			break;
-//		}
+		switch (action) {
+		case VIEW:
+			String summaryContent = m_executor.execute(payload.getDomain(), payload.getTime(), payload.getEmails());
+			model.setSummaryContent(summaryContent);
+			break;
+		}
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.SUMMARY);
