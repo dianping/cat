@@ -20,7 +20,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(IpService.class));
 		all.add(C(RequestUtils.class));
 		all.add(C(MonitorManager.class).req(UrlPatternConfigManager.class, IpService.class));
-
+		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

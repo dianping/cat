@@ -103,6 +103,12 @@
 		<table>
 			<tr>
 				<th class="left">
+					<select style="width: 120px;" name="innerorouter" id=""innerorouter"">
+						<option value="inner">内部cdn</option>
+						<option value="outer">外部cdn</option>
+					</select> 
+				</th>
+				<th class="left">
 				cdn服务商 <select style="width: 120px;" name="cdn" id="cdn">
 						<option value="ALL">ALL</option>
 						<option value="网宿">网宿</option>

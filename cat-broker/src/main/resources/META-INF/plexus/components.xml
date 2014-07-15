@@ -138,5 +138,30 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.app.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.app.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.app.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.app.appdata.AppDataDispatcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.app.JspViewer</role>
+			<implementation>com.dianping.cat.broker.api.page.app.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.app.appdata.AppDataDispatcher</role>
+			<implementation>com.dianping.cat.broker.api.page.app.appdata.AppDataDispatcher</implementation>
+		</component>
 	</components>
 </plexus>

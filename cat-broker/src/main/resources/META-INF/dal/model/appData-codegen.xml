@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="appData" root="true">
+    <attribute name="timestamp" value-type="long" />
+    <attribute name="city" value-type="int" />
+    <attribute name="operator" value-type="int" />
+    <attribute name="network" value-type="int" />
+    <attribute name="version" value-type="int" />
+    <attribute name="channel" value-type="int" />
+    <attribute name="command" value-type="int" />
+    <attribute name="code" value-type="int" />
+    <attribute name="platform" value-type="int" />
+    <attribute name="count" value-type="int" />
+    <attribute name="requestByte" value-type="int" />
+    <attribute name="responseByte" value-type="int" />
+    <attribute name="responseTime" value-type="int" />
+  </entity>
+</model>
+
