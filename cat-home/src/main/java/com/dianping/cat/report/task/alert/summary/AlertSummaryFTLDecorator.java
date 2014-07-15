@@ -1,5 +1,8 @@
 package com.dianping.cat.report.task.alert.summary;
 
+import java.io.StringWriter;
+import java.util.Map;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -8,6 +11,7 @@ import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 public class AlertSummaryFTLDecorator implements AlertSummaryDecorator, Initializable {
 
@@ -15,8 +19,22 @@ public class AlertSummaryFTLDecorator implements AlertSummaryDecorator, Initiali
 
 	@Override
 	public String generateHtml(AlertSummary alertSummary) {
+		AlertSummaryVisitor visitor = new AlertSummaryVisitor();
+		visitor.visitAlertSummary(alertSummary);
 
-		return null;
+		Map<Object, Object> dataMap = visitor.getResult();
+		StringWriter sw = new StringWriter(5000);
+
+		System.out.println(dataMap.get("dateStr"));
+		System.out.println(dataMap.get("domain"));
+
+		try {
+			Template t = m_configuration.getTemplate("summary.ftl");
+			t.process(dataMap, sw);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return sw.toString();
 	}
 
 	@Override
