@@ -17,6 +17,7 @@
 		<module>cat-home</module>
 		<module>cat-broker</module>
 		<module>cat-agent</module>
+		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
