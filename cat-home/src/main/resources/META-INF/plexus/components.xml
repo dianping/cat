@@ -1948,7 +1948,7 @@
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.tool.MailSMS</role>
@@ -3435,10 +3435,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
 			<implementation>com.dianping.cat.report.page.alteration.Handler</implementation>
 			<requirements>
@@ -3767,27 +3763,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.app.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.app.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.summary.Handler</role>
-			<implementation>com.dianping.cat.report.page.summary.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.summary.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.summary.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.summary.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>

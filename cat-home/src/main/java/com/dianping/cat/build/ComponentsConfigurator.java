@@ -62,8 +62,8 @@ import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
-import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
@@ -208,7 +208,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      TopAnalyzer.ID));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class,
-		      AlertSummaryDecorator.class, MailSMS.class));
+		      AlertSummaryFTLDecorator.class, MailSMS.class));
 
 		all.add(C(AlertSummaryGenerator.class).req(AlertDao.class, TopologyGraphManager.class));
 
