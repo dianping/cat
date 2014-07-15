@@ -38,7 +38,7 @@ Requirements
 Quick Started
 ---------------------
 #####1、在CAT目录下，用maven构建项目
-        mvn clean install
+        mvn clean install -DskipTests
 #####2、配置CAT的环境
 		mvn cat:install
 Note：
