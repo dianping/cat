@@ -16,6 +16,8 @@ import freemarker.template.Template;
 public class AlertSummaryFTLDecorator implements AlertSummaryDecorator, Initializable {
 
 	public Configuration m_configuration;
+	
+	public static final String ID = "AlertSummaryFTLDecorator";
 
 	@Override
 	public String generateHtml(AlertSummary alertSummary) {

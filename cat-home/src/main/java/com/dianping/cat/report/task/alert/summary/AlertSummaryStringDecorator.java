@@ -10,6 +10,8 @@ import com.dianping.cat.home.alert.summary.entity.Category;
 import com.site.lookup.util.StringUtils;
 
 public class AlertSummaryStringDecorator implements AlertSummaryDecorator {
+	
+	public static final String ID = "AlertSummaryDecorator";
 
 	private static final String css = "<style> th, .alert-content { white-space: nowrap; } </style>";
 

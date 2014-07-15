@@ -1948,12 +1948,18 @@
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.tool.MailSMS</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role-hint>AlertSummaryFTLDecorator</role-hint>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+			<role-hint>AlertSummaryFTLDecorator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
@@ -3389,6 +3395,8 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role-hint>AlertSummaryFTLDecorator</role-hint>
+					<field-name>m_alertSummaryDecorator</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.tool.MailSMS</role>

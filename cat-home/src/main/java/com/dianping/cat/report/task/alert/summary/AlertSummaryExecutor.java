@@ -16,13 +16,13 @@ import com.site.lookup.util.StringUtils;
 public class AlertSummaryExecutor {
 
 	@Inject
-	AlertSummaryGenerator m_alertSummaryGenerator;
+	private AlertSummaryGenerator m_alertSummaryGenerator;
 
 	@Inject
-	AlertSummaryManager m_alertSummaryManager;
+	private AlertSummaryManager m_alertSummaryManager;
 
-	@Inject
-	AlertSummaryDecorator m_alertSummaryDecorator;
+	@Inject(type = AlertSummaryDecorator.class, value = AlertSummaryFTLDecorator.ID)
+	private AlertSummaryDecorator m_alertSummaryDecorator;
 
 	@Inject
 	protected MailSMS m_mailSms;
