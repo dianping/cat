@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	AlertSummaryExecutor m_executor;
+	private AlertSummaryExecutor m_executor;
 
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
@@ -263,7 +263,8 @@ public class Handler implements PageHandler<Context> {
 			builAlertDetails(model, payload);
 			break;
 		case ALERT_SUMMARY:
-			String summaryContent = m_executor.execute(payload.getSummarydomain(), payload.getSummarytime(), payload.getSummaryemails());
+			String summaryContent = m_executor.execute(payload.getSummarydomain(), payload.getSummarytime(),
+			      payload.getSummaryemails());
 			model.setSummaryContent(summaryContent);
 			break;
 		}
