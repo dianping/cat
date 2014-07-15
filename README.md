@@ -28,7 +28,6 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 ![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll03.png)
 
 
-
 Requirements
 ---------------------
 * Java 6
