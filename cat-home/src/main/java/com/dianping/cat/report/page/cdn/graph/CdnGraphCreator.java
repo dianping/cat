@@ -15,7 +15,7 @@ import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 
 public class CdnGraphCreator extends AbstractGraphCreator {
-	
+
 	private final static String CDN = "cdn";
 
 	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
@@ -51,7 +51,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 
 		for (Entry<String, MetricItem> item : items.entrySet()) {
 			String key = item.getKey();
-			
+
 			if (!data.containsKey(key)) {
 				double[] values = new double[60];
 				for (int i = 0; i < 60; i++)
@@ -87,7 +87,7 @@ public class CdnGraphCreator extends AbstractGraphCreator {
 			MetricReport report = m_metricReportService.queryCdnReport(CDN, properties, new Date(start));
 			Map<String, double[]> currentValues;
 			currentValues = fetchData(report);
-			
+
 			mergeMap(sourceValue, currentValues, totalSize, index);
 			index++;
 		}

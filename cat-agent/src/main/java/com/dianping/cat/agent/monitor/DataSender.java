@@ -1,4 +1,4 @@
-package com.dianping.cat.agent.monitor.executors;
+package com.dianping.cat.agent.monitor;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -18,23 +18,17 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.agent.monitor.EnvironmentConfig;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
 public class DataSender implements Task, Initializable {
 
 	@Inject
-	private EnvironmentConfig m_environmentConfig;
+	private CatServers m_catServers;
 
-	private static BlockingQueue<DataEntity> m_entities = new ArrayBlockingQueue<DataEntity>(5000);
+	private BlockingQueue<DataEntity> m_entities = new ArrayBlockingQueue<DataEntity>(5000);
 
 	private static final int MAX_ENTITIES = 20;
-
-	public DataSender setEnvironmentConfig(EnvironmentConfig environmentConfig) {
-		m_environmentConfig = environmentConfig;
-		return this;
-	}
 
 	public boolean put(List<DataEntity> entities) {
 		boolean result = true;
@@ -58,16 +52,14 @@ public class DataSender implements Task, Initializable {
 		StringBuilder sb = new StringBuilder();
 
 		for (DataEntity entity : entities) {
-			sb.append(entity.getGroup()).append("\t").append(entity.getDomain()).append("\t").append(entity.getId())
-			      .append("\t").append(entity.getType()).append("\t").append(entity.getTime()).append("\t")
-			      .append(entity.getValue()).append("\n");
+			sb.append(entity.buildBatchContent());
 		}
 		return sb.toString();
 	}
 
 	private boolean sendData(String server, String content) {
 		boolean flag = false;
-		String url = m_environmentConfig.buildSystemUrl(server);
+		String url = m_catServers.buildSystemUrl(server);
 
 		try {
 			URLConnection conn = new URL(url).openConnection();
@@ -93,7 +85,7 @@ public class DataSender implements Task, Initializable {
 	}
 
 	private boolean sendBatchEntities(List<DataEntity> entities) {
-		List<String> servers = m_environmentConfig.getServers();
+		List<String> servers = m_catServers.getServers();
 
 		for (String server : servers) {
 			String entityContent = buildBatchEntities(entities);
@@ -123,9 +115,9 @@ public class DataSender implements Task, Initializable {
 				}
 
 				if (!dataEntities.isEmpty()) {
-					Transaction t = Cat.newTransaction("Data", "Send");
-
+					Transaction t = Cat.newTransaction("Sender", "Send");
 					boolean success = false;
+
 					try {
 						success = sendBatchEntities(dataEntities);
 					} catch (Exception e) {
@@ -134,10 +126,10 @@ public class DataSender implements Task, Initializable {
 						t.setStatus(Transaction.SUCCESS);
 						t.complete();
 					}
+
 					if (!success) {
-						Cat.logEvent("DataSender", "Failed", Event.SUCCESS,
-						      "All cat servers: " + m_environmentConfig.getServers() + "are unreachable. DataEntity: "
-						            + dataEntities.toString());
+						Cat.logError(new RuntimeException("All cat servers: " + m_catServers.getServers()
+						      + "are unreachable. DataEntity: " + dataEntities.toString()));
 					}
 				} else {
 					Thread.sleep(5);
@@ -150,7 +142,7 @@ public class DataSender implements Task, Initializable {
 
 	@Override
 	public String getName() {
-		return "system-data-sender";
+		return "data-sender";
 	}
 
 	@Override

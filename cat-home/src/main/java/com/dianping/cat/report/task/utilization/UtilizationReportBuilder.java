@@ -49,8 +49,8 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		UtilizationReport utilizationReport = queryHourlyReportsByDuration(name, domain, period,
 		      TaskHelper.tomorrowZero(period));
-
 		DailyReport report = new DailyReport();
+		
 		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
@@ -76,8 +76,8 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 			if (m_configManger.validateDomain(domainName)) {
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
 				int size = transactionReport.getMachines().size();
+				
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
-
 				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
 				transactionVisitor.visitTransactionReport(transactionReport);
 			}

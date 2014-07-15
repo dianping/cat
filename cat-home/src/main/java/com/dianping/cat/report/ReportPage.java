@@ -49,7 +49,9 @@ public enum ReportPage implements Page {
 
    SYSTEM("system", "system", "System", "System", true),
 
-   CDN("cdn", "cdn", "Cdn", "Cdn", true);
+   CDN("cdn", "cdn", "Cdn", "Cdn", true),
+
+   APP("app", "app", "App", "App", true);
 
    private String m_name;
 

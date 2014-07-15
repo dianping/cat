@@ -24,6 +24,11 @@ public class MetricIdAndRuleMappingTest {
 		protected String getConfigName() {
 			return null;
 		}
+
+		@Override
+      protected String getCategoryName() {
+	      return null;
+      }
 	};
 
 	private List<String> buildPatternList(String path) {
@@ -39,7 +44,7 @@ public class MetricIdAndRuleMappingTest {
 		boolean tmpResult = false;
 
 		for (String pattern : patterns) {
-			tmpResult = m_manager.validate("regex", pattern, text);
+			tmpResult = m_manager.validate(null, pattern, null, text);
 
 			if (tmpResult) {
 				return tmpResult;

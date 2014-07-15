@@ -1758,6 +1758,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.system.SystemAlertConfig</role>
+			<implementation>com.dianping.cat.report.task.alert.system.SystemAlertConfig</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig</role>
 			<implementation>com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig</implementation>
 			<requirements>
@@ -1806,6 +1815,9 @@
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
@@ -1839,10 +1851,49 @@
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.system.SystemAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.system.SystemAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.system.SystemAlertConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -1878,6 +1929,9 @@
 					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
@@ -1897,6 +1951,26 @@
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>alert</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>alert</logical-table-name>
+				<physical-table-name>alert</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>alert-summary</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>alert-summary</logical-table-name>
+				<physical-table-name>alert_summary</physical-table-name>
+				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
@@ -1951,16 +2025,6 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>sqlreport</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>sqlreport</logical-table-name>
-				<physical-table-name>sqlreport</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>topology-graph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1978,6 +2042,24 @@
 				<physical-table-name>weekly_report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertSummaryDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.AlterationDao</role>
@@ -2018,15 +2100,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 			<implementation>com.dianping.cat.home.dal.report.MonthlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.SqlreportDao</role>
-			<implementation>com.dianping.cat.home.dal.report.SqlreportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -3561,6 +3634,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.app.Handler</role>
+			<implementation>com.dianping.cat.report.page.app.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.app.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -3757,7 +3860,13 @@
 					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
@@ -3812,6 +3921,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.NetworkRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

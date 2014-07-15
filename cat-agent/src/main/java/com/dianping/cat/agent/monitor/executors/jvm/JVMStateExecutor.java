@@ -2,59 +2,36 @@ package com.dianping.cat.agent.monitor.executors.jvm;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMStateExecutor extends AbstractExecutor {
 
 	public static final String ID = "JVMStateExecutor";
-
-	private static final String CATALINA_PATH = "/data/applogs/tomcat/catalina.out";
 
 	@Override
 	public List<DataEntity> execute() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 
 		entities.addAll(buildCatalinaLogInfo());
-		entities.addAll(buildTomcatLiveInfo());
-
 		return entities;
 	}
 
 	public List<DataEntity> buildCatalinaLogInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		File logFile = new File(CATALINA_PATH);
+		File logFile = new File(m_envConfig.getCatalinaPath());
 
 		if (logFile.exists()) {
 			double bytes = logFile.length();
-			double kilobytes = (bytes / 1024);
-			DataEntity entity = new DataEntity();
+			Map<String, Double> values = new HashMap<String, Double>();
 
-			entity.setId(buildJVMDataEntityId("catalinaLogSize")).setType(SUM_TYPE).setTime(System.currentTimeMillis())
-			      .setValue(kilobytes);
-			addGroupDomainInfo(entity);
-			entities.add(entity);
+			values.put(JVM_TYPE + "_catalinaLogSize_" + m_envConfig.getIp(), bytes);
+			entities.addAll(buildEntities(values, AVG_TYPE));
 		}
-		return entities;
-	}
-
-	public List<DataEntity> buildTomcatLiveInfo() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-		DataEntity entity = new DataEntity();
-		String pid = JVMMemoryExecutor.findPidOfTomcat();
-		long current = System.currentTimeMillis();
-
-		entity.setId(buildJVMDataEntityId("tomcatLive")).setType(AVG_TYPE).setTime(current);
-		addGroupDomainInfo(entity);
-
-		if (pid == null) {
-			entity.setValue(0);
-		} else {
-			entity.setValue(1);
-		}
-		entities.add(entity);
 		return entities;
 	}
 
@@ -62,5 +39,4 @@ public class JVMStateExecutor extends AbstractExecutor {
 	public String getId() {
 		return ID;
 	}
-
 }

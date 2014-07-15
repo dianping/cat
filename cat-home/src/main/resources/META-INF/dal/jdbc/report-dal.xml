@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.home.dal.report" gen="true">
+	<entity name="alert" table="alert" alias="al">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<param name="domain" />
+		<query-defs>
+			<query name="query-alerts-by-time-category-domain" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="category" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert_time'/> >= ${start-time}
+					AND <FIELD name='alert_time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='category'>
+						AND <FIELD name='category'/> = ${category} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='alert_time'/> asc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-category" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="category" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert_time'/> >= ${start-time}
+					AND <FIELD name='alert_time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='category'>
+						AND <FIELD name='category'/> = ${category} 
+					</IF>
+					ORDER BY <FIELD name='alert_time'/> asc		
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 	<entity name="alteration" table="alteration" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-time" value-type="Date" />

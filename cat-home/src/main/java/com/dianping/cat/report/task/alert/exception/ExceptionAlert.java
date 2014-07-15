@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -21,6 +22,8 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.Alert;
+import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -33,6 +36,9 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class ExceptionAlert implements Task, LogEnabled {
+
+	@Inject
+	protected AlertDao m_alertDao;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -58,6 +64,19 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private Logger m_logger;
 
+	private Alert buildAlert(String domainName, AlertException exception, String mailContent) {
+		Alert alert = new Alert();
+
+		alert.setDomain(domainName);
+		alert.setAlertTime(new Date());
+		alert.setCategory(getName());
+		alert.setType(exception.getType());
+		alert.setContent(mailContent);
+		alert.setMetric(exception.getName());
+
+		return alert;
+	}
+
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
@@ -72,7 +91,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	@Override
 	public String getName() {
 		return "exception-alert";
 	}
@@ -132,7 +150,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
-						sendAlertForDomain(entry.getKey(), entry.getValue());
+						sendAndStoreAlert(entry.getKey(), entry.getValue());
 					} catch (Exception e) {
 						m_logger.error(e.getMessage());
 					}
@@ -155,16 +173,19 @@ public class ExceptionAlert implements Task, LogEnabled {
 		}
 	}
 
-	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
+	private void sendAndStoreAlert(String domain, List<AlertException> exceptions) {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
-		String mailTitle = m_alertBuilder.buildMailTitle(domain);
-		String mailContent = m_alertBuilder.buildContent(exceptions.toString(), domain);
-
+		String weixins = m_alertConfig.buildWeiXinReceivers(project);
+		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
+		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
+		
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+		
+		storeAlerts(domain, exceptions, mailTitle + "<br/>" + mailContent);
 
 		List<AlertException> errorExceptions = m_alertBuilder.buildErrorException(exceptions);
 
@@ -174,6 +195,31 @@ public class ExceptionAlert implements Task, LogEnabled {
 			m_mailSms.sendSms(smsContent, smsContent, phones);
 			m_logger.info(smsContent + " " + phones);
 			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
+		
+			m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
+			m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
+			Cat.logEvent("WeiXinAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
+			      + " " + weixins);
+		}
+	}
+
+	private void storeAlerts(String domain, List<AlertException> exceptions, String mailContent) {
+		for (AlertException exception : exceptions) {
+			storeAlert(domain, exception, mailContent);
+		}
+	}
+
+	private void storeAlert(String domainName, AlertException exception, String mailContent) {
+		Alert alert = buildAlert(domainName, exception, mailContent);
+
+		try {
+			int count = m_alertDao.insert(alert);
+
+			if (count != 1) {
+				Cat.logError("insert alert error: " + alert.toString(), new RuntimeException());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
 	}
 

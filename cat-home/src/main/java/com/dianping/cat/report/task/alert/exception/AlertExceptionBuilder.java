@@ -41,7 +41,7 @@ public class AlertExceptionBuilder {
 		double totalWarnLimit = totalLimitPair.getKey();
 		double totalErrorLimit = totalLimitPair.getValue();
 		double totalException = 0;
-
+		
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 
@@ -125,11 +125,12 @@ public class AlertExceptionBuilder {
 		return limits;
 	}
 
-	public String buildMailTitle(String domain) {
-		StringBuilder sb = new StringBuilder();
+	public String buildMailContent(String exceptions, String domain) {
+		String content = buildContent(exceptions, domain);
+		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
+		String mailContent = content + " <a href='" + url + "'>点击此处查看详情</a>";
 
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("]");
-		return sb.toString();
+		return mailContent;
 	}
 
 	public String buildContent(String exceptions, String domain) {

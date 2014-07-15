@@ -1,0 +1,121 @@
+package com.dianping.cat.agent.monitor.executors;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+
+public class EnvConfig implements Initializable {
+
+	private String m_ip;
+
+	private String m_domain;
+
+	private String m_hostName;
+
+	private String MD5_PATH = "/usr/sbin/sshd";
+
+	private String PACKAGE_INTERFACE = "eth0";
+
+	private String CONFIG_FILE = "/data/webapps/server.properties";
+
+	private String CATALINA_PATH = "/data/applogs/tomcat/catalina.out";
+
+	private List<String> TRAFFIC_INTERFACE_LIST = new ArrayList<String>(Arrays.asList("eth0", "lo"));
+
+	private List<String> DISK_LIST = new ArrayList<String>(Arrays.asList("/", "/data", "/usr", "/var"));
+
+	public String getDomain() {
+		return m_domain;
+	}
+
+	public String getGroup() {
+		return "system-" + m_domain;
+	}
+
+	public String getIp() {
+		return m_ip;
+	}
+
+	public String getHostName() {
+		return m_hostName;
+	}
+
+	public String getConfig() {
+		return CONFIG_FILE;
+	}
+
+	public String getCatalinaPath() {
+		return CATALINA_PATH;
+	}
+
+	public List<String> getTrafficInterfaceList() {
+		return TRAFFIC_INTERFACE_LIST;
+	}
+
+	public String getPackageInterface() {
+		return PACKAGE_INTERFACE;
+	}
+
+	public List<String> getDiskList() {
+		return DISK_LIST;
+	}
+
+	public String getMd5Path() {
+		return MD5_PATH;
+	}
+
+	// host.name 配置规则:
+	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
+	private String buildDomain(String hostName) {
+		String domain = "";
+
+		if (hostName.endsWith(".nh") || hostName.endsWith(".beta")) {
+			domain = hostName.substring(0, hostName.lastIndexOf(".") - 2);
+		} else if (hostName.endsWith("hm")) {
+			domain = hostName.substring(0, hostName.lastIndexOf(".") - 6);
+		} else if (hostName.contains("-sl-")) {
+			domain = hostName.substring(0, hostName.lastIndexOf("-sl-"));
+		} else if (hostName.contains("-gp-")) {
+			domain = hostName.substring(0, hostName.lastIndexOf("-gp-"));
+		} else {
+			throw new RuntimeException("Unrecognized hostName [" + hostName + "] occurs");
+		}
+		return domain;
+	}
+
+	@Override
+	public void initialize() {
+		try {
+			String agent = System.getProperty("agent", "executors");
+
+			if ("executors".equals(agent)) {
+				Properties properties = new Properties();
+				InputStream in = new BufferedInputStream(new FileInputStream(getConfig()));
+				properties.load(in);
+
+				m_hostName = properties.getProperty("host.name");
+
+				if (m_hostName == null) {
+					m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
+				}
+
+				m_domain = buildDomain(m_hostName);
+				m_ip = properties.getProperty("host.ip");
+
+				if (m_ip == null) {
+					m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error when init environment info ", e);
+		}
+	}
+}

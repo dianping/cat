@@ -9,5 +9,7 @@ public interface MailSMS {
 	public boolean sendEmailByGmail(String title,String content,List<String> emails);
 	
 	public boolean sendSms(String title,String content,List<String> phones);
+	
+	public boolean sendWeiXin(String title, String content, String domain, String weixins);
 
 }

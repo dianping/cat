@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+   <rule id="CPUIdle">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_cpu)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="warning">
+            <sub-condition type="MaxVal" text="0.8"/>
+         </condition>
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="DataUsage">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_/data-usage)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="UsrUsage">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_/usr-usage)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="VarUsage">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_/var-usage)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="UptimeDown">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_uptime)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="2" alertType="error">
+            <sub-condition type="FluDescPer" text="0"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MD5Change">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_md5Change)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MinVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="HostNameChange">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_hostNameChange)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MinVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="HostIpChange">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_hostIpChange)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MinVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

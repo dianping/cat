@@ -269,8 +269,12 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.td1(buf);
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s\" target=\"_blank\">[:: %s ::]</a>", link, name));
+		
+		count += helper.write(buf,
+		      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
+		            m_logViewPrefix, link, link, name));
 		count += helper.td2(buf);
+		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
 

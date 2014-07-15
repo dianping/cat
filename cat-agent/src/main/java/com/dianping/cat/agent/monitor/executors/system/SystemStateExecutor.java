@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -14,14 +16,12 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.Uptime;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemStateExecutor extends AbstractExecutor implements Initializable {
 
 	public static final String ID = "SystemStateExecutor";
-
-	private static final String MD5_PATH = "/usr/sbin/sshd";
 
 	private Sigar m_sigar = new Sigar();
 
@@ -34,10 +34,10 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 	@Override
 	public void initialize() throws InitializationException {
 		m_hostName = fetchHostName();
-		m_ipAddr = m_environmentConfig.getIp();
+		m_ipAddr = m_envConfig.getIp();
 
 		try {
-			m_md5String = readFileContent(MD5_PATH);
+			m_md5String = readFileContent(m_envConfig.getMd5Path());
 		} catch (IOException e) {
 			Cat.logError(e);
 		}
@@ -76,8 +76,7 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 			String line = br.readLine();
 
 			while (line != null) {
-				sb.append(line);
-				sb.append(System.getProperty("line.separator"));
+				sb.append(line).append(System.getProperty("line.separator"));
 				line = br.readLine();
 			}
 			return sb.toString();
@@ -95,12 +94,10 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		try {
 			Uptime uptime = m_sigar.getUptime();
 			double time = uptime.getUptime() / 60;
+			Map<String, Double> values = new HashMap<String, Double>();
 
-			DataEntity entity = new DataEntity();
-			entity.setId(buildSystemDataEntityId("uptime")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
-			      .setValue(time);
-			addGroupDomainInfo(entity);
-			entities.add(entity);
+			values.put(buildSystemId("uptime"), time);
+			entities.addAll(buildEntities(values, AVG_TYPE));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -128,34 +125,30 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	public List<DataEntity> buildHostIpAddInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		DataEntity entity = new DataEntity();
+		double value = 0;
 
-		entity.setId(buildSystemDataEntityId("hostIpChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
-		addGroupDomainInfo(entity);
-		
 		if (!hostIpAddrChanged()) {
-			entity.setValue(1);
-		} else {
-			entity.setValue(0);
+			value = 1;
 		}
-		entities.add(entity);
+		Map<String, Double> values = new HashMap<String, Double>();
+
+		values.put(buildSystemId("hostIpChange"), value);
+		entities.addAll(buildEntities(values, AVG_TYPE));
 		return entities;
 	}
 
 	public List<DataEntity> buildHostNameInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
-		DataEntity entity = new DataEntity();
 		String hostName = fetchHostName();
+		double value = 0;
 
-		entity.setId(buildSystemDataEntityId("hostNameChange")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
-		addGroupDomainInfo(entity);
-		
 		if (m_hostName.equals(hostName)) {
-			entity.setValue(1);
-		} else {
-			entity.setValue(0);
+			value = 1;
 		}
-		entities.add(entity);
+		Map<String, Double> values = new HashMap<String, Double>();
+
+		values.put(buildSystemId("hostNameChange"), value);
+		entities.addAll(buildEntities(values, AVG_TYPE));
 		return entities;
 	}
 
@@ -163,18 +156,16 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
 		try {
-			String currMd5String = readFileContent(MD5_PATH);
-			DataEntity entity = new DataEntity();
+			String currMd5String = readFileContent(m_envConfig.getMd5Path());
+			double value = 0;
 
-			entity.setId(buildSystemDataEntityId("md5Change")).setType(AVG_TYPE).setTime(System.currentTimeMillis());
-			addGroupDomainInfo(entity);
-			
-			if (m_md5String != null && m_md5String.equals(currMd5String)) {
-				entity.setValue(1);
-			} else {
-				entity.setValue(0);
+			if (m_md5String.equals(currMd5String)) {
+				value = 1;
 			}
-			entities.add(entity);
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("md5Change"), value);
+			entities.addAll(buildEntities(values, AVG_TYPE));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

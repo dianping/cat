@@ -170,7 +170,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private TopologyGraph queryGraphFromDB(long time) {
+	public TopologyGraph queryGraphFromDB(long time) {
 		try {
 			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao.findByPeriod(new Date(time),
 			      TopologyGraphEntity.READSET_FULL);

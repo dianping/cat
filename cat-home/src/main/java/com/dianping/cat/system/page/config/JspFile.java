@@ -37,7 +37,9 @@ public enum JspFile {
 
 	DOMAIN_METRIC_RULE_CONFIG_UPDATE("/jsp/system/domainMetricRule/domainMetricRuleConfig.jsp"),
 
-	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metricRule/metricRuleConfig.jsp"),
+	NETWORK_RULE_CONFIG_UPDATE("/jsp/system/networkRule/networkRuleConfig.jsp"),
+
+	SYSTEM_RULE_CONFIG_UPDATE("/jsp/system/systemRule/systemRuleConfig.jsp"),
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 
@@ -57,7 +59,9 @@ public enum JspFile {
 
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
 	
-	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp");
+	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
+	
+	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp");
 
 	private String m_path;
 

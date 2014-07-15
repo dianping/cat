@@ -1,8 +1,13 @@
 package com.dianping.cat.system.tool;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -42,6 +47,10 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 	private Authenticator m_authenticator;
 
 	private Logger m_logger;
+
+	private static final String WEIXIN_URL = "http://dpoa.api.dianping.com/app/monitor/cat/push";
+
+	private static final String SUCCESS_TEXT = "{\"success\":\"1\"}";
 
 	private HtmlEmail createHtmlEmail() throws EmailException {
 		HtmlEmail email = new HtmlEmail();
@@ -151,7 +160,7 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 	@Override
 	public boolean sendSms(String title, String content, List<String> phones) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (String phone : phones) {
 			InputStream in = null;
 			try {
@@ -178,6 +187,74 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public boolean sendWeiXin(String title, String content, String domain, String weixins) {
+		String urlDomain = null;
+		String urlTitle = null;
+		String urlContent = null;
+		String urlWeixins = null;
+
+		try {
+			urlDomain = URLEncoder.encode(domain, "UTF-8");
+			urlTitle = URLEncoder.encode(title, "UTF-8");
+			urlContent = URLEncoder.encode(content.replaceAll("<a href.*(?=</a>)</a>", ""), "UTF-8");
+			urlWeixins = URLEncoder.encode(weixins, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			Cat.logError("transfer weixin content error:" + title + " " + content + " " + domain + " " + weixins, e);
+			return false;
+		}
+
+		String urlParameters = "domain=" + urlDomain + "&email=" + urlWeixins + "&title=" + urlTitle + "&content="
+		      + urlContent;
+
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(WEIXIN_URL).openConnection();
+
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setUseCaches(false);
+
+			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuilder builder = new StringBuilder();
+
+				while ((inputLine = reader.readLine()) != null) {
+					builder.append(inputLine);
+				}
+				reader.close();
+
+				String responseText = builder.toString();
+
+				if (responseText.equals(SUCCESS_TEXT)) {
+					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + domain + " " + title + " "
+					      + content + " " + weixins + " " + responseText);
+					return true;
+				} else {
+					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + domain + " " + title + " "
+					      + content + " " + weixins + " " + responseText);
+					return false;
+				}
+			} else {
+				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + domain + " " + title + " "
+				      + content + " " + weixins);
+				return false;
+			}
+		} catch (Exception ex) {
+			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + domain + " " + title + " " + content + " "
+			      + weixins);
+			Cat.logError("send weixin error:" + domain + " " + title + " " + content + " " + weixins, ex);
+			return false;
+		}
+
 	}
 
 	public static class Item {
@@ -252,4 +329,5 @@ public class DefaultMailImpl implements MailSMS, Initializable, LogEnabled {
 		}
 
 	}
+
 }

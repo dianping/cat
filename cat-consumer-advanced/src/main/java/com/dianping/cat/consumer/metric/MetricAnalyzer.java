@@ -100,7 +100,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		ConfigItem config = new ConfigItem();
 
 		if ("C".equals(status)) {
-			int count = Integer.parseInt(data);
+			if (StringUtils.isEmpty(data)) {
+				data = "1";
+			}
+			int count = (int) Double.parseDouble(data);
 
 			config.setCount(count);
 			config.setValue((double) count);
@@ -122,7 +125,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setCount(Integer.parseInt(datas[0]));
 			config.setValue(Double.parseDouble(datas[1]));
-			config.setShowCount(false);
 			config.setShowSum(true);
 		} else {
 			return null;
@@ -170,9 +172,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (!StringUtils.isEmpty(group)) {
 			m_productLineConfigManager.insertIfNotExsit(group, domain);
 
-			if (!isBussinessMonitor(domain, group)) {
-				report = findOrCreateReport(group);
-			}
+			report = findOrCreateReport(group);
 		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
@@ -184,19 +184,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-			if (isBussinessMonitor(domain, group)) {
+			if (!isNetwork(group) && !isSystem(group)) {
 				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 			}
 		}
 		return 0;
 	}
 
-	private boolean isBussinessMonitor(String domain, String group) {
-		if (Constants.BROKER_SERVICE.equals(domain) || StringUtils.isNotEmpty(group)) {
-			return false;
-		} else {
-			return true;
-		}
+	private boolean isNetwork(String group) {
+		return group.startsWith("f5") || group.startsWith("switch");
+	}
+
+	private boolean isSystem(String group) {
+		return group.startsWith("system");
 	}
 
 	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {

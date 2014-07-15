@@ -35,7 +35,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			LineChart lineChart = new LineChart();
 
 			buildLineChartTitle(alertKeys, lineChart, key);
-			lineChart.setUnit("Value/分钟");
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
@@ -200,6 +199,19 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 		return false;
 	}
+	
+	private String queryMetricItemDes(String type) {
+		String des = "";
+
+		if (MetricType.AVG.name().equals(type)) {
+			des = Chinese.Suffix_AVG;
+		} else if (MetricType.SUM.name().equals(type)) {
+			des = Chinese.Suffix_SUM;
+		} else if (MetricType.COUNT.name().equals(type)) {
+			des = Chinese.Suffix_COUNT;
+		}
+		return des;
+	}
 
 	private void buildLineChartTitle(List<String> alertKeys, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
@@ -243,5 +255,4 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 		return values;
 	}
-
 }

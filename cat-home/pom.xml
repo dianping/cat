@@ -165,6 +165,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/alert-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertconfig-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/alertsummary-manifest.xml,
                             </manifest>
 						</configuration>
 					</execution>
