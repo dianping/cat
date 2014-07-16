@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
@@ -17,7 +16,8 @@
 		<module>cat-home</module>
 		<module>cat-broker</module>
 		<module>cat-agent</module>
-	</modules>
+    <module>IPService</module>
+  </modules>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

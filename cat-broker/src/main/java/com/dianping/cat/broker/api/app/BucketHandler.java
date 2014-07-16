@@ -12,7 +12,9 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.service.appData.entity.AppData;
 
 public class BucketHandler implements Task, LogEnabled {
@@ -22,6 +24,9 @@ public class BucketHandler implements Task, LogEnabled {
 	private AppDataQueue m_appDataQueue;
 
 	private HashMap<Integer, HashMap<String, AppData>> m_mergedData;
+	
+	@Inject
+	private AppDataService m_appDataService;
 
 	private long m_startTime;
 
@@ -99,7 +104,7 @@ public class BucketHandler implements Task, LogEnabled {
 			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
 				AppData appData = entry.getValue();
 
-				if (toHbase(appData) == false) {
+				if (saveToDataBase(appData) == false) {
 					saveToFile(appData);
 				}
 			}
@@ -121,8 +126,9 @@ public class BucketHandler implements Task, LogEnabled {
 		m_appDataQueue.offer(appData);
 	}
 
-	private boolean toHbase(AppData appData) {
-		return false;
+	private boolean saveToDataBase(AppData appData) {
+		m_appDataService.insert();
+		return true;
 	}
 
 	private void saveToFile(AppData appData) {

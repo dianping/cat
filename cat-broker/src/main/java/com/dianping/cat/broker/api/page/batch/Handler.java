@@ -22,6 +22,7 @@ import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.service.appData.entity.AppData;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
@@ -31,6 +32,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private IpService m_ipService;
+	
+	@Inject
+	private AppConfigManager m_appConfigManager;
 
 	private Logger m_logger;
 
@@ -129,10 +133,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				try {
 					appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setChannel(Integer.parseInt(items[3]));
-					appData.setCommand(Integer.parseInt(items[4]));
+					Integer command = m_appConfigManager.getCommands().get(items[2]);
+					if (command == null) {
+						continue;
+					}
+					appData.setCommand(command);
+					appData.setNetwork(Integer.parseInt(items[2]));
+					appData.setVersion(Integer.parseInt(items[3]));
+					appData.setChannel(Integer.parseInt(items[4]));
 					appData.setCode(Integer.parseInt(items[5]));
 					appData.setPlatform(Integer.parseInt(items[6]));
 					appData.setRequestByte(Integer.parseInt(items[7]));
