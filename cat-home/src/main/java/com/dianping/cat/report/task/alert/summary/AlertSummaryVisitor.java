@@ -54,11 +54,14 @@ public class AlertSummaryVisitor extends BaseVisitor {
 
 	@Override
 	public void visitCategory(Category category) {
+		if (m_alertList.size() > 0) {
+			m_alertList = new ArrayList<Map<Object, Object>>();
+		}
+		
 		for (Alert alert : category.getAlerts()) {
 			visitAlert(alert);
 		}
 
-		m_result.put(category.getName(), m_alertList);
-		m_alertList = new ArrayList<Map<Object, Object>>();
+		m_categoryMap.put(category.getName(), m_alertList);
 	}
 }

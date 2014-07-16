@@ -27,9 +27,6 @@ public class AlertSummaryFTLDecorator implements AlertSummaryDecorator, Initiali
 		Map<Object, Object> dataMap = visitor.getResult();
 		StringWriter sw = new StringWriter(5000);
 
-		System.out.println(dataMap.get("dateStr"));
-		System.out.println(dataMap.get("domain"));
-
 		try {
 			Template t = m_configuration.getTemplate("summary.ftl");
 			t.process(dataMap, sw);
