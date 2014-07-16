@@ -328,7 +328,7 @@ CREATE TABLE `alert_summary` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统一告警信息';
 
-CREATE TABLE `app_data_command` (
+CREATE TABLE `app_data_command_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `period` date NOT NULL COMMENT '时间',
   `minute_order` smallint NOT NULL COMMENT '分钟',
@@ -354,7 +354,3 @@ CREATE TABLE `app_data_command` (
   KEY IX_period_platform_minute (period,platform,minute_order),
   KEY IX_period_code_minute (period,code,minute_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app基本数据';
-
-
-
-
