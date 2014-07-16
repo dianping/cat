@@ -44,18 +44,17 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			lineChart.setId(startDate.toString());
 			lineChart.setHtmlTitle(key);
 
-			Map<Long, Double> all = convertToMap(datas.get(key), startDate, endDate, 5);
+			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 5);
 
 			lineChart.add(startDate.toString(), all);
 		}
 		return lineChart;
 	}
 
-	protected Map<Long, Double> convertToMap(double[] data, Date start, Date end, int step) {
+	protected Map<Long, Double> convertToMap(double[] data, Date start, int step) {
 		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
 		int length = data.length;
 		long startTime = start.getTime();
-		long endTime = end.getTime();
 		long time = startTime;
 		int i = 0;
 
@@ -64,9 +63,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			map.put(time, data[i]);
 		}
 
-		for (; time < endTime; time += step * TimeUtil.ONE_MINUTE) {
-			map.put(time, -1D);
-		}
 		return map;
 	}
 }

@@ -16,9 +16,14 @@
       	<member name="access-number-sum"/>
       	<member name="response-sum-time-sum"/>
       </readset>
+      <readset name="SUCCESS-DATA">
+      	<member name="minute-order"/>
+      	<member name="code"/>
+      	<member name="access-number-sum"/>
+      </readset>
     </readsets>
     <query-defs>
-	 <query name="insert-data" type="INSERT">
+	  <query name="insert-data" type="INSERT">
         <param name="command-id" />
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
@@ -58,6 +63,42 @@
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
+      </query>
+      <query name="find-success-data" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NOT_ZERO' field='city'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NOT_ZERO' field='operator'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NOT_ZERO' field='network'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NOT_ZERO' field='app-version'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NOT_ZERO' field='connnect-type'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NOT_ZERO' field='code'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NOT_ZERO' field='platform'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
       </query>
     </query-defs>
   </entity>

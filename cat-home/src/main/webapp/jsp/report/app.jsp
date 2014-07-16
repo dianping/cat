@@ -174,7 +174,7 @@
 			}
 			
 			var data = ${model.lineChart.jsonString};
-			graphMetricChart2(document.getElementById('${model.lineChart.id}'), data);
+			graphMetricChartForApp(document.getElementById('${model.lineChart.id}'), data);
 			
 		});
 	</script>

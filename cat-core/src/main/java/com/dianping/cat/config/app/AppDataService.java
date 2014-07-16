@@ -3,10 +3,22 @@ package com.dianping.cat.config.app;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.app.AppDataCommand;
+import com.dianping.cat.app.AppDataCommandDao;
+import com.dianping.cat.app.AppDataCommandEntity;
+
 public class AppDataService {
+
+	@Inject
+	private AppDataCommandDao m_dao;
 
 	public static final String SUCCESS_RATIO = "successRatio";
 
@@ -52,6 +64,11 @@ public class AppDataService {
 		return map;
 	}
 
+	private Map<String, double[]> querySuccessRatio(QueryEntity entity) {
+
+		return makeMockValue(SUCCESS_RATIO);
+	}
+
 	private Map<String, double[]> queryDelayAvg(QueryEntity entity) {
 
 		return makeMockValue(DELAY_AVG);
@@ -62,9 +79,31 @@ public class AppDataService {
 		return makeMockValue(REQUEST_COUNT);
 	}
 
-	private Map<String, double[]> querySuccessRatio(QueryEntity entity) {
+	public void queryAvg(QueryEntity entity) {
+		int commandId = entity.getCommand();
+		Date period = entity.getDate();
+		int city = entity.getCity();
+		int operator = entity.getOperator();
+		int network = entity.getNetwork();
+		int appVersion = entity.getVersion();
+		int connnectType = entity.getChannel();
+		int code = entity.getCode();
+		int platform = entity.getPlatfrom();
 
-		return makeMockValue(SUCCESS_RATIO);
+		try {
+			List<AppDataCommand> datas = m_dao.findData(commandId, period, city, operator, network, appVersion,
+			      connnectType, code, platform, AppDataCommandEntity.READSET_DATA);
+
+			for (AppDataCommand data : datas) {
+				int minuteOrder = data.getMinuteOrder();
+				long count = data.getAccessNumberSum();
+				long sum = data.getResponseSumTimeSum();
+
+				double avg = sum / count;
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	public static class Statistics {

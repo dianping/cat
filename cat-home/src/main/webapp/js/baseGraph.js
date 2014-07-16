@@ -164,14 +164,33 @@ function graphMetricChart(container, data) {
 			});
 }
 
-function graphMetricChart2(container, data) {
+function parseMetricLineDataForApp(data) {
+	var res = [];
+	data.subTitles.forEach(function(title, i) {
+		var series = {}
+		series.name = title;
+		series.data = [];
+		var map = data.datas[i];
+		var j = 0;
+
+		for ( var key in map) {
+			var value = map[key];
+			series.data[j] = value;
+			j++;
+		}
+		res.push(series);
+	});
+	return res;
+}
+
+function graphMetricChartForApp(container, data) {
 	Highcharts.setOptions({
 		global : {
 			useUTC : false
 		}
 	});
 	var ylabelMin = data.minYlable;
-	var _data = parseMetricLineData(data);
+	var _data = parseMetricLineDataForApp(data);
 	$(container).highcharts(
 			{
 				chart : {
@@ -182,16 +201,15 @@ function graphMetricChart2(container, data) {
 					useHTML: true
 				},
 				xAxis : {
-					type : 'datetime',
-					dateTimeLabelFormats : {
-						second : '%H:%M:%S',
-						minute : '%H:%M',
-						hour : '%H:%M',
-						day : '%m-%d',
-						week : '%Y-%m-%d',
-						month : '%m-%d',
-						year : '%Y-%m'
-					},
+					type : "category",
+		            labels : {
+		                step : 12,
+		                maxStaggerLines : 1,
+		                formatter: function() {
+		                	return this.value / 12;
+		                }
+		            },
+				max : 288
 				},
 				yAxis : {
 					min : ylabelMin,
