@@ -67,7 +67,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(AppDataService.class).req(AppConfigManager.class, AppDataCommandDao.class));
-
+	
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class));
