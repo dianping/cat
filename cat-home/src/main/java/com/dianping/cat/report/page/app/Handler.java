@@ -63,24 +63,25 @@ public class Handler implements PageHandler<Context> {
 		LineChart lineCharts = new LineChart();
 
 		if (entity1 != null) {
-			LineChart lineChart1 = m_appGraphCreator.buildChartsByProductLine(entity1, type);
-			Iterator<String> ititle = lineChart1.getSubTitles().iterator();
+			LineChart lineChart1 = m_appGraphCreator.buildLineChart(entity1, type);
 			Iterator<Map<Long, Double>> idata = lineChart1.getDatas().iterator();
-			while (ititle.hasNext() && idata.hasNext()) {
-				lineCharts.add(ititle.next().toString(), idata.next());
+
+			if (lineChart1.getDatas().size() == 1) {
+				lineCharts.add("查询1", idata.next());
 			}
 		}
+
 		if (entity2 != null) {
-			LineChart lineChart2 = m_appGraphCreator.buildChartsByProductLine(entity2, type);
-			Iterator<String> ititle = lineChart2.getSubTitles().iterator();
+			LineChart lineChart2 = m_appGraphCreator.buildLineChart(entity2, type);
 			Iterator<Map<Long, Double>> idata = lineChart2.getDatas().iterator();
-			while (ititle.hasNext() && idata.hasNext()) {
-				lineCharts.add(ititle.next().toString(), idata.next());
+
+			if (lineChart2.getDatas().size() == 1) {
+				lineCharts.add("查询2", idata.next());
 			}
 		}
+
 		lineCharts.setId("app");
 		lineCharts.setHtmlTitle(type);
-
 		model.setLineChart(lineCharts);
 
 		if (!ctx.isProcessStopped()) {

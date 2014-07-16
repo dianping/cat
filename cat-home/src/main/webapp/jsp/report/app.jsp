@@ -32,7 +32,6 @@
 			var key = $("#command").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code");
-			code.length = 0;
 			for ( var prop in value) {
 				var opt = $('<option />');
 
@@ -45,7 +44,6 @@
 			var key = $("#command2").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code2");
-			code.length = 0;
 			for ( var prop in value) {
 				var opt = $('<option />');
 
@@ -190,11 +188,13 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 命令字 <select id="command" style="width: 350px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;">
+				</select> 返回码 <select id="code" style="width: 120px;"><option value='0' >All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -203,23 +203,28 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 渠道 <select id="channel" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.channels}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -243,11 +248,14 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 命令字 <select id="command2" style="width: 350px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 返回码 <select id="code2" style="width: 120px;">
+						<option value='0' >All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -256,23 +264,28 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 渠道 <select id="channel2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.channels}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -284,11 +297,11 @@
 
 		<div class="btn-group" data-toggle="buttons">
 			<label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="successRatio">成功率
+				name="typeCheckbox" value="successRatio" onclick="query()" >成功率
 			</label> <label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="requestCount">总请求数
+				name="typeCheckbox" value="requestCount" onclick="query()" >总请求数
 			</label> <label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="delayAvg">成功延时(ms)
+				name="typeCheckbox" value="delayAvg" onclick="query()" >成功延时(ms)
 			</label>
 		</div>
 
