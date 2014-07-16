@@ -5,7 +5,13 @@ cd `dirname $0`
 
 function kill_by_javaclass {
 local javaclass=$1
-/usr/local/jdk/bin/jps -lvm | awk -v javaclass=$javaclass '$2==javaclass{cmd=sprintf("kill -s TERM %s; sleep 1; kill -9 %s", $1, $1);system(cmd)}'
+jps=/usr/local/jdk/bin/jps
+
+if [ ! -x $jps ];then
+jps=jps
+fi
+
+$jps -lvm | awk -v javaclass=$javaclass '$2==javaclass{cmd=sprintf("kill -s TERM %s; sleep 1; kill -9 %s", $1, $1);system(cmd)}'
 }
 
 agent_class="com.dianping.cat.agent.monitor.CatAgent"
@@ -35,5 +41,12 @@ java=java
 fi
 
 echo "Starting cat-agent $agent_class $port `pwd`"
-nohup $java -Xms128m -Xmx128m -classpath classes:"lib/*" -Dagent=$agent $agent_class $port /agent `pwd` >>/data/applogs/cat/agent-startup.log 2>&1 &
+
+para=""
+if [ "$agent" = "paas"  ];then
+ip=$(sh -c "ifconfig br0 | awk -v FS='[ \t:]+' 'NR == 2 {print \$4}'")
+para="-Dhost.ip=$ip"
+fi
+
+nohup $java -Xms128m -Xmx128m -classpath classes:"lib/*" -Dagent=$agent $para $agent_class $port /agent `pwd` >>/data/applogs/cat/agent-startup.log 2>&1 &
 echo "Started"

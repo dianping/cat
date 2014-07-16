@@ -3,18 +3,18 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.app.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
+	<res:useCss
+		value="${res.css.local['bootstrap-datetimepicker.min.css']}"
+		target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}"
+		target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command};
@@ -32,7 +32,6 @@
 			var key = $("#command").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code");
-			code.length = 0;
 			for ( var prop in value) {
 				var opt = $('<option />');
 
@@ -45,7 +44,6 @@
 			var key = $("#command2").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code2");
-			code.length = 0;
 			for ( var prop in value) {
 				var opt = $('<option />');
 
@@ -61,7 +59,7 @@
 			return myDate.getFullYear() + "-" + myDate.getMonth() + "-"
 					+ myDate.getDate();
 		}
-		
+
 		function query() {
 			var time = $("#time").val();
 			var command = $("#command").val();
@@ -94,8 +92,18 @@
 						+ split + palteform2 + split + city2 + split
 						+ operator2;
 			}
+			
+			var checkboxs = document.getElementsByName("typeCheckbox");
+			var type = "";
+			
+			for(var i=0; i<checkboxs.length;i++){
+				if(checkboxs[i].checked){
+					type = checkboxs[i].value;
+					break;
+				}
+			}
 
-			var href = "?query1=" + query1 + "&query2=" + query2;
+			var href = "?query1=" + query1 + "&query2=" + query2 + "&type=" + type;
 			window.location.href = href;
 		}
 
@@ -113,13 +121,14 @@
 			command2.on('change', command2Change);
 
 			$("#command").val(words[1]);
-			
-			if(words[0]==null||words[0].length==0){
+
+			if (words[0] == null || words[0].length == 0) {
 				$("#time").val(getDate());
-			}else{
+			} else {
 				$("#time").val(words[0]);
 			}
 			
+
 			command1Change();
 			$("#code").val(words[2]);
 			$("#network").val(words[3]);
@@ -134,9 +143,9 @@
 				document.getElementById("checkbox").checked = true;
 				var words = query2.split(";");
 
-				if(words[0]==null||words[0].length==0){
+				if (words[0] == null || words[0].length == 0) {
 					$("#time2").val(getDate());
-				}else{
+				} else {
 					$("#time2").val(words[0]);
 				}
 
@@ -149,9 +158,22 @@
 				$("#platform2").val(words[6]);
 				$("#city2").val(words[7]);
 				$("#operator2").val(words[8]);
-			}else{
+			} else {
 				$("#time2").val(getDate());
 			}
+			
+			var checkboxs = document.getElementsByName("typeCheckbox");
+			
+			for(var i=0; i<checkboxs.length;i++){
+				if(checkboxs[i].value == "${payload.type}"){
+					checkboxs[i].checked = true;
+					break;
+				}
+			}
+			
+			var data = ${model.lineChart.jsonString};
+			graphMetricChartForApp(document.getElementById('${model.lineChart.id}'), data);
+			
 		});
 	</script>
 	<div class="report">
@@ -166,11 +188,13 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 命令字 <select id="command" style="width: 350px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;">
+				</select> 返回码 <select id="code" style="width: 120px;"><option value='0' >All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -179,23 +203,28 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 渠道 <select id="channel" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.channels}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -219,11 +248,14 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 命令字 <select id="command2" style="width: 350px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 返回码 <select id="code2" style="width: 120px;">
+						<option value='0' >All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -232,23 +264,28 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 渠道 <select id="channel2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.channels}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator2" style="width: 100px;">
+						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -257,6 +294,20 @@
 				</th>
 			</tr>
 		</table>
+
+		<div class="btn-group" data-toggle="buttons">
+			<label class="btn btn-info"> <input type="radio"
+				name="typeCheckbox" value="successRatio" onclick="query()" >成功率
+			</label> <label class="btn btn-info"> <input type="radio"
+				name="typeCheckbox" value="requestCount" onclick="query()" >总请求数
+			</label> <label class="btn btn-info"> <input type="radio"
+				name="typeCheckbox" value="delayAvg" onclick="query()" >成功延时(ms)
+			</label>
+		</div>
+
+		<div style="float:left;width:95%;">
+			<div id="${model.lineChart.id}"></div>
+		</div>
 
 		<table class="footer">
 			<tr>

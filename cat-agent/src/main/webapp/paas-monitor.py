@@ -15,6 +15,11 @@ def execute(command):
     return p.returncode, p.stdout.read(), p.stderr.read()
 
 
+def docker_command(pid, command):
+    _, result, _ = execute(COMMAND_PATTERN % (pid, command))
+    return result.strip()
+
+
 def get_instance_ids():
     return [ele['Id'] for ele in json.loads(urllib2.urlopen('http://0.0.0.0:8090/containers/ps').read())]
 
@@ -49,12 +54,12 @@ def get_name(inspect_info):
 
 def get_cpu_usage(metric_info):
     if 'current_usage' in metric_info['cpu_stats']['cpu_usage']:
-        return metric_info['cpu_stats']['cpu_usage']['current_usage']
+        return metric_info['cpu_stats']['cpu_usage']['cpu_usage']
     return 0
 
 
 def get_network_info(pid, network_name):
-    _, flow, _ = execute(COMMAND_PATTERN % (pid, 'ifconfig %s' % network_name))
+    flow = docker_command(pid, 'ifconfig %s' % network_name)
 
     total_error, total_dropped, total_collision = [0] * 3
     m = re.search(r'RX bytes:\s*(\d+).*?TX bytes:\s*(\d+)', flow, re.IGNORECASE)
@@ -77,12 +82,11 @@ def get_network_info(pid, network_name):
     return rx, tx, total_error, total_dropped, total_collision
 
 
-def get_container_info(inspect_info):
-    pid = inspect_info['State']['Pid']
-    _, disk_usage, _ = execute(COMMAND_PATTERN % (pid, 'df -h | grep "rootfs"'))
+def get_container_info(pid):
+    disk_usage = docker_command(pid, 'df -h | grep "rootfs"')
     disk_usage = re.split(r'\s+', disk_usage.strip())[-2][:-1]
     disk_usage = int(disk_usage) * 1.0 / 100
-    _, ssh_md5, _ = execute(COMMAND_PATTERN % (pid, 'md5sum /usr/sbin/sshd'))
+    ssh_md5 = docker_command(pid, 'md5sum /usr/sbin/sshd')
     ssh_md5 = re.split(r'\s+', ssh_md5.strip())[0]
 
     eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision = get_network_info(pid, 'eth0')
@@ -97,7 +101,8 @@ def get_swap_usage(metric_info):
 
 
 def get_memory_info(metric_info, instance_id):
-    used, cached = metric_info['memory_stats']['usage'], metric_info['memory_stats']['stats']['cache']
+    used, cached = metric_info['memory_stats']['stats']['rss'], metric_info['memory_stats']['stats']['cache']
+    shared, buffered = [0, 0]
     total = -1
     try:
         result = json.loads(post('http://localhost:8090/containers/%s/cgroup' % instance_id,
@@ -109,7 +114,29 @@ def get_memory_info(metric_info, instance_id):
     except Exception, e:
         pass
 
-    return total, used, cached
+    free = int(total) - int(used) - int(cached)
+
+    return total, used, cached, free, shared, buffered
+
+
+def get_process_info(pid):
+    result = docker_command(pid, "top -b -n1 | grep Tasks | awk '{print $2,$4}'")
+    return re.split(r'\s+', result.strip())
+
+
+def get_number_of_user_connected(pid):
+    result = docker_command(pid, "who | awk '{ print $1 }' | sort | uniq | wc -l")
+    return result.strip()
+
+
+def get_tcp_established(pid):
+    result = docker_command(pid, 'netstat -anot | grep ESTABLISHED | wc -l')
+    return result.strip()
+
+
+def get_inodes_info(pid):
+    result = docker_command(pid, "df -i | grep rootfs | awk '{print $2,$4}'")
+    return re.split(r'\s+', result.strip())
 
 
 def post(url, data, headers={}):
@@ -130,10 +157,16 @@ def get_all_info(current_instance=None):
 
         inspect_info = instance_inspect(instance_id)
         metric_info = instance_metric(instance_id)
+        pid = inspect_info['State']['Pid']
+
         disk_usage, ssh_md5, eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision, lo_rx, lo_tx, \
-        lo_errors, lo_dropped, lo_collision = get_container_info(inspect_info)
+        lo_errors, lo_dropped, lo_collision = get_container_info(pid)
         ip = get_ip(inspect_info)
-        mem_total, mem_used, mem_cached = get_memory_info(metric_info, instance_id)
+        mem_total, mem_used, mem_cached, mem_free, mem_shared, mem_buffered = get_memory_info(metric_info, instance_id)
+        process_total, process_running = get_process_info(pid)
+        number_of_user_connected = get_number_of_user_connected(pid)
+        tcp_established_num = get_tcp_established(pid)
+        inodes_total, inodes_free = get_inodes_info(pid)
 
         m = [
             ('domain', '', get_name(inspect_info)),
@@ -141,6 +174,9 @@ def get_all_info(current_instance=None):
             ('system_cachedMem', 'avg', mem_cached),
             ('system_totalMem', 'avg', mem_total),
             ('system_usedMem', 'avg', mem_used),
+            ('system_freeMem', 'avg', mem_free),
+            ('system_sharedMem', 'avg', mem_shared),
+            ('system_buffersMem', 'avg', mem_buffered),
             ('system_/-usage', 'avg', disk_usage),
             ('system_swapUsage', 'avg', get_swap_usage(metric_info)),
             ('system_md5Change', 'avg', ssh_md5),
@@ -152,9 +188,12 @@ def get_all_info(current_instance=None):
             ('system_eth0-collisions', 'sum', eth0_collision),
             ('system_lo-outFlow', 'sum', lo_tx),
             ('system_lo-inFlow', 'sum', lo_rx),
-            ('system_lo-dropped', 'sum', lo_dropped),
-            ('system_lo-errors', 'sum', lo_errors),
-            ('system_lo-collisions', 'sum', lo_collision),
+            ('system_totalProcess', 'avg', process_total),
+            ('system_runningProcess', 'avg', process_running),
+            ('system_establishedTcp', 'avg', tcp_established_num),
+            ('system_loginUsers', 'avg', number_of_user_connected),
+            ('system_/-freeInodes', 'avg', "%.3f" % (float(inodes_free) / int(inodes_total))),
+
         ]
 
         print '\n'.join(['%s_%s%s=%s' % (k, ip, t and ':' + t, v) for k, t, v in m])

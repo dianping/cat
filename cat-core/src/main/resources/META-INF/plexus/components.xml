@@ -93,6 +93,9 @@
 			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.app.AppDataCommandDao</role>
 				</requirement>
 			</requirements>

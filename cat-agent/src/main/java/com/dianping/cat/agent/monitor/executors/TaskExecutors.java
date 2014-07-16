@@ -1,5 +1,6 @@
 package com.dianping.cat.agent.monitor.executors;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +15,21 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.DataSender;
+import com.dianping.cat.agent.monitor.executors.jvm.JVMMemoryExecutor;
+import com.dianping.cat.agent.monitor.executors.jvm.JVMStateExecutor;
+import com.dianping.cat.agent.monitor.executors.system.SystemPerformanceExecutor;
+import com.dianping.cat.agent.monitor.executors.system.SystemStateExecutor;
 import com.dianping.cat.message.Transaction;
 
 public class TaskExecutors extends ContainerHolder implements Task, Initializable {
 
-	private Collection<Executor> m_executors;
-
 	@Inject
 	private DataSender m_sender;
+
+	@Inject
+	private EnvConfig m_config;
+
+	private Collection<Executor> m_executors = new ArrayList<Executor>();
 
 	private static final long DURATION = 5 * 1000;
 
@@ -36,8 +44,17 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 
 		if ("executors".equalsIgnoreCase(agent)) {
 			Map<String, Executor> map = lookupMap(Executor.class);
-			m_executors = map.values();
+			String monitors = m_config.getMonitors();
 
+			if (monitors.toLowerCase().contains("system")) {
+				m_executors.add(map.get(SystemPerformanceExecutor.ID));
+				m_executors.add(map.get(SystemStateExecutor.ID));
+			}
+
+			if (monitors.toLowerCase().contains("tomcat")) {
+				m_executors.add(map.get(JVMMemoryExecutor.ID));
+				m_executors.add(map.get(JVMStateExecutor.ID));
+			}
 			Threads.forGroup("Cat").start(this);
 		}
 	}

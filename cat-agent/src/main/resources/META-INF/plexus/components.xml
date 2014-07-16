@@ -101,6 +101,9 @@
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -175,7 +178,14 @@
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
