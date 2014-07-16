@@ -18,7 +18,7 @@
       </readset>
     </readsets>
     <query-defs>
-	 <query name="insert-data" type="INSERT">
+	  <query name="insert-data" type="INSERT">
         <param name="command-id" />
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
