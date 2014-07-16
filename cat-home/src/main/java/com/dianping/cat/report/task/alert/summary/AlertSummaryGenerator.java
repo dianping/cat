@@ -118,15 +118,15 @@ public class AlertSummaryGenerator {
 	}
 
 	private Category generateDependCategoryByTimeCateDomain(Date date, String cate, List<String> dependencyDomains) {
-		String categoryName = "dependency-" + cate;
+		String categoryName = "dependency_" + cate;
 		String dbCategoryName = cate + "-alert";
 		Category category = new Category(categoryName);
 		Date startTime = new Date(date.getTime() - DURATION);
 
 		for (String domain : dependencyDomains) {
 			try {
-				List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName,
-				      domain, AlertEntity.READSET_FULL);
+				List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
+				      AlertEntity.READSET_FULL);
 				setDBAlertsToCategoryWithDomain(category, dbAlerts);
 			} catch (DalException e) {
 				Cat.logError("find dependency alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
@@ -137,7 +137,7 @@ public class AlertSummaryGenerator {
 	}
 
 	private Category generateDependCategoryByTopology(Date date, String cate, TopologyGraph topology, int statusThreshold) {
-		String categoryName = "dependency-" + cate;
+		String categoryName = "dependency_" + cate;
 		Category category = new Category(categoryName);
 
 		for (TopologyEdge edge : topology.getEdges().values()) {

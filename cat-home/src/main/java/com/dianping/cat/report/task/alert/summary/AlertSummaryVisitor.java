@@ -19,7 +19,7 @@ public class AlertSummaryVisitor extends BaseVisitor {
 
 	private Map<Object, Object> m_categoryMap = new HashMap<Object, Object>();
 
-	private List<Map<Object, Object>> m_alertList = new ArrayList<Map<Object, Object>>();
+	private List<Map<Object, Object>> m_alertList;
 
 	private DateFormat m_fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -54,10 +54,8 @@ public class AlertSummaryVisitor extends BaseVisitor {
 
 	@Override
 	public void visitCategory(Category category) {
-		if (m_alertList.size() > 0) {
-			m_alertList = new ArrayList<Map<Object, Object>>();
-		}
-		
+		m_alertList = new ArrayList<Map<Object, Object>>();
+
 		for (Alert alert : category.getAlerts()) {
 			visitAlert(alert);
 		}
