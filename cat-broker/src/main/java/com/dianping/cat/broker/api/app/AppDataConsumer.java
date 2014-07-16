@@ -8,13 +8,18 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.service.appData.entity.AppData;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 
 	public static final long DURATION = 5 * 60 * 1000L;
+	
+	@Inject
+	private AppDataService m_appDataService;
 
 	private AppDataQueue m_appDataQueue;
 
@@ -45,8 +50,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
 
-		Threads.forGroup("Cat").start(appDataDispatcherThread);
 		Threads.forGroup("Cat").start(bucketThreadController);
+		Threads.forGroup("Cat").start(appDataDispatcherThread);
 	}
 
 	public void setDataLoss(long dataLoss) {
@@ -73,7 +78,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 						timestamp -= timestamp % DURATION;
 						BucketHandler handler = m_tasks.get(new Long(timestamp));
 
-						if (handler == null) {
+						if (handler == null || !handler.isActive()) {
 							m_dataLoss++;
 
 							if (m_dataLoss % 1000 == 0) {
@@ -123,7 +128,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 				try {
 					long currentDuration = curTime - curTime % DURATION;
-
+					
 					removeLastLastTask(currentDuration);
 					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
@@ -147,8 +152,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private void startCurrentTask(long currentDuration) {
 			Long cur = new Long(currentDuration);
-			if (m_tasks.get(cur) != null) {
-				BucketHandler curBucketHandler = new BucketHandler(cur);
+			if (m_tasks.get(cur) == null) {
+				BucketHandler curBucketHandler = new BucketHandler(cur, m_appDataService);
 				Threads.forGroup("Cat").start(curBucketHandler);
 
 				m_tasks.put(cur, curBucketHandler);
@@ -157,8 +162,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private void startNextTask(long currentDuration) {
 			Long next = new Long(currentDuration + DURATION);
-			if (m_tasks.get(next) != null) {
-				BucketHandler nextBucketHandler = new BucketHandler(next);
+			if (m_tasks.get(next) == null) {
+				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataService);
 				Threads.forGroup("Cat").start(nextBucketHandler);
 
 				m_tasks.put(next, nextBucketHandler);

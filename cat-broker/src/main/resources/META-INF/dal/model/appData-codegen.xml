@@ -6,7 +6,7 @@
     <attribute name="operator" value-type="int" />
     <attribute name="network" value-type="int" />
     <attribute name="version" value-type="int" />
-    <attribute name="channel" value-type="int" />
+    <attribute name="connectType" value-type="int" />
     <attribute name="command" value-type="int" />
     <attribute name="code" value-type="int" />
     <attribute name="platform" value-type="int" />

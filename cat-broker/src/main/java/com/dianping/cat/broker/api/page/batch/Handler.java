@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.service.appData.entity.AppData;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
@@ -121,7 +123,25 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			String records[] = content.split("\n");
 
 			IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
-
+			String cityStr = ipInfo.getProvince();
+			String operatorStr = ipInfo.getChannel();
+			int cityId = 0, operatorId = 0;
+			List<Item> cityList = m_appConfigManager.queryConfigItem(AppConfigManager.CITY);
+			List<Item> operatorList = m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR);
+			
+			for (Item item : cityList) {
+				if (item.getName().equals(cityStr)) {
+					cityId = item.getId();
+					break;
+				}
+			}
+			for (Item item : operatorList) {
+				if (item.getName().equals(operatorStr)) {
+					operatorId = item.getId();
+					break;
+				}
+			}
+			
 			for (String record : records) {
 				String items[] = record.split("\t");
 
@@ -140,14 +160,15 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setCommand(command);
 					appData.setNetwork(Integer.parseInt(items[2]));
 					appData.setVersion(Integer.parseInt(items[3]));
-					appData.setChannel(Integer.parseInt(items[4]));
+					appData.setConnectType(Integer.parseInt(items[4]));
 					appData.setCode(Integer.parseInt(items[5]));
 					appData.setPlatform(Integer.parseInt(items[6]));
 					appData.setRequestByte(Integer.parseInt(items[7]));
 					appData.setResponseByte(Integer.parseInt(items[8]));
 					appData.setResponseTime(Integer.parseInt(items[9]));
-					appData.setCity(ipInfo.getAreaId());
-					appData.setOperator(ipInfo.getCorpId());
+					appData.setCity(cityId);
+					appData.setOperator(operatorId);
+					appData.setCount(1);
 				} catch (Exception e) {
 					m_logger.error(e.getMessage(), e);
 				}

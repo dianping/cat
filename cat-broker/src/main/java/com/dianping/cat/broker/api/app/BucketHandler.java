@@ -2,82 +2,73 @@ package com.dianping.cat.broker.api.app;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.service.appData.entity.AppData;
 
-public class BucketHandler implements Task, LogEnabled {
+public class BucketHandler implements Task {
 
-	private Logger m_logger;
+	private static final String FILEDIRECTORY = "/data/appdatas/cat/app/";
+
+	private static int ONE_DAY = 24 * 60 * 60 * 1000;
+	
+	private static int ONE_MINUTE = 60 * 1000;
 
 	private AppDataQueue m_appDataQueue;
 
-	private HashMap<Integer, HashMap<String, AppData>> m_mergedData;
-	
-	@Inject
 	private AppDataService m_appDataService;
-
-	private long m_startTime;
 
 	private boolean m_isActive = true;
 
-	private static final String FILEDIRECTORY = "/data/appdatas/cat/appdata/";
+	private HashMap<Integer, HashMap<String, AppData>> m_mergedData;
 
-	public void setActive(boolean isActive) {
-		m_isActive = isActive;
-	}
+	private long m_startTime;
 
-	public BucketHandler(long startTime) {
+	public BucketHandler(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
 		m_appDataQueue = new AppDataQueue();
 		m_mergedData = new LinkedHashMap<Integer, HashMap<String, AppData>>();
+		m_appDataService = appDataService;
+	}
+
+	private void end() {
+		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
+			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
+				AppData appData = entry.getValue();
+
+				saveToDataBase(appData);
+			}
+		}
+	}
+
+	public void enqueue(AppData appData) {
+		m_appDataQueue.offer(appData);
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
+	public String getName() {
+		return "BucketHandler";
 	}
 
-	@Override
-	public void run() {
-		while (m_isActive) {
-			AppData appData = m_appDataQueue.poll();
-
-			if (appData != null) {
-				processEntity(appData);
-			}
+	public boolean isActive() {
+		synchronized (this) {
+			return m_isActive;
 		}
-
-		while (true) {
-			AppData appData = m_appDataQueue.poll();
-
-			if (appData != null) {
-				processEntity(appData);
-			} else {
-				break;
-			}
-		}
-
-		end();
 	}
 
 	private void processEntity(AppData appData) {
 		Integer command = appData.getCommand();
-		String key = m_startTime + ":" + appData.getCity() + ":" + appData.getOperator() + ":" + appData.getChannel()
+		String key = m_startTime + ":" + appData.getCity() + ":" + appData.getOperator() + ":" + appData.getConnectType()
 		      + ":" + appData.getVersion() + ":" + appData.getNetwork() + ":" + appData.getCode() + ":"
 		      + appData.getPlatform();
-
 		HashMap<String, AppData> secondMap = m_mergedData.get(command);
 
 		if (secondMap == null) {
@@ -99,36 +90,43 @@ public class BucketHandler implements Task, LogEnabled {
 		}
 	}
 
-	private void end() {
-		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
-			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
-				AppData appData = entry.getValue();
+	@Override
+	public void run() {
+		while (isActive()) {
+			AppData appData = m_appDataQueue.poll();
 
-				if (saveToDataBase(appData) == false) {
-					saveToFile(appData);
-				}
+			if (appData != null) {
+				processEntity(appData);
 			}
 		}
-		
+
+		while (true) {
+			AppData appData = m_appDataQueue.poll();
+
+			if (appData != null) {
+				processEntity(appData);
+			} else {
+				break;
+			}
+		}
+
+		end();
 	}
 
-	@Override
-	public String getName() {
-		return "BucketHandler";
-	}
+	private void saveToDataBase(AppData appData) {
+		int minute = (int) (m_startTime % ONE_DAY / ONE_MINUTE);
+		Date period = new Date(m_startTime - minute * ONE_MINUTE);
 
-	@Override
-	public void shutdown() {
-		m_isActive = false;
-	}
+		try {
+			m_appDataService.insert(period, minute, appData.getCommand(), appData.getCity(), appData.getOperator(),
+			      appData.getNetwork(), appData.getVersion(), appData.getConnectType(), appData.getCode(),
+			      appData.getPlatform(), appData.getCount(), appData.getResponseTime(), appData.getResponseByte(),
+			      appData.getResponseByte());
+		} catch (Exception e) {
+			Cat.logError(e);
 
-	public void enqueue(AppData appData) {
-		m_appDataQueue.offer(appData);
-	}
-
-	private boolean saveToDataBase(AppData appData) {
-		m_appDataService.insert();
-		return true;
+			saveToFile(appData);
+		}
 	}
 
 	private void saveToFile(AppData appData) {
@@ -140,14 +138,22 @@ public class BucketHandler implements Task, LogEnabled {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 			String content = appData.getTimestamp() + "\t" + appData.getCity() + "\t" + appData.getOperator() + "\t"
-			      + appData.getNetwork() + "\t" + appData.getVersion() + "\t" + appData.getChannel() + "\t"
+			      + appData.getNetwork() + "\t" + appData.getVersion() + "\t" + appData.getConnectType() + "\t"
 			      + appData.getCommand() + "\t" + appData.getCode() + "\t" + appData.getPlatform() + "\t"
 			      + appData.getRequestByte() + "\t" + appData.getResponseByte() + "\t" + appData.getResponseTime() + "\n";
 
 			writer.append(content);
 			writer.close();
-		} catch (IOException e) {
-			m_logger.error("save appdata to file " + filePath + " failed. " + e.getMessage());
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
+
+	@Override
+	public void shutdown() {
+		synchronized (this) {
+			m_isActive = false;
+		}
+	}
+
 }

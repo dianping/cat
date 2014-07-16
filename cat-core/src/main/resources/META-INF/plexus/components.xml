@@ -89,6 +89,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.AppDataService</role>
+			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppDataCommandDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.url.UrlPatternHandler</role>
 			<implementation>com.dianping.cat.config.url.DefaultUrlPatternHandler</implementation>
 		</component>
