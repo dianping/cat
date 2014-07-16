@@ -66,13 +66,13 @@
 			var code = $("#code").val();
 			var network = $("#network").val();
 			var version = $("#version").val();
-			var channel = $("#channel").val();
+			var connectionType = $("#connectionType").val();
 			var palteform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
 			var split = ";";
 			var query1 = time + split + command + split + code + split
-					+ network + split + version + split + channel + split
+					+ network + split + version + split + connectionType + split
 					+ palteform + split + city + split + operator;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
@@ -83,12 +83,12 @@
 				var code2 = $("#code2").val();
 				var network2 = $("#network2").val();
 				var version2 = $("#version2").val();
-				var channel2 = $("#channel2").val();
+				var connectionType2 = $("#connectionType2").val();
 				var palteform2 = $("#platform2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
 				query2 = time2 + split + command2 + split + code2 + split
-						+ network2 + split + version2 + split + channel2
+						+ network2 + split + version2 + split + connectionType2
 						+ split + palteform2 + split + city2 + split
 						+ operator2;
 			}
@@ -133,7 +133,7 @@
 			$("#code").val(words[2]);
 			$("#network").val(words[3]);
 			$("#version").val(words[4]);
-			$("#channel").val(words[5]);
+			$("#connectionType").val(words[5]);
 			$("#platform").val(words[6]);
 			$("#city").val(words[7]);
 			$("#operator").val(words[8]);
@@ -154,7 +154,7 @@
 				$("#code2").val(words[2]);
 				$("#network2").val(words[3]);
 				$("#version2").val(words[4]);
-				$("#channel2").val(words[5]);
+				$("#connectionType2").val(words[5]);
 				$("#platform2").val(words[6]);
 				$("#city2").val(words[7]);
 				$("#operator2").val(words[8]);
@@ -188,7 +188,6 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 命令字 <select id="command" style="width: 350px;">
-						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -207,9 +206,9 @@
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
-				</select> 渠道 <select id="channel" style="width: 100px;">
+				</select> 连接类型 <select id="connectionType" style="width: 100px;">
 						<option value='0' >All</option>
-						<c:forEach var="item" items="${model.channels}" varStatus="status">
+						<c:forEach var="item" items="${model.connectionTypes}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform" style="width: 100px;">
@@ -248,7 +247,6 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 命令字 <select id="command2" style="width: 350px;">
-						<option value='0' >All</option>
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -268,9 +266,9 @@
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
-				</select> 渠道 <select id="channel2" style="width: 100px;">
+				</select> 连接类型 <select id="connectionType2" style="width: 100px;">
 						<option value='0' >All</option>
-						<c:forEach var="item" items="${model.channels}" varStatus="status">
+						<c:forEach var="item" items="${model.connectionTypes}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform2" style="width: 100px;">

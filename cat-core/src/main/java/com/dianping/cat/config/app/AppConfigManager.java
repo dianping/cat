@@ -34,6 +34,10 @@ public class AppConfigManager implements Initializable {
 
 	private Map<String, Integer> m_commands = new HashMap<String, Integer>();
 
+	private Map<String, Integer> m_cities = new HashMap<String, Integer>();
+
+	private Map<String, Integer> m_operators = new HashMap<String, Integer>();
+
 	private int m_configId;
 
 	private static final String CONFIG_NAME = "app-config";
@@ -52,7 +56,7 @@ public class AppConfigManager implements Initializable {
 
 	public static String CITY = "城市";
 
-	public static String CHANNEL = "渠道";
+	public static String CONNECT_TYPE = "连接类型";
 
 	public AppConfig getConfig() {
 		return m_config;
@@ -128,15 +132,39 @@ public class AppConfigManager implements Initializable {
 	public Map<String, Integer> getCommands() {
 		return m_commands;
 	}
+	
+	public Map<String, Integer> getCities() {
+   	return m_cities;
+   }
 
-	private void refreshCommand() {
+	public Map<String, Integer> getOperators() {
+   	return m_operators;
+   }
+
+	private void refreshData() {
 		Collection<Command> commands = m_config.getCommands().values();
-
-		m_commands.clear();
+		Map<String, Integer> commandMap = new HashMap<String, Integer>();
 
 		for (Command c : commands) {
-			m_commands.put(c.getName(), c.getId());
+			commandMap.put(c.getName(), c.getId());
 		}
+		m_commands = commandMap;
+		
+		Map<String, Integer> cityMap = new HashMap<String, Integer>();
+		ConfigItem cities = m_config.findConfigItem(CITY);
+		
+		for(Item item:cities.getItems().values()){
+			cityMap.put(item.getName(), item.getId());
+		}
+		m_cities = cityMap;
+		
+		Map<String, Integer> operatorMap = new HashMap<String, Integer>();
+		ConfigItem operations = m_config.findConfigItem(OPERATOR);
+		
+		for(Item item:operations.getItems().values()){
+			operatorMap.put(item.getName(), item.getId());
+		}
+		m_operators = operatorMap;
 	}
 
 	public Collection<Item> queryConfigItems(String key) {
@@ -159,7 +187,7 @@ public class AppConfigManager implements Initializable {
 				AppConfig appConfig = DefaultSaxParser.parse(content);
 
 				m_config = appConfig;
-				refreshCommand();
+				refreshData();
 				m_modifyTime = modifyTime;
 			}
 		}
@@ -175,7 +203,7 @@ public class AppConfigManager implements Initializable {
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 
-			refreshCommand();
+			refreshData();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;

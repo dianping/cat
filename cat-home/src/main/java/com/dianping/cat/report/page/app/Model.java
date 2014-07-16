@@ -24,7 +24,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<Item> m_versions;
 
-	private List<Item> m_channels;
+	private List<Item> m_connectionTypes;
 
 	private List<Item> m_operators;
 
@@ -59,10 +59,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public List<Item> getChannels() {
-		return m_channels;
 	}
 
 	public List<Item> getCities() {
@@ -100,9 +96,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_versions;
 	}
 
-	public void setChannels(List<Item> channels) {
-		m_channels = channels;
-	}
+	public List<Item> getConnectionTypes() {
+   	return m_connectionTypes;
+   }
+
+	public void setConnectionTypes(List<Item> connectionTypes) {
+   	m_connectionTypes = connectionTypes;
+   }
 
 	public void setCities(List<Item> cities) {
 		m_cities = cities;
