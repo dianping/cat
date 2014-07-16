@@ -3744,6 +3744,23 @@
 		<component>
 			<role>com.dianping.cat.config.app.AppDataService</role>
 			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppDataCommandDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppDataCommandDao</role>
+			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
@@ -7413,6 +7430,23 @@
 		<component>
 			<role>com.dianping.cat.config.app.AppDataService</role>
 			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppDataCommandDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppDataCommandDao</role>
+			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
