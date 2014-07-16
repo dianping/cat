@@ -16,7 +16,28 @@ public class AppDataService {
 	@Inject
 	private AppDataCommandDao m_dao;
 
-	public void insert() {
+	public void insert(Date period, int minute, int commandId, int city, int operator, int network, int appVersion,
+	      int connectType, int code, int platform, int count, int responseSumTime, int requestPackage,
+	      int responsePackage) throws DalException {
+		AppDataCommand proto = new AppDataCommand();
+
+		proto.setPeriod(period);
+		proto.setMinuteOrder(minute);
+		proto.setCommandId(commandId);
+		proto.setCity(city);
+		proto.setOperator(operator);
+		proto.setNetwork(network);
+		proto.setAppVersion(appVersion);
+		proto.setConnnectType(connectType);
+		proto.setCode(code);
+		proto.setPlatform(platform);
+		proto.setAccessNumber(count);
+		proto.setResponseSumTime(responseSumTime);
+		proto.setRequestPackage(requestPackage);
+		proto.setResponsePackage(responsePackage);
+		proto.setCreationDate(new Date());
+
+		m_dao.insertData(proto);
 	}
 
 	public void queryAvg(QueryEntity entity) {
@@ -36,10 +57,10 @@ public class AppDataService {
 
 			for (AppDataCommand data : datas) {
 				int minuteOrder = data.getMinuteOrder();
-				long count=data.getAccessNumberSum();
+				long count = data.getAccessNumberSum();
 				long sum = data.getResponseSumTimeSum();
 
-				double avg =sum/count;
+				double avg = sum / count;
 			}
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -50,7 +71,7 @@ public class AppDataService {
 	}
 
 	public void querySuccessRate(QueryEntity entity) {
-		
+
 	}
 
 	public static class Statistics {
