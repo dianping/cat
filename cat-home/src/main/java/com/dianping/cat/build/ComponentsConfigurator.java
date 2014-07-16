@@ -160,8 +160,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.addAll(defineCommonComponents());
+		
 		all.addAll(defineConfigComponents());
+		
 		all.addAll(defineMetricComponents());
+		
 		all.addAll(defineAlertComponents());
 		
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
