@@ -35,7 +35,11 @@ public class AppDataService {
 			      connnectType, code, platform, AppDataCommandEntity.READSET_DATA);
 
 			for (AppDataCommand data : datas) {
+				int minuteOrder = data.getMinuteOrder();
+				long count=data.getAccessNumberSum();
+				long sum = data.getResponseSumTimeSum();
 
+				double avg =sum/count;
 			}
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -46,6 +50,7 @@ public class AppDataService {
 	}
 
 	public void querySuccessRate(QueryEntity entity) {
+		
 	}
 
 	public static class Statistics {
