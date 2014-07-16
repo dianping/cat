@@ -217,7 +217,7 @@ public class InstallMojo extends AbstractMojo {
 			      }
 		      });
 		m_user = PropertyProviders.fromConsole().forString("jdbc.user", "Please input username:", null, null, null);
-		m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, null,
+		m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, "",
 		      null);
 	}
 }
