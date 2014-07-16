@@ -6,13 +6,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
+import com.dianping.cat.report.page.LineChart;
 
 public class Model extends AbstractReportModel<Action, Context> {
+
+	@EntityMeta
+	private LineChart m_lineChart;
 
 	private List<Item> m_cities;
 
@@ -116,5 +122,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setVersions(List<Item> versions) {
 		m_versions = versions;
+	}
+
+	public LineChart getLineChart() {
+		return m_lineChart;
+	}
+
+	public void setLineChart(LineChart lineChart) {
+		m_lineChart = lineChart;
 	}
 }

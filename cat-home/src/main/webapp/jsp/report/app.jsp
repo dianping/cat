@@ -3,18 +3,18 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.app.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
+	<res:useCss
+		value="${res.css.local['bootstrap-datetimepicker.min.css']}"
+		target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}"
+		target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command};
@@ -61,7 +61,7 @@
 			return myDate.getFullYear() + "-" + myDate.getMonth() + "-"
 					+ myDate.getDate();
 		}
-		
+
 		function query() {
 			var time = $("#time").val();
 			var command = $("#command").val();
@@ -94,8 +94,18 @@
 						+ split + palteform2 + split + city2 + split
 						+ operator2;
 			}
+			
+			var checkboxs = document.getElementsByName("typeCheckbox");
+			var type = "";
+			
+			for(var i=0; i<checkboxs.length;i++){
+				if(checkboxs[i].checked){
+					type = checkboxs[i].value;
+					break;
+				}
+			}
 
-			var href = "?query1=" + query1 + "&query2=" + query2;
+			var href = "?query1=" + query1 + "&query2=" + query2 + "&type=" + type;
 			window.location.href = href;
 		}
 
@@ -113,13 +123,14 @@
 			command2.on('change', command2Change);
 
 			$("#command").val(words[1]);
-			
-			if(words[0]==null||words[0].length==0){
+
+			if (words[0] == null || words[0].length == 0) {
 				$("#time").val(getDate());
-			}else{
+			} else {
 				$("#time").val(words[0]);
 			}
 			
+
 			command1Change();
 			$("#code").val(words[2]);
 			$("#network").val(words[3]);
@@ -134,9 +145,9 @@
 				document.getElementById("checkbox").checked = true;
 				var words = query2.split(";");
 
-				if(words[0]==null||words[0].length==0){
+				if (words[0] == null || words[0].length == 0) {
 					$("#time2").val(getDate());
-				}else{
+				} else {
 					$("#time2").val(words[0]);
 				}
 
@@ -149,9 +160,22 @@
 				$("#platform2").val(words[6]);
 				$("#city2").val(words[7]);
 				$("#operator2").val(words[8]);
-			}else{
+			} else {
 				$("#time2").val(getDate());
 			}
+			
+			var checkboxs = document.getElementsByName("typeCheckbox");
+			
+			for(var i=0; i<checkboxs.length;i++){
+				if(checkboxs[i].value == "${payload.type}"){
+					checkboxs[i].checked = true;
+					break;
+				}
+			}
+			
+			var data = ${model.lineChart.jsonString};
+			graphMetricChart2(document.getElementById('${model.lineChart.id}'), data);
+			
 		});
 	</script>
 	<div class="report">
@@ -257,6 +281,20 @@
 				</th>
 			</tr>
 		</table>
+
+		<div class="btn-group" data-toggle="buttons">
+			<label class="btn btn-info"> <input type="radio"
+				name="typeCheckbox" value="successRatio">成功率
+			</label> <label class="btn btn-info"> <input type="radio"
+				name="typeCheckbox" value="requestCount">总请求数
+			</label> <label class="btn btn-info"> <input type="radio"
+				name="typeCheckbox" value="delayAvg">成功延时(ms)
+			</label>
+		</div>
+
+		<div style="float:left;width:95%;">
+			<div id="${model.lineChart.id}"></div>
+		</div>
 
 		<table class="footer">
 			<tr>

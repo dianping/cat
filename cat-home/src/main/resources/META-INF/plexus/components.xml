@@ -384,6 +384,39 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.TransactionReportService</implementation>
 			<requirements>
@@ -3643,6 +3676,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3662,6 +3698,43 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppDataService</role>
+			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

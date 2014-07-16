@@ -12,6 +12,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -36,6 +37,7 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -158,6 +160,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 
 		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+
+		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 		// report serivce
