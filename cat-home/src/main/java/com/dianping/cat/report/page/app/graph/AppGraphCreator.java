@@ -3,8 +3,8 @@ package com.dianping.cat.report.page.app.graph;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -31,7 +31,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	}
 
 	private Map<String, double[]> prepareAllData(QueryEntity queryEntity, String type) {
-		Map<String, double[]> value = new AppDataServiceMock().queryValue(queryEntity, type);
+		Map<String, double[]> value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;
 	}
@@ -109,6 +109,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 			return makeMockValue(REQUEST_COUNT);
 		}
-
 	}
+	
 }

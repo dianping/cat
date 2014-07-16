@@ -1,8 +1,6 @@
 package com.dianping.cat.config.app;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -72,16 +70,8 @@ public class AppDataService {
 		List<AppDataCommand> datas;
 
 		try {
-			datas = m_dao.findData(commandId, period, city, operator, network, appVersion, connnectType, code, platform,
-			      AppDataCommandEntity.READSET_DATA);
-
-			Collections.sort(datas, new Comparator<AppDataCommand>() {
-				@Override
-				public int compare(AppDataCommand o1, AppDataCommand o2) {
-					return (int) (o2.getMinuteOrder() - o1.getMinuteOrder());
-				}
-			});
-
+			datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
+			      platform, AppDataCommandEntity.READSET_COUNT_DATA);
 			int n = calculateSize(entity.getDate().getTime());
 
 			if (SUCCESS_RATIO.equals(type)) {
@@ -117,30 +107,24 @@ public class AppDataService {
 	public Map<String, double[]> querySuccessRatio(List<AppDataCommand> datas, int n) {
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 		double[] value = new double[n];
-		int i = 0;
 
 		try {
 			Map<Integer, List<AppDataCommand>> dataMap = convert2AppDataCommandMap(datas);
-			int size = dataMap.size();
 
-			if (size <= n) {
-				for (Entry<Integer, List<AppDataCommand>> entry : dataMap.entrySet()) {
-					long success = 0;
-					long sum = 0;
+			for (Entry<Integer, List<AppDataCommand>> entry : dataMap.entrySet()) {
+				int key = entry.getKey();
+				long success = 0;
+				long sum = 0;
 
-					for (AppDataCommand data : entry.getValue()) {
-						long number = data.getAccessNumberSum();
+				for (AppDataCommand data : entry.getValue()) {
+					long number = data.getAccessNumberSum();
 
-						if (isSuccessStatus(data)) {
-							success += number;
-						}
-						sum += number;
+					if (isSuccessStatus(data)) {
+						success += number;
 					}
-					value[i++] = (double) success / sum;
+					sum += number;
 				}
-			} else {
-				Cat.logError(new RuntimeException("query database minute number " + size + " lagger than expected size "
-				      + n));
+				value[key / 5] = (double) success / sum;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -165,14 +149,11 @@ public class AppDataService {
 	public Map<String, double[]> queryRequestCount(List<AppDataCommand> datas, int n) {
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 		double[] value = new double[n];
-		int i = 0;
 
 		for (AppDataCommand data : datas) {
 			long count = data.getAccessNumberSum();
 
-			if (i < n) {
-				value[i++] = count;
-			}
+			value[data.getMinuteOrder() / 5] = count;
 		}
 		values.put(DELAY_AVG, value);
 		return values;
@@ -181,16 +162,13 @@ public class AppDataService {
 	public Map<String, double[]> queryDelayAvg(List<AppDataCommand> datas, int n) {
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 		double[] value = new double[n];
-		int i = 0;
 
 		for (AppDataCommand data : datas) {
 			long count = data.getAccessNumberSum();
 			long sum = data.getResponseSumTimeSum();
 
 			double avg = sum / count;
-			if (i < n) {
-				value[i++] = avg;
-			}
+			value[data.getMinuteOrder() / 5] = avg;
 		}
 		values.put(DELAY_AVG, value);
 		return values;
@@ -203,6 +181,7 @@ public class AppDataService {
 		if (startTime + oneDay > System.currentTimeMillis()) {
 			long current = System.currentTimeMillis();
 			long endTime = current - current % 300000;
+			
 			n = (int) (endTime - startTime) / 300000;
 		}
 		return n;

@@ -2,6 +2,7 @@ package com.dianping.cat.broker;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -9,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppTest {
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws UnsupportedEncodingException {
 		List<String> urls = new ArrayList<String>();
 		String url_pre = "http://localhost:2765/broker-service/api/batch";
 		long timestamp = System.currentTimeMillis();
+		
 		for (int i = 0; i < 10; i++) {
-			urls.add(url_pre + "?v=2&c=" + timestamp + URLEncoder.encode("\tshop.bin\t1\t1\t1\t1\t1\t1\t1\t1\n"));
+			urls.add(url_pre + "?v=2&c=" + timestamp + URLEncoder.encode("\tshop.bin\t1\t1\t1\t1\t1\t1\t1\t1\n", "utf-8"));
 		}
 
 		for (String url : urls) {

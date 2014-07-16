@@ -1,7 +1,6 @@
 package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +15,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.broker.api.app.AppData;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
 import com.dianping.cat.broker.api.page.Constrants;
 import com.dianping.cat.broker.api.page.IpService;
@@ -24,8 +24,6 @@ import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.service.appData.entity.AppData;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -34,17 +32,17 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private IpService m_ipService;
-	
+
 	@Inject
 	private AppConfigManager m_appConfigManager;
-
-	private Logger m_logger;
 
 	@Inject
 	private MonitorManager m_manager;
 
 	@Inject
 	private RequestUtils m_util;
+
+	private Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -121,42 +119,33 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (userIp != null) {
 			String content = payload.getContent();
 			String records[] = content.split("\n");
-
 			IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
-			String cityStr = ipInfo.getProvince();
+			String province = ipInfo.getProvince();
 			String operatorStr = ipInfo.getChannel();
-			int cityId = 0, operatorId = 0;
-			List<Item> cityList = m_appConfigManager.queryConfigItem(AppConfigManager.CITY);
-			List<Item> operatorList = m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR);
-			
-			for (Item item : cityList) {
-				if (item.getName().equals(cityStr)) {
-					cityId = item.getId();
-					break;
+			Integer cityId = m_appConfigManager.getCities().get(province);
+			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
+
+			if (cityId != null && operatorId != null) {
+				for (String record : records) {
+					processOneRecord(cityId, operatorId, record);
 				}
 			}
-			for (Item item : operatorList) {
-				if (item.getName().equals(operatorStr)) {
-					operatorId = item.getId();
-					break;
-				}
-			}
-			
-			for (String record : records) {
-				String items[] = record.split("\t");
+		} else {
+			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
+		}
+	}
 
-				if (items.length != 10) {
-					continue;
-				}
+	private void processOneRecord(int cityId, int operatorId, String record) {
+		String items[] = record.split("\t");
 
-				AppData appData = new AppData();
+		if (items.length == 10) {
+			AppData appData = new AppData();
 
-				try {
-					appData.setTimestamp(Long.parseLong(items[0]));
-					Integer command = m_appConfigManager.getCommands().get(items[2]);
-					if (command == null) {
-						continue;
-					}
+			try {
+				appData.setTimestamp(Long.parseLong(items[0]));
+				Integer command = m_appConfigManager.getCommands().get(items[2]);
+
+				if (command != null) {
 					appData.setCommand(command);
 					appData.setNetwork(Integer.parseInt(items[2]));
 					appData.setVersion(Integer.parseInt(items[3]));
@@ -169,14 +158,12 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setCity(cityId);
 					appData.setOperator(operatorId);
 					appData.setCount(1);
-				} catch (Exception e) {
-					m_logger.error(e.getMessage(), e);
+					
+					m_appDataConsumer.enqueue(appData);
 				}
-
-				m_appDataConsumer.enqueue(appData);
+			} catch (Exception e) {
+				m_logger.error(e.getMessage(), e);
 			}
-		} else {
-			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 	}
 

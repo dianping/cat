@@ -11,7 +11,11 @@
     <var name="key-id" value-type="int" key-member="id" />
     <var name="command-id" value-type="int" />
     <readsets>
-      <readset name="DATA">
+      <readset name="COUNT-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      <readset name="AVG-DATA">
       	<member name="minute-order"/>
       	<member name="access-number-sum"/>
       	<member name="response-sum-time-sum"/>
@@ -28,7 +32,7 @@
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
       </query>    	
-      <query name="find-data" type="SELECT" multiple="true">
+      <query name="find-data-by-minute" type="SELECT" multiple="true">
         <param name="command-id" /><param name="period" />
         <param name="period" />
         <param name="city" />
@@ -64,7 +68,7 @@
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
       </query>
-      <query name="find-success-data" type="SELECT" multiple="true">
+      <query name="find-data-by-minute-code" type="SELECT" multiple="true">
         <param name="command-id" /><param name="period" />
         <param name="period" />
         <param name="city" />

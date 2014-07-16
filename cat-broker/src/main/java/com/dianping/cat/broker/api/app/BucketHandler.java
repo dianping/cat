@@ -12,15 +12,14 @@ import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.service.appData.entity.AppData;
 
 public class BucketHandler implements Task {
 
 	private static final String FILEDIRECTORY = "/data/appdatas/cat/app/";
 
-	private static int ONE_DAY = 24 * 60 * 60 * 1000;
-	
 	private static int ONE_MINUTE = 60 * 1000;
+
+	private static int ONE_DAY = 24 * 60 * ONE_MINUTE;
 
 	private AppDataQueue m_appDataQueue;
 
@@ -65,10 +64,19 @@ public class BucketHandler implements Task {
 	}
 
 	private void processEntity(AppData appData) {
-		Integer command = appData.getCommand();
-		String key = m_startTime + ":" + appData.getCity() + ":" + appData.getOperator() + ":" + appData.getConnectType()
-		      + ":" + appData.getVersion() + ":" + appData.getNetwork() + ":" + appData.getCode() + ":"
-		      + appData.getPlatform();
+		int command = appData.getCommand();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(m_startTime).append(":");
+		sb.append(appData.getCity()).append(":");
+		sb.append(appData.getOperator()).append(":");
+		sb.append(appData.getConnectType()).append(":");
+		sb.append(appData.getVersion()).append(":");
+		sb.append(appData.getNetwork()).append(":");
+		sb.append(appData.getCode()).append(":");
+		sb.append(appData.getPlatform());
+
+		String key = sb.toString();
 		HashMap<String, AppData> secondMap = m_mergedData.get(command);
 
 		if (secondMap == null) {

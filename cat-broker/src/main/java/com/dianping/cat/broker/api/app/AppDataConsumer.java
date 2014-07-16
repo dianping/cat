@@ -12,7 +12,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.service.appData.entity.AppData;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 
@@ -44,7 +43,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_dataLoss = 0;
 		m_appDataQueue = new AppDataQueue();
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
@@ -136,7 +134,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-
 				long elapsedTime = System.currentTimeMillis() - curTime;
 
 				try {
@@ -169,6 +166,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 				m_tasks.put(next, nextBucketHandler);
 			}
 		}
-
 	}
+	
 }

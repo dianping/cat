@@ -43,7 +43,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.APP);
-		model.setChannels(m_manager.queryConfigItem(AppConfigManager.CHANNEL));
+		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
 		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
 		model.setNetworks(m_manager.queryConfigItem(AppConfigManager.NETWORK));
 		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));

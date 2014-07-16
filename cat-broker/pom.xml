@@ -132,18 +132,6 @@
                      <env>dev</env>
                   </configuration>
                </execution>
-               <execution>
-                  <id>generate dal model files</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-model</goal>
-                  </goals>
-                  <configuration>
-                     <manifest><![CDATA[
-                        ${basedir}/src/main/resources/META-INF/dal/model/appData-manifest.xml,
-                     ]]></manifest>
-                  </configuration>
-               </execution>
             </executions>
          </plugin>
          <plugin>
