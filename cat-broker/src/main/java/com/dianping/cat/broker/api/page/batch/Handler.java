@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,20 +16,35 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.broker.api.app.AppDataConsumer;
 import com.dianping.cat.broker.api.page.Constrants;
+import com.dianping.cat.broker.api.page.IpService;
+import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
+import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.service.appData.entity.AppData;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
+
+	@Inject
+	private AppDataConsumer m_appDataConsumer;
+
+	@Inject
+	private IpService m_ipService;
+	
+	@Inject
+	private AppConfigManager m_appConfigManager;
+
+	private Logger m_logger;
 
 	@Inject
 	private MonitorManager m_manager;
 
 	@Inject
 	private RequestUtils m_util;
-
-	private Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -49,7 +65,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		HttpServletResponse response = ctx.getHttpServletResponse();
 		String userIp = m_util.getRemoteIp(request);
+		String version = payload.getVersion();
 
+		if (version.equals("1")) {
+			processVersion1(payload, request, userIp);
+		} else if (version.equals("2")) {
+			processVersion2(payload, request, userIp);
+		}
+
+		response.getWriter().write("OK");
+	}
+
+	private void processVersion1(Payload payload, HttpServletRequest request, String userIp) {
 		if (userIp != null) {
 			try {
 				String content = payload.getContent();
@@ -88,7 +115,69 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		} else {
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
-		response.getWriter().write("OK");
+	}
+
+	private void processVersion2(Payload payload, HttpServletRequest request, String userIp) {
+		if (userIp != null) {
+			String content = payload.getContent();
+			String records[] = content.split("\n");
+
+			IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
+			String cityStr = ipInfo.getProvince();
+			String operatorStr = ipInfo.getChannel();
+			int cityId = 0, operatorId = 0;
+			List<Item> cityList = m_appConfigManager.queryConfigItem(AppConfigManager.CITY);
+			List<Item> operatorList = m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR);
+			
+			for (Item item : cityList) {
+				if (item.getName().equals(cityStr)) {
+					cityId = item.getId();
+					break;
+				}
+			}
+			for (Item item : operatorList) {
+				if (item.getName().equals(operatorStr)) {
+					operatorId = item.getId();
+					break;
+				}
+			}
+			
+			for (String record : records) {
+				String items[] = record.split("\t");
+
+				if (items.length != 10) {
+					continue;
+				}
+
+				AppData appData = new AppData();
+
+				try {
+					appData.setTimestamp(Long.parseLong(items[0]));
+					Integer command = m_appConfigManager.getCommands().get(items[2]);
+					if (command == null) {
+						continue;
+					}
+					appData.setCommand(command);
+					appData.setNetwork(Integer.parseInt(items[2]));
+					appData.setVersion(Integer.parseInt(items[3]));
+					appData.setConnectType(Integer.parseInt(items[4]));
+					appData.setCode(Integer.parseInt(items[5]));
+					appData.setPlatform(Integer.parseInt(items[6]));
+					appData.setRequestByte(Integer.parseInt(items[7]));
+					appData.setResponseByte(Integer.parseInt(items[8]));
+					appData.setResponseTime(Integer.parseInt(items[9]));
+					appData.setCity(cityId);
+					appData.setOperator(operatorId);
+					appData.setCount(1);
+				} catch (Exception e) {
+					m_logger.error(e.getMessage(), e);
+				}
+
+				m_appDataConsumer.enqueue(appData);
+			}
+		} else {
+			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
+		}
 	}
 
 	private boolean validate(String errorCode, String httpStatus) {

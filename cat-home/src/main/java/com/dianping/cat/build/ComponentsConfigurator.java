@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -38,6 +39,7 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -236,6 +238,69 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+
+		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
+		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		// report serivce
+		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
+		// task
+		all.addAll(new TaskComponentConfigurator().defineComponents());
+
+		// model service
+		all.addAll(new ServiceComponentConfigurator().defineComponents());
+
+		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
+
+		all.add(C(BusinessAlertConfig.class).req(AlertConfigManager.class));
+
+		all.add(C(NetworkAlertConfig.class).req(AlertConfigManager.class));
+
+		all.add(C(SystemAlertConfig.class).req(AlertConfigManager.class));
+
+		all.add(C(ExceptionAlertConfig.class).req(AlertConfigManager.class));
+
+		all.add(C(AlertInfo.class));
+
+		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
+
+		all.add(C(DataChecker.class, DefaultDataChecker.class));
+
+		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)//
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class));
+
+		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)//
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
+
+		all.add(C(SystemAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
+		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class));
+
+		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
+
+		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
+		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
+		      TopAnalyzer.ID));
+
+		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
+
+		// database
+		all.add(C(JdbcDataSourceDescriptorManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.addAll(new CatDatabaseConfigurator().defineComponents());
+		all.addAll(new UserDatabaseConfigurator().defineComponents());
+
+		// update project database
+		all.add(C(ProjectUpdateTask.class)//
+		      .req(ProjectDao.class, HostinfoDao.class));
+
+		// web, please keep it last
+		all.addAll(new WebComponentConfigurator().defineComponents());
+
+		// for alarm module
+		all.addAll(new AlarmComponentConfigurator().defineComponents());
 
 		return all;
 	}

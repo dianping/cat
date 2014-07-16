@@ -117,7 +117,7 @@ function graphMetricChart(container, data) {
 						week : '%Y-%m-%d',
 						month : '%m-%d',
 						year : '%Y-%m'
-					}
+					},
 				},
 				yAxis : {
 					min : ylabelMin,
@@ -163,6 +163,99 @@ function graphMetricChart(container, data) {
 				series : _data
 			});
 }
+
+function parseMetricLineDataForApp(data) {
+	var res = [];
+	data.subTitles.forEach(function(title, i) {
+		var series = {}
+		series.name = title;
+		series.data = [];
+		var map = data.datas[i];
+		var j = 0;
+
+		for ( var key in map) {
+			var value = map[key];
+			series.data[j] = value;
+			j++;
+		}
+		res.push(series);
+	});
+	return res;
+}
+
+function graphMetricChartForApp(container, data) {
+	Highcharts.setOptions({
+		global : {
+			useUTC : false
+		}
+	});
+	var ylabelMin = data.minYlable;
+	var _data = parseMetricLineDataForApp(data);
+	$(container).highcharts(
+			{
+				chart : {
+					type : 'spline'
+				},
+				title : {
+					text : data.htmlTitle,
+					useHTML: true
+				},
+				xAxis : {
+					type : "category",
+		            labels : {
+		                step : 12,
+		                maxStaggerLines : 1,
+		                formatter: function() {
+		                	return this.value / 12;
+		                }
+		            },
+				max : 288
+				},
+				yAxis : {
+					min : ylabelMin,
+	                title: {
+	                    text: data.unit,
+	                }
+				},
+				credits : {
+					enabled : false
+				},
+				plotOptions : {
+					spline : {
+						lineWidth : 2,
+						states : {
+							hover : {
+								lineWidth : 2
+							}
+						},
+						marker : {
+							enabled : false
+						}
+					}
+				},
+				legend : {
+					maxHeight : 82
+				},
+				tooltip : {
+					allowPointSelect : false,
+					formatter : function() {
+						var	number0 = Number(this.y).toFixed(0);
+						var number1 = Number(this.y).toFixed(1);
+						var number = number1;
+						
+						if(Number(number1)==Number(number0)){
+							number = number0;
+						}
+						
+						return  Highcharts.dateFormat('%Y-%m-%d %H:%M',
+										this.x)  
+								+ '<br/>['+ this.series.name + '] '+ '<b>' + number + '</b>';
+					}
+				},
+				series : _data
+			});
+}
+
 function graphLineChart(container, data) {
 	Highcharts.setOptions({
 		global : {

@@ -13,13 +13,13 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 
 public class IpService implements Initializable {
-	private Map<Integer, Area> m_areas;
-
-	private Map<Integer, Corporation> m_corps;
-
 	private int[] m_areaIds;
 
+	private Map<Integer, Area> m_areas;
+
 	private int[] m_corpIds;
+
+	private Map<Integer, Corporation> m_corps;
 
 	private long[] m_ends;
 
@@ -176,11 +176,11 @@ public class IpService implements Initializable {
 	public static class Area {
 		private Integer m_areaId;
 
+		private String m_city;
+
 		private String m_nation;
 
 		private String m_province;
-
-		private String m_city;
 
 		public Integer getAreaId() {
 			return m_areaId;
@@ -240,13 +240,13 @@ public class IpService implements Initializable {
 	}
 
 	public static class IpInfo {
-		private String m_nation;
-
-		private String m_province;
+		private String m_channel;
 
 		private String m_city;
 
-		private String m_channel;
+		private String m_nation;
+		
+		private String m_province;
 
 		public String getChannel() {
 			return m_channel;

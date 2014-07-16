@@ -3,6 +3,7 @@ package com.dianping.cat.config.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class AppConfigManager implements Initializable {
 		if (c != null) {
 			return c.getCodes().values();
 		} else {
-			return null;
+			return Collections.emptySet();
 		}
 	}
 
@@ -120,14 +121,13 @@ public class AppConfigManager implements Initializable {
 		if (config != null) {
 			return new ArrayList<Item>(config.getItems().values());
 		} else {
-			System.out.println(name);
 			return new ArrayList<Item>();
 		}
 	}
-	
+
 	public Map<String, Integer> getCommands() {
-   	return m_commands;
-   }
+		return m_commands;
+	}
 
 	private void refreshCommand() {
 		Collection<Command> commands = m_config.getCommands().values();
