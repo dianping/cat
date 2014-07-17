@@ -36,7 +36,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	public String getName() {
 		return "business-alert";
 	}
-	
+
 	@Override
 	public BaseAlertConfig getAlertConfig() {
 		return m_alertConfig;
@@ -71,6 +71,8 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 			if (alertResult != null && alertResult.isTriggered()) {
 				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
+				String contactInfo = buildContactInfo(domain);
+				alertResult.setContent(alertResult.getContent() + contactInfo);
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
 				storeAlert(domain, metric, mailTitle, alertResult);

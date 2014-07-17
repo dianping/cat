@@ -34,6 +34,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
+import com.site.lookup.util.StringUtils;
 
 public class ExceptionAlert implements Task, LogEnabled {
 
@@ -84,6 +85,28 @@ public class ExceptionAlert implements Task, LogEnabled {
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
+	}
+
+	private String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[业务负责人: ").append(owners).append(" ]");
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append("[负责人手机号码: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
 	}
 
 	@Override
@@ -179,12 +202,13 @@ public class ExceptionAlert implements Task, LogEnabled {
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
 		String weixins = m_alertConfig.buildWeiXinReceivers(project);
 		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
-		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
-		
+		String contactInfo = buildContactInfo(domain);
+		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain, contactInfo);
+
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
-		
+
 		m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
 		m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain

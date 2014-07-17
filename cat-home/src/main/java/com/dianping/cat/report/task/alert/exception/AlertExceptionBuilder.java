@@ -125,10 +125,10 @@ public class AlertExceptionBuilder {
 		return limits;
 	}
 
-	public String buildMailContent(String exceptions, String domain) {
+	public String buildMailContent(String exceptions, String domain, String contactInfo) {
 		String content = buildContent(exceptions, domain);
 		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
-		String mailContent = content + " <a href='" + url + "'>点击此处查看详情</a>";
+		String mailContent = content + "<br/>" + contactInfo + " <a href='" + url + "'>点击此处查看详情</a>";
 
 		return mailContent;
 	}

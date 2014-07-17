@@ -1826,6 +1826,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1862,6 +1865,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1897,6 +1903,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 			</requirements>
 		</component>

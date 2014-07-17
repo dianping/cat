@@ -192,27 +192,27 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class, ProjectDao.class));
 
 		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, ProjectDao.class));
 
 		all.add(C(SystemAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class));
+		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, ProjectDao.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
-		      TopAnalyzer.ID));
+		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(
+		      ModelService.class, TopAnalyzer.ID));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
 
-		all.add(C(AlertSummaryDecorator.class,AlertSummaryFTLDecorator.ID,AlertSummaryFTLDecorator.class));
-		
+		all.add(C(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));
+
 		all.add(C(AlertSummaryGenerator.class).req(AlertDao.class, TopologyGraphManager.class));
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));

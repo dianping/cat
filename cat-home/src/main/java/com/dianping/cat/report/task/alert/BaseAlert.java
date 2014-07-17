@@ -22,6 +22,9 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
@@ -32,6 +35,7 @@ import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
+import com.site.lookup.util.StringUtils;
 
 public abstract class BaseAlert {
 
@@ -61,6 +65,9 @@ public abstract class BaseAlert {
 
 	@Inject
 	protected RemoteMetricReportService m_service;
+
+	@Inject
+	private ProjectDao m_projectDao;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -94,6 +101,37 @@ public abstract class BaseAlert {
 			Cat.logError("get metric title error:" + metricKey, ex);
 			return null;
 		}
+	}
+
+	private String extractDomain(String metricKey) {
+		try {
+			return metricKey.split(":")[0];
+		} catch (Exception ex) {
+			Cat.logError("extract domain error:" + metricKey, ex);
+			return null;
+		}
+	}
+
+	protected String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[业务负责人: ").append(owners).append(" ]");
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append("[负责人手机号码: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
 	}
 
 	private Long buildMillsByString(String time) throws Exception {
@@ -244,6 +282,8 @@ public abstract class BaseAlert {
 			if (alertResult != null && alertResult.isTriggered()) {
 				String metricTitle = buildMetricTitle(metricKey);
 				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
+				String contactInfo = buildContactInfo(extractDomain(metricKey));
+				alertResult.setContent(alertResult.getContent() + contactInfo);
 				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
 
 				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
@@ -339,7 +379,7 @@ public abstract class BaseAlert {
 	}
 
 	protected abstract String getName();
-	
+
 	protected abstract BaseAlertConfig getAlertConfig();
 
 	protected abstract void sendAlertInfo(ProductLine productLine, String mailTitle, String content, String alertType);
