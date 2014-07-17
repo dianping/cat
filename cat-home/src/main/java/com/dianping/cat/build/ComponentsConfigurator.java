@@ -153,7 +153,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectDao.class));
 
 		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
@@ -205,8 +205,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(
-		      ModelService.class, TopAnalyzer.ID));
+		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
+		      TopAnalyzer.ID));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));

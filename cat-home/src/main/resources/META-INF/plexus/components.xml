@@ -291,6 +291,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3145,6 +3148,9 @@
 			<role>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
