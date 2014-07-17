@@ -120,14 +120,17 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			String content = payload.getContent();
 			String records[] = content.split("\n");
 			IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
-			String province = ipInfo.getProvince();
-			String operatorStr = ipInfo.getChannel();
-			Integer cityId = m_appConfigManager.getCities().get(province);
-			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
+			
+			if (ipInfo != null) {
+				String province = ipInfo.getProvince();
+				String operatorStr = ipInfo.getChannel();
+				Integer cityId = m_appConfigManager.getCities().get(province);
+				Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
 
-			if (cityId != null && operatorId != null) {
-				for (String record : records) {
-					processOneRecord(cityId, operatorId, record);
+				if (cityId != null && operatorId != null) {
+					for (String record : records) {
+						processOneRecord(cityId, operatorId, record);
+					}
 				}
 			}
 		} else {
@@ -158,7 +161,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setCity(cityId);
 					appData.setOperator(operatorId);
 					appData.setCount(1);
-					
+
 					m_appDataConsumer.enqueue(appData);
 				}
 			} catch (Exception e) {
