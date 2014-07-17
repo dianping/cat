@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
@@ -25,13 +26,11 @@ public class AppDataService {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public static final String SUCCESS_RATIO = "successRatio";
+	public static final String SUCCESS_RATIO = "成功率";
 
-	public static final String REQUEST_COUNT = "requestCount";
+	public static final String REQUEST_COUNT = "请求数";
 
-	public static final String DELAY_AVG = "delayAvg";
-
-	private static final int MAX_SIZE = 288;
+	public static final String DELAY_AVG = "成功延时(ms)";
 
 	public void insert(Date period, int minute, int commandId, int city, int operator, int network, int appVersion,
 	      int connectType, int code, int platform, int count, int responseSumTime, int requestPackage,
@@ -57,7 +56,7 @@ public class AppDataService {
 		m_dao.insertData(proto);
 	}
 
-	public Map<String, double[]> queryValue(QueryEntity entity, String type) {
+	public double[] queryValue(QueryEntity entity, String type) {
 		int commandId = entity.getCommand();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -70,28 +69,43 @@ public class AppDataService {
 		List<AppDataCommand> datas;
 
 		try {
-			datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-			      platform, AppDataCommandEntity.READSET_COUNT_DATA);
-			int n = calculateSize(entity.getDate().getTime());
-
 			if (SUCCESS_RATIO.equals(type)) {
-				return querySuccessRatio(datas, n);
-			} else if (REQUEST_COUNT.equals(type)) {
-				return queryRequestCount(datas, n);
-			} else if (DELAY_AVG.equals(type)) {
-				return queryDelayAvg(datas, n);
+				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, AppDataCommandEntity.READSET_COUNT_DATA);
+				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
+
+				return querySuccessRatio(dataPair);
+			} else {
+				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
+				      platform, AppDataCommandEntity.READSET_COUNT_DATA);
+				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
+
+				if (REQUEST_COUNT.equals(type)) {
+					return queryRequestCount(dataPair);
+				} else if (DELAY_AVG.equals(type)) {
+					return queryDelayAvg(dataPair);
+				}
 			}
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new LinkedHashMap<String, double[]>();
+		return null;
 	}
 
-	private Map<Integer, List<AppDataCommand>> convert2AppDataCommandMap(List<AppDataCommand> fromDatas) {
+	private Pair<Integer, Map<Integer, List<AppDataCommand>>> convert2AppDataCommandMap(List<AppDataCommand> fromDatas) {
 		Map<Integer, List<AppDataCommand>> dataMap = new LinkedHashMap<Integer, List<AppDataCommand>>();
+		int min = -1;
+		int max = -1;
 
 		for (AppDataCommand from : fromDatas) {
 			int minute = from.getMinuteOrder();
+
+			if (min < 0 || min > minute) {
+				min = minute;
+			}
+			if (max < 0 || max < minute) {
+				max = minute;
+			}
 			List<AppDataCommand> data = dataMap.get(minute);
 
 			if (data == null) {
@@ -101,16 +115,15 @@ public class AppDataService {
 			}
 			data.add(from);
 		}
-		return dataMap;
+		int n = (max - min) / 5;
+		return new Pair<Integer, Map<Integer, List<AppDataCommand>>>(n, dataMap);
 	}
 
-	public Map<String, double[]> querySuccessRatio(List<AppDataCommand> datas, int n) {
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-		double[] value = new double[n];
+	public double[] querySuccessRatio(Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
+		double[] value = new double[dataPair.getKey()];
+		Map<Integer, List<AppDataCommand>> dataMap = dataPair.getValue();
 
 		try {
-			Map<Integer, List<AppDataCommand>> dataMap = convert2AppDataCommandMap(datas);
-
 			for (Entry<Integer, List<AppDataCommand>> entry : dataMap.entrySet()) {
 				int key = entry.getKey();
 				long success = 0;
@@ -130,8 +143,7 @@ public class AppDataService {
 			Cat.logError(e);
 		}
 
-		values.put(DELAY_AVG, value);
-		return values;
+		return value;
 	}
 
 	private boolean isSuccessStatus(AppDataCommand data) {
@@ -146,44 +158,31 @@ public class AppDataService {
 		return false;
 	}
 
-	public Map<String, double[]> queryRequestCount(List<AppDataCommand> datas, int n) {
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-		double[] value = new double[n];
+	public double[] queryRequestCount(Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
+		double[] value = new double[dataPair.getKey()];
 
-		for (AppDataCommand data : datas) {
-			long count = data.getAccessNumberSum();
+		for (Entry<Integer, List<AppDataCommand>> entry : dataPair.getValue().entrySet()) {
+			for (AppDataCommand data : entry.getValue()) {
+				long count = data.getAccessNumberSum();
 
-			value[data.getMinuteOrder() / 5] = count;
+				value[data.getMinuteOrder() / 5] = count;
+			}
 		}
-		values.put(DELAY_AVG, value);
-		return values;
+		return value;
 	}
 
-	public Map<String, double[]> queryDelayAvg(List<AppDataCommand> datas, int n) {
-		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
-		double[] value = new double[n];
+	public double[] queryDelayAvg(Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
+		double[] value = new double[dataPair.getKey()];
 
-		for (AppDataCommand data : datas) {
-			long count = data.getAccessNumberSum();
-			long sum = data.getResponseSumTimeSum();
+		for (Entry<Integer, List<AppDataCommand>> entry : dataPair.getValue().entrySet()) {
+			for (AppDataCommand data : entry.getValue()) {
+				long count = data.getAccessNumberSum();
+				long sum = data.getResponseSumTimeSum();
 
-			double avg = sum / count;
-			value[data.getMinuteOrder() / 5] = avg;
+				double avg = sum / count;
+				value[data.getMinuteOrder() / 5] = avg;
+			}
 		}
-		values.put(DELAY_AVG, value);
-		return values;
-	}
-
-	private int calculateSize(long startTime) {
-		int n = MAX_SIZE;
-		int oneDay = 24 * 3600 * 1000;
-
-		if (startTime + oneDay > System.currentTimeMillis()) {
-			long current = System.currentTimeMillis();
-			long endTime = current - current % 300000;
-			
-			n = (int) (endTime - startTime) / 300000;
-		}
-		return n;
+		return value;
 	}
 }
