@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.config.app.AppDataService;
 
 public class BucketHandler implements Task {
@@ -126,10 +127,24 @@ public class BucketHandler implements Task {
 		Date period = new Date(m_startTime - minute * ONE_MINUTE);
 
 		try {
-			m_appDataService.insert(period, minute, appData.getCommand(), appData.getCity(), appData.getOperator(),
-			      appData.getNetwork(), appData.getVersion(), appData.getConnectType(), appData.getCode(),
-			      appData.getPlatform(), appData.getCount(), appData.getResponseTime(), appData.getResponseByte(),
-			      appData.getResponseByte());
+			AppDataCommand proto = new AppDataCommand();
+
+			proto.setPeriod(period);
+			proto.setMinuteOrder(minute);
+			proto.setCommandId(appData.getCommand());
+			proto.setCity(appData.getCity());
+			proto.setOperator(appData.getOperator());
+			proto.setNetwork(appData.getNetwork());
+			proto.setAppVersion(appData.getVersion());
+			proto.setConnnectType(appData.getConnectType());
+			proto.setCode(appData.getCode());
+			proto.setPlatform(appData.getPlatform());
+			proto.setAccessNumber(appData.getCount());
+			proto.setResponseSumTime(appData.getResponseTime());
+			proto.setRequestPackage(appData.getRequestByte());
+			proto.setResponsePackage(appData.getResponseByte());
+			proto.setCreationDate(new Date());
+			m_appDataService.insert(proto);
 		} catch (Exception e) {
 			Cat.logError(e);
 

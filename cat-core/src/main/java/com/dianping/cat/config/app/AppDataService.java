@@ -32,27 +32,7 @@ public class AppDataService {
 
 	public static final String DELAY_AVG = "成功延时(ms)";
 
-	public void insert(Date period, int minute, int commandId, int city, int operator, int network, int appVersion,
-	      int connectType, int code, int platform, int count, int responseSumTime, int requestPackage,
-	      int responsePackage) throws DalException {
-		AppDataCommand proto = new AppDataCommand();
-
-		proto.setPeriod(period);
-		proto.setMinuteOrder(minute);
-		proto.setCommandId(commandId);
-		proto.setCity(city);
-		proto.setOperator(operator);
-		proto.setNetwork(network);
-		proto.setAppVersion(appVersion);
-		proto.setConnnectType(connectType);
-		proto.setCode(code);
-		proto.setPlatform(platform);
-		proto.setAccessNumber(count);
-		proto.setResponseSumTime(responseSumTime);
-		proto.setRequestPackage(requestPackage);
-		proto.setResponsePackage(responsePackage);
-		proto.setCreationDate(new Date());
-
+	public void insert(AppDataCommand proto) throws DalException {
 		m_dao.insertData(proto);
 	}
 
