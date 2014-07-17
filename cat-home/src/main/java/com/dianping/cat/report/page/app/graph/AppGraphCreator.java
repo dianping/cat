@@ -2,8 +2,8 @@ package com.dianping.cat.report.page.app.graph;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import org.unidal.lookup.annotation.Inject;
@@ -19,47 +19,45 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	@Inject
 	private AppDataService m_appDataService;
 
-	public LineChart buildLineChart(QueryEntity queryEntity, String type) {
-		Map<String, double[]> values = prepareAllData(queryEntity, type);
+	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
+		LinkedList<double[]> dataList = new LinkedList<double[]>();
+		double[] data1 = prepareAllData(queryEntity1, type);
+		dataList.add(data1);
 
-		long startTime = queryEntity.getDate().getTime();
-		long endTime = startTime + TimeUtil.ONE_DAY;
-		Date endDate = new Date(endTime);
-		Date startDate = new Date(startTime);
+		if (queryEntity2 != null) {
+			double[] values2 = prepareAllData(queryEntity2, type);
+			dataList.add(values2);
+		}
 
-		return buildChartData(values, startDate, endDate);
+		return buildChartData(dataList, type);
 	}
 
-	private Map<String, double[]> prepareAllData(QueryEntity queryEntity, String type) {
-		Map<String, double[]> value = m_appDataService.queryValue(queryEntity, type);
+	private double[] prepareAllData(QueryEntity queryEntity, String type) {
+		double[] value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;
 	}
 
-	public LineChart buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate) {
+	public LineChart buildChartData(final LinkedList<double[]> dataList, String type) {
 		LineChart lineChart = new LineChart();
+		lineChart.setId("app");
+		lineChart.setHtmlTitle(type);
+		int i = 1;
 
-		for (Entry<String, double[]> entry : datas.entrySet()) {
-			String key = entry.getKey();
-
-			lineChart.setId(startDate.toString());
-			lineChart.setHtmlTitle(key);
-
-			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 5);
-
-			lineChart.add(startDate.toString(), all);
+		for (double[] data : dataList) {
+			lineChart.add("查询" + i++, data);
 		}
 		return lineChart;
 	}
 
+	@Override
 	protected Map<Long, Double> convertToMap(double[] data, Date start, int step) {
 		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
 		int length = data.length;
 		long startTime = start.getTime();
 		long time = startTime;
-		int i = 0;
 
-		for (; i < length; i++) {
+		for (int i = 0; i < length; i++) {
 			time += step * TimeUtil.ONE_MINUTE;
 			map.put(time, data[i]);
 		}
@@ -68,7 +66,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	}
 
 	public class AppDataServiceMock extends AppDataService {
-		public Map<String, double[]> queryValue(QueryEntity entity, String type) {
+		public double[] queryValue(QueryEntity entity, String type) {
 			if (SUCCESS_RATIO.equals(type)) {
 				return querySuccessRatio(entity);
 			} else if (REQUEST_COUNT.equals(type)) {
@@ -76,12 +74,11 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			} else if (DELAY_AVG.equals(type)) {
 				return queryDelayAvg(entity);
 			} else {
-				return new LinkedHashMap<String, double[]>();
+				return null;
 			}
 		}
 
-		private Map<String, double[]> makeMockValue(String type) {
-			Map<String, double[]> map = new LinkedHashMap<String, double[]>();
+		private double[] makeMockValue(String type) {
 			long startTime = TimeUtil.getCurrentDay().getTime();
 			long current = System.currentTimeMillis();
 			long endTime = current - current % 300000;
@@ -91,24 +88,22 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			for (int i = 0; i < n; i++) {
 				value[i] = (new Random().nextDouble() + 1) * 100;
 			}
-			map.put(type, value);
-			return map;
+			return value;
 		}
 
-		private Map<String, double[]> querySuccessRatio(QueryEntity entity) {
+		private double[] querySuccessRatio(QueryEntity entity) {
 
 			return makeMockValue(SUCCESS_RATIO);
 		}
 
-		private Map<String, double[]> queryDelayAvg(QueryEntity entity) {
+		private double[] queryDelayAvg(QueryEntity entity) {
 
 			return makeMockValue(DELAY_AVG);
 		}
 
-		private Map<String, double[]> queryRequestCount(QueryEntity entity) {
+		private double[] queryRequestCount(QueryEntity entity) {
 
 			return makeMockValue(REQUEST_COUNT);
 		}
 	}
-	
 }

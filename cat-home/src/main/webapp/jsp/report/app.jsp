@@ -295,11 +295,11 @@
 
 		<div class="btn-group" data-toggle="buttons">
 			<label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="successRatio" onclick="query()" >成功率
+				name="typeCheckbox" value="成功率" >成功率
 			</label> <label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="requestCount" onclick="query()" >总请求数
+				name="typeCheckbox" value="请求数" >请求数
 			</label> <label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="delayAvg" onclick="query()" >成功延时(ms)
+				name="typeCheckbox" value="成功延时(ms)" >成功延时(ms)
 			</label>
 		</div>
 
