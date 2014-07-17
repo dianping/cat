@@ -25,6 +25,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.site.lookup.util.StringUtils;
 
@@ -67,7 +68,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
@@ -254,7 +255,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return des;
 	}
 
-	private void buildLineChartTitle(List<String> alertKeys, LineChart chart, String key, String contactInfo) {
+	private void buildLineChartTitle(List<AlertMetric> alertKeys, LineChart chart, String key, String contactInfo) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
@@ -266,12 +267,22 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			chart.setTitle(title);
 			chart.setId(metricId + ":" + type);
 
-			if (alertKeys.contains(metricId)) {
+			if (containMetric(alertKeys, metricId)) {
 				chart.setHtmlTitle("<span style='color:red'>" + title + "<br><small>" + contactInfo + "</small></span>");
 			} else {
 				chart.setHtmlTitle(title + "<br><small>" + contactInfo + "</small>");
 			}
 		}
+	}
+
+	private boolean containMetric(List<AlertMetric> alertKeys, String metricId) {
+		for (AlertMetric alertMetric : alertKeys) {
+			if (alertMetric.getMetricId().equals(metricId)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {

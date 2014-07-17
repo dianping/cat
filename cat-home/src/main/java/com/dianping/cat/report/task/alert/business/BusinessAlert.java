@@ -73,7 +73,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
 				String contactInfo = buildContactInfo(domain);
 				alertResult.setContent(alertResult.getContent() + contactInfo);
-				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
+				m_alertInfo.addAlertInfo(productLine.getId(), metricKey, new Date().getTime());
 
 				storeAlert(domain, metric, mailTitle, alertResult);
 				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());

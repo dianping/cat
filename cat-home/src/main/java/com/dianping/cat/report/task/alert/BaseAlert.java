@@ -284,7 +284,7 @@ public abstract class BaseAlert {
 				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
 				String contactInfo = buildContactInfo(extractDomain(metricKey));
 				alertResult.setContent(alertResult.getContent() + contactInfo);
-				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
+				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
 				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
 				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());

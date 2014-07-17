@@ -14,12 +14,14 @@ import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.home.nettopo.entity.Switch;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 
 public class NetGraphBuilder {
 
 	private static final int ERROR = 3;
 
-	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports, List<String> alertKeys) {
+	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports,
+	      List<AlertMetric> alertKeys) {
 		NetGraphSet netGraphSet = new NetGraphSet();
 
 		for (int minute = 0; minute <= 59; minute++) {
@@ -49,7 +51,7 @@ public class NetGraphBuilder {
 		return netGraphSet;
 	}
 
-	private void buildConnectionInfo(Map<String, MetricReport> reports, List<String> alertKeys, int minute,
+	private void buildConnectionInfo(Map<String, MetricReport> reports, List<AlertMetric> alertKeys, int minute,
 	      List<String> alertSwitchs, Connection connection) {
 		double insum = 0, outsum = 0, inDiscardsSum = 0, outDiscardsSum = 0, inErrorsSum = 0, outErrorsSum = 0;
 		int inState = 0, outState = 0, inDiscardsState = 0, outDiscardsState = 0, inErrorsState = 0, outErrorsState = 0;
@@ -62,27 +64,27 @@ public class NetGraphBuilder {
 
 			updateInterface(inter, report, minute);
 
-			if (inAlert(alertKeys, domain, key)) {
+			if (containsAlert(alertKeys, group, domain, key, "-flow-in")) {
 				inter.setInstate(ERROR);
 				inState = ERROR;
 			}
-			if (inDiscardsAlert(alertKeys, domain, key)) {
+			if (containsAlert(alertKeys, group, domain, key, "-discard/error-indiscards")) {
 				inter.setInDiscardsState(ERROR);
 				inDiscardsState = ERROR;
 			}
-			if (inErrorsAlert(alertKeys, domain, key)) {
+			if (containsAlert(alertKeys, group, domain, key, "-discard/error-inerrors")) {
 				inter.setInErrorsState(ERROR);
 				inErrorsState = ERROR;
 			}
-			if (outAlert(alertKeys, domain, key)) {
+			if (containsAlert(alertKeys, group, domain, key, "-flow-out")) {
 				inter.setOutstate(ERROR);
 				outState = ERROR;
 			}
-			if (outDiscardsAlert(alertKeys, domain, key)) {
+			if (containsAlert(alertKeys, group, domain, key, "-discard/error-outdiscards")) {
 				inter.setOutDiscardsState(ERROR);
 				outDiscardsState = ERROR;
 			}
-			if (outErrorsAlert(alertKeys, domain, key)) {
+			if (containsAlert(alertKeys, group, domain, key, "-discard/error-outerrors")) {
 				inter.setOutErrorsState(ERROR);
 				outErrorsState = ERROR;
 			}
@@ -106,35 +108,23 @@ public class NetGraphBuilder {
 		connection.setOutDiscardsState(outDiscardsState);
 		connection.setInErrorsState(inErrorsState);
 		connection.setOutErrorsState(outErrorsState);
-		
+
 		if (inState == ERROR || outState == ERROR || inDiscardsState == ERROR || outDiscardsState == ERROR
 		      || inErrorsState == ERROR || outErrorsState == ERROR) {
 			alertSwitchs.add(connection.getFrom());
 		}
 	}
 
-	private boolean inAlert(List<String> alertKeys, String domain, String key) {
-		return alertKeys.contains(domain + ":Metric:" + key + "-flow-in");
-	}
+	private boolean containsAlert(List<AlertMetric> alertKeys, String group, String domain, String key, String suffix) {
+		String actualKey = domain + ":Metric:" + key + suffix;
 
-	private boolean inDiscardsAlert(List<String> alertKeys, String domain, String key) {
-		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-indiscards");
-	}
+		for (AlertMetric metric : alertKeys) {
+			if (metric.getGroup().equals(group) && metric.getMetricId().equals(actualKey)) {
+				return true;
+			}
+		}
 
-	private boolean inErrorsAlert(List<String> alertKeys, String domain, String key) {
-		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-inerrors");
-	}
-
-	private boolean outAlert(List<String> alertKeys, String domain, String key) {
-		return alertKeys.contains(domain + ":Metric:" + key + "-flow-out");
-	}
-
-	private boolean outDiscardsAlert(List<String> alertKeys, String domain, String key) {
-		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-outdiscards");
-	}
-
-	private boolean outErrorsAlert(List<String> alertKeys, String domain, String key) {
-		return alertKeys.contains(domain + ":Metric:" + key + "-discard/error-outerrors");
+		return false;
 	}
 
 	private NetGraph copyBaseInfoFromTemplate(NetGraph netGraph) {
