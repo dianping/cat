@@ -82,6 +82,8 @@ public class CatFilter implements Filter {
 			protected int detectMode(HttpServletRequest req) {
 				String source = req.getHeader("X-CAT-SOURCE");
 				String id = req.getHeader("X-CAT-ID");
+				
+				Cat.setup(null);
 
 				if ("container".equals(source)) {
 					return 2;
@@ -157,30 +159,30 @@ public class CatFilter implements Filter {
 			public void handle(Context ctx) throws IOException, ServletException {
 				boolean isTraceMode = Cat.getManager().isTraceMode();
 
+				HttpServletRequest req = ctx.getRequest();
+				HttpServletResponse res = ctx.getResponse();
+				MessageProducer producer = Cat.getProducer();
+				int mode = ctx.getMode();
+
+				switch (mode) {
+				case 0:
+					ctx.setId(producer.createMessageId());
+					break;
+				case 1:
+					ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
+					ctx.setParentId(req.getHeader("X-CAT-PARENT-ID"));
+					ctx.setId(req.getHeader("X-CAT-ID"));
+					break;
+				case 2:
+					ctx.setRootId(producer.createMessageId());
+					ctx.setParentId(ctx.getRootId());
+					ctx.setId(producer.createMessageId());
+					break;
+				default:
+					throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
+				}
+
 				if (isTraceMode) {
-					HttpServletRequest req = ctx.getRequest();
-					HttpServletResponse res = ctx.getResponse();
-					MessageProducer producer = Cat.getProducer();
-					int mode = ctx.getMode();
-
-					switch (mode) {
-					case 0:
-						ctx.setId(producer.createMessageId());
-						break;
-					case 1:
-						ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
-						ctx.setParentId(req.getHeader("X-CAT-PARENT-ID"));
-						ctx.setId(req.getHeader("X-CAT-ID"));
-						break;
-					case 2:
-						ctx.setRootId(producer.createMessageId());
-						ctx.setParentId(ctx.getRootId());
-						ctx.setId(producer.createMessageId());
-						break;
-					default:
-						throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
-					}
-
 					MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 					tree.setMessageId(ctx.getId());
