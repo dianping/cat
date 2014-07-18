@@ -147,6 +147,7 @@ public class BucketHandler implements Task {
 			m_appDataService.insert(proto);
 		} catch (Exception e) {
 			Cat.logError(e);
+			e.printStackTrace();
 
 			saveToFile(appData);
 		}

@@ -17,7 +17,7 @@ public class AppTest {
 		long timestamp = System.currentTimeMillis();
 		
 		for (int i = 0; i < 10; i++) {
-			urls.add(url_pre + "?v=2&c=" + timestamp + URLEncoder.encode("\tshop.bin\t1\t1\t1\t1\t1\t1\t1\t1\n", "utf-8"));
+			urls.add(url_pre + "?v=2&c=" + timestamp + URLEncoder.encode("\thttp://www.dianping.com/\t1\t1\t1\t1\t1\t1\t1\t1\n", "utf-8"));
 		}
 
 		for (String url : urls) {

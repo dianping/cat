@@ -56,6 +56,7 @@ public class AppDataService {
 
 				return querySuccessRatio(dataPair);
 			} else {
+
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppDataCommandEntity.READSET_COUNT_DATA);
 				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
@@ -68,6 +69,7 @@ public class AppDataService {
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -95,7 +97,9 @@ public class AppDataService {
 			}
 			data.add(from);
 		}
-		int n = (max - min) / 5;
+		int gap = max - min;
+		int n = gap <= 0 ? max / 5 : gap / 5;
+
 		return new Pair<Integer, Map<Integer, List<AppDataCommand>>>(n, dataMap);
 	}
 
@@ -117,10 +121,11 @@ public class AppDataService {
 					}
 					sum += number;
 				}
-				value[key / 5] = (double) success / sum;
+				value[key / 5 - 1] = (double) success / sum;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
+			e.printStackTrace();
 		}
 
 		return value;
@@ -129,7 +134,6 @@ public class AppDataService {
 	private boolean isSuccessStatus(AppDataCommand data) {
 		int code = data.getCode();
 		Collection<Code> codes = m_appConfigManager.queryCodeByCommand(data.getCommandId());
-
 		for (Code c : codes) {
 			if (c.getId() == code) {
 				return (c.getStatus() == 0);
@@ -145,7 +149,7 @@ public class AppDataService {
 			for (AppDataCommand data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 
-				value[data.getMinuteOrder() / 5] = count;
+				value[data.getMinuteOrder() / 5 - 1] = count;
 			}
 		}
 		return value;
@@ -160,7 +164,7 @@ public class AppDataService {
 				long sum = data.getResponseSumTimeSum();
 
 				double avg = sum / count;
-				value[data.getMinuteOrder() / 5] = avg;
+				value[data.getMinuteOrder() / 5 - 1] = avg;
 			}
 		}
 		return value;
