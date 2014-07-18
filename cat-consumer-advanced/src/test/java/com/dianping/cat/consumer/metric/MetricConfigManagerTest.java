@@ -74,7 +74,6 @@ public class MetricConfigManagerTest {
 		configs.put(item, 3L);
 		Assert.assertEquals(3L, configs.get(item).longValue());
 		Assert.assertEquals(1, configs.size());
-
 	}
 
 	@Test
