@@ -32,6 +32,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("group")
 	private String m_group;
+	
+	@FieldMeta("id")//cjx
+	private String m_id;
 
 	public Payload() {
 		super(ReportPage.METRIC);
@@ -48,6 +51,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getGroup() {
 		return m_group;
+	}
+	
+	public String getId(){//cjx
+		return m_id;	
 	}
 
 	@Override
@@ -70,6 +77,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	public boolean isRefresh() {
 		return m_refresh;
 	}
+	
+	
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.METRIC);
@@ -85,6 +94,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setGroup(String group) {
 		m_group = group;
+	}
+	
+	public void setId(String id){//cjx
+		m_id=id;
 	}
 
 	@Override

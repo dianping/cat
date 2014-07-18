@@ -58,6 +58,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 	
+	
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
@@ -133,14 +134,21 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			String key = config.getId();
 			if (config.getShowAvg() && config.getShowAvgDashboard()) {
 				String avgKey = key + ":" + MetricType.AVG.name();
+				//System.out.println(avgKey);
+				//System.out.println("\n\n\n\n\n");
 				put(allCharts, result, avgKey);
 			}
 			if (config.getShowCount() && config.getShowCountDashboard()) {
 				String countKey = key + ":" + MetricType.COUNT.name();
+				//System.out.println(countKey);
+				//System.out.println("\n\n\n\n\n");
 				put(allCharts, result, countKey);
 			}
 			if (config.getShowSum() && config.getShowSumDashboard()) {
 				String sumKey = key + ":" + MetricType.SUM.name();
+				//System.out.println(sumKey);
+				//System.out.println("\n\n\n\n\n");
+		
 				put(allCharts, result, sumKey);
 			}
 		}
@@ -165,6 +173,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 		return false;
 	}
+	
 
 	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
@@ -177,14 +186,17 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
 			}
 		}
-		for (MetricKeyConfig metric : metricConfigs) {
+	for (MetricKeyConfig metric : metricConfigs) {
 			String domain = metric.getMetricDomain();
 			String type = metric.getMetricType().equalsIgnoreCase("metric") ? "Metric" : metric.getMetricType();
 			String key = metric.getMetricKey();
 			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":"
 			      + metric.getDisplayType().toUpperCase();
+			//System.out.println(id);
+			//System.out.println("\n\n\n\n\n");
 			put(allCharts, result, id);
 		}
+		
 		return result;
 	}
 

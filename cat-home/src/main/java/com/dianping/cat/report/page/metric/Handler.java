@@ -35,7 +35,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-	
+
 	@Inject
 	private MetricGraphCreator m_graphCreator;
 
@@ -47,7 +47,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@OutboundActionMeta(name = MetricAnalyzer.ID)
-	public void handleOutbound(Context ctx) throws ServletException, IOException {
+	public void handleOutbound(Context ctx) throws ServletException,
+			IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
@@ -56,42 +57,68 @@ public class Handler implements PageHandler<Context> {
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
+		String group = payload.getGroup();
+		Map<String, LineChart> allCharts = null;
+		
 
 		switch (payload.getAction()) {
 		case METRIC:
 			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
-			
+
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
-		case DASHBOARD:
-			String group = payload.getGroup();
-			Map<String, LineChart> allCharts = null;
-
+		case DASHBOARD:			
+			if (group == null || group.length() == 0) {
+				allCharts = m_graphCreator.buildDashboard(start, end);
+			} else {
+				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
+			}			
+			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
+			break;
+		case JSON:
+			String id = payload.getId();	
 			if (group == null || group.length() == 0) {
 				allCharts = m_graphCreator.buildDashboard(start, end);
 			} else {
 				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
 			}
-			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
+			ArrayList<LineChart> dateList = new ArrayList<LineChart>(allCharts.values());
+			for (LineChart lineChart : dateList) {
+				if (lineChart.getId().equals(id)) {
+					System.out.println("id: " + lineChart.getJsonString());
+					model.setJson(lineChart.getJsonString());
+				}
+			}
+			
 			break;
 		}
-		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
+
+		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig()
+				.getMetricGroups().keySet();
 
 		model.setMetricGroups(new ArrayList<String>(groups));
-		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
+		model.setProductLines(m_productLineConfigManager
+				.queryMetricProductLines().values());
 		m_jspViewer.view(ctx, model);
 	}
+	
+	
+	
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.METRIC);
 		String poduct = payload.getProduct();
-
-		if (poduct == null || poduct.length() == 0) {
-			payload.setAction(Action.DASHBOARD.getName());
+		
+		
+		if ((poduct == null || poduct.length() == 0)) {
+			if (!payload.getAction().equals(Action.JSON)) {
+				payload.setAction(Action.DASHBOARD.getName());
+			}
 		}
 		m_normalizePayload.normalize(model, payload);
 		int timeRange = payload.getTimeRange();
-		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
+		Date startTime = new Date(payload.getDate() - (timeRange - 1)
+				* TimeUtil.ONE_HOUR);
 		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
 
 		model.setStartTime(startTime);
