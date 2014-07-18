@@ -33,9 +33,13 @@ public class AppDataService {
 	public static final String DELAY_AVG = "成功延时(ms)";
 
 	public void insert(AppDataCommand proto) throws DalException {
-		m_dao.insertData(proto);
+		m_dao.insert(proto);
 	}
 
+	public void insert(AppDataCommand[] proto) throws DalException {
+		m_dao.insert(proto);
+	}
+	
 	public double[] queryValue(QueryEntity entity, String type) {
 		int commandId = entity.getCommand();
 		Date period = entity.getDate();

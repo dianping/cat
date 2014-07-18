@@ -38,7 +38,7 @@ public class AlertInfo implements Initializable {
 				keys.add(entry.getKey());
 			}
 		}
-		
+
 		return keys;
 	}
 

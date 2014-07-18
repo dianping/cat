@@ -92,20 +92,6 @@ public class CatFilter implements Filter {
 				}
 			}
 
-			protected String getCookie(HttpServletRequest req, String name) {
-				Cookie[] cookies = req.getCookies();
-
-				if (cookies != null) {
-					for (Cookie cookie : cookies) {
-						if (name.equalsIgnoreCase(cookie.getName())) {
-							return cookie.getValue();
-						}
-					}
-				}
-
-				return null;
-			}
-
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
@@ -116,8 +102,6 @@ public class CatFilter implements Filter {
 				if (top) {
 					ctx.setMode(detectMode(req));
 					ctx.setType(CatConstants.TYPE_URL);
-
-					Cat.setup(getCookie(req, "JSESSIONID"));
 
 					setTraceMode(req);
 				} else {
@@ -171,51 +155,55 @@ public class CatFilter implements Filter {
 
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
-				HttpServletRequest req = ctx.getRequest();
-				HttpServletResponse res = ctx.getResponse();
-				MessageProducer producer = Cat.getProducer();
-				int mode = ctx.getMode();
+				boolean isTraceMode = Cat.getManager().isTraceMode();
 
-				switch (mode) {
-				case 0:
-					ctx.setId(producer.createMessageId());
-					break;
-				case 1:
-					ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
-					ctx.setParentId(req.getHeader("X-CAT-PARENT-ID"));
-					ctx.setId(req.getHeader("X-CAT-ID"));
-					break;
-				case 2:
-					ctx.setRootId(producer.createMessageId());
-					ctx.setParentId(ctx.getRootId());
-					ctx.setId(producer.createMessageId());
-					break;
-				default:
-					throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
-				}
+				if (isTraceMode) {
+					HttpServletRequest req = ctx.getRequest();
+					HttpServletResponse res = ctx.getResponse();
+					MessageProducer producer = Cat.getProducer();
+					int mode = ctx.getMode();
 
-				MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+					switch (mode) {
+					case 0:
+						ctx.setId(producer.createMessageId());
+						break;
+					case 1:
+						ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
+						ctx.setParentId(req.getHeader("X-CAT-PARENT-ID"));
+						ctx.setId(req.getHeader("X-CAT-ID"));
+						break;
+					case 2:
+						ctx.setRootId(producer.createMessageId());
+						ctx.setParentId(ctx.getRootId());
+						ctx.setId(producer.createMessageId());
+						break;
+					default:
+						throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
+					}
 
-				tree.setMessageId(ctx.getId());
-				tree.setParentMessageId(ctx.getParentId());
-				tree.setRootMessageId(ctx.getRootId());
+					MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
-				res.setHeader("X-CAT-SERVER", getCatServer());
+					tree.setMessageId(ctx.getId());
+					tree.setParentMessageId(ctx.getParentId());
+					tree.setRootMessageId(ctx.getRootId());
 
-				switch (mode) {
-				case 0:
-					res.setHeader("X-CAT-ROOT-ID", ctx.getId());
-					break;
-				case 1:
-					res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-					res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-					res.setHeader("X-CAT-ID", ctx.getId());
-					break;
-				case 2:
-					res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-					res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-					res.setHeader("X-CAT-ID", ctx.getId());
-					break;
+					res.setHeader("X-CAT-SERVER", getCatServer());
+
+					switch (mode) {
+					case 0:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getId());
+						break;
+					case 1:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+						res.setHeader("X-CAT-ID", ctx.getId());
+						break;
+					case 2:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+						res.setHeader("X-CAT-ID", ctx.getId());
+						break;
+					}
 				}
 
 				ctx.handle();
@@ -531,7 +519,6 @@ public class CatFilter implements Filter {
 		public String toString() {
 			return m_cookie.toString();
 		}
-
 	}
 
 	protected static interface Handler {
