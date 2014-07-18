@@ -36,6 +36,10 @@ public class AppDataService {
 		m_dao.insert(proto);
 	}
 
+	public void insert(AppDataCommand[] proto) throws DalException {
+		m_dao.insert(proto);
+	}
+	
 	public double[] queryValue(QueryEntity entity, String type) {
 		int commandId = entity.getCommand();
 		Date period = entity.getDate();
