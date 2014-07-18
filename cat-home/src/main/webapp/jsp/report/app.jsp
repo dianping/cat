@@ -9,12 +9,9 @@
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss
-		value="${res.css.local['bootstrap-datetimepicker.min.css']}"
-		target="head-css" />
+	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}"
-		target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command};
@@ -55,8 +52,10 @@
 
 		function getDate() {
 			var myDate = new Date();
+			var myMonth = new Number(myDate.getMonth());
+			var month = myMonth + 1;
 
-			return myDate.getFullYear() + "-" + myDate.getMonth() + "-"
+			return myDate.getFullYear() + "-" + month + "-"
 					+ myDate.getDate();
 		}
 
@@ -72,8 +71,8 @@
 			var operator = $("#operator").val();
 			var split = ";";
 			var query1 = time + split + command + split + code + split
-					+ network + split + version + split + connectionType + split
-					+ palteform + split + city + split + operator;
+					+ network + split + version + split + connectionType
+					+ split + palteform + split + city + split + operator;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
@@ -92,89 +91,93 @@
 						+ split + palteform2 + split + city2 + split
 						+ operator2;
 			}
-			
+
 			var checkboxs = document.getElementsByName("typeCheckbox");
 			var type = "";
-			
-			for(var i=0; i<checkboxs.length;i++){
-				if(checkboxs[i].checked){
+
+			for (var i = 0; i < checkboxs.length; i++) {
+				if (checkboxs[i].checked) {
 					type = checkboxs[i].value;
 					break;
 				}
 			}
 
-			var href = "?query1=" + query1 + "&query2=" + query2 + "&type=" + type;
+			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
+					+ type;
 			window.location.href = href;
 		}
 
-		$(document).ready(function() {
-			$('#datetimepicker1').datetimepicker();
-			$('#datetimepicker2').datetimepicker();
+		$(document).ready(
+				function() {
+					$('#datetimepicker1').datetimepicker();
+					$('#datetimepicker2').datetimepicker();
 
-			var query1 = '${payload.query1}';
-			var query2 = '${payload.query2}';
-			var command1 = $('#command');
-			var command2 = $('#command2');
-			var words = query1.split(";");
+					var query1 = '${payload.query1}';
+					var query2 = '${payload.query2}';
+					var command1 = $('#command');
+					var command2 = $('#command2');
+					var words = query1.split(";");
 
-			command1.on('change', command1Change);
-			command2.on('change', command2Change);
+					command1.on('change', command1Change);
+					command2.on('change', command2Change);
 
-			$("#command").val(words[1]);
+					$("#command").val(words[1]);
 
-			if (words[0] == null || words[0].length == 0) {
-				$("#time").val(getDate());
-			} else {
-				$("#time").val(words[0]);
-			}
-			
+					if (words[0] == null || words.length == 1) {
+						console.log(words.length);
 
-			command1Change();
-			$("#code").val(words[2]);
-			$("#network").val(words[3]);
-			$("#version").val(words[4]);
-			$("#connectionType").val(words[5]);
-			$("#platform").val(words[6]);
-			$("#city").val(words[7]);
-			$("#operator").val(words[8]);
+						$("#time").val(getDate());
+					} else {
+						$("#time").val(words[0]);
+					}
 
-			if (query2 != null && query2 != '') {
-				$('#history').slideDown();
-				document.getElementById("checkbox").checked = true;
-				var words = query2.split(";");
+					command1Change();
+					$("#code").val(words[2]);
+					$("#network").val(words[3]);
+					$("#version").val(words[4]);
+					$("#connectionType").val(words[5]);
+					$("#platform").val(words[6]);
+					$("#city").val(words[7]);
+					$("#operator").val(words[8]);
 
-				if (words[0] == null || words[0].length == 0) {
-					$("#time2").val(getDate());
-				} else {
-					$("#time2").val(words[0]);
-				}
+					if (query2 != null && query2 != '') {
+						$('#history').slideDown();
+						document.getElementById("checkbox").checked = true;
+						var words = query2.split(";");
 
-				$("#command2").val(words[1]);
-				command2Change();
-				$("#code2").val(words[2]);
-				$("#network2").val(words[3]);
-				$("#version2").val(words[4]);
-				$("#connectionType2").val(words[5]);
-				$("#platform2").val(words[6]);
-				$("#city2").val(words[7]);
-				$("#operator2").val(words[8]);
-			} else {
-				$("#time2").val(getDate());
-			}
-			
-			var checkboxs = document.getElementsByName("typeCheckbox");
-			
-			for(var i=0; i<checkboxs.length;i++){
-				if(checkboxs[i].value == "${payload.type}"){
-					checkboxs[i].checked = true;
-					break;
-				}
-			}
-			
-			var data = ${model.lineChart.jsonString};
-			graphMetricChartForApp(document.getElementById('${model.lineChart.id}'), data);
-			
-		});
+						if (words[0] == null || words[0].length == 0) {
+							$("#time2").val(getDate());
+						} else {
+							$("#time2").val(words[0]);
+						}
+
+						$("#command2").val(words[1]);
+						command2Change();
+						$("#code2").val(words[2]);
+						$("#network2").val(words[3]);
+						$("#version2").val(words[4]);
+						$("#connectionType2").val(words[5]);
+						$("#platform2").val(words[6]);
+						$("#city2").val(words[7]);
+						$("#operator2").val(words[8]);
+					} else {
+						$("#time2").val(getDate());
+					}
+
+					var checkboxs = document.getElementsByName("typeCheckbox");
+
+					for (var i = 0; i < checkboxs.length; i++) {
+						if (checkboxs[i].value == "${payload.type}") {
+							checkboxs[i].checked = true;
+							break;
+						}
+					}
+
+					var data = ${model.lineChart.jsonString};
+					graphMetricChartForApp(document
+							.getElementById('${model.lineChart.id}'), data);
+
+				});
 	</script>
 	<div class="report">
 		<table>
@@ -191,9 +194,10 @@
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;"><option value='0' >All</option>
+				</select> 返回码 <select id="code" style="width: 120px;"><option
+							value='0'>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -202,28 +206,29 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 连接类型 <select id="connectionType" style="width: 100px;">
-						<option value='0' >All</option>
-						<c:forEach var="item" items="${model.connectionTypes}" varStatus="status">
+						<option value='0'>All</option>
+						<c:forEach var="item" items="${model.connectionTypes}"
+							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -251,9 +256,9 @@
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 返回码 <select id="code2" style="width: 120px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -262,28 +267,29 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version2" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 连接类型 <select id="connectionType2" style="width: 100px;">
-						<option value='0' >All</option>
-						<c:forEach var="item" items="${model.connectionTypes}" varStatus="status">
+						<option value='0'>All</option>
+						<c:forEach var="item" items="${model.connectionTypes}"
+							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform2" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city2" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator2" style="width: 100px;">
-						<option value='0' >All</option>
+						<option value='0'>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -294,16 +300,16 @@
 		</table>
 
 		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="成功率" >成功率
+			<label class="btn btn-info"><input type="radio"
+				name="typeCheckbox" value="request">请求数
 			</label> <label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="请求数" >请求数
-			</label> <label class="btn btn-info"> <input type="radio"
-				name="typeCheckbox" value="成功延时(ms)" >成功延时(ms)
+				name="typeCheckbox" value="success">成功率
+			</label> <label class="btn btn-info">  <input type="radio"
+				name="typeCheckbox" value="delay">成功延时(ms)
 			</label>
 		</div>
 
-		<div style="float:left;width:95%;">
+		<div style="float: left; width: 95%;">
 			<div id="${model.lineChart.id}"></div>
 		</div>
 

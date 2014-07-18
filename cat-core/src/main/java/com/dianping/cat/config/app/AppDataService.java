@@ -26,11 +26,11 @@ public class AppDataService {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public static final String SUCCESS_RATIO = "成功率";
+	public static final String SUCCESS= "success";
 
-	public static final String REQUEST_COUNT = "请求数";
+	public static final String REQUEST = "request";
 
-	public static final String DELAY_AVG = "成功延时(ms)";
+	public static final String DELAY = "delay";
 
 	public void insert(AppDataCommand proto) throws DalException {
 		m_dao.insertData(proto);
@@ -49,40 +49,40 @@ public class AppDataService {
 		List<AppDataCommand> datas;
 
 		try {
-			if (SUCCESS_RATIO.equals(type)) {
+			if (SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppDataCommandEntity.READSET_COUNT_DATA);
+				      code, platform, AppDataCommandEntity.READSET_SUCCESS_DATA);
 				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
 
-				return querySuccessRatio(dataPair);
-			} else {
+				return querySuccessRatio(commandId, dataPair);
+			} else if (REQUEST.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppDataCommandEntity.READSET_COUNT_DATA);
-				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
 
-				if (REQUEST_COUNT.equals(type)) {
-					return queryRequestCount(dataPair);
-				} else if (DELAY_AVG.equals(type)) {
-					return queryDelayAvg(dataPair);
-				}
+				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
+				return queryRequestCount(dataPair);
+			} else if (DELAY.equals(type)) {
+				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
+				      platform, AppDataCommandEntity.READSET_AVG_DATA);
+
+				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
+				return queryDelayAvg(dataPair);
 			}
+
 		} catch (Exception e) {
 			Cat.logError(e);
+			e.printStackTrace();
 		}
 		return null;
 	}
 
 	private Pair<Integer, Map<Integer, List<AppDataCommand>>> convert2AppDataCommandMap(List<AppDataCommand> fromDatas) {
 		Map<Integer, List<AppDataCommand>> dataMap = new LinkedHashMap<Integer, List<AppDataCommand>>();
-		int min = -1;
 		int max = -1;
 
 		for (AppDataCommand from : fromDatas) {
 			int minute = from.getMinuteOrder();
 
-			if (min < 0 || min > minute) {
-				min = minute;
-			}
 			if (max < 0 || max < minute) {
 				max = minute;
 			}
@@ -95,11 +95,13 @@ public class AppDataService {
 			}
 			data.add(from);
 		}
-		int n = (max - min) / 5;
+
+		int n = max / 5;
+
 		return new Pair<Integer, Map<Integer, List<AppDataCommand>>>(n, dataMap);
 	}
 
-	public double[] querySuccessRatio(Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
+	public double[] querySuccessRatio(int commandId, Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
 		double[] value = new double[dataPair.getKey()];
 		Map<Integer, List<AppDataCommand>> dataMap = dataPair.getValue();
 
@@ -112,12 +114,12 @@ public class AppDataService {
 				for (AppDataCommand data : entry.getValue()) {
 					long number = data.getAccessNumberSum();
 
-					if (isSuccessStatus(data)) {
+					if (isSuccessStatus(commandId, data.getCode())) {
 						success += number;
 					}
 					sum += number;
 				}
-				value[key / 5] = (double) success / sum;
+				value[key / 5 - 1] = (double) success / sum;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -126,9 +128,8 @@ public class AppDataService {
 		return value;
 	}
 
-	private boolean isSuccessStatus(AppDataCommand data) {
-		int code = data.getCode();
-		Collection<Code> codes = m_appConfigManager.queryCodeByCommand(data.getCommandId());
+	private boolean isSuccessStatus(int commandId, int code) {
+		Collection<Code> codes = m_appConfigManager.queryCodeByCommand(commandId);
 
 		for (Code c : codes) {
 			if (c.getId() == code) {
@@ -145,7 +146,7 @@ public class AppDataService {
 			for (AppDataCommand data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 
-				value[data.getMinuteOrder() / 5] = count;
+				value[data.getMinuteOrder() / 5 - 1] = count;
 			}
 		}
 		return value;
@@ -160,7 +161,7 @@ public class AppDataService {
 				long sum = data.getResponseSumTimeSum();
 
 				double avg = sum / count;
-				value[data.getMinuteOrder() / 5] = avg;
+				value[data.getMinuteOrder() / 5 - 1] = avg;
 			}
 		}
 		return value;

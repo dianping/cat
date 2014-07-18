@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Random;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -21,27 +20,43 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
 		LinkedList<double[]> dataList = new LinkedList<double[]>();
-		double[] data1 = prepareAllData(queryEntity1, type);
-		dataList.add(data1);
+
+		if (queryEntity1 != null) {
+			double[] data1 = prepareQueryData(queryEntity1, type);
+			dataList.add(data1);
+		}
 
 		if (queryEntity2 != null) {
-			double[] values2 = prepareAllData(queryEntity2, type);
+			double[] values2 = prepareQueryData(queryEntity2, type);
 			dataList.add(values2);
 		}
 
 		return buildChartData(dataList, type);
 	}
 
-	private double[] prepareAllData(QueryEntity queryEntity, String type) {
+	private double[] prepareQueryData(QueryEntity queryEntity, String type) {
 		double[] value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;
 	}
 
+	private String queryType(String type) {
+		if (AppDataService.SUCCESS.equals(type)) {
+			return "成功率";
+		} else if (AppDataService.REQUEST.equals(type)) {
+			return "请求数";
+		} else if (AppDataService.DELAY.equals(type)) {
+			return "成功延时(ms)";
+		} else {
+			return "";
+		}
+	}
+
 	public LineChart buildChartData(final LinkedList<double[]> dataList, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
-		lineChart.setHtmlTitle(type);
+
+		lineChart.setHtmlTitle(queryType(type));
 		int i = 1;
 
 		for (double[] data : dataList) {
@@ -63,47 +78,5 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		}
 
 		return map;
-	}
-
-	public class AppDataServiceMock extends AppDataService {
-		public double[] queryValue(QueryEntity entity, String type) {
-			if (SUCCESS_RATIO.equals(type)) {
-				return querySuccessRatio(entity);
-			} else if (REQUEST_COUNT.equals(type)) {
-				return queryRequestCount(entity);
-			} else if (DELAY_AVG.equals(type)) {
-				return queryDelayAvg(entity);
-			} else {
-				return null;
-			}
-		}
-
-		private double[] makeMockValue(String type) {
-			long startTime = TimeUtil.getCurrentDay().getTime();
-			long current = System.currentTimeMillis();
-			long endTime = current - current % 300000;
-			int n = (int) (endTime - startTime) / 300000;
-			double[] value = new double[n];
-
-			for (int i = 0; i < n; i++) {
-				value[i] = (new Random().nextDouble() + 1) * 100;
-			}
-			return value;
-		}
-
-		private double[] querySuccessRatio(QueryEntity entity) {
-
-			return makeMockValue(SUCCESS_RATIO);
-		}
-
-		private double[] queryDelayAvg(QueryEntity entity) {
-
-			return makeMockValue(DELAY_AVG);
-		}
-
-		private double[] queryRequestCount(QueryEntity entity) {
-
-			return makeMockValue(REQUEST_COUNT);
-		}
 	}
 }
