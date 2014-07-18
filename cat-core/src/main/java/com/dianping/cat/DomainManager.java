@@ -121,7 +121,6 @@ public class DomainManager implements Initializable, LogEnabled {
 			return true;
 		} catch (Exception ex) {
 			Cat.logError(ex);
-			ex.printStackTrace();
 		}
 		return false;
 	}

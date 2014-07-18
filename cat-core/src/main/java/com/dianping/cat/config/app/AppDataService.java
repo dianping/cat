@@ -73,7 +73,6 @@ public class AppDataService {
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -129,7 +128,6 @@ public class AppDataService {
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 
 		return value;
