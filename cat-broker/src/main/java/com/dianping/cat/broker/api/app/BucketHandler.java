@@ -1,11 +1,10 @@
 package com.dianping.cat.broker.api.app;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.unidal.helper.Threads.Task;
@@ -15,8 +14,6 @@ import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.config.app.AppDataService;
 
 public class BucketHandler implements Task {
-
-	private static final String FILEDIRECTORY = "/data/appdatas/cat/app/";
 
 	private static int ONE_MINUTE = 60 * 1000;
 
@@ -40,12 +37,38 @@ public class BucketHandler implements Task {
 	}
 
 	private void end() {
+		int minute = (int) (m_startTime % ONE_DAY / ONE_MINUTE);
+		Date period = new Date(m_startTime - minute * ONE_MINUTE);
+		List<AppDataCommand> appDataCommands = new ArrayList<AppDataCommand>();
+
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
 			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
 				AppData appData = entry.getValue();
+				AppDataCommand proto = new AppDataCommand();
 
-				saveToDataBase(appData);
+				proto.setPeriod(period);
+				proto.setMinuteOrder(minute);
+				proto.setCommandId(appData.getCommand());
+				proto.setCity(appData.getCity());
+				proto.setOperator(appData.getOperator());
+				proto.setNetwork(appData.getNetwork());
+				proto.setAppVersion(appData.getVersion());
+				proto.setConnnectType(appData.getConnectType());
+				proto.setCode(appData.getCode());
+				proto.setPlatform(appData.getPlatform());
+				proto.setAccessNumber(appData.getCount());
+				proto.setResponseSumTime(appData.getResponseTime());
+				proto.setRequestPackage(appData.getRequestByte());
+				proto.setResponsePackage(appData.getResponseByte());
+				proto.setCreationDate(new Date());
+				appDataCommands.add(proto);
 			}
+		}
+
+		try {
+			m_appDataService.insert((AppDataCommand[]) appDataCommands.toArray());
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -120,57 +143,6 @@ public class BucketHandler implements Task {
 		}
 
 		end();
-	}
-
-	private void saveToDataBase(AppData appData) {
-		int minute = (int) (m_startTime % ONE_DAY / ONE_MINUTE);
-		Date period = new Date(m_startTime - minute * ONE_MINUTE);
-
-		try {
-			AppDataCommand proto = new AppDataCommand();
-
-			proto.setPeriod(period);
-			proto.setMinuteOrder(minute);
-			proto.setCommandId(appData.getCommand());
-			proto.setCity(appData.getCity());
-			proto.setOperator(appData.getOperator());
-			proto.setNetwork(appData.getNetwork());
-			proto.setAppVersion(appData.getVersion());
-			proto.setConnnectType(appData.getConnectType());
-			proto.setCode(appData.getCode());
-			proto.setPlatform(appData.getPlatform());
-			proto.setAccessNumber(appData.getCount());
-			proto.setResponseSumTime(appData.getResponseTime());
-			proto.setRequestPackage(appData.getRequestByte());
-			proto.setResponsePackage(appData.getResponseByte());
-			proto.setCreationDate(new Date());
-			m_appDataService.insert(proto);
-		} catch (Exception e) {
-			Cat.logError(e);
-			e.printStackTrace();
-
-			saveToFile(appData);
-		}
-	}
-
-	private void saveToFile(AppData appData) {
-		Date date = new Date();
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		String dateStr = formater.format(date);
-		String filePath = FILEDIRECTORY + dateStr;
-
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-			String content = appData.getTimestamp() + "\t" + appData.getCity() + "\t" + appData.getOperator() + "\t"
-			      + appData.getNetwork() + "\t" + appData.getVersion() + "\t" + appData.getConnectType() + "\t"
-			      + appData.getCommand() + "\t" + appData.getCode() + "\t" + appData.getPlatform() + "\t"
-			      + appData.getRequestByte() + "\t" + appData.getResponseByte() + "\t" + appData.getResponseTime() + "\n";
-
-			writer.append(content);
-			writer.close();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 
 	@Override

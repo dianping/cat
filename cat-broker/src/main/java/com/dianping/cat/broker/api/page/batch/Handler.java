@@ -116,7 +116,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion2(Payload payload, HttpServletRequest request, String userIp) {
-		userIp = "180.153.132.49";
 		if (userIp != null) {
 			String content = payload.getContent();
 			String records[] = content.split("\n");
