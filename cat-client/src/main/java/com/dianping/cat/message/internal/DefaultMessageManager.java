@@ -233,10 +233,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	public void setTraceMode(boolean traceMode) {
-		Context content = getContext();
+		Context context = getContext();
 
-		if (content != null) {
-			content.setTraceMode(traceMode);
+		if (context != null) {
+			context.setTraceMode(traceMode);
 		}
 	}
 
