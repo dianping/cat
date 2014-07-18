@@ -33,9 +33,9 @@ public abstract class BaseAlertConfig {
 		return smsReceivers;
 	}
 
-	public List<String> buildMailReceivers(ProductLine productLine) {
+	public List<String> buildMailReceivers(ProductLine productLine, String configId) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.queryReceiverById(getId());
+		Receiver receiver = m_manager.queryReceiverById(configId);
 
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;
@@ -47,6 +47,10 @@ public abstract class BaseAlertConfig {
 		}
 	}
 
+	public List<String> buildMailReceivers(ProductLine productLine) {
+		return buildMailReceivers(productLine, getId());
+	}
+
 	private List<String> buildProductlineMailReceivers(ProductLine productLine) {
 		return split(productLine.getEmail());
 	}
@@ -55,9 +59,9 @@ public abstract class BaseAlertConfig {
 		return split(productLine.getPhone());
 	}
 
-	public List<String> buildSMSReceivers(ProductLine productLine) {
+	public List<String> buildSMSReceivers(ProductLine productLine, String configId) {
 		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.queryReceiverById(getId());
+		Receiver receiver = m_manager.queryReceiverById(configId);
 
 		if (receiver != null && !receiver.isEnable()) {
 			return smsReceivers;
@@ -68,7 +72,11 @@ public abstract class BaseAlertConfig {
 			return smsReceivers;
 		}
 	}
-	
+
+	public List<String> buildSMSReceivers(ProductLine productLine) {
+		return buildSMSReceivers(productLine, getId());
+	}
+
 	protected abstract String buildMailTitle(String artifactName, String configTitle);
 
 	public abstract String getId();

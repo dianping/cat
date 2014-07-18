@@ -205,6 +205,8 @@ public class ExceptionAlert implements Task, LogEnabled {
 		String contactInfo = buildContactInfo(domain);
 		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain, contactInfo);
 
+		storeAlerts(domain, exceptions, mailTitle + "<br/>" + mailContent);
+
 		m_mailSms.sendEmail(mailTitle, mailContent, emails);
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
@@ -213,8 +215,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 		m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
 		      + " " + weixins);
-
-		storeAlerts(domain, exceptions, mailTitle + "<br/>" + mailContent);
 
 		List<AlertException> errorExceptions = m_alertBuilder.buildErrorException(exceptions);
 

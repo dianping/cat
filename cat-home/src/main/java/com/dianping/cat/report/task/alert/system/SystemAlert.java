@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.system;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -11,7 +10,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.BaseAlertConfig;
@@ -30,7 +28,7 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 	public String getName() {
 		return "system-alert";
 	}
-	
+
 	@Override
 	public BaseAlertConfig getAlertConfig() {
 		return m_alertConfig;
@@ -85,21 +83,6 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 				active = false;
 			}
 		}
-	}
-
-	@Override
-	protected void sendAlertInfo(ProductLine productLine, String title, String content, String alertType) {
-		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-
-		m_logger.info(title + " " + content + " " + emails);
-		m_mailSms.sendEmail(title, content, emails);
-
-		if (alertType != null && alertType.equals("error")) {
-			List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-			m_mailSms.sendSms(title + " " + content, content, phones);
-		}
-
-		Cat.logEvent("SystemAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
 
 	@Override

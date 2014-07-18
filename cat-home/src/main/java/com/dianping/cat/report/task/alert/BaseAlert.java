@@ -30,7 +30,9 @@ import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.task.alert.sender.BaseSender;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
@@ -68,6 +70,9 @@ public abstract class BaseAlert {
 
 	@Inject
 	private ProjectDao m_projectDao;
+
+	@Inject
+	protected BaseSender m_baseSender;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -282,12 +287,16 @@ public abstract class BaseAlert {
 			if (alertResult != null && alertResult.isTriggered()) {
 				String metricTitle = buildMetricTitle(metricKey);
 				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
-				String contactInfo = buildContactInfo(extractDomain(metricKey));
+				String domain = extractDomain(metricKey);
+				String contactInfo = buildContactInfo(domain);
 				alertResult.setContent(alertResult.getContent() + contactInfo);
+				String content = alertResult.getContent();
 				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
 				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
-				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());
+				String configId = getAlertConfig().getId();
+				m_baseSender.sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				Cat.logEvent(configId, productlineName, Event.SUCCESS, mailTitle + "  " + content);
 			}
 		}
 	}
@@ -381,6 +390,4 @@ public abstract class BaseAlert {
 	protected abstract String getName();
 
 	protected abstract BaseAlertConfig getAlertConfig();
-
-	protected abstract void sendAlertInfo(ProductLine productLine, String mailTitle, String content, String alertType);
 }
