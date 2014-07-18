@@ -13,7 +13,7 @@ public enum BaseSender {
 
 	MailSender {
 		@Override
-		protected void logSend(String title, String content, List<String> receivers) {
+		protected void sendLog(String title, String content, List<String> receivers) {
 			StringBuilder builder = new StringBuilder();
 
 			builder.append(title).append(",").append(content).append(",");
@@ -30,15 +30,14 @@ public enum BaseSender {
 		}
 
 		@Override
-		protected boolean sendAlert(ProductLine productLine, String domain, String title, String content,
-		      String alertType, String configId) {
+		public boolean sendAlert(List<String> receivers, String domain, String title, String content, String alertType,
+		      String configId) {
 			try {
-				List<String> receivers = queryReceivers(productLine, configId);
 				m_mailSms.sendEmail(title, content, receivers);
-				logSend(title, content, receivers);
+				sendLog(title, content, receivers);
 				return true;
 			} catch (Exception ex) {
-				Cat.logError("send mail error" + productLine + " " + title + " " + content, ex);
+				Cat.logError("send mail error" + " " + title + " " + content, ex);
 				return false;
 			}
 		}
@@ -46,7 +45,7 @@ public enum BaseSender {
 
 	WeixinSender {
 		@Override
-		protected void logSend(String title, String content, List<String> receivers) {
+		protected void sendLog(String title, String content, List<String> receivers) {
 			StringBuilder builder = new StringBuilder();
 
 			builder.append(title).append(" ").append(content).append(" ");
@@ -63,19 +62,18 @@ public enum BaseSender {
 		}
 
 		@Override
-		protected boolean sendAlert(ProductLine productLine, String domain, String title, String content,
-		      String alertType, String configId) {
+		public boolean sendAlert(List<String> receivers, String domain, String title, String content, String alertType,
+		      String configId) {
 			if (alertType == null || !alertType.equals("error")) {
 				return true;
 			}
 
 			try {
-				List<String> receivers = queryReceivers(productLine, configId);
 				m_mailSms.sendWeiXin(title, content, domain, mergeList(receivers));
-				logSend(title, content, receivers);
+				sendLog(title, content, receivers);
 				return true;
 			} catch (Exception ex) {
-				Cat.logError("send weixin error" + productLine + " " + title + " " + content, ex);
+				Cat.logError("send weixin error" + " " + title + " " + content, ex);
 				return false;
 			}
 		}
@@ -98,7 +96,7 @@ public enum BaseSender {
 
 	SmsSender {
 		@Override
-		protected void logSend(String title, String content, List<String> receivers) {
+		protected void sendLog(String title, String content, List<String> receivers) {
 			StringBuilder builder = new StringBuilder();
 
 			builder.append(title).append(" ").append(content).append(" ");
@@ -115,19 +113,18 @@ public enum BaseSender {
 		}
 
 		@Override
-		protected boolean sendAlert(ProductLine productLine, String domain, String title, String content,
-		      String alertType, String configId) {
+		public boolean sendAlert(List<String> receivers, String domain, String title, String content, String alertType,
+		      String configId) {
 			if (alertType == null || !alertType.equals("error")) {
 				return true;
 			}
 
 			try {
-				List<String> receivers = queryReceivers(productLine, configId);
 				m_mailSms.sendSms(title, content, receivers);
-				logSend(title, content, receivers);
+				sendLog(title, content, receivers);
 				return true;
 			} catch (Exception ex) {
-				Cat.logError("send sms error" + productLine + " " + title + " " + content, ex);
+				Cat.logError("send sms error" + " " + title + " " + content, ex);
 				return false;
 			}
 		}
@@ -144,7 +141,8 @@ public enum BaseSender {
 		boolean sendResult = true;
 
 		for (BaseSender sender : BaseSender.values()) {
-			if (!sender.sendAlert(productLine, domain, title, content, alertType, configId)) {
+			List<String> receivers = sender.queryReceivers(productLine, configId);
+			if (!sender.sendAlert(receivers, domain, title, content, alertType, configId)) {
 				sendResult = false;
 			}
 		}
@@ -153,9 +151,9 @@ public enum BaseSender {
 
 	protected abstract List<String> queryReceivers(ProductLine productLine, String configId);
 
-	protected abstract void logSend(String title, String content, List<String> receivers);
+	protected abstract void sendLog(String title, String content, List<String> receivers);
 
-	protected abstract boolean sendAlert(ProductLine productLine, String domain, String title, String content,
+	public abstract boolean sendAlert(List<String> receivers, String domain, String title, String content,
 	      String alertType, String configId);
 
 }

@@ -53,18 +53,18 @@ public class AlertExceptionBuilder {
 
 				totalException += value;
 
-				if (errorLimit > 0 && value >= errorLimit && needSendSms(domain, exceptionName)) {
-					alertExceptions.add(new AlertException(exceptionName, AlertException.ERROR_EXCEPTION, value));
+				if (errorLimit > 0 && value >= errorLimit) {
+					alertExceptions.add(new AlertException(exceptionName, AlertException.ERROR_EXCEPTION, value,
+					      needSendSms(domain, exceptionName)));
 				} else if (warnLimit > 0 && value >= warnLimit) {
 					alertExceptions.add(new AlertException(exceptionName, AlertException.WARN_EXCEPTION, value));
 				}
 			}
 		}
 
-		if (totalErrorLimit > 0 && totalException >= totalErrorLimit
-		      && needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)) {
+		if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
 			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.ERROR_EXCEPTION,
-			      totalException));
+			      totalException, needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)));
 		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
 			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.WARN_EXCEPTION,
 			      totalException));
@@ -126,19 +126,20 @@ public class AlertExceptionBuilder {
 	}
 
 	public String buildMailContent(String exceptions, String domain, String contactInfo) {
-		String content = buildContent(exceptions, domain);
+		String content = buildContent(exceptions, domain, contactInfo);
 		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
-		String mailContent = content + "<br/>" + contactInfo + " <a href='" + url + "'>点击此处查看详情</a>";
+		String mailContent = content + "<br/>" + " <a href='" + url + "'>点击此处查看详情</a>";
 
 		return mailContent;
 	}
 
-	public String buildContent(String exceptions, String domain) {
+	public String buildContent(String exceptions, String domain, String contactInfo) {
 		StringBuilder sb = new StringBuilder();
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
 
 		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
 		sb.append(exceptions).append("[时间: ").append(time).append("]");
+		sb.append(contactInfo);
 
 		return sb.toString();
 	}
@@ -148,6 +149,17 @@ public class AlertExceptionBuilder {
 
 		for (AlertException alertException : exceptions) {
 			if (AlertException.ERROR_EXCEPTION.equals(alertException.getType())) {
+				errorExceptions.add(alertException);
+			}
+		}
+		return errorExceptions;
+	}
+
+	public List<AlertException> buildErrorAndTriggeredException(List<AlertException> exceptions) {
+		List<AlertException> errorExceptions = new ArrayList<AlertException>();
+
+		for (AlertException alertException : exceptions) {
+			if (AlertException.ERROR_EXCEPTION.equals(alertException.getType()) && alertException.isTriggered()) {
 				errorExceptions.add(alertException);
 			}
 		}
@@ -166,10 +178,24 @@ public class AlertExceptionBuilder {
 
 		private double m_count;
 
+		private boolean m_isTriggered;
+
 		public AlertException(String name, String type, double count) {
 			m_name = name;
 			m_type = type;
 			m_count = count;
+			m_isTriggered = false;
+		}
+
+		public AlertException(String name, String type, double count, boolean isTriggered) {
+			m_name = name;
+			m_type = type;
+			m_count = count;
+			m_isTriggered = isTriggered;
+		}
+
+		public boolean isTriggered() {
+			return m_isTriggered;
 		}
 
 		public String getName() {
