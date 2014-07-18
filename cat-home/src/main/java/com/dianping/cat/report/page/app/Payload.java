@@ -20,7 +20,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_query2;
 
 	@FieldMeta("type")
-	private String m_type = "successRatio";
+	private String m_type = "request";
 
 	public Payload() {
 		super(ReportPage.APP);
