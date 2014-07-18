@@ -27,11 +27,10 @@
       </readset>
     </readsets>
     <query-defs>
-	  <query name="insert-data" type="INSERT">
-        <param name="command-id" />
+	  <query name="insert" type="INSERT"  batch="true">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
-      </query>    	
+      </query>  
       <query name="find-data-by-minute" type="SELECT" multiple="true">
         <param name="command-id" /><param name="period" />
         <param name="period" />

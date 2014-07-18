@@ -163,6 +163,9 @@
 				<requirement>
 					<role>com.dianping.cat.app.AppDataCommandDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
