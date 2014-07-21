@@ -270,7 +270,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			if (containMetric(alertKeys, metricId)) {
 				chart.setHtmlTitle("<span style='color:red'>" + title + "<br><small>" + contactInfo + "</small></span>");
 			} else {
-				chart.setHtmlTitle(title + "<br><small>" + contactInfo + "</small>");
+				chart.setHtmlTitle(title);
 			}
 		}
 	}

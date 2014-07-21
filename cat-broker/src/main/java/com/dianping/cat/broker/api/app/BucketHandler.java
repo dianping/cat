@@ -40,6 +40,7 @@ public class BucketHandler implements Task {
 		int minute = (int) (m_startTime % ONE_DAY / ONE_MINUTE);
 		Date period = new Date(m_startTime - minute * ONE_MINUTE);
 		List<AppDataCommand> appDataCommands = new ArrayList<AppDataCommand>();
+		int batchSize = 100;
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
 			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
@@ -62,9 +63,17 @@ public class BucketHandler implements Task {
 				proto.setResponsePackage(appData.getResponseByte());
 				proto.setCreationDate(new Date());
 				appDataCommands.add(proto);
+
+				if (appDataCommands.size() >= batchSize) {
+					batchInsert(appDataCommands);
+					appDataCommands = new ArrayList<AppDataCommand>();
+				}
 			}
 		}
+		batchInsert(appDataCommands);
+	}
 
+	private void batchInsert(List<AppDataCommand> appDataCommands) {
 		try {
 			m_appDataService.insert((AppDataCommand[]) appDataCommands.toArray());
 		} catch (Exception e) {

@@ -21,7 +21,7 @@ public class AlertSummaryVisitor extends BaseVisitor {
 
 	private List<Map<Object, Object>> m_alertList;
 
-	private DateFormat m_fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private DateFormat m_fmt = new SimpleDateFormat("HH:mm:ss");
 
 	public Map<Object, Object> getResult() {
 		return m_result;

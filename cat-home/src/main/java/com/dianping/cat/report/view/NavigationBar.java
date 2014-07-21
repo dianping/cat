@@ -21,8 +21,6 @@ public class NavigationBar {
 	public Page[] getVisiblePages() {
 		return new Page[] {
 
-		ReportPage.HOME,
-
 		ReportPage.METRIC,
 
 		ReportPage.USERMONITOR,
