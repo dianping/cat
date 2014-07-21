@@ -71,6 +71,7 @@ public class AppConfigManager implements Initializable {
 			m_configId = config.getId();
 			m_config = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
+			refreshData();
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
@@ -132,14 +133,14 @@ public class AppConfigManager implements Initializable {
 	public Map<String, Integer> getCommands() {
 		return m_commands;
 	}
-	
+
 	public Map<String, Integer> getCities() {
-   	return m_cities;
-   }
+		return m_cities;
+	}
 
 	public Map<String, Integer> getOperators() {
-   	return m_operators;
-   }
+		return m_operators;
+	}
 
 	private void refreshData() {
 		Collection<Command> commands = m_config.getCommands().values();
@@ -149,19 +150,19 @@ public class AppConfigManager implements Initializable {
 			commandMap.put(c.getName(), c.getId());
 		}
 		m_commands = commandMap;
-		
+
 		Map<String, Integer> cityMap = new HashMap<String, Integer>();
 		ConfigItem cities = m_config.findConfigItem(CITY);
-		
-		for(Item item:cities.getItems().values()){
+
+		for (Item item : cities.getItems().values()) {
 			cityMap.put(item.getName(), item.getId());
 		}
 		m_cities = cityMap;
-		
+
 		Map<String, Integer> operatorMap = new HashMap<String, Integer>();
 		ConfigItem operations = m_config.findConfigItem(OPERATOR);
-		
-		for(Item item:operations.getItems().values()){
+
+		for (Item item : operations.getItems().values()) {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;

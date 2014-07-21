@@ -126,7 +126,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				String operatorStr = ipInfo.getChannel();
 				Integer cityId = m_appConfigManager.getCities().get(province);
 				Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
-
+				
 				if (cityId != null && operatorId != null) {
 					for (String record : records) {
 						processOneRecord(cityId, operatorId, record);
@@ -146,7 +146,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				appData.setTimestamp(Long.parseLong(items[0]));
-				Integer command = m_appConfigManager.getCommands().get(items[2]);
+				Integer command = m_appConfigManager.getCommands().get(items[1]);
 
 				if (command != null) {
 					appData.setCommand(command);

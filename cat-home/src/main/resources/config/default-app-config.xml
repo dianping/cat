@@ -5,8 +5,10 @@
 		<item id="3" name="4G"></item>
 	</config-item>
 	<config-item id="运营商">
-		<item id="1" name="移动"></item>
-		<item id="2" name="联通"></item>
+		<item id="1" name="中国移动"></item>
+		<item id="2" name="中国联通"></item>
+		<item id="3" name="中国电信"></item>
+		<item id="4" name="中国铁通"></item>
 	</config-item>
 	<config-item id="版本">
 		<item id="1" name="1.0"></item>
