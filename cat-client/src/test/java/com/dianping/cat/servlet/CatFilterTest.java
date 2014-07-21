@@ -64,17 +64,6 @@ public class CatFilterTest extends JettyServer {
 	}
 
 	@Test
-	public void testForABTest() throws Exception {
-		String url = "http://localhost:2282/mock/abtest?metricType=mockMetric";
-		InputStream in = Urls.forIO().openStream(url);
-		String content = Files.forIO().readFrom(in, "utf-8");
-
-		Assert.assertEquals("mock content here!", content);
-
-		TimeUnit.MILLISECONDS.sleep(100);
-	}
-
-	@Test
 	public void testMode0() throws Exception {
 		String url = "http://localhost:2282/mock/mode0";
 		InputStream in = Urls.forIO().openStream(url);
@@ -119,6 +108,7 @@ public class CatFilterTest extends JettyServer {
 		Map<String, List<String>> headers = new HashMap<String, List<String>>();
 		InputStream in = Urls.forIO().connectTimeout(100) //
 		      .header("X-Cat-Source", "container") //
+		      .header("X-CAT-TRACE-MODE", "true") //
 		      .openStream(url, headers);
 		String content = Files.forIO().readFrom(in, "utf-8");
 
@@ -150,14 +140,19 @@ public class CatFilterTest extends JettyServer {
 
 	private String getHeader(Map<String, List<String>> headers, String name) {
 		List<String> values = headers.get(name);
-		int len = values.size();
 
-		if (len == 0) {
+		if (values != null) {
+			int len = values.size();
+
+			if (len == 0) {
+				return null;
+			} else if (len == 1) {
+				return values.get(0);
+			} else {
+				return Joiners.by(',').join(values);
+			}
+		}else{
 			return null;
-		} else if (len == 1) {
-			return values.get(0);
-		} else {
-			return Joiners.by(',').join(values);
 		}
 	}
 
