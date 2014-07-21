@@ -18,26 +18,18 @@
 <res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
 <res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
 </head>
-<body>
+
+
 	<div class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container-fluid">
-       	  <a class="brand" href="/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CAT</a>
+       	  <a class="brand" style="padding-right:20px" href="/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CAT</a>
           <div class="nav-collapse collapse">
-          	<div class="nav  pull-right">
-          		<c:forEach var="page" items="${navBar.systemPages}">
-					<c:if test="${page.standalone}">
-						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
-							href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
-					</c:if>
-					<c:if
-						test="${not page.standalone and model.page.name == page.name}">
-						<li class="active"><a href="#">${page.title}</a></li>
-					</c:if>
-				</c:forEach>
+          	<div class="nav pull-right">
 					<li id="loginInfo" ></li>
           	</div>
-            <ul class="nav">
+          	
+           <ul class="nav">
             	<c:forEach var="page" items="${navBar.visiblePages}">
 					<c:if test="${page.standalone}">
 						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
@@ -48,7 +40,23 @@
 						<li class="active"><a href="#">${page.title}</a></li>
 					</c:if>
 				</c:forEach>
-            </ul>
+            </ul> 
+            <ul class="nav">
+          		<li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+          			<ul class="dropdown-menu">
+					<li class="nav-header">Report</li>
+					<li><a style="padding:3px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">matrix</a></li>
+					<li><a style="padding:3px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">network</a></li>
+					<li><a style="padding:3px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">cdn</a></li>
+					<li><a style="padding:3px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">system</a></li>
+					<li><a style="padding:3px 30px" href="/cat/r/change?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">change</a></li>
+					<li><a style="padding:3px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">statistics</a></li>
+					<li class="nav-header">System</li>
+					<li><a style="padding:3px 30px" href="/cat/s/alarm?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">alarm</a></li>
+					<li><a style="padding:3px 30px" href="/cat/s/config?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">config</a></li>
+	          		</ul>
+          		</li>
+          	</ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
