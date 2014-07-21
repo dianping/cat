@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.summary;
+package com.dianping.cat.report.alert.summary;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
