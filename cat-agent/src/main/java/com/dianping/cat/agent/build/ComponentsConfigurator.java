@@ -45,7 +45,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Executor.class, SystemStateExecutor.ID, SystemStateExecutor.class).req(EnvConfig.class,
 		      CommandUtils.class));
 
-		all.add(C(TaskExecutors.class).req(DataSender.class));
+		all.add(C(TaskExecutors.class).req(DataSender.class, EnvConfig.class));
 
 		all.add(C(PaasTask.class).req(DataSender.class, DataBuilder.class));
 

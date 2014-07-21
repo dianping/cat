@@ -235,6 +235,11 @@ public class ExceptionAlert implements Task, LogEnabled {
 			String smsContent = m_alertBuilder.buildContent(errorAndTriggeredExceptions.toString(), domain, contactInfo);
 			m_smsSender.sendAlert(phones, domain, smsContent, smsContent, "error");
 			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
+		
+			m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
+			m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
+			Cat.logEvent("WeiXinAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
+			      + " " + weixins);
 		}
 	}
 

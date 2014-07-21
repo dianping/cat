@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.app" gen="true" >
+   <entity name="app-data-command" table="app_data_command" alias="adc">
+    <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
+    <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="request-package" field="request_package" value-type="long" length="19" nullable="false" />
+    <member name="response-package" field="response_package" value-type="long" length="19" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <member name="access-number-sum" value-type="long" all="false" select-expr="sum(access_number)" length="19" nullable="false" />
+    <member name="response-sum-time-sum" value-type="long" all="false" select-expr="sum(response_sum_time)" length="19" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <var name="command-id" value-type="int" />
+    <readsets>
+      <readset name="COUNT-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      <readset name="AVG-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="SUCCESS-DATA">
+      	<member name="minute-order"/>
+      	<member name="code"/>
+      	<member name="access-number-sum"/>
+      </readset>
+    </readsets>
+    <query-defs>
+	  <query name="insert" type="INSERT"  batch="true">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>  
+      <query name="find-data-by-minute" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NOT_ZERO' field='city'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NOT_ZERO' field='operator'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NOT_ZERO' field='network'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NOT_ZERO' field='app-version'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NOT_ZERO' field='connnect-type'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NOT_ZERO' field='code'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NOT_ZERO' field='platform'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='minute-order'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-minute-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NOT_ZERO' field='city'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NOT_ZERO' field='operator'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NOT_ZERO' field='network'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NOT_ZERO' field='app-version'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NOT_ZERO' field='connnect-type'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NOT_ZERO' field='code'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NOT_ZERO' field='platform'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>

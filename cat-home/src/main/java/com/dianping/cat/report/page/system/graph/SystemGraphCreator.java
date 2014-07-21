@@ -31,11 +31,11 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 	      "/-usage:avg", "/-freeInodes:avg", "/-read:sum", "/-write:sum", "/data-usage:avg", "/data-freeInodes:avg",
 	      "/data-read:sum", "/data-write:sum", "/usr-usage:avg", "/usr-freeInodes:avg", "/usr-read:sum",
 	      "/usr-write:sum", "/var-usage:avg", "/var-freeInodes:avg", "/var-read:sum", "/var-write:sum",
-	      "eth0-inFlow:sum", "eth0-outFlow:sum", "eth0-dropped:sum", "eth0-errors:sum", "lo-inFlow:sum",
-	      "lo-outFlow:sum", "lo-dropped:sum", "lo-errors:sum", "swapUsage:avg", "loadAvg1:avg", "loadAvg5:avg",
-	      "totalMem:avg", "usedMem:avg", "freeMem:avg", "sharedMem:avg", "buffersMem:avg", "cachedMem:avg",
-	      "totalProcess:avg", "runningProcess:avg", "swapUsage:avg", "establishedTcp:avg", "loginUsers:avg",
-	      "uptime:avg", "md5Change:avg", "hostNameChange:avg", "hostIpChange:avg"));
+	      "eth0-inFlow:sum", "eth0-outFlow:sum", "eth0-dropped:sum", "eth0-errors:sum", "eth0-collisions:sum",
+	      "lo-inFlow:sum", "lo-outFlow:sum", "swapUsage:avg", "loadAvg1:avg", "loadAvg5:avg", "totalMem:avg",
+	      "usedMem:avg", "freeMem:avg", "sharedMem:avg", "buffersMem:avg", "cachedMem:avg", "totalProcess:avg",
+	      "runningProcess:avg", "swapUsage:avg", "establishedTcp:avg", "loginUsers:avg", "uptime:avg", "md5Change:avg",
+	      "hostNameChange:avg", "hostIpChange:avg"));
 
 	private static final List<String> JVM_KEY_LIST = new ArrayList<String>(Arrays.asList("edenUsage:avg",
 	      "oldUsage:avg", "permUsage:avg", "catalinaLogSize:sum"));

@@ -97,5 +97,11 @@ public interface MessageManager {
 	 *           title shown in the logview
 	 */
 	public void bind(String tag, String title);
+	
+	/**
+	 * get domain
+	 * 
+	 */
+	public String getDomain();
 
 }

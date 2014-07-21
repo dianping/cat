@@ -230,7 +230,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		}
 	}
 
-	protected Map<Long, Double> buildNoneData(Date startDate, Date endDate, int step) {
+	public Map<Long, Double> buildNoneData(Date startDate, Date endDate, int step) {
 		int n = 0;
 		long current = System.currentTimeMillis();
 

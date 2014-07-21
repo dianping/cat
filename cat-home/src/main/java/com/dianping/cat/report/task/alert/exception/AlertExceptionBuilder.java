@@ -41,7 +41,7 @@ public class AlertExceptionBuilder {
 		double totalWarnLimit = totalLimitPair.getKey();
 		double totalErrorLimit = totalLimitPair.getValue();
 		double totalException = 0;
-
+		
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 
