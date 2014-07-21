@@ -15,15 +15,16 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
 
 public class NetworkGraphCreator extends AbstractGraphCreator {
 
-	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
-	      final Map<String, double[]> dataWithOutFutures) {
+	public Map<String, LineChart> buildChartData(String productLine, final Map<String, double[]> datas, Date startDate,
+	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
@@ -41,7 +42,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 					Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 					Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
-					buildLineChartTitle(lineChart, key, alertKeys);
+					buildLineChartTitle(productLine, lineChart, key, alertKeys);
 					addLastMinuteData(current, all, m_lastMinute, endDate);
 					convertFlowMetric(lineChart, current, buildLineTitle(key));
 				} else {
@@ -53,12 +54,12 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	private void buildLineChartTitle(LineChart lineChart, String key, List<String> alertKeys) {
+	private void buildLineChartTitle(String productLine, LineChart lineChart, String key, List<AlertMetric> alertKeys) {
 		String title = lineChart.getHtmlTitle();
 		String realKey = key.substring(0, key.lastIndexOf(":"));
 
 		// alertKeys格式 = [domain:Metric:key]
-		if (alertKeys.contains(realKey) && !title.startsWith("<span style='color:red'>")) {
+		if (containsAlert(productLine, realKey, alertKeys) && !title.startsWith("<span style='color:red'>")) {
 			lineChart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
 		} else {
 			lineChart.setHtmlTitle(title);
@@ -70,7 +71,17 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 
-		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		return buildChartData(productLine, oldCurrentValues, startDate, endDate, dataWithOutFutures);
+	}
+
+	private boolean containsAlert(String productLine, String key, List<AlertMetric> metrics) {
+		for (AlertMetric metric : metrics) {
+			if (metric.getGroup().equals(productLine) && metric.getMetricId().equals(key)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {

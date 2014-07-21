@@ -13,8 +13,8 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -24,6 +24,7 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.AlertDao;
+import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -65,6 +66,14 @@ import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlertConfig;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
@@ -87,8 +96,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
-	
-	
+
 	private List<Component> defineAlertComponents() {
 		List<Component> all = new ArrayList<Component>();
 
@@ -121,7 +129,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		return all;
 	}
-	
+
 	private List<Component> defineCommonComponents() {
 		List<Component> all = new ArrayList<Component>();
 
@@ -139,7 +147,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
-	
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 
 		all.add(C(TopologyGraphBuilder.class).req(TopologyGraphItemBuilder.class).is(PER_LOOKUP));
@@ -147,13 +154,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class) //
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
 		      .req(ModelService.class, DependencyAnalyzer.ID));
-		
 
 		// update project database
 		all.add(C(ProjectUpdateTask.class)//
 		      .req(ProjectDao.class, HostinfoDao.class));
-		
-		
+
 		return all;
 	}
 
@@ -162,17 +167,17 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.addAll(defineCommonComponents());
-		
+
 		all.addAll(defineConfigComponents());
-		
+
 		all.addAll(defineMetricComponents());
-		
+
 		all.addAll(defineAlertComponents());
-		
+
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-		
+
 		// report serivce
 		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
 		// task
@@ -181,7 +186,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TableProvider.class,"app-data-command",AppDataCommandTableProvider.class));
+		all.add(C(TableProvider.class, "app-data-command", AppDataCommandTableProvider.class));
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -197,10 +202,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		return all;
 	}
-	
-	private List<Component> defineConfigComponents(){
+
+	private List<Component> defineConfigComponents() {
 		List<Component> all = new ArrayList<Component>();
-		
+
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
@@ -211,10 +216,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
-	
+
 		return all;
 	}
-	private List<Component> defineMetricComponents(){
+
+	private List<Component> defineMetricComponents() {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(IpService.class));
@@ -228,7 +234,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricGroupConfigManager.class, AlertInfo.class));
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectDao.class));
 		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
@@ -266,23 +272,48 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 
-		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class));
+		all.add(C(MailSender.class).req(MailSMS.class));
 
-		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
+		all.add(C(SmsSender.class).req(MailSMS.class));
 
-		all.add(C(SystemAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class));
+		all.add(C(WeixinSender.class).req(MailSMS.class));
+
+		all.add(C(BusinessAlert.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
+		            BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)
+		      //
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class, ProjectDao.class)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+
+		all.add(C(NetworkAlert.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
+		            NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)
+		      //
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, ProjectDao.class)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+
+		all.add(C(SystemAlert.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
+		            SystemAlertConfig.class, AlertInfo.class, AlertDao.class)
+		      //
+		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, ProjectDao.class)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
-		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
-		      TopAnalyzer.ID));
+		all.add(C(ExceptionAlert.class)
+		      .req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class, ExceptionConfigManager.class,
+		            AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class, TopAnalyzer.ID)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+
+		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
+		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
+
+		all.add(C(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));
+
+		all.add(C(AlertSummaryGenerator.class).req(AlertDao.class, TopologyGraphManager.class));
+
+		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 

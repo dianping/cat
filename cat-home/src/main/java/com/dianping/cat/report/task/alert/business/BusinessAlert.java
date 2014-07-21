@@ -25,8 +25,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	@Inject
 	protected BusinessAlertConfig m_alertConfig;
 
-	private Logger m_logger;
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -36,7 +34,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	public String getName() {
 		return "business-alert";
 	}
-	
+
 	@Override
 	public BaseAlertConfig getAlertConfig() {
 		return m_alertConfig;
@@ -71,10 +69,16 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 			if (alertResult != null && alertResult.isTriggered()) {
 				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
-				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
+				String contactInfo = buildContactInfo(domain);
+				alertResult.setContent(alertResult.getContent() + contactInfo);
+				String content = alertResult.getContent();
+				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
 
 				storeAlert(domain, metric, mailTitle, alertResult);
-				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());
+
+				String configId = getAlertConfig().getId();
+				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				Cat.logEvent(configId, product, Event.SUCCESS, mailTitle + "  " + content);
 			}
 		}
 	}
@@ -144,21 +148,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				active = false;
 			}
 		}
-	}
-
-	@Override
-	public void sendAlertInfo(ProductLine productLine, String title, String content, String alertType) {
-		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-
-		m_logger.info(title + " " + content + " " + emails);
-		m_mailSms.sendEmail(title, content, emails);
-
-		if (alertType != null && alertType.equals("error")) {
-			List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-			m_mailSms.sendSms(title + " " + content, content, phones);
-		}
-
-		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
 	}
 
 	@Override

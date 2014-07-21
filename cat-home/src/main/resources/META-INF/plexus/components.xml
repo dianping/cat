@@ -300,6 +300,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1835,6 +1838,33 @@
 			<implementation>com.dianping.cat.report.task.alert.DefaultDataChecker</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.MailSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.SmsSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.WeixinSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.business.BusinessAlert</role>
 			<implementation>com.dianping.cat.report.task.alert.business.BusinessAlert</implementation>
 			<requirements>
@@ -1867,6 +1897,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1904,6 +1946,18 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1939,6 +1993,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1976,6 +2042,60 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role-hint>AlertSummaryFTLDecorator</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+			<role-hint>AlertSummaryFTLDecorator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3115,6 +3235,9 @@
 			<implementation>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
@@ -3338,6 +3461,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3355,6 +3481,65 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role-hint>AlertSummaryFTLDecorator</role-hint>
+					<field-name>m_alertSummaryDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertSummaryDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6801,6 +6986,9 @@
 			<implementation>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
@@ -7024,6 +7212,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7041,6 +7232,65 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role-hint>AlertSummaryFTLDecorator</role-hint>
+					<field-name>m_alertSummaryDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertSummaryDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

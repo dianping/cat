@@ -32,6 +32,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.alert.AlertInfo;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.NetGraphConfigManager;
@@ -49,13 +50,13 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
-	
+
 	@Inject
 	private AlertInfo m_alertInfo;
-	
+
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
-	
+
 	private NetGraphSet m_currentNetGraphSet;
 
 	private NetGraphSet m_lastNetGraphSet;
@@ -109,18 +110,17 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	}
 
 	private Set<String> queryAllGroups(NetGraph netGraphTemplate) {
-      Set<String> groups = new HashSet<String>();
+		Set<String> groups = new HashSet<String>();
 
-      for (NetTopology netTopology : netGraphTemplate.getNetTopologies()) {
-      	for (Connection connection : netTopology.getConnections()) {
-      		for (Interface inter : connection.getInterfaces()) {
-      			groups.add(inter.getGroup());
-      		}
-      	}
-      }
-      return groups;
-   }
-	
+		for (NetTopology netTopology : netGraphTemplate.getNetTopologies()) {
+			for (Connection connection : netTopology.getConnections()) {
+				for (Interface inter : connection.getInterfaces()) {
+					groups.add(inter.getGroup());
+				}
+			}
+		}
+		return groups;
+	}
 
 	private Map<String, MetricReport> queryMetricReports(Set<String> groups, Date date) {
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
@@ -154,19 +154,21 @@ public class NetGraphManager implements Initializable, LogEnabled {
 					minuteStr = '0' + minuteStr;
 				}
 				Transaction t = Cat.newTransaction("NetGraph", "M" + minuteStr);
-				
+
 				try {
 					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
 					Set<String> groups = queryAllGroups(netGraphTemplate);
 					Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, TimeUtil.getCurrentHour());
-					List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
-					
-					m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, currentMetricReports, alertKeys);
+					List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+
+					m_currentNetGraphSet = m_netGraphBuilder
+					      .buildGraphSet(netGraphTemplate, currentMetricReports, alertKeys);
 
 					Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
 					Map<String, MetricReport> lastHourReports = queryMetricReports(groups, lastHour);
 
-					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports, new ArrayList<String>());
+					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports,
+					      new ArrayList<AlertMetric>());
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
 					t.setStatus(e);

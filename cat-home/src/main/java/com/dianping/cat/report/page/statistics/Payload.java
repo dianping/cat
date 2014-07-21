@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page.statistics;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -17,6 +20,17 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("tab")
 	private String m_tab = "tab1";
+
+	@FieldMeta("summarydomain")
+	private String m_summarydomain;
+
+	@FieldMeta("summarytime")
+	private String m_summarytime;
+
+	@FieldMeta("summaryemails")
+	private String m_summaryemails;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public Payload() {
 		super(ReportPage.STATISTICS);
@@ -36,6 +50,30 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_sortBy;
 	}
 
+	public String getSummarydomain() {
+		if (m_summarydomain == null || "".equals(m_summarydomain)) {
+			return null;
+		} else {
+			return m_summarydomain;
+		}
+	}
+
+	public String getSummaryemails() {
+		if (m_summaryemails == null || "".equals(m_summaryemails)) {
+			return null;
+		} else {
+			return m_summaryemails;
+		}
+	}
+
+	public Date getSummarytime() {
+		try {
+			return m_sdf.parse(m_summarytime);
+		} catch (Exception ex) {
+			return new Date();
+		}
+	}
+
 	public String getTab() {
 		return m_tab;
 	}
@@ -51,6 +89,18 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setSortBy(String sortBy) {
 		m_sortBy = sortBy;
+	}
+
+	public void setSummarydomain(String summaryDomain) {
+		m_summarydomain = summaryDomain;
+	}
+
+	public void setSummaryemails(String summaryEmails) {
+		m_summaryemails = summaryEmails;
+	}
+
+	public void setSummarytime(String summaryTime) {
+		m_summarytime = summaryTime;
 	}
 
 	public void setTab(String tab) {
