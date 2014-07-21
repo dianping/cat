@@ -21,6 +21,7 @@ import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.home.nettopo.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
@@ -31,7 +32,7 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
-	
+
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
 
@@ -52,7 +53,7 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 				}
 			}
 		}
-		
+
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groups) {
@@ -61,8 +62,9 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 
 			reports.put(group, report);
 		}
-		
-		NetGraphSet netGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, reports, new ArrayList<String>());
+
+		NetGraphSet netGraphSet = m_netGraphBuilder
+		      .buildGraphSet(netGraphTemplate, reports, new ArrayList<AlertMetric>());
 		HourlyReport hourlyReport = new HourlyReport();
 
 		hourlyReport.setType(1);

@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.alert.summary;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,27 +9,55 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
+import com.dianping.cat.system.tool.MailSMS;
+import com.site.helper.Splitters;
+import com.site.lookup.util.StringUtils;
 
 public class AlertSummaryExecutor {
 
 	@Inject
-	AlertSummaryGenerator m_alertSummaryGenerator;
+	private AlertSummaryGenerator m_alertSummaryGenerator;
 
 	@Inject
-	AlertSummaryManager m_alertSummaryManager;
+	private AlertSummaryManager m_alertSummaryManager;
+
+	@Inject(type = AlertSummaryDecorator.class, value = AlertSummaryFTLDecorator.ID)
+	private AlertSummaryDecorator m_alertSummaryDecorator;
 
 	@Inject
-	AlertSummaryDecorator m_alertSummaryDecorator;
+	protected MailSMS m_mailSms;
 
-	@Inject
-	AlertSummarySender m_alertSummarySender;
+	private String buildMailTitle(String domain, Date date) {
+		StringBuilder builder = new StringBuilder();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-	public String execute(String domain, Date date, List<String> receivers) {
+		builder.append("[统一告警] [项目 ").append(domain).append("]");
+		builder.append("[时间 ").append(dateFormat.format(date)).append("]");
+		return builder.toString();
+	}
+
+	private List<String> builderReceivers(String str) {
+		List<String> result = new ArrayList<String>();
+
+		if (str != null) {
+			result.addAll(Splitters.by(",").noEmptyItem().split(str));
+		}
+
+		return result;
+	}
+
+	public String execute(String domain, Date date, String receiverStr) {
+		if (StringUtils.isEmpty(domain) || date == null) {
+			return null;
+		}
+
 		try {
 			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
 			m_alertSummaryManager.insert(alertSummary);
+			String title = buildMailTitle(domain, date);
 			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
-			m_alertSummarySender.send(content, receivers);
+			List<String> receivers = builderReceivers(receiverStr);
+			m_mailSms.sendEmail(title, content, receivers);
 
 			return content;
 		} catch (Exception e) {

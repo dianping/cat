@@ -22,7 +22,7 @@ public class NavigationBar {
 		return new Page[] {
 
 		ReportPage.METRIC,
-		
+
 		ReportPage.USERMONITOR,
 		
 		ReportPage.APP,
@@ -44,9 +44,9 @@ public class NavigationBar {
 		ReportPage.DEPENDENCY,
 
 		ReportPage.NETWORK,
-		
+
 		ReportPage.CDN,
-		
+
 		ReportPage.SYSTEM,
 
 		ReportPage.ALTERATION,
@@ -54,9 +54,8 @@ public class NavigationBar {
 		ReportPage.STATE,
 
 		ReportPage.STATISTICS,
-		
-		ReportPage.LOGVIEW,
 
+		ReportPage.LOGVIEW,
 		};
 	}
 }

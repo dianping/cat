@@ -30,10 +30,14 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
+import com.site.lookup.util.StringUtils;
 
 public class ExceptionAlert implements Task, LogEnabled {
 
@@ -57,6 +61,15 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_topService;
+
+	@Inject
+	protected MailSender m_mailSender;
+
+	@Inject
+	protected SmsSender m_smsSender;
+
+	@Inject
+	protected WeixinSender m_weixinSender;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
@@ -84,6 +97,28 @@ public class ExceptionAlert implements Task, LogEnabled {
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
+	}
+
+	private String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[业务负责人: ").append(owners).append(" ]");
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append("[负责人手机号码: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
 	}
 
 	@Override
@@ -179,21 +214,26 @@ public class ExceptionAlert implements Task, LogEnabled {
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
 		String weixins = m_alertConfig.buildWeiXinReceivers(project);
 		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
-		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain);
-		
-		m_mailSms.sendEmail(mailTitle, mailContent, emails);
-		m_logger.info(mailTitle + " " + mailContent + " " + emails);
-		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
-		
+		String contactInfo = buildContactInfo(domain);
+		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain, contactInfo);
+
 		storeAlerts(domain, exceptions, mailTitle + "<br/>" + mailContent);
 
+		m_mailSender.sendAlert(emails, domain, mailTitle, mailContent, "warning");
+		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+
 		List<AlertException> errorExceptions = m_alertBuilder.buildErrorException(exceptions);
-
 		if (!errorExceptions.isEmpty()) {
-			String smsContent = m_alertBuilder.buildContent(errorExceptions.toString(), domain);
+			String weixinContent = m_alertBuilder.buildContent(errorExceptions.toString(), domain, contactInfo);
+			m_weixinSender.sendAlert(emails, domain, mailTitle, weixinContent, "error");
+			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + weixinContent + " "
+			      + domain + " " + weixins);
+		}
 
-			m_mailSms.sendSms(smsContent, smsContent, phones);
-			m_logger.info(smsContent + " " + phones);
+		List<AlertException> errorAndTriggeredExceptions = m_alertBuilder.buildErrorAndTriggeredException(exceptions);
+		if (!errorAndTriggeredExceptions.isEmpty()) {
+			String smsContent = m_alertBuilder.buildContent(errorAndTriggeredExceptions.toString(), domain, contactInfo);
+			m_smsSender.sendAlert(phones, domain, smsContent, smsContent, "error");
 			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
 		
 			m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);

@@ -20,14 +20,16 @@ public enum Action implements org.unidal.web.mvc.Action {
 	UTILIZATION_REPORT(Constants.REPORT_UTILIZATION),
 
 	UTILIZATION_HISTORY_REPORT("historyUtilization"),
-	
+
 	ALERT_REPORT(Constants.REPORT_ALERT),
-	
+
 	ALERT_REPORT_DETAIL("alertDetail"),
-	
+
 	ALERT_HISTORY_REPORT_DETAIL("historyAlertDetail"),
-	
-	ALERT_HISTORY_REPORT("historyAlert");
+
+	ALERT_HISTORY_REPORT("historyAlert"),
+
+	ALERT_SUMMARY("summary");
 
 	private String m_name;
 

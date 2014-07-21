@@ -22,16 +22,25 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.task.alert.sender.BaseSender;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
+import com.site.lookup.util.StringUtils;
 
 public abstract class BaseAlert {
 
@@ -61,6 +70,18 @@ public abstract class BaseAlert {
 
 	@Inject
 	protected RemoteMetricReportService m_service;
+
+	@Inject
+	private ProjectDao m_projectDao;
+
+	@Inject
+	protected MailSender m_mailSender;
+
+	@Inject
+	protected SmsSender m_smsSender;
+
+	@Inject
+	protected WeixinSender m_weixinSender;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -94,6 +115,37 @@ public abstract class BaseAlert {
 			Cat.logError("get metric title error:" + metricKey, ex);
 			return null;
 		}
+	}
+
+	private String extractDomain(String metricKey) {
+		try {
+			return metricKey.split(":")[0];
+		} catch (Exception ex) {
+			Cat.logError("extract domain error:" + metricKey, ex);
+			return null;
+		}
+	}
+
+	protected String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[业务负责人: ").append(owners).append(" ]");
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append("[负责人手机号码: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
 	}
 
 	private Long buildMillsByString(String time) throws Exception {
@@ -244,10 +296,16 @@ public abstract class BaseAlert {
 			if (alertResult != null && alertResult.isTriggered()) {
 				String metricTitle = buildMetricTitle(metricKey);
 				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
-				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
+				String domain = extractDomain(metricKey);
+				String contactInfo = buildContactInfo(domain);
+				alertResult.setContent(alertResult.getContent() + contactInfo);
+				String content = alertResult.getContent();
+				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
 				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
-				sendAlertInfo(productLine, mailTitle, alertResult.getContent(), alertResult.getAlertType());
+				String configId = getAlertConfig().getId();
+				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				Cat.logEvent(configId, productlineName, Event.SUCCESS, mailTitle + "  " + content);
 			}
 		}
 	}
@@ -265,6 +323,26 @@ public abstract class BaseAlert {
 				Cat.logError(e);
 			}
 		}
+	}
+
+	protected boolean sendAllAlert(ProductLine productLine, String domain, String title, String content,
+	      String alertType, String configId) {
+		boolean sendResult = true;
+		BaseSender[] senders = { m_mailSender, m_weixinSender };
+
+		List<String> receivers = getAlertConfig().buildMailReceivers(productLine);
+		for (BaseSender sender : senders) {
+			if (!sender.sendAlert(receivers, domain, title, content, alertType)) {
+				sendResult = false;
+			}
+		}
+
+		receivers = getAlertConfig().buildSMSReceivers(productLine);
+		if (!m_smsSender.sendAlert(receivers, domain, title, content, alertType)) {
+			sendResult = false;
+		}
+
+		return sendResult;
 	}
 
 	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
@@ -339,8 +417,6 @@ public abstract class BaseAlert {
 	}
 
 	protected abstract String getName();
-	
-	protected abstract BaseAlertConfig getAlertConfig();
 
-	protected abstract void sendAlertInfo(ProductLine productLine, String mailTitle, String content, String alertType);
+	protected abstract BaseAlertConfig getAlertConfig();
 }
