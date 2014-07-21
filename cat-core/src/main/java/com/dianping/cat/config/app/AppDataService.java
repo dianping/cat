@@ -26,20 +26,16 @@ public class AppDataService {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public static final String SUCCESS= "success";
+	public static final String SUCCESS = "success";
 
 	public static final String REQUEST = "request";
 
 	public static final String DELAY = "delay";
 
-	public void insert(AppDataCommand proto) throws DalException {
-		m_dao.insert(proto);
-	}
-
 	public void insert(AppDataCommand[] proto) throws DalException {
 		m_dao.insert(proto);
 	}
-	
+
 	public double[] queryValue(QueryEntity entity, String type) {
 		int commandId = entity.getCommand();
 		Date period = entity.getDate();
@@ -71,11 +67,11 @@ public class AppDataService {
 
 				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
 				return queryDelayAvg(dataPair);
+			} else {
+				throw new RuntimeException("unexpected query type, type:" + type);
 			}
-
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -170,4 +166,5 @@ public class AppDataService {
 		}
 		return value;
 	}
+	
 }

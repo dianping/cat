@@ -30,7 +30,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			double[] values2 = prepareQueryData(queryEntity2, type);
 			dataList.add(values2);
 		}
-
 		return buildChartData(dataList, type);
 	}
 
@@ -48,18 +47,18 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		} else if (AppDataService.DELAY.equals(type)) {
 			return "成功延时(ms)";
 		} else {
-			return "";
+			throw new RuntimeException("unexpected query type, type:" + type);
 		}
 	}
 
 	public LineChart buildChartData(final LinkedList<double[]> dataList, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
-
 		lineChart.setHtmlTitle(queryType(type));
-		int i = 1;
+		int length = dataList.size();
 
-		for (double[] data : dataList) {
+		for (int i = 0; i < length; i++) {
+			double[] data = dataList.get(i);
 			lineChart.add("查询" + i++, data);
 		}
 		return lineChart;
@@ -76,7 +75,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			time += step * TimeUtil.ONE_MINUTE;
 			map.put(time, data[i]);
 		}
-
 		return map;
 	}
 }

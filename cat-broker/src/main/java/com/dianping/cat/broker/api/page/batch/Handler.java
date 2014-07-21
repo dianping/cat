@@ -65,76 +65,72 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 
-		if (version.equals("1")) {
-			processVersion1(payload, request, userIp);
-		} else if (version.equals("2")) {
-			processVersion2(payload, request, userIp);
+		if (userIp != null) {
+			if (version.equals("1")) {
+				processVersion1(payload, request, userIp);
+			} else if (version.equals("2")) {
+				processVersion2(payload, request, userIp);
+			}
+		} else {
+			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
 		response.getWriter().write("OK");
 	}
 
 	private void processVersion1(Payload payload, HttpServletRequest request, String userIp) {
-		if (userIp != null) {
-			try {
-				String content = payload.getContent();
-				String[] lines = content.split("\n");
+		try {
+			String content = payload.getContent();
+			String[] lines = content.split("\n");
 
-				for (String line : lines) {
-					String[] tabs = line.split("\t");
-					// timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
-					if (tabs.length == 5 && validate(tabs[3], tabs[4])) {
-						MonitorEntity entity = new MonitorEntity();
-						String httpStatus = tabs[3];
-						String errorCode = tabs[4];
+			for (String line : lines) {
+				String[] tabs = line.split("\t");
+				// timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
+				if (tabs.length == 5 && validate(tabs[3], tabs[4])) {
+					MonitorEntity entity = new MonitorEntity();
+					String httpStatus = tabs[3];
+					String errorCode = tabs[4];
 
-						if (StringUtils.isEmpty(errorCode)) {
-							errorCode = Constrants.NOT_SET;
-						}
-						if (StringUtils.isEmpty(httpStatus)) {
-							httpStatus = Constrants.NOT_SET;
-						}
-						entity.setTimestamp(Long.parseLong(tabs[0]));
-						entity.setTargetUrl(tabs[1]);
-						entity.setDuration(Double.parseDouble(tabs[2]));
-						entity.setHttpStatus(httpStatus);
-						entity.setErrorCode(errorCode);
-						entity.setIp(userIp);
-
-						if (payload.getVersion().equals("1")) {
-							entity.setCount(10);
-						}
-						m_manager.offer(entity);
+					if (StringUtils.isEmpty(errorCode)) {
+						errorCode = Constrants.NOT_SET;
 					}
+					if (StringUtils.isEmpty(httpStatus)) {
+						httpStatus = Constrants.NOT_SET;
+					}
+					entity.setTimestamp(Long.parseLong(tabs[0]));
+					entity.setTargetUrl(tabs[1]);
+					entity.setDuration(Double.parseDouble(tabs[2]));
+					entity.setHttpStatus(httpStatus);
+					entity.setErrorCode(errorCode);
+					entity.setIp(userIp);
+
+					if (payload.getVersion().equals("1")) {
+						entity.setCount(10);
+					}
+					m_manager.offer(entity);
 				}
-			} catch (Exception e) {
-				m_logger.error(e.getMessage(), e);
 			}
-		} else {
-			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 		}
 	}
 
 	private void processVersion2(Payload payload, HttpServletRequest request, String userIp) {
-		if (userIp != null) {
-			String content = payload.getContent();
-			String records[] = content.split("\n");
-			IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
-			
-			if (ipInfo != null) {
-				String province = ipInfo.getProvince();
-				String operatorStr = ipInfo.getChannel();
-				Integer cityId = m_appConfigManager.getCities().get(province);
-				Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
-				
-				if (cityId != null && operatorId != null) {
-					for (String record : records) {
-						processOneRecord(cityId, operatorId, record);
-					}
+		String content = payload.getContent();
+		String records[] = content.split("\n");
+		IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
+
+		if (ipInfo != null) {
+			String province = ipInfo.getProvince();
+			String operatorStr = ipInfo.getChannel();
+			Integer cityId = m_appConfigManager.getCities().get(province);
+			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
+
+			if (cityId != null && operatorId != null) {
+				for (String record : records) {
+					processOneRecord(cityId, operatorId, record);
 				}
 			}
-		} else {
-			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 	}
 
