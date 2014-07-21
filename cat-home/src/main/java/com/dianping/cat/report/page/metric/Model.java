@@ -26,6 +26,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private Date m_startTime;
 
 	private Date m_endTime;
+	
+	private String m_json;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -88,6 +90,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setStartTime(Date startTime) {
 		m_startTime = startTime;
+	}
+
+	public String getJson() {
+		return m_json;
+	}
+
+	public void setJson(String json) {
+		this.m_json = json;
 	}
 	
 }
