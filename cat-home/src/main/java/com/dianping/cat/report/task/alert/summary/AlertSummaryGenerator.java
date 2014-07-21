@@ -34,7 +34,7 @@ public class AlertSummaryGenerator {
 		alert.setAlertTime(date);
 		alert.setContext(edge.getDes());
 		alert.setMetric(edge.getKey());
-		alert.setType("long call");
+		alert.setType("slow "+edge.getType());
 		alert.setDomain(edge.getSelf());
 
 		return alert;

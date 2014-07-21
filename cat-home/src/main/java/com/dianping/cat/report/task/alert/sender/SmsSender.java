@@ -5,7 +5,7 @@ import java.util.List;
 import com.dianping.cat.Cat;
 
 public class SmsSender extends BaseSender {
-
+	
 	@Override
 	protected void sendLog(String title, String content, List<String> receivers) {
 		StringBuilder builder = new StringBuilder();
