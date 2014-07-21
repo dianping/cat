@@ -104,8 +104,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					entity.setErrorCode(errorCode);
 					entity.setIp(userIp);
 
-					if (payload.getVersion().equals("1")) {
+					if ("200".equals(httpStatus)) {
 						entity.setCount(10);
+					} else {
+						entity.setCount(1);
 					}
 					m_manager.offer(entity);
 				}
