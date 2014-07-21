@@ -62,6 +62,9 @@ import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
@@ -190,23 +193,39 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 
-		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class, ProjectDao.class));
+		all.add(C(MailSender.class).req(MailSMS.class));
 
-		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, ProjectDao.class));
+		all.add(C(SmsSender.class).req(MailSMS.class));
 
-		all.add(C(SystemAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, ProjectDao.class));
+		all.add(C(WeixinSender.class).req(MailSMS.class));
+
+		all.add(C(BusinessAlert.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
+		            BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)
+		      //
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class, ProjectDao.class)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+
+		all.add(C(NetworkAlert.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
+		            NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)
+		      //
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, ProjectDao.class)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+
+		all.add(C(SystemAlert.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
+		            SystemAlertConfig.class, AlertInfo.class, AlertDao.class)
+		      //
+		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, ProjectDao.class)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
-		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
-		      TopAnalyzer.ID));
+		all.add(C(ExceptionAlert.class)
+		      .req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class, ExceptionConfigManager.class,
+		            AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class, TopAnalyzer.ID)
+		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));

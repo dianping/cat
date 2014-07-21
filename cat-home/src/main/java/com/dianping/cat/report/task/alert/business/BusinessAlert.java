@@ -77,7 +77,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				storeAlert(domain, metric, mailTitle, alertResult);
 
 				String configId = getAlertConfig().getId();
-				m_baseSender.sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
 				Cat.logEvent(configId, product, Event.SUCCESS, mailTitle + "  " + content);
 			}
 		}

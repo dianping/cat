@@ -1796,6 +1796,33 @@
 			<implementation>com.dianping.cat.report.task.alert.DefaultDataChecker</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.MailSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.SmsSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.WeixinSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.business.BusinessAlert</role>
 			<implementation>com.dianping.cat.report.task.alert.business.BusinessAlert</implementation>
 			<requirements>
@@ -1831,6 +1858,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1871,6 +1907,15 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1910,6 +1955,15 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1946,6 +2000,15 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.WeixinSender</role>
 				</requirement>
 			</requirements>
 		</component>

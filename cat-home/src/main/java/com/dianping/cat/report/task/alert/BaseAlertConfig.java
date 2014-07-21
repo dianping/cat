@@ -33,9 +33,9 @@ public abstract class BaseAlertConfig {
 		return smsReceivers;
 	}
 
-	public List<String> buildMailReceivers(ProductLine productLine, String configId) {
+	public List<String> buildMailReceivers(ProductLine productLine) {
 		List<String> mailReceivers = new ArrayList<String>();
-		Receiver receiver = m_manager.queryReceiverById(configId);
+		Receiver receiver = m_manager.queryReceiverById(getId());
 
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;
@@ -45,10 +45,6 @@ public abstract class BaseAlertConfig {
 
 			return mailReceivers;
 		}
-	}
-
-	public List<String> buildMailReceivers(ProductLine productLine) {
-		return buildMailReceivers(productLine, getId());
 	}
 
 	private List<String> buildProductlineMailReceivers(ProductLine productLine) {
@@ -74,7 +70,17 @@ public abstract class BaseAlertConfig {
 	}
 
 	public List<String> buildSMSReceivers(ProductLine productLine) {
-		return buildSMSReceivers(productLine, getId());
+		List<String> smsReceivers = new ArrayList<String>();
+		Receiver receiver = m_manager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return smsReceivers;
+		} else {
+			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+			smsReceivers.addAll(buildProductlineSMSReceivers(productLine));
+
+			return smsReceivers;
+		}
 	}
 
 	protected abstract String buildMailTitle(String artifactName, String configTitle);

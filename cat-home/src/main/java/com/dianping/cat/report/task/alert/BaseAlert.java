@@ -33,6 +33,9 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.task.alert.sender.BaseSender;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
@@ -72,7 +75,13 @@ public abstract class BaseAlert {
 	private ProjectDao m_projectDao;
 
 	@Inject
-	protected BaseSender m_baseSender;
+	protected MailSender m_mailSender;
+
+	@Inject
+	protected SmsSender m_smsSender;
+
+	@Inject
+	protected WeixinSender m_weixinSender;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -295,7 +304,7 @@ public abstract class BaseAlert {
 
 				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
 				String configId = getAlertConfig().getId();
-				m_baseSender.sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
 				Cat.logEvent(configId, productlineName, Event.SUCCESS, mailTitle + "  " + content);
 			}
 		}
@@ -314,6 +323,26 @@ public abstract class BaseAlert {
 				Cat.logError(e);
 			}
 		}
+	}
+
+	protected boolean sendAllAlert(ProductLine productLine, String domain, String title, String content,
+	      String alertType, String configId) {
+		boolean sendResult = true;
+		BaseSender[] senders = { m_mailSender, m_weixinSender };
+
+		List<String> receivers = getAlertConfig().buildMailReceivers(productLine);
+		for (BaseSender sender : senders) {
+			if (!sender.sendAlert(receivers, domain, title, content, alertType)) {
+				sendResult = false;
+			}
+		}
+
+		receivers = getAlertConfig().buildSMSReceivers(productLine);
+		if (!m_smsSender.sendAlert(receivers, domain, title, content, alertType)) {
+			sendResult = false;
+		}
+
+		return sendResult;
 	}
 
 	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
