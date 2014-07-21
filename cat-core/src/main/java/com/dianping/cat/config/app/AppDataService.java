@@ -99,13 +99,8 @@ public class AppDataService {
 			}
 			data.add(from);
 		}
-<<<<<<< HEAD
-		int gap = max - min;
-		int n = gap <= 0 ? max / 5 : gap / 5;
-=======
 
 		int n = max / 5;
->>>>>>> 679260357982378d8ec37b01091bbd37da70b3db
 
 		return new Pair<Integer, Map<Integer, List<AppDataCommand>>>(n, dataMap);
 	}
@@ -137,15 +132,9 @@ public class AppDataService {
 		return value;
 	}
 
-<<<<<<< HEAD
-	private boolean isSuccessStatus(AppDataCommand data) {
-		int code = data.getCode();
-		Collection<Code> codes = m_appConfigManager.queryCodeByCommand(data.getCommandId());
-=======
 	private boolean isSuccessStatus(int commandId, int code) {
 		Collection<Code> codes = m_appConfigManager.queryCodeByCommand(commandId);
 
->>>>>>> 679260357982378d8ec37b01091bbd37da70b3db
 		for (Code c : codes) {
 			if (c.getId() == code) {
 				return (c.getStatus() == 0);
