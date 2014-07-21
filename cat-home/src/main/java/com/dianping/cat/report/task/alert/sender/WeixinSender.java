@@ -25,6 +25,7 @@ public class WeixinSender extends BaseSender {
 		}
 
 		try {
+			content = content.replaceAll("<br/>", "\n");
 			m_mailSms.sendWeiXin(title, content, domain, mergeList(receivers));
 			sendLog(title, content, receivers);
 			return true;
