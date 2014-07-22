@@ -60,31 +60,31 @@ public class NetGraphBuilder {
 			String group = inter.getGroup();
 			MetricReport report = reports.get(group);
 			String domain = inter.getDomain();
-			String key = inter.getKey();
+			String prefix = inter.getKey();
 
 			updateInterface(inter, report, minute);
 
-			if (containsAlert(alertKeys, group, domain, key, "-flow-in")) {
+			if (containsAlert(alertKeys, group, domain, prefix, "-flow-in")) {
 				inter.setInstate(ERROR);
 				inState = ERROR;
 			}
-			if (containsAlert(alertKeys, group, domain, key, "-discard/error-indiscards")) {
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-indiscards")) {
 				inter.setInDiscardsState(ERROR);
 				inDiscardsState = ERROR;
 			}
-			if (containsAlert(alertKeys, group, domain, key, "-discard/error-inerrors")) {
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-inerrors")) {
 				inter.setInErrorsState(ERROR);
 				inErrorsState = ERROR;
 			}
-			if (containsAlert(alertKeys, group, domain, key, "-flow-out")) {
+			if (containsAlert(alertKeys, group, domain, prefix, "-flow-out")) {
 				inter.setOutstate(ERROR);
 				outState = ERROR;
 			}
-			if (containsAlert(alertKeys, group, domain, key, "-discard/error-outdiscards")) {
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-outdiscards")) {
 				inter.setOutDiscardsState(ERROR);
 				outDiscardsState = ERROR;
 			}
-			if (containsAlert(alertKeys, group, domain, key, "-discard/error-outerrors")) {
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-outerrors")) {
 				inter.setOutErrorsState(ERROR);
 				outErrorsState = ERROR;
 			}
@@ -115,15 +115,14 @@ public class NetGraphBuilder {
 		}
 	}
 
-	private boolean containsAlert(List<AlertMetric> alertKeys, String group, String domain, String key, String suffix) {
-		String actualKey = domain + ":Metric:" + key + suffix;
+	private boolean containsAlert(List<AlertMetric> alertKeys, String group, String domain, String prefix, String suffix) {
+		String actualKey = domain + ":Metric:" + prefix + suffix;
 
 		for (AlertMetric metric : alertKeys) {
 			if (metric.getGroup().equals(group) && metric.getMetricId().equals(actualKey)) {
 				return true;
 			}
 		}
-
 		return false;
 	}
 

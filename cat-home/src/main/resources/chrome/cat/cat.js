@@ -77,7 +77,7 @@ function TabManager() {
 	};
 	
 	this.headersWillBeSent = function(tabId, headers) {
-		headers.push({name: "X-CAT-TRACE-MODE", value: "1"});
+		headers.push({name: "X-CAT-TRACE-MODE", value: "true"});
 		return {requestHeaders: headers};
 	};
 	
@@ -110,7 +110,6 @@ function TabManager() {
 		console.debug("show pageAction for " + tabId);
 		chrome.pageAction.show(tabId);
 	};
-
 }
 
 var tabMgr = new TabManager();
