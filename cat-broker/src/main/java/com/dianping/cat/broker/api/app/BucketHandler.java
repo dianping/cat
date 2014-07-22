@@ -94,13 +94,11 @@ public class BucketHandler implements Task {
 
 	@Override
 	public String getName() {
-		return "BucketHandler";
+		return "BucketHandler-" + m_startTime;
 	}
 
 	public boolean isActive() {
-		synchronized (this) {
-			return m_isActive;
-		}
+		return m_isActive;
 	}
 
 	private void processEntity(AppData appData) {
@@ -144,7 +142,11 @@ public class BucketHandler implements Task {
 			AppData appData = m_appDataQueue.poll();
 
 			if (appData != null) {
-				processEntity(appData);
+				try {
+					processEntity(appData);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 		}
 
@@ -163,9 +165,7 @@ public class BucketHandler implements Task {
 
 	@Override
 	public void shutdown() {
-		synchronized (this) {
-			m_isActive = false;
-		}
+		m_isActive = false;
 	}
 
 }
