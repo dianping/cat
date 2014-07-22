@@ -12,6 +12,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 
 public class Handler implements PageHandler<Context> {
@@ -24,6 +25,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AppGraphCreator m_appGraphCreator;
 
+	@Inject
+	private PayloadNormalizer m_normalizePayload;
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "app")
@@ -35,6 +39,7 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "app")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.APP);
@@ -45,8 +50,8 @@ public class Handler implements PageHandler<Context> {
 		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
-		Payload payload = ctx.getPayload();
-
+		m_normalizePayload.normalize(model, payload);
+		
 		QueryEntity entity1 = payload.getQueryEntity1();
 		QueryEntity entity2 = payload.getQueryEntity2();
 		String type = payload.getType();

@@ -43,7 +43,9 @@ public class BucketHandler implements Task {
 		int batchSize = 100;
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
-			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
+			HashMap<String, AppData> value = outerEntry.getValue();
+			
+			for (Entry<String, AppData> entry : value.entrySet()) {
 				AppData appData = entry.getValue();
 				AppDataCommand proto = new AppDataCommand();
 
@@ -75,7 +77,14 @@ public class BucketHandler implements Task {
 
 	private void batchInsert(List<AppDataCommand> appDataCommands) {
 		try {
-			m_appDataService.insert((AppDataCommand[]) appDataCommands.toArray());
+			int length = appDataCommands.size();
+			AppDataCommand[] array = new AppDataCommand[length];
+
+			for (int i = 0; i < length; i++) {
+				array[i] = appDataCommands.get(i);
+			}
+
+			m_appDataService.insert(array);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -87,13 +96,11 @@ public class BucketHandler implements Task {
 
 	@Override
 	public String getName() {
-		return "BucketHandler";
+		return "BucketHandler-" + m_startTime;
 	}
 
 	public boolean isActive() {
-		synchronized (this) {
-			return m_isActive;
-		}
+		return m_isActive;
 	}
 
 	private void processEntity(AppData appData) {
@@ -137,7 +144,11 @@ public class BucketHandler implements Task {
 			AppData appData = m_appDataQueue.poll();
 
 			if (appData != null) {
-				processEntity(appData);
+				try {
+					processEntity(appData);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 		}
 
@@ -156,9 +167,7 @@ public class BucketHandler implements Task {
 
 	@Override
 	public void shutdown() {
-		synchronized (this) {
-			m_isActive = false;
-		}
+		m_isActive = false;
 	}
 
 }

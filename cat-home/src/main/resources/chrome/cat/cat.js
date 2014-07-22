@@ -69,7 +69,7 @@ function TabManager() {
 			var value = headers[i]["value"];
 			console.debug("\t" + name + " : " + value);
 		}
-		if(tabId <= 0) {
+		if(tabId <= 0) {	
 			return;
 		}
 

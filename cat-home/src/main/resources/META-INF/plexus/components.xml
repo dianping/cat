@@ -3873,6 +3873,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7623,6 +7626,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>

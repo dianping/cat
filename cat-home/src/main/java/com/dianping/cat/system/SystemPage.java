@@ -5,11 +5,11 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum SystemPage implements Page {
 
-   ALARM("alarm", "alarm", "Alarm", "Alarm", true),
+   ALARM("alarm", "alarm", "Alarm", "Alarm", false),
 
    LOGIN("login", "login", "Login", "Login", false),
 
-   CONFIG("config", "config", "Config", "Config", true),
+   CONFIG("config", "config", "Config", "Config", false),
 
    PLUGIN("plugin", "plugin", "Plugin", "Plugin", true);
 

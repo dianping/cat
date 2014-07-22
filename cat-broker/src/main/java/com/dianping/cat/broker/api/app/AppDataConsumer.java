@@ -1,5 +1,7 @@
 package com.dianping.cat.broker.api.app;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -16,7 +18,7 @@ import com.dianping.cat.config.app.AppDataService;
 public class AppDataConsumer implements Initializable, LogEnabled {
 
 	public static final long DURATION = 5 * 60 * 1000L;
-	
+
 	@Inject
 	private AppDataService m_appDataService;
 
@@ -99,12 +101,15 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 	private class BucketThreadController implements Task {
 
+		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
 		private void closeLastTask(long currentDuration) {
 			Long last = new Long(currentDuration - DURATION);
 			BucketHandler lastBucketHandler = m_tasks.get(last);
 
 			if (lastBucketHandler != null) {
 				lastBucketHandler.shutdown();
+				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 			}
 		}
 
@@ -126,7 +131,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 				try {
 					long currentDuration = curTime - curTime % DURATION;
-					
+
 					removeLastLastTask(currentDuration);
 					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
@@ -151,21 +156,26 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			Long cur = new Long(currentDuration);
 			if (m_tasks.get(cur) == null) {
 				BucketHandler curBucketHandler = new BucketHandler(cur, m_appDataService);
+				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 				Threads.forGroup("Cat").start(curBucketHandler);
 
 				m_tasks.put(cur, curBucketHandler);
+				m_logger.info("started bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 			}
 		}
 
 		private void startNextTask(long currentDuration) {
 			Long next = new Long(currentDuration + DURATION);
+
 			if (m_tasks.get(next) == null) {
 				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataService);
+				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(next)));
 				Threads.forGroup("Cat").start(nextBucketHandler);
 
 				m_tasks.put(next, nextBucketHandler);
+				m_logger.info("started bucket handler ,time " + m_sdf.format(new Date(next)));
 			}
 		}
 	}
-	
+
 }

@@ -24,9 +24,9 @@ public class NavigationBar {
 		ReportPage.METRIC,
 
 		ReportPage.USERMONITOR,
-		
+
 		ReportPage.APP,
-		
+
 		ReportPage.TRANSACTION,
 
 		ReportPage.EVENT,
@@ -39,10 +39,12 @@ public class NavigationBar {
 
 		ReportPage.CACHE,
 
-		ReportPage.MATRIX,
-
 		ReportPage.DEPENDENCY,
 
+		ReportPage.STATE,
+
+		ReportPage.MATRIX,
+		
 		ReportPage.NETWORK,
 
 		ReportPage.CDN,
@@ -51,11 +53,12 @@ public class NavigationBar {
 
 		ReportPage.ALTERATION,
 
-		ReportPage.STATE,
-
 		ReportPage.STATISTICS,
+		
+		SystemPage.ALARM,
 
-		ReportPage.LOGVIEW,
-		};
+		SystemPage.CONFIG,
+
+		ReportPage.LOGVIEW, };
 	}
 }
