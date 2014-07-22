@@ -44,25 +44,25 @@
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
-        <IF type='NOT_ZERO' field='city'>
+        <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
-        <IF type='NOT_ZERO' field='operator'>
+        <IF type='NE' field='operator' value='-1'>
 			AND  <FIELD name='operator'/> = ${operator}
 		</IF>
-        <IF type='NOT_ZERO' field='network'>
+        <IF type='NE' field='network' value='-1'>
 			AND  <FIELD name='network'/> = ${network}
 		</IF>
-        <IF type='NOT_ZERO' field='app-version'>
+        <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NOT_ZERO' field='connnect-type'>
+        <IF type='NE' field='connnect-type' value='-1'>
 			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
-		<IF type='NOT_ZERO' field='code'>
+		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
 		</IF>
-		<IF type='NOT_ZERO' field='platform'>
+		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
@@ -80,25 +80,25 @@
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
-        <IF type='NOT_ZERO' field='city'>
+        <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
-        <IF type='NOT_ZERO' field='operator'>
+        <IF type='NE' field='operator' value='-1'>
 			AND  <FIELD name='operator'/> = ${operator}
 		</IF>
-        <IF type='NOT_ZERO' field='network'>
+        <IF type='NE' field='network' value='-1'>
 			AND  <FIELD name='network'/> = ${network}
 		</IF>
-        <IF type='NOT_ZERO' field='app-version'>
+        <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NOT_ZERO' field='connnect-type'>
+        <IF type='NE' field='connnect-type' value='-1'>
 			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
-		<IF type='NOT_ZERO' field='code'>
+		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
 		</IF>
-		<IF type='NOT_ZERO' field='platform'>
+		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
         group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
