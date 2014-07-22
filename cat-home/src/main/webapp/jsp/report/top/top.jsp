@@ -18,7 +18,6 @@
 </style>
 <a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
 <div class="report">
 	<table class="header">
