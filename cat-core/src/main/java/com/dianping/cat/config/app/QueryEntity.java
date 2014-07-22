@@ -3,7 +3,7 @@ package com.dianping.cat.config.app;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.jboss.netty.util.internal.StringUtil;
+
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
