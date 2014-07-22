@@ -43,7 +43,9 @@ public class BucketHandler implements Task {
 		int batchSize = 100;
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
-			for (Entry<String, AppData> entry : outerEntry.getValue().entrySet()) {
+			HashMap<String, AppData> value = outerEntry.getValue();
+			
+			for (Entry<String, AppData> entry : value.entrySet()) {
 				AppData appData = entry.getValue();
 				AppDataCommand proto = new AppDataCommand();
 
