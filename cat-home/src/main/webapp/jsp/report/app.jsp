@@ -194,10 +194,9 @@
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;"><option
-							value='-1'>All</option>
+				</select> 返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -206,29 +205,29 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 连接类型 <select id="connectionType" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
@@ -256,9 +255,9 @@
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 返回码 <select id="code2" style="width: 120px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -267,29 +266,29 @@
 			</tr>
 			<tr>
 				<th align=left>版本 <select id="version2" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 连接类型 <select id="connectionType2" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform2" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 地区 <select id="city2" style="width: 100px;">
-						<option value='-1'>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator2" style="width: 100px;">
-						<option>All</option>
+						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.id}'>${item.name}</option>

@@ -3,6 +3,8 @@ package com.dianping.cat.config.app;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.jboss.netty.util.internal.StringUtil;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 
@@ -32,17 +34,30 @@ public class QueryEntity {
 
 		try {
 			m_date = sdf.parse(strs[0]);
-			m_command = Integer.parseInt(strs[1]);
-			m_code = Integer.parseInt(strs[2]);
-			m_network = Integer.parseInt(strs[3]);
-			m_version = Integer.parseInt(strs[4]);
-			m_channel = Integer.parseInt(strs[5]);
-			m_platfrom = Integer.parseInt(strs[6]);
-			m_city = Integer.parseInt(strs[7]);
-			m_operator = Integer.parseInt(strs[8]);
+			m_command = parseValue(strs[1]);
+			m_code = parseValue(strs[2]);
+			m_network = parseValue(strs[3]);
+			m_version = parseValue(strs[4]);
+			m_channel = parseValue(strs[5]);
+			m_platfrom = parseValue(strs[6]);
+			m_city = parseValue(strs[7]);
+			m_operator = parseValue(strs[8]);
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
+	}
+
+	private int parseValue(String str) {
+		if (StringUtils.isEmpty(str)) {
+			return -1;
+		} else {
+			try {
+				return Integer.parseInt(str);
+			} catch (NumberFormatException e) {
+				Cat.logError(e);
+			}
+		}
+		return -1;
 	}
 
 	public Date getDate() {
@@ -118,10 +133,10 @@ public class QueryEntity {
 	}
 
 	@Override
-   public String toString() {
-	   return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
-	         + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
-	         + ", m_city=" + m_city + ", m_operator=" + m_operator + "]";
-   }
-	
+	public String toString() {
+		return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
+		      + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
+		      + ", m_city=" + m_city + ", m_operator=" + m_operator + "]";
+	}
+
 }
