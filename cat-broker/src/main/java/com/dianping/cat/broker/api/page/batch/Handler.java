@@ -66,9 +66,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String version = payload.getVersion();
 
 		if (userIp != null) {
-			if (version.equals("1")) {
+			if ("1".equals(version)) {
 				processVersion1(payload, request, userIp);
-			} else if (version.equals("2")) {
+			} else if ("2".equals(version)) {
 				processVersion2(payload, request, userIp);
 			}
 		} else {

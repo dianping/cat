@@ -75,7 +75,14 @@ public class BucketHandler implements Task {
 
 	private void batchInsert(List<AppDataCommand> appDataCommands) {
 		try {
-			m_appDataService.insert((AppDataCommand[]) appDataCommands.toArray());
+			int length = appDataCommands.size();
+			AppDataCommand[] array = new AppDataCommand[length];
+
+			for (int i = 0; i < length; i++) {
+				array[i] = appDataCommands.get(i);
+			}
+
+			m_appDataService.insert(array);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

@@ -1,6 +1,5 @@
 package com.dianping.cat.config.app;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,7 +41,7 @@ public class QueryEntity {
 			m_platfrom = parseValue(strs[6]);
 			m_city = parseValue(strs[7]);
 			m_operator = parseValue(strs[8]);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 	}
@@ -51,13 +50,8 @@ public class QueryEntity {
 		if (StringUtils.isEmpty(str)) {
 			return -1;
 		} else {
-			try {
-				return Integer.parseInt(str);
-			} catch (NumberFormatException e) {
-				Cat.logError(e);
-			}
+			return Integer.parseInt(str);
 		}
-		return -1;
 	}
 
 	public Date getDate() {
