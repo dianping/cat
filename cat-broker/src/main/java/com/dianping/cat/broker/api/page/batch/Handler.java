@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -67,14 +68,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 		boolean success = true;
-		
+
 		if (userIp != null) {
 			if ("1".equals(version)) {
 				processVersion1(payload, request, userIp);
 			} else if ("2".equals(version)) {
 				processVersion2(payload, request, userIp);
 			} else {
-				success=false;
+				success = false;
 				Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
 			}
 		} else {
@@ -82,9 +83,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
-		if (success){
-			response.getWriter().write("OK");			
-		}else{
+		if (success) {
+			response.getWriter().write("OK");
+		} else {
 			response.getWriter().write("validate request!");
 		}
 	}
@@ -155,7 +156,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				appData.setTimestamp(Long.parseLong(items[0]));
-				Integer command = m_appConfigManager.getCommands().get(items[1]);
+				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[1], "utf-8"));
 
 				if (command != null) {
 					appData.setCommand(command);
@@ -174,7 +175,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					m_appDataConsumer.enqueue(appData);
 					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
 				} else {
-					Cat.logEvent("Command", items[1], Event.SUCCESS, items[1]);
+					Cat.logEvent("CommandNotFound", items[1], Event.SUCCESS, items[1]);
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
