@@ -21,7 +21,8 @@
 	       <li class='nav-header'><h4>系统监控配置</h4></li>
 	       <li class="text-right" id="systemRuleConfigUpdate"><a href="?op=systemRuleConfigUpdate"><strong>系统告警配置</strong></a></li>
 	       <li class='nav-header'><h4>系统默认配置</h4></li>
-	        <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>默认告警配置</strong></a></li>
+	       <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>默认告警配置</strong></a></li>
+	       <li class="text-right" id="types"><a href="?op=alertTypes"><strong>告警类型设置</strong></a></li>
 	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常类型配置</strong></a></li>
 	       <li class="text-right" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate"><strong>机器分组配置</strong></a></li>
          </ul>

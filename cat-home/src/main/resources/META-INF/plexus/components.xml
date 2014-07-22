@@ -4164,6 +4164,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertTypeManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4226,6 +4229,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.AlertTypeManager</role>
+			<implementation>com.dianping.cat.system.config.AlertTypeManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -7918,6 +7930,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertTypeManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7980,6 +7995,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.AlertTypeManager</role>
+			<implementation>com.dianping.cat.system.config.AlertTypeManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
