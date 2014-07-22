@@ -16,7 +16,7 @@ import com.dianping.cat.report.page.JsonBuilder;
 public class CityManager implements Initializable {
 
 	public Map<String, List<City>> maps = new LinkedHashMap<String, List<City>>();
-
+	
 	public String getCityInfo() {
 		return new JsonBuilder().toJson(maps);
 	}

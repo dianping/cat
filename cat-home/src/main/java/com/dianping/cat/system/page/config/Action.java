@@ -63,7 +63,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	DOMAIN_METRIC_RULE_CONFIG_UPDATE("domainMetricRuleConfigUpdate"),
 
-	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
+	NETWORK_RULE_CONFIG_UPDATE("networkRuleConfigUpdate"),
+
+	SYSTEM_RULE_CONFIG_UPDATE("systemRuleConfigUpdate"),
 
 	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 
@@ -91,7 +93,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	METRIC_GROUP_CONFIG_UPDATE("metricGroupConfigUpdate"),
 
-	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate");
+	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
+	
+	APP_CONFIG_UPDATE("appConfigUpdate");
 	
 	private String m_name;
 

@@ -24,6 +24,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_browserChart;
 
 	private String m_osChart;
+	
+	private String m_summaryContent;
 
 	@EntityMeta
 	private BugReport m_bugReport;
@@ -33,13 +35,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private HeavyReport m_heavyReport;
-	
+
 	@EntityMeta
 	private AlertReport m_alertReport;
 
 	@EntityMeta
 	private UtilizationReport m_utilizationReport;
-
+	
 	private List<Domain> m_serviceList;
 
 	private List<Url> m_callUrls;
@@ -59,13 +61,25 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
-	
-	private List<com.dianping.cat.home.alert.report.entity.Domain> m_alertDomains;
-	
-	private List<com.dianping.cat.home.alert.report.entity.Exception> m_alertExceptions;
 
+	private List<com.dianping.cat.home.alert.report.entity.Domain> m_alertDomains;
+
+	private List<com.dianping.cat.home.alert.report.entity.Exception> m_alertExceptions;
+	
 	public Model(Context ctx) {
 		super(ctx);
+	}
+	
+	public List<com.dianping.cat.home.alert.report.entity.Domain> getAlertDomains() {
+		return m_alertDomains;
+	}
+
+	public List<com.dianping.cat.home.alert.report.entity.Exception> getAlertExceptions() {
+		return m_alertExceptions;
+	}
+
+	public AlertReport getAlertReport() {
+		return m_alertReport;
 	}
 
 	public String getBrowserChart() {
@@ -110,17 +124,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
 	}
-
+	
 	public Map<String, ErrorStatis> getErrorStatis() {
 		return m_errorStatis;
 	}
 	
 	public HeavyReport getHeavyReport() {
 		return m_heavyReport;
-	}
-	
-	public AlertReport getAlertReport() {
-		return m_alertReport;
 	}
 
 	public String getOsChart() {
@@ -143,6 +153,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_sqlUrls;
 	}
 
+	public String getSummaryContent() {
+		return m_summaryContent;
+	}
+
 	public UtilizationReport getUtilizationReport() {
 		return m_utilizationReport;
 	}
@@ -153,6 +167,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
 		return m_utilizationWebList;
+	}
+
+	public void setAlertDomains(List<com.dianping.cat.home.alert.report.entity.Domain> alertDomains) {
+		m_alertDomains = alertDomains;
+	}
+
+	public void setAlertExceptions(List<com.dianping.cat.home.alert.report.entity.Exception> alertExceptions) {
+		m_alertExceptions = alertExceptions;
+	}
+
+	public void setAlertReport(AlertReport alertReport) {
+		m_alertReport = alertReport;
 	}
 
 	public void setBrowserChart(String browserChart) {
@@ -170,7 +196,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setCacheUrls(List<Url> cacheUrls) {
 		m_cacheUrls = cacheUrls;
 	}
-
+	
 	public void setCallServices(List<Service> callServices) {
 		m_callServices = callServices;
 	}
@@ -185,10 +211,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setHeavyReport(HeavyReport heavyReport) {
 		m_heavyReport = heavyReport;
-	}
-	
-	public void setAlertReport(AlertReport alertReport) {
-		m_alertReport = alertReport;
 	}
 
 	public void setOsChart(String osChart) {
@@ -211,6 +233,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_sqlUrls = sqlUrls;
 	}
 
+	public void setSummaryContent(String summaryContent) {
+		m_summaryContent = summaryContent;
+	}
+
 	public void setUtilizationReport(UtilizationReport utilizationReport) {
 		m_utilizationReport = utilizationReport;
 	}
@@ -221,22 +247,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setUtilizationWebList(List<com.dianping.cat.home.utilization.entity.Domain> utilizationWebList) {
 		m_utilizationWebList = utilizationWebList;
-	}
-
-	public List<com.dianping.cat.home.alert.report.entity.Domain> getAlertDomains() {
-		return m_alertDomains;
-	}
-
-	public void setAlertDomains(List<com.dianping.cat.home.alert.report.entity.Domain> alertDomains) {
-		m_alertDomains = alertDomains;
-	}
-
-	public List<com.dianping.cat.home.alert.report.entity.Exception> getAlertExceptions() {
-		return m_alertExceptions;
-	}
-
-	public void setAlertExceptions(List<com.dianping.cat.home.alert.report.entity.Exception> alertExceptions) {
-		m_alertExceptions = alertExceptions;
 	}
 
 }

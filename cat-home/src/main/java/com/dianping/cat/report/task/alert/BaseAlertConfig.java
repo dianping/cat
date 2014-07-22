@@ -55,6 +55,20 @@ public abstract class BaseAlertConfig {
 		return split(productLine.getPhone());
 	}
 
+	public List<String> buildSMSReceivers(ProductLine productLine, String configId) {
+		List<String> smsReceivers = new ArrayList<String>();
+		Receiver receiver = m_manager.queryReceiverById(configId);
+
+		if (receiver != null && !receiver.isEnable()) {
+			return smsReceivers;
+		} else {
+			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+			smsReceivers.addAll(buildProductlineSMSReceivers(productLine));
+
+			return smsReceivers;
+		}
+	}
+
 	public List<String> buildSMSReceivers(ProductLine productLine) {
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_manager.queryReceiverById(getId());
@@ -68,6 +82,8 @@ public abstract class BaseAlertConfig {
 			return smsReceivers;
 		}
 	}
+
+	protected abstract String buildMailTitle(String artifactName, String configTitle);
 
 	public abstract String getId();
 

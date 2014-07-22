@@ -10,6 +10,7 @@
 		<attribute name="enable" value-type="boolean" />
 		<element name="email" value-type="String" type="list" names="emails" />
 		<element name="phone" value-type="String" type="list" names="phones" />
+		<element name="weixin" value-type="String" type="list" names="weixins" />
 	</entity>
 </model>
 

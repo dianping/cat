@@ -19,10 +19,10 @@ import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -102,14 +102,9 @@ public class MetricConfigManager implements Initializable {
 			for (MetricItemConfig config : configs.values()) {
 				String domain = config.getDomain();
 				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+				ProductLine product = m_productLineConfigManager.queryProductLine(productLine);
 
-				if (Constants.BROKER_SERVICE.equals(domain)) {
-					unused.add(config.getId());
-				}
-				if ("Default".equals(productLine)) {
-					unused.add(config.getId());
-				}
-				if (!config.getId().contains(":Metric:")) {
+				if (product == null || !product.isMetricDashboard()) {
 					unused.add(config.getId());
 				}
 			}

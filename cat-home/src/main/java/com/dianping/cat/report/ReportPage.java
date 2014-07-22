@@ -21,7 +21,7 @@ public enum ReportPage implements Page {
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
 
-   MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
+   MATRIX("matrix", "matrix", "Matrix", "Matrix", false),
 
    CROSS("cross", "cross", "Cross", "Cross", true),
 
@@ -37,19 +37,21 @@ public enum ReportPage implements Page {
 
    EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true),
 
-   STATISTICS("statistics", "statistics", "Statistics", "Statistics", true),
+   STATISTICS("statistics", "statistics", "Statistics", "Statistics", false),
 
-   ALTERATION("alteration", "alteration", "Change", "Alteration", true),
+   ALTERATION("alteration", "alteration", "Change", "Alteration", false),
 
    MONITOR("monitor", "monitor", "Monitor", "Monitor", true),
 
-   NETWORK("network", "network", "Network", "Network", true),
+   NETWORK("network", "network", "Network", "Network", false),
 
    USERMONITOR("userMonitor", "userMonitor", "Monitor", "UserMonitor", true),
 
-   SYSTEM("system", "system", "System", "System", true),
+   SYSTEM("system", "system", "System", "System", false),
 
-   CDN("cdn", "cdn", "Cdn", "Cdn", true);
+   CDN("cdn", "cdn", "Cdn", "Cdn", false),
+
+   APP("app", "app", "App", "App", true);
 
    private String m_name;
 

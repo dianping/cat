@@ -16,6 +16,7 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -100,7 +101,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		ConfigItem config = new ConfigItem();
 
 		if ("C".equals(status)) {
-			int count = Integer.parseInt(data);
+			if (StringUtils.isEmpty(data)) {
+				data = "1";
+			}
+			int count = (int) Double.parseDouble(data);
 
 			config.setCount(count);
 			config.setValue((double) count);
@@ -122,7 +126,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setCount(Integer.parseInt(datas[0]));
 			config.setValue(Double.parseDouble(datas[1]));
-			config.setShowCount(false);
 			config.setShowSum(true);
 		} else {
 			return null;
@@ -168,11 +171,14 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		ConfigItem config = parseValue(status, data);
 
 		if (!StringUtils.isEmpty(group)) {
-			m_productLineConfigManager.insertIfNotExsit(group, domain);
+			boolean result = m_productLineConfigManager.insertIfNotExsit(group, domain);
 
-			if (!validateMetricType(domain, group)) {
-				report = findOrCreateReport(group);
+			if (!result) {
+				m_logger.error(String.format("error when insert product line info, productline %s, domain %s", group,
+				      domain));
 			}
+
+			report = findOrCreateReport(group);
 		}
 		if (config != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
@@ -184,30 +190,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-			if (validateMetricType(domain, group)) {
-				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+
+			ProductLine productline = m_productLineConfigManager.queryProductLine(group);
+
+			if (productline != null && productline.getMetricDashboard()) {
+				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+
+				if (!result) {
+					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,
+					      metricName));
+				}
 			}
 		}
 		return 0;
-	}
-
-	private boolean validateGroup(String group) {
-		if (!StringUtils.isEmpty(group)
-		      && (group.toLowerCase().startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX)
-		            || group.toLowerCase().startsWith(ProductLineConfigManager.NETWORK_F5_PREFIX) || group.toLowerCase()
-		            .startsWith(ProductLineConfigManager.NETWORK_SWITCH_PREFIX))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateMetricType(String domain, String group) {
-		if (Constants.BROKER_SERVICE.equals(domain) || validateGroup(group)) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {

@@ -1,8 +1,43 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
+			<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+			<implementation>com.dianping.cat.agent.monitor.CommandUtils</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.DataBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.CatServers</role>
+			<implementation>com.dianping.cat.agent.monitor.CatServers</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.DataSender</role>
+			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CatServers</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.executors.jvm.TomcatPidManager</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.jvm.TomcatPidManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.Executor</role>
@@ -10,7 +45,13 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.jvm.JVMMemoryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.executors.jvm.TomcatPidManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -20,7 +61,10 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.jvm.JVMStateExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -30,7 +74,10 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.system.SystemPerformanceExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -40,16 +87,10 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.system.SystemStateExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
-			<implementation>com.dianping.cat.agent.monitor.executors.DataSender</implementation>
-			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -58,16 +99,22 @@
 			<implementation>com.dianping.cat.agent.monitor.executors.TaskExecutors</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.puppet.PuppetTask</role>
-			<implementation>com.dianping.cat.agent.monitor.puppet.PuppetTask</implementation>
+			<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.PaasTask</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -92,13 +139,13 @@
 					<role>com.dianping.cat.agent.core.page.index.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.puppet.PuppetTask</role>
+					<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -112,35 +159,58 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
-			<implementation>com.dianping.cat.agent.monitor.executors.DataSender</implementation>
+			<role>com.dianping.cat.agent.monitor.DataSender</role>
+			<implementation>com.dianping.cat.agent.monitor.DataSender</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.CatServers</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
-			<implementation>com.dianping.cat.agent.monitor.EnvironmentConfig</implementation>
+			<role>com.dianping.cat.agent.monitor.CatServers</role>
+			<implementation>com.dianping.cat.agent.monitor.CatServers</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
 			<implementation>com.dianping.cat.agent.monitor.executors.TaskExecutors</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.executors.DataSender</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.monitor.puppet.PuppetTask</role>
-			<implementation>com.dianping.cat.agent.monitor.puppet.PuppetTask</implementation>
+			<role>com.dianping.cat.agent.monitor.executors.EnvConfig</role>
+			<implementation>com.dianping.cat.agent.monitor.executors.EnvConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.PaasTask</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.PaasTask</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.agent.monitor.EnvironmentConfig</role>
+					<role>com.dianping.cat.agent.monitor.DataSender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.paas.DataBuilder</role>
+			<implementation>com.dianping.cat.agent.monitor.paas.DataBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.agent.monitor.CommandUtils</role>
+			<implementation>com.dianping.cat.agent.monitor.CommandUtils</implementation>
 		</component>
 	</components>
 </plexus>

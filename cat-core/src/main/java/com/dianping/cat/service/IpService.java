@@ -27,31 +27,28 @@ public class IpService implements Initializable {
 
 	private IpInfo findIpInfo(long ip) {
 		int low = 0, high = m_starts.length - 1, mid;
+		IpInfo ipInfo = new IpInfo();
+		
+		ipInfo.setNation("未知");
+		ipInfo.setProvince("未知");
+		ipInfo.setCity("未知");
+		ipInfo.setChannel("其他");
 
 		while (low <= high) {
 			mid = (low + high) / 2;
 			if (ip >= m_starts[mid] && ip <= m_ends[mid]) {
-				IpInfo ipInfo = new IpInfo();
-
 				Area area = m_areas.get(m_areaIds[mid]);
 				if (area != null) {
 					ipInfo.setNation(area.getNation());
 					ipInfo.setProvince(area.getProvince());
 					ipInfo.setCity(area.getCity());
-				} else {
-					ipInfo.setNation("未知");
-					ipInfo.setProvince("未知");
-					ipInfo.setCity("未知");
 				}
 
 				Corporation corp = m_corps.get(m_corpIds[mid]);
-
 				if (corp != null) {
 					ipInfo.setChannel(corp.getName());
-				} else {
-					ipInfo.setChannel("其他");
 				}
-				return ipInfo;
+				break;
 			} else if (ip < m_starts[mid]) {
 				high = mid - 1;
 			} else {
@@ -59,9 +56,9 @@ public class IpService implements Initializable {
 			}
 		}
 
-		return null;
+		return ipInfo;
 	}
-
+	
 	public IpInfo findIpInfoByString(String ip) {
 		try {
 			String[] segments = ip.split("\\.");

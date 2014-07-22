@@ -74,7 +74,23 @@ public class MetricConfigManagerTest {
 		configs.put(item, 3L);
 		Assert.assertEquals(3L, configs.get(item).longValue());
 		Assert.assertEquals(1, configs.size());
-
+	}
+	
+	@Test
+	public void testInit(){
+		MetricConfigManager manager = new MockMetricConfigManager();
+		((MockMetricConfigManager) manager).setConfigDao(new MockConfigDao2());
+		try {
+			manager.initialize();
+		} catch (Exception e) {
+		}
+		
+		s_storeCount=0;
+		manager.insertIfNotExist("test", "test", "test", new ConfigItem());
+		manager.insertIfNotExist("test", "test", "test", new ConfigItem());
+		manager.insertIfNotExist("test1", "test", "test", new ConfigItem());
+		manager.insertIfNotExist("test1", "test", "test", new ConfigItem());
+		Assert.assertEquals(s_storeCount, 2);
 	}
 
 	@Test

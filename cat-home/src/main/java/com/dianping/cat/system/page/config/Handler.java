@@ -27,6 +27,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -47,12 +48,13 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
-import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
+import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.system.config.SystemRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -95,14 +97,20 @@ public class Handler implements PageHandler<Context> {
 	private NetworkRuleConfigManager m_metricRuleConfigManager;
 
 	@Inject
+	private SystemRuleConfigManager m_systemRuleConfigManager;
+
+	@Inject
 	private AlertConfigManager m_alertConfigManager;
+
+	@Inject
+	private AppConfigManager m_appConfigManager;
 
 	@Inject
 	private DomainNavManager m_manager;
 
 	@Inject
 	private ReportService m_reportService;
-	
+
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
 
@@ -349,14 +357,23 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_businessRuleConfigManager.getMonitorRules().toString());
 			break;
-		case METRIC_RULE_CONFIG_UPDATE:
-			String metricRuleConfig = payload.getContent();
-			if (!StringUtils.isEmpty(metricRuleConfig)) {
-				model.setOpState(m_metricRuleConfigManager.insert(metricRuleConfig));
+		case NETWORK_RULE_CONFIG_UPDATE:
+			String networkRuleConfig = payload.getContent();
+			if (!StringUtils.isEmpty(networkRuleConfig)) {
+				model.setOpState(m_metricRuleConfigManager.insert(networkRuleConfig));
 			} else {
 				model.setOpState(true);
 			}
 			model.setContent(m_metricRuleConfigManager.getMonitorRules().toString());
+			break;
+		case SYSTEM_RULE_CONFIG_UPDATE:
+			String systemRuleConfig = payload.getContent();
+			if (!StringUtils.isEmpty(systemRuleConfig)) {
+				model.setOpState(m_systemRuleConfigManager.insert(systemRuleConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_systemRuleConfigManager.getMonitorRules().toString());
 			break;
 		case ALERT_DEFAULT_RECEIVERS:
 			String alertDefaultReceivers = payload.getContent();
@@ -444,6 +461,13 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_netGraphConfigManager.getConfig().toString());
 			break;
+		case APP_CONFIG_UPDATE:
+			String appConfig = payload.getContent();
+			if (!StringUtils.isEmpty(appConfig)) {
+				model.setOpState(m_appConfigManager.insert(appConfig));
+			}
+			model.setContent(m_appConfigManager.getConfig().toString());
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -500,14 +524,14 @@ public class Handler implements PageHandler<Context> {
 	private void metricRuleAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 
-		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(key).toString());
+		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key).toString());
 	}
-	
+
 	private boolean metricRuleAddSubmit(Payload payload, Model model) {
-		try{
+		try {
 			String xmlContent = m_businessRuleConfigManager.updateRule(payload.getContent());
 			return m_businessRuleConfigManager.insert(xmlContent);
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			return false;
 		}
 	}

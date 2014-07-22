@@ -1,75 +1,60 @@
 package com.dianping.cat.agent.monitor.executors.jvm;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class JVMMemoryExecutor extends AbstractExecutor {
 
+	@Inject
+	private TomcatPidManager m_manager;
+
 	public static final String ID = "JVMMemoryExecutor";
-
-	public static String findPidOfTomcat() {
-		String pid = null;
-
-		try {
-			Process process = Runtime.getRuntime().exec(
-			      new String[] { "/bin/sh", "-c", "ps aux | grep tomcat | grep -v grep" });
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String output = reader.readLine();
-
-			if (output != null) {
-				if (reader.readLine() != null) {
-					Cat.logError(new RuntimeException("More than one tomcat is running"));
-				}
-				reader.close();
-				String[] outputs = output.split(" +");
-				pid = outputs[1];
-			} else {
-				Cat.logError(new RuntimeException("No tomcat is running"));
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return pid;
-	}
 
 	private List<DataEntity> buildJVMMemoryInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
+		Set<String> pids = m_manager.findPidOfTomcat();
 
-		try {
-			String pid = findPidOfTomcat();
-			Process process = Runtime.getRuntime().exec("jstat -gcutil " + pid);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		for (String pid : pids) {
+			List<String> lines = null;
 
-			reader.readLine();
+			try {
+				lines = m_commandUtils.runShell("/usr/local/jdk/bin/jstat -gcutil " + pid);
+			} catch (Exception e) {
+				try {
+					lines = m_commandUtils.runShell("jstat -gcutil " + pid);
+				} catch (Exception cause) {
+					Cat.logError("Maybe cat agent doesn't know path of jstat ", cause);
+				}
+			}
+			if (lines.size() == 2) {
+				Iterator<String> iterator = lines.iterator();
+				iterator.next();
+				String line = iterator.next();
+				String[] metrics = line.split(" +");
 
-			String output = reader.readLine();
-			String[] metrics = output.split(" +");
-			long current = System.currentTimeMillis();
+				try {
+					Map<String, Double> values = new HashMap<String, Double>();
 
-			DataEntity eden = new DataEntity();
-			eden.setId(buildJVMDataEntityId("edenUsage")).setType(AVG_TYPE).setTime(current)
-			      .setValue(Double.valueOf(metrics[2]) / 100);
-			entities.add(eden);
-
-			DataEntity old = new DataEntity();
-			old.setId(buildJVMDataEntityId("oldUsage")).setType(AVG_TYPE).setTime(current)
-			      .setValue(Double.valueOf(metrics[3]) / 100);
-			entities.add(old);
-
-			DataEntity perm = new DataEntity();
-			perm.setId(buildJVMDataEntityId("permUsage")).setType(AVG_TYPE).setTime(current)
-			      .setValue(Double.valueOf(metrics[4]) / 100);
-			entities.add(perm);
-
-			return entities;
-		} catch (Exception e) {
-			Cat.logError(e);
+					values.put(buildJVMId("edenUsage", pid), Double.valueOf(metrics[2]) / 100);
+					values.put(buildJVMId("oldUsage", pid), Double.valueOf(metrics[3]) / 100);
+					values.put(buildJVMId("permUsage", pid), Double.valueOf(metrics[4]) / 100);
+					entities.addAll(buildEntities(values, AVG_TYPE));
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			} else {
+				Cat.logError(new RuntimeException("No tomcat is running, [jstat -gcutil] result: " + lines));
+			}
 		}
 		return entities;
 	}
@@ -86,5 +71,4 @@ public class JVMMemoryExecutor extends AbstractExecutor {
 	public String getId() {
 		return ID;
 	}
-
 }

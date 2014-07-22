@@ -1,12 +1,15 @@
 package com.dianping.cat.report.task.alert;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -16,24 +19,39 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.Alert;
+import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.task.alert.sender.BaseSender;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
+import com.site.lookup.util.StringUtils;
 
 public abstract class BaseAlert {
 
 	@Inject
-	protected BaseRuleConfigManager m_metricRuleConfigManager;
+	protected BaseRuleConfigManager m_ruleConfigManager;
 
 	@Inject
 	protected MailSMS m_mailSms;
+
+	@Inject
+	protected AlertDao m_alertDao;
 
 	@Inject
 	protected AlertInfo m_alertInfo;
@@ -53,9 +71,23 @@ public abstract class BaseAlert {
 	@Inject
 	protected RemoteMetricReportService m_service;
 
+	@Inject
+	private ProjectDao m_projectDao;
+
+	@Inject
+	protected MailSender m_mailSender;
+
+	@Inject
+	protected SmsSender m_smsSender;
+
+	@Inject
+	protected WeixinSender m_weixinSender;
+
 	protected static final int DATA_AREADY_MINUTE = 1;
 
 	protected static final long DURATION = TimeUtil.ONE_MINUTE;
+
+	private static final Long ONE_MINUTE_MILLSEC = 60000L;
 
 	protected Logger m_logger;
 
@@ -63,11 +95,75 @@ public abstract class BaseAlert {
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
-	protected Pair<Boolean, String> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
+	private Alert buildAlert(String domainName, String metricTitle, String mailTitle, AlertResultEntity alertResult) {
+		Alert alert = new Alert();
+
+		alert.setDomain(domainName);
+		alert.setAlertTime(alertResult.getAlertTime());
+		alert.setCategory(getName());
+		alert.setType(alertResult.getAlertType());
+		alert.setContent(mailTitle + "<br/>" + alertResult.getContent());
+		alert.setMetric(metricTitle);
+
+		return alert;
+	}
+
+	private String buildMetricTitle(String metricKey) {
+		try {
+			return metricKey.split(":")[2];
+		} catch (Exception ex) {
+			Cat.logError("get metric title error:" + metricKey, ex);
+			return null;
+		}
+	}
+
+	private String extractDomain(String metricKey) {
+		try {
+			return metricKey.split(":")[0];
+		} catch (Exception ex) {
+			Cat.logError("extract domain error:" + metricKey, ex);
+			return null;
+		}
+	}
+
+	protected String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[业务负责人: ").append(owners).append(" ]");
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append("[负责人手机号码: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
+	}
+
+	private Long buildMillsByString(String time) throws Exception {
+		String[] times = time.split(":");
+		int hour = Integer.parseInt(times[0]);
+		int minute = Integer.parseInt(times[1]);
+		long result = hour * 60 * 60 * 1000 + minute * 60 * 1000;
+
+		return result;
+	}
+
+	protected AlertResultEntity computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		List<Config> configs = m_metricRuleConfigManager.queryConfigs(metricKey, type);
-		int maxMinute = queryCheckMinute(configs);
+		List<Config> configs = m_ruleConfigManager.queryConfigs(product, metricKey, type);
+		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+		int maxMinute = resultPair.getKey();
+		List<Condition> conditions = resultPair.getValue();
 
 		if (minute >= maxMinute - 1) {
 			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -79,7 +175,7 @@ public abstract class BaseAlert {
 				value = queryRealData(start, end, metricKey, report, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				return m_dataChecker.checkData(value, baseline, configs);
+				return m_dataChecker.checkData(value, baseline, conditions);
 			}
 		} else if (minute < 0) {
 			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
@@ -90,7 +186,7 @@ public abstract class BaseAlert {
 
 				value = queryRealData(start, end, metricKey, lastReport, type);
 				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-				return m_dataChecker.checkData(value, baseline, configs);
+				return m_dataChecker.checkData(value, baseline, conditions);
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
@@ -110,7 +206,7 @@ public abstract class BaseAlert {
 
 				value = mergerArray(lastValue, currentValue);
 				baseline = mergerArray(lastBaseline, currentBaseline);
-				return m_dataChecker.checkData(value, baseline, configs);
+				return m_dataChecker.checkData(value, baseline, conditions);
 			}
 		}
 		return null;
@@ -152,6 +248,26 @@ public abstract class BaseAlert {
 		}
 	}
 
+	private boolean judgeCurrentInConfigRange(Config config) {
+		long ruleStartTime;
+		long ruleEndTime;
+		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+
+		try {
+			ruleStartTime = buildMillsByString(config.getStarttime());
+			ruleEndTime = buildMillsByString(config.getEndtime()) + ONE_MINUTE_MILLSEC;
+		} catch (Exception ex) {
+			ruleStartTime = 0L;
+			ruleEndTime = 86400000L;
+		}
+
+		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+			return false;
+		}
+
+		return true;
+	}
+
 	private double[] mergerArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
@@ -172,43 +288,61 @@ public abstract class BaseAlert {
 		return true;
 	}
 
-	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
-		if (needAlert(config)) {
-			String product = productLine.getId();
-			String metricKey = m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey());
+	private void processMetricItem(int minute, ProductLine productLine, String metricKey) {
+		for (MetricType type : MetricType.values()) {
+			String productlineName = productLine.getId();
+			AlertResultEntity alertResult = computeAlertInfo(minute, productlineName, metricKey, type);
 
-			Pair<Boolean, String> alert = null;
-			if (config.isShowAvg()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
-			}
-			if (config.isShowCount()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
-			}
-			if (config.isShowSum()) {
-				alert = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
-			}
+			if (alertResult != null && alertResult.isTriggered()) {
+				String metricTitle = buildMetricTitle(metricKey);
+				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
+				String domain = extractDomain(metricKey);
+				String contactInfo = buildContactInfo(domain);
+				alertResult.setContent(alertResult.getContent() + contactInfo);
+				String content = alertResult.getContent();
+				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
-			if (alert != null && alert.getKey()) {
-				m_alertInfo.addAlertInfo(metricKey, new Date().getTime());
-
-				sendAlertInfo(productLine, config.getTitle(), alert.getValue());
+				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
+				String configId = getAlertConfig().getId();
+				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				Cat.logEvent(configId, productlineName, Event.SUCCESS, mailTitle + "  " + content);
 			}
 		}
 	}
 
 	protected void processProductLine(ProductLine productLine) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
-		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		String product = productLine.getId();
+		MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
-		for (MetricItemConfig config : configs) {
+		for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
 			try {
-				processMetricItemConfig(config, minute, productLine);
+				processMetricItem(minute, productLine, entry.getKey());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
+	}
+
+	protected boolean sendAllAlert(ProductLine productLine, String domain, String title, String content,
+	      String alertType, String configId) {
+		boolean sendResult = true;
+		BaseSender[] senders = { m_mailSender, m_weixinSender };
+
+		List<String> receivers = getAlertConfig().buildMailReceivers(productLine);
+		for (BaseSender sender : senders) {
+			if (!sender.sendAlert(receivers, domain, title, content, alertType)) {
+				sendResult = false;
+			}
+		}
+
+		receivers = getAlertConfig().buildSMSReceivers(productLine);
+		if (!m_smsSender.sendAlert(receivers, domain, title, content, alertType)) {
+			sendResult = false;
+		}
+
+		return sendResult;
 	}
 
 	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
@@ -220,19 +354,29 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	private int queryCheckMinute(List<Config> configs) {
+	private Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
 		int maxMinute = 0;
+		List<Condition> conditions = new ArrayList<Condition>();
+		Iterator<Config> iterator = configs.iterator();
 
-		for (Config config : configs) {
-			for (Condition con : config.getConditions()) {
-				int tmpMinute = con.getMinute();
+		while (iterator.hasNext()) {
+			Config config = iterator.next();
 
-				if (tmpMinute > maxMinute) {
-					maxMinute = tmpMinute;
+			if (judgeCurrentInConfigRange(config)) {
+				List<Condition> tmpConditions = config.getConditions();
+				conditions.addAll(tmpConditions);
+
+				for (Condition con : tmpConditions) {
+					int tmpMinute = con.getMinute();
+
+					if (tmpMinute > maxMinute) {
+						maxMinute = tmpMinute;
+					}
 				}
 			}
 		}
-		return maxMinute;
+
+		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
 	}
 
 	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
@@ -258,6 +402,21 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected abstract void sendAlertInfo(ProductLine productLine, String metricTitle, String content);
+	protected void storeAlert(String domainName, String metricTitle, String mailTitle, AlertResultEntity alertResult) {
+		Alert alert = buildAlert(domainName, metricTitle, mailTitle, alertResult);
 
+		try {
+			int count = m_alertDao.insert(alert);
+
+			if (count != 1) {
+				Cat.logError("insert alert error: " + alert.toString(), new RuntimeException());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
+
+	protected abstract String getName();
+
+	protected abstract BaseAlertConfig getAlertConfig();
 }

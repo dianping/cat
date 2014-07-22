@@ -16,6 +16,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -168,6 +169,8 @@ public class DomainManager implements Initializable, LogEnabled {
 			} else {
 				return null;
 			}
+		} catch (DalNotFoundException e) {
+			// ignore
 		} catch (DalException e) {
 			Cat.logError(e);
 		}

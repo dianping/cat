@@ -120,6 +120,7 @@ public class DefaultReportService implements ReportService {
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
 		try {
+			report.setContent("");
 			m_dailyReportDao.insert(report);
 
 			int id = report.getId();
@@ -138,6 +139,7 @@ public class DefaultReportService implements ReportService {
 	@Override
 	public boolean insertHourlyReport(HourlyReport report, byte[] content) {
 		try {
+			report.setContent("");
 			m_hourlyReportDao.insert(report);
 
 			int id = report.getId();

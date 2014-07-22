@@ -1,20 +1,18 @@
 package com.dianping.cat.report.task.alert.exception;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -24,19 +22,27 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.dal.report.Alert;
+import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
+import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
+import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.SmsSender;
+import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
+import com.site.lookup.util.StringUtils;
 
 public class ExceptionAlert implements Task, LogEnabled {
+
+	@Inject
+	protected AlertDao m_alertDao;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -50,20 +56,39 @@ public class ExceptionAlert implements Task, LogEnabled {
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;
 
+	@Inject
+	private AlertExceptionBuilder m_alertBuilder;
+
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
 	private ModelService<TopReport> m_topService;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	@Inject
+	protected MailSender m_mailSender;
 
-	private static final String TOTAL_EXCEPTION_NAME = "TotalException";
+	@Inject
+	protected SmsSender m_smsSender;
+
+	@Inject
+	protected WeixinSender m_weixinSender;
+
+	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
 	private static final int ALERT_PERIOD = 1;
 
-	private static final int WARN_FLAG = 1;
-
-	private static final int ERROR_FLAG = 2;
-
 	private Logger m_logger;
+
+	private Alert buildAlert(String domainName, AlertException exception, String mailContent) {
+		Alert alert = new Alert();
+
+		alert.setDomain(domainName);
+		alert.setAlertTime(new Date());
+		alert.setCategory(getName());
+		alert.setType(exception.getType());
+		alert.setContent(mailContent);
+		alert.setMetric(exception.getName());
+
+		return alert;
+	}
 
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
@@ -74,104 +99,33 @@ public class ExceptionAlert implements Task, LogEnabled {
 		return topMetric;
 	}
 
+	private String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[业务负责人: ").append(owners).append(" ]");
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append("[负责人手机号码: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	private Pair<Double, Double> queryDomainTotalLimit(String domain) {
-		ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(domain);
-		Pair<Double, Double> limits = new Pair<Double, Double>();
-		double totalWarnLimit = -1;
-		double totalErrorLimit = -1;
-
-		if (totalExceptionLimit != null) {
-			totalWarnLimit = totalExceptionLimit.getWarning();
-			totalErrorLimit = totalExceptionLimit.getError();
-		}
-		limits.setKey(totalWarnLimit);
-		limits.setValue(totalErrorLimit);
-
-		return limits;
-	}
-
-	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
-		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exceptionName);
-		Pair<Double, Double> limits = new Pair<Double, Double>();
-		double warnLimit = -1;
-		double errorLimit = -1;
-
-		if (exceptionLimit != null) {
-			warnLimit = exceptionLimit.getWarning();
-			errorLimit = exceptionLimit.getError();
-		}
-		limits.setKey(warnLimit);
-		limits.setValue(errorLimit);
-
-		return limits;
-	}
-
-	private boolean isExcludedException(String domain, String exceptionName) {
-		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
-
-		if (result != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private List<AlertException> buildDomainAlertExceptionList(Item item) {
-		String domain = item.getDomain();
-		List<AlertException> alertExceptions = new ArrayList<AlertException>();
-		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
-		double totalWarnLimit = totalLimitPair.getKey();
-		double totalErrorLimit = totalLimitPair.getValue();
-		double totalException = 0;
-
-		for (Entry<String, Double> entry : item.getException().entrySet()) {
-			String exceptionName = entry.getKey();
-
-			if (!isExcludedException(domain, exceptionName)) {
-				double value = entry.getValue().doubleValue();
-				Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
-				double warnLimit = limitPair.getKey();
-				double errorLimit = limitPair.getValue();
-
-				totalException += value;
-
-				if (errorLimit > 0 && value > errorLimit) {
-					alertExceptions.add(new AlertException(exceptionName, ERROR_FLAG, value));
-				} else if (warnLimit > 0 && value > warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, WARN_FLAG, value));
-				}
-			}
-		}
-
-		if (totalErrorLimit > 0 && totalException > totalErrorLimit) {
-			alertExceptions.add(new AlertException(TOTAL_EXCEPTION_NAME, ERROR_FLAG, totalException));
-		} else if (totalWarnLimit > 0 && totalException > totalWarnLimit) {
-			alertExceptions.add(new AlertException(TOTAL_EXCEPTION_NAME, WARN_FLAG, totalException));
-		}
-
-		return alertExceptions;
-	}
-
-	private Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
-		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
-
-		// different domain -> [excepitons:numbers]
-		for (Item item : items) {
-			List<AlertException> domainAlertExceptions = buildDomainAlertExceptionList(item);
-
-			if (!domainAlertExceptions.isEmpty()) {
-				alertExceptions.put(item.getDomain(), domainAlertExceptions);
-			}
-		}
-		return alertExceptions;
-	}
-
-	@Override
 	public String getName() {
 		return "exception-alert";
 	}
@@ -227,11 +181,11 @@ public class ExceptionAlert implements Task, LogEnabled {
 				if (!items.isEmpty()) {
 					item = items.iterator().next();
 				}
-				Map<String, List<AlertException>> alertExceptions = buildAlertExceptions(item);
+				Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(item);
 
 				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 					try {
-						sendAlertForDomain(entry.getKey(), entry.getValue());
+						sendAndStoreAlert(entry.getKey(), entry.getValue());
 					} catch (Exception e) {
 						m_logger.error(e.getMessage());
 					}
@@ -254,77 +208,62 @@ public class ExceptionAlert implements Task, LogEnabled {
 		}
 	}
 
-	private void sendAlertForDomain(String domain, List<AlertException> exceptions) {
+	private void sendAndStoreAlert(String domain, List<AlertException> exceptions) {
 		Project project = queryProjectByDomain(domain);
 		List<String> emails = m_alertConfig.buildMailReceivers(project);
 		List<String> phones = m_alertConfig.buildSMSReceivers(project);
-		List<AlertException> errorExceptions = new ArrayList<AlertException>();
-		List<AlertException> warnExceptions = new ArrayList<AlertException>();
+		String weixins = m_alertConfig.buildWeiXinReceivers(project);
+		String mailTitle = m_alertConfig.buildMailTitle(domain, null);
+		String contactInfo = buildContactInfo(domain);
+		String mailContent = m_alertBuilder.buildMailContent(exceptions.toString(), domain, contactInfo);
 
-		for (AlertException exception : exceptions) {
-			if (exception.getAlertFlag() == WARN_FLAG) {
-				warnExceptions.add(exception);
-			} else if (exception.getAlertFlag() == ERROR_FLAG) {
-				errorExceptions.add(exception);
-			}
+		storeAlerts(domain, exceptions, mailTitle + "<br/>" + mailContent);
+
+		m_mailSender.sendAlert(emails, domain, mailTitle, mailContent, "warning");
+		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
+
+		List<AlertException> errorExceptions = m_alertBuilder.buildErrorException(exceptions);
+		if (!errorExceptions.isEmpty()) {
+			String weixinContent = m_alertBuilder.buildContent(errorExceptions.toString(), domain, contactInfo);
+			m_weixinSender.sendAlert(emails, domain, mailTitle, weixinContent, "error");
+			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + weixinContent + " "
+			      + domain + " " + weixins);
 		}
 
-		StringBuilder mailTitle = new StringBuilder();
-		String mailContent = buildContent(exceptions.toString(), domain);
-
-		mailTitle.append("[CAT异常告警] [项目: ").append(domain).append("]");
-		m_logger.info(mailTitle + " " + mailContent + " " + emails);
-		m_mailSms.sendEmail(mailTitle.toString(), mailContent, emails);
-		Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
-
-		if (!errorExceptions.isEmpty()) {
-			String smsContent = buildContent(errorExceptions.toString(), domain);
-
-			m_logger.info(smsContent + " " + phones);
-			m_mailSms.sendSms(smsContent, null, phones);
-			Cat.logEvent("ExceptionAlert", project.getDomain(), Event.SUCCESS, "[短信告警] " + smsContent);
+		List<AlertException> errorAndTriggeredExceptions = m_alertBuilder.buildErrorAndTriggeredException(exceptions);
+		if (!errorAndTriggeredExceptions.isEmpty()) {
+			String smsContent = m_alertBuilder.buildContent(errorAndTriggeredExceptions.toString(), domain, contactInfo);
+			m_smsSender.sendAlert(phones, domain, smsContent, smsContent, "error");
+			Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[短信告警] " + smsContent);
+		
+			m_mailSms.sendWeiXin(mailTitle, mailContent, domain, weixins);
+			m_logger.info(mailTitle + " " + mailContent + " " + domain + " " + weixins);
+			Cat.logEvent("WeiXinAlert", domain, Event.SUCCESS, "[微信告警] " + mailTitle + "  " + mailContent + " " + domain
+			      + " " + weixins);
 		}
 	}
 
-	private String buildContent(String exceptions, String domain) {
-		StringBuilder sb = new StringBuilder();
+	private void storeAlerts(String domain, List<AlertException> exceptions, String mailContent) {
+		for (AlertException exception : exceptions) {
+			storeAlert(domain, exception, mailContent);
+		}
+	}
 
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exceptions).append("[时间: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()))
-		      .append("]");
+	private void storeAlert(String domainName, AlertException exception, String mailContent) {
+		Alert alert = buildAlert(domainName, exception, mailContent);
 
-		return sb.toString();
+		try {
+			int count = m_alertDao.insert(alert);
+
+			if (count != 1) {
+				Cat.logError("insert alert error: " + alert.toString(), new RuntimeException());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	@Override
 	public void shutdown() {
-	}
-
-	public class AlertException {
-
-		private String m_name;
-
-		private int m_alertFlag;
-
-		private double m_count;
-
-		public AlertException(String name, int alertFlag, double count) {
-			m_name = name;
-			m_alertFlag = alertFlag;
-			m_count = count;
-		}
-
-		public int getAlertFlag() {
-			return m_alertFlag;
-		}
-
-		public String getName() {
-			return m_name;
-		}
-
-		@Override
-		public String toString() {
-			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
-		}
 	}
 }

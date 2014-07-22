@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -56,7 +57,7 @@ public class Handler implements PageHandler<Context> {
 
 	public String buildProject2Domains() {
 		List<Project> projects = new ArrayList<Project>();
-		Map<String, List<Project>> project2Domains = new HashMap<String, List<Project>>();
+		Map<String, Set<String>> project2Domains = new HashMap<String, Set<String>>();
 
 		try {
 			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
@@ -65,13 +66,17 @@ public class Handler implements PageHandler<Context> {
 		}
 		for (Project project : projects) {
 			String projectLine = project.getProjectLine();
-			List<Project> list = project2Domains.get(projectLine);
+			Set<String> set = project2Domains.get(projectLine);
 
-			if (list == null) {
-				list = new ArrayList<Project>();
-				project2Domains.put(projectLine, list);
+			if (set == null) {
+				set = new HashSet<String>();
+				project2Domains.put(projectLine, set);
 			}
-			list.add(project);
+			String cmdbDomain = project.getCmdbDomain();
+
+			if (StringUtils.isNotEmpty(cmdbDomain)) {
+				set.add(cmdbDomain);
+			}
 		}
 		return new JsonBuilder().toJson(project2Domains);
 	}

@@ -205,9 +205,9 @@ public class TopMetric extends BaseVisitor {
 						errorLimit = exceptionLimit.getError();
 					}
 				}
-				if (errorLimit > 0 && value > errorLimit) {
+				if (errorLimit > 0 && value >= errorLimit) {
 					sb.append(buildErrorText(entry.getKey() + " " + value, ERROR_COLOR)).append("<br/>");
-				} else if (warnLimit > 0 && value > warnLimit) {
+				} else if (warnLimit > 0 && value >= warnLimit) {
 					sb.append(buildErrorText(entry.getKey() + " " + value, WARN_COLOR)).append("<br/>");
 				} else {
 					sb.append(entry.getKey()).append(" ");

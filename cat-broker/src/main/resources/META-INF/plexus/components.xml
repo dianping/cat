@@ -21,11 +21,44 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.broker.api.app.AppDataConsumer</role>
+			<implementation>com.dianping.cat.broker.api.app.AppDataConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-data-command</role-hint>
+			<implementation>com.dianping.cat.config.app.AppDataCommandTableProvider</implementation>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-data-command</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-data-command</logical-table-name>
+				<physical-table-name>app_data_command</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppDataCommandDao</role>
+			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
@@ -98,10 +131,58 @@
 			<implementation>com.dianping.cat.broker.api.page.batch.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.broker.api.app.AppDataConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.IpService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.broker.api.page.MonitorManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.app.AppDataConsumer</role>
+			<implementation>com.dianping.cat.broker.api.app.AppDataConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppDataService</role>
+			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppDataCommandDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppDataCommandDao</role>
+			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>

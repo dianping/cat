@@ -11,31 +11,73 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.site.lookup.util.StringUtils;
 
 public class MetricGraphCreator extends AbstractGraphCreator {
+
+	@Inject
+	private ProjectDao m_projectDao;
+
+	protected String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			String owners = project.getOwner();
+			String phones = project.getPhone();
+			StringBuilder builder = new StringBuilder();
+
+			if (!StringUtils.isEmpty(owners)) {
+				builder.append("[负责人: ").append(owners);
+			}
+			if (!StringUtils.isEmpty(phones)) {
+				builder.append(" 手机: ").append(phones).append(" ]");
+			}
+
+			return builder.toString();
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		}
+
+		return null;
+	}
+
+	private String extractDomain(String metricKey) {
+		try {
+			return metricKey.split(":")[0];
+		} catch (Exception ex) {
+			Cat.logError("extract domain error:" + metricKey, ex);
+			return null;
+		}
+	}
 
 	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
 	      final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<String> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
+			String contactInfo = buildContactInfo(extractDomain(key));
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
-			buildLineChartTitle(alertKeys, lineChart, key);
-			lineChart.setUnit("Value/分钟");
+			buildLineChartTitle(alertKeys, lineChart, key, contactInfo);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
@@ -58,7 +100,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
-	
+
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
@@ -73,7 +115,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 		return oldCurrentValues;
 	}
-	
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
@@ -201,7 +242,20 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return false;
 	}
 
-	private void buildLineChartTitle(List<String> alertKeys, LineChart chart, String key) {
+	private String queryMetricItemDes(String type) {
+		String des = "";
+
+		if (MetricType.AVG.name().equals(type)) {
+			des = Chinese.Suffix_AVG;
+		} else if (MetricType.SUM.name().equals(type)) {
+			des = Chinese.Suffix_SUM;
+		} else if (MetricType.COUNT.name().equals(type)) {
+			des = Chinese.Suffix_COUNT;
+		}
+		return des;
+	}
+
+	private void buildLineChartTitle(List<AlertMetric> alertKeys, LineChart chart, String key, String contactInfo) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
@@ -213,12 +267,22 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			chart.setTitle(title);
 			chart.setId(metricId + ":" + type);
 
-			if (alertKeys.contains(metricId)) {
-				chart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
+			if (containMetric(alertKeys, metricId)) {
+				chart.setHtmlTitle("<span style='color:red'>" + title + "<br><small>" + contactInfo + "</small></span>");
 			} else {
 				chart.setHtmlTitle(title);
 			}
 		}
+	}
+
+	private boolean containMetric(List<AlertMetric> alertKeys, String metricId) {
+		for (AlertMetric alertMetric : alertKeys) {
+			if (alertMetric.getMetricId().equals(metricId)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private Map<String, double[]> buildGraphData(MetricReport metricReport, List<MetricItemConfig> metricConfigs) {
@@ -243,5 +307,4 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 		return values;
 	}
-
 }

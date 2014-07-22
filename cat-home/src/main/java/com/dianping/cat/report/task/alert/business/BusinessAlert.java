@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.alert.business;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,14 +15,15 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
+import com.dianping.cat.report.task.alert.BaseAlertConfig;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	private BusinessAlertConfig m_alertConfig;
-
-	private Logger m_logger;
+	protected BusinessAlertConfig m_alertConfig;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -30,7 +32,12 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "metric-alert";
+		return "business-alert";
+	}
+
+	@Override
+	public BaseAlertConfig getAlertConfig() {
+		return m_alertConfig;
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
@@ -39,6 +46,56 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
+		if (needAlert(config)) {
+			String product = productLine.getId();
+			String domain = config.getDomain();
+			String metric = config.getMetricKey();
+			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
+
+			AlertResultEntity alertResult = null;
+			if (config.isShowAvg()) {
+				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
+			}
+			if (config.isShowCount()) {
+				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
+			}
+			if (config.isShowSum()) {
+				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
+			}
+
+			if (alertResult != null && alertResult.isTriggered()) {
+				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
+				String contactInfo = buildContactInfo(domain);
+				alertResult.setContent(alertResult.getContent() + contactInfo);
+				String content = alertResult.getContent();
+				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
+
+				storeAlert(domain, metric, mailTitle, alertResult);
+
+				String configId = getAlertConfig().getId();
+				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
+				Cat.logEvent(configId, product, Event.SUCCESS, mailTitle + "  " + content);
+			}
+		}
+	}
+
+	@Override
+	protected void processProductLine(ProductLine productLine) {
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
+		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		for (MetricItemConfig config : configs) {
+			try {
+				processMetricItemConfig(config, minute, productLine);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 
@@ -94,20 +151,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	public void sendAlertInfo(ProductLine productLine, String metricTitle, String content) {
-		List<String> emails = m_alertConfig.buildMailReceivers(productLine);
-		List<String> phones = m_alertConfig.buildSMSReceivers(productLine);
-		String title = m_alertConfig.buildMailTitle(productLine, metricTitle);
-
-		m_logger.info(title + " " + content + " " + emails);
-		m_mailSms.sendEmail(title, content, emails);
-		m_mailSms.sendSms(title + " " + content, content, phones);
-
-		Cat.logEvent("MetricAlert", productLine.getId(), Event.SUCCESS, title + "  " + content);
-	}
-
-	@Override
 	public void shutdown() {
 	}
-
 }

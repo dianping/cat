@@ -16,7 +16,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.unidal.helper.Joiners;
 import org.unidal.helper.Joiners.IBuilder;
@@ -25,6 +27,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -44,7 +47,8 @@ public class CatFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
-		Context ctx = new Context((HttpServletRequest) request, (HttpServletResponse) response, chain, m_handlers);
+		Context ctx = new Context(new RequestWrapper((HttpServletRequest) request), new ResponseWrapper(
+		      (HttpServletResponse) response), chain, m_handlers);
 
 		ctx.handle();
 	}
@@ -78,6 +82,8 @@ public class CatFilter implements Filter {
 			protected int detectMode(HttpServletRequest req) {
 				String source = req.getHeader("X-CAT-SOURCE");
 				String id = req.getHeader("X-CAT-ID");
+				
+				Cat.setup(null);
 
 				if ("container".equals(source)) {
 					return 2;
@@ -86,20 +92,6 @@ public class CatFilter implements Filter {
 				} else {
 					return 0;
 				}
-			}
-
-			protected String getCookie(HttpServletRequest req, String name) {
-				Cookie[] cookies = req.getCookies();
-
-				if (cookies != null) {
-					for (Cookie cookie : cookies) {
-						if (name.equalsIgnoreCase(cookie.getName())) {
-							return cookie.getValue();
-						}
-					}
-				}
-
-				return null;
 			}
 
 			@Override
@@ -112,8 +104,6 @@ public class CatFilter implements Filter {
 				if (top) {
 					ctx.setMode(detectMode(req));
 					ctx.setType(CatConstants.TYPE_URL);
-
-					Cat.setup(getCookie(req, "JSESSIONID"));
 
 					setTraceMode(req);
 				} else {
@@ -167,6 +157,8 @@ public class CatFilter implements Filter {
 
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
+				boolean isTraceMode = Cat.getManager().isTraceMode();
+
 				HttpServletRequest req = ctx.getRequest();
 				HttpServletResponse res = ctx.getResponse();
 				MessageProducer producer = Cat.getProducer();
@@ -190,28 +182,30 @@ public class CatFilter implements Filter {
 					throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
 				}
 
-				MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+				if (isTraceMode) {
+					MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
-				tree.setMessageId(ctx.getId());
-				tree.setParentMessageId(ctx.getParentId());
-				tree.setRootMessageId(ctx.getRootId());
+					tree.setMessageId(ctx.getId());
+					tree.setParentMessageId(ctx.getParentId());
+					tree.setRootMessageId(ctx.getRootId());
 
-				res.setHeader("X-CAT-SERVER", getCatServer());
+					res.setHeader("X-CAT-SERVER", getCatServer());
 
-				switch (mode) {
-				case 0:
-					res.setHeader("X-CAT-ROOT-ID", ctx.getId());
-					break;
-				case 1:
-					res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-					res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-					res.setHeader("X-CAT-ID", ctx.getId());
-					break;
-				case 2:
-					res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-					res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-					res.setHeader("X-CAT-ID", ctx.getId());
-					break;
+					switch (mode) {
+					case 0:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getId());
+						break;
+					case 1:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+						res.setHeader("X-CAT-ID", ctx.getId());
+						break;
+					case 2:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+						res.setHeader("X-CAT-ID", ctx.getId());
+						break;
+					}
 				}
 
 				ctx.handle();
@@ -433,7 +427,160 @@ public class CatFilter implements Filter {
 		}
 	}
 
+	public static class CookieWrapper extends Cookie {
+		private Cookie m_cookie;
+
+		public CookieWrapper(Cookie cookie) {
+			super(cookie.getName(), cookie.getValue());
+			m_cookie = cookie;
+		}
+
+		public CookieWrapper(String name, String value) {
+			super(name, value);
+		}
+
+		public Object clone() {
+			return m_cookie.clone();
+		}
+
+		public boolean equals(Object obj) {
+			return m_cookie.equals(obj);
+		}
+
+		public String getComment() {
+			return m_cookie.getComment();
+		}
+
+		public String getDomain() {
+			return m_cookie.getDomain();
+		}
+
+		public int getMaxAge() {
+			return m_cookie.getMaxAge();
+		}
+
+		public String getName() {
+			return m_cookie.getName();
+		}
+
+		public String getPath() {
+			return m_cookie.getPath();
+		}
+
+		public boolean getSecure() {
+			return m_cookie.getSecure();
+		}
+
+		public String getValue() {
+			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":ReadCookie", m_cookie.getName());
+
+			event.setStatus(Event.SUCCESS);
+			event.addData("domain", m_cookie.getDomain());
+			event.addData("path", m_cookie.getPath());
+			event.addData("maxAge", m_cookie.getMaxAge());
+			event.complete();
+			return m_cookie.getValue();
+		}
+
+		public int getVersion() {
+			return m_cookie.getVersion();
+		}
+
+		public int hashCode() {
+			return m_cookie.hashCode();
+		}
+
+		public void setComment(String purpose) {
+			m_cookie.setComment(purpose);
+		}
+
+		public void setDomain(String pattern) {
+			m_cookie.setDomain(pattern);
+		}
+
+		public void setMaxAge(int expiry) {
+			m_cookie.setMaxAge(expiry);
+		}
+
+		public void setPath(String uri) {
+			m_cookie.setPath(uri);
+		}
+
+		public void setSecure(boolean flag) {
+			m_cookie.setSecure(flag);
+		}
+
+		public void setValue(String newValue) {
+			m_cookie.setValue(newValue);
+		}
+
+		public void setVersion(int v) {
+			m_cookie.setVersion(v);
+		}
+
+		public String toString() {
+			return m_cookie.toString();
+		}
+	}
+
 	protected static interface Handler {
 		public void handle(Context ctx) throws IOException, ServletException;
+	}
+
+	public static class RequestWrapper extends HttpServletRequestWrapper {
+
+		private HttpServletRequest m_request;
+
+		public RequestWrapper(HttpServletRequest request) {
+			super(request);
+			m_request = request;
+		}
+
+		@Override
+		public Cookie[] getCookies() {
+			Cookie[] cookies = m_request.getCookies();
+
+			if (cookies != null) {
+				int length = cookies.length;
+				CookieWrapper[] wappers = new CookieWrapper[length];
+
+				for (int i = 0; i < length; i++) {
+					wappers[i] = new CookieWrapper(cookies[i]);
+				}
+				return wappers;
+			} else {
+				return null;
+			}
+		}
+
+	}
+
+	public static class ResponseWrapper extends HttpServletResponseWrapper {
+
+		public ResponseWrapper(HttpServletResponse response) {
+			super(response);
+		}
+
+		@Override
+		public void addCookie(Cookie cookie) {
+			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":SetCookie", cookie.getName());
+
+			event.setStatus(Event.SUCCESS);
+			event.addData("domain", cookie.getDomain());
+			event.addData("path", cookie.getPath());
+			event.addData("maxAge", cookie.getMaxAge());
+			event.complete();
+			super.addCookie(cookie);
+		}
+
+		@Override
+		public void addHeader(String name, String value) {
+			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":SetHead", name);
+
+			event.setStatus(Event.SUCCESS);
+			event.addData("value", value);
+			event.complete();
+			super.addHeader(name, value);
+		}
 	}
 }

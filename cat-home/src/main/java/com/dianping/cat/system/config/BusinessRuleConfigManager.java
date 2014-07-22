@@ -19,9 +19,12 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessRuleConfigManager extends BaseRuleConfigManager implements Initializable {
+
+	private static final String CATEGORY_NAME = "business";
 
 	private static final String CONFIG_NAME = "businessRuleConfig";
 
@@ -47,16 +50,21 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		return config;
 	}
 
-	private Rule buildDefaultRule(String metricKey) {
+	private Rule buildDefaultRule(String product, String metricKey) {
 		Rule rule = new Rule(metricKey);
 		MetricItem item = new MetricItem();
 
-		item.setType("id");
-		item.setText(metricKey);
+		item.setProductText(product);
+		item.setMetricItemText(metricKey);
 
 		rule.addMetricItem(item);
 		rule.addConfig(buildDefaultConfig());
 		return rule;
+	}
+
+	@Override
+	protected String getCategoryName() {
+		return CATEGORY_NAME;
 	}
 
 	@Override
@@ -96,7 +104,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	}
 
 	@Override
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String metricKey, MetricType type) {
+	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
 		Rule rule = m_config.getRules().get(metricKey);
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
 
@@ -120,17 +128,20 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 			if (configs.size() == 0) {
 				configs.add(buildDefaultConfig());
 			}
+
+			Cat.logEvent("FindRule", getCategoryName(), Event.SUCCESS,
+			      "find rule for " + metricKey + ": " + rule.toString());
 			return configs;
 		}
 	}
 
-	public Rule queryRule(String metricKey) {
+	public Rule queryRule(String product, String metricKey) {
 		Rule rule = m_config.getRules().get(metricKey);
 
 		if (rule != null) {
 			return rule;
 		} else {
-			return buildDefaultRule(metricKey);
+			return buildDefaultRule(product, metricKey);
 		}
 	}
 

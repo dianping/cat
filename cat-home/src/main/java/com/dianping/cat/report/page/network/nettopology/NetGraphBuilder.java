@@ -14,81 +14,116 @@ import com.dianping.cat.home.nettopo.entity.NetGraph;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.home.nettopo.entity.Switch;
+import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 
 public class NetGraphBuilder {
 
-	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports, List<String> alertKeys) {
+	private static final int ERROR = 3;
+
+	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports,
+	      List<AlertMetric> alertKeys) {
 		NetGraphSet netGraphSet = new NetGraphSet();
 
-		for (int i = 0; i <= 59; i++) {
+		for (int minute = 0; minute <= 59; minute++) {
 			NetGraph netGraph = copyBaseInfoFromTemplate(netGraphTemplate);
+
 			for (NetTopology netTopology : netGraph.getNetTopologies()) {
 				List<String> alertSwitchs = new ArrayList<String>();
-				
+
 				for (Connection connection : netTopology.getConnections()) {
 					try {
-						double insum = 0;
-						double outsum = 0;
-						double inDiscardsSum = 0;
-						double outDiscardsSum = 0;
-						double inErrorsSum = 0;
-						double outErrorsSum = 0;
-						int inState = 0;
-						int outState = 0;
-
-						for (Interface inter : connection.getInterfaces()) {
-							String group = inter.getGroup();
-							MetricReport report = reports.get(group);
-
-							updateInterface(inter, report, i);
-							
-							if (alertKeys.contains(inter.getKey() + "-flow-in") || 
-									alertKeys.contains(inter.getKey() + "-discard/error-indiscards") ||
-									alertKeys.contains(inter.getKey() + "-discard/error-inerrors")) {
-								inter.setInstate(3);
-								inState = 3;
-							}
-							if (alertKeys.contains(inter.getKey() + "-flow-out") ||
-									alertKeys.contains(inter.getKey() + "-discard/error-outdiscards") ||
-									alertKeys.contains(inter.getKey() + "-discard/error-outerrors")) {
-								inter.setOutstate(3);
-								outState = 3;
-							}
-							
-							insum += inter.getIn();
-							outsum += inter.getOut();
-							inDiscardsSum += inter.getIndiscards();
-							outDiscardsSum += inter.getOutdiscards();
-							inErrorsSum += inter.getInerrors();
-							outErrorsSum += inter.getOuterrors();
-						}
-						connection.setInsum(insum);
-						connection.setOutsum(outsum);
-						connection.setIndiscards(inDiscardsSum);
-						connection.setOutdiscards(outDiscardsSum);
-						connection.setInerrors(inErrorsSum);
-						connection.setOuterrors(outErrorsSum);
-						connection.setInstate(inState);
-						connection.setOutstate(outState);
-						if (inState == 3 || outState == 3) {
-							alertSwitchs.add(connection.getFrom());
-						}
+						buildConnectionInfo(reports, alertKeys, minute, alertSwitchs, connection);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
 				}
-				
+
 				for (Switch sw : netTopology.getSwitchs()) {
 					if (alertSwitchs.contains(sw.getName())) {
-						sw.setState(3);
+						sw.setState(ERROR);
 					}
 				}
 			}
-			netGraph.setMinute(i);
+			netGraph.setMinute(minute);
 			netGraphSet.addNetGraph(netGraph);
 		}
 
 		return netGraphSet;
+	}
+
+	private void buildConnectionInfo(Map<String, MetricReport> reports, List<AlertMetric> alertKeys, int minute,
+	      List<String> alertSwitchs, Connection connection) {
+		double insum = 0, outsum = 0, inDiscardsSum = 0, outDiscardsSum = 0, inErrorsSum = 0, outErrorsSum = 0;
+		int inState = 0, outState = 0, inDiscardsState = 0, outDiscardsState = 0, inErrorsState = 0, outErrorsState = 0;
+
+		for (Interface inter : connection.getInterfaces()) {
+			String group = inter.getGroup();
+			MetricReport report = reports.get(group);
+			String domain = inter.getDomain();
+			String prefix = inter.getKey();
+
+			updateInterface(inter, report, minute);
+
+			if (containsAlert(alertKeys, group, domain, prefix, "-flow-in")) {
+				inter.setInstate(ERROR);
+				inState = ERROR;
+			}
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-indiscards")) {
+				inter.setInDiscardsState(ERROR);
+				inDiscardsState = ERROR;
+			}
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-inerrors")) {
+				inter.setInErrorsState(ERROR);
+				inErrorsState = ERROR;
+			}
+			if (containsAlert(alertKeys, group, domain, prefix, "-flow-out")) {
+				inter.setOutstate(ERROR);
+				outState = ERROR;
+			}
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-outdiscards")) {
+				inter.setOutDiscardsState(ERROR);
+				outDiscardsState = ERROR;
+			}
+			if (containsAlert(alertKeys, group, domain, prefix, "-discard/error-outerrors")) {
+				inter.setOutErrorsState(ERROR);
+				outErrorsState = ERROR;
+			}
+
+			insum += inter.getIn();
+			outsum += inter.getOut();
+			inDiscardsSum += inter.getInDiscards();
+			outDiscardsSum += inter.getOutDiscards();
+			inErrorsSum += inter.getInErrors();
+			outErrorsSum += inter.getOutErrors();
+		}
+		connection.setInsum(insum);
+		connection.setOutsum(outsum);
+		connection.setInDiscards(inDiscardsSum);
+		connection.setOutDiscards(outDiscardsSum);
+		connection.setInErrors(inErrorsSum);
+		connection.setOutErrors(outErrorsSum);
+		connection.setInstate(inState);
+		connection.setOutstate(outState);
+		connection.setInDiscardsState(inDiscardsState);
+		connection.setOutDiscardsState(outDiscardsState);
+		connection.setInErrorsState(inErrorsState);
+		connection.setOutErrorsState(outErrorsState);
+
+		if (inState == ERROR || outState == ERROR || inDiscardsState == ERROR || outDiscardsState == ERROR
+		      || inErrorsState == ERROR || outErrorsState == ERROR) {
+			alertSwitchs.add(connection.getFrom());
+		}
+	}
+
+	private boolean containsAlert(List<AlertMetric> alertKeys, String group, String domain, String prefix, String suffix) {
+		String actualKey = domain + ":Metric:" + prefix + suffix;
+
+		for (AlertMetric metric : alertKeys) {
+			if (metric.getGroup().equals(group) && metric.getMetricId().equals(actualKey)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private NetGraph copyBaseInfoFromTemplate(NetGraph netGraph) {
@@ -126,6 +161,10 @@ public class NetGraphBuilder {
 					interB.setOutstate(interA.getOutstate());
 					interB.setInstate(interA.getInstate());
 					interB.setOutstate(interA.getOutstate());
+					interB.setInDiscardsState(interA.getInDiscardsState());
+					interB.setOutDiscardsState(interA.getOutDiscardsState());
+					interB.setInErrorsState(interA.getInErrorsState());
+					interB.setOutErrorsState(interA.getOutErrorsState());
 					connectionB.addInterface(interB);
 				}
 				connectionB.setInsum(connectionA.getInsum());
@@ -134,6 +173,10 @@ public class NetGraphBuilder {
 				connectionB.setTo(connectionA.getTo());
 				connectionB.setInstate(connectionA.getInstate());
 				connectionB.setOutstate(connectionA.getOutstate());
+				connectionB.setInDiscardsState(connectionA.getInDiscardsState());
+				connectionB.setOutDiscardsState(connectionA.getOutDiscardsState());
+				connectionB.setInErrorsState(connectionA.getInErrorsState());
+				connectionB.setOutErrorsState(connectionA.getOutErrorsState());
 				netTopologyB.addConnection(connectionB);
 			}
 
@@ -150,24 +193,21 @@ public class NetGraphBuilder {
 		try {
 			MetricItem inItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-flow-in");
 			MetricItem outItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-flow-out");
-			MetricItem inDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-indiscards");
-			MetricItem outDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-outdiscards");
+			MetricItem inDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key
+			      + "-discard/error-indiscards");
+			MetricItem outDiscardsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key
+			      + "-discard/error-outdiscards");
 			MetricItem inErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-inerrors");
-			MetricItem outErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key + "-discard/error-outerrors");
+			MetricItem outErrorsItem = report.findOrCreateMetricItem(domain + ":Metric:" + key
+			      + "-discard/error-outerrors");
 
 			inter.setIn(inItem.findOrCreateSegment(minute).getSum() / 60 * 8);
 			inter.setOut(outItem.findOrCreateSegment(minute).getSum() / 60 * 8);
-			inter.setIndiscards(inDiscardsItem.findOrCreateSegment(minute).getSum() / 60);
-			inter.setOutdiscards(outDiscardsItem.findOrCreateSegment(minute).getSum() / 60);
-			inter.setInerrors(inErrorsItem.findOrCreateSegment(minute).getSum() / 60);
-			inter.setOuterrors(outErrorsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setInDiscards(inDiscardsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setOutDiscards(outDiscardsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setInErrors(inErrorsItem.findOrCreateSegment(minute).getSum() / 60);
+			inter.setOutErrors(outErrorsItem.findOrCreateSegment(minute).getSum() / 60);
 		} catch (Exception e) {
-			inter.setIn(0.0);
-			inter.setOut(0.0);
-			inter.setIndiscards(0.0);
-			inter.setOutdiscards(0.0);
-			inter.setInerrors(0.0);
-			inter.setOuterrors(0.0);
 			Cat.logError(e);
 		}
 	}

@@ -63,6 +63,7 @@ import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
 import com.dianping.cat.report.view.StringSortHelper;
+import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -103,7 +104,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	private LocalTransactionService m_transactionService;
 
 	@Inject
-	private CdnReportConvertor m_cdnReportConvertor;
+	private IpService m_ipService;
 
 	private static final int DEFAULT_SIZE = 32 * 1024;
 
@@ -257,10 +258,11 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					String province = payload.getProvince();
 					String city = payload.getCity();
 					MetricReport metricReport = (MetricReport) response.getModel();
+					CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
 
-					m_cdnReportConvertor.SetConventorParameter(cdn, province, city);
-					m_cdnReportConvertor.visitMetricReport(metricReport);
-					((ModelResponse<MetricReport>) response).setModel(m_cdnReportConvertor.getReport());
+					cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
+					cdnReportConvertor.visitMetricReport(metricReport);
+					((ModelResponse<MetricReport>) response).setModel(cdnReportConvertor.getReport());
 				}
 
 			} else if (DependencyAnalyzer.ID.equals(report)) {

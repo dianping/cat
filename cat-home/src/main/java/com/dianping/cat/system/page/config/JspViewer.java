@@ -76,8 +76,10 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.METRIC_RULE_ADD_OR_UPDATE.getPath();
 		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.METRIC_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
-		case METRIC_RULE_CONFIG_UPDATE:
-			return JspFile.METRIC_RULE_CONFIG_UPDATE.getPath();
+		case NETWORK_RULE_CONFIG_UPDATE:
+			return JspFile.NETWORK_RULE_CONFIG_UPDATE.getPath();
+		case SYSTEM_RULE_CONFIG_UPDATE:
+			return JspFile.SYSTEM_RULE_CONFIG_UPDATE.getPath();
 		case ALERT_DEFAULT_RECEIVERS:
 			return JspFile.ALERT_DEFAULT_RECEIVERS.getPath();
 			// Excepton Config
@@ -104,8 +106,10 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
 		case METRIC_GROUP_CONFIG_UPDATE:
 			return JspFile.METRIC_GROUP_CONFIG_UPDATE.getPath();
-		default:
-			throw new RuntimeException("Unknown action: " + action);
+		case APP_CONFIG_UPDATE:
+			return JspFile.APP_CONFIG_UPDATE.getPath();
 		}
+		
+		throw new RuntimeException("Unknown action: " + action);
 	}
 }

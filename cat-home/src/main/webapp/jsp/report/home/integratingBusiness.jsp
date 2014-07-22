@@ -55,6 +55,7 @@
 	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</span></td></tr>
 	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用TuanGouWeb这类命名方式</span></td></tr>
 	<tr><td>key</td><td>监控业务唯一ID名称，<span class="text-error">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用PayCount这类命名方式</span></td></tr>
+	<tr><td>timestamp</td><td>时间戳,<span class="text-error">必需，仅仅为数字。如果缺失，选取服务器当前时间</span></td></tr>
 	<tr><td>op</td><td>sum，avg，count[<span class="text-error">默认</span>]</td></tr>
 	<tr><td>count</td><td>op=count时所需，<span class="text-error">默认为1</span></td></tr>
 	<tr><td>sum</td><td>op=sum时所需，<span class="text-error">默认为0</span></td></tr>
@@ -63,15 +64,15 @@
 
 <p> 1).op = count时，用于记录一个指标值出现的次数</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=count
+	http://cat.dianpingoa.com/cat/r/monitor?timestamp=1404815988&group=myGroup&domain=myApp&key=myKey&op=count
 </pre>
 <p> 2).op = avg时，用于记录一个指标出现的平均值</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=avg&avg=500
+	http://cat.dianpingoa.com/cat/r/monitor?timestamp=1404815988&group=myGroup&domain=myApp&key=myKey&op=avg&avg=500
 </pre>
 <p> 3).op = sum时，用于记录一个指标出现的总和</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/monitor?group=myGroup&domain=myApp&key=myKey&op=sum&sum=500
+	http://cat.dianpingoa.com/cat/r/monitor?timestamp=1404815988&group=myGroup&domain=myApp&key=myKey&op=sum&sum=500
 </pre>
 <p>返回说明</p>
 <pre>

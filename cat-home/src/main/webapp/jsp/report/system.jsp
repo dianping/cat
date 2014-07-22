@@ -25,30 +25,17 @@
 			if("${model.ipAddrs}" != "[]") {
 				ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
 			}
-			for( var i=0; i<ipAddrs.length; i++){
-			 	var ip = "ip_" + ipAddrs[i];
-				if(document.getElementById(ip).checked == false){
-					document.getElementById("ipAll").checked = false;
-					break;
-				} 
-			}
 			
 			var curIpAddrs = '';
 			var num = 0;
-			if(document.getElementById("ipAll").checked == false) {
+			if(document.getElementById("ipAll").checked == false && ipAddrs.length > 0) {
 				for( var i=0; i<ipAddrs.length; i++){
 				 	var ip = "ip_" + ipAddrs[i];
 					if(document.getElementById(ip).checked){
 						curIpAddrs += ipAddrs[i] + "_";
-						num ++;
 					} 
 				}
-				if(num == ipAddrs.length) {
-					curIpAddrs = "All";
-					document.getElementById("ipAll").checked = true;
-				}else{
-					curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
-				}
+				curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
 			}else{
 				curIpAddrs = "All";
 			}
@@ -58,12 +45,7 @@
 					+ end; 
 		}
 		
-		function queryAll() {
-			var productLine = $("#productLine").val();
-			var domain = $("#domain").val();
-			var type = $("#type").val();
-			var start = $("#startTime").val();
-			var end = $("#endTime").val();
+		function clickAll() {
 			var ipAddrs = '';
 			
 			if("${model.ipAddrs}" != "[]"){
@@ -74,23 +56,26 @@
 			 	var ip = "ip_" + ipAddrs[i];
 				document.getElementById(ip).checked = document.getElementById("ipAll").checked;
 			}
-			
-			var curIpAddrs = '';
-			if(document.getElementById("ipAll").checked == true) {
-				curIpAddrs = "All";
-			}else{
-				for( var i=0; i<ipAddrs.length; i++){
-				 	var ip = "ip_" + ipAddrs[i];
-					if(document.getElementById(ip).checked){
-						curIpAddrs += ipAddrs[i] + "_";
-					} 
-				}
-				curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
+		}
+		
+		function clickIp() {
+			var ipAddrs = '';
+			if("${model.ipAddrs}" != "[]") {
+				ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
 			}
-			
-			window.location.href = "?productLine=" + productLine + "&domain=" + domain + "&type=" + type 
-					+ "&ipAddrs=" + curIpAddrs + "&startDate=" + start + "&endDate="
-					+ end; 
+			var num = 0;
+			for( var i=0; i<ipAddrs.length; i++){
+			 	var ip = "ip_" + ipAddrs[i];
+				if(document.getElementById(ip).checked){
+					num ++;
+				}else{
+					document.getElementById("ipAll").checked = false;
+					break;
+				} 
+			}
+			if(num == ipAddrs.length) {
+				document.getElementById("ipAll").checked = true;
+			}
 		}
 
 		$(document).ready(
@@ -101,7 +86,6 @@
 				        	alert("结束时间不能晚于结束时间！");
 				        	$("#startTime").val($("#endTime").val());
 				        	} 
-				    	query();
 					});
 					$('#datetimepicker2').datetimepicker().on('hide', function(ev){
 						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
@@ -109,7 +93,6 @@
 				        	alert("结束时间不能早于开始时间！");
 				        	$("#endTime").val($("#startTime").val());
 				        	} 
-				    	query();
 					});
 					
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
@@ -138,21 +121,28 @@
 					var productSelect = $('#productLine');
 					function change() {
 						var productLine = $("#productLine").val();
-						var projects = projectsInfo[productLine];
+						var projects;
+						if(productLine == 'All') {
+							projects = new Array();
+							for(var key in projectsInfo) {
+								for(var subKey in projectsInfo[key]) {
+									projects.push(projectsInfo[key][subKey]);
+								}
+							}
+						} else {
+							projects = projectsInfo[productLine];
+						}
 						select = document.getElementById("domain");
 						select.length = 0;
 
 						for ( var prop in projects) {
-							var opt = $('<option />');
-							var cmdbDomain = projects[prop].cmdbDomain;
-							var domain = projects[prop].domain;
-							if(typeof cmdbDomain != "undefined" && cmdbDomain.length > 0 ) {
-								opt.html(cmdbDomain);
-							}else{
+							if (projects.hasOwnProperty(prop)) {
+								var opt = $('<option />');
+								var domain = projects[prop];
 								opt.html(domain);
+								opt.val(domain);
+								opt.appendTo(select);
 							}
-							opt.val(domain);
-							opt.appendTo(select);
 						}
 						$("#domain").select2();
 					}
@@ -203,11 +193,13 @@
 			<tr>
 				<th class="left">
 					业务线
-					<select style="width: 200px;" name="productLine" id="productLine" onclick="query()"></select>
+					<select style="width: 200px;" name="productLine" id="productLine" >
+					<option value="All">All</option>
+					</select>
 					项目
-					<select style="width: 200px;" name="domain" id="domain" onclick="query()"></select> 
+					<select style="width: 200px;" name="domain" id="domain" ></select> 
 					查询类型
-					<select style="width: 100px;" name="type" id="type"  onclick="query()" >
+					<select style="width: 100px;" name="type" id="type" >
 							<option value="system">系统</option>
 							<option value="jvm">JVM</option>
 							<option value="nginx">Nginx</option>
@@ -216,7 +208,7 @@
 
 				<th class="right">开始时间
 					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()">
+						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" >
 						</input>
 						<span class="add-on">
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
@@ -225,7 +217,7 @@
            
 					结束时间
 					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" onchange="query()"></input> 
+						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" ></input> 
 						<span class="add-on" ondragleave="query()"> 
 							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
 						</span>
@@ -236,13 +228,13 @@
 		</table>
 	
 		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary">
-		    		<input type="checkbox" id="ipAll" onclick="queryAll()" unchecked>All
+			<label class="btn btn-info">
+		    		<input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All
 		  	</label>
 	    	
 	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
-      			<label class="btn btn-primary">
-		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="query()" unchecked>${item}
+      			<label class="btn btn-info">
+		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}
 		  		</label>
 			</c:forEach>
 		</div>

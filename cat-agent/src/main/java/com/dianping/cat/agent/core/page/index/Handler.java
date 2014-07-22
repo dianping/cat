@@ -11,9 +11,9 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.agent.core.CorePage;
-import com.dianping.cat.agent.monitor.executors.DataSender;
+import com.dianping.cat.agent.monitor.DataSender;
 import com.dianping.cat.agent.monitor.executors.TaskExecutors;
-import com.dianping.cat.agent.monitor.puppet.PuppetTask;
+import com.dianping.cat.agent.monitor.paas.PaasTask;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -26,7 +26,7 @@ public class Handler implements PageHandler<Context> {
 	protected TaskExecutors m_taskExecutors;
 
 	@Inject
-	private PuppetTask m_puppetTask;
+	protected PaasTask m_paasTask;
 
 	@Override
 	@PayloadMeta(Payload.class)

@@ -15,7 +15,9 @@ import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.site.lookup.util.StringUtils;
 
 public abstract class BaseRuleConfigManager {
 
@@ -25,6 +27,8 @@ public abstract class BaseRuleConfigManager {
 	protected int m_configId;
 
 	protected MonitorRules m_config;
+
+	protected abstract String getCategoryName();
 
 	protected abstract String getConfigName();
 
@@ -43,27 +47,29 @@ public abstract class BaseRuleConfigManager {
 		}
 	}
 
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String metricKey, MetricType type) {
+	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
 
 		for (Rule rule : m_config.getRules().values()) {
 			List<MetricItem> items = rule.getMetricItems();
 
 			for (MetricItem item : items) {
-				String checkType = item.getType();
-				String context = item.getText();
+				String productText = item.getProductText();
+				String metricItemText = item.getMetricItemText();
 				boolean validate = false;
 
 				if (type == MetricType.COUNT && item.isMonitorCount()) {
-					validate = validate(checkType, context, metricKey);
+					validate = validate(productText, metricItemText, product, metricKey);
 				} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-					validate = validate(checkType, context, metricKey);
+					validate = validate(productText, metricItemText, product, metricKey);
 				} else if (type == MetricType.SUM && item.isMonitorSum()) {
-					validate = validate(checkType, context, metricKey);
+					validate = validate(productText, metricItemText, product, metricKey);
 				}
 
 				if (validate) {
 					configs.addAll(rule.getConfigs());
+					Cat.logEvent("FindRule", getCategoryName(), Event.SUCCESS,
+					      "find rule for " + metricKey + ": " + rule.toString());
 					break;
 				}
 			}
@@ -89,24 +95,27 @@ public abstract class BaseRuleConfigManager {
 		return true;
 	}
 
-	public boolean validate(String type, String context, String metricKey) {
-		if (type.equals("id")) {
-			if (context.equals(metricKey)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else if (type.equals("regex")) {
-			Pattern p = Pattern.compile(context);
-			Matcher matcher = p.matcher(metricKey);
-
-			if (matcher.find()) {
-				return true;
+	public boolean validate(String productText, String metricKeyText, String product, String metricKey) {
+		if (StringUtils.isEmpty(productText)) {
+			return validateRegex(metricKeyText, metricKey);
+		} else {
+			if (validateRegex(productText, product)) {
+				return validateRegex(metricKeyText, metricKey);
 			} else {
 				return false;
 			}
 		}
-		return false;
+	}
+
+	public boolean validateRegex(String regexText, String text) {
+		Pattern p = Pattern.compile(regexText);
+		Matcher m = p.matcher(text);
+
+		if (m.find()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

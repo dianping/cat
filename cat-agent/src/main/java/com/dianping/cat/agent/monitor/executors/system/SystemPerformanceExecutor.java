@@ -1,38 +1,265 @@
 package com.dianping.cat.agent.monitor.executors.system;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.hyperic.sigar.Cpu;
+import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
 import org.hyperic.sigar.NetInterfaceStat;
+import org.hyperic.sigar.NetStat;
+import org.hyperic.sigar.ProcStat;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Swap;
+import org.hyperic.sigar.Who;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.agent.monitor.DataEntity;
 import com.dianping.cat.agent.monitor.executors.AbstractExecutor;
-import com.dianping.cat.agent.monitor.executors.DataEntity;
 
 public class SystemPerformanceExecutor extends AbstractExecutor {
 
 	public static final String ID = "PerformanceExecutor";
 
-	private static final String ETH_NAME = "eth0";
-
-	private static final List<String> DISK_LIST = new ArrayList<String>(Arrays.asList("/data", "/usr", "/var"));
-
 	private Sigar m_sigar = new Sigar();
 
-	private Cpu m_preCpu;
+	private Map<String, NetInterfaceStat> m_preIfStatMap = new HashMap<String, NetInterfaceStat>();
 
-	private Cpu m_curCpu;
+	private Map<String, FileSystemUsage> m_fileSystemUsageMap = new HashMap<String, FileSystemUsage>();
 
-	private NetInterfaceStat m_preIfStat;
+	private List<DataEntity> buildCpuInfo() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 
-	private NetInterfaceStat m_curIfStat;
+		try {
+			CpuPerc cpuPerc = m_sigar.getCpuPerc();
+			double system = cpuPerc.getSys();
+			double iowait = cpuPerc.getWait();
+			double nice = cpuPerc.getNice();
+			double steal = cpuPerc.getStolen();
+			double user = cpuPerc.getUser();
+			double softirq = cpuPerc.getSoftIrq();
+			double idle = cpuPerc.getIdle();
+			double irq = cpuPerc.getIrq();
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("sysCpu"), system);
+			values.put(buildSystemId("iowaitCpu"), iowait);
+			values.put(buildSystemId("niceCpu"), nice);
+			values.put(buildSystemId("stealCpu"), steal);
+			values.put(buildSystemId("userCpu"), user);
+			values.put(buildSystemId("softirqCpu"), softirq);
+			values.put(buildSystemId("idleCpu"), idle);
+			values.put(buildSystemId("irqCpu"), irq);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildDiskUsage() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			FileSystem[] fileSystems = m_sigar.getFileSystemList();
+
+			for (FileSystem fs : fileSystems) {
+				String dirName = fs.getDirName();
+
+				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK && m_envConfig.getDiskList().contains(dirName)) {
+					Map<String, Double> values = new HashMap<String, Double>();
+					FileSystemUsage usage = m_sigar.getFileSystemUsage(dirName);
+					double usedPerc = usage.getUsePercent();
+					double inodePerc = 1.0 * usage.getFreeFiles() / usage.getFiles();
+
+					values.put(buildSystemId(dirName + "-usage"), usedPerc);
+					values.put(buildSystemId(dirName + "-freeInodes"), inodePerc);
+					entities.addAll(buildEntities(values, AVG_TYPE));
+
+					FileSystemUsage preUsage = m_fileSystemUsageMap.get(dirName);
+
+					if (preUsage != null) {
+						double read = usage.getDiskReadBytes() - preUsage.getDiskReadBytes();
+						double write = usage.getDiskWriteBytes() - preUsage.getDiskWriteBytes();
+
+						values.clear();
+						values.put(buildSystemId(dirName + "-read"), read);
+						values.put(buildSystemId(dirName + "-write"), write);
+						entities.addAll(buildEntities(values, SUM_TYPE));
+					}
+					m_fileSystemUsageMap.put(dirName, usage);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private ArrayList<DataEntity> buildLoadInfo() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			double[] loadAvgs = m_sigar.getLoadAverage();
+			double loadAvg1 = loadAvgs[0];
+			double loadAvg5 = loadAvgs[1];
+
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("loadAvg1"), loadAvg1);
+			values.put(buildSystemId("loadAvg5"), loadAvg5);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildMemInfo() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			List<String> lines = m_commandUtils.runShell("free");
+			Iterator<String> iterator = lines.iterator();
+
+			if (lines.size() >= 2) {
+				iterator.next();
+				String line = iterator.next();
+				String[] outputs = line.split(" +");
+				double total = Double.parseDouble(outputs[1]);
+				double used = Double.parseDouble(outputs[2]) / total;
+				double free = Double.parseDouble(outputs[3]) / total;
+				double shared = Double.parseDouble(outputs[4]) / total;
+				double buffers = Double.parseDouble(outputs[5]) / total;
+				double cached = Double.parseDouble(outputs[6]) / total;
+				Map<String, Double> values = new HashMap<String, Double>();
+
+				values.put(buildSystemId("totalMem"), total);
+				values.put(buildSystemId("usedMem"), used);
+				values.put(buildSystemId("freeMem"), free);
+				values.put(buildSystemId("sharedMem"), shared);
+				values.put(buildSystemId("buffersMem"), buffers);
+				values.put(buildSystemId("cachedMem"), cached);
+				entities.addAll(buildEntities(values, AVG_TYPE));
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildNetworkInfo() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+
+		for (String netInterface : m_envConfig.getTrafficInterfaceList()) {
+			try {
+				NetInterfaceStat curIfStat = m_sigar.getNetInterfaceStat(netInterface);
+				NetInterfaceStat preIfStat = m_preIfStatMap.get(netInterface);
+
+				if (preIfStat != null) {
+					Map<String, Double> values = new HashMap<String, Double>();
+					double totalRxBytes = curIfStat.getRxBytes() - preIfStat.getRxBytes();
+					double totalTxBytes = curIfStat.getTxBytes() - preIfStat.getTxBytes();
+
+					values.put(buildSystemId(netInterface + "-inFlow"), totalRxBytes);
+					values.put(buildSystemId(netInterface + "-outFlow"), totalTxBytes);
+
+					if (m_envConfig.getPackageInterface().equals(netInterface)) {
+						double txDropped = curIfStat.getTxDropped() - preIfStat.getTxDropped();
+						double txErrors = curIfStat.getTxErrors() - preIfStat.getTxErrors();
+						double txCollisions = curIfStat.getTxCollisions() - preIfStat.getTxCollisions();
+
+						values.put(buildSystemId(netInterface + "-dropped"), txDropped);
+						values.put(buildSystemId(netInterface + "-errors"), txErrors);
+						values.put(buildSystemId(netInterface + "-collisions"), txCollisions);
+					}
+					entities.addAll(buildEntities(values, SUM_TYPE));
+				}
+				m_preIfStatMap.put(netInterface, curIfStat);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildProcessInfo() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			ProcStat procStat = m_sigar.getProcStat();
+			double totalProc = procStat.getTotal();
+			double totalRunning = procStat.getRunning();
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("totalProcess"), totalProc);
+			values.put(buildSystemId("runningProcess"), totalRunning);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+		} catch (SigarException e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildSwapInfo() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			Swap curSwap = m_sigar.getSwap();
+			double totalSwap = curSwap.getTotal();
+			double swapUsage = totalSwap > 0.0 ? curSwap.getFree() / totalSwap : 0.0;
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("swapUsage"), swapUsage);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildTcpConnectionInfo() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+		try {
+			NetStat netStat = m_sigar.getNetStat();
+			double tcpCon = netStat.getTcpEstablished();
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("establishedTcp"), tcpCon);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	private List<DataEntity> buildUserNumber() {
+		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			Who[] whos = m_sigar.getWhoList();
+			Set<String> users = new HashSet<String>();
+
+			for (Who user : whos) {
+				users.add(user.getUser());
+			}
+			double number = users.size();
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("loginUsers"), number);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
 
 	@Override
 	public List<DataEntity> execute() {
@@ -40,125 +267,14 @@ public class SystemPerformanceExecutor extends AbstractExecutor {
 
 		entities.addAll(buildCpuInfo());
 		entities.addAll(buildDiskUsage());
-		entities.addAll(buildFlowInfo());
+		entities.addAll(buildNetworkInfo());
 		entities.addAll(buildSwapInfo());
 		entities.addAll(buildLoadInfo());
+		entities.addAll(buildTcpConnectionInfo());
+		entities.addAll(buildUserNumber());
+		entities.addAll(buildProcessInfo());
+		entities.addAll(buildMemInfo());
 
-		return entities;
-	}
-
-	public List<DataEntity> buildCpuInfo() {
-		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			double cpuUsage = 0.0;
-
-			if (m_preCpu != null) {
-				m_curCpu = m_sigar.getCpu();
-				long totalIdle = m_curCpu.getIdle() - m_preCpu.getIdle();
-				long totalTime = m_curCpu.getTotal() - m_preCpu.getTotal();
-
-				if (totalIdle > 0 && totalTime > 0) {
-					cpuUsage = 1 - 1.0 * totalIdle / totalTime;
-					m_preCpu = m_curCpu;
-				}
-				DataEntity entity = new DataEntity();
-
-				entity.setId(buildSystemDataEntityId("cpu")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
-				      .setValue(cpuUsage);
-				entities.add(entity);
-			} else {
-				m_preCpu = m_sigar.getCpu();
-			}
-		} catch (SigarException e) {
-			Cat.logError(e);
-		}
-		return entities;
-	}
-
-	public List<DataEntity> buildDiskUsage() {
-		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			FileSystem[] fileSystems = m_sigar.getFileSystemList();
-			long current = System.currentTimeMillis();
-
-			for (FileSystem fs : fileSystems) {
-				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK && DISK_LIST.contains(fs.getDirName())) {
-					FileSystemUsage usage = m_sigar.getFileSystemUsage(fs.getDirName());
-					DataEntity entity = new DataEntity();
-
-					entity.setId(buildSystemDataEntityId(fs.getDirName() + "-usage")).setType(AVG_TYPE).setTime(current)
-					      .setValue(usage.getUsePercent());
-					entities.add(entity);
-				}
-			}
-		} catch (SigarException e) {
-			Cat.logError(e);
-		}
-		return entities;
-	}
-
-	public List<DataEntity> buildFlowInfo() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			if (m_preIfStat != null) {
-				m_curIfStat = m_sigar.getNetInterfaceStat(ETH_NAME);
-				long totalRxBytes = m_curIfStat.getRxBytes() - m_preIfStat.getRxBytes();
-				long totalTxBytes = m_curIfStat.getTxBytes() - m_preIfStat.getTxBytes();
-				m_preIfStat = m_curIfStat;
-
-				long current = System.currentTimeMillis();
-				DataEntity inFlow = new DataEntity();
-
-				inFlow.setId(buildSystemDataEntityId(ETH_NAME + "-in-flow")).setType(SUM_TYPE).setTime(current)
-				      .setValue(totalRxBytes);
-				entities.add(inFlow);
-
-				DataEntity outFlow = new DataEntity();
-				outFlow.setId(buildSystemDataEntityId(ETH_NAME + "-out-flow")).setType(SUM_TYPE).setTime(current)
-				      .setValue(totalTxBytes);
-				entities.add(outFlow);
-			} else {
-				m_preIfStat = m_sigar.getNetInterfaceStat(ETH_NAME);
-			}
-		} catch (SigarException e) {
-			Cat.logError(e);
-		}
-		return entities;
-	}
-
-	public List<DataEntity> buildSwapInfo() {
-		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			Swap curSwap = m_sigar.getSwap();
-			double swapUsage = 1.0 * curSwap.getUsed() / curSwap.getTotal();
-			DataEntity entity = new DataEntity();
-
-			entity.setId(buildSystemDataEntityId("swap")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
-			      .setValue(swapUsage);
-			entities.add(entity);
-		} catch (SigarException e) {
-			Cat.logError(e);
-		}
-		return entities;
-	}
-
-	public ArrayList<DataEntity> buildLoadInfo() {
-		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			double[] loadAverages = m_sigar.getLoadAverage();
-			DataEntity entity = new DataEntity();
-
-			entity.setId(buildSystemDataEntityId("load")).setType(AVG_TYPE).setTime(System.currentTimeMillis())
-			      .setValue(loadAverages[0]);
-			entities.add(entity);
-		} catch (SigarException e) {
-			Cat.logError(e);
-		}
 		return entities;
 	}
 

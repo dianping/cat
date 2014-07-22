@@ -10,11 +10,11 @@
 		<entity-ref name="config" type="list" names="configs" />
 	</entity>
 	<entity name="metric-item">
-		<attribute name="type" value-type="String" />
 		<attribute name="monitorCount" value-type="boolean" />
 		<attribute name="monitorSum" value-type="boolean" />
 		<attribute name="monitorAvg" value-type="boolean" />
-		<attribute name="text" value-type="String" />
+		<attribute name="productText" value-type="String" />
+		<attribute name="metricItemText" value-type="String" />
 	</entity>
 	<entity name="config">
 		<attribute name="starttime" value-type="String" />
@@ -24,6 +24,7 @@
 	<entity name="condition">
 		<attribute name="title" value-type="String" />
 		<attribute name="minute" value-type="int" default-value="3" />
+		<attribute name="alertType" value-type="String" default-value="error" />
 		<entity-ref name="sub-condition" type="list" names="sub-conditions" />
 	</entity>
 	<entity name="sub-condition">

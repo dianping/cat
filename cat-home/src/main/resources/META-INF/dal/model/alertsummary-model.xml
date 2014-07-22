@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.alert.summary"
+	enable-sax-parser="true" enable-xml-parser="true" enable-xml-builder="true" enable-base-visitor="true" >
+</model>
