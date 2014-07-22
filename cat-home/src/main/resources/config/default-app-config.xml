@@ -1,8 +1,9 @@
 <app-config>
 	<config-item id="网络类型">
-		<item id="1" name="2G"></item>
-		<item id="2" name="3G"></item>
-		<item id="3" name="4G"></item>
+		<item id="1" name="WIFI"></item>
+		<item id="2" name="2G"></item>
+		<item id="3" name="3G"></item>
+		<item id="4" name="4G"></item>
 	</config-item>
 	<config-item id="运营商">
 		<item id="1" name="中国移动"></item>
@@ -51,10 +52,6 @@
 		<item id="30" name="新疆维吾尔自治区"></item>
 		<item id="31" name="云南省"></item>
 		<item id="32" name="浙江省"></item>
-	</config-item>
-	<config-item id="渠道">
-		<item id="1" name="360"></item>
-		<item id="2" name="apple"></item>
 	</config-item>
 	<config-item id="连接类型">
 		<item id="1" name="长连接"></item>
