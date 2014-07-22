@@ -54,4 +54,7 @@
    <model package="com.dianping.cat.home.alertsummary" name="alertsummary">
       <sample-model>/Users/leon/Desktop/AlertSummary.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.alert.thirdParty" name="thirdParty">
+      <sample-model>src/test/resources/config/thirdParty-config.xml</sample-model>
+   </model>
 </wizard>

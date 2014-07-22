@@ -41,7 +41,7 @@ public class AlertExceptionBuilder {
 		double totalWarnLimit = totalLimitPair.getKey();
 		double totalErrorLimit = totalLimitPair.getValue();
 		double totalException = 0;
-		
+
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 
@@ -127,7 +127,8 @@ public class AlertExceptionBuilder {
 
 	public String buildMailContent(String exceptions, String domain, String contactInfo) {
 		String content = buildContent(exceptions, domain, contactInfo);
-		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
+		String date = new SimpleDateFormat("yyyyMMddHH").format(new Date());
+		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain + "&date=" + date;
 		String mailContent = content + "<br/>" + " <a href='" + url + "'>点击此处查看详情</a>";
 
 		return mailContent;

@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
@@ -52,20 +51,20 @@ public class AppDataService {
 			if (SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
 				      code, platform, AppDataCommandEntity.READSET_SUCCESS_DATA);
-				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
+				AppDataCommandMap convertedData = convert2AppDataCommandMap(datas);
 
-				return querySuccessRatio(commandId, dataPair);
+				return querySuccessRatio(commandId, convertedData);
 			} else if (REQUEST.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppDataCommandEntity.READSET_COUNT_DATA);
 
-				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
-				return queryRequestCount(dataPair);
+				AppDataCommandMap convertedData = convert2AppDataCommandMap(datas);
+				return queryRequestCount(convertedData);
 			} else if (DELAY.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppDataCommandEntity.READSET_AVG_DATA);
 
-				Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair = convert2AppDataCommandMap(datas);
+				AppDataCommandMap dataPair = convert2AppDataCommandMap(datas);
 				return queryDelayAvg(dataPair);
 			} else {
 				throw new RuntimeException("unexpected query type, type:" + type);
@@ -76,7 +75,7 @@ public class AppDataService {
 		return null;
 	}
 
-	private Pair<Integer, Map<Integer, List<AppDataCommand>>> convert2AppDataCommandMap(List<AppDataCommand> fromDatas) {
+	private AppDataCommandMap convert2AppDataCommandMap(List<AppDataCommand> fromDatas) {
 		Map<Integer, List<AppDataCommand>> dataMap = new LinkedHashMap<Integer, List<AppDataCommand>>();
 		int max = -1;
 
@@ -95,18 +94,16 @@ public class AppDataService {
 			}
 			data.add(from);
 		}
-
 		int n = max / 5;
 
-		return new Pair<Integer, Map<Integer, List<AppDataCommand>>>(n, dataMap);
+		return new AppDataCommandMap(n, dataMap);
 	}
 
-	public double[] querySuccessRatio(int commandId, Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
-		double[] value = new double[dataPair.getKey()];
-		Map<Integer, List<AppDataCommand>> dataMap = dataPair.getValue();
+	public double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
+		double[] value = new double[convertedData.getMaxSize()];
 
 		try {
-			for (Entry<Integer, List<AppDataCommand>> entry : dataMap.entrySet()) {
+			for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 				int key = entry.getKey();
 				long success = 0;
 				long sum = 0;
@@ -139,10 +136,10 @@ public class AppDataService {
 		return false;
 	}
 
-	public double[] queryRequestCount(Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
-		double[] value = new double[dataPair.getKey()];
+	public double[] queryRequestCount(AppDataCommandMap convertedData) {
+		double[] value = new double[convertedData.getMaxSize()];
 
-		for (Entry<Integer, List<AppDataCommand>> entry : dataPair.getValue().entrySet()) {
+		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 			for (AppDataCommand data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 
@@ -152,10 +149,10 @@ public class AppDataService {
 		return value;
 	}
 
-	public double[] queryDelayAvg(Pair<Integer, Map<Integer, List<AppDataCommand>>> dataPair) {
-		double[] value = new double[dataPair.getKey()];
+	public double[] queryDelayAvg(AppDataCommandMap convertedData) {
+		double[] value = new double[convertedData.getMaxSize()];
 
-		for (Entry<Integer, List<AppDataCommand>> entry : dataPair.getValue().entrySet()) {
+		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 			for (AppDataCommand data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 				long sum = data.getResponseSumTimeSum();
@@ -166,5 +163,24 @@ public class AppDataService {
 		}
 		return value;
 	}
-	
+
+	public class AppDataCommandMap {
+		private int m_maxSize;
+
+		private Map<Integer, List<AppDataCommand>> m_appDataCommands;
+
+		public int getMaxSize() {
+			return m_maxSize;
+		}
+
+		public Map<Integer, List<AppDataCommand>> getAppDataCommands() {
+			return m_appDataCommands;
+		}
+
+		public AppDataCommandMap(int maxSize, Map<Integer, List<AppDataCommand>> appDataCommands) {
+			m_maxSize = maxSize;
+			m_appDataCommands = appDataCommands;
+		}
+	}
+
 }

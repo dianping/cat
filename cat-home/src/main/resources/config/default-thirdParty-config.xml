@@ -1,0 +1,7 @@
+<third-party-config>
+	<http url="http://www.51ping.com:8080" type="get" />
+	<http url="http://www.51ping.com:8080" type="post" />
+	<socket ip="10.10.10.1" port="80" />
+	<socket ip="10.10.10.1" port="80" />
+	<socket ip="10.10.10.1" port="80" />
+</third-party-config>
