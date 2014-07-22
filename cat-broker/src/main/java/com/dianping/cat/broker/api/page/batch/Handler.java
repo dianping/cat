@@ -66,9 +66,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String version = payload.getVersion();
 
 		if (userIp != null) {
-			if (version.equals("1")) {
+			if ("1".equals(version)) {
 				processVersion1(payload, request, userIp);
-			} else if (version.equals("2")) {
+			} else if ("2".equals(version)) {
 				processVersion2(payload, request, userIp);
 			}
 		} else {
@@ -104,8 +104,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					entity.setErrorCode(errorCode);
 					entity.setIp(userIp);
 
-					if (payload.getVersion().equals("1")) {
+					if ("200".equals(httpStatus)) {
 						entity.setCount(10);
+					} else {
+						entity.setCount(1);
 					}
 					m_manager.offer(entity);
 				}

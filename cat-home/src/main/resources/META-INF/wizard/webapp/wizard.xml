@@ -26,7 +26,7 @@
          <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
             <description>Dashboard</description>
          </page>
-         <page name="matrix" title="Matrix" path="matrix" view="/jsp/report/matrix/matrix.jsp">
+         <page name="matrix" title="Matrix" path="matrix" view="/jsp/report/matrix/matrix.jsp" standalone="false">
             <description>Matrix</description>
          </page>
          <page name="cross" title="Cross" path="cross" view="/jsp/report/cross/cross.jsp">
@@ -50,25 +50,25 @@
          <page name="externalError" title="externalError" path="externalError" template="default">
             <description>ExternalError</description>
          </page>
-         <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" template="default">
+         <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" standalone="false" template="default">
             <description>Statistics</description>
          </page>
-         <page name="alteration" title="Change" path="alteration" template="default">
+         <page name="alteration" title="Change" path="alteration" standalone="false" template="default">
             <description>Alteration</description>
          </page>
          <page name="monitor" title="Monitor" path="monitor" template="default">
             <description>Monitor</description>
          </page>
-         <page name="network" title="Network" path="network" template="default">
+         <page name="network" title="Network" path="network" standalone="false" template="default">
             <description>Network</description>
          </page>
          <page name="userMonitor" title="Monitor" path="userMonitor" template="default">
             <description>UserMonitor</description>
          </page>
-         <page name="system" title="System" path="system" template="default">
+         <page name="system" title="System" path="system" standalone="false" template="default">
             <description>System</description>
          </page>
-         <page name="cdn" title="Cdn" path="cdn" template="default">
+         <page name="cdn" title="Cdn" path="cdn" standalone="false" template="default">
             <description>Cdn</description>
          </page>
          <page name="app" title="App" path="app" template="default">
@@ -76,13 +76,13 @@
          </page>
       </module>
       <module name="system" path="s" default="false">
-         <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp">
+         <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp" standalone="false">
             <description>Alarm</description>
          </page>
          <page name="login" title="Login" default="true" path="login" standalone="false">
             <description>Login</description>
          </page>
-         <page name="config" title="Config" path="config" view="/jsp/system/project/project.jsp">
+         <page name="config" title="Config" path="config" view="/jsp/system/project/project.jsp" standalone="false">
             <description>Config</description>
          </page>
          <page name="plugin" title="Plugin" path="plugin" view="/jsp/system/plugin/plugin.jsp">
