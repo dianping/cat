@@ -54,4 +54,7 @@
    <model package="com.dianping.cat.home.alertsummary" name="alertsummary">
       <sample-model>/Users/leon/Desktop/AlertSummary.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.alert.type" name="alert-type">
+      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/alert-type.xml</sample-model>
+   </model>
 </wizard>

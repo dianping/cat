@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="alert-type" root="true">
+    <entity-ref name="category" type="list" names="categories" />
+  </entity>
+  <entity name="category">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="type" type="list" names="types" />
+  </entity>
+  <entity name="type">
+    <attribute name="id" value-type="String" />
+    <attribute name="sendSms" value-type="boolean" />
+    <attribute name="sendMail" value-type="boolean" />
+    <attribute name="sendWeixin" value-type="boolean" />
+  </entity>
+</model>
+

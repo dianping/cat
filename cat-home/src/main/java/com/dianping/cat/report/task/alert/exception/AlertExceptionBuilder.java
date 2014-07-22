@@ -41,7 +41,7 @@ public class AlertExceptionBuilder {
 		double totalWarnLimit = totalLimitPair.getKey();
 		double totalErrorLimit = totalLimitPair.getValue();
 		double totalException = 0;
-		
+
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 
@@ -138,7 +138,7 @@ public class AlertExceptionBuilder {
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
 
 		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exceptions).append("[时间: ").append(time).append("]");
+		sb.append(exceptions).append("[时间: ").append(time).append("]").append("\n");
 		sb.append(contactInfo);
 
 		return sb.toString();
