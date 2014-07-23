@@ -26,18 +26,20 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.alert.type.entity.Type;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.baseline.BaselineService;
-import com.dianping.cat.report.task.alert.sender.BaseSender;
 import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.Postman;
 import com.dianping.cat.report.task.alert.sender.SmsSender;
 import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.system.config.AlertTypeManager;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.tool.MailSMS;
 import com.site.lookup.util.StringUtils;
@@ -83,6 +85,12 @@ public abstract class BaseAlert {
 	@Inject
 	protected WeixinSender m_weixinSender;
 
+	@Inject
+	protected AlertTypeManager m_alertTypeManager;
+
+	@Inject
+	protected Postman m_postman;
+
 	protected static final int DATA_AREADY_MINUTE = 1;
 
 	protected static final long DURATION = TimeUtil.ONE_MINUTE;
@@ -108,11 +116,11 @@ public abstract class BaseAlert {
 		return alert;
 	}
 
-	private String buildMetricTitle(String metricKey) {
+	private String buildMetricName(String metricKey) {
 		try {
 			return metricKey.split(":")[2];
 		} catch (Exception ex) {
-			Cat.logError("get metric title error:" + metricKey, ex);
+			Cat.logError("get metric name error:" + metricKey, ex);
 			return null;
 		}
 	}
@@ -157,7 +165,7 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	protected AlertResultEntity computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
+	protected List<AlertResultEntity> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
 		List<Config> configs = m_ruleConfigManager.queryConfigs(product, metricKey, type);
@@ -291,18 +299,18 @@ public abstract class BaseAlert {
 	private void processMetricItem(int minute, ProductLine productLine, String metricKey) {
 		for (MetricType type : MetricType.values()) {
 			String productlineName = productLine.getId();
-			AlertResultEntity alertResult = computeAlertInfo(minute, productlineName, metricKey, type);
+			List<AlertResultEntity> alertResults = computeAlertInfo(minute, productlineName, metricKey, type);
 
-			if (alertResult != null && alertResult.isTriggered()) {
-				String metricTitle = buildMetricTitle(metricKey);
-				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricTitle);
+			for (AlertResultEntity alertResult : alertResults) {
+				String metricName = buildMetricName(metricKey);
+				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricName);
 				String domain = extractDomain(metricKey);
 				String contactInfo = buildContactInfo(domain);
 				alertResult.setContent(alertResult.getContent() + contactInfo);
 				String content = alertResult.getContent();
 				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
-				storeAlert(productlineName, metricTitle, mailTitle, alertResult);
+				storeAlert(productlineName, metricName, mailTitle, alertResult);
 				String configId = getAlertConfig().getId();
 				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
 				Cat.logEvent(configId, productlineName, Event.SUCCESS, mailTitle + "  " + content);
@@ -327,19 +335,28 @@ public abstract class BaseAlert {
 
 	protected boolean sendAllAlert(ProductLine productLine, String domain, String title, String content,
 	      String alertType, String configId) {
+		Type type = m_alertTypeManager.getType(configId, domain, alertType);
 		boolean sendResult = true;
-		BaseSender[] senders = { m_mailSender, m_weixinSender };
 
-		List<String> receivers = getAlertConfig().buildMailReceivers(productLine);
-		for (BaseSender sender : senders) {
-			if (!sender.sendAlert(receivers, domain, title, content, alertType)) {
+		if (type.isSendMail()) {
+			List<String> receivers = getAlertConfig().buildMailReceivers(productLine);
+			if (!m_mailSender.sendAlert(receivers, domain, title, content)) {
 				sendResult = false;
 			}
 		}
 
-		receivers = getAlertConfig().buildSMSReceivers(productLine);
-		if (!m_smsSender.sendAlert(receivers, domain, title, content, alertType)) {
-			sendResult = false;
+		if (type.isSendWeixin()) {
+			List<String> receivers = getAlertConfig().buildMailReceivers(productLine);
+			if (!m_weixinSender.sendAlert(receivers, domain, title, content)) {
+				sendResult = false;
+			}
+		}
+
+		if (type.isSendSms()) {
+			List<String> receivers = getAlertConfig().buildSMSReceivers(productLine);
+			if (!m_smsSender.sendAlert(receivers, domain, title, content)) {
+				sendResult = false;
+			}
 		}
 
 		return sendResult;
