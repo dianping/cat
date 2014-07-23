@@ -1902,7 +1902,7 @@
 					<role>com.dianping.cat.report.task.alert.sender.SmsSender</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.AlertTypeManager</role>
+					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4177,7 +4177,7 @@
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.AlertTypeManager</role>
+					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
@@ -4251,8 +4251,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.AlertTypeManager</role>
-			<implementation>com.dianping.cat.system.config.AlertTypeManager</implementation>
+			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
+			<implementation>com.dianping.cat.system.config.AlertPolicyManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -7986,7 +7986,7 @@
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.AlertTypeManager</role>
+					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
@@ -8060,8 +8060,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.AlertTypeManager</role>
-			<implementation>com.dianping.cat.system.config.AlertTypeManager</implementation>
+			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
+			<implementation>com.dianping.cat.system.config.AlertPolicyManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

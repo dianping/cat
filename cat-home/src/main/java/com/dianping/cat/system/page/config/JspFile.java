@@ -43,7 +43,7 @@ public enum JspFile {
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 
-	ALERT_TYPE("/jsp/system/alert/types.jsp"),
+	ALERT_POLICY("/jsp/system/alert/policy.jsp"),
 
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 

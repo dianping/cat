@@ -47,7 +47,7 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
-import com.dianping.cat.system.config.AlertTypeManager;
+import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -117,7 +117,7 @@ public class Handler implements PageHandler<Context> {
 	private NetGraphConfigManager m_netGraphConfigManager;
 
 	@Inject
-	private AlertTypeManager m_alertTypeManager;
+	private AlertPolicyManager m_alertPolicyManager;
 
 	@Inject
 	private ThirdPartyConfigManager m_thirdPartyConfigManager;
@@ -395,15 +395,15 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_alertConfigManager.getAlertConfig().toString());
 			break;
-		case ALERT_TYPE:
-			String alertTypes = payload.getContent();
+		case ALERT_POLICY:
+			String alertPolicy = payload.getContent();
 
-			if (!StringUtils.isEmpty(alertTypes)) {
-				model.setOpState(m_alertTypeManager.insert(alertTypes));
+			if (!StringUtils.isEmpty(alertPolicy)) {
+				model.setOpState(m_alertPolicyManager.insert(alertPolicy));
 			} else {
 				model.setOpState(true);
 			}
-			model.setContent(m_alertTypeManager.getAlertType().toString());
+			model.setContent(m_alertPolicyManager.getAlertPolicy().toString());
 			break;
 		case EXCEPTION:
 			loadExceptionConfig(model);

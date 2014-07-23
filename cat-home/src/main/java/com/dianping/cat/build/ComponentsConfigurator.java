@@ -86,7 +86,7 @@ import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.system.config.AlertConfigManager;
-import com.dianping.cat.system.config.AlertTypeManager;
+import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -296,7 +296,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertManager.class).req(AlertDao.class));
 
 		all.add(C(Postman.class).req(ProjectDao.class, MailSMS.class, MailSender.class, WeixinSender.class,
-		      SmsSender.class, AlertTypeManager.class));
+		      SmsSender.class, AlertPolicyManager.class));
 
 		all.add(C(BusinessAlert.class)
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
