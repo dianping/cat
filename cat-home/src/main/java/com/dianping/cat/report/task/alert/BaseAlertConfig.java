@@ -83,7 +83,7 @@ public abstract class BaseAlertConfig {
 		}
 	}
 
-	protected abstract String buildMailTitle(String artifactName, String configTitle);
+	public abstract String buildMailTitle(String artifactName, String metricName);
 
 	public abstract String getId();
 

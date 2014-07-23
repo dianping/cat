@@ -58,7 +58,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 	}
 
 	@Override
-	public String buildMailTitle(String domain, String configTitle) {
+	public String buildMailTitle(String domain, String metricName) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[CAT异常告警] [项目: ").append(domain).append("]");
