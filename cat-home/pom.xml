@@ -161,7 +161,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertconfig-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertsummary-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/alert-type-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/thirdParty-manifest.xml,
                             </manifest>
 						</configuration>
