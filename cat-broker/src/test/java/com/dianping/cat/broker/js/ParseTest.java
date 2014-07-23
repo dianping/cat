@@ -15,7 +15,7 @@ public class ParseTest {
 		for (int i = 0; i < 1000; i++) {
 			analyzer.parseValue("abc", data);
 		}
-		
+
 		Assert.assertEquals(analyzer.parseValue("aaa", "aaa=1.1"), "1.1");
 		Assert.assertEquals(analyzer.parseValue("aaa", data), "1.1");
 		Assert.assertEquals(analyzer.parseValue("a", data), "1.1");
