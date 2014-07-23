@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.alert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.tuple.Pair;
@@ -25,8 +26,8 @@ public class DefaultDataChecker implements DataChecker {
 		return result;
 	}
 
-	public AlertResultEntity checkData(double[] value, double[] baseline, List<Condition> conditions) {
-		AlertResultEntity result = new AlertResultEntity();
+	public List<AlertResultEntity> checkData(double[] value, double[] baseline, List<Condition> conditions) {
+		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 
 		for (Condition condition : conditions) {
 			int conditionMinute = condition.getMinute();
@@ -37,15 +38,11 @@ public class DefaultDataChecker implements DataChecker {
 
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
-				if (alertType != null && alertType.equals("error")) {
-					return new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType);
-				} else {
-					result = new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType);
-				}
+				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
 			}
 		}
 
-		return result;
+		return alertResults;
 	}
 
 	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {

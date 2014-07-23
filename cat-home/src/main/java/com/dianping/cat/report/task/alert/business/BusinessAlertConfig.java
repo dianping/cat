@@ -7,11 +7,11 @@ public class BusinessAlertConfig extends BaseAlertConfig {
 	private String m_id = "business";
 
 	@Override
-	public String buildMailTitle(String productlineName, String configTitle) {
+	public String buildMailTitle(String productlineName, String metricName) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[业务告警] [产品线 ").append(productlineName).append("]");
-		sb.append("[业务指标 ").append(configTitle).append("]");
+		sb.append("[业务指标 ").append(metricName).append("]");
 		return sb.toString();
 	}
 

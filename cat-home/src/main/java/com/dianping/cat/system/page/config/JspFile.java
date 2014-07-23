@@ -43,6 +43,8 @@ public enum JspFile {
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 
+	ALERT_TYPE("/jsp/system/alert/types.jsp"),
+
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 
 	EXCEPTION("/jsp/system/exception/exception.jsp"),
@@ -58,9 +60,9 @@ public enum JspFile {
 	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
-	
+
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
-	
+
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 	
 	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
