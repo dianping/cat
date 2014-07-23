@@ -283,6 +283,16 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		public Map<String, ProductLine> queryAllProductLines() {
 			return new HashMap<String, ProductLine>();
 		}
+
+		@Override
+      public ProductLine queryProductLine(String id) {
+			return null;
+      }
+
+		@Override
+      public boolean insertIfNotExsit(String product, String domain) {
+			return true;
+      }
 	}
 
 }

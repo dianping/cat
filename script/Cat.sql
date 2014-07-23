@@ -346,7 +346,7 @@ CREATE TABLE `app_data_command_1` (
   `status` smallint NOT NULL COMMENT '数据状态',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
-  KEY IX_period_city_minute (period,minute_order),
+  KEY IX_period_minute (period,minute_order),
   KEY IX_period_city_minute (period,city,minute_order),
   KEY IX_period_operator_minute (period,operator,minute_order),
   KEY IX_period_network_minute (period,network,minute_order),
