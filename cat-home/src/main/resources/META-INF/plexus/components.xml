@@ -4515,6 +4515,14 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</role>
 			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</role>

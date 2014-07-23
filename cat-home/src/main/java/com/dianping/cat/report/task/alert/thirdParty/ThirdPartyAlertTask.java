@@ -44,7 +44,7 @@ public class ThirdPartyAlertTask implements Task, LogEnabled {
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
-				m_logger.error(e.getMessage());
+				m_logger.error(e.getMessage(), e);
 			} finally {
 				t.complete();
 			}
@@ -67,22 +67,28 @@ public class ThirdPartyAlertTask implements Task, LogEnabled {
 
 	private String connectHttpUrl(Http http) {
 		String type = http.getType();
-		String result = "";
+		String result = null;
 		String paras = http.getPars();
 
 		if (StringUtils.isNotEmpty(paras)) {
-			paras = http.getPars().replaceAll(";", "&");
+			paras = paras.replaceAll("[;]", "&");
+			http.setPars(paras);
 		}
 
-		if ("get".equalsIgnoreCase(http.getType())) {
-			String url = http.getUrl();
-			url += "?" + paras;
-			result = m_httpMonitor.readFromGet(url);
-		} else if ("post".equalsIgnoreCase(type)) {
-			String url = http.getUrl();
-			result = m_httpMonitor.readFromPost(url, paras);
-		} else {
-			throw new RuntimeException("Illeagle access type: " + type);
+		try {
+			if ("get".equalsIgnoreCase(type)) {
+				String url = http.getUrl();
+
+				if (StringUtils.isNotEmpty(paras)) {
+					url += "?" + paras;
+				}
+				result = m_httpMonitor.readFromGet(url);
+			} else if ("post".equalsIgnoreCase(type)) {
+				String url = http.getUrl();
+				result = m_httpMonitor.readFromPost(url, paras);
+			}
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 		}
 		return result;
 	}

@@ -41,7 +41,7 @@ public class Payload extends AbstractReportPayload<Action> {
 			return null;
 		}
 	}
-
+	
 	@Override
 	public Action getAction() {
 		return m_action;

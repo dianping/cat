@@ -131,7 +131,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
 		      TopAnalyzer.ID));
 
-		all.add(C(ThirdPartyAlert.class));
+		all.add(C(ThirdPartyAlert.class).req(ProjectDao.class, MailSender.class));
 
 		all.add(C(HttpMonitor.class));
 

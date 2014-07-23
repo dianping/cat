@@ -41,7 +41,7 @@ public class ThirdPartyAlertEntity {
 
 	@Override
 	public String toString() {
-		return "ThirdPartyAlertEntity [m_type=" + m_type + ", m_domains=" + m_domains + ", m_details=" + m_details + "]";
+		return "[type=" + m_type + ", details=" + m_details + "]";
 	}
 
 }
