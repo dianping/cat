@@ -17,7 +17,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
-import com.site.helper.Splitters;
 
 public class DisplayHeartbeat {
 	private static final int K = 1024;
@@ -124,7 +123,8 @@ public class DisplayHeartbeat {
 
 			m_systemLoadAverage[minute] = period.getSystemLoadAverage();
 
-			for (Entry<String, Extension> entry : period.getExtensions().entrySet()) {
+			for (Entry<String, Extension> entry : period.getExtensions()
+					.entrySet()) {
 				Map<String, double[]> groups = m_extensions.get(entry.getKey());
 
 				if (groups == null) {
@@ -132,7 +132,8 @@ public class DisplayHeartbeat {
 
 					m_extensions.put(entry.getKey(), groups);
 				}
-				for (Entry<String, Detail> detail : entry.getValue().getDetails().entrySet()) {
+				for (Entry<String, Detail> detail : entry.getValue()
+						.getDetails().entrySet()) {
 					double[] doubles = groups.get(detail.getKey());
 
 					if (doubles == null) {
@@ -156,7 +157,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getActiceThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Active Thread", "Minute", "Count", m_activeThreads));
+		return m_builder.build(new HeartbeatPayload(0, "Active Thread",
+				"Minute", "Count", m_activeThreads));
 	}
 
 	public double[] getActiveThreads() {
@@ -206,8 +208,9 @@ public class DisplayHeartbeat {
 	}
 
 	public String getCatMessageOverflowGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Cat Message Overflow / Minute", "Minute", "Count",
-		      m_addCatMessageOverflow));
+		return m_builder.build(new HeartbeatPayload(1,
+				"Cat Message Overflow / Minute", "Minute", "Count",
+				m_addCatMessageOverflow));
 	}
 
 	public double[] getCatMessageProduced() {
@@ -215,8 +218,9 @@ public class DisplayHeartbeat {
 	}
 
 	public String getCatMessageProducedGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Cat Message Produced / Minute", "Minute", "Count",
-		      m_addCatMessageProduced));
+		return m_builder.build(new HeartbeatPayload(0,
+				"Cat Message Produced / Minute", "Minute", "Count",
+				m_addCatMessageProduced));
 	}
 
 	public double[] getCatMessageSize() {
@@ -224,11 +228,14 @@ public class DisplayHeartbeat {
 	}
 
 	public String getCatMessageSizeGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "Cat Message Size / Minute", "Minute", "MB", m_addCatMessageSize));
+		return m_builder.build(new HeartbeatPayload(2,
+				"Cat Message Size / Minute", "Minute", "MB",
+				m_addCatMessageSize));
 	}
 
 	public String getCatThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Cat Thread", "Minute", "Count", m_catThreads));
+		return m_builder.build(new HeartbeatPayload(1, "Cat Thread", "Minute",
+				"Count", m_catThreads));
 	}
 
 	public double[] getCatThreads() {
@@ -240,7 +247,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getDeamonThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(6, "Daemon Thread", "Minute", "Count", m_daemonThreads));
+		return m_builder.build(new HeartbeatPayload(6, "Daemon Thread",
+				"Minute", "Count", m_daemonThreads));
 	}
 
 	public List<String> getDiskNames() {
@@ -290,7 +298,8 @@ public class DisplayHeartbeat {
 				}
 
 				String path = disks.get(i).getPath();
-				String graph = m_builder.build(new HeartbeatPayload(i, "Disk Free (" + path + ")", "Minute", "GB", values));
+				String graph = m_builder.build(new HeartbeatPayload(i,
+						"Disk Free (" + path + ")", "Minute", "GB", values));
 
 				sb.append(graph);
 			}
@@ -325,11 +334,13 @@ public class DisplayHeartbeat {
 	}
 
 	public String getHeapUsageGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Heap Usage", "Minute", "MB", m_heapUsage));
+		return m_builder.build(new HeartbeatPayload(1, "Heap Usage", "Minute",
+				"MB", m_heapUsage));
 	}
 
 	public String getHttpTheadGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "HTTP Thread", "Minute", "Count", m_httpThreads));
+		return m_builder.build(new HeartbeatPayload(0, "HTTP Thread", "Minute",
+				"Count", m_httpThreads));
 	}
 
 	public double[] getHttpThreads() {
@@ -341,7 +352,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getMemoryFreeGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Memory Free", "Minute", "MB", m_memoryFree));
+		return m_builder.build(new HeartbeatPayload(0, "Memory Free", "Minute",
+				"MB", m_memoryFree));
 	}
 
 	public double[] getNewGcCount() {
@@ -349,7 +361,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getNewGcCountGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "NewGc Count", "Minute", "Count", m_addNewGcCount));
+		return m_builder.build(new HeartbeatPayload(0, "NewGc Count", "Minute",
+				"Count", m_addNewGcCount));
 	}
 
 	public double[] getNewThreads() {
@@ -361,7 +374,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getNoneHeapUsageGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "None Heap Usage", "Minute", "MB", m_noneHeapUsage));
+		return m_builder.build(new HeartbeatPayload(2, "None Heap Usage",
+				"Minute", "MB", m_noneHeapUsage));
 	}
 
 	public double[] getOldGcCount() {
@@ -369,7 +383,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getOldGcCountGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "OldGc Count", "Minute", "Count", m_addOldGcCount));
+		return m_builder.build(new HeartbeatPayload(1, "OldGc Count", "Minute",
+				"Count", m_addOldGcCount));
 	}
 
 	public List<Period> getPeriods() {
@@ -377,7 +392,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getPigeonTheadGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "Pigeon Thread", "Minute", "Count", m_pigeonThreads));
+		return m_builder.build(new HeartbeatPayload(2, "Pigeon Thread",
+				"Minute", "Count", m_pigeonThreads));
 	}
 
 	public double[] getPigeonThreads() {
@@ -385,7 +401,8 @@ public class DisplayHeartbeat {
 	}
 
 	public String getStartedThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Started Thread", "Minute", "Count", m_newThreads));
+		return m_builder.build(new HeartbeatPayload(1, "Started Thread",
+				"Minute", "Count", m_newThreads));
 	}
 
 	public double[] getSystemLoadAverage() {
@@ -393,17 +410,19 @@ public class DisplayHeartbeat {
 	}
 
 	public String getSystemLoadAverageGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "System Load Average", "Minute", "", m_systemLoadAverage));
+		return m_builder.build(new HeartbeatPayload(2, "System Load Average",
+				"Minute", "", m_systemLoadAverage));
 	}
 
 	public String getTotalThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "Total Started Thread", "Minute", "Count", m_totalThreads));
+		return m_builder.build(new HeartbeatPayload(2, "Total Started Thread",
+				"Minute", "Count", m_totalThreads));
 	}
 
 	public double[] getTotalThreads() {
 		return m_totalThreads;
 	}
-
+	
 	public Map<String, Map<String, String>> getDalGraph() {
 		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
 		Map<String, double[]> dalData = m_extensions.get(DAL);
@@ -415,22 +434,25 @@ public class DisplayHeartbeat {
 		for (Entry<String, double[]> entry : dalData.entrySet()) {
 			String key = entry.getKey();
 
-			List<String> split = Splitters.by('-').trim().split(key);
-			if (split != null && split.size() == 2) {
-				String db = split.get(0);
-				String title = split.get(1);
+			int pos = key.lastIndexOf('-');
+
+			if (pos > 0) {
+				String db = key.substring(0, pos);
+				String title = key.substring(pos + 1);
 
 				Map<String, String> map = graphs.get(db);
 				if (map == null) {
 					map = new HashMap<String, String>();
-					graphs.put(split.get(0), map);
+					graphs.put(db, map);
 				}
 				if (!DAL_INDEX.containsKey(title)) {
 					DAL_INDEX.put(title, DAL_INDEX_COUNTER.getAndIncrement());
 				}
 
-				map.put(title, m_builder.build(new HeartbeatPayload(DAL_INDEX.get(title), title, "Minute", "Count", entry
-				      .getValue())));
+				map.put(title,
+						m_builder.build(new HeartbeatPayload(DAL_INDEX
+								.get(title), title, "Minute", "Count", entry
+								.getValue())));
 			}
 		}
 
@@ -446,7 +468,8 @@ public class DisplayHeartbeat {
 
 		private double[] m_values;
 
-		public HeartbeatPayload(int index, String title, String axisXLabel, String axisYLabel, double[] values) {
+		public HeartbeatPayload(int index, String title, String axisXLabel,
+				String axisYLabel, double[] values) {
 			super(title, axisXLabel, axisYLabel);
 
 			m_idPrefix = title;

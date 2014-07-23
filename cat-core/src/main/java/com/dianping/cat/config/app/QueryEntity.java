@@ -2,7 +2,9 @@ package com.dianping.cat.config.app;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -13,34 +15,36 @@ public class QueryEntity {
 
 	private int m_command;
 
-	private int m_code;
+	private int m_code = DEFAULT_VALUE;
 
-	private int m_network;
+	private int m_network = DEFAULT_VALUE;
 
-	private int m_version;
+	private int m_version = DEFAULT_VALUE;
 
-	private int m_channel;
+	private int m_channel = DEFAULT_VALUE;
 
-	private int m_platfrom;
+	private int m_platfrom = DEFAULT_VALUE;
 
-	private int m_city;
+	private int m_city = DEFAULT_VALUE;
 
-	private int m_operator;
+	private int m_operator = DEFAULT_VALUE;
+
+	private static final int DEFAULT_VALUE = -1;
 
 	public QueryEntity(String query) {
-		String[] strs = query.split(";");
+		List<String> strs = Splitters.by(";").split(query);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
-			m_date = sdf.parse(strs[0]);
-			m_command = parseValue(strs[1]);
-			m_code = parseValue(strs[2]);
-			m_network = parseValue(strs[3]);
-			m_version = parseValue(strs[4]);
-			m_channel = parseValue(strs[5]);
-			m_platfrom = parseValue(strs[6]);
-			m_city = parseValue(strs[7]);
-			m_operator = parseValue(strs[8]);
+			m_date = sdf.parse(strs.get(0));
+			m_command = parseValue(strs.get(1));
+			m_code = parseValue(strs.get(2));
+			m_network = parseValue(strs.get(3));
+			m_version = parseValue(strs.get(4));
+			m_channel = parseValue(strs.get(5));
+			m_platfrom = parseValue(strs.get(6));
+			m_city = parseValue(strs.get(7));
+			m_operator = parseValue(strs.get(8));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -48,7 +52,7 @@ public class QueryEntity {
 
 	private int parseValue(String str) {
 		if (StringUtils.isEmpty(str)) {
-			return -1;
+			return DEFAULT_VALUE;
 		} else {
 			return Integer.parseInt(str);
 		}
