@@ -17,8 +17,7 @@ public abstract class BaseSender implements LogEnabled {
 
 	protected abstract void sendLog(String title, String content, List<String> receivers);
 
-	public abstract boolean sendAlert(List<String> receivers, String domain, String title, String content,
-	      String alertType);
+	public abstract boolean sendAlert(List<String> receivers, String domain, String title, String content);
 
 	@Override
 	public void enableLogging(Logger logger) {

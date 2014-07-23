@@ -11,6 +11,9 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.alert.type.entity.AlertType;
+import com.dianping.cat.home.alert.type.entity.Category;
+import com.dianping.cat.home.alert.type.entity.Domain;
+import com.dianping.cat.home.alert.type.entity.Type;
 import com.dianping.cat.home.alert.type.transform.DefaultSaxParser;
 
 public class AlertTypeManager implements Initializable {
@@ -24,8 +27,39 @@ public class AlertTypeManager implements Initializable {
 
 	private static final String CONFIG_NAME = "alertType";
 
+	private static final String DEFAULT_TYPE = "default";
+
 	public AlertType getAlertType() {
 		return m_config;
+	}
+
+	public Type getType(String categoryName, String domainName, String typeName) {
+		try {
+			Category category = m_config.findCategory(categoryName);
+			Domain domain = category.findDomain(domainName);
+			if (domain == null) {
+				domain = category.findDomain(DEFAULT_TYPE);
+			}
+
+			Type type = domain.findType(typeName);
+			if (type == null) {
+				type = generateDefaultType();
+			}
+
+			return type;
+		} catch (Exception ex) {
+			return generateDefaultType();
+		}
+	}
+
+	private Type generateDefaultType() {
+		Type type = new Type();
+
+		type.setSendMail(true);
+		type.setSendWeixin(true);
+		type.setSendSms(false);
+
+		return type;
 	}
 
 	@Override

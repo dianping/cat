@@ -19,11 +19,7 @@ public class WeixinSender extends BaseSender {
 	}
 
 	@Override
-	public boolean sendAlert(List<String> receivers, String domain, String title, String content, String alertType) {
-		if (alertType == null || !alertType.equals("error")) {
-			return true;
-		}
-
+	public boolean sendAlert(List<String> receivers, String domain, String title, String content) {
 		try {
 			content = content.replaceAll("<br/>", "\n");
 			m_mailSms.sendWeiXin(title, content, domain, mergeList(receivers));

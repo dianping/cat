@@ -5,7 +5,7 @@ import java.util.List;
 import com.dianping.cat.Cat;
 
 public class SmsSender extends BaseSender {
-	
+
 	@Override
 	protected void sendLog(String title, String content, List<String> receivers) {
 		StringBuilder builder = new StringBuilder();
@@ -20,11 +20,7 @@ public class SmsSender extends BaseSender {
 	}
 
 	@Override
-	public boolean sendAlert(List<String> receivers, String domain, String title, String content, String alertType) {
-		if (alertType == null || !alertType.equals("error")) {
-			return true;
-		}
-
+	public boolean sendAlert(List<String> receivers, String domain, String title, String content) {
 		try {
 			m_mailSms.sendSms(title, content, receivers);
 			sendLog(title, content, receivers);
