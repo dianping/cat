@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert;
+package com.dianping.cat.report.task.alert.manager;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -6,11 +6,12 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
+import com.dianping.cat.report.task.alert.AlertResultEntity;
 
 public class AlertManager {
 
 	@Inject
-	protected AlertDao m_alertDao;
+	private AlertDao m_alertDao;
 
 	private Alert buildAlert(String categoryName, String domainName, String metricName, String mailTitle,
 	      AlertResultEntity alertResult) {
@@ -26,7 +27,7 @@ public class AlertManager {
 		return alert;
 	}
 
-	protected void storeAlert(String categoryName, String domainName, String metricName, String mailTitle,
+	public void storeAlert(String categoryName, String domainName, String metricName, String mailTitle,
 	      AlertResultEntity alertResult) {
 		Alert alert = buildAlert(categoryName, domainName, metricName, mailTitle, alertResult);
 
@@ -40,4 +41,5 @@ public class AlertManager {
 			Cat.logError(e);
 		}
 	}
+
 }

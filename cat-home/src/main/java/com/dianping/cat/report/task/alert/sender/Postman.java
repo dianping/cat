@@ -19,7 +19,7 @@ import com.site.lookup.util.StringUtils;
 public class Postman {
 
 	@Inject
-	private ProjectDao m_projectDao;
+	protected ProjectDao m_projectDao;
 
 	@Inject
 	protected MailSender m_mailSender;

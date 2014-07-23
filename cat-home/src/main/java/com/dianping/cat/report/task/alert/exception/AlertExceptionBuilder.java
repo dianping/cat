@@ -133,6 +133,24 @@ public class AlertExceptionBuilder {
 		return mailContent;
 	}
 
+	public String buildDBContent(String exceptions, String domain) {
+		String content = buildContent(exceptions, domain);
+		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
+		String mailContent = content + "<br/>" + " <a href='" + url + "'>点击此处查看详情</a>";
+
+		return mailContent;
+	}
+
+	public String buildContent(String exceptions, String domain) {
+		StringBuilder sb = new StringBuilder();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+
+		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
+		sb.append(exceptions).append("[时间: ").append(time).append("]");
+
+		return sb.toString();
+	}
+
 	public String buildContent(String exceptions, String domain, String contactInfo) {
 		StringBuilder sb = new StringBuilder();
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());

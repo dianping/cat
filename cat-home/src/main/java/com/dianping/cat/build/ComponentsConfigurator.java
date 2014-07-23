@@ -64,9 +64,12 @@ import com.dianping.cat.report.task.alert.business.BusinessAlertConfig;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
+import com.dianping.cat.report.task.alert.manager.AlertManager;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
+import com.dianping.cat.report.task.alert.sender.ExceptionPostman;
 import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender.Postman;
 import com.dianping.cat.report.task.alert.sender.SmsSender;
 import com.dianping.cat.report.task.alert.sender.WeixinSender;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
@@ -80,6 +83,7 @@ import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.system.config.AlertConfigManager;
+import com.dianping.cat.system.config.AlertTypeManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -278,33 +282,37 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(WeixinSender.class).req(MailSMS.class));
 
+		all.add(C(AlertManager.class).req(AlertDao.class));
+
+		all.add(C(Postman.class).req(ProjectDao.class, MailSMS.class, MailSender.class, WeixinSender.class,
+		      SmsSender.class, AlertTypeManager.class));
+
 		all.add(C(BusinessAlert.class)
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
 		            BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)
 		      //
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class, ProjectDao.class)
-		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class)
+		      .req(Postman.class, AlertManager.class));
 
 		all.add(C(NetworkAlert.class)
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
 		            NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)
 		      //
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, ProjectDao.class)
-		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class)
+		      .req(Postman.class, AlertManager.class));
 
 		all.add(C(SystemAlert.class)
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
 		            SystemAlertConfig.class, AlertInfo.class, AlertDao.class)
 		      //
-		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, ProjectDao.class)
-		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class)
+		      .req(Postman.class, AlertManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
 		all.add(C(ExceptionAlert.class)
-		      .req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class, ExceptionConfigManager.class,
-		            AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class, TopAnalyzer.ID)
-		      .req(MailSender.class, SmsSender.class, WeixinSender.class));
+		      .req(ExceptionAlertConfig.class, ExceptionConfigManager.class, AlertExceptionBuilder.class)
+		      .req(ModelService.class, TopAnalyzer.ID).req(ExceptionPostman.class, AlertManager.class));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));

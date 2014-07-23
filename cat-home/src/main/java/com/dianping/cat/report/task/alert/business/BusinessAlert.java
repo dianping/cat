@@ -13,7 +13,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
@@ -68,17 +67,13 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			}
 
 			for (AlertResultEntity alertResult : alertResults) {
-				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
-				String contactInfo = buildContactInfo(domain);
-				alertResult.setContent(alertResult.getContent() + contactInfo);
-				String content = alertResult.getContent();
 				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
 
-				storeAlert(domain, metric, mailTitle, alertResult);
+				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), metric);
+				m_alertManager.storeAlert(getName(), product, metric, mailTitle, alertResult);
 
 				String configId = getAlertConfig().getId();
-				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
-				Cat.logEvent(configId, product, Event.SUCCESS, mailTitle + "  " + content);
+				m_postman.sendAlert(getAlertConfig(), alertResult, productLine, domain, mailTitle, configId);
 			}
 		}
 	}
