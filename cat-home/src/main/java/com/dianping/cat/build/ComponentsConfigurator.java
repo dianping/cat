@@ -79,9 +79,9 @@ import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlertConfig;
-import com.dianping.cat.report.task.alert.thirdParty.HttpMonitor;
+import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
-import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertTask;
+import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.IpService;
@@ -137,9 +137,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ThirdPartyAlert.class).req(ProjectDao.class, MailSender.class));
 
-		all.add(C(HttpMonitor.class));
+		all.add(C(HttpConnector.class));
 
-		all.add(C(ThirdPartyAlertTask.class).req(HttpMonitor.class, ThirdPartyAlert.class, ThirdPartyConfigManager.class));
+		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class, ThirdPartyConfigManager.class));
 
 		return all;
 	}

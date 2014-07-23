@@ -82,12 +82,12 @@ public class ExceptionAlert implements Task {
 
 	@Override
 	public void run() {
+		boolean active = true;
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			active = false;
 		}
-		boolean active = true;
 		while (active) {
 			long current = System.currentTimeMillis();
 			int minute = Calendar.getInstance().get(Calendar.MINUTE);
