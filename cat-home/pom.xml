@@ -161,12 +161,8 @@
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertconfig-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertsummary-manifest.xml,
-<<<<<<< HEAD
 								${basedir}/src/main/resources/META-INF/dal/model/thirdParty-manifest.xml,
                             </manifest>
-=======
-							</manifest>
->>>>>>> 3e3e41e0b99c7f6ccbc47eee11d96e67a9ff45fd
 						</configuration>
 					</execution>
 					<execution>
