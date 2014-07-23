@@ -96,9 +96,11 @@ public enum Action implements org.unidal.web.mvc.Action {
 	METRIC_GROUP_CONFIG_UPDATE("metricGroupConfigUpdate"),
 
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
-
-	APP_CONFIG_UPDATE("appConfigUpdate");
-
+	
+	APP_CONFIG_UPDATE("appConfigUpdate"),
+	
+	THIRD_PARTY_CONFIG_UPDATE("thirdPartyConfigUpdate");
+	
 	private String m_name;
 
 	public static Action getByName(String name, Action defaultAction) {

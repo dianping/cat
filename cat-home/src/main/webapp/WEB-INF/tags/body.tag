@@ -49,7 +49,7 @@
 					<li><a style="padding:3px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">network</a></li>
 					<li><a style="padding:3px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">cdn</a></li>
 					<li><a style="padding:3px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">system</a></li>
-					<li><a style="padding:3px 30px" href="/cat/r/change?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">change</a></li>
+					<li><a style="padding:3px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">change</a></li>
 					<li><a style="padding:3px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">statistics</a></li>
 					<li class="nav-header">System</li>
 					<li><a style="padding:3px 30px" href="/cat/s/alarm?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">alarm</a></li>

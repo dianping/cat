@@ -79,6 +79,9 @@ import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlertConfig;
+import com.dianping.cat.report.task.alert.thirdParty.HttpMonitor;
+import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
+import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertTask;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.IpService;
@@ -93,6 +96,7 @@ import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
+import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -130,6 +134,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
 		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
 		      TopAnalyzer.ID));
+
+		all.add(C(ThirdPartyAlert.class).req(ProjectDao.class, MailSender.class));
+
+		all.add(C(HttpMonitor.class));
+
+		all.add(C(ThirdPartyAlertTask.class).req(HttpMonitor.class, ThirdPartyAlert.class, ThirdPartyConfigManager.class));
 
 		return all;
 	}
@@ -219,6 +229,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
+		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
 		return all;

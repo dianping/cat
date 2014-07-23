@@ -152,16 +152,16 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		productLine.setDashboard(metricDashboard);
 	}
 
-	public boolean insertIfNotExsit(String line, String domain) {
+	public boolean insertIfNotExsit(String product, String domain) {
 		Company company = getCompany();
 
 		if (company != null) {
-			ProductLine productLine = company.getProductLines().get(line);
+			ProductLine productLine = company.getProductLines().get(product);
 
 			if (productLine == null) {
 				productLine = new ProductLine();
-				productLine.setId(line);
-				productLine.setTitle(line);
+				productLine.setId(product);
+				productLine.setTitle(product);
 				buildDefaultDashboard(productLine, domain);
 				productLine.addDomain(new Domain(domain));
 				company.addProductLine(productLine);
@@ -215,11 +215,16 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return domains;
 	}
 
+	public ProductLine queryProductLine(String id) {
+		return getCompany().findProductLine(id);
+	}
+
 	public Map<String, ProductLine> queryMetricProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
 		for (ProductLine line : getCompany().getProductLines().values()) {
 			String id = line.getId();
+
 			if (id != null && id.length() > 0 && line.getMetricDashboard()) {
 				productLines.put(id, line);
 			}
@@ -248,7 +253,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		return productLine == null ? "Default" : productLine;
 	}
-
+	
 	public Map<String, List<ProductLine>> queryTypeProductLines() {
 		Map<String, List<ProductLine>> productLines = new LinkedHashMap<String, List<ProductLine>>();
 
@@ -343,13 +348,13 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				config.setName(CONFIG_NAME);
 				config.setContent(getCompany().toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+				m_domainToProductLines = buildDomainToProductLines();
+				return true;
 			} catch (Exception e) {
 				Cat.logError(e);
 				return false;
 			}
-			m_domainToProductLines = buildDomainToProductLines();
 		}
-		return true;
 	}
 
 }

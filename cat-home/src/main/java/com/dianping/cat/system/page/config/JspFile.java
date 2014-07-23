@@ -63,7 +63,9 @@ public enum JspFile {
 
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
-	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp");
+	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
+	
+	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
 
 	private String m_path;
 

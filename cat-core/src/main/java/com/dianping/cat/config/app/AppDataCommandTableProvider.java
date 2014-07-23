@@ -23,7 +23,7 @@ public class AppDataCommandTableProvider implements TableProvider {
 	public String getLogicalTableName() {
 		return m_logicalTableName;
 	}
-
+	
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
 		AppDataCommand command = (AppDataCommand) hints.get(QueryEngine.HINT_DATA_OBJECT);

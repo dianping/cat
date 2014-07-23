@@ -56,6 +56,7 @@ import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
+import com.dianping.cat.system.config.ThirdPartyConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -117,6 +118,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AlertTypeManager m_alertTypeManager;
+
+	@Inject
+	private ThirdPartyConfigManager m_thirdPartyConfigManager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -481,6 +485,13 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(m_appConfigManager.insert(appConfig));
 			}
 			model.setContent(m_appConfigManager.getConfig().toString());
+			break;
+		case THIRD_PARTY_CONFIG_UPDATE:
+			String thirdPartyConfig = payload.getContent();
+			if (!StringUtils.isEmpty(thirdPartyConfig)) {
+				model.setOpState(m_thirdPartyConfigManager.insert(thirdPartyConfig));
+			}
+			model.setContent(m_thirdPartyConfigManager.getConfig().toString());
 			break;
 		}
 		m_jspViewer.view(ctx, model);

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -30,7 +28,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
-public class ExceptionAlert implements Task, LogEnabled {
+public class ExceptionAlert implements Task {
 
 	@Inject
 	private ExceptionAlertConfig m_alertConfig;
@@ -54,8 +52,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 
 	private static final int ALERT_PERIOD = 1;
 
-	private Logger m_logger;
-
 	private TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
@@ -63,11 +59,6 @@ public class ExceptionAlert implements Task, LogEnabled {
 		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	public String getName() {
@@ -132,7 +123,7 @@ public class ExceptionAlert implements Task, LogEnabled {
 							m_alertManager.storeAlert(getName(), domain, exception.getName(), mailTitle, alertResult);
 						}
 					} catch (Exception e) {
-						m_logger.error(e.getMessage());
+						Cat.logError(e);
 					}
 				}
 				t.setStatus(Transaction.SUCCESS);
