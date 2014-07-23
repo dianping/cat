@@ -124,7 +124,7 @@ public class ThirdPartyAlertTask implements Task, LogEnabled {
 		String url = http.getUrl();
 		String type = http.getType();
 		String pars = http.getPars();
-		String details = "HTTP URL[" + url + "?" + pars + "] " + type.toUpperCase() + "无法访问";
+		String details = "HTTP URL[" + url + "?" + pars + "] " + type.toUpperCase() + "访问出现异常";
 
 		entity.setDomains(http.getDomains()).setType(type).setDetails(details);
 		return entity;
