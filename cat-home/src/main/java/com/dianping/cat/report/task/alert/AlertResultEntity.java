@@ -11,13 +11,6 @@ public class AlertResultEntity {
 
 	private Date m_alertTime;
 
-	public AlertResultEntity() {
-		this.m_isTriggered = false;
-		this.m_content = "";
-		this.m_alertType = "";
-		this.m_alertTime = new Date();
-	}
-
 	public AlertResultEntity(boolean result, String content, String alertType) {
 		this.m_isTriggered = result;
 		this.m_content = content;

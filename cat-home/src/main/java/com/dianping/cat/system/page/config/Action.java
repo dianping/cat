@@ -69,6 +69,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 
+	ALERT_TYPE("alertTypes"),
+
 	EXCEPTION("exception"),
 
 	EXCEPTION_THRESHOLD_UPDATE("exceptionThresholdUpdate"),

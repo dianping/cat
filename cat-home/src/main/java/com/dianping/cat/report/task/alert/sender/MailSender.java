@@ -20,7 +20,7 @@ public class MailSender extends BaseSender {
 	}
 
 	@Override
-	public boolean sendAlert(List<String> receivers, String domain, String title, String content, String alertType) {
+	public boolean sendAlert(List<String> receivers, String domain, String title, String content) {
 		try {
 			m_mailSms.sendEmail(title, content, receivers);
 			sendLog(title, content, receivers);

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.alert.exception;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.dianping.cat.core.dal.Project;
@@ -25,7 +26,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 		}
 	}
 
-	public String buildWeiXinReceivers(Project project) {
+	public List<String> buildWeiXinReceivers(Project project) {
 		StringBuilder builder = new StringBuilder();
 		Receiver receiver = m_manager.queryReceiverById(getId());
 
@@ -38,10 +39,10 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 			String result = builder.toString();
 
 			if (result.endsWith(",")) {
-				return result.substring(0, result.length() - 1);
-			} else {
-				return result;
+				result = result.substring(0, result.length() - 1);
 			}
+
+			return Arrays.asList(result.split(","));
 		}
 	}
 
@@ -58,7 +59,7 @@ public class ExceptionAlertConfig extends BaseAlertConfig {
 	}
 
 	@Override
-	public String buildMailTitle(String domain, String configTitle) {
+	public String buildMailTitle(String domain, String metricName) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[CAT异常告警] [项目: ").append(domain).append("]");
