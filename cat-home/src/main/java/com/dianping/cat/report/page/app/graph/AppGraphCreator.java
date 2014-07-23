@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.app.graph;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
@@ -19,18 +20,18 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	private AppDataService m_appDataService;
 
 	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
-		LinkedList<double[]> dataList = new LinkedList<double[]>();
+		List<double[]> datas = new LinkedList<double[]>();
 
 		if (queryEntity1 != null) {
 			double[] data1 = prepareQueryData(queryEntity1, type);
-			dataList.add(data1);
+			datas.add(data1);
 		}
 
 		if (queryEntity2 != null) {
 			double[] values2 = prepareQueryData(queryEntity2, type);
-			dataList.add(values2);
+			datas.add(values2);
 		}
-		return buildChartData(dataList, type);
+		return buildChartData(datas, type);
 	}
 
 	private double[] prepareQueryData(QueryEntity queryEntity, String type) {
@@ -51,15 +52,16 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	public LineChart buildChartData(final LinkedList<double[]> dataList, String type) {
+	public LineChart buildChartData(final List<double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setHtmlTitle(queryType(type));
-		int length = dataList.size();
+		int length = datas.size();
 
 		for (int i = 0; i < length; i++) {
-			double[] data = dataList.get(i);
-			lineChart.add("查询" + i++, data);
+			double[] data = datas.get(i);
+
+			lineChart.add("查询" + (i + 1), data);
 		}
 		return lineChart;
 	}
