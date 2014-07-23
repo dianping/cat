@@ -56,18 +56,18 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String metric = config.getMetricKey();
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
 
-			AlertResultEntity alertResult = null;
+			List<AlertResultEntity> alertResults = null;
 			if (config.isShowAvg()) {
-				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
+				alertResults = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
 			}
 			if (config.isShowCount()) {
-				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
+				alertResults = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
 			}
 			if (config.isShowSum()) {
-				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
+				alertResults = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
 			}
 
-			if (alertResult != null && alertResult.isTriggered()) {
+			for (AlertResultEntity alertResult : alertResults) {
 				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
 				String contactInfo = buildContactInfo(domain);
 				alertResult.setContent(alertResult.getContent() + contactInfo);
