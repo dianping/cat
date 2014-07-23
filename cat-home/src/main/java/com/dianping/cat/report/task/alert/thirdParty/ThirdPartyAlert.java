@@ -154,7 +154,7 @@ public class ThirdPartyAlert implements Task, LogEnabled {
 		String mailTitle = buildMailTitle(domain);
 		String mailContent = buildMailContent(entities.toString(), domain);
 
-		// m_mailSender.sendAlert(emails, domain, mailTitle, mailContent, "warning");
+		m_mailSender.sendAlert(emails, domain, mailTitle, mailContent, "warning");
 		m_logger.info(mailTitle + " " + mailContent + " " + emails);
 		Cat.logEvent("ExceptionAlert", domain, Event.SUCCESS, "[邮件告警] " + mailTitle + "  " + mailContent);
 	}
