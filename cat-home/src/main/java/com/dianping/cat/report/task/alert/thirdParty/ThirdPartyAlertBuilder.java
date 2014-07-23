@@ -138,7 +138,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 		Map<String, Par> pars = http.getPars();
 		String details = "HTTP URL[" + url + "?" + buildPars(pars) + "] " + type.toUpperCase() + "访问出现异常";
 
-		entity.setDomains(http.getDomain()).setType(type).setDetails(details);
+		entity.setDomain(http.getDomain()).setType(type).setDetails(details);
 		return entity;
 	}
 

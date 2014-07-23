@@ -30,7 +30,7 @@ public class ThirdPartyAlertEntity {
 		return this;
 	}
 
-	public ThirdPartyAlertEntity setDomains(String domain) {
+	public ThirdPartyAlertEntity setDomain(String domain) {
 		m_domain = domain;
 		return this;
 	}
