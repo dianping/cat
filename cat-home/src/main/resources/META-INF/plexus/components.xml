@@ -194,6 +194,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.ConfigReloadTask</role>
 			<implementation>com.dianping.cat.system.config.ConfigReloadTask</implementation>
 			<requirements>
@@ -4164,6 +4173,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4226,6 +4238,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -4488,6 +4509,37 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</role>
+			<implementation>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertTask</role>
+			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -7918,6 +7970,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7980,6 +8035,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

@@ -1,0 +1,13 @@
+<third-party-config>
+	<http url="http://www.51ping.com:8080" type="get" pars="name=name;sex=male" >
+		<domain id="cat1" />
+		<domain id="cat2" />
+	</http>
+	<http url="http://www.51ping.com:8080" type="post" pars="name=abc;sex=male" />
+	<socket ip="10.10.10.1" port="80">
+		<domain id="cat1" />
+		<domain id="cat2" />
+	</socket>
+	<socket ip="10.10.10.1" port="80" />
+	<socket ip="10.10.10.1" port="80" />
+</third-party-config>
