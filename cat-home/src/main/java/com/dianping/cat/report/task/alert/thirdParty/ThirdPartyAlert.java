@@ -84,8 +84,8 @@ public class ThirdPartyAlert implements Task, LogEnabled {
 
 					alertEntities.add(entity);
 				}
-
 				Map<String, List<ThirdPartyAlertEntity>> domain2AlertMap = buildDomain2AlertMap(alertEntities);
+				
 				for (Entry<String, List<ThirdPartyAlertEntity>> entry : domain2AlertMap.entrySet()) {
 					sendAlert(entry.getKey(), entry.getValue());
 				}
