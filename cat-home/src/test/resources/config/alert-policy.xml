@@ -1,26 +1,26 @@
 <alert-policy>
 	<type id="network">
 		<group id="cat">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin,sms" />
-			<channel id="error" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
 		</group>
 		<group id="unipay">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin,sms" />
-			<channel id="error" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
 		</group>
 		<group id="cat">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin,sms" />
-			<channel id="error" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
 		</group>
 	</type>
 	<type id="exception">
 		<group id="cat">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin,sms" />
-			<channel id="error" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin,sms" />
 		</group>
 	</type>
 </alert-policy>

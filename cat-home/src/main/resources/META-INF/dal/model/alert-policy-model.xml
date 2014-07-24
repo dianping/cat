@@ -12,12 +12,11 @@
 	</entity>
 	<entity name="group">
 		<attribute name="id" value-type="String" key="true" />
-		<entity-ref name="channel" type="map" names="channels"
+		<entity-ref name="level" type="map" names="levels"
 			method-find-or-create='true' />
 	</entity>
-	<entity name="channel">
+	<entity name="level">
 		<attribute name="id" value-type="String" key="true" />
 		<attribute name="send" value-type="String" />
 	</entity>
 </model>
-

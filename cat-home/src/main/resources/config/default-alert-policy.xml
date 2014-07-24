@@ -1,26 +1,26 @@
 <alert-policy>
 	<type id="network">
 		<group id="default">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
 		</group>
 	</type>
 	<type id="exception">
 		<group id="default">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
 		</group>
 	</type>
 	<type id="business">
 		<group id="default">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
 		</group>
 	</type>
 	<type id="system">
 		<group id="default">
-			<channel id="error" send="mail,weixin,sms" />
-			<channel id="warning" send="mail,weixin" />
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
 		</group>
 	</type>
 </alert-policy>
