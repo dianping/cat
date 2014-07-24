@@ -447,6 +447,30 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.MailSender</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.MailSender</implementation>
 			<requirements>
@@ -563,30 +587,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
-			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.business.BusinessAlertConfig</role>
@@ -4199,6 +4199,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.RouterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4279,6 +4282,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
 			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.RouterConfigManager</role>
+			<implementation>com.dianping.cat.system.config.RouterConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

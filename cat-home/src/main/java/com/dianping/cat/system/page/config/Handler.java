@@ -55,6 +55,7 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 
@@ -121,6 +122,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ThirdPartyConfigManager m_thirdPartyConfigManager;
+
+	@Inject
+	private RouterConfigManager m_routerConfigManager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -492,6 +496,13 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(m_thirdPartyConfigManager.insert(thirdPartyConfig));
 			}
 			model.setContent(m_thirdPartyConfigManager.getConfig().toString());
+			break;
+		case ROUTER_CONFIG_UPDATE:
+			String routerConfig = payload.getContent();
+			if (!StringUtils.isEmpty(routerConfig)) {
+				model.setOpState(m_routerConfigManager.insert(routerConfig));
+			}
+			model.setContent(m_routerConfigManager.getRouterConfig().toString());
 			break;
 		}
 		m_jspViewer.view(ctx, model);

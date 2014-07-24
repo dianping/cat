@@ -25,6 +25,7 @@
 	       <li class="text-right" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers"><strong>默认告警配置</strong></a></li>
 	       <li class="text-right" id="types"><a href="?op=alertTypes"><strong>告警类型设置</strong></a></li>
 	       <li class="text-right" id="bugConfigUpdate"><a href="?op=bugConfigUpdate"><strong>异常类型配置</strong></a></li>
+	       <li class="text-right" id="routerConfigUpdate"><a href="?op=routerConfigUpdate"><strong>异常类型配置</strong></a></li>
 	       <li class="text-right" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate"><strong>机器分组配置</strong></a></li>
          </ul>
 </div>
