@@ -1,14 +1,10 @@
 package com.dianping.cat.report.task.alert.thirdParty;
 
-import java.util.List;
-
-import com.dianping.cat.home.alert.thirdParty.entity.Domain;
-
 public class ThirdPartyAlertEntity {
 
 	private String m_type;
 
-	private List<Domain> m_domains;
+	private String m_domain;
 
 	private String m_details;
 
@@ -20,8 +16,8 @@ public class ThirdPartyAlertEntity {
 		return m_details;
 	}
 
-	public List<Domain> getDomains() {
-		return m_domains;
+	public String getDomain() {
+		return m_domain;
 	}
 
 	public ThirdPartyAlertEntity setType(String type) {
@@ -34,8 +30,8 @@ public class ThirdPartyAlertEntity {
 		return this;
 	}
 
-	public ThirdPartyAlertEntity setDomains(List<Domain> domains) {
-		m_domains = domains;
+	public ThirdPartyAlertEntity setDomain(String domain) {
+		m_domain = domain;
 		return this;
 	}
 
