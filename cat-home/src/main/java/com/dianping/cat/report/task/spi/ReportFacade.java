@@ -76,8 +76,6 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 	@Override
 	public void initialize() throws InitializationException {
 		m_reportBuilders = lookupMap(ReportTaskBuilder.class);
-		
-		System.out.println(m_reportBuilders.size());
 	}
 
 }
