@@ -30,6 +30,8 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
+	
+	public static final String ID = TransactionAnalyzer.ID;
 
 	@Inject
 	protected GraphDao m_graphDao;

@@ -17,6 +17,8 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class HeartbeatReportBuilder implements ReportTaskBuilder {
 
+	public static final String ID = HeartbeatAnalyzer.ID;
+
 	@Inject
 	protected GraphDao m_graphDao;
 

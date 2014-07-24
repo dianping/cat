@@ -12,6 +12,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
@@ -27,6 +28,9 @@ import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnabled {
+	
+	public static final String ID = MetricAnalyzer.ID;
+
 	@Inject
 	protected ReportService m_reportService;
 

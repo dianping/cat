@@ -21,6 +21,8 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class DependencyReportBuilder implements ReportTaskBuilder {
 
+	public static final String ID = DependencyAnalyzer.ID;
+
 	@Inject
 	private ReportService m_reportService;
 

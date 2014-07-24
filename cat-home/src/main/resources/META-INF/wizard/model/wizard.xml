@@ -60,4 +60,7 @@
    <model package="com.dianping.cat.home.alert.thirdParty" name="thirdParty">
       <sample-model>src/test/resources/config/thirdParty-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.router" name="router">
+      <sample-model>src/test/resources/config/router-config.xml</sample-model>
+   </model>
 </wizard>

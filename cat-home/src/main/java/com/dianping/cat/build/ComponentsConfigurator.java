@@ -50,6 +50,8 @@ import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
+import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
+import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
@@ -67,7 +69,6 @@ import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.manager.AlertManager;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
-import com.dianping.cat.report.task.alert.sender.ExceptionPostman;
 import com.dianping.cat.report.task.alert.sender.MailSender;
 import com.dianping.cat.report.task.alert.sender.Postman;
 import com.dianping.cat.report.task.alert.sender.SmsSender;
@@ -95,6 +96,7 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
@@ -139,7 +141,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HttpConnector.class));
 
-		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class, ThirdPartyConfigManager.class));
+		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class,
+		      ThirdPartyConfigManager.class));
 
 		return all;
 	}
@@ -230,6 +233,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));
+		all.add(C(RouterConfigManager.class).req(ConfigDao.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
 
 		return all;
@@ -263,29 +267,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
-		// report serivce
-		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
-		// task
-		all.addAll(new TaskComponentConfigurator().defineComponents());
 
-		// model service
-		all.addAll(new ServiceComponentConfigurator().defineComponents());
-
-		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
-
-		all.add(C(BusinessAlertConfig.class).req(AlertConfigManager.class));
-
-		all.add(C(NetworkAlertConfig.class).req(AlertConfigManager.class));
-
-		all.add(C(SystemAlertConfig.class).req(AlertConfigManager.class));
-
-		all.add(C(ExceptionAlertConfig.class).req(AlertConfigManager.class));
-
-		all.add(C(AlertInfo.class));
-
-		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
-
-		all.add(C(DataChecker.class, DefaultDataChecker.class));
+		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
+		      ReportService.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
 		all.add(C(MailSender.class).req(MailSMS.class));
 
@@ -298,32 +282,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Postman.class).req(ProjectDao.class, MailSMS.class, MailSender.class, WeixinSender.class,
 		      SmsSender.class, AlertTypeManager.class));
 
-		all.add(C(BusinessAlert.class)
-		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
-		            BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)
-		      //
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class)
-		      .req(Postman.class, AlertManager.class));
-
-		all.add(C(NetworkAlert.class)
-		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
-		            NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)
-		      //
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class)
-		      .req(Postman.class, AlertManager.class));
-
-		all.add(C(SystemAlert.class)
-		      .req(MetricConfigManager.class, ProductLineConfigManager.class, BaselineService.class, MailSMS.class,
-		            SystemAlertConfig.class, AlertInfo.class, AlertDao.class)
-		      //
-		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class)
-		      .req(Postman.class, AlertManager.class));
-
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
-
-		all.add(C(ExceptionAlert.class)
-		      .req(ExceptionAlertConfig.class, ExceptionConfigManager.class, AlertExceptionBuilder.class)
-		      .req(ModelService.class, TopAnalyzer.ID).req(ExceptionPostman.class, AlertManager.class));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
@@ -334,23 +293,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
-		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
-
-		// database
-		all.add(C(JdbcDataSourceDescriptorManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-		all.addAll(new CatDatabaseConfigurator().defineComponents());
-		all.addAll(new UserDatabaseConfigurator().defineComponents());
-
-		// update project database
-		all.add(C(ProjectUpdateTask.class)//
-		      .req(ProjectDao.class, HostinfoDao.class));
-
-		// web, please keep it last
-		all.addAll(new WebComponentConfigurator().defineComponents());
-
-		// for alarm module
-		all.addAll(new AlarmComponentConfigurator().defineComponents());
+		all.add(C(NetGraphBuilder.class));
 
 		return all;
 	}

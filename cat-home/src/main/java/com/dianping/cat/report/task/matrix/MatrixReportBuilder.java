@@ -22,6 +22,8 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class MatrixReportBuilder implements ReportTaskBuilder {
 
+	public static final String ID = MatrixAnalyzer.ID;
+
 	@Inject
 	protected ReportService m_reportService;
 
