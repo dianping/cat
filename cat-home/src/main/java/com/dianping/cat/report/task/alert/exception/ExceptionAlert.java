@@ -23,7 +23,7 @@ import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.task.alert.manager.AlertManager;
-import com.dianping.cat.report.task.alert.sender.ExceptionPostman;
+import com.dianping.cat.report.task.alert.sender2.ExceptionPostman;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;

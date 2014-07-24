@@ -25,7 +25,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.alert.thirdParty.entity.Domain;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.sender.MailSender;
+import com.dianping.cat.report.task.alert.sender2.MailSender;
 import com.site.helper.Splitters;
 
 public class ThirdPartyAlert implements Task, LogEnabled {

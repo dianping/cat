@@ -26,7 +26,7 @@ import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.task.alert.manager.AlertManager;
-import com.dianping.cat.report.task.alert.sender.Postman;
+import com.dianping.cat.report.task.alert.sender2.Postman;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.sender;
+package com.dianping.cat.report.task.alert.sender2;
 
 import java.util.List;
 

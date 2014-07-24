@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.sender;
+package com.dianping.cat.report.task.alert.sender2;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import com.dianping.cat.home.alert.type.entity.Type;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlertConfig;
-import com.dianping.cat.system.config.AlertTypeManager;
+import com.dianping.cat.system.config.AlertPolicyManager;
 import com.site.lookup.util.StringUtils;
 
 public class Postman {
@@ -31,7 +31,7 @@ public class Postman {
 	protected WeixinSender m_weixinSender;
 
 	@Inject
-	protected AlertTypeManager m_alertTypeManager;
+	protected AlertPolicyManager m_alertTypeManager;
 
 	protected String buildContactInfo(String domainName) {
 		try {
@@ -64,7 +64,7 @@ public class Postman {
 	      String domain, String mailTitle, String configId) {
 		String content = alertResult.getContent();
 		String contactInfo = buildContactInfo(domain);
-		Type type = m_alertTypeManager.getType(configId, domain, alertResult.getAlertType());
+		Type type = m_alertTypeManager.getType(configId, domain, alertResult.getAlertLevel());
 		boolean sendResult = true;
 
 		if (type.isSendMail()) {

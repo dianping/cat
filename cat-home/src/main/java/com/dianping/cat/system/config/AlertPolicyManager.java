@@ -11,8 +11,8 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.alert.policy.entity.AlertPolicy;
-import com.dianping.cat.home.alert.policy.entity.Channel;
 import com.dianping.cat.home.alert.policy.entity.Group;
+import com.dianping.cat.home.alert.policy.entity.Level;
 import com.dianping.cat.home.alert.policy.entity.Type;
 import com.dianping.cat.home.alert.policy.transform.DefaultSaxParser;
 
@@ -33,7 +33,7 @@ public class AlertPolicyManager implements Initializable {
 		return m_config;
 	}
 
-	public boolean containsType(String typeName, String groupName, String channelName) {
+	public String queryChannels(String typeName, String groupName, String levelName) {
 		try {
 			Type type = m_config.findType(typeName);
 			Group group = type.findGroup(groupName);
@@ -41,14 +41,14 @@ public class AlertPolicyManager implements Initializable {
 				group = type.findGroup(DEFAULT_TYPE);
 			}
 
-			Channel channel = group.findChannel(channelName);
-			if (channel == null) {
-				return false;
+			Level level = group.findLevel(levelName);
+			if (level == null) {
+				return "";
 			}
 
-			return channel.getSend().contains(channelName);
+			return level.getSend();
 		} catch (Exception ex) {
-			return false;
+			return "";
 		}
 	}
 
