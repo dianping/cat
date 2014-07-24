@@ -985,7 +985,8 @@
 			<implementation>com.dianping.cat.report.baseline.BaselineConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1012,7 +1013,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1033,7 +1035,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1054,7 +1057,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1075,7 +1079,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1090,7 +1095,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>bug</role-hint>
 			<implementation>com.dianping.cat.report.task.bug.BugReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1099,7 +1105,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>service</role-hint>
 			<implementation>com.dianping.cat.report.task.service.ServiceReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1111,7 +1118,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1120,7 +1128,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1129,7 +1138,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1138,7 +1148,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>alert</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1150,7 +1161,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>heavy</role-hint>
 			<implementation>com.dianping.cat.report.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1159,7 +1171,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>utilization</role-hint>
 			<implementation>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1177,7 +1190,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1192,35 +1206,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
-			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
-			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.network.NetTopologyReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>NetTopology</role-hint>
 			<implementation>com.dianping.cat.report.task.network.NetTopologyReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1237,53 +1224,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.network.NetTopologyReportBuilder</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2117,6 +2057,34 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5118,7 +5086,8 @@
 			<implementation>com.dianping.cat.report.baseline.BaselineConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5145,7 +5114,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5166,7 +5136,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5187,7 +5158,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5208,7 +5180,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5223,7 +5196,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>bug</role-hint>
 			<implementation>com.dianping.cat.report.task.bug.BugReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5232,7 +5206,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>service</role-hint>
 			<implementation>com.dianping.cat.report.task.service.ServiceReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5244,7 +5219,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5253,7 +5229,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5262,7 +5239,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5271,7 +5249,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>alert</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5283,7 +5262,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>heavy</role-hint>
 			<implementation>com.dianping.cat.report.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5292,7 +5272,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>utilization</role-hint>
 			<implementation>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5310,7 +5291,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5325,35 +5307,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
-			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
-			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.network.NetTopologyReportBuilder</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>NetTopology</role-hint>
 			<implementation>com.dianping.cat.report.task.network.NetTopologyReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -5370,53 +5325,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.dependency.DependencyReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.bug.BugReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.service.ServiceReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.heavy.HeavyReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.network.NetTopologyReportBuilder</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>

@@ -1,0 +1,8 @@
+<router-config>
+	<domain id="Cat">
+		<server id="10.1.6.101" port="2280"></server>		
+		<server id="10.1.6.102" port="2280"></server>		
+		<server id="10.1.6.103" port="2280"></server>		
+	</domain>
+	<domain></domain>
+</router-config>

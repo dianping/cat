@@ -191,7 +191,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setTitle(metricName);
 
-			ProductLine productline = m_productLineConfigManager.queryProductLine(group);
+			ProductLine productline = m_productLineConfigManager.queryProductLine(report.getProduct());
 
 			if (productline != null && productline.getMetricDashboard()) {
 				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);

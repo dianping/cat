@@ -50,6 +50,8 @@ import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
+import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
+import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
@@ -139,7 +141,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HttpConnector.class));
 
-		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class, ThirdPartyConfigManager.class));
+		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class,
+		      ThirdPartyConfigManager.class));
 
 		return all;
 	}
@@ -335,6 +338,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
+
+		all.add(C(NetGraphBuilder.class));
+
+		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
+		      ReportService.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
