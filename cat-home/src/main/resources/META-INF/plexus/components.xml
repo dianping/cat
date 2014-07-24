@@ -4540,15 +4540,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</role>
-			<implementation>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</implementation>
+			<role>com.dianping.cat.report.task.alert.thirdParty.HttpConnector</role>
+			<implementation>com.dianping.cat.report.task.alert.thirdParty.HttpConnector</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertTask</role>
-			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertTask</implementation>
+			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder</role>
+			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.thirdParty.HttpMonitor</role>
+					<role>com.dianping.cat.report.task.alert.thirdParty.HttpConnector</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</role>

@@ -8,11 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.unidal.helper.Files;
 
-public class HttpMonitor {
+public class HttpConnector {
 
-	public String readFromGet(String url) {
+	public boolean readFromGet(String url) {
+		boolean result = false;
 		HttpURLConnection connection = null;
 		InputStream in = null;
 		BufferedReader reader = null;
@@ -26,13 +26,10 @@ public class HttpMonitor {
 			int response_code = connection.getResponseCode();
 
 			if (response_code == HttpURLConnection.HTTP_OK) {
-				in = connection.getInputStream();
-				String result = Files.forIO().readFrom(in, "utf-8");
-
-				return result;
+				result = true;
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			return false;
 		} finally {
 			if (connection != null) {
 				connection.disconnect();
@@ -45,13 +42,13 @@ public class HttpMonitor {
 					reader.close();
 				}
 			} catch (IOException e) {
-				throw new RuntimeException(e);
 			}
 		}
-		return null;
+		return result;
 	}
 
-	public String readFromPost(String url, String content) {
+	public boolean readFromPost(String url, String content) {
+		boolean result = false;
 		HttpURLConnection connection = null;
 		BufferedReader reader = null;
 		OutputStreamWriter writer = null;
@@ -76,13 +73,10 @@ public class HttpMonitor {
 			int response_code = connection.getResponseCode();
 
 			if (response_code == HttpURLConnection.HTTP_OK) {
-				in = connection.getInputStream();
-				String result = Files.forIO().readFrom(in, "utf-8");
-
-				return result;
+				result = true;
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			return false;
 		} finally {
 			if (connection != null) {
 				connection.disconnect();
@@ -98,9 +92,8 @@ public class HttpMonitor {
 					in.close();
 				}
 			} catch (IOException e) {
-				throw new RuntimeException(e);
 			}
 		}
-		return null;
+		return result;
 	}
 }
