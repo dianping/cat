@@ -6,18 +6,13 @@ import java.util.Map;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
-import com.dianping.cat.report.task.alert.BaseAlertConfig;
 
 public class SystemAlert extends BaseAlert implements Task, LogEnabled {
-
-	@Inject
-	private SystemAlertConfig m_alertConfig;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -26,12 +21,7 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "system-alert";
-	}
-
-	@Override
-	public BaseAlertConfig getAlertConfig() {
-		return m_alertConfig;
+		return "system";
 	}
 
 	@Override

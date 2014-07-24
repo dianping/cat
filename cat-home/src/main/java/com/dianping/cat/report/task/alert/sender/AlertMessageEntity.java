@@ -5,9 +5,9 @@ import java.util.List;
 public class AlertMessageEntity {
 	private String m_group;
 
-	private String m_content;
-
 	private String m_title;
+
+	private String m_content;
 
 	private List<String> m_receivers;
 
@@ -22,7 +22,7 @@ public class AlertMessageEntity {
 		return m_content;
 	}
 
-	public String getDomain() {
+	public String getGroup() {
 		return m_group;
 	}
 
@@ -53,8 +53,8 @@ public class AlertMessageEntity {
 		this.m_content = content;
 	}
 
-	public void setDomain(String domain) {
-		this.m_group = domain;
+	public void setGroup(String group) {
+		this.m_group = group;
 	}
 
 	public void setReceivers(List<String> receivers) {

@@ -9,7 +9,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
-import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.site.lookup.util.StringUtils;
 
@@ -43,42 +42,47 @@ public abstract class Decorator {
 	}
 
 	protected String buildExceptionContent(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-		String domain = alert.getGroup();
-		String date = m_fromat.format(alert.getAlertDate());
-		AlertException exception = (AlertException) alert.getParas().get("exception");
+		try {
+			StringBuilder sb = new StringBuilder();
+			String domain = alert.getGroup();
+			String date = m_fromat.format(alert.getAlertDate());
 
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exception.toString()).append("[时间: ").append(date).append("]");
-		sb.append(" <a href='").append("http://cat.dianpingoa.com/cat/r/p?domain=").append(domain).append("&date=")
-		      .append(date).append("'>点击此处查看详情</a>");
+			sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
+			sb.append(alert.getContent()).append("[时间: ").append(date).append("]");
+			sb.append(" <a href='").append("http://cat.dianpingoa.com/cat/r/p?domain=").append(domain).append("&date=")
+			      .append(date).append("'>点击此处查看详情</a>").append("<br/>");
 
-		return sb.toString();
+			return sb.toString();
+		} catch (Exception ex) {
+			Cat.logError("build exception content error:" + alert.toString(), ex);
+			return null;
+		}
 	}
 
-	public String generateTitle(AlertEntity alert) {
-		if ("business".equals(alert.getType())) {
+	protected String generateTitle(AlertEntity alert) {
+		String type = alert.getType();
+		if ("business".equals(type)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("[业务告警] [产品线 ").append(alert.getProductline()).append("]");
-			sb.append("[业务指标 ").append(alert.getMetricName()).append("]");
+			sb.append("[业务指标 ").append(alert.getMetric()).append("]");
 			return sb.toString();
 		}
 
-		if ("network".equals(alert.getType())) {
+		if ("network".equals(type)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("[网络告警] [产品线 ").append(alert.getProductline()).append("]");
-			sb.append("[网络指标 ").append(alert.getMetricName()).append("]");
+			sb.append("[网络指标 ").append(alert.getMetric()).append("]");
 			return sb.toString();
 		}
 
-		if ("system".equals(alert.getType())) {
+		if ("system".equals(type)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("[系统告警] [产品线 ").append(alert.getProductline()).append("]");
-			sb.append("[系统指标 ").append(alert.getMetricName()).append("]");
+			sb.append("[系统指标 ").append(alert.getMetric()).append("]");
 			return sb.toString();
 		}
 
-		if ("exception".equals(alert.getType())) {
+		if ("exception".equals(type)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("[CAT异常告警] [项目: ").append(alert.getGroup()).append("]");
 			return sb.toString();
@@ -87,6 +91,6 @@ public abstract class Decorator {
 		return "";
 	}
 
-	public abstract String generateContent(AlertEntity alert);
+	protected abstract String generateContent(AlertEntity alert);
 
 }

@@ -1,11 +1,15 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class MailDecorator extends Decorator {
 
+	public static final String ID = AlertChannel.MAIL.getName();
+
 	@Override
 	public String generateContent(AlertEntity alert) {
+
 		String content;
 
 		if ("exception".equals(alert.getType())) {

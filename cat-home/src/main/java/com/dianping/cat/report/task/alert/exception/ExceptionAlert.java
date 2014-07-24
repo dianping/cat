@@ -20,18 +20,15 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
-import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
-import com.dianping.cat.report.task.alert.manager.AlertManager;
-import com.dianping.cat.report.task.alert.sender2.ExceptionPostman;
+import com.dianping.cat.report.task.alert.sender.AlertEntity;
+import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
+import com.dianping.cat.report.task.alert.sender.dispatcher.DispatcherManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class ExceptionAlert implements Task {
-
-	@Inject
-	private ExceptionAlertConfig m_alertConfig;
 
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;
@@ -43,10 +40,7 @@ public class ExceptionAlert implements Task {
 	private ModelService<TopReport> m_topService;
 
 	@Inject
-	protected ExceptionPostman m_postman;
-
-	@Inject
-	protected AlertManager m_alertManager;
+	protected DispatcherManager m_dispatcherManager;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
@@ -62,7 +56,7 @@ public class ExceptionAlert implements Task {
 	}
 
 	public String getName() {
-		return "exception-alert";
+		return "exception";
 	}
 
 	private TopReport queryTopReport(Date start) {
@@ -113,14 +107,15 @@ public class ExceptionAlert implements Task {
 						String domain = entry.getKey();
 						List<AlertException> exceptions = entry.getValue();
 
-						m_postman.sendAlert(m_alertConfig, m_alertBuilder, domain, exceptions);
-
-						String mailTitle = m_alertConfig.buildMailTitle(domain, null);
-						String content = m_alertBuilder.buildDBContent(exceptions.toString(), domain);
-
 						for (AlertException exception : exceptions) {
-							AlertResultEntity alertResult = new AlertResultEntity(true, content, exception.getType());
-							m_alertManager.storeAlert(getName(), domain, exception.getName(), mailTitle, alertResult);
+							String metricName = exception.getName();
+
+							AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
+							builder.buildDate(new Date()).buildLevel(exception.getType()).buildContent(exception.toString());
+							builder.buildMetric(metricName).buildProductline(domain).buildType(getName()).buildGroup(domain);
+							AlertEntity alertEntity = builder.getAlertEntity();
+
+							m_dispatcherManager.send(alertEntity);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);

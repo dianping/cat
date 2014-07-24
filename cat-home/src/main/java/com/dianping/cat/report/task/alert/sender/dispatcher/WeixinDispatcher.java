@@ -17,7 +17,7 @@ public class WeixinDispatcher implements Dispatcher {
 	@Override
 	public boolean send(AlertMessageEntity message) {
 		try {
-			m_mailSms.sendWeiXin(message.getTitle(), message.getContent(), message.getDomain(),
+			m_mailSms.sendWeiXin(message.getTitle(), message.getContent(), message.getGroup(),
 			      message.getReceiverString());
 			Cat.logEvent("SendWeixin", message.toString());
 			return true;

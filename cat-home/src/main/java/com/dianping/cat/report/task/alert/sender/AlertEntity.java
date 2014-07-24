@@ -8,7 +8,7 @@ public class AlertEntity {
 
 	private String m_id;
 
-	private String m_content;
+	private Date m_alertDate;
 
 	private String m_type;
 
@@ -18,11 +18,9 @@ public class AlertEntity {
 
 	private String m_productline;
 
-	private String m_metricName;
+	private String m_metric;
 
-	private String m_dbType;
-
-	private Date m_alertDate;
+	private String m_content;
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
@@ -32,10 +30,6 @@ public class AlertEntity {
 
 	public String getContent() {
 		return m_content;
-	}
-
-	public String getDbType() {
-		return m_dbType;
 	}
 
 	public String getGroup() {
@@ -50,8 +44,8 @@ public class AlertEntity {
 		return m_level;
 	}
 
-	public String getMetricName() {
-		return m_metricName;
+	public String getMetric() {
+		return m_metric;
 	}
 
 	public Map<String, Object> getParas() {
@@ -74,10 +68,6 @@ public class AlertEntity {
 		m_content = content;
 	}
 
-	public void setDbType(String dbType) {
-		m_dbType = dbType;
-	}
-
 	public void setGroup(String group) {
 		m_group = group;
 	}
@@ -90,8 +80,8 @@ public class AlertEntity {
 		m_level = level;
 	}
 
-	public void setMetricName(String metricName) {
-		m_metricName = metricName;
+	public void setMetric(String metricName) {
+		m_metric = metricName;
 	}
 
 	public void setParas(Map<String, Object> paras) {
@@ -104,6 +94,50 @@ public class AlertEntity {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public class AlertEntityBuilder {
+
+		private AlertEntity m_alertEntity = new AlertEntity();
+
+		public AlertEntityBuilder buildDate(Date date) {
+			m_alertEntity.setAlertDate(date);
+			return this;
+		}
+
+		public AlertEntityBuilder buildType(String type) {
+			m_alertEntity.setType(type);
+			return this;
+		}
+
+		public AlertEntityBuilder buildGroup(String group) {
+			m_alertEntity.setGroup(group);
+			return this;
+		}
+
+		public AlertEntityBuilder buildLevel(String level) {
+			m_alertEntity.setLevel(level);
+			return this;
+		}
+
+		public AlertEntityBuilder buildProductline(String productline) {
+			m_alertEntity.setProductline(productline);
+			return this;
+		}
+
+		public AlertEntityBuilder buildMetric(String metric) {
+			m_alertEntity.setMetric(metric);
+			return this;
+		}
+
+		public AlertEntityBuilder buildContent(String content) {
+			m_alertEntity.setContent(content);
+			return this;
+		}
+
+		public AlertEntity getAlertEntity(){
+			return m_alertEntity;
+		}
 	}
 
 }

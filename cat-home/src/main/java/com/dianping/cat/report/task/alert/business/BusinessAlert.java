@@ -13,16 +13,18 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
-import com.dianping.cat.report.task.alert.BaseAlertConfig;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.task.alert.sender.AlertEntity;
+import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	protected BusinessAlertConfig m_alertConfig;
+	protected MetricConfigManager m_metricConfigManager;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -31,12 +33,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "business-alert";
-	}
-
-	@Override
-	public BaseAlertConfig getAlertConfig() {
-		return m_alertConfig;
+		return "business";
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
@@ -68,12 +65,17 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 			for (AlertResultEntity alertResult : alertResults) {
 				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
+				String metricName = buildMetricName(metricKey);
 
-				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), metric);
-				m_alertManager.storeAlert(getName(), product, metric, mailTitle, alertResult);
+				AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
+				builder.buildDate(alertResult.getAlertTime()).buildContent(alertResult.getContent())
+				      .buildLevel(alertResult.getAlertLevel());
+				builder.buildMetric(metricName).buildProductline(product).buildType(getName());
 
-				String configId = getAlertConfig().getId();
-				m_postman.sendAlert(getAlertConfig(), alertResult, productLine, domain, mailTitle, configId);
+				builder.buildGroup(domain);
+				AlertEntity alertEntity = builder.getAlertEntity();
+
+				m_dispatcherManager.send(alertEntity);
 			}
 		}
 	}
