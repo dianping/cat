@@ -17,11 +17,13 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class RouterBuilder implements ReportTaskBuilder {
+public class RouterConfigBuilder implements ReportTaskBuilder {
+
+	public static final String ID = Constants.REPORT_ROUTER;
 
 	@Inject
 	private ReportService m_reportService;
-	
+
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		Date start = period;
@@ -30,7 +32,7 @@ public class RouterBuilder implements ReportTaskBuilder {
 		StateReportVisitor visitor = new StateReportVisitor();
 
 		visitor.visitStateReport(report);
-		
+
 		Map<String, Long> numbers = visitor.getNumbers();
 		Comparator<Entry<String, Long>> compator = new Comparator<Map.Entry<String, Long>>() {
 

@@ -65,7 +65,7 @@ public enum JspFile {
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 	
-	ROUTER_CONFIG_UPDATE("/jsp/system/routerConfig/routerConfig.jsp"),
+	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
 	
 	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
 

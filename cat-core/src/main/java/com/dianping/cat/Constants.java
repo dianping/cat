@@ -35,4 +35,6 @@ public class Constants {
 	
 	public static final String METRIC_CDN = "cdn";
 
+	public static final String REPORT_ROUTER = "router";
+
 }
