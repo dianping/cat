@@ -28,6 +28,8 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class EventReportBuilder implements ReportTaskBuilder {
 
+	public static final String ID = EventAnalyzer.ID;
+
 	@Inject
 	protected GraphDao m_graphDao;
 

@@ -1,0 +1,11 @@
+<router-config>
+	<default-server id="10.1.6.101" weight="1" port="2280" enable="true"/>
+	<default-server id="10.1.6.101" weight="1" port="2280" enable="false"/>
+	<default-server id="10.1.6.101" weight="1" port="2280" enable="true"/>
+	<domain id="Cat">
+		<server id="10.1.6.101" port="2280"></server>
+		<server id="10.1.6.102" port="2280"></server>
+		<server id="10.1.6.103" port="2280"></server>
+	</domain>
+	<domain></domain>
+</router-config>

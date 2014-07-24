@@ -28,6 +28,9 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class ProblemReportBuilder implements ReportTaskBuilder {
+	
+	public static final String ID = ProblemAnalyzer.ID;
+
 	@Inject
 	protected GraphDao m_graphDao;
 

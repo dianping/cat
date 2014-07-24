@@ -7,16 +7,16 @@
   <entity name="http">
     <attribute name="url" value-type="String" />
     <attribute name="type" value-type="String" />
-    <attribute name="pars" value-type="String" />
-    <entity-ref name="domain" type="list" names="domains" />
+    <attribute name="domain" value-type="String" />
+    <entity-ref name="par" type="list" names="pars" />
   </entity>
-  <entity name="domain">
+  <entity name="par">
     <attribute name="id" value-type="String" />
+    <attribute name="value" value-type="String" />
   </entity>
   <entity name="socket">
     <attribute name="ip" value-type="String" />
     <attribute name="port" value-type="int" />
-    <entity-ref name="domain" type="list" names="domains" />
   </entity>
 </model>
 

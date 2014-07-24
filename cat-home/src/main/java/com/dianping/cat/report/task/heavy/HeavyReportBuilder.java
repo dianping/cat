@@ -23,6 +23,8 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class HeavyReportBuilder implements ReportTaskBuilder {
 
+	public static final String ID = Constants.REPORT_HEAVY;
+	
 	@Inject
 	protected ReportService m_reportService;
 

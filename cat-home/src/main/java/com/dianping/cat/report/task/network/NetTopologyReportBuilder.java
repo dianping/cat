@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -26,6 +27,8 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class NetTopologyReportBuilder implements ReportTaskBuilder {
+
+	public static final String ID = Constants.REPORT_NET_TOPOLOGY;
 
 	@Inject
 	protected ReportService m_reportService;

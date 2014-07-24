@@ -22,7 +22,6 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.alert.thirdParty.entity.Domain;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender2.MailSender;
@@ -85,11 +84,10 @@ public class ThirdPartyAlert implements Task, LogEnabled {
 					alertEntities.add(entity);
 				}
 				Map<String, List<ThirdPartyAlertEntity>> domain2AlertMap = buildDomain2AlertMap(alertEntities);
-				
+
 				for (Entry<String, List<ThirdPartyAlertEntity>> entry : domain2AlertMap.entrySet()) {
 					sendAlert(entry.getKey(), entry.getValue());
 				}
-
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -113,17 +111,15 @@ public class ThirdPartyAlert implements Task, LogEnabled {
 		Map<String, List<ThirdPartyAlertEntity>> domain2AlertMap = new HashMap<String, List<ThirdPartyAlertEntity>>();
 
 		for (ThirdPartyAlertEntity entity : alertEntities) {
-			for (Domain domain : entity.getDomains()) {
-				String domainId = domain.getId();
-				List<ThirdPartyAlertEntity> alertList = domain2AlertMap.get(domainId);
+			String domain = entity.getDomain();
+			List<ThirdPartyAlertEntity> alertList = domain2AlertMap.get(domain);
 
-				if (alertList == null) {
-					alertList = new ArrayList<ThirdPartyAlertEntity>();
+			if (alertList == null) {
+				alertList = new ArrayList<ThirdPartyAlertEntity>();
 
-					domain2AlertMap.put(domainId, alertList);
-				}
-				alertList.add(entity);
+				domain2AlertMap.put(domain, alertList);
 			}
+			alertList.add(entity);
 		}
 		return domain2AlertMap;
 	}

@@ -22,6 +22,8 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class AlertReportBuilder implements ReportTaskBuilder {
 
+	public static final String ID = Constants.REPORT_ALERT;
+
 	@Inject
 	protected ReportService m_reportService;
 
