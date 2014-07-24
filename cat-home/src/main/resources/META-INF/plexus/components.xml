@@ -360,6 +360,7 @@
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 <<<<<<< HEAD
+<<<<<<< HEAD
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.chart.DataExtractor</role>
@@ -4131,8 +4132,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.JspViewer</role>
-=======
->>>>>>> d449f6f139b5c4cee567f70569d83b30e25a6296
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.chart.DataExtractor</role>
@@ -4201,11 +4200,7 @@
 					<role>com.dianping.cat.report.chart.DataExtractor</role>
 				</requirement>
 				<requirement>
-<<<<<<< HEAD
 					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
-=======
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
->>>>>>> d449f6f139b5c4cee567f70569d83b30e25a6296
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -4261,13 +4256,6 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
-			<implementation>com.dianping.cat.system.config.AlertPolicyManager</implementation>
-=======
-			<role>com.dianping.cat.report.task.alert.sender.Postman</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.Postman</implementation>
->>>>>>> d449f6f139b5c4cee567f70569d83b30e25a6296
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
