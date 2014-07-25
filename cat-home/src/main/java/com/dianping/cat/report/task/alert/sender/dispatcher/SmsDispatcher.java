@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.alert.sender.dispatcher;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.system.tool.MailSMS;
 
@@ -12,7 +11,7 @@ public class SmsDispatcher implements Dispatcher {
 	@Inject
 	private MailSMS m_mailSms;
 
-	public static final String ID = AlertChannel.SMS.getName();
+	public static final String ID = "sms";
 
 	@Override
 	public boolean send(AlertMessageEntity message) {
@@ -24,6 +23,11 @@ public class SmsDispatcher implements Dispatcher {
 			Cat.logError("send sms error " + message.toString(), ex);
 			return false;
 		}
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 
 }

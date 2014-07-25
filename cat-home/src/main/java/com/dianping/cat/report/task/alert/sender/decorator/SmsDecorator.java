@@ -1,12 +1,11 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
-public class SmsDecorator extends Decorator {
+public class SmsDecorator extends DefaultDecorator {
 
-	public static final String ID = AlertChannel.SMS.getName();
-	
+	public static final String ID = "sms";
+
 	@Override
 	public String generateContent(AlertEntity alert) {
 		String content;
@@ -21,5 +20,10 @@ public class SmsDecorator extends Decorator {
 
 		return content.replaceAll("<br/>", " ");
 	}
-	
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
 }

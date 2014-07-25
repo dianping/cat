@@ -1,11 +1,10 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
-public class MailDecorator extends Decorator {
+public class MailDecorator extends DefaultDecorator {
 
-	public static final String ID = AlertChannel.MAIL.getName();
+	public static final String ID = "mail";
 
 	@Override
 	public String generateContent(AlertEntity alert) {
@@ -19,6 +18,11 @@ public class MailDecorator extends Decorator {
 		}
 
 		return content + buildContactInfo(alert.getGroup());
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 
 }
