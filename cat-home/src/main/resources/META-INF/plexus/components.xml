@@ -1264,7 +1264,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.ReportServiceManager</role>
-			<implementation>com.dianping.cat.report.service.impl.DefaultReportServiceManager</implementation>
+			<implementation>com.dianping.cat.report.service.DefaultReportServiceManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>

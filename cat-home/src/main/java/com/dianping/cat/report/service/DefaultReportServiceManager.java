@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service.impl;
+package com.dianping.cat.report.service;
 
 import java.util.Date;
 import java.util.Map;
@@ -56,8 +56,6 @@ import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
-import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.service.ReportServiceManager;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class DefaultReportServiceManager extends ContainerHolder implements ReportServiceManager, Initializable {

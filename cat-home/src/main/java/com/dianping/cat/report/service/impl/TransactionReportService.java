@@ -65,7 +65,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 					reportModel.accept(merger);
 				}
 			} catch (DalNotFoundException e) {
-				//ignore
+				// ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -147,7 +147,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						//ignore
+						// ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -177,7 +177,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -197,7 +197,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
