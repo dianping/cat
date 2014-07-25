@@ -64,7 +64,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 					reportModel.accept(merger);
 				}
 			} catch (DalNotFoundException e) {
-				m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
+				//ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -146,7 +146,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
+						//ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -176,7 +176,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
+			//ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -196,7 +196,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
+			//ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
