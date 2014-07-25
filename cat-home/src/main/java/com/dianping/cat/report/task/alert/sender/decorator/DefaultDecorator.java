@@ -17,7 +17,7 @@ public abstract class DefaultDecorator implements Decorator {
 	@Inject
 	protected ProjectDao m_projectDao;
 
-	private DateFormat m_fromat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private DateFormat m_fromat = new SimpleDateFormat("yyyyMMdd");
 
 	protected String buildContactInfo(String domainName) {
 		try {
@@ -38,7 +38,7 @@ public abstract class DefaultDecorator implements Decorator {
 			Cat.logError("build contact info error for doamin: " + domainName, ex);
 		}
 
-		return null;
+		return "";
 	}
 
 	protected String buildExceptionContent(AlertEntity alert) {

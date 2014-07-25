@@ -49,22 +49,6 @@ public class AlertMessageEntity {
 		return m_title;
 	}
 
-	public void setContent(String content) {
-		this.m_content = content;
-	}
-
-	public void setGroup(String group) {
-		this.m_group = group;
-	}
-
-	public void setReceivers(List<String> receivers) {
-		this.m_receivers = receivers;
-	}
-
-	public void setTitle(String title) {
-		this.m_title = title;
-	}
-
 	@Override
 	public String toString() {
 		return "title: " + m_title + " content: " + m_content + " receiver: " + getReceiverString();

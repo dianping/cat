@@ -66,7 +66,7 @@ public class DispatcherManager implements Initializable {
 				m_alertManager.storeAlert(alert, message);
 
 				Dispatcher dispatcher = m_dispatchers.get(channelName);
-				dispatcher.send(message);
+				dispatcher.send(message, type);
 			}
 		}
 
