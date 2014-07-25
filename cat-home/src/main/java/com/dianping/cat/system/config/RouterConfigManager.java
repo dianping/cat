@@ -1,8 +1,7 @@
 package com.dianping.cat.system.config;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -16,6 +15,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
 
@@ -32,8 +32,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "routerConfig";
 
-	private Map<String, Set<String>> m_configs = new HashMap<String, Set<String>>();
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -42,7 +40,27 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	public RouterConfig getRouterConfig() {
 		return m_routerConfig;
 	}
+	
+	public String queryBackUpServer(){
+		return m_routerConfig.getBackupServer();
+	}
+	
+	public int queryPort(){
+		return m_routerConfig.getPort();
+	}
 
+	public List<String> queryEnableServers() {
+		List<DefaultServer> servers = m_routerConfig.getDefaultServers();
+		List<String> result = new ArrayList<String>();
+
+		for (DefaultServer server : servers) {
+			if (server.isEnable()) {
+				result.add(server.getId());
+			}
+		}
+
+		return result;
+	}
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -78,7 +96,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		try {
 			m_routerConfig = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
-			m_configs.clear();
+			
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);

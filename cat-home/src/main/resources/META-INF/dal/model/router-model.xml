@@ -5,6 +5,8 @@
   <entity name="router-config" root="true">
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="domain" value-type="String" key="true"/>
+    <attribute name="backup-server" value-type="String"/>
+    <attribute name="port" value-type="int"/>
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <entity-ref name="domain" type="map" names="domains" method-find-or-create='true'/>
   </entity>
