@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 
 public class AvgLoadAnalyzer extends ComponentTestCase {
 
@@ -28,7 +28,7 @@ public class AvgLoadAnalyzer extends ComponentTestCase {
 	private DecimalFormat m_df = new DecimalFormat("#.00");
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	private Map<String, MachineInfo> m_infos = new LinkedHashMap<String, MachineInfo>();
 
@@ -44,7 +44,7 @@ public class AvgLoadAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		m_reportService = (ReportService) lookup(ReportService.class);
+		m_reportService = (ReportServiceManager) lookup(ReportServiceManager.class);
 
 		Date start = m_sdf.parse(m_start);
 		Set<String> domains = queryDomains(start);

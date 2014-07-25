@@ -19,7 +19,7 @@ import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -28,7 +28,7 @@ import com.dianping.cat.service.ModelResponse;
 public class CachedMetricReportServiceImpl implements CachedMetricReportService {
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private ModelService<MetricReport> m_service;

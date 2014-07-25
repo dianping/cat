@@ -24,7 +24,7 @@ import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 
-public abstract class AbstractReportService<T> implements LogEnabled {
+public abstract class AbstractReportService<T> implements LogEnabled, ReportService<T> {
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
@@ -120,11 +120,23 @@ public abstract class AbstractReportService<T> implements LogEnabled {
 		return domains;
 	}
 
-	public abstract T queryDailyReport(String domain, Date start, Date end);
+	/* (non-Javadoc)
+    * @see com.dianping.cat.report.service.RReportService#queryDailyReport(java.lang.String, java.util.Date, java.util.Date)
+    */
+	@Override
+   public abstract T queryDailyReport(String domain, Date start, Date end);
 
-	public abstract T queryHourlyReport(String domain, Date start, Date end);
+	/* (non-Javadoc)
+    * @see com.dianping.cat.report.service.RReportService#queryHourlyReport(java.lang.String, java.util.Date, java.util.Date)
+    */
+	@Override
+   public abstract T queryHourlyReport(String domain, Date start, Date end);
 
-	public abstract T queryMonthlyReport(String domain, Date start);
+	/* (non-Javadoc)
+    * @see com.dianping.cat.report.service.RReportService#queryMonthlyReport(java.lang.String, java.util.Date)
+    */
+	@Override
+   public abstract T queryMonthlyReport(String domain, Date start);
 
 	public T queryReport(String domain, Date start, Date end) {
 		int type = computeQueryType(start, end);
@@ -147,6 +159,10 @@ public abstract class AbstractReportService<T> implements LogEnabled {
 		return report;
 	}
 
-	public abstract T queryWeeklyReport(String domain, Date start);
+	/* (non-Javadoc)
+    * @see com.dianping.cat.report.service.RReportService#queryWeeklyReport(java.lang.String, java.util.Date)
+    */
+	@Override
+   public abstract T queryWeeklyReport(String domain, Date start);
 	
 }

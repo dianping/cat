@@ -16,7 +16,7 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class DependencyReportBuilder implements ReportTaskBuilder {
@@ -24,7 +24,7 @@ public class DependencyReportBuilder implements ReportTaskBuilder {
 	public static final String ID = DependencyAnalyzer.ID;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private TopologyGraphBuilder m_graphBuilder;

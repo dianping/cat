@@ -34,7 +34,7 @@ import com.dianping.cat.report.page.event.TpsStatistics;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.MergeAllMachine;
 import com.dianping.cat.report.page.transaction.MergeAllName;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
@@ -47,7 +47,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;

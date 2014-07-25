@@ -27,7 +27,7 @@ import com.dianping.cat.home.utilization.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
@@ -36,7 +36,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 	public static final String ID = Constants.REPORT_UTILIZATION;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	@Inject
 	private TransactionMergeManager m_mergeManager;

@@ -56,7 +56,7 @@ import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
 import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
@@ -159,7 +159,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
 		all.add(C(StateGraphs.class, StateGraphs.class).//
-		      req(ReportService.class));
+		      req(ReportServiceManager.class));
 		all.add(C(DomainNavManager.class).req(ProjectDao.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
@@ -244,7 +244,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(IpService.class));
 		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class)
-		      .req(ModelService.class, MetricAnalyzer.ID).req(ReportService.class).req(IpService.class));
+		      .req(ModelService.class, MetricAnalyzer.ID).req(ReportServiceManager.class).req(IpService.class));
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
@@ -269,7 +269,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
-		      ReportService.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
+		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
 		all.add(C(MailSender.class).req(MailSMS.class));
 

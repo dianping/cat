@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class HeartbeatReportBuilder implements ReportTaskBuilder {
@@ -23,7 +23,7 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 	protected GraphDao m_graphDao;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	@Inject
 	private HeartbeatGraphCreator m_heartbeatGraphCreator;

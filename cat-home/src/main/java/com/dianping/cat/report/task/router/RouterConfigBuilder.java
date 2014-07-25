@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.router;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,15 +15,48 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.home.router.entity.DefaultServer;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.system.config.RouterConfigManager;
 
 public class RouterConfigBuilder implements ReportTaskBuilder {
 
 	public static final String ID = Constants.REPORT_ROUTER;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
+
+	@Inject
+	private RouterConfigManager m_configManager;
+
+	private Map<String, Long> queryServers() {
+		List<DefaultServer> servers = m_configManager.getRouterConfig().getDefaultServers();
+		Map<String, Long> result = new HashMap<String, Long>();
+
+		for (DefaultServer server : servers) {
+			if (server.isEnable()) {
+				result.put(server.getId(), 0L);
+			}
+		}
+
+		return result;
+	}
+
+	private String findMinProcessServer(Map<String, Long> maps) {
+		long min = Long.MAX_VALUE;
+		String result = null;
+
+		for (Entry<String, Long> entry : maps.entrySet()) {
+			Long value = entry.getValue();
+
+			if (value < min) {
+				result = entry.getKey();
+				min = value;
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -42,6 +76,7 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 			}
 		};
 		numbers = MapUtils.sortMap(numbers, compator);
+
 		return false;
 	}
 
