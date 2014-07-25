@@ -227,7 +227,7 @@ public class AlertExceptionBuilder {
 
 		@Override
 		public String toString() {
-			return "{exception_name=" + m_name + ", exception_count=" + m_count + "}";
+			return "[ 异常名称: " + m_name + " 异常数量：" + m_count + " ]";
 		}
 	}
 

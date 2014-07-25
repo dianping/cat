@@ -32,6 +32,8 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class UtilizationReportBuilder implements ReportTaskBuilder {
+	
+	public static final String ID = Constants.REPORT_UTILIZATION;
 
 	@Inject
 	protected ReportService m_reportService;

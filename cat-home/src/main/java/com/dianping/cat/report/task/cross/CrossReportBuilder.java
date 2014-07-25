@@ -20,6 +20,8 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class CrossReportBuilder implements ReportTaskBuilder {
+	
+	public static final String ID = CrossAnalyzer.ID;
 
 	@Inject
 	protected ReportService m_reportService;
