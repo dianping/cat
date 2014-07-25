@@ -22,7 +22,7 @@
 				<h4 class="text-center text-error">服务器配置</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
-						<td><textarea name="bug" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
+						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
 					</tr>
 					<tr>
 						<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
