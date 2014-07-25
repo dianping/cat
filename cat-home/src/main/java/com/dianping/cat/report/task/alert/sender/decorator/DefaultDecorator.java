@@ -2,6 +2,7 @@ package com.dianping.cat.report.task.alert.sender.decorator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -59,6 +60,21 @@ public abstract class DefaultDecorator implements Decorator {
 		}
 	}
 
+	protected String buildThirdPartyContent(AlertEntity alert) {
+		try {
+			StringBuilder sb = new StringBuilder();
+			String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+
+			sb.append("[CAT第三方告警] [项目: ").append(alert.getGroup()).append("] : ");
+			sb.append(alert.getContent()).append("[时间: ").append(time).append("]");
+
+			return sb.toString();
+		} catch (Exception ex) {
+			Cat.logError("build third party content error:" + alert.toString(), ex);
+			return null;
+		}
+	}
+
 	public String generateTitle(AlertEntity alert) {
 		String type = alert.getType();
 		if ("business".equals(type)) {
@@ -85,6 +101,12 @@ public abstract class DefaultDecorator implements Decorator {
 		if ("exception".equals(type)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("[CAT异常告警] [项目: ").append(alert.getGroup()).append("]");
+			return sb.toString();
+		}
+
+		if ("thidparty".equals(type)) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("[CAT第三方告警] [项目: ").append(alert.getGroup()).append("]");
 			return sb.toString();
 		}
 

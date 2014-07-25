@@ -29,7 +29,7 @@ public class Seeker {
 	protected AlertConfigManager m_configManager;
 
 	public List<String> queryReceivers(String productlineName, AlertChannel channel, String type) {
-		if ("exception".equals(type)) {
+		if ("exception".equals(type) || "thirdparty".equals(type)) {
 			return queryReceiversByDomain(productlineName, channel, type);
 		} else {
 			return queryReceiversByProductline(productlineName, channel, type);

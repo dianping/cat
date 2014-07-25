@@ -23,4 +23,9 @@
 			<level id="warning" send="mail,weixin" />
 		</group>
 	</type>
+	<type id="thirdparty">
+		<group id="default">
+			<level id="warning" send="mail" />
+		</group>
+	</type>
 </alert-policy>

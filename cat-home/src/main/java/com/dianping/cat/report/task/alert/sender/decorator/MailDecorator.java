@@ -13,6 +13,8 @@ public class MailDecorator extends DefaultDecorator {
 
 		if ("exception".equals(alert.getType())) {
 			content = buildExceptionContent(alert);
+		} else if ("thirdparty".equals(alert.getType())) {
+			content = buildThirdPartyContent(alert);
 		} else {
 			content = alert.getContent();
 		}

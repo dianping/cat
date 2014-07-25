@@ -160,7 +160,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
 		      DispatcherManager.class).req(ModelService.class, TopAnalyzer.ID));
 
-		// all.add(C(ThirdPartyAlert.class).req(ProjectDao.class, MailSender.class));
+		all.add(C(ThirdPartyAlert.class).req(DispatcherManager.class));
 
 		all.add(C(HttpConnector.class));
 
