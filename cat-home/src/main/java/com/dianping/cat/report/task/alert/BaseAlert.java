@@ -16,7 +16,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -25,12 +24,12 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.baseline.BaselineService;
-import com.dianping.cat.report.task.alert.manager.AlertManager;
-import com.dianping.cat.report.task.alert.sender.Postman;
+import com.dianping.cat.report.task.alert.sender.AlertEntity;
+import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
+import com.dianping.cat.report.task.alert.sender.dispatcher.DispatcherManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
-import com.dianping.cat.system.tool.MailSMS;
 
 public abstract class BaseAlert {
 
@@ -38,16 +37,10 @@ public abstract class BaseAlert {
 	protected BaseRuleConfigManager m_ruleConfigManager;
 
 	@Inject
-	protected MailSMS m_mailSms;
-
-	@Inject
 	protected AlertInfo m_alertInfo;
 
 	@Inject
 	private DataChecker m_dataChecker;
-
-	@Inject
-	protected MetricConfigManager m_metricConfigManager;
 
 	@Inject
 	protected ProductLineConfigManager m_productLineConfigManager;
@@ -59,10 +52,7 @@ public abstract class BaseAlert {
 	protected RemoteMetricReportService m_service;
 
 	@Inject
-	protected Postman m_postman;
-
-	@Inject
-	protected AlertManager m_alertManager;
+	protected DispatcherManager m_dispatcherManager;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -76,7 +66,7 @@ public abstract class BaseAlert {
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
-	private String buildMetricName(String metricKey) {
+	protected String buildMetricName(String metricKey) {
 		try {
 			return metricKey.split(":")[2];
 		} catch (Exception ex) {
@@ -85,7 +75,7 @@ public abstract class BaseAlert {
 		}
 	}
 
-	private String extractDomain(String metricKey) {
+	protected String extractDomain(String metricKey) {
 		try {
 			return metricKey.split(":")[0];
 		} catch (Exception ex) {
@@ -243,12 +233,20 @@ public abstract class BaseAlert {
 				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
 				String metricName = buildMetricName(metricKey);
-				String mailTitle = getAlertConfig().buildMailTitle(productLine.getTitle(), metricName);
-				m_alertManager.storeAlert(getName(), productlineName, metricName, mailTitle, alertResult);
 
-				String domain = extractDomain(metricKey);
-				String configId = getAlertConfig().getId();
-				m_postman.sendAlert(getAlertConfig(), alertResult, productLine, domain, mailTitle, configId);
+				AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
+				builder.buildDate(alertResult.getAlertTime()).buildContent(alertResult.getContent())
+				      .buildLevel(alertResult.getAlertLevel());
+				builder.buildMetric(metricName).buildProductline(productlineName).buildType(getName());
+				if ("network".equals(getName())) {
+					builder.buildGroup(productlineName);
+				} else {
+					String domain = extractDomain(metricKey);
+					builder.buildGroup(domain);
+				}
+				AlertEntity alertEntity = builder.getAlertEntity();
+
+				m_dispatcherManager.send(alertEntity);
 			}
 		}
 	}
@@ -326,6 +324,4 @@ public abstract class BaseAlert {
 	}
 
 	protected abstract String getName();
-
-	protected abstract BaseAlertConfig getAlertConfig();
 }

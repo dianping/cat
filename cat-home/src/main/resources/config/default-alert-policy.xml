@@ -1,0 +1,31 @@
+<alert-policy>
+	<type id="network">
+		<group id="default">
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
+		</group>
+	</type>
+	<type id="exception">
+		<group id="default">
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
+		</group>
+	</type>
+	<type id="business">
+		<group id="default">
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
+		</group>
+	</type>
+	<type id="system">
+		<group id="default">
+			<level id="error" send="mail,weixin,sms" />
+			<level id="warning" send="mail,weixin" />
+		</group>
+	</type>
+	<type id="thirdparty">
+		<group id="default">
+			<level id="warning" send="mail" />
+		</group>
+	</type>
+</alert-policy>

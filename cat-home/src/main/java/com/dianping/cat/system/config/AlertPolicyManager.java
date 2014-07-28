@@ -10,56 +10,46 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.alert.type.entity.AlertType;
-import com.dianping.cat.home.alert.type.entity.Category;
-import com.dianping.cat.home.alert.type.entity.Domain;
-import com.dianping.cat.home.alert.type.entity.Type;
-import com.dianping.cat.home.alert.type.transform.DefaultSaxParser;
+import com.dianping.cat.home.alert.policy.entity.AlertPolicy;
+import com.dianping.cat.home.alert.policy.entity.Group;
+import com.dianping.cat.home.alert.policy.entity.Level;
+import com.dianping.cat.home.alert.policy.entity.Type;
+import com.dianping.cat.home.alert.policy.transform.DefaultSaxParser;
 
-public class AlertTypeManager implements Initializable {
+public class AlertPolicyManager implements Initializable {
 
 	@Inject
 	private ConfigDao m_configDao;
 
 	private int m_configId;
 
-	private AlertType m_config;
+	private AlertPolicy m_config;
 
-	private static final String CONFIG_NAME = "alertType";
+	private static final String CONFIG_NAME = "alertPolicy";
 
 	private static final String DEFAULT_TYPE = "default";
 
-	public AlertType getAlertType() {
+	public AlertPolicy getAlertPolicy() {
 		return m_config;
 	}
 
-	public Type getType(String categoryName, String domainName, String typeName) {
+	public String queryChannels(String typeName, String groupName, String levelName) {
 		try {
-			Category category = m_config.findCategory(categoryName);
-			Domain domain = category.findDomain(domainName);
-			if (domain == null) {
-				domain = category.findDomain(DEFAULT_TYPE);
+			Type type = m_config.findType(typeName);
+			Group group = type.findGroup(groupName);
+			if (group == null) {
+				group = type.findGroup(DEFAULT_TYPE);
 			}
 
-			Type type = domain.findType(typeName);
-			if (type == null) {
-				type = generateDefaultType();
+			Level level = group.findLevel(levelName);
+			if (level == null) {
+				return "";
 			}
 
-			return type;
+			return level.getSend();
 		} catch (Exception ex) {
-			return generateDefaultType();
+			return "";
 		}
-	}
-
-	private Type generateDefaultType() {
-		Type type = new Type();
-
-		type.setSendMail(true);
-		type.setSendWeixin(true);
-		type.setSendSms(false);
-
-		return type;
 	}
 
 	@Override
@@ -73,7 +63,7 @@ public class AlertTypeManager implements Initializable {
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-alert-type.xml"), "utf-8");
+				      this.getClass().getResourceAsStream("/config/default-alert-policy.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -89,7 +79,7 @@ public class AlertTypeManager implements Initializable {
 			Cat.logError(e);
 		}
 		if (m_config == null) {
-			m_config = new AlertType();
+			m_config = new AlertPolicy();
 		}
 	}
 
