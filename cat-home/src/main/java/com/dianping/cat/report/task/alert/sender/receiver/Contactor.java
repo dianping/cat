@@ -28,11 +28,11 @@ public class Contactor {
 	@Inject
 	protected AlertConfigManager m_configManager;
 
-	public List<String> queryReceivers(String productlineName, AlertChannel channel, String type) {
-		if ("exception".equals(type) || "thirdparty".equals(type)) {
-			return queryReceiversByDomain(productlineName, channel, type);
+	public List<String> queryReceivers(String productlineName, AlertChannel channel, String alertType) {
+		if ("exception".equals(alertType) || "thirdparty".equals(alertType)) {
+			return queryReceiversByDomain(productlineName, channel, alertType);
 		} else {
-			return queryReceiversByProductline(productlineName, channel, type);
+			return queryReceiversByProductline(productlineName, channel, alertType);
 		}
 	}
 
