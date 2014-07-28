@@ -17,7 +17,7 @@ import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.site.helper.Splitters;
 
-public class Seeker {
+public class Contactor {
 
 	@Inject
 	protected ProjectDao m_projectDao;

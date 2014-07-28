@@ -22,6 +22,12 @@ public abstract class DefaultDecorator implements Decorator {
 
 	protected String buildContactInfo(String domainName) {
 		try {
+			if (domainName.startsWith("f5-")) {
+				domainName = domainName.substring(3);
+			} else if (domainName.startsWith("switch-")) {
+				domainName = domainName.substring(7);
+			}
+
 			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
 			String owners = project.getOwner();
 			String phones = project.getPhone();
@@ -46,7 +52,7 @@ public abstract class DefaultDecorator implements Decorator {
 		try {
 			StringBuilder sb = new StringBuilder();
 			String domain = alert.getGroup();
-			String date = m_fromat.format(alert.getAlertDate());
+			String date = m_fromat.format(alert.getDate());
 
 			sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
 			sb.append(alert.getContent()).append("[时间: ").append(date).append("]");

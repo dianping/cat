@@ -18,7 +18,7 @@ public class AlertManager {
 		Alert alert = new Alert();
 
 		alert.setDomain(alertEntity.getGroup());
-		alert.setAlertTime(alertEntity.getAlertDate());
+		alert.setAlertTime(alertEntity.getDate());
 		alert.setCategory(alertEntity.getType() + "-alert");
 		alert.setType(alertEntity.getLevel());
 		alert.setContent(message.getTitle() + "<br/>" + message.getContent());
