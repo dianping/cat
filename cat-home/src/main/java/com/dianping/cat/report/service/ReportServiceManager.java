@@ -21,6 +21,7 @@ import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
+import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
@@ -67,5 +68,7 @@ public interface ReportServiceManager {
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end);
 	
 	public NetGraphSet queryNetTopologyReport(String domain, Date start, Date end);
+	
+	public RouterConfig queryRouterConfigReport(String domain, Date start, Date end);
 
 }

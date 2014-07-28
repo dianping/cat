@@ -6,8 +6,6 @@ import java.util.Map;
 
 public class AlertEntity {
 
-	private String m_id;
-
 	private Date m_date;
 
 	private String m_type;
@@ -15,8 +13,6 @@ public class AlertEntity {
 	private String m_group;
 
 	private String m_level;
-
-	private String m_productline;
 
 	private String m_metric;
 
@@ -36,10 +32,6 @@ public class AlertEntity {
 		return m_group;
 	}
 
-	public String getId() {
-		return m_id;
-	}
-
 	public String getLevel() {
 		return m_level;
 	}
@@ -50,10 +42,6 @@ public class AlertEntity {
 
 	public Map<String, Object> getParas() {
 		return m_paras;
-	}
-
-	public String getProductline() {
-		return m_productline;
 	}
 
 	public String getType() {
@@ -72,10 +60,6 @@ public class AlertEntity {
 		m_group = group;
 	}
 
-	public void setId(String id) {
-		m_id = id;
-	}
-
 	public void setLevel(String level) {
 		m_level = level;
 	}
@@ -86,10 +70,6 @@ public class AlertEntity {
 
 	public void setParas(Map<String, Object> paras) {
 		m_paras = paras;
-	}
-
-	public void setProductline(String productline) {
-		m_productline = productline;
 	}
 
 	public void setType(String type) {
@@ -117,11 +97,6 @@ public class AlertEntity {
 
 		public AlertEntityBuilder buildLevel(String level) {
 			m_alertEntity.setLevel(level);
-			return this;
-		}
-
-		public AlertEntityBuilder buildProductline(String productline) {
-			m_alertEntity.setProductline(productline);
 			return this;
 		}
 

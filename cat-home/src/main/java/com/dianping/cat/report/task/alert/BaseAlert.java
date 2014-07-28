@@ -26,7 +26,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
-import com.dianping.cat.report.task.alert.sender.SendManager;
+import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
@@ -52,7 +52,7 @@ public abstract class BaseAlert {
 	protected RemoteMetricReportService m_service;
 
 	@Inject
-	protected SendManager m_sendManager;
+	protected AlertManager m_sendManager;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -237,7 +237,8 @@ public abstract class BaseAlert {
 				AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
 				builder.buildDate(alertResult.getAlertTime()).buildContent(alertResult.getContent())
 				      .buildLevel(alertResult.getAlertLevel());
-				builder.buildMetric(metricName).buildProductline(productlineName).buildType(getName());
+				builder.buildMetric(metricName).buildType(getName());
+				
 				if ("network".equals(getName())) {
 					builder.buildGroup(productlineName);
 				} else {

@@ -1,61 +1,73 @@
 package com.dianping.cat.system.page.router;
 
-import com.dianping.cat.system.SystemPage;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-public class Payload implements ActionPayload<SystemPage, Action> {
-   private SystemPage m_page;
+import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.system.SystemPage;
 
-   @FieldMeta("op")
-   private Action m_action;
-   
-   @FieldMeta("domain")
-   private String m_domain;
-   
-   @FieldMeta("date")
-   private String m_date;
-   
-   public String getDomain() {
-   	return m_domain;
-   }
+public class Payload implements ActionPayload<SystemPage, Action> {
+	private SystemPage m_page;
+
+	@FieldMeta("op")
+	private Action m_action;
+
+	@FieldMeta("domain")
+	private String m_domain;
+
+	@FieldMeta("date")
+	private String m_date;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	public String getDomain() {
+		return m_domain;
+	}
 
 	public void setDomain(String domain) {
-   	m_domain = domain;
-   }
+		m_domain = domain;
+	}
 
-	public String getDate() {
-   	return m_date;
-   }
+	public Date getDate() {
+		try {
+			return m_sdf.parse(m_date);
+		} catch (ParseException e) {
+			return TimeUtil.getCurrentDay(-1);
+		}
+	}
 
 	public void setDate(String date) {
-   	m_date = date;
-   }
+		m_date = date;
+	}
 
 	public void setAction(String action) {
-      m_action = Action.getByName(action, Action.API);
-   }
+		m_action = Action.getByName(action, Action.API);
+	}
 
-   @Override
-   public Action getAction() {
-      return m_action;
-   }
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
 
-   @Override
-   public SystemPage getPage() {
-      return m_page;
-   }
+	@Override
+	public SystemPage getPage() {
+		return m_page;
+	}
 
-   @Override
-   public void setPage(String page) {
-      m_page = SystemPage.getByName(page, SystemPage.ROUTER);
-   }
+	@Override
+	public void setPage(String page) {
+		m_page = SystemPage.getByName(page, SystemPage.ROUTER);
+	}
 
-   @Override
-   public void validate(ActionContext<?> ctx) {
-      if (m_action == null) {
-         m_action = Action.API;
-      }
-   }
+	@Override
+	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.API;
+		}
+	}
 }

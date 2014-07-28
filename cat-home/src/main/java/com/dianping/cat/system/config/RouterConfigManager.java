@@ -40,13 +40,27 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	public RouterConfig getRouterConfig() {
 		return m_routerConfig;
 	}
-	
-	public String queryBackUpServer(){
+
+	public String queryBackUpServer() {
 		return m_routerConfig.getBackupServer();
 	}
-	
-	public int queryPort(){
+
+	public int queryPort() {
 		return m_routerConfig.getPort();
+	}
+
+	public List<String> queryRandomServers() {
+		List<String> servers = queryEnableServers();
+		int length = servers.size();
+		int index = (int) (Math.random() * length);
+		List<String> result = new ArrayList<String>();
+
+		for (int i = 0; i < 2; i++) {
+			servers.add(servers.get((index + 1) % index));
+		}
+		
+		servers.add(queryBackUpServer());
+		return result;
 	}
 
 	public List<String> queryEnableServers() {
@@ -61,6 +75,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 		return result;
 	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -96,7 +111,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		try {
 			m_routerConfig = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
-			
+
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);

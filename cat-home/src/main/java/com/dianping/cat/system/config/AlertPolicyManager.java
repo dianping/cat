@@ -1,5 +1,8 @@
 package com.dianping.cat.system.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -15,6 +18,7 @@ import com.dianping.cat.home.alert.policy.entity.Group;
 import com.dianping.cat.home.alert.policy.entity.Level;
 import com.dianping.cat.home.alert.policy.entity.Type;
 import com.dianping.cat.home.alert.policy.transform.DefaultSaxParser;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 
 public class AlertPolicyManager implements Initializable {
 
@@ -33,22 +37,36 @@ public class AlertPolicyManager implements Initializable {
 		return m_config;
 	}
 
-	public String queryChannels(String typeName, String groupName, String levelName) {
+	public List<AlertChannel> queryChannels(String typeName, String groupName, String levelName) {
 		try {
 			Type type = m_config.findType(typeName);
 			Group group = type.findGroup(groupName);
+
 			if (group == null) {
 				group = type.findGroup(DEFAULT_TYPE);
 			}
 
 			Level level = group.findLevel(levelName);
 			if (level == null) {
-				return "";
+				return new ArrayList<AlertChannel>();
+			} else {
+				String send = level.getSend();
+				String[] sends = send.split(",");
+				List<AlertChannel> channels = new ArrayList<AlertChannel>();
+
+				for (String str : sends) {
+					AlertChannel channel = AlertChannel.findByName(str);
+
+					if (channel != null) {
+						channels.add(channel);
+					}
+				}
+
+				return channels;
 			}
 
-			return level.getSend();
 		} catch (Exception ex) {
-			return "";
+			return new ArrayList<AlertChannel>();
 		}
 	}
 

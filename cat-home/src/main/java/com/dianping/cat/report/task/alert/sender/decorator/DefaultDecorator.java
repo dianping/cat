@@ -83,36 +83,38 @@ public abstract class DefaultDecorator implements Decorator {
 
 	public String generateTitle(AlertEntity alert) {
 		String type = alert.getType();
+		String group = alert.getGroup();
+		
 		if ("business".equals(type)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("[业务告警] [产品线 ").append(alert.getProductline()).append("]");
+			sb.append("[业务告警] [产品线 ").append(group).append("]");
 			sb.append("[业务指标 ").append(alert.getMetric()).append("]");
 			return sb.toString();
 		}
 
 		if ("network".equals(type)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("[网络告警] [产品线 ").append(alert.getProductline()).append("]");
+			sb.append("[网络告警] [产品线 ").append(group).append("]");
 			sb.append("[网络指标 ").append(alert.getMetric()).append("]");
 			return sb.toString();
 		}
 
 		if ("system".equals(type)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("[系统告警] [产品线 ").append(alert.getProductline()).append("]");
+			sb.append("[系统告警] [产品线 ").append(group).append("]");
 			sb.append("[系统指标 ").append(alert.getMetric()).append("]");
 			return sb.toString();
 		}
 
 		if ("exception".equals(type)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("[CAT异常告警] [项目: ").append(alert.getGroup()).append("]");
+			sb.append("[CAT异常告警] [项目: ").append(group).append("]");
 			return sb.toString();
 		}
 
 		if ("thidparty".equals(type)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("[CAT第三方告警] [项目: ").append(alert.getGroup()).append("]");
+			sb.append("[CAT第三方告警] [项目: ").append(group).append("]");
 			return sb.toString();
 		}
 

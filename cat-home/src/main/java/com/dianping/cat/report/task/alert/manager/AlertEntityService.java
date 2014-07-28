@@ -9,7 +9,7 @@ import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class AlertManager {
+public class AlertEntityService {
 
 	@Inject
 	private AlertDao m_alertDao;

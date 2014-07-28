@@ -471,8 +471,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.manager.AlertManager</role>
-			<implementation>com.dianping.cat.report.task.alert.manager.AlertManager</implementation>
+			<role>com.dianping.cat.report.task.alert.manager.AlertEntityService</role>
+			<implementation>com.dianping.cat.report.task.alert.manager.AlertEntityService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -675,8 +675,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.SendManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.SendManager</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.AlertManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
@@ -688,7 +688,7 @@
 					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.manager.AlertManager</role>
+					<role>com.dianping.cat.report.task.alert.manager.AlertEntityService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
@@ -721,7 +721,7 @@
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.SendManager</role>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -748,7 +748,7 @@
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.SendManager</role>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -775,7 +775,7 @@
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.SendManager</role>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -799,7 +799,7 @@
 					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.SendManager</role>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -812,7 +812,7 @@
 			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.SendManager</role>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4311,6 +4311,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.RouterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

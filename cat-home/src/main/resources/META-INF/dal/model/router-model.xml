@@ -16,6 +16,5 @@
   </entity>
   <entity name="server">
     <attribute name="id" value-type="String"/>
-    <attribute name="port" value-type="int" />
   </entity>
 </model>

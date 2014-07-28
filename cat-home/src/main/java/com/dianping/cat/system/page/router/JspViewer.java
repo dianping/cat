@@ -12,7 +12,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case API:
 			return JspFile.API.getPath();
 		case MODEL:
-			return JspFile.API.getPath();
+			return JspFile.MODEL.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

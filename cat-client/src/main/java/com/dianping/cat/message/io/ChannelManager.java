@@ -26,11 +26,14 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.site.helper.Splitters;
 
 public class ChannelManager implements Task {
 	private List<InetSocketAddress> m_serverAddresses;
+
+	private ClientConfigManager m_configManager;
 
 	private ClientBootstrap m_bootstrap;
 
@@ -56,8 +59,6 @@ public class ChannelManager implements Task {
 
 	private MessageQueue m_queue;
 
-	private String m_serverUrl = "http://10.1.6.128:8080/cat/r/router?op=api";
-
 	private String m_lastServers;
 
 	private List<InetSocketAddress> parse(String content) {
@@ -72,38 +73,14 @@ public class ChannelManager implements Task {
 		return address;
 	}
 
-	int count = 0;
-
 	private String getServerConfig() {
-		if (true) {
-			int current = count++;
-
-			if (current % 2 == 0) {
-				return "127.0.0.1:2280;192.168.213.115:2280;";
-			}
-			if (current % 2 == 1) {
-				return "192.168.213.115:2280;127.0.0.1:2280;";
-			}
-		}
-
 		try {
-			InputStream currentServer = Urls.forIO().readTimeout(3000).connectTimeout(1000).openStream(m_serverUrl);
+			InputStream currentServer = Urls.forIO().readTimeout(3000).connectTimeout(1000)
+			      .openStream(m_configManager.getServerConfigUrl());
 			String content = Files.forIO().readFrom(currentServer, "utf-8");
 
 			return content.trim();
 		} catch (Exception e) {
-			long current = System.currentTimeMillis();
-
-			if (current % 3 == 0) {
-				return "10.1.6.127:2280;10.1.6.128:2280;10.1.6.129:2280;";
-			}
-			if (current % 3 == 1) {
-				return "10.1.6.121:2280;10.1.6.122:2280;10.1.6.123:2280;";
-			}
-			if (current % 3 == 2) {
-				return "10.1.6.124:2280;10.1.6.125:2280;10.1.6.126:2280;";
-			}
-
 			return null;
 		}
 	}
@@ -147,9 +124,11 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue) {
+	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
+	      ClientConfigManager configManager) {
 		m_logger = logger;
 		m_queue = queue;
+		m_configManager = configManager;
 
 		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Boss", 10);
 		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);
@@ -333,4 +312,5 @@ public class ChannelManager implements Task {
 			}
 		}
 	}
+
 }

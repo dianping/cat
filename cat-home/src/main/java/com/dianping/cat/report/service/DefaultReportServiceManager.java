@@ -54,6 +54,7 @@ import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
+import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
@@ -85,6 +86,11 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 	private MonthlyReportContentDao m_monthlyReportContentDao;
 
 	private Map<String, ReportService> m_reportServices;
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_reportServices = lookupMap(ReportService.class);
+	}
 
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
@@ -193,6 +199,13 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 		}
 	}
 
+	@Override
+	public AlertReport queryAlertReport(String domain, Date start, Date end) {
+		ReportService<AlertReport> reportService = m_reportServices.get(Constants.REPORT_ALERT);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
 	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
 		ReportService<TransactionReport> reportService = m_reportServices.get(TransactionAnalyzer.ID);
 
@@ -247,11 +260,25 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 		return reportService.queryReport(domain, start, end);
 	}
 
+	@Override
+	public NetGraphSet queryNetTopologyReport(String domain, Date start, Date end) {
+		ReportService<NetGraphSet> reportService = m_reportServices.get(Constants.REPORT_NET_TOPOLOGY);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
 	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
 		ReportService<ProblemReport> reportService = m_reportServices.get(ProblemAnalyzer.ID);
 
 		return reportService.queryReport(domain, start, end);
 	}
+
+	@Override
+   public RouterConfig queryRouterConfigReport(String domain, Date start, Date end) {
+		ReportService<RouterConfig> reportService = m_reportServices.get(Constants.REPORT_ROUTER);
+
+		return reportService.queryReport(domain, start, end);
+   }
 
 	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
 		ReportService<ServiceReport> reportService = m_reportServices.get(Constants.REPORT_SERVICE);
@@ -282,25 +309,6 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 		ReportService<UtilizationReport> reportService = m_reportServices.get(Constants.REPORT_UTILIZATION);
 
 		return reportService.queryReport(domain, start, end);
-	}
-
-	@Override
-	public NetGraphSet queryNetTopologyReport(String domain, Date start, Date end) {
-		ReportService<NetGraphSet> reportService = m_reportServices.get(Constants.REPORT_NET_TOPOLOGY);
-
-		return reportService.queryReport(domain, start, end);
-	}
-
-	@Override
-	public AlertReport queryAlertReport(String domain, Date start, Date end) {
-		ReportService<AlertReport> reportService = m_reportServices.get(Constants.REPORT_ALERT);
-
-		return reportService.queryReport(domain, start, end);
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_reportServices = lookupMap(ReportService.class);
 	}
 
 }

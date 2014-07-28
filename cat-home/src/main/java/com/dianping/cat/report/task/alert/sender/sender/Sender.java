@@ -4,8 +4,8 @@ import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public interface Sender {
 
-	String getId();
+	public String getId();
 
-	boolean send(AlertMessageEntity message, String type);
+	public boolean send(AlertMessageEntity message, String alertType);
 
 }
