@@ -82,8 +82,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.SYSTEM_RULE_CONFIG_UPDATE.getPath();
 		case ALERT_DEFAULT_RECEIVERS:
 			return JspFile.ALERT_DEFAULT_RECEIVERS.getPath();
-		case ALERT_TYPE:
-			return JspFile.ALERT_TYPE.getPath();
+		case ALERT_POLICY:
+			return JspFile.ALERT_POLICY.getPath();
 			// Excepton Config
 		case EXCEPTION:
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:

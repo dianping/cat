@@ -18,8 +18,8 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<form name="alertTypes" id="form" method="post"
-				action="${model.pageUri}?op=alertTypes"
+			<form name="alertPolicy" id="form" method="post"
+				action="${model.pageUri}?op=alertPolicy"
 				onsubmit="return validate_form(this)">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
 				<h4 class="text-center text-error">告警类型</h4>
@@ -40,7 +40,7 @@
 </a:body>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#types').addClass('active');
+		$('#policy').addClass('active');
 		var state = '${model.opState}';
 		if (state == 'Success') {
 			$('#state').html('操作成功');

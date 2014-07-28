@@ -62,24 +62,27 @@ import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
-import com.dianping.cat.report.task.alert.business.BusinessAlertConfig;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
-import com.dianping.cat.report.task.alert.exception.ExceptionAlertConfig;
 import com.dianping.cat.report.task.alert.manager.AlertManager;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
-import com.dianping.cat.report.task.alert.network.NetworkAlertConfig;
-import com.dianping.cat.report.task.alert.sender.MailSender;
-import com.dianping.cat.report.task.alert.sender.Postman;
-import com.dianping.cat.report.task.alert.sender.SmsSender;
-import com.dianping.cat.report.task.alert.sender.WeixinSender;
+import com.dianping.cat.report.task.alert.sender.decorator.Decorator;
+import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
+import com.dianping.cat.report.task.alert.sender.decorator.MailDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.SmsDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.WeixinDecorator;
+import com.dianping.cat.report.task.alert.sender.dispatcher.Dispatcher;
+import com.dianping.cat.report.task.alert.sender.dispatcher.DispatcherManager;
+import com.dianping.cat.report.task.alert.sender.dispatcher.MailDispatcher;
+import com.dianping.cat.report.task.alert.sender.dispatcher.SmsDispatcher;
+import com.dianping.cat.report.task.alert.sender.dispatcher.WeixinDispatcher;
+import com.dianping.cat.report.task.alert.sender.receiver.Seeker;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
-import com.dianping.cat.report.task.alert.system.SystemAlertConfig;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
@@ -87,7 +90,7 @@ import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.system.config.AlertConfigManager;
-import com.dianping.cat.system.config.AlertTypeManager;
+import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -110,34 +113,54 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private List<Component> defineAlertComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(BusinessAlertConfig.class).req(AlertConfigManager.class));
-		all.add(C(NetworkAlertConfig.class).req(AlertConfigManager.class));
-		all.add(C(SystemAlertConfig.class).req(AlertConfigManager.class));
-		all.add(C(ExceptionAlertConfig.class).req(AlertConfigManager.class));
 		all.add(C(AlertInfo.class));
 		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
 
+		all.add(C(Dispatcher.class, MailDispatcher.ID, MailDispatcher.class).req(MailSMS.class));
+
+		all.add(C(Dispatcher.class, SmsDispatcher.ID, SmsDispatcher.class).req(MailSMS.class));
+
+		all.add(C(Dispatcher.class, WeixinDispatcher.ID, WeixinDispatcher.class).req(MailSMS.class));
+
+		all.add(C(Decorator.class, MailDecorator.ID, MailDecorator.class).req(ProjectDao.class));
+
+		all.add(C(Decorator.class, SmsDecorator.ID, SmsDecorator.class).req(ProjectDao.class));
+
+		all.add(C(Decorator.class, WeixinDecorator.ID, WeixinDecorator.class).req(ProjectDao.class));
+
+		all.add(C(AlertPolicyManager.class).req(ConfigDao.class));
+
+		all.add(C(DecoratorManager.class).req(Decorator.class, MailDecorator.ID, "mailDecorator")
+		      .req(Decorator.class, SmsDecorator.ID, "smsDecorator")
+		      .req(Decorator.class, WeixinDecorator.ID, "weixinDecorator"));
+
+		all.add(C(Seeker.class).req(ProjectDao.class, ProductLineConfigManager.class, AlertConfigManager.class));
+
+		all.add(C(DispatcherManager.class)
+		      .req(AlertPolicyManager.class, DecoratorManager.class, Seeker.class, AlertManager.class)
+		      .req(Dispatcher.class, MailDispatcher.ID, "mailDispatcher")
+		      .req(Dispatcher.class, WeixinDispatcher.ID, "weixinDispatcher")
+		      .req(Dispatcher.class, SmsDispatcher.ID, "smsDispatcher"));
+
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, BusinessAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class));
+		      BaselineService.class, AlertInfo.class).req(RemoteMetricReportService.class,
+		      BusinessRuleConfigManager.class, DataChecker.class, DispatcherManager.class));
 
-		all.add(C(NetworkAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, NetworkAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class));
+		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
+		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class,
+		            DispatcherManager.class));
 
-		all.add(C(SystemAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      BaselineService.class, MailSMS.class, SystemAlertConfig.class, AlertInfo.class, AlertDao.class)//
-		      .req(RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class));
+		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
+		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, DispatcherManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
-		all.add(C(ExceptionAlert.class).req(ProjectDao.class, ExceptionAlertConfig.class, MailSMS.class,
-		      ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertDao.class).req(ModelService.class,
-		      TopAnalyzer.ID));
+		all.add(C(ExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
+		      DispatcherManager.class).req(ModelService.class, TopAnalyzer.ID));
 
-		all.add(C(ThirdPartyAlert.class).req(ProjectDao.class, MailSender.class));
+		all.add(C(ThirdPartyAlert.class).req(DispatcherManager.class));
 
 		all.add(C(HttpConnector.class));
 
@@ -271,16 +294,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
-		all.add(C(MailSender.class).req(MailSMS.class));
-
-		all.add(C(SmsSender.class).req(MailSMS.class));
-
-		all.add(C(WeixinSender.class).req(MailSMS.class));
-
 		all.add(C(AlertManager.class).req(AlertDao.class));
-
-		all.add(C(Postman.class).req(ProjectDao.class, MailSMS.class, MailSender.class, WeixinSender.class,
-		      SmsSender.class, AlertTypeManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 

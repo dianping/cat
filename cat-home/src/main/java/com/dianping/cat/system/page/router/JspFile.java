@@ -1,7 +1,7 @@
 package com.dianping.cat.system.page.router;
 
 public enum JspFile {
-	VIEW("/jsp/system/router.jsp"),
+	API("/jsp/system/router.jsp"),
 
 	;
 

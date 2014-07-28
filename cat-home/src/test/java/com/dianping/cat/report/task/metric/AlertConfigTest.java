@@ -222,7 +222,7 @@ public class AlertConfigTest {
 		}
 
 		for (AlertResultEntity alertResult : alertResults) {
-			if (alertResult.getAlertType().equals("error")) {
+			if (alertResult.getAlertLevel().equals("error")) {
 				return alertResult;
 			}
 		}

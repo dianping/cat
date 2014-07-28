@@ -10,9 +10,31 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
    @FieldMeta("op")
    private Action m_action;
+   
+   @FieldMeta("domain")
+   private String m_domain;
+   
+   @FieldMeta("date")
+   private String m_date;
+   
+   public String getDomain() {
+   	return m_domain;
+   }
 
-   public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
+	public void setDomain(String domain) {
+   	m_domain = domain;
+   }
+
+	public String getDate() {
+   	return m_date;
+   }
+
+	public void setDate(String date) {
+   	m_date = date;
+   }
+
+	public void setAction(String action) {
+      m_action = Action.getByName(action, Action.API);
    }
 
    @Override
@@ -33,7 +55,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
    @Override
    public void validate(ActionContext<?> ctx) {
       if (m_action == null) {
-         m_action = Action.VIEW;
+         m_action = Action.API;
       }
    }
 }
