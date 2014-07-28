@@ -1,8 +1,8 @@
-package com.dianping.cat.report.task.alert.sender.dispatcher;
+package com.dianping.cat.report.task.alert.sender.sender;
 
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public interface Dispatcher {
+public interface Sender {
 
 	String getId();
 
