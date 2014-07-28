@@ -66,15 +66,16 @@ import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.manager.AlertManager;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
+import com.dianping.cat.report.task.alert.sender.SendManager;
 import com.dianping.cat.report.task.alert.sender.decorator.Decorator;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.decorator.MailDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.SmsDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.WeixinDecorator;
 import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
+import com.dianping.cat.report.task.alert.sender.sender.MailSender;
 import com.dianping.cat.report.task.alert.sender.sender.Sender;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
-import com.dianping.cat.report.task.alert.sender.sender.MailSender;
 import com.dianping.cat.report.task.alert.sender.sender.SmsSender;
 import com.dianping.cat.report.task.alert.sender.sender.WeixinSender;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
@@ -118,11 +119,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
 
-		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(MailSMS.class));
+		all.add(C(Sender.class, MailSender.ID, MailSender.class));
 
-		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(MailSMS.class));
+		all.add(C(Sender.class, SmsSender.ID, SmsSender.class));
 
-		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(MailSMS.class));
+		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class));
 
 		all.add(C(Decorator.class, MailDecorator.ID, MailDecorator.class).req(ProjectDao.class));
 
@@ -138,29 +139,28 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Contactor.class).req(ProjectDao.class, ProductLineConfigManager.class, AlertConfigManager.class));
 
-		all.add(C(SenderManager.class)
-		      .req(AlertPolicyManager.class, DecoratorManager.class, Contactor.class, AlertManager.class)
-		      .req(Sender.class, MailSender.ID, "mailDispatcher")
-		      .req(Sender.class, WeixinSender.ID, "weixinDispatcher")
-		      .req(Sender.class, SmsSender.ID, "smsDispatcher"));
+		all.add(C(SenderManager.class).req(Sender.class, MailSender.ID, "mailSender")
+		      .req(Sender.class, WeixinSender.ID, "weixinSender").req(Sender.class, SmsSender.ID, "smsSender"));
+
+		all.add(C(SendManager.class).req(AlertPolicyManager.class, DecoratorManager.class, Contactor.class,
+		      AlertManager.class, SenderManager.class));
 
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, AlertInfo.class).req(RemoteMetricReportService.class,
-		      BusinessRuleConfigManager.class, DataChecker.class, SenderManager.class));
+		      BusinessRuleConfigManager.class, DataChecker.class, SendManager.class));
 
-		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
-		      .req(RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class,
-		            SenderManager.class));
+		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
+		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, SendManager.class));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, SenderManager.class));
+		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, SendManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
-		all.add(C(ExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
-		      SenderManager.class).req(ModelService.class, TopAnalyzer.ID));
+		all.add(C(ExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class, SendManager.class)
+		      .req(ModelService.class, TopAnalyzer.ID));
 
-		all.add(C(ThirdPartyAlert.class).req(SenderManager.class));
+		all.add(C(ThirdPartyAlert.class).req(SendManager.class));
 
 		all.add(C(HttpConnector.class));
 

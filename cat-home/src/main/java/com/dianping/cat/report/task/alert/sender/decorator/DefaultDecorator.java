@@ -22,6 +22,12 @@ public abstract class DefaultDecorator implements Decorator {
 
 	protected String buildContactInfo(String domainName) {
 		try {
+			if (domainName.startsWith("f5-")) {
+				domainName = domainName.substring(3);
+			} else if (domainName.startsWith("switch-")) {
+				domainName = domainName.substring(7);
+			}
+
 			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
 			String owners = project.getOwner();
 			String phones = project.getPhone();

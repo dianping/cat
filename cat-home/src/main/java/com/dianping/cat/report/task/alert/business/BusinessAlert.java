@@ -75,7 +75,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				builder.buildGroup(domain);
 				AlertEntity alertEntity = builder.getAlertEntity();
 
-				m_dispatcherManager.send(alertEntity);
+				m_sendManager.addAlert(alertEntity);
 			}
 		}
 	}

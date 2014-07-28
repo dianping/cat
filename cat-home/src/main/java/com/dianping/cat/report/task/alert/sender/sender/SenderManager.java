@@ -1,88 +1,49 @@
 package com.dianping.cat.report.task.alert.sender.sender;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
-import com.dianping.cat.report.task.alert.manager.AlertManager;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
-import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
-import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
-import com.dianping.cat.system.config.AlertPolicyManager;
 
 public class SenderManager implements Initializable {
 
-	@Inject
-	private AlertPolicyManager m_policyManager;
-
-	@Inject
-	private DecoratorManager m_decoratorManager;
-
-	@Inject
-	private Contactor m_seeker;
-
-	@Inject
-	protected AlertManager m_alertManager;
-
 	@Inject(type = Sender.class, value = MailSender.ID)
-	protected Sender m_mailDispatcher;
+	protected Sender m_mailSender;
 
 	@Inject(type = Sender.class, value = WeixinSender.ID)
-	protected Sender m_weixinDispatcher;
+	protected Sender m_weixinSender;
 
 	@Inject(type = Sender.class, value = SmsSender.ID)
-	protected Sender m_smsDispatcher;
+	protected Sender m_smsSender;
 
-	private Map<String, Sender> m_dispatchers = new HashMap<String, Sender>();
+	private Map<String, Sender> m_senders = new HashMap<String, Sender>();
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_dispatchers.put(m_mailDispatcher.getId(), m_mailDispatcher);
-		m_dispatchers.put(m_weixinDispatcher.getId(), m_weixinDispatcher);
-		m_dispatchers.put(m_smsDispatcher.getId(), m_smsDispatcher);
+		m_senders.put(m_mailSender.getId(), m_mailSender);
+		m_senders.put(m_weixinSender.getId(), m_weixinSender);
+		m_senders.put(m_smsSender.getId(), m_smsSender);
 	}
 
-	public boolean send(AlertEntity alert) {
-		String type = alert.getType();
-		String group = alert.getGroup();
-		String level = alert.getLevel();
-
-		String channels = m_policyManager.queryChannels(type, group, level);
-
-		for (AlertChannel channel : AlertChannel.values()) {
-			String channelName = channel.getName();
-			if (channels.contains(channelName)) {
-				Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert, channelName);
-				List<String> receivers = m_seeker.queryReceivers(alert.getProductline(), channel, type);
-				AlertMessageEntity message = new AlertMessageEntity(group, pair.getKey(), pair.getValue(), receivers);
-
-				m_alertManager.storeAlert(alert, message);
-
-				Sender dispatcher = m_dispatchers.get(channelName);
-				dispatcher.send(message, type);
-			}
-		}
-
-		return false;
+	public boolean sendAlert(String channelName, String type, AlertMessageEntity message) {
+		Sender sender = m_senders.get(channelName);
+		return sender.send(message, type);
 	}
 
-	public void setMailDispatcher(Sender dispatcher) {
-		m_mailDispatcher = dispatcher;
+	public void setMailSender(Sender sender) {
+		m_mailSender = sender;
 	}
 
-	public void setSmsDispatcher(Sender dispatcher) {
-		m_smsDispatcher = dispatcher;
+	public void setSmsSender(Sender sender) {
+		m_smsSender = sender;
 	}
 
-	public void setWeixinDispatcher(Sender dispatcher) {
-		m_weixinDispatcher = dispatcher;
+	public void setWeixinSender(Sender sender) {
+		m_weixinSender = sender;
 	}
 
 }

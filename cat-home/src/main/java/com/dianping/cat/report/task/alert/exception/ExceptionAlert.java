@@ -23,7 +23,7 @@ import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.task.alert.sender.SendManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -40,7 +40,7 @@ public class ExceptionAlert implements Task {
 	private ModelService<TopReport> m_topService;
 
 	@Inject
-	protected SenderManager m_dispatcherManager;
+	protected SendManager m_sendManager;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
@@ -115,7 +115,7 @@ public class ExceptionAlert implements Task {
 							builder.buildMetric(metricName).buildProductline(domain).buildType(getName()).buildGroup(domain);
 							AlertEntity alertEntity = builder.getAlertEntity();
 
-							m_dispatcherManager.send(alertEntity);
+							m_sendManager.addAlert(alertEntity);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);

@@ -19,12 +19,12 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.task.alert.sender.SendManager;
 
 public class ThirdPartyAlert implements Task {
 
 	@Inject
-	private SenderManager m_dispatcherManager;
+	private SendManager m_sendManager;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
@@ -83,7 +83,7 @@ public class ThirdPartyAlert implements Task {
 					builder.buildMetric(getName()).buildProductline(domain).buildType(getName()).buildGroup(domain);
 					AlertEntity alertEntity = builder.getAlertEntity();
 
-					m_dispatcherManager.send(alertEntity);
+					m_sendManager.addAlert(alertEntity);
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
