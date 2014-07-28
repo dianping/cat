@@ -26,14 +26,14 @@ import com.dianping.cat.home.dal.alarm.MailRecordEntity;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
 
 public class ScheduledMailTask implements Task, LogEnabled {
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private MailRecordDao m_mailRecordDao;

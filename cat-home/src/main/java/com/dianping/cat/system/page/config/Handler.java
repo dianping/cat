@@ -43,7 +43,7 @@ import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
@@ -55,6 +55,7 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 
@@ -111,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 	private DomainNavManager m_manager;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
@@ -121,6 +122,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ThirdPartyConfigManager m_thirdPartyConfigManager;
+
+	@Inject
+	private RouterConfigManager m_routerConfigManager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -492,6 +496,13 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(m_thirdPartyConfigManager.insert(thirdPartyConfig));
 			}
 			model.setContent(m_thirdPartyConfigManager.getConfig().toString());
+			break;
+		case ROUTER_CONFIG_UPDATE:
+			String routerConfig = payload.getContent();
+			if (!StringUtils.isEmpty(routerConfig)) {
+				model.setOpState(m_routerConfigManager.insert(routerConfig));
+			}
+			model.setContent(m_routerConfigManager.getRouterConfig().toString());
 			break;
 		}
 		m_jspViewer.view(ctx, model);

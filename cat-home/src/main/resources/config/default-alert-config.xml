@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alert-config>
+   <receiver id="network" enable="true">
+      <email>leon.li@dianping.com</email>
+      <email>weiwei.zeng@dianping.com</email>
+      <email>hai.bo@dianping.com</email>
+      <email>monitor@dianping.com</email>
+      <phone>18662513308</phone>
+      <phone>15997433793</phone>
+      <phone>18918052089</phone>
+   </receiver>
+   <receiver id="exception" enable="true">
+      <email>jialin.sun@dianping.com</email>
+      <phone>15201789489</phone>
+   </receiver>
+   <receiver id="business" enable="true">
+      <email>yong.you@dianping.com</email>
+      <email>argus@dianping.com</email>
+      <email>jialin.sun@dianping.com</email>
+      <email>monitor@dianping.com</email>
+      <phone>13916536843</phone>
+      <phone>18616671676</phone>
+      <phone>13858086694</phone>
+   </receiver>
+</alert-config>

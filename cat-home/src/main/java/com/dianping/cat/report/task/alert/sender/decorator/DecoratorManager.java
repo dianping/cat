@@ -25,8 +25,10 @@ public class DecoratorManager implements Initializable {
 
 	public Pair<String, String> generateTitleAndContent(AlertEntity alert, String channelName) {
 		Decorator decorator = m_decorators.get(channelName);
-
-		return new Pair<String, String>(decorator.generateTitle(alert), decorator.generateContent(alert));
+		String title = decorator.generateTitle(alert);
+		String content = decorator.generateContent(alert);
+		
+		return new Pair<String, String>(title, content);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ public class AlertMessageEntity {
 	private String m_title;
 
 	private String m_content;
-
+	
 	private List<String> m_receivers;
 
 	public AlertMessageEntity(String group, String title, String content, List<String> receivers) {

@@ -142,7 +142,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			if (cityId != null && operatorId != null) {
 				for (String record : records) {
-					processOneRecord(cityId, operatorId, record);
+					try {
+						if (!StringUtils.isEmpty(record)) {
+							processOneRecord(cityId, operatorId, record);
+						}
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			}
 		}
@@ -155,14 +161,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			AppData appData = new AppData();
 
 			try {
-				appData.setTimestamp(Long.parseLong(items[0]));
-				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[1], "utf-8"));
+				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[4], "utf-8"));
 
 				if (command != null) {
+					appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[2]));
-					appData.setVersion(Integer.parseInt(items[3]));
-					appData.setConnectType(Integer.parseInt(items[4]));
+					appData.setNetwork(Integer.parseInt(items[1]));
+					appData.setVersion(Integer.parseInt(items[2]));
+					appData.setConnectType(Integer.parseInt(items[3]));
 					appData.setCode(Integer.parseInt(items[5]));
 					appData.setPlatform(Integer.parseInt(items[6]));
 					appData.setRequestByte(Integer.parseInt(items[7]));
@@ -175,7 +181,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					m_appDataConsumer.enqueue(appData);
 					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
 				} else {
-					Cat.logEvent("CommandNotFound", items[1], Event.SUCCESS, items[1]);
+					Cat.logEvent("CommandNotFound", items[4], Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);

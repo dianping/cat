@@ -13,13 +13,13 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.manager.AlertManager;
+import com.dianping.cat.report.task.alert.manager.AlertEntityService;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 
-public class SendManager implements Initializable {
+public class AlertManager implements Initializable {
 
 	@Inject
 	private AlertPolicyManager m_policyManager;
@@ -31,7 +31,7 @@ public class SendManager implements Initializable {
 	private Contactor m_contactor;
 
 	@Inject
-	protected AlertManager m_alertManager;
+	protected AlertEntityService m_alertEntityService;
 
 	@Inject
 	protected SenderManager m_senderManager;
@@ -39,32 +39,29 @@ public class SendManager implements Initializable {
 	private BlockingQueue<AlertEntity> m_alerts = new LinkedBlockingDeque<AlertEntity>();
 
 	private boolean send(AlertEntity alert) {
-		boolean result = true;
+		boolean result = false;
 		String type = alert.getType();
 		String group = alert.getGroup();
 		String level = alert.getLevel();
+		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
-		String channels = m_policyManager.queryChannels(type, group, level);
-
-		for (AlertChannel channel : AlertChannel.values()) {
+		for (AlertChannel channel : channels) {
 			String channelName = channel.getName();
-			if (channels.contains(channelName)) {
-				Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert, channelName);
-				List<String> receivers = m_contactor.queryReceivers(alert.getProductline(), channel, type);
-				AlertMessageEntity message = new AlertMessageEntity(group, pair.getKey(), pair.getValue(), receivers);
+			Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert, channelName);
+			List<String> receivers = m_contactor.queryReceivers(group, channel, type);
+			String content = pair.getValue();
+			AlertMessageEntity message = new AlertMessageEntity(group, pair.getKey(), content, receivers);
 
-				m_alertManager.storeAlert(alert, message);
+			m_alertEntityService.storeAlert(alert, message);
 
-				if (!m_senderManager.sendAlert(channelName, type, message)) {
-					result = false;
-				}
+			if (m_senderManager.sendAlert(channelName, type, message)) {
+				result = true;
 			}
 		}
-
 		return result;
 	}
 
-	public synchronized boolean addAlert(AlertEntity alert) {
+	public boolean addAlert(AlertEntity alert) {
 		return m_alerts.offer(alert);
 	}
 

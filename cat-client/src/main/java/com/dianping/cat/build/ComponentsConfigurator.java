@@ -43,6 +43,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageSender.class, TcpSocketSender.ID, TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //
+		      .req(ClientConfigManager.class)
 		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec"));
 		all.add(C(TransportManager.class, DefaultTransportManager.class) //

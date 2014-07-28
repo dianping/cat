@@ -23,6 +23,8 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
+	public static String ID = "business";
+
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
 
@@ -33,7 +35,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "business";
+		return ID;
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
@@ -70,7 +72,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
 				builder.buildDate(alertResult.getAlertTime()).buildContent(alertResult.getContent())
 				      .buildLevel(alertResult.getAlertLevel());
-				builder.buildMetric(metricName).buildProductline(product).buildType(getName());
+				builder.buildMetric(metricName).buildType(getName());
 
 				builder.buildGroup(domain);
 				AlertEntity alertEntity = builder.getAlertEntity();

@@ -24,7 +24,7 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
@@ -33,7 +33,7 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 	public static final String ID = Constants.REPORT_SERVICE;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	@Inject
 	private DomainManager m_domainManager;

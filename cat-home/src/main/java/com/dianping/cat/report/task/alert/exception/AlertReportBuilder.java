@@ -15,7 +15,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -25,7 +25,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	public static final String ID = Constants.REPORT_ALERT;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;

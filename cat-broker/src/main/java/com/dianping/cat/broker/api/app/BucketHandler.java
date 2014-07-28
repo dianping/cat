@@ -44,7 +44,7 @@ public class BucketHandler implements Task {
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
 			HashMap<String, AppData> value = outerEntry.getValue();
-			
+
 			for (Entry<String, AppData> entry : value.entrySet()) {
 				AppData appData = entry.getValue();
 				AppDataCommand proto = new AppDataCommand();

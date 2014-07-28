@@ -1,21 +1,36 @@
-package com.dianping.cat.report.service.impl;
+package com.dianping.cat.report.service;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
@@ -39,11 +54,12 @@ import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
+import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
-import com.dianping.cat.report.service.ReportService;
 
-public class DefaultReportService implements ReportService {
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class DefaultReportServiceManager extends ContainerHolder implements ReportServiceManager, Initializable {
 
 	@Inject
 	private HourlyReportDao m_hourlyReportDao;
@@ -69,53 +85,12 @@ public class DefaultReportService implements ReportService {
 	@Inject
 	private MonthlyReportContentDao m_monthlyReportContentDao;
 
-	@Inject
-	private TransactionReportService m_transactionReportService;
+	private Map<String, ReportService> m_reportServices;
 
-	@Inject
-	private EventReportService m_eventReportService;
-
-	@Inject
-	private ProblemReportService m_problemReportService;
-
-	@Inject
-	private HeartbeatReportService m_heartbeatReportService;
-
-	@Inject
-	private CrossReportService m_crossReportService;
-
-	@Inject
-	private MatrixReportService m_matrixReportService;
-
-	@Inject
-	private DependencyReportService m_dependencyReportService;
-
-	@Inject
-	private TopReportService m_topReportService;
-
-	@Inject
-	private BugReportService m_bugReportService;
-
-	@Inject
-	private HeavyReportService m_heavyReportService;
-
-	@Inject
-	private AlertReportService m_alertReportService;
-
-	@Inject
-	private ServiceReportService m_serviceReportService;
-
-	@Inject
-	private StateReportService m_stateReportService;
-
-	@Inject
-	private MetricReportService m_metricReportService;
-
-	@Inject
-	private UtilizationReportService m_utilizationReportService;
-
-	@Inject
-	private NetTopologyReportService m_netTopologyReportService;
+	@Override
+	public void initialize() throws InitializationException {
+		m_reportServices = lookupMap(ReportService.class);
+	}
 
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
@@ -224,75 +199,116 @@ public class DefaultReportService implements ReportService {
 		}
 	}
 
+	@Override
+	public AlertReport queryAlertReport(String domain, Date start, Date end) {
+		ReportService<AlertReport> reportService = m_reportServices.get(Constants.REPORT_ALERT);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
 	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
-		return m_transactionReportService.queryAllDomainNames(start, end, name);
+		ReportService<TransactionReport> reportService = m_reportServices.get(TransactionAnalyzer.ID);
+
+		return reportService.queryAllDomainNames(start, end, name);
 	}
 
 	public BugReport queryBugReport(String domain, Date start, Date end) {
-		return m_bugReportService.queryReport(domain, start, end);
+		ReportService<BugReport> reportService = m_reportServices.get(Constants.REPORT_BUG);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public CrossReport queryCrossReport(String domain, Date start, Date end) {
-		return m_crossReportService.queryReport(domain, start, end);
+		ReportService<CrossReport> reportService = m_reportServices.get(CrossAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
-		return m_dependencyReportService.queryReport(domain, start, end);
+		ReportService<DependencyReport> reportService = m_reportServices.get(DependencyAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public EventReport queryEventReport(String domain, Date start, Date end) {
-		return m_eventReportService.queryReport(domain, start, end);
+		ReportService<EventReport> reportService = m_reportServices.get(EventAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end) {
-		return m_heartbeatReportService.queryReport(domain, start, end);
+		ReportService<HeartbeatReport> reportService = m_reportServices.get(HeartbeatAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public HeavyReport queryHeavyReport(String domain, Date start, Date end) {
-		return m_heavyReportService.queryReport(domain, start, end);
+		ReportService<HeavyReport> reportService = m_reportServices.get(Constants.REPORT_HEAVY);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end) {
-		return m_matrixReportService.queryReport(domain, start, end);
+		ReportService<MatrixReport> reportService = m_reportServices.get(MatrixAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	public MetricReport queryMetricReport(String domain, Date start, Date end) {
-		return m_metricReportService.queryReport(domain, start, end);
-	}
+		ReportService<MetricReport> reportService = m_reportServices.get(MetricAnalyzer.ID);
 
-	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
-		return m_problemReportService.queryReport(domain, start, end);
-	}
-
-	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
-		return m_serviceReportService.queryReport(domain, start, end);
-	}
-
-	public StateReport queryStateReport(String domain, Date start, Date end) {
-		return m_stateReportService.queryReport(domain, start, end);
-	}
-
-	public TopReport queryTopReport(String domain, Date start, Date end) {
-		return m_topReportService.queryReport(domain, start, end);
-	}
-
-	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
-		return m_transactionReportService.queryReport(domain, start, end);
-	}
-
-	@Override
-	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
-		return m_utilizationReportService.queryReport(domain, start, end);
+		return reportService.queryReport(domain, start, end);
 	}
 
 	@Override
 	public NetGraphSet queryNetTopologyReport(String domain, Date start, Date end) {
-		return m_netTopologyReportService.queryHourlyReport(domain, start, end);
+		ReportService<NetGraphSet> reportService = m_reportServices.get(Constants.REPORT_NET_TOPOLOGY);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
+		ReportService<ProblemReport> reportService = m_reportServices.get(ProblemAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 	@Override
-	public AlertReport queryAlertReport(String domain, Date start, Date end) {
-		return m_alertReportService.queryReport(domain, start, end);
+   public RouterConfig queryRouterConfigReport(String domain, Date start, Date end) {
+		ReportService<RouterConfig> reportService = m_reportServices.get(Constants.REPORT_ROUTER);
+
+		return reportService.queryReport(domain, start, end);
+   }
+
+	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
+		ReportService<ServiceReport> reportService = m_reportServices.get(Constants.REPORT_SERVICE);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	public StateReport queryStateReport(String domain, Date start, Date end) {
+		ReportService<StateReport> reportService = m_reportServices.get(StateAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	public TopReport queryTopReport(String domain, Date start, Date end) {
+		ReportService<TopReport> reportService = m_reportServices.get(TopAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
+		ReportService<TransactionReport> reportService = m_reportServices.get(TransactionAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	@Override
+	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
+		ReportService<UtilizationReport> reportService = m_reportServices.get(Constants.REPORT_UTILIZATION);
+
+		return reportService.queryReport(domain, start, end);
 	}
 
 }

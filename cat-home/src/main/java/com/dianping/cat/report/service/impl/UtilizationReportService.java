@@ -62,7 +62,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 					reportModel.accept(merger);
 				}
 			} catch (DalNotFoundException e) {
-				m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
+				//ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -143,7 +143,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
+						//ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -171,7 +171,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 				return queryFromMonthlyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
+			//ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -191,7 +191,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 				return queryFromWeeklyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start);
+			//ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

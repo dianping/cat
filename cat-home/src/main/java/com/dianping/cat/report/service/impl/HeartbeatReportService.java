@@ -74,7 +74,7 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
+						//ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.5</version>
+		<version>1.1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>

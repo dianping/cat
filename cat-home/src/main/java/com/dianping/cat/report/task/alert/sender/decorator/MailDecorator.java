@@ -8,7 +8,6 @@ public class MailDecorator extends DefaultDecorator {
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-
 		String content;
 
 		if ("exception".equals(alert.getType())) {

@@ -42,6 +42,9 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ClientConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageStatistics</role>
 					<field-name>m_statistics</field-name>
 				</requirement>
