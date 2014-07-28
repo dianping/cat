@@ -42,7 +42,7 @@ public class SmsSender implements Sender, LogEnabled {
 	}
 
 	private boolean sendSms(AlertMessageEntity message) {
-		String title = message.getTitle();
+		String content = message.getTitle() + " " + message.getContent();
 		List<String> phones = message.getReceivers();
 		StringBuilder sb = new StringBuilder();
 
@@ -50,7 +50,7 @@ public class SmsSender implements Sender, LogEnabled {
 			InputStream in = null;
 			try {
 				String format = "http://10.1.1.84/sms/send/json?jsonm={type:808,mobile:\"%s\",pair:{body=\"%s\"}}";
-				String urlAddress = String.format(format, phone, URLEncoder.encode(title, "utf-8"));
+				String urlAddress = String.format(format, phone, URLEncoder.encode(content, "utf-8"));
 				URL url = new URL(urlAddress);
 				URLConnection conn = url.openConnection();
 
