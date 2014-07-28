@@ -148,7 +148,10 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
-
+	}
+	
+	public String getServerConfigUrl(){
+		return "http://server";
 	}
 
 	public boolean isCatEnabled() {
