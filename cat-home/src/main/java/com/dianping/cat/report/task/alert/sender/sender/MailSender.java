@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.sender.dispatcher;
+package com.dianping.cat.report.task.alert.sender.sender;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -9,7 +9,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class MailDispatcher implements Dispatcher, LogEnabled {
+public class MailSender implements Sender, LogEnabled {
 
 	@Inject
 	private MailSMS m_mailSms;

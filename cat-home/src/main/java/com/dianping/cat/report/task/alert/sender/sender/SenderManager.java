@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.sender.dispatcher;
+package com.dianping.cat.report.task.alert.sender.sender;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +14,10 @@ import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
-import com.dianping.cat.report.task.alert.sender.receiver.Seeker;
+import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
 import com.dianping.cat.system.config.AlertPolicyManager;
 
-public class DispatcherManager implements Initializable {
+public class SenderManager implements Initializable {
 
 	@Inject
 	private AlertPolicyManager m_policyManager;
@@ -26,21 +26,21 @@ public class DispatcherManager implements Initializable {
 	private DecoratorManager m_decoratorManager;
 
 	@Inject
-	private Seeker m_seeker;
+	private Contactor m_seeker;
 
 	@Inject
 	protected AlertManager m_alertManager;
 
-	@Inject(type = Dispatcher.class, value = MailDispatcher.ID)
-	protected Dispatcher m_mailDispatcher;
+	@Inject(type = Sender.class, value = MailSender.ID)
+	protected Sender m_mailDispatcher;
 
-	@Inject(type = Dispatcher.class, value = WeixinDispatcher.ID)
-	protected Dispatcher m_weixinDispatcher;
+	@Inject(type = Sender.class, value = WeixinSender.ID)
+	protected Sender m_weixinDispatcher;
 
-	@Inject(type = Dispatcher.class, value = SmsDispatcher.ID)
-	protected Dispatcher m_smsDispatcher;
+	@Inject(type = Sender.class, value = SmsSender.ID)
+	protected Sender m_smsDispatcher;
 
-	private Map<String, Dispatcher> m_dispatchers = new HashMap<String, Dispatcher>();
+	private Map<String, Sender> m_dispatchers = new HashMap<String, Sender>();
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -65,7 +65,7 @@ public class DispatcherManager implements Initializable {
 
 				m_alertManager.storeAlert(alert, message);
 
-				Dispatcher dispatcher = m_dispatchers.get(channelName);
+				Sender dispatcher = m_dispatchers.get(channelName);
 				dispatcher.send(message, type);
 			}
 		}
@@ -73,15 +73,15 @@ public class DispatcherManager implements Initializable {
 		return false;
 	}
 
-	public void setMailDispatcher(Dispatcher dispatcher) {
+	public void setMailDispatcher(Sender dispatcher) {
 		m_mailDispatcher = dispatcher;
 	}
 
-	public void setSmsDispatcher(Dispatcher dispatcher) {
+	public void setSmsDispatcher(Sender dispatcher) {
 		m_smsDispatcher = dispatcher;
 	}
 
-	public void setWeixinDispatcher(Dispatcher dispatcher) {
+	public void setWeixinDispatcher(Sender dispatcher) {
 		m_weixinDispatcher = dispatcher;
 	}
 

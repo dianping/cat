@@ -46,7 +46,7 @@ public abstract class DefaultDecorator implements Decorator {
 		try {
 			StringBuilder sb = new StringBuilder();
 			String domain = alert.getGroup();
-			String date = m_fromat.format(alert.getAlertDate());
+			String date = m_fromat.format(alert.getDate());
 
 			sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
 			sb.append(alert.getContent()).append("[时间: ").append(date).append("]");

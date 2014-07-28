@@ -8,7 +8,7 @@ public class AlertEntity {
 
 	private String m_id;
 
-	private Date m_alertDate;
+	private Date m_date;
 
 	private String m_type;
 
@@ -24,8 +24,8 @@ public class AlertEntity {
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
-	public Date getAlertDate() {
-		return m_alertDate;
+	public Date getDate() {
+		return m_date;
 	}
 
 	public String getContent() {
@@ -60,8 +60,8 @@ public class AlertEntity {
 		return m_type;
 	}
 
-	public void setAlertDate(Date alertDate) {
-		m_alertDate = alertDate;
+	public void setDate(Date alertDate) {
+		m_date = alertDate;
 	}
 
 	public void setContent(String content) {
@@ -101,7 +101,7 @@ public class AlertEntity {
 		private AlertEntity m_alertEntity = new AlertEntity();
 
 		public AlertEntityBuilder buildDate(Date date) {
-			m_alertEntity.setAlertDate(date);
+			m_alertEntity.setDate(date);
 			return this;
 		}
 
