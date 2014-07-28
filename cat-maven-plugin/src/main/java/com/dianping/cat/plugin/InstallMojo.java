@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.Pattern;
@@ -54,9 +55,12 @@ public class InstallMojo extends AbstractMojo {
 	private boolean m_verbose = false;
 
 	private void createDatabase(Statement stmt) throws SQLException {
+		ResultSet result = null;
 		try {
-			stmt.executeUpdate("create database cat");
-
+			result = stmt.executeQuery("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'cat'");
+			if (!result.next()) {
+				stmt.executeUpdate("create database cat");
+			}
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1007) {
 				getLog().info("Database 'cat' already exists, drop it first...");
@@ -67,6 +71,8 @@ public class InstallMojo extends AbstractMojo {
 			} else {
 				throw e;
 			}
+		} finally {
+			result.close();
 		}
 	}
 
@@ -217,7 +223,6 @@ public class InstallMojo extends AbstractMojo {
 			      }
 		      });
 		m_user = PropertyProviders.fromConsole().forString("jdbc.user", "Please input username:", null, null, null);
-		m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, "",
-		      null);
+		m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, "", null);
 	}
 }
