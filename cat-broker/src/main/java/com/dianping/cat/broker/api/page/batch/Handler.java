@@ -142,7 +142,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			if (cityId != null && operatorId != null) {
 				for (String record : records) {
-					processOneRecord(cityId, operatorId, record);
+					try {
+						if (!StringUtils.isEmpty(record)) {
+							processOneRecord(cityId, operatorId, record);
+						}
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			}
 		}
