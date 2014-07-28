@@ -30,7 +30,7 @@ public class WeixinSender implements Sender, LogEnabled {
 		try {
 			String messageStr = message.toString();
 
-			if (!sendWeixin(message)) {
+			if (!sendWeixin(message, type)) {
 				Cat.logEvent("AlertWeixinError", type, Event.SUCCESS, messageStr);
 				m_logger.info("AlertWeixinError " + messageStr);
 				return false;
@@ -45,7 +45,7 @@ public class WeixinSender implements Sender, LogEnabled {
 		}
 	}
 
-	private boolean sendWeixin(AlertMessageEntity message) {
+	private boolean sendWeixin(AlertMessageEntity message, String type) {
 		String domain = message.getGroup();
 		String title = message.getTitle();
 		String content = message.getContent();
@@ -55,19 +55,21 @@ public class WeixinSender implements Sender, LogEnabled {
 		String urlTitle = null;
 		String urlContent = null;
 		String urlWeixins = null;
+		String urlType = null;
 
 		try {
 			urlDomain = URLEncoder.encode(domain, "UTF-8");
 			urlTitle = URLEncoder.encode(title, "UTF-8");
 			urlContent = URLEncoder.encode(content.replaceAll("<a href.*(?=</a>)</a>", ""), "UTF-8");
 			urlWeixins = URLEncoder.encode(weixins, "UTF-8");
+			urlType = URLEncoder.encode(type, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			Cat.logError("transfer weixin content error:" + title + " " + content + " " + domain + " " + weixins, e);
 			return false;
 		}
 
 		String urlParameters = "domain=" + urlDomain + "&email=" + urlWeixins + "&title=" + urlTitle + "&content="
-		      + urlContent;
+		      + urlContent + "&type=" + urlType;
 
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(WEIXIN_URL).openConnection();
