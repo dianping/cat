@@ -66,9 +66,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		HttpServletResponse response = ctx.getHttpServletResponse();
 		String userIp = m_util.getRemoteIp(request);
-		
-		userIp = "58.24.23.252";
-		
 		String version = payload.getVersion();
 		boolean success = true;
 
@@ -164,10 +161,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			AppData appData = new AppData();
 
 			try {
-				appData.setTimestamp(Long.parseLong(items[0]));
 				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[4], "utf-8"));
 
 				if (command != null) {
+					appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setCommand(command);
 					appData.setNetwork(Integer.parseInt(items[1]));
 					appData.setVersion(Integer.parseInt(items[2]));
