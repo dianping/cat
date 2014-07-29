@@ -24,6 +24,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
@@ -289,7 +290,7 @@ public class ChannelManager implements Task {
 	private Pair<Boolean, String> serverConfigChanged() {
 		String current = loadServerConfig();
 
-		if (current != null && !current.equals(m_activeServerConfig)) {
+		if (!StringUtils.isEmpty(current) && !current.equals(m_activeServerConfig)) {
 			return new Pair<Boolean, String>(true, current);
 		} else {
 			return new Pair<Boolean, String>(false, current);
