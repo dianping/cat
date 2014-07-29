@@ -1,6 +1,8 @@
 package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -17,6 +19,8 @@ import com.dianping.cat.report.service.AbstractReportService;
 
 public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
+	private Map<Long, RouterConfig> m_configs = new LinkedHashMap<Long, RouterConfig>();
+
 	@Override
 	public RouterConfig makeReport(String domain, Date start, Date end) {
 		RouterConfig report = new RouterConfig(domain);
@@ -28,20 +32,28 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
 	@Override
 	public RouterConfig queryDailyReport(String domain, Date start, Date end) {
-		String name = Constants.REPORT_ROUTER;
+		long time = start.getTime();
+		RouterConfig config = m_configs.get(time);
 
-		try {
-			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, start,
-			      DailyReportEntity.READSET_FULL);
-			RouterConfig config = queryFromDailyBinary(report.getId(), domain);
+		if (config == null) {
+			String name = Constants.REPORT_ROUTER;
 
+			try {
+				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, start,
+				      DailyReportEntity.READSET_FULL);
+				config = queryFromDailyBinary(report.getId(), domain);
+
+				m_configs.put(time, config);
+				return config;
+			} catch (DalNotFoundException e) {
+				// ignore
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			return null;
+		} else {
 			return config;
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (Exception e) {
-			Cat.logError(e);
 		}
-		return null;
 	}
 
 	private RouterConfig queryFromDailyBinary(int id, String domain) throws DalException {

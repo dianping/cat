@@ -74,9 +74,8 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setContent(report.toString());
 			}
-			break;
 		}
-		model.setAction(Action.API);
+		model.setAction(action);
 		model.setPage(SystemPage.ROUTER);
 
 		if (!ctx.isProcessStopped()) {
