@@ -228,7 +228,7 @@ public class ChannelManager implements Task {
 	public void run() {
 		while (m_active) {
 			m_count++;
-			
+
 			if (shouldCheckServerConfig(m_count)) {
 				Pair<Boolean, String> pair = serverConfigChanged();
 
@@ -297,7 +297,7 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
-		int duration = 3600;
+		int duration = 60 * 5;
 
 		if (count % (duration) == 0) {
 			return true;
