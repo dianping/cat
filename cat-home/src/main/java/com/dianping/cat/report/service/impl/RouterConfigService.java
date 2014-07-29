@@ -28,17 +28,16 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
 	@Override
 	public RouterConfig queryDailyReport(String domain, Date start, Date end) {
-		long startTime = start.getTime();
 		String name = Constants.REPORT_ROUTER;
 
 		try {
-			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
+			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, start,
 			      DailyReportEntity.READSET_FULL);
 			RouterConfig config = queryFromDailyBinary(report.getId(), domain);
 
 			return config;
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -51,7 +50,7 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
 		} else {
-			return new RouterConfig(domain);
+			return null;
 		}
 	}
 

@@ -157,8 +157,12 @@ public class ClientConfigManager implements LogEnabled {
 			List<Server> servers = m_config.getServers();
 
 			for (Server server : servers) {
-				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp(), server.getPort(), getDomain()
-				      .getId());
+				Integer httpPort = server.getHttpPort();
+
+				if (httpPort == null) {
+					httpPort = 8080;
+				}
+				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp(), httpPort, getDomain().getId());
 			}
 		}
 		return null;

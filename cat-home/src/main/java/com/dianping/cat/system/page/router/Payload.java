@@ -1,6 +1,5 @@
 package com.dianping.cat.system.page.router;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,7 +35,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public Date getDate() {
 		try {
 			return m_sdf.parse(m_date);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			return TimeUtil.getCurrentDay(-1);
 		}
 	}

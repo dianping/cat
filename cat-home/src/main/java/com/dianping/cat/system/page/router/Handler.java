@@ -57,9 +57,9 @@ public class Handler implements PageHandler<Context> {
 				if (domain == null) {
 					m_configManager.getRouterConfig().getDefaultServers();
 
-					List<String> servers = m_configManager.queryRandomServers();
+					List<Server> servers = m_configManager.queryServersByDomain(payload.getDomain());
 
-					str = buildServerStr(servers, m_configManager.queryPort());
+					str = buildServerStr(servers);
 				} else {
 					List<Server> servers = domain.getServers();
 
@@ -82,15 +82,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private String buildServerStr(List<String> servers, int port) {
-		StringBuilder sb = new StringBuilder();
-
-		for (String server : servers) {
-			sb.append(server).append(":").append(port).append(";");
-		}
-		return sb.toString();
 	}
 
 	private String buildServerStr(List<Server> servers) {

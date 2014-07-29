@@ -95,6 +95,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					MessageTree tree = m_queue.poll();
 
 					if (tree != null) {
+						System.out.println("write to====" + future.getChannel().getRemoteAddress());
+						
 						sendInternal(tree);
 						tree.setMessage(null);
 					}
@@ -102,6 +104,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					m_logger.error("Error when sending message over TCP socket!", t);
 				}
 			} else {
+				System.out.println("channel  can't write");
 				try {
 					Thread.sleep(5);
 				} catch (Exception e) {
