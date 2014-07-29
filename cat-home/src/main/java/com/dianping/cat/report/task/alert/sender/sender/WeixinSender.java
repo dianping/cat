@@ -13,6 +13,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.report.task.alert.sender.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class WeixinSender implements Sender, LogEnabled {
@@ -21,7 +22,7 @@ public class WeixinSender implements Sender, LogEnabled {
 
 	private static final String SUCCESS_TEXT = "{\"success\":\"1\"}";
 
-	public static final String ID = "weixin";
+	public static final String ID = AlertConstants.WEIXIN;
 
 	private Logger m_logger;
 
@@ -50,6 +51,7 @@ public class WeixinSender implements Sender, LogEnabled {
 		String title = message.getTitle();
 		String content = message.getContent();
 		String weixins = message.getReceiverString();
+		StringBuilder paraBuilder = new StringBuilder(300);
 
 		String urlDomain = null;
 		String urlTitle = null;
@@ -68,8 +70,12 @@ public class WeixinSender implements Sender, LogEnabled {
 			return false;
 		}
 
-		String urlParameters = "domain=" + urlDomain + "&email=" + urlWeixins + "&title=" + urlTitle + "&content="
-		      + urlContent + "&type=" + urlType;
+		paraBuilder.append("domain=").append(urlDomain);
+		paraBuilder.append("&email=").append(urlWeixins);
+		paraBuilder.append("&title=").append(urlTitle);
+		paraBuilder.append("&content=").append(urlContent);
+		paraBuilder.append("&type=").append(urlType);
+		String urlParameters = paraBuilder.toString();
 
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(WEIXIN_URL).openConnection();
