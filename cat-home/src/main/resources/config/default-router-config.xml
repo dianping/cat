@@ -12,5 +12,6 @@
    <domain id="Cat">
       <server id="10.1.6.37" port="2280"/>
       <server id="10.1.6.128" port="2280"/>
+      <server id="127.0.0.1" port="2280"/>
    </domain>
 </router-config>
