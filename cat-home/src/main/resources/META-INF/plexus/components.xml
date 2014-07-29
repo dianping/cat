@@ -564,24 +564,105 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-			<role-hint>mail</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.MailSender</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>business</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-			<role-hint>sms</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.SmsSender</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>network</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-			<role-hint>weixin</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.WeixinSender</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>system</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.SystemContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>exception</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>thirdParty</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role-hint>business</role-hint>
+					<field-name>businessContactor</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role-hint>network</role-hint>
+					<field-name>networkContactor</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role-hint>system</role-hint>
+					<field-name>exceptionContactor</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role-hint>exception</role-hint>
+					<field-name>systemContactor</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role-hint>thirdParty</role-hint>
+					<field-name>thirdpartyContactor</field-name>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>mail</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.MailDecorator</implementation>
+			<role-hint>business</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
@@ -590,8 +671,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>sms</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SmsDecorator</implementation>
+			<role-hint>network</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
@@ -600,11 +681,62 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>weixin</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.WeixinDecorator</implementation>
+			<role-hint>exception</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>system</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>thirdParty</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role-hint>business</role-hint>
+					<field-name>businessDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role-hint>network</role-hint>
+					<field-name>networkDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role-hint>exception</role-hint>
+					<field-name>exceptionDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role-hint>system</role-hint>
+					<field-name>systemDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role-hint>thirdParty</role-hint>
+					<field-name>thirdpartyDecorator</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -618,40 +750,60 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role-hint>mail</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.spliter.MailSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role-hint>sms</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.spliter.SmsSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role-hint>weixin</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.spliter.WeixinSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
 					<role-hint>mail</role-hint>
-					<field-name>mailDecorator</field-name>
+					<field-name>mailSpliter</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
 					<role-hint>sms</role-hint>
-					<field-name>smsDecorator</field-name>
+					<field-name>smsSpliter</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
 					<role-hint>weixin</role-hint>
-					<field-name>weixinDecorator</field-name>
+					<field-name>weixinSpliter</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.Contactor</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
+			<role-hint>mail</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.sender.MailSender</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
+			<role-hint>sms</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.sender.SmsSender</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
+			<role-hint>weixin</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.sender.WeixinSender</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
@@ -685,10 +837,13 @@
 					<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.manager.AlertEntityService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>

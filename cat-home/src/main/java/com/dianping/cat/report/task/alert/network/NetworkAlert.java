@@ -11,6 +11,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.BaseAlert;
+import com.dianping.cat.report.task.alert.sender.AlertConstants;
 
 public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
@@ -21,7 +22,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "network";
+		return AlertConstants.NETWORK;
 	}
 
 	@Override

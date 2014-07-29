@@ -15,8 +15,9 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.alert.manager.AlertEntityService;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
-import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
+import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.task.alert.sender.spliter.SpliterManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 
 public class AlertManager implements Initializable {
@@ -28,15 +29,18 @@ public class AlertManager implements Initializable {
 	private DecoratorManager m_decoratorManager;
 
 	@Inject
-	private Contactor m_contactor;
+	private ContactorManager m_contactorManager;
 
 	@Inject
 	protected AlertEntityService m_alertEntityService;
 
 	@Inject
+	protected SpliterManager m_splitterManager;
+
+	@Inject
 	protected SenderManager m_senderManager;
 
-	private BlockingQueue<AlertEntity> m_alerts = new LinkedBlockingDeque<AlertEntity>();
+	private BlockingQueue<AlertEntity> m_alerts = new LinkedBlockingDeque<AlertEntity>(10000);
 
 	private boolean send(AlertEntity alert) {
 		boolean result = false;
@@ -47,10 +51,11 @@ public class AlertManager implements Initializable {
 
 		for (AlertChannel channel : channels) {
 			String channelName = channel.getName();
-			Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert, channelName);
-			List<String> receivers = m_contactor.queryReceivers(group, channel, type);
-			String content = pair.getValue();
-			AlertMessageEntity message = new AlertMessageEntity(group, pair.getKey(), content, receivers);
+			Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
+			String title = pair.getKey();
+			String content = m_splitterManager.process(pair.getValue(), channelName);
+			List<String> receivers = m_contactorManager.queryReceivers(group, channelName, type);
+			AlertMessageEntity message = new AlertMessageEntity(group, title, content, receivers);
 
 			m_alertEntityService.storeAlert(alert, message);
 

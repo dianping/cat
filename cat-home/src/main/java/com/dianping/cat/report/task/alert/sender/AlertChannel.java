@@ -2,17 +2,17 @@ package com.dianping.cat.report.task.alert.sender;
 
 public enum AlertChannel {
 
-	MAIL("mail"),
+	MAIL(AlertConstants.MAIL),
 
-	SMS("sms"),
+	SMS(AlertConstants.SMS),
 
-	WEIXIN("weixin");
+	WEIXIN(AlertConstants.WEIXIN);
 
 	private String m_name;
 
 	public static AlertChannel findByName(String name) {
 		for (AlertChannel channel : values()) {
-			if(channel.getName().equals(name)){
+			if (channel.getName().equals(name)) {
 				return channel;
 			}
 		}
