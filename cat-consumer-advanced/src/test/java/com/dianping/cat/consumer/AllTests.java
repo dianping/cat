@@ -39,8 +39,6 @@ DependencyReportMergerTest.class,
 
 ProductLineConfigManagerTest.class,
 
-MetricConfigManagerTest.class
-
 })
 public class AllTests {
 
