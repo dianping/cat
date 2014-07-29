@@ -3,26 +3,27 @@ package com.dianping.cat.report.task.alert.sender.receiver;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.system.config.AlertConfigManager;
 
 public abstract class ProjectContactor extends DefaultContactor implements Contactor {
 
 	@Inject
-	protected ProductLineConfigManager m_productLineConfigManager;
+	protected ProjectDao m_projectDao;
 
 	@Inject
 	protected AlertConfigManager m_configManager;
 
-	protected ProductLine m_productline = new ProductLine();
-
 	@Override
-	public List<String> queryEmailContactors() {
+	public List<String> queryEmailContactors(String id) {
+		Project project = queryProject(id);
 		List<String> mailReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -30,14 +31,15 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 			return mailReceivers;
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
-			mailReceivers.addAll(split(m_productline.getEmail()));
+			mailReceivers.addAll(split(project.getEmail()));
 
 			return mailReceivers;
 		}
 	}
 
 	@Override
-	public List<String> querySmsContactors() {
+	public List<String> querySmsContactors(String id) {
+		Project project = queryProject(id);
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -45,14 +47,15 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 			return smsReceivers;
 		} else {
 			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
-			smsReceivers.addAll(split(m_productline.getPhone()));
+			smsReceivers.addAll(split(project.getPhone()));
 
 			return smsReceivers;
 		}
 	}
 
 	@Override
-	public List<String> queryWeiXinContactors() {
+	public List<String> queryWeiXinContactors(String id) {
+		Project project = queryProject(id);
 		List<String> weixinReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -60,17 +63,19 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 			return weixinReceivers;
 		} else {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
-			weixinReceivers.addAll(split(m_productline.getEmail()));
+			weixinReceivers.addAll(split(project.getEmail()));
 
 			return weixinReceivers;
 		}
 	}
 
-	public void setModule(String productlineName) {
+	private Project queryProject(String domainName) {
 		try {
-			m_productline = m_productLineConfigManager.queryProductLine(productlineName);
-		} catch (Exception e) {
-			Cat.logError("query productline error:" + productlineName, e);
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			return project;
+		} catch (DalException e) {
+			Cat.logError("query project error:" + domainName, e);
+			return new Project();
 		}
 	}
 
