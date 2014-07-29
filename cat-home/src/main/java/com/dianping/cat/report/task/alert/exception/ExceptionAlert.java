@@ -20,10 +20,10 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
-import com.dianping.cat.report.task.alert.sender.dispatcher.DispatcherManager;
+import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -40,7 +40,7 @@ public class ExceptionAlert implements Task {
 	private ModelService<TopReport> m_topService;
 
 	@Inject
-	protected DispatcherManager m_dispatcherManager;
+	protected AlertManager m_sendManager;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE;
 
@@ -56,7 +56,7 @@ public class ExceptionAlert implements Task {
 	}
 
 	public String getName() {
-		return "exception";
+		return AlertConstants.EXCEPTION;
 	}
 
 	private TopReport queryTopReport(Date start) {
@@ -109,13 +109,17 @@ public class ExceptionAlert implements Task {
 
 						for (AlertException exception : exceptions) {
 							String metricName = exception.getName();
+							AlertEntity entity = new AlertEntity();
+							
+							entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
+							entity.setMetric(metricName).setType(getName()).setGroup(domain);
 
-							AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
+							AlertExceptionBuilder builder = new AlertEntity().new AlertExceptionBuilder();
 							builder.buildDate(new Date()).buildLevel(exception.getType()).buildContent(exception.toString());
 							builder.buildMetric(metricName).buildProductline(domain).buildType(getName()).buildGroup(domain);
 							AlertEntity alertEntity = builder.getAlertEntity();
 							
-							//m_dispatcherManager.send(alertEntity);
+							m_sendManager.addAlert(entity);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);

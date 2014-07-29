@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 
 public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 
@@ -28,7 +28,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	private Map<String, DomainInfo> m_infos = new LinkedHashMap<String, DomainInfo>();
 
@@ -44,7 +44,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		m_reportService = (ReportService) lookup(ReportService.class);
+		m_reportService = (ReportServiceManager) lookup(ReportServiceManager.class);
 
 		long start = m_sdf.parse(m_start).getTime();
 		long end = m_sdf.parse(m_end).getTime();

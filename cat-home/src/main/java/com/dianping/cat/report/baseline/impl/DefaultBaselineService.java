@@ -32,7 +32,7 @@ public class DefaultBaselineService implements BaselineService {
 
 		@Override
 		protected boolean removeEldestEntry(Entry<String, Baseline> eldest) {
-			return size() > 1000;
+			return size() > 5000;
 		}
 	};
 

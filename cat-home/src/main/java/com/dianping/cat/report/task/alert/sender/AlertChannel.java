@@ -1,14 +1,25 @@
 package com.dianping.cat.report.task.alert.sender;
 
+import com.dianping.cat.report.task.alert.AlertConstants;
+
 public enum AlertChannel {
 
-	MAIL("mail"),
+	MAIL(AlertConstants.MAIL),
 
-	SMS("sms"),
+	SMS(AlertConstants.SMS),
 
-	WEIXIN("weixin");
+	WEIXIN(AlertConstants.WEIXIN);
 
 	private String m_name;
+
+	public static AlertChannel findByName(String name) {
+		for (AlertChannel channel : values()) {
+			if (channel.getName().equals(name)) {
+				return channel;
+			}
+		}
+		return null;
+	}
 
 	private AlertChannel(String name) {
 		m_name = name;

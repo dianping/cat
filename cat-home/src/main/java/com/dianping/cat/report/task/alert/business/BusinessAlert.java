@@ -15,13 +15,15 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
+
+	public static String ID = AlertConstants.BUSINESS;
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
@@ -33,7 +35,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "business";
+		return ID;
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
@@ -67,15 +69,12 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
 				String metricName = buildMetricName(metricKey);
 
-				AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
-				builder.buildDate(alertResult.getAlertTime()).buildContent(alertResult.getContent())
-				      .buildLevel(alertResult.getAlertLevel());
-				builder.buildMetric(metricName).buildProductline(product).buildType(getName());
+				AlertEntity entity = new AlertEntity();
+				
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent()).setLevel(alertResult.getAlertLevel());
+				entity.setMetric(metricName).setType(getName()).setGroup(product);
 
-				builder.buildGroup(domain);
-				AlertEntity alertEntity = builder.getAlertEntity();
-
-				m_dispatcherManager.send(alertEntity);
+				m_sendManager.addAlert(entity);
 			}
 		}
 	}

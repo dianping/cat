@@ -37,7 +37,7 @@ public class CachedReportTask implements Task, LogEnabled {
 	private long m_end;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private ServerConfigManager m_configManger;

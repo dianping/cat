@@ -10,6 +10,7 @@ import org.unidal.helper.Threads.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.BaseAlert;
 
 public class SystemAlert extends BaseAlert implements Task, LogEnabled {
@@ -21,7 +22,7 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "system";
+		return AlertConstants.SYSTEM;
 	}
 
 	@Override

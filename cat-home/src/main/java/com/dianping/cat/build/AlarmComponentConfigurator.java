@@ -8,7 +8,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.system.notify.ReportRender;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 import com.dianping.cat.system.notify.ScheduledMailTask;
@@ -26,7 +26,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ScheduledMailTask.class).//
 		      req(ReportRender.class, MailSMS.class)//
-		      .req(ReportService.class, ScheduledManager.class)//
+		      .req(ReportServiceManager.class, ScheduledManager.class)//
 		      .req(MailRecordDao.class));
 
 		return all;

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.manager;
+package com.dianping.cat.report.task.alert.service;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -9,7 +9,7 @@ import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class AlertManager {
+public class AlertEntityService {
 
 	@Inject
 	private AlertDao m_alertDao;
@@ -18,7 +18,7 @@ public class AlertManager {
 		Alert alert = new Alert();
 
 		alert.setDomain(alertEntity.getGroup());
-		alert.setAlertTime(alertEntity.getAlertDate());
+		alert.setAlertTime(alertEntity.getDate());
 		alert.setCategory(alertEntity.getType() + "-alert");
 		alert.setType(alertEntity.getLevel());
 		alert.setContent(message.getTitle() + "<br/>" + message.getContent());

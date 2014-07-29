@@ -1,8 +1,9 @@
 package com.dianping.cat.system.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -16,7 +17,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.router.entity.DefaultServer;
+import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
+import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
 
 public class RouterConfigManager implements Initializable, LogEnabled {
@@ -32,8 +36,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "routerConfig";
 
-	private Map<String, Set<String>> m_configs = new HashMap<String, Set<String>>();
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -41,6 +43,47 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	public RouterConfig getRouterConfig() {
 		return m_routerConfig;
+	}
+
+	public Server queryBackUpServer() {
+		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
+	}
+
+	public List<Server> queryServersByDomain(String domain) {
+		Domain domainConfig = m_routerConfig.findDomain(domain);
+		List<Server> result = new ArrayList<Server>();
+
+		if (domainConfig == null) {
+			Map<Server, Integer> map = new HashMap<Server, Integer>();
+			List<Server> servers = queryEnableServers();
+			int length = servers.size();
+			int index = (int) (Math.random() * length);
+
+			for (int i = 0; i < 2; i++) {
+				map.put(servers.get((index + 1) % length), 0);
+			}
+			map.put(queryBackUpServer(), 0);
+
+			result = new ArrayList<Server>(map.keySet());
+		} else {
+			for (Server server : domainConfig.getServers()) {
+				result.add(server);
+			}
+		}
+		return result;
+	}
+
+	public List<Server> queryEnableServers() {
+		List<DefaultServer> servers = m_routerConfig.getDefaultServers();
+		List<Server> result = new ArrayList<Server>();
+
+		for (DefaultServer server : servers) {
+			if (server.isEnable()) {
+				result.add(new Server().setId(server.getId()).setPort(server.getPort()));
+			}
+		}
+
+		return result;
 	}
 
 	@Override
@@ -78,7 +121,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		try {
 			m_routerConfig = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
-			m_configs.clear();
+
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);

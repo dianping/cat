@@ -19,7 +19,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
@@ -28,7 +28,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	public static final String ID = Constants.REPORT_BUG;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	private SimpleDateFormat m_hourly_formate = new SimpleDateFormat("yyyyMMddHH");
 

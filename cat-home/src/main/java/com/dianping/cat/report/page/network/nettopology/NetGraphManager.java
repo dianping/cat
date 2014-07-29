@@ -30,7 +30,7 @@ import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.nettopo.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
@@ -46,7 +46,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
@@ -83,7 +83,8 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		} else if (startTime == currentHours - TimeUtil.ONE_HOUR) {
 			netGraphSet = m_lastNetGraphSet;
 		} else {
-			netGraphSet = m_reportService.queryNetTopologyReport(Constants.CAT, start, null);
+			netGraphSet = m_reportService.queryNetTopologyReport(Constants.CAT, start, new Date(start.getTime()
+			      + TimeUtil.ONE_HOUR));
 		}
 
 		if (netGraphSet != null) {

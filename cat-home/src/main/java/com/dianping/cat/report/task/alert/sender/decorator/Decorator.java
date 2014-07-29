@@ -4,10 +4,10 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public interface Decorator {
 
-	String getId();
+	public String getId();
 
-	String generateTitle(AlertEntity alert);
+	public String generateTitle(AlertEntity alert);
 
-	String generateContent(AlertEntity alert);
-
+	public String generateContent(AlertEntity alert);
+	
 }

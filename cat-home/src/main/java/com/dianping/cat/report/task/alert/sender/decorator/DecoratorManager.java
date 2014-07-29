@@ -12,39 +12,64 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class DecoratorManager implements Initializable {
 
-	@Inject(type = Decorator.class, value = MailDecorator.ID)
-	private Decorator m_mailDecorator;
+	@Inject(type = Decorator.class, value = BusinessDecorator.ID)
+	private Decorator m_businessDecorator;
 
-	@Inject(type = Decorator.class, value = WeixinDecorator.ID)
-	private Decorator m_weixinDecorator;
+	@Inject(type = Decorator.class, value = NetworkDecorator.ID)
+	private Decorator m_networkDecorator;
 
-	@Inject(type = Decorator.class, value = SmsDecorator.ID)
-	private Decorator m_smsDecorator;
+	@Inject(type = Decorator.class, value = ExceptionDecorator.ID)
+	private Decorator m_exceptionDecorator;
+
+	@Inject(type = Decorator.class, value = SystemDecorator.ID)
+	private Decorator m_systemDecorator;
+
+	@Inject(type = Decorator.class, value = ThirdpartyDecorator.ID)
+	private Decorator m_thirdpartyDecorator;
 
 	private Map<String, Decorator> m_decorators = new HashMap<String, Decorator>();
 
-	public Pair<String, String> generateTitleAndContent(AlertEntity alert, String channelName) {
-		Decorator decorator = m_decorators.get(channelName);
+	public Pair<String, String> generateTitleAndContent(AlertEntity alert) {
+		String alertType = alert.getType();
+		Decorator decorator = m_decorators.get(alertType);
 
-		return new Pair<String, String>(decorator.generateTitle(alert), decorator.generateContent(alert));
+		if (decorator != null) {
+			String title = decorator.generateTitle(alert);
+			String content = decorator.generateContent(alert);
+
+			return new Pair<String, String>(title, content);
+		} else {
+			throw new RuntimeException("error alert type:" + alert.getType());
+		}
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_decorators.put(m_mailDecorator.getId(), m_mailDecorator);
-		m_decorators.put(m_weixinDecorator.getId(), m_weixinDecorator);
-		m_decorators.put(m_smsDecorator.getId(), m_smsDecorator);
+		m_decorators.put(m_businessDecorator.getId(), m_businessDecorator);
+		m_decorators.put(m_networkDecorator.getId(), m_networkDecorator);
+		m_decorators.put(m_exceptionDecorator.getId(), m_exceptionDecorator);
+		m_decorators.put(m_systemDecorator.getId(), m_systemDecorator);
+		m_decorators.put(m_thirdpartyDecorator.getId(), m_thirdpartyDecorator);
 	}
 
-	public void setMailDecorator(Decorator decorator) {
-		m_mailDecorator = decorator;
+	public void setBusinessDecorator(Decorator decorator) {
+		m_businessDecorator = decorator;
 	}
 
-	public void setSmsDecorator(Decorator decorator) {
-		m_smsDecorator = decorator;
+	public void setNetworkDecorator(Decorator decorator) {
+		m_networkDecorator = decorator;
 	}
 
-	public void setWeixinDecorator(Decorator decorator) {
-		m_weixinDecorator = decorator;
+	public void setExceptionDecorator(Decorator decorator) {
+		m_exceptionDecorator = decorator;
 	}
+
+	public void setSystemDecorator(Decorator decorator) {
+		m_systemDecorator = decorator;
+	}
+
+	public void setThirdpartyDecorator(Decorator decorator) {
+		m_thirdpartyDecorator = decorator;
+	}
+
 }

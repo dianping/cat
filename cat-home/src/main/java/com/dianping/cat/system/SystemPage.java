@@ -11,7 +11,9 @@ public enum SystemPage implements Page {
 
    CONFIG("config", "config", "Config", "Config", false),
 
-   PLUGIN("plugin", "plugin", "Plugin", "Plugin", true);
+   PLUGIN("plugin", "plugin", "Plugin", "Plugin", true),
+
+   ROUTER("router", "router", "Router", "Router", true);
 
    private String m_name;
 

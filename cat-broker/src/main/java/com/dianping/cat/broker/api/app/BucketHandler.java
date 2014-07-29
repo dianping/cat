@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.app;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,10 +15,6 @@ import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.config.app.AppDataService;
 
 public class BucketHandler implements Task {
-
-	private static int ONE_MINUTE = 60 * 1000;
-
-	private static int ONE_DAY = 24 * 60 * ONE_MINUTE;
 
 	private AppDataQueue m_appDataQueue;
 
@@ -37,14 +34,24 @@ public class BucketHandler implements Task {
 	}
 
 	private void end() {
-		int minute = (int) (m_startTime % ONE_DAY / ONE_MINUTE);
-		Date period = new Date(m_startTime - minute * ONE_MINUTE);
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(m_startTime);
+
+		int minute = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+		minute = minute - minute % 5;
+		
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		
+		Date period = new Date(cal.getTimeInMillis());
 		List<AppDataCommand> appDataCommands = new ArrayList<AppDataCommand>();
 		int batchSize = 100;
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
 			HashMap<String, AppData> value = outerEntry.getValue();
-			
+
 			for (Entry<String, AppData> entry : value.entrySet()) {
 				AppData appData = entry.getValue();
 				AppDataCommand proto = new AppDataCommand();

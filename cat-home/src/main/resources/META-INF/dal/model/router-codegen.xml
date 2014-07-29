@@ -6,8 +6,7 @@
   </entity>
   <entity name="default-server">
     <attribute name="id" value-type="String" />
-    <attribute name="weight" value-type="int" />
-    <attribute name="port" value-type="int" />
+    <attribute name="port" value-type="int"/>
     <attribute name="enable" value-type="boolean" />
   </entity>
   <entity name="domain">
