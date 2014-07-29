@@ -7,29 +7,83 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
+import javax.mail.Authenticator;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.HtmlEmail;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.report.task.alert.sender.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class MailSender implements Sender, LogEnabled {
+public class MailSender implements Initializable, Sender, LogEnabled {
 
-	public static final String ID = "mail";
+	@Inject
+	private ServerConfigManager m_manager;
+
+	public static final String ID = AlertConstants.MAIL;
+
+	private String m_name;
+
+	private String m_password;
+
+	private Authenticator m_authenticator;
 
 	private Logger m_logger;
+
+	private HtmlEmail createHtmlEmail() throws EmailException {
+		HtmlEmail email = new HtmlEmail();
+
+		email.setHostName("smtp.gmail.com");
+		email.setSmtpPort(465);
+		email.setAuthenticator(m_authenticator);
+		email.setSSL(true);
+		email.setFrom(m_name);
+		email.setCharset("utf-8");
+		return email;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
+	public void initialize() {
+		m_name = m_manager.getEmailAccount();
+		m_password = m_manager.getEmailPassword();
+		m_authenticator = new DefaultAuthenticator(m_name, m_password);
+	}
 
 	@Override
 	public boolean send(AlertMessageEntity message, String type) {
 		try {
 			String messageStr = message.toString();
 
-			if (!sendEmail(message)) {
-				Cat.logEvent("AlertMailError", type, Event.SUCCESS, messageStr);
-				m_logger.info("AlertMailError " + messageStr);
-				return false;
+			boolean result = sendEmail(message);
+
+			if (!result) {
+				Cat.logEvent("InternalEmailSendError", type, Event.SUCCESS, messageStr);
+				boolean gmail = sendEmailByGmail(message);
+
+				if (gmail == false) {
+					Cat.logEvent("AlertMailError", type, Event.SUCCESS, messageStr);
+					m_logger.info("AlertMailError " + messageStr);
+					return false;
+				}
 			}
 
 			Cat.logEvent("AlertMail", type, Event.SUCCESS, messageStr);
@@ -91,14 +145,30 @@ public class MailSender implements Sender, LogEnabled {
 		}
 	}
 
-	@Override
-	public String getId() {
-		return ID;
-	}
+	private boolean sendEmailByGmail(AlertMessageEntity message) {
+		try {
+			String title = message.getTitle();
+			String content = message.getContent();
+			List<String> emails = message.getReceivers();
+			HtmlEmail email = createHtmlEmail();
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
+			email.setSubject(title);
+			email.setFrom("CAT@dianping.com");
+
+			if (content != null) {
+				email.setHtmlMsg(content);
+			}
+			if (emails != null && emails.size() > 0) {
+				for (String to : emails) {
+					email.addTo(to);
+				}
+				email.send();
+			}
+			return true;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return false;
 	}
 
 }

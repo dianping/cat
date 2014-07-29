@@ -18,12 +18,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.task.alert.sender.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
-	public static String ID = "business";
+	public static String ID = AlertConstants.BUSINESS;
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;

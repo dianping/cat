@@ -21,6 +21,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
+import com.dianping.cat.report.task.alert.sender.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
@@ -56,7 +57,7 @@ public class ExceptionAlert implements Task {
 	}
 
 	public String getName() {
-		return "exception";
+		return AlertConstants.EXCEPTION;
 	}
 
 	private TopReport queryTopReport(Date start) {
