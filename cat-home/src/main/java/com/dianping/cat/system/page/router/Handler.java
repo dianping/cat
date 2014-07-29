@@ -67,7 +67,9 @@ public class Handler implements PageHandler<Context> {
 				}
 				model.setContent(str);
 			} else {
-				model.setContent("");
+				List<Server> servers = m_configManager.queryServersByDomain(payload.getDomain());
+
+				model.setContent(buildServerStr(servers));
 			}
 			break;
 		case MODEL:

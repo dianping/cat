@@ -24,6 +24,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
@@ -59,7 +60,7 @@ public class ChannelManager implements Task {
 
 	private MessageQueue m_queue;
 
-	private String m_lastServers;
+	private String m_activeServerConfig;
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
 	      ClientConfigManager configManager) {
@@ -84,16 +85,14 @@ public class ChannelManager implements Task {
 
 		m_bootstrap = bootstrap;
 
-		String serverConfig = getServerConfig();
+		String serverConfig = loadServerConfig();
 
 		if (serverConfig != null) {
-			List<InetSocketAddress> newAddress = parse(serverConfig);
+			List<InetSocketAddress> configedAddresses = parseSocketAddress(serverConfig);
 
-			initChannel(newAddress);
-			m_lastServers = serverConfig;
+			initChannel(configedAddresses, serverConfig);
 		} else {
-			initChannel(serverAddresses);
-			m_lastServers = null;
+			initChannel(serverAddresses, null);
 		}
 	}
 
@@ -148,20 +147,7 @@ public class ChannelManager implements Task {
 		return "TcpSocketSender-ChannelManager";
 	}
 
-	private String getServerConfig() {
-		try {
-			String url = m_configManager.getServerConfigUrl();
-			InputStream currentServer = Urls.forIO().readTimeout(3000).connectTimeout(1000).openStream(url);
-			String content = Files.forIO().readFrom(currentServer, "utf-8");
-
-			return content.trim();
-		} catch (Exception e) {
-
-		}
-		return null;
-	}
-
-	private void initChannel(List<InetSocketAddress> addresses) {
+	private void initChannel(List<InetSocketAddress> addresses, String serverConfig) {
 		try {
 			StringBuilder sb = new StringBuilder();
 
@@ -179,11 +165,12 @@ public class ChannelManager implements Task {
 				if (future != null) {
 					m_activeFuture = future;
 					m_activeIndex = i;
+					m_activeServerConfig = serverConfig;
 					break;
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			m_logger.error(e.getMessage(), e);
 			// ignore
 		}
 	}
@@ -208,7 +195,20 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	private List<InetSocketAddress> parse(String content) {
+	private String loadServerConfig() {
+		try {
+			String url = m_configManager.getServerConfigUrl();
+			InputStream currentServer = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
+			String content = Files.forIO().readFrom(currentServer, "utf-8");
+
+			return content.trim();
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	private List<InetSocketAddress> parseSocketAddress(String content) {
 		try {
 			List<String> strs = Splitters.by(";").noEmptyItem().split(content);
 			List<InetSocketAddress> address = new ArrayList<InetSocketAddress>();
@@ -229,6 +229,7 @@ public class ChannelManager implements Task {
 	public void run() {
 		while (m_active) {
 			m_count++;
+
 			if (shouldCheckServerConfig(m_count)) {
 				Pair<Boolean, String> pair = serverConfigChanged();
 
@@ -236,10 +237,9 @@ public class ChannelManager implements Task {
 					closeAllChannel();
 
 					String servers = pair.getValue();
-					List<InetSocketAddress> serverAddresses = parse(servers);
+					List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
 
-					initChannel(serverAddresses);
-					m_lastServers = servers;
+					initChannel(serverAddresses, servers);
 				}
 			}
 
@@ -288,9 +288,9 @@ public class ChannelManager implements Task {
 	}
 
 	private Pair<Boolean, String> serverConfigChanged() {
-		String current = getServerConfig();
+		String current = loadServerConfig();
 
-		if (current != null && !current.equals(m_lastServers)) {
+		if (!StringUtils.isEmpty(current) && !current.equals(m_activeServerConfig)) {
 			return new Pair<Boolean, String>(true, current);
 		} else {
 			return new Pair<Boolean, String>(false, current);
@@ -298,9 +298,9 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
-		int duration = 3600;
+		int duration = 60 * 5;
 
-		if (count % (duration) == 0) {
+		if (count % (duration) == 0 || m_activeIndex == -1) {
 			return true;
 		} else {
 			return false;
