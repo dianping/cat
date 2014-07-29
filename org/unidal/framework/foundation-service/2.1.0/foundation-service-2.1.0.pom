@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.framework</groupId>
+      <artifactId>parent</artifactId>
+      <version>2.0.6</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.framework</groupId>
+   <artifactId>foundation-service</artifactId>
+   <version>2.1.0</version>
+   <name>Foundation Service</name>
+   <dependencies>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.8.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-container-default</artifactId>
+         <version>1.5.5</version>
+         <exclusions>
+            <exclusion>
+               <groupId>com.google.collections</groupId>
+               <artifactId>google-collections</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+         <version>15.0</version>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-utils</artifactId>
+         <version>3.0.8</version>
+      </dependency>
+      <dependency>
+         <groupId>org.aspectj</groupId>
+         <artifactId>aspectjrt</artifactId>
+         <version>1.5.4</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.netty</groupId>
+         <artifactId>netty</artifactId>
+         <version>3.2.7.Final</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.jgit</groupId>
+         <artifactId>org.eclipse.jgit.http.server</artifactId>
+         <version>2.3.1.201302201838-r</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <version>1.2.17</version>
+      </dependency>
+   </dependencies>
+</project>
