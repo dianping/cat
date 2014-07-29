@@ -8,16 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
 <res:bean id="res" />
-<res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useCss value='${res.css.local.body_css}' target="head-css" />
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
-<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
-<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 <style>
 	.tooltip-inner {
 		max-width:36555px;
@@ -31,6 +21,16 @@
 </style>
  <c:choose>
 	<c:when test="${payload.fullScreen}">
+		<res:useCss value='${res.css.local.table_css}' target="head-css" />
+		<res:useCss value='${res.css.local.body_css}' target="head-css" />
+		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 		<div class="report">
 			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
 				<div class="opNav">
@@ -46,6 +46,7 @@
 	    </div>
 	</c:when>
 	<c:otherwise>
+		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 			<a:report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=dashboard">
 		<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
