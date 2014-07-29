@@ -159,7 +159,7 @@ public class ClientConfigManager implements LogEnabled {
 			for (Server server : servers) {
 				Integer httpPort = server.getHttpPort();
 
-				if (httpPort == null) {
+				if (httpPort == null || httpPort == 0) {
 					httpPort = 8080;
 				}
 				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp(), httpPort, getDomain().getId());

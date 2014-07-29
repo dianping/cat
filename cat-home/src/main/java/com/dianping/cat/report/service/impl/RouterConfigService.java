@@ -23,11 +23,7 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
 	@Override
 	public RouterConfig makeReport(String domain, Date start, Date end) {
-		RouterConfig report = new RouterConfig(domain);
-
-		report.setStartTime(start);
-		report.setEndTime(end);
-		return report;
+		return null;
 	}
 
 	@Override
