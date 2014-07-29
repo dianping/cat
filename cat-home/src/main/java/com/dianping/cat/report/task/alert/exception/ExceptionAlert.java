@@ -114,8 +114,8 @@ public class ExceptionAlert implements Task {
 							builder.buildDate(new Date()).buildLevel(exception.getType()).buildContent(exception.toString());
 							builder.buildMetric(metricName).buildProductline(domain).buildType(getName()).buildGroup(domain);
 							AlertEntity alertEntity = builder.getAlertEntity();
-
-							m_dispatcherManager.send(alertEntity);
+							
+							//m_dispatcherManager.send(alertEntity);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);

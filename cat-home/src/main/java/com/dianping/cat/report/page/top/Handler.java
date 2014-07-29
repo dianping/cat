@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.top;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -79,7 +81,8 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			minuteCount = payload.getMinuteCounts();
 		}
-		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager);
+		List<String> excludeDomains = Arrays.asList("FrontEnd");
+		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager, excludeDomains);
 
 		displayTop.visitTopReport(report);
 		model.setTopReport(report);

@@ -20,22 +20,31 @@ import com.dianping.cat.report.page.LineChart;
 
 public class SystemGraphCreator extends AbstractGraphCreator {
 
+	public static final String PAAS_SYSTEM = "paasSystem";
+
 	public static final String SYSTEM_TYPE = "system";
 
 	public static final String JVM_TYPE = "jvm";
 
 	public static final String NGINX_TYPE = "nginx";
 
-	private static final List<String> SYSTEM_KEY_LIST = new ArrayList<String>(Arrays.asList("sysCpu:avg",
-	      "iowaitCpu:avg", "niceCpu:avg", "stealCpu:avg", "userCpu:avg", "softirqCpu:avg", "idleCpu:avg", "irqCpu:avg",
-	      "/-usage:avg", "/-freeInodes:avg", "/-read:sum", "/-write:sum", "/data-usage:avg", "/data-freeInodes:avg",
-	      "/data-read:sum", "/data-write:sum", "/usr-usage:avg", "/usr-freeInodes:avg", "/usr-read:sum",
-	      "/usr-write:sum", "/var-usage:avg", "/var-freeInodes:avg", "/var-read:sum", "/var-write:sum",
-	      "eth0-inFlow:sum", "eth0-outFlow:sum", "eth0-dropped:sum", "eth0-errors:sum", "eth0-collisions:sum",
-	      "lo-inFlow:sum", "lo-outFlow:sum", "swapUsage:avg", "loadAvg1:avg", "loadAvg5:avg", "totalMem:avg",
-	      "usedMem:avg", "freeMem:avg", "sharedMem:avg", "buffersMem:avg", "cachedMem:avg", "totalProcess:avg",
-	      "runningProcess:avg", "swapUsage:avg", "establishedTcp:avg", "loginUsers:avg", "uptime:avg", "md5Change:avg",
-	      "hostNameChange:avg", "hostIpChange:avg"));
+	private static final List<String> SYSTEM_KEY_LIST = Arrays.asList("sysCpu:avg", "iowaitCpu:avg", "niceCpu:avg",
+	      "stealCpu:avg", "userCpu:avg", "softirqCpu:avg", "idleCpu:avg", "irqCpu:avg", "/-usage:avg",
+	      "/-freeInodes:avg", "/-read:sum", "/-write:sum", "/data-usage:avg", "/data-freeInodes:avg", "/data-read:sum",
+	      "/data-write:sum", "/usr-usage:avg", "/usr-freeInodes:avg", "/usr-read:sum", "/usr-write:sum",
+	      "/var-usage:avg", "/var-freeInodes:avg", "/var-read:sum", "/var-write:sum", "eth0-inFlow:sum",
+	      "eth0-outFlow:sum", "eth0-dropped:sum", "eth0-errors:sum", "eth0-collisions:sum", "lo-inFlow:sum",
+	      "lo-outFlow:sum", "swapUsage:avg", "loadAvg1:avg", "loadAvg5:avg", "totalMem:avg", "usedMem:avg",
+	      "freeMem:avg", "sharedMem:avg", "buffersMem:avg", "cachedMem:avg", "totalProcess:avg", "runningProcess:avg",
+	      "swapUsage:avg", "establishedTcp:avg", "loginUsers:avg", "uptime:avg", "md5Change:avg", "hostNameChange:avg",
+	      "hostIpChange:avg");
+
+	private static final List<String> PAAS_SYSTEM_KEY_LIST = Arrays.asList("sysCpu:avg", "userCpu:avg", "cpuUsage:avg",
+	      "/-usage:avg", "/-freeInodes:avg", "/-read:sum", "/-write:sum", "eth0-inFlow:sum", "eth0-outFlow:sum",
+	      "eth0-dropped:sum", "eth0-errors:sum", "eth0-collisions:sum", "lo-inFlow:sum", "lo-outFlow:sum",
+	      "swapUsage:avg", "totalMem:avg", "usedMem:avg", "freeMem:avg", "sharedMem:avg", "buffersMem:avg",
+	      "cachedMem:avg", "totalProcess:avg", "runningProcess:avg", "swapUsage:avg", "establishedTcp:avg",
+	      "loginUsers:avg", "uptime:avg", "md5Change:avg");
 
 	private static final List<String> JVM_KEY_LIST = new ArrayList<String>(Arrays.asList("edenUsage:avg",
 	      "oldUsage:avg", "permUsage:avg", "catalinaLogSize:sum"));
@@ -131,8 +140,9 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 	}
 
 	protected List<String> fetchExpectedKeys(String type) {
-
-		if (SYSTEM_TYPE.equalsIgnoreCase(type)) {
+		if (PAAS_SYSTEM.equalsIgnoreCase(type)) {
+			return PAAS_SYSTEM_KEY_LIST;
+		} else if (SYSTEM_TYPE.equalsIgnoreCase(type)) {
 			return SYSTEM_KEY_LIST;
 		} else if (JVM_TYPE.equalsIgnoreCase(type)) {
 			return JVM_KEY_LIST;
