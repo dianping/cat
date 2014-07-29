@@ -236,9 +236,7 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
-		return true;
-		
-		
+		//return true;
 		 int duration = 3600;
 		
 		 if (count % (duration) == 0) {
