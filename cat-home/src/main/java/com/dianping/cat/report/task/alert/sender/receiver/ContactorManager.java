@@ -9,7 +9,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertConstants;
 
 public class ContactorManager implements Initializable {
 
@@ -40,9 +40,9 @@ public class ContactorManager implements Initializable {
 			return contactor.querySmsContactors();
 		} else if (AlertConstants.WEIXIN.equals(channel)) {
 			return contactor.queryWeiXinContactors();
+		} else {
+			return new ArrayList<String>();
 		}
-
-		return new ArrayList<String>();
 	}
 
 	@Override

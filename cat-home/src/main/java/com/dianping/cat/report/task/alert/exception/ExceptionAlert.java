@@ -20,10 +20,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -110,13 +109,12 @@ public class ExceptionAlert implements Task {
 
 						for (AlertException exception : exceptions) {
 							String metricName = exception.getName();
+							AlertEntity entity = new AlertEntity();
+							
+							entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
+							entity.setMetric(metricName).setType(getName()).setGroup(domain);
 
-							AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
-							builder.buildDate(new Date()).buildLevel(exception.getType()).buildContent(exception.toString());
-							builder.buildMetric(metricName).buildType(getName()).buildGroup(domain);
-							AlertEntity alertEntity = builder.getAlertEntity();
-
-							m_sendManager.addAlert(alertEntity);
+							m_sendManager.addAlert(entity);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);

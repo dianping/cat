@@ -30,11 +30,17 @@ public class DecoratorManager implements Initializable {
 	private Map<String, Decorator> m_decorators = new HashMap<String, Decorator>();
 
 	public Pair<String, String> generateTitleAndContent(AlertEntity alert) {
-		Decorator decorator = m_decorators.get(alert.getType());
-		String title = decorator.generateTitle(alert);
-		String content = decorator.generateContent(alert);
+		String alertType = alert.getType();
+		Decorator decorator = m_decorators.get(alertType);
 
-		return new Pair<String, String>(title, content);
+		if (decorator != null) {
+			String title = decorator.generateTitle(alert);
+			String content = decorator.generateContent(alert);
+
+			return new Pair<String, String>(title, content);
+		} else {
+			throw new RuntimeException("error alert type:" + alert.getType());
+		}
 	}
 
 	@Override

@@ -14,7 +14,6 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
@@ -52,8 +51,6 @@ public class CatClientModule extends AbstractModule {
 
 			Threads.forGroup("Cat").start(statusUpdateTask);
 			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
-
-			ClientConfig config = clientConfigManager.getClientConfig();
 
 			// MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
 			// Threads.forGroup("Cat").start(mmapReaderTask);

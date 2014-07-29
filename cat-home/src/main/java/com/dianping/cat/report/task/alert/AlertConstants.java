@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.sender;
+package com.dianping.cat.report.task.alert;
 
 public class AlertConstants {
 

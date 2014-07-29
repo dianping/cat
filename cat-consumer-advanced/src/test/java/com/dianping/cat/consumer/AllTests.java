@@ -13,7 +13,6 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
 import com.dianping.cat.consumer.matrix.MatrixModelTest;
 import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
 import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
-import com.dianping.cat.consumer.metric.MetricConfigManagerTest;
 import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 
 @RunWith(Suite.class)

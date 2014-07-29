@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.alert.manager;
+package com.dianping.cat.report.task.alert.service;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;

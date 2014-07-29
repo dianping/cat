@@ -48,71 +48,40 @@ public class AlertEntity {
 		return m_type;
 	}
 
-	public void setDate(Date alertDate) {
+	public AlertEntity setDate(Date alertDate) {
 		m_date = alertDate;
+		return this;
 	}
 
-	public void setContent(String content) {
+	public AlertEntity setContent(String content) {
 		m_content = content;
+		return this;
 	}
 
-	public void setGroup(String group) {
+	public AlertEntity setGroup(String group) {
 		m_group = group;
+		return this;
 	}
 
-	public void setLevel(String level) {
+	public AlertEntity setLevel(String level) {
 		m_level = level;
+		return this;
 	}
 
-	public void setMetric(String metricName) {
+	public AlertEntity setMetric(String metricName) {
 		m_metric = metricName;
+		return this;
 	}
 
-	public void setParas(Map<String, Object> paras) {
+	public AlertEntity setParas(Map<String, Object> paras) {
 		m_paras = paras;
+		return this;
 	}
 
-	public void setType(String type) {
+	public AlertEntity setType(String type) {
 		m_type = type;
+		return this;
 	}
 
-	public class AlertEntityBuilder {
-
-		private AlertEntity m_alertEntity = new AlertEntity();
-
-		public AlertEntityBuilder buildDate(Date date) {
-			m_alertEntity.setDate(date);
-			return this;
-		}
-
-		public AlertEntityBuilder buildType(String type) {
-			m_alertEntity.setType(type);
-			return this;
-		}
-
-		public AlertEntityBuilder buildGroup(String group) {
-			m_alertEntity.setGroup(group);
-			return this;
-		}
-
-		public AlertEntityBuilder buildLevel(String level) {
-			m_alertEntity.setLevel(level);
-			return this;
-		}
-
-		public AlertEntityBuilder buildMetric(String metric) {
-			m_alertEntity.setMetric(metric);
-			return this;
-		}
-
-		public AlertEntityBuilder buildContent(String content) {
-			m_alertEntity.setContent(content);
-			return this;
-		}
-
-		public AlertEntity getAlertEntity(){
-			return m_alertEntity;
-		}
-	}
 
 }

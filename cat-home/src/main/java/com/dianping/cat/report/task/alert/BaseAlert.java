@@ -25,7 +25,6 @@ import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -233,21 +232,12 @@ public abstract class BaseAlert {
 				m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
 				String metricName = buildMetricName(metricKey);
-
-				AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
-				builder.buildDate(alertResult.getAlertTime()).buildContent(alertResult.getContent())
-				      .buildLevel(alertResult.getAlertLevel());
-				builder.buildMetric(metricName).buildType(getName());
+				AlertEntity entity = new AlertEntity();
 				
-				if ("network".equals(getName())) {
-					builder.buildGroup(productlineName);
-				} else {
-					String domain = extractDomain(metricKey);
-					builder.buildGroup(domain);
-				}
-				AlertEntity alertEntity = builder.getAlertEntity();
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent()).setLevel(alertResult.getAlertLevel());
+				entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
 
-				m_sendManager.addAlert(alertEntity);
+				m_sendManager.addAlert(entity);
 			}
 		}
 	}

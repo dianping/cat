@@ -10,8 +10,8 @@ import org.unidal.helper.Threads.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.BaseAlert;
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
 
 public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 

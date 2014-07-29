@@ -1,6 +1,6 @@
 package com.dianping.cat.report.task.alert.sender.spliter;
 
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertConstants;
 
 public class WeixinSpliter implements Spliter {
 
