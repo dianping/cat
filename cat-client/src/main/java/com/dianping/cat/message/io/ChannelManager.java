@@ -87,9 +87,9 @@ public class ChannelManager implements Task {
 		String serverConfig = loadServerConfig();
 
 		if (serverConfig != null) {
-			List<InetSocketAddress> newAddress = parseSocketAddress(serverConfig);
+			List<InetSocketAddress> configedAddresses = parseSocketAddress(serverConfig);
 
-			initChannel(newAddress, serverConfig);
+			initChannel(configedAddresses, serverConfig);
 		} else {
 			initChannel(serverAddresses, null);
 		}
