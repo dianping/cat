@@ -7,7 +7,7 @@
 	</type>
 	<type id="exception">
 		<group id="default">
-			<level id="error" send="mail,weixin,sms" />
+			<level id="error" send="mail,weixin" />
 			<level id="warning" send="mail,weixin" />
 		</group>
 	</type>

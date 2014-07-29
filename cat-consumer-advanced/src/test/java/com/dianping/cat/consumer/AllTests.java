@@ -36,7 +36,7 @@ DependencyAnalyzerTest.class,
 
 DependencyReportMergerTest.class,
 
-ProductLineConfigManagerTest.class,
+ProductLineConfigManagerTest.class
 
 })
 public class AllTests {
