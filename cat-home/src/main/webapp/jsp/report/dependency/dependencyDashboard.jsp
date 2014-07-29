@@ -46,6 +46,7 @@
 	    </div>
 	</c:when>
 	<c:otherwise>
+		<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 			<a:report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=dashboard">
