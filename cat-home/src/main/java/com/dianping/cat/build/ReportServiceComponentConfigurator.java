@@ -40,6 +40,7 @@ import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.report.service.impl.MetricReportService;
 import com.dianping.cat.report.service.impl.NetTopologyReportService;
 import com.dianping.cat.report.service.impl.ProblemReportService;
+import com.dianping.cat.report.service.impl.RouterConfigService;
 import com.dianping.cat.report.service.impl.ServiceReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.service.impl.TopReportService;
@@ -88,6 +89,9 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
 		      MonthlyReportContentDao.class));
 		all.add(C(ReportService.class, Constants.REPORT_ALERT, AlertReportService.class).req(HourlyReportDao.class,
+		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(C(ReportService.class, Constants.REPORT_ROUTER, RouterConfigService.class).req(HourlyReportDao.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
 		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 

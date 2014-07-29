@@ -62,27 +62,33 @@ public class ChannelManager implements Task {
 	private String m_lastServers;
 
 	private List<InetSocketAddress> parse(String content) {
-		List<String> strs = Splitters.by(";").noEmptyItem().split(content);
-		List<InetSocketAddress> address = new ArrayList<InetSocketAddress>();
+		try {
+			List<String> strs = Splitters.by(";").noEmptyItem().split(content);
+			List<InetSocketAddress> address = new ArrayList<InetSocketAddress>();
 
-		for (String str : strs) {
-			List<String> items = Splitters.by(":").noEmptyItem().split(str);
+			for (String str : strs) {
+				List<String> items = Splitters.by(":").noEmptyItem().split(str);
 
-			address.add(new InetSocketAddress(items.get(0), Integer.parseInt(items.get(1))));
+				address.add(new InetSocketAddress(items.get(0), Integer.parseInt(items.get(1))));
+			}
+			return address;
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 		}
-		return address;
+		return new ArrayList<InetSocketAddress>();
 	}
 
 	private String getServerConfig() {
 		try {
-			InputStream currentServer = Urls.forIO().readTimeout(3000).connectTimeout(1000)
-			      .openStream(m_configManager.getServerConfigUrl());
+			String url = m_configManager.getServerConfigUrl();
+			InputStream currentServer = Urls.forIO().readTimeout(3000).connectTimeout(1000).openStream(url);
 			String content = Files.forIO().readFrom(currentServer, "utf-8");
 
 			return content.trim();
 		} catch (Exception e) {
-			return null;
+
 		}
+		return null;
 	}
 
 	private Pair<Boolean, String> serverConfigChanged() {
@@ -109,18 +115,30 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	private void initChannel(List<InetSocketAddress> serverAddresses) {
-		m_serverAddresses = serverAddresses;
-		int len = serverAddresses.size();
+	private void initChannel(List<InetSocketAddress> addresses) {
+		try {
+			StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < len; i++) {
-			ChannelFuture future = createChannel(serverAddresses.get(i));
-
-			if (future != null) {
-				m_activeFuture = future;
-				m_activeIndex = i;
-				break;
+			for (InetSocketAddress address : addresses) {
+				sb.append(address.getAddress().getHostAddress()).append(":").append(address.getPort()).append(',');
 			}
+			m_logger.info("init CAT server:" + sb.toString());
+
+			m_serverAddresses = addresses;
+			int len = addresses.size();
+
+			for (int i = 0; i < len; i++) {
+				ChannelFuture future = createChannel(addresses.get(i));
+
+				if (future != null) {
+					m_activeFuture = future;
+					m_activeIndex = i;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// ignore
 		}
 	}
 
@@ -146,7 +164,7 @@ public class ChannelManager implements Task {
 		bootstrap.setOption("keepAlive", true);
 
 		m_bootstrap = bootstrap;
-
+		
 		String serverConfig = getServerConfig();
 
 		if (serverConfig != null) {
@@ -218,13 +236,14 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
-		int duration = 3600;
-
-		if (count % (duration) == 0) {
-			return true;
-		} else {
-			return false;
-		}
+		//return true;
+		 int duration = 3600;
+		
+		 if (count % (duration) == 0) {
+		 return true;
+		 } else {
+		 return false;
+		 }
 	}
 
 	@Override

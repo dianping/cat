@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.router;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 			}
 		};
 		numbers = MapUtils.sortMap(numbers, compator);
-		Map<String, Long> servers = findAvaliableServers();
+		Map<Server, Long> servers = findAvaliableServers();
 
 		processMainServer(servers, routerConfig, numbers);
 		processBackServer(servers, routerConfig, numbers);
@@ -73,7 +74,6 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 		dailyReport.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(routerConfig);
 
-		System.out.println(routerConfig);
 		m_reportService.insertDailyReport(dailyReport, binaryContent);
 		return true;
 	}
@@ -93,21 +93,21 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 		throw new RuntimeException("router builder don't support weekly task");
 	}
 
-	private Map<String, Long> findAvaliableServers() {
-		List<String> servers = m_configManager.queryEnableServers();
-		Map<String, Long> result = new HashMap<String, Long>();
+	private Map<Server, Long> findAvaliableServers() {
+		List<Server> servers = m_configManager.queryEnableServers();
+		Map<Server, Long> result = new HashMap<Server, Long>();
 
-		for (String server : servers) {
+		for (Server server : servers) {
 			result.put(server, 0L);
 		}
 		return result;
 	}
 
-	private String findMinProcessServer(Map<String, Long> maps) {
+	private Server findMinProcessServer(Map<Server, Long> maps) {
 		long min = Long.MAX_VALUE;
-		String result = null;
+		Server result = null;
 
-		for (Entry<String, Long> entry : maps.entrySet()) {
+		for (Entry<Server, Long> entry : maps.entrySet()) {
 			Long value = entry.getValue();
 
 			if (value < min) {
@@ -118,60 +118,71 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 		return result;
 	}
 
-	private void processBackServer(Map<String, Long> servers, RouterConfig routerConfig, Map<String, Long> numbers) {
-		Map<String, Map<String, Long>> backServers = new LinkedHashMap<String, Map<String, Long>>();
-		String backUpServer = m_configManager.queryBackUpServer();
-		int port = m_configManager.queryPort();
+	private void addServerList(List<Server> servers, Server server) {
+		for (Server s : servers) {
+			if (s.getId().equals(server.getId())) {
+				return;
+			}
+		}
+		servers.add(server);
+	}
 
-		for (Domain domain : routerConfig.getDomains().values()) {
+	private void processBackServer(Map<Server, Long> servers, RouterConfig routerConfig, Map<String, Long> numbers) {
+		Map<Server, Map<Server, Long>> backServers = new LinkedHashMap<Server, Map<Server, Long>>();
+		Server backUpServer = m_configManager.queryBackUpServer();
+		Collection<Domain> values = routerConfig.getDomains().values();
+
+		for (Domain domain : values) {
+			List<Server> domainServers = domain.getServers();
 			String domainName = domain.getId();
 			Domain defaultDomainConfig = m_configManager.getRouterConfig().getDomains().get(domainName);
 
 			if (defaultDomainConfig == null) {
-
-				String server = domain.getServers().get(0).getId();
-				Map<String, Long> serverProcess = backServers.get(server);
+				Server server = domain.getServers().get(0);
+				Map<Server, Long> serverProcess = backServers.get(server);
 
 				if (serverProcess == null) {
-					serverProcess = new LinkedHashMap<String, Long>();
+					serverProcess = new LinkedHashMap<Server, Long>();
 
-					for (Entry<String, Long> entry : servers.entrySet()) {
+					for (Entry<Server, Long> entry : servers.entrySet()) {
 						if (!entry.getKey().equals(server)) {
 							serverProcess.put(entry.getKey(), entry.getValue());
 						}
 					}
 					backServers.put(server, serverProcess);
 				}
-				String nextServer = findMinProcessServer(serverProcess);
-				Long oldValue = serverProcess.get(nextServer);
+				Server nextServer = findMinProcessServer(serverProcess);
 
-				serverProcess.put(nextServer, oldValue + numbers.get(domain.getId()));
-				domain.addServer(new Server().setId(nextServer).setPort(port));
-				domain.addServer(new Server().setId(backUpServer).setPort(port));
+				if (nextServer != null) {
+					Long oldValue = serverProcess.get(nextServer);
+
+					serverProcess.put(nextServer, oldValue + numbers.get(domain.getId()));
+
+					addServerList(domainServers, nextServer);
+				}
+				addServerList(domainServers, backUpServer);
 			}
 		}
 	}
 
-	private void processMainServer(Map<String, Long> servers, RouterConfig routerConfig, Map<String, Long> numbers) {
-		int port = m_configManager.queryPort();
-
+	private void processMainServer(Map<Server, Long> servers, RouterConfig routerConfig, Map<String, Long> numbers) {
 		for (Entry<String, Long> entry : numbers.entrySet()) {
 			String domainName = entry.getKey();
 			Domain defaultDomainConfig = m_configManager.getRouterConfig().getDomains().get(domainName);
 			Long value = entry.getValue();
 
 			if (defaultDomainConfig == null) {
-				String server = findMinProcessServer(servers);
+				Server server = findMinProcessServer(servers);
 				Long oldValue = servers.get(server);
 				Domain domainConfig = new Domain(domainName);
 
 				servers.put(server, oldValue + value);
-				domainConfig.addServer(new Server().setId(server).setPort(port));
+				domainConfig.addServer(server);
 				routerConfig.addDomain(domainConfig);
 			} else {
 				routerConfig.addDomain(defaultDomainConfig);
-				
-				String server = defaultDomainConfig.getServers().get(0).getId();
+
+				Server server = defaultDomainConfig.getServers().get(0);
 				Long oldValue = servers.get(server);
 
 				if (oldValue != null) {

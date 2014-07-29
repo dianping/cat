@@ -1,7 +1,9 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -16,7 +18,9 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.router.entity.DefaultServer;
+import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
+import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
 
 public class RouterConfigManager implements Initializable, LogEnabled {
@@ -41,35 +45,41 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return m_routerConfig;
 	}
 
-	public String queryBackUpServer() {
-		return m_routerConfig.getBackupServer();
+	public Server queryBackUpServer() {
+		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
 	}
 
-	public int queryPort() {
-		return m_routerConfig.getPort();
-	}
+	public List<Server> queryServersByDomain(String domain) {
+		Domain domainConfig = m_routerConfig.findDomain(domain);
+		List<Server> result = new ArrayList<Server>();
 
-	public List<String> queryRandomServers() {
-		List<String> servers = queryEnableServers();
-		int length = servers.size();
-		int index = (int) (Math.random() * length);
-		List<String> result = new ArrayList<String>();
+		if (domainConfig == null) {
+			Map<Server, Integer> map = new HashMap<Server, Integer>();
+			List<Server> servers = queryEnableServers();
+			int length = servers.size();
+			int index = (int) (Math.random() * length);
 
-		for (int i = 0; i < 2; i++) {
-			servers.add(servers.get((index + 1) % index));
+			for (int i = 0; i < 2; i++) {
+				map.put(servers.get((index + 1) % length), 0);
+			}
+			map.put(queryBackUpServer(), 0);
+
+			result = new ArrayList<Server>(map.keySet());
+		} else {
+			for (Server server : domainConfig.getServers()) {
+				result.add(server);
+			}
 		}
-		
-		servers.add(queryBackUpServer());
 		return result;
 	}
 
-	public List<String> queryEnableServers() {
+	public List<Server> queryEnableServers() {
 		List<DefaultServer> servers = m_routerConfig.getDefaultServers();
-		List<String> result = new ArrayList<String>();
+		List<Server> result = new ArrayList<Server>();
 
 		for (DefaultServer server : servers) {
 			if (server.isEnable()) {
-				result.add(server.getId());
+				result.add(new Server().setId(server.getId()).setPort(server.getPort()));
 			}
 		}
 
