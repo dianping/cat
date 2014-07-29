@@ -110,15 +110,9 @@ public class ExceptionAlert implements Task {
 						for (AlertException exception : exceptions) {
 							String metricName = exception.getName();
 							AlertEntity entity = new AlertEntity();
-							
+
 							entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
 							entity.setMetric(metricName).setType(getName()).setGroup(domain);
-
-							AlertExceptionBuilder builder = new AlertEntity().new AlertExceptionBuilder();
-							builder.buildDate(new Date()).buildLevel(exception.getType()).buildContent(exception.toString());
-							builder.buildMetric(metricName).buildProductline(domain).buildType(getName()).buildGroup(domain);
-							AlertEntity alertEntity = builder.getAlertEntity();
-							
 							m_sendManager.addAlert(entity);
 						}
 					} catch (Exception e) {

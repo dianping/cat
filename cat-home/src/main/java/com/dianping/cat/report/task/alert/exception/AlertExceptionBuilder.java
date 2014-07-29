@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Constants;
+import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.top.TopMetric.Item;
@@ -21,20 +23,39 @@ public class AlertExceptionBuilder {
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;
 
+	@Inject
+	private AggregationConfigManager m_aggregationConfigManager;
+
 	public Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
 
 		for (Item item : items) {
-			List<AlertException> domainAlertExceptions = buildDomainAlertExceptionList(item);
+			String domain = item.getDomain();
 
-			if (!domainAlertExceptions.isEmpty()) {
-				alertExceptions.put(item.getDomain(), domainAlertExceptions);
+			if (Constants.FRONT_END.equalsIgnoreCase(domain)) {
+				List<AlertException> frontEndAlertExceptions = buildFrontEndAlertExceptions(item);
+
+				if (!frontEndAlertExceptions.isEmpty()) {
+					alertExceptions.put(domain, frontEndAlertExceptions);
+				}
+			} else {
+				List<AlertException> domainAlertExceptions = buildDomainAlertExceptions(item);
+
+				if (!domainAlertExceptions.isEmpty()) {
+					alertExceptions.put(domain, domainAlertExceptions);
+				}
 			}
 		}
 		return alertExceptions;
 	}
 
-	private List<AlertException> buildDomainAlertExceptionList(Item item) {
+	private List<AlertException> buildFrontEndAlertExceptions(Item item) {
+		String domain = item.getDomain();
+		List<AlertException> alertExceptions = new ArrayList<AlertException>();
+		return null;
+	}
+
+	private List<AlertException> buildDomainAlertExceptions(Item item) {
 		String domain = item.getDomain();
 		List<AlertException> alertExceptions = new ArrayList<AlertException>();
 		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);

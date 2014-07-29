@@ -6,6 +6,7 @@ public class ExceptionBuilder {
 	public static void main(String args[]) {
 		while (true) {
 			Cat.logError(new RuntimeException("just test for FrontEnd"));
+			System.out.println("log error");
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {

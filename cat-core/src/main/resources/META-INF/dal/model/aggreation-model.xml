@@ -6,7 +6,9 @@
   </entity>
   <entity name="aggregation-rule">
     <attribute name="pattern" value-type="String" key="true"/>
-    <attribute name="type" value-type="int" />
+    <attribute name="type" value-type="int" primitive="true"/>
+    <attribute name="warn" value-type="int" primitive="true"/>
+    <attribute name="mails" value-type="String" />
     <attribute name="domain" value-type="String" />
     <attribute name="sample" value-type="String" />
     <attribute name="display-name" value-type="String" />

@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -202,7 +203,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
-		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
+		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
 
 		all.add(C(ExceptionAlert.class)
 		      .req(ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertManager.class).req(ModelService.class,
@@ -343,8 +344,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
-
-		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
