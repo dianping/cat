@@ -1,12 +1,29 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
+import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
+import com.dianping.cat.system.notify.ReportRenderImpl;
 
-public class ExceptionDecorator extends DefaultDecorator {
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+public class ExceptionDecorator extends DefaultDecorator implements Initializable {
+
+	public Configuration m_configuration;
 
 	public static final String ID = AlertConstants.EXCEPTION;
+
+	private DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {
@@ -22,21 +39,39 @@ public class ExceptionDecorator extends DefaultDecorator {
 
 	@Override
 	public String generateContent(AlertEntity alert) {
+		Map<Object, Object> dataMap = generateExceptionMap(alert);
+		StringWriter sw = new StringWriter(5000);
+
 		try {
-			StringBuilder sb = new StringBuilder();
-			String domain = alert.getGroup();
-			String date = m_format.format(alert.getDate());
+			Template t = m_configuration.getTemplate("exceptionAlert.ftl");
+			t.process(dataMap, sw);
+		} catch (Exception e) {
+			Cat.logError("build exception content error:" + alert.toString(), e);
+		}
+		return sw.toString();
+	}
 
-			sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-			sb.append(alert.getContent()).append("[时间: ").append(date).append("]");
-			sb.append(" <a href='").append("http://cat.dianpingoa.com/cat/r/p?domain=").append(domain).append("&date=")
-			      .append(date).append("'>点击此处查看详情[联系人修改请联系黄永,修改CMDB]</a>").append("<br/>");
-			sb.append(buildContactInfo(domain));
+	private Map<Object, Object> generateExceptionMap(AlertEntity alert) {
+		String domain = alert.getGroup();
+		String contactInfo = buildContactInfo(domain);
+		Map<Object, Object> map = new HashMap<Object, Object>();
 
-			return sb.toString();
-		} catch (Exception ex) {
-			Cat.logError("build exception content error:" + alert.toString(), ex);
-			return null;
+		map.put("domain", domain);
+		map.put("content", alert.getContent());
+		map.put("date", m_dateFormat.format(alert.getDate()));
+		map.put("contactInfo", contactInfo);
+
+		return map;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_configuration = new Configuration();
+		m_configuration.setDefaultEncoding("UTF-8");
+		try {
+			m_configuration.setClassForTemplateLoading(ReportRenderImpl.class, "/freemaker");
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 

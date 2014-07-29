@@ -1,0 +1,1 @@
+[CAT第三方告警] [项目: ${domain}] : ${content}[时间: ${date}]  <br/> [联系人修改请联系黄永,修改CMDB] <br/> ${contactInfo}

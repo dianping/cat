@@ -32,14 +32,13 @@ public class ContactorManager implements Initializable {
 
 	public List<String> queryReceivers(String group, String channel, String type) {
 		Contactor contactor = m_contactors.get(type);
-		contactor.setModule(group);
 
 		if (AlertConstants.MAIL.equals(channel)) {
-			return contactor.queryEmailContactors();
+			return contactor.queryEmailContactors(group);
 		} else if (AlertConstants.SMS.equals(channel)) {
-			return contactor.querySmsContactors();
+			return contactor.querySmsContactors(group);
 		} else if (AlertConstants.WEIXIN.equals(channel)) {
-			return contactor.queryWeiXinContactors();
+			return contactor.queryWeiXinContactors(group);
 		} else {
 			return new ArrayList<String>();
 		}
