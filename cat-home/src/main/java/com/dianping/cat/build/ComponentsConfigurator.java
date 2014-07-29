@@ -133,19 +133,19 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
 
-		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, SystemContactor.ID, SystemContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, SystemContactor.ID, SystemContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProductLineConfigManager.class,
+		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectDao.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProductLineConfigManager.class,
+		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectDao.class,
 		      AlertConfigManager.class));
 
 		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
