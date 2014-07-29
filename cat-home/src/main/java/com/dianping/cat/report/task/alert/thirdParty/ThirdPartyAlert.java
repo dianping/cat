@@ -17,9 +17,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.report.task.alert.sender.AlertEntity.AlertEntityBuilder;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 
 public class ThirdPartyAlert implements Task {
@@ -78,13 +77,12 @@ public class ThirdPartyAlert implements Task {
 				for (Entry<String, List<ThirdPartyAlertEntity>> entry : domain2AlertMap.entrySet()) {
 					String domain = entry.getKey();
 					List<ThirdPartyAlertEntity> thirdPartyAlerts = entry.getValue();
+					AlertEntity entity = new AlertEntity();
+					
+					entity.setDate(new Date()).setContent(thirdPartyAlerts.toString()).setLevel("warning");
+					entity.setMetric(getName()).setType(getName()).setGroup(domain);
 
-					AlertEntityBuilder builder = new AlertEntity().new AlertEntityBuilder();
-					builder.buildDate(new Date()).buildLevel("warning").buildContent(thirdPartyAlerts.toString());
-					builder.buildMetric(getName()).buildType(getName()).buildGroup(domain);
-					AlertEntity alertEntity = builder.getAlertEntity();
-
-					m_sendManager.addAlert(alertEntity);
+					m_sendManager.addAlert(entity);
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {

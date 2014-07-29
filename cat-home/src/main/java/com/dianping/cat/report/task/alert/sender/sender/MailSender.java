@@ -21,7 +21,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class MailSender implements Initializable, Sender, LogEnabled {

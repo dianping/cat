@@ -1,6 +1,6 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class SystemDecorator extends DefaultDecorator {

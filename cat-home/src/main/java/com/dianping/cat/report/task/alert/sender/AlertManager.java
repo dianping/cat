@@ -13,11 +13,11 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.manager.AlertEntityService;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.alert.sender.spliter.SpliterManager;
+import com.dianping.cat.report.task.alert.service.AlertEntityService;
 import com.dianping.cat.system.config.AlertPolicyManager;
 
 public class AlertManager implements Initializable {
@@ -32,13 +32,13 @@ public class AlertManager implements Initializable {
 	private ContactorManager m_contactorManager;
 
 	@Inject
-	protected AlertEntityService m_alertEntityService;
-
-	@Inject
 	protected SpliterManager m_splitterManager;
 
 	@Inject
 	protected SenderManager m_senderManager;
+	
+	@Inject
+	protected AlertEntityService m_alertEntityService;
 
 	private BlockingQueue<AlertEntity> m_alerts = new LinkedBlockingDeque<AlertEntity>(10000);
 

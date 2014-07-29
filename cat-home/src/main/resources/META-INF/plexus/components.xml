@@ -471,8 +471,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.manager.AlertEntityService</role>
-			<implementation>com.dianping.cat.report.task.alert.manager.AlertEntityService</implementation>
+			<role>com.dianping.cat.report.task.alert.service.AlertEntityService</role>
+			<implementation>com.dianping.cat.report.task.alert.service.AlertEntityService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -840,7 +840,7 @@
 					<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.manager.AlertEntityService</role>
+					<role>com.dianping.cat.report.task.alert.service.AlertEntityService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>

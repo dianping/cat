@@ -3,7 +3,7 @@ package com.dianping.cat.report.task.alert.sender.decorator;
 import java.util.Date;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.sender.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class ThirdpartyDecorator extends DefaultDecorator {
