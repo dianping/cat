@@ -57,10 +57,10 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			Map<Server, Integer> map = new HashMap<Server, Integer>();
 			List<Server> servers = queryEnableServers();
 			int length = servers.size();
-			int index = domain.hashCode() * length;
+			int index = domain.hashCode();
 
 			for (int i = 0; i < 2; i++) {
-				map.put(servers.get((index + 1) % length), 0);
+				map.put(servers.get((index + i) % length), 0);
 			}
 			map.put(queryBackUpServer(), 0);
 
