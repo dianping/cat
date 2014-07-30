@@ -71,6 +71,7 @@ import com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.Decorator;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator;
@@ -78,6 +79,7 @@ import com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor;
+import com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor;
@@ -148,11 +150,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectDao.class,
 		      AlertConfigManager.class));
 
+		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
+		      AggregationConfigManager.class));
+
 		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
 		      .req(Contactor.class, NetworkContactor.ID, "networkContactor")
 		      .req(Contactor.class, SystemContactor.ID, "exceptionContactor")
 		      .req(Contactor.class, ExceptionContactor.ID, "systemContactor")
-		      .req(Contactor.class, ThirdpartyContactor.ID, "thirdpartyContactor"));
+		      .req(Contactor.class, ThirdpartyContactor.ID, "thirdpartyContactor")
+		      .req(Contactor.class, FrontEndExceptionContactor.ID, "frontEndExceptionContactor"));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProjectDao.class));
 
@@ -164,11 +170,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectDao.class));
 
+		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
+
 		all.add(C(DecoratorManager.class).req(Decorator.class, BusinessDecorator.ID, "businessDecorator")
 		      .req(Decorator.class, NetworkDecorator.ID, "networkDecorator")
 		      .req(Decorator.class, ExceptionDecorator.ID, "exceptionDecorator")
 		      .req(Decorator.class, SystemDecorator.ID, "systemDecorator")
-		      .req(Decorator.class, ThirdpartyDecorator.ID, "thirdpartyDecorator"));
+		      .req(Decorator.class, ThirdpartyDecorator.ID, "thirdpartyDecorator")
+		      .req(Decorator.class, FrontEndExceptionDecorator.ID, "frontEndExceptionDecorator"));
 
 		all.add(C(AlertPolicyManager.class).req(ConfigDao.class));
 

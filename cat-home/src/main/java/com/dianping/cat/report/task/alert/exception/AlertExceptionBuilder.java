@@ -1,8 +1,6 @@
 package com.dianping.cat.report.task.alert.exception;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +9,12 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.top.TopMetric.Item;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class AlertExceptionBuilder {
@@ -30,29 +29,32 @@ public class AlertExceptionBuilder {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
 
 		for (Item item : items) {
-			String domain = item.getDomain();
+			List<AlertException> domainAlertExceptions = buildDomainAlertExceptions(item);
 
-			if (Constants.FRONT_END.equalsIgnoreCase(domain)) {
-				List<AlertException> frontEndAlertExceptions = buildFrontEndAlertExceptions(item);
-
-				if (!frontEndAlertExceptions.isEmpty()) {
-					alertExceptions.put(domain, frontEndAlertExceptions);
-				}
-			} else {
-				List<AlertException> domainAlertExceptions = buildDomainAlertExceptions(item);
-
-				if (!domainAlertExceptions.isEmpty()) {
-					alertExceptions.put(domain, domainAlertExceptions);
-				}
+			if (!domainAlertExceptions.isEmpty()) {
+				alertExceptions.put(item.getDomain(), domainAlertExceptions);
 			}
 		}
 		return alertExceptions;
 	}
 
-	private List<AlertException> buildFrontEndAlertExceptions(Item item) {
-		String domain = item.getDomain();
+	public List<AlertException> buildFrontEndAlertExceptions(Item frontEndItem) {
 		List<AlertException> alertExceptions = new ArrayList<AlertException>();
-		return null;
+
+		for (Entry<String, Double> entry : frontEndItem.getException().entrySet()) {
+			String exception = entry.getKey();
+			AggregationRule rule = m_aggregationConfigManager.queryAggration(exception);
+			
+			if (rule != null) {
+				int warn = rule.getWarn();
+				double value = entry.getValue().doubleValue();
+
+				if (value >= warn) {
+					alertExceptions.add(new AlertException(exception, AlertConstants.WARNING_EXCEPTION, value));
+				}
+			}
+		}
+		return alertExceptions;
 	}
 
 	private List<AlertException> buildDomainAlertExceptions(Item item) {
@@ -75,19 +77,19 @@ public class AlertExceptionBuilder {
 				totalException += value;
 
 				if (errorLimit > 0 && value >= errorLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertException.ERROR_EXCEPTION, value,
+					alertExceptions.add(new AlertException(exceptionName, AlertConstants.ERROR_EXCEPTION, value,
 					      needSendSms(domain, exceptionName)));
 				} else if (warnLimit > 0 && value >= warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertException.WARN_EXCEPTION, value));
+					alertExceptions.add(new AlertException(exceptionName, AlertConstants.WARNING_EXCEPTION, value));
 				}
 			}
 		}
 
 		if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.ERROR_EXCEPTION,
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertConstants.ERROR_EXCEPTION,
 			      totalException, needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)));
 		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertException.WARN_EXCEPTION,
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertConstants.WARNING_EXCEPTION,
 			      totalException));
 		}
 
@@ -146,71 +148,7 @@ public class AlertExceptionBuilder {
 		return limits;
 	}
 
-	public String buildMailContent(String exceptions, String domain, String contactInfo) {
-		String content = buildContent(exceptions, domain, contactInfo);
-		String date = new SimpleDateFormat("yyyyMMddHH").format(new Date());
-		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain + "&date=" + date;
-		String mailContent = content + "<br/>" + " <a href='" + url + "'>点击此处查看详情</a>";
-
-		return mailContent;
-	}
-
-	public String buildDBContent(String exceptions, String domain) {
-		String content = buildContent(exceptions, domain);
-		String url = "http://cat.dianpingoa.com/cat/r/p?domain=" + domain;
-		String mailContent = content + "<br/>" + " <a href='" + url + "'>点击此处查看详情</a>";
-
-		return mailContent;
-	}
-
-	public String buildContent(String exceptions, String domain) {
-		StringBuilder sb = new StringBuilder();
-		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
-
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exceptions).append("[时间: ").append(time).append("]");
-
-		return sb.toString();
-	}
-
-	public String buildContent(String exceptions, String domain, String contactInfo) {
-		StringBuilder sb = new StringBuilder();
-		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
-
-		sb.append("[CAT异常告警] [项目: ").append(domain).append("] : ");
-		sb.append(exceptions).append("[时间: ").append(time).append("]").append("\n");
-		sb.append(contactInfo);
-
-		return sb.toString();
-	}
-
-	public List<AlertException> buildErrorException(List<AlertException> exceptions) {
-		List<AlertException> errorExceptions = new ArrayList<AlertException>();
-
-		for (AlertException alertException : exceptions) {
-			if (AlertException.ERROR_EXCEPTION.equals(alertException.getType())) {
-				errorExceptions.add(alertException);
-			}
-		}
-		return errorExceptions;
-	}
-
-	public List<AlertException> buildErrorAndTriggeredException(List<AlertException> exceptions) {
-		List<AlertException> errorExceptions = new ArrayList<AlertException>();
-
-		for (AlertException alertException : exceptions) {
-			if (AlertException.ERROR_EXCEPTION.equals(alertException.getType()) && alertException.isTriggered()) {
-				errorExceptions.add(alertException);
-			}
-		}
-		return errorExceptions;
-	}
-
 	public class AlertException {
-
-		private static final String WARN_EXCEPTION = "warn";
-
-		private static final String ERROR_EXCEPTION = "error";
 
 		private String m_name;
 

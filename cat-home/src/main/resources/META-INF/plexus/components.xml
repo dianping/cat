@@ -480,15 +480,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
-			<implementation>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
 			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
@@ -629,6 +620,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>frontEndException</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
 			<requirements>
@@ -656,6 +657,11 @@
 					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
 					<role-hint>thirdParty</role-hint>
 					<field-name>thirdpartyContactor</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+					<role-hint>frontEndException</role-hint>
+					<field-name>frontEndExceptionContactor</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -710,6 +716,11 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>frontEndException</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</implementation>
 			<requirements>
@@ -737,6 +748,11 @@
 					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 					<role-hint>thirdParty</role-hint>
 					<field-name>thirdpartyDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+					<role-hint>frontEndException</role-hint>
+					<field-name>frontEndExceptionDecorator</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -940,6 +956,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3590,6 +3609,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
