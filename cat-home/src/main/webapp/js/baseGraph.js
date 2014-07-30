@@ -175,7 +175,7 @@ function parseMetricLineDataForApp(data) {
 	return res;
 }
 
-function graphMetricChartForApp(container, data) {
+function graphMetricChartForApp(container, data, datePair) {
 	Highcharts.setOptions({
 		global : {
 			useUTC : false
@@ -238,8 +238,8 @@ function graphMetricChartForApp(container, data) {
 						if (Number(number1) == Number(number0)) {
 							number = number0;
 						}
-
-						return Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x)
+						
+						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x *  5 * 60000 + Date.parse(datePair[this.series.name]))
 								+ '<br/>[' + this.series.name + '] ' + '<b>'
 								+ number + '</b>';
 					}
