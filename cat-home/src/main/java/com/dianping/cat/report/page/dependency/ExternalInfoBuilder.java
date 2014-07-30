@@ -119,7 +119,7 @@ public class ExternalInfoBuilder {
 		int minuteCount = payload.getMinuteCounts();
 		int minute = model.getMinute();
 		TopReport report = queryTopReport(payload);
-		List<String> excludeDomains = Arrays.asList("FrontEnd");
+		List<String> excludeDomains = Arrays.asList(Constants.FRONT_END);
 		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager, excludeDomains);
 		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
 		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);

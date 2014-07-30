@@ -81,7 +81,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			minuteCount = payload.getMinuteCounts();
 		}
-		List<String> excludeDomains = Arrays.asList("FrontEnd");
+		List<String> excludeDomains = Arrays.asList(Constants.FRONT_END);
 		TopMetric displayTop = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager, excludeDomains);
 
 		displayTop.visitTopReport(report);
