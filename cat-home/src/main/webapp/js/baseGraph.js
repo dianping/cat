@@ -239,7 +239,7 @@ function graphMetricChartForApp(container, data, datePair) {
 							number = number0;
 						}
 						
-						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x *  5 * 60000 + Date.parse(datePair[this.series.name]))
+						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x*300000 - 8*3600000 + Date.parse(datePair[this.series.name]))
 								+ '<br/>[' + this.series.name + '] ' + '<b>'
 								+ number + '</b>';
 					}
