@@ -1,7 +1,7 @@
 package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
@@ -19,7 +19,7 @@ import com.dianping.cat.report.service.AbstractReportService;
 
 public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
-	private Map<Long, RouterConfig> m_configs = new LinkedHashMap<Long, RouterConfig>();
+	private Map<Long, RouterConfig> m_configs = new HashMap<Long, RouterConfig>();
 
 	@Override
 	public RouterConfig makeReport(String domain, Date start, Date end) {

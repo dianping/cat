@@ -21,9 +21,6 @@
 <a:body>
 
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
-	<res:useCss value='${res.css.local.table_css}' target="head-css" />
-	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 	
 

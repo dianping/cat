@@ -188,8 +188,8 @@ public class AppConfigManager implements Initializable {
 				AppConfig appConfig = DefaultSaxParser.parse(content);
 
 				m_config = appConfig;
-				refreshData();
 				m_modifyTime = modifyTime;
+				refreshData();
 			}
 		}
 	}
@@ -224,6 +224,7 @@ public class AppConfigManager implements Initializable {
 			boolean active = true;
 			while (active) {
 				try {
+					refreshAppConfigConfig();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
