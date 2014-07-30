@@ -15,7 +15,7 @@ import com.dianping.cat.system.notify.ReportRenderImpl;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class ThirdpartyDecorator extends DefaultDecorator implements Initializable {
+public class ThirdpartyDecorator extends ProjectDecorator implements Initializable {
 
 	public Configuration m_configuration;
 

@@ -665,7 +665,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -675,7 +675,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -695,7 +695,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

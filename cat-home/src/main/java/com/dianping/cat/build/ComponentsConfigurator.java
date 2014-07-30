@@ -153,13 +153,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(Contactor.class, ExceptionContactor.ID, "systemContactor")
 		      .req(Contactor.class, ThirdpartyContactor.ID, "thirdpartyContactor"));
 
-		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProductLineConfigManager.class));
 
 		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectDao.class));
 
-		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProductLineConfigManager.class));
 
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectDao.class));
 

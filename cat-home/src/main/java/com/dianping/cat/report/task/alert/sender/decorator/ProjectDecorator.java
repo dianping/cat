@@ -1,32 +1,20 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
-import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.site.lookup.util.StringUtils;
 
-public abstract class DefaultDecorator implements Decorator {
+public abstract class ProjectDecorator extends DefaultDecorator {
 
 	@Inject
 	protected ProjectDao m_projectDao;
 
-	protected DateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-	protected String buildContactInfo(String domainName) {
+	public String buildContactInfo(String domainName) {
 		try {
-			if (domainName.startsWith("f5-")) {
-				domainName = domainName.substring(3);
-			} else if (domainName.startsWith("switch-")) {
-				domainName = domainName.substring(7);
-			}
-
 			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
 			String owners = project.getOwner();
 			String phones = project.getPhone();
@@ -41,14 +29,9 @@ public abstract class DefaultDecorator implements Decorator {
 
 			return builder.toString();
 		} catch (Exception ex) {
-			Cat.logError("build contact info error for doamin: " + domainName, ex);
+			Cat.logError("build project contact info error for doamin: " + domainName, ex);
 		}
 
 		return "";
 	}
-
-	public String generateContent(AlertEntity alert) {
-		return alert.getContent() + buildContactInfo(alert.getGroup());
-	}
-
 }
