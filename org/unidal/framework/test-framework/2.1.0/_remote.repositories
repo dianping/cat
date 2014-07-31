@@ -1,0 +1,6 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Jul 25 15:57:36 CST 2014
+test-framework-2.1.0.jar>=
+test-framework-2.1.0.pom>dianping-internal-releases=
+test-framework-2.1.0.jar>dianping-internal-releases=
+test-framework-2.1.0-sources.jar>dianping-internal-releases=
