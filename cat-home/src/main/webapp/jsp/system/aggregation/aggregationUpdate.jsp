@@ -54,6 +54,15 @@
 						<td>模板</td>
 						<td><input type="text" class="input-xlarge"  placeholder="选择被聚合对象的模板" name="aggregation.pattern" required value="${model.aggregationRule.pattern}"/></td>
 					</tr>
+					<tr>
+						<td>告警阈值</td>
+						<td><input type="text" class="input-xlarge"  placeholder="告警阈值" name="aggregation.warn" required value="${model.aggregationRule.warn}"/></td>
+					</tr>
+					<tr>
+						<td>联系邮件</td>
+						<td><input type="text" class="input-xlarge"  placeholder="联系邮件" name="aggregation.mails" required value="${model.aggregationRule.mails}"/></td>
+					</tr>
+					
 					<%-- <tr>
 						<td>显示名称</td>
 						<td><input type="text" class="input-xlarge" placeholder="聚合显示的名称" name="aggregation.displayName" required value="${model.aggregationRule.displayName}"/></td>

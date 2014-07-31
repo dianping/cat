@@ -28,6 +28,9 @@ public class ContactorManager implements Initializable {
 	@Inject(type = Contactor.class, value = ThirdpartyContactor.ID)
 	private Contactor m_thirdpartyContactor;
 
+	@Inject(type = Contactor.class, value = FrontEndExceptionContactor.ID)
+	private Contactor m_frontEndExceptionContactor;
+
 	private Map<String, Contactor> m_contactors = new HashMap<String, Contactor>();
 
 	public List<String> queryReceivers(String group, String channel, String type) {
@@ -51,6 +54,7 @@ public class ContactorManager implements Initializable {
 		m_contactors.put(m_exceptionContactor.getId(), m_exceptionContactor);
 		m_contactors.put(m_systemContactor.getId(), m_systemContactor);
 		m_contactors.put(m_thirdpartyContactor.getId(), m_thirdpartyContactor);
+		m_contactors.put(m_frontEndExceptionContactor.getId(), m_frontEndExceptionContactor);
 	}
 
 	public void setBusinessContactor(Contactor contactor) {
@@ -71,6 +75,10 @@ public class ContactorManager implements Initializable {
 
 	public void setThirdpartyContactor(Contactor thirdpartyContactor) {
 		m_thirdpartyContactor = thirdpartyContactor;
+	}
+
+	public void setFrontEndExceptionContactor(Contactor frontEndExceptionContactor) {
+		m_frontEndExceptionContactor = frontEndExceptionContactor;
 	}
 
 }
