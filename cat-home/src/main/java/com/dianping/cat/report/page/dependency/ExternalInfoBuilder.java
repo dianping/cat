@@ -51,7 +51,7 @@ public class ExternalInfoBuilder {
 	private ExceptionConfigManager m_configManager;
 
 	@Inject
-	private ServerConfigManager m_serverConfigManager;
+	protected ServerConfigManager m_serverConfigManager;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 

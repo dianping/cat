@@ -129,9 +129,7 @@ CREATE TABLE `businessReport` (
   `content` longblob COMMENT '用于存放报表的具体内容',
   `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
-  KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
-  KEY `IX_Name_Period` (`name`,`period`),
-  KEY `IX_Period` (`period`)
+  KEY `IX_Period_productLine_name` (`period`,`productLine`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
 CREATE TABLE `sqltable` (
@@ -286,8 +284,7 @@ CREATE TABLE `baseline` (
   `data` blob,
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
-  KEY `ix_reportperiod` (`report_period`)
+  KEY `period_name_key` (`report_period`,`report_name`,`index_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `alteration` (
