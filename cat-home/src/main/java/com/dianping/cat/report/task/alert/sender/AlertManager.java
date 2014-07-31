@@ -97,7 +97,6 @@ public class AlertManager implements Initializable {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 	@Override

@@ -346,5 +346,5 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !domain.equals(Constants.FRONT_END) && filterDomain(domain);
 	}
-
+	
 }
