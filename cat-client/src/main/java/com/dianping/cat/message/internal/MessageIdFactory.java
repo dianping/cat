@@ -88,9 +88,7 @@ public class MessageIdFactory {
 
 			m_ipAddress = sb.toString();
 		}
-
-		String tmpDir = System.getProperty("java.io.tmpdir");
-		File mark = new File(tmpDir, "cat-" + domain + ".mark");
+		File mark = new File("/data/appdatas/cat/", "cat-" + domain + ".mark");
 
 		m_markFile = new RandomAccessFile(mark, "rw");
 		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);

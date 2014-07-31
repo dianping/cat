@@ -342,5 +342,5 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
 	}
-
+	
 }
