@@ -259,9 +259,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				hourStr = "0" + hourStr;
 			}
 
-			Transaction t1 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
+			Transaction t1 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
 			try {
-				updateProjectInfo();
+				updateHostNameInfo();
 				t1.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t1.setStatus(e);
@@ -269,12 +269,12 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				t1.complete();
 			}
 
-			Transaction t2 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
+			Transaction t2 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
 			try {
-				updateHostNameInfo();
+				updateProjectInfo();
 				t2.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				t2.setStatus(e);
+				t1.setStatus(e);
 			} finally {
 				t2.complete();
 			}
