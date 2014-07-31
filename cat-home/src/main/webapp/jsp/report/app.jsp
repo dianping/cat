@@ -124,8 +124,6 @@
 					$("#command").val(words[1]);
 
 					if (words[0] == null || words.length == 1) {
-						console.log(words.length);
-
 						$("#time").val(getDate());
 					} else {
 						$("#time").val(words[0]);
@@ -139,6 +137,9 @@
 					$("#platform").val(words[6]);
 					$("#city").val(words[7]);
 					$("#operator").val(words[8]);
+					
+					var datePair = {};
+					datePair["查询1"]=$("#time").val();
 
 					if (query2 != null && query2 != '') {
 						$('#history').slideDown();
@@ -150,6 +151,8 @@
 						} else {
 							$("#time2").val(words[0]);
 						}
+						
+						datePair["查询2"]=$("#time2").val();
 
 						$("#command2").val(words[1]);
 						command2Change();
@@ -175,7 +178,7 @@
 
 					var data = ${model.lineChart.jsonString};
 					graphMetricChartForApp(document
-							.getElementById('${model.lineChart.id}'), data);
+							.getElementById('${model.lineChart.id}'), data, datePair);
 
 				});
 	</script>

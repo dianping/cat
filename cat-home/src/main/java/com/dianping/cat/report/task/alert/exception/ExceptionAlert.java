@@ -94,32 +94,27 @@ public class ExceptionAlert implements Task {
 
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
-				Collection<List<Item>> items = topMetric.getError().getResult().values();
-				List<Item> item = new ArrayList<Item>();
+				Collection<List<Item>> itemLists = topMetric.getError().getResult().values();
+				List<Item> itemList = new ArrayList<Item>();
 
-				if (!items.isEmpty()) {
-					item = items.iterator().next();
+				if (!itemLists.isEmpty()) {
+					itemList = itemLists.iterator().next();
 				}
-				Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(item);
+				Item frontEndItem = null;
+				List<Item> otherItemList = new ArrayList<Item>();
 
-				for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
-					try {
-						String domain = entry.getKey();
-						List<AlertException> exceptions = entry.getValue();
-
-						for (AlertException exception : exceptions) {
-							String metricName = exception.getName();
-							AlertEntity entity = new AlertEntity();
-							
-							entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-							entity.setMetric(metricName).setType(getName()).setGroup(domain);
-
-							m_sendManager.addAlert(entity);
-						}
-					} catch (Exception e) {
-						Cat.logError(e);
+				for (Item item : itemList) {
+					if (Constants.FRONT_END.equals(item.getDomain())) {
+						frontEndItem = item;
+					} else {
+						otherItemList.add(item);
 					}
 				}
+				if (frontEndItem != null) {
+					handleFrontEndException(frontEndItem);
+				}
+				handleGeneralExceptions(itemList);
+
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -134,6 +129,45 @@ public class ExceptionAlert implements Task {
 				}
 			} catch (InterruptedException e) {
 				active = false;
+			}
+		}
+	}
+
+	private void handleGeneralExceptions(List<Item> itemList) {
+		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
+
+		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
+			try {
+				String domain = entry.getKey();
+				List<AlertException> exceptions = entry.getValue();
+
+				for (AlertException exception : exceptions) {
+					String metricName = exception.getName();
+					AlertEntity entity = new AlertEntity();
+
+					entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
+					entity.setMetric(metricName).setType(getName()).setGroup(domain);
+					m_sendManager.addAlert(entity);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
+	private void handleFrontEndException(Item frontEndItem) {
+		List<AlertException> alertExceptions = m_alertBuilder.buildFrontEndAlertExceptions(frontEndItem);
+
+		for (AlertException exception : alertExceptions) {
+			try {
+				String metricName = exception.getName();
+				AlertEntity entity = new AlertEntity();
+
+				entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
+				entity.setMetric(metricName).setType(AlertConstants.FRONT_END_EXCEPTION).setGroup(metricName);
+				m_sendManager.addAlert(entity);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}

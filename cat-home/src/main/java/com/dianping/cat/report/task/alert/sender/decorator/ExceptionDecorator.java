@@ -23,7 +23,7 @@ public class ExceptionDecorator extends DefaultDecorator implements Initializabl
 
 	public static final String ID = AlertConstants.EXCEPTION;
 
-	private DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	protected DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {
@@ -51,7 +51,7 @@ public class ExceptionDecorator extends DefaultDecorator implements Initializabl
 		return sw.toString();
 	}
 
-	private Map<Object, Object> generateExceptionMap(AlertEntity alert) {
+	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		String domain = alert.getGroup();
 		String contactInfo = buildContactInfo(domain);
 		Map<Object, Object> map = new HashMap<Object, Object>();

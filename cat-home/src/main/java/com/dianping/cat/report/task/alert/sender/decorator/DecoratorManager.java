@@ -27,6 +27,9 @@ public class DecoratorManager implements Initializable {
 	@Inject(type = Decorator.class, value = ThirdpartyDecorator.ID)
 	private Decorator m_thirdpartyDecorator;
 
+	@Inject(type = Decorator.class, value = FrontEndExceptionDecorator.ID)
+	private Decorator m_frontEndExceptionDecorator;
+
 	private Map<String, Decorator> m_decorators = new HashMap<String, Decorator>();
 
 	public Pair<String, String> generateTitleAndContent(AlertEntity alert) {
@@ -50,6 +53,7 @@ public class DecoratorManager implements Initializable {
 		m_decorators.put(m_exceptionDecorator.getId(), m_exceptionDecorator);
 		m_decorators.put(m_systemDecorator.getId(), m_systemDecorator);
 		m_decorators.put(m_thirdpartyDecorator.getId(), m_thirdpartyDecorator);
+		m_decorators.put(m_frontEndExceptionDecorator.getId(), m_frontEndExceptionDecorator);
 	}
 
 	public void setBusinessDecorator(Decorator decorator) {
@@ -70,6 +74,10 @@ public class DecoratorManager implements Initializable {
 
 	public void setThirdpartyDecorator(Decorator decorator) {
 		m_thirdpartyDecorator = decorator;
+	}
+
+	public void setFrontEndExceptionDecorator(Decorator decorator) {
+		m_frontEndExceptionDecorator = decorator;
 	}
 
 }
