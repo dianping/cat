@@ -57,8 +57,6 @@ public class NavigationBar {
 		
 		SystemPage.ALARM,
 
-		SystemPage.CONFIG,
-
 		ReportPage.LOGVIEW, };
 	}
 }
