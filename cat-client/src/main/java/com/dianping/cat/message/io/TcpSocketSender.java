@@ -102,7 +102,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					m_logger.error("Error when sending message over TCP socket!", t);
 				}
 			} else {
-				System.out.println("check write false");
 				try {
 					Thread.sleep(5);
 				} catch (Exception e) {
