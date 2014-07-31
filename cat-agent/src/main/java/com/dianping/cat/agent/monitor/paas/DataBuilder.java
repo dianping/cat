@@ -152,11 +152,11 @@ public class DataBuilder {
 
 		try {
 			outputs = m_commandUtils.runShell(cmd);
+			
+			return convert2DataEntities(outputs);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		List<DataEntity> dataEntities = convert2DataEntities(outputs);
-
-		return dataEntities;
+		return new ArrayList<DataEntity>();
 	}
 }
