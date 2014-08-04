@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
@@ -20,7 +22,7 @@ import com.dianping.cat.home.dal.user.DpAdminLoginDao;
 import com.dianping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 
-public class ScheduledManager {
+public class ScheduledManager implements Initializable{
 
 	@Inject
 	private DpAdminLoginDao m_loginDao;
@@ -164,4 +166,8 @@ public class ScheduledManager {
 			model.setOpState(Handler.FAIL);
 		}
 	}
+
+	@Override
+   public void initialize() throws InitializationException {
+   }
 }

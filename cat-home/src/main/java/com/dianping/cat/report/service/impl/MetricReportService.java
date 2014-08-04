@@ -46,15 +46,15 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 		MetricReportMerger merger = new MetricReportMerger(new MetricReport(group));
 
 		try {
-			List<BusinessReport> reports = m_businessReportDao.findAllByProductLineNameDuration(start, end, group,
-			      MetricAnalyzer.ID, BusinessReportEntity.READSET_FULL);
+			List<BusinessReport> reports = m_businessReportDao.findAllByPeriodProductLineName(start, group,
+			      BusinessReportEntity.READSET_FULL);
 
 			for (BusinessReport report : reports) {
 				byte[] content = report.getContent();
 
 				try {
 					MetricReport reportModel = DefaultNativeParser.parse(content);
-			
+
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
