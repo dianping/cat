@@ -1,5 +1,8 @@
 package com.dianping.cat.broker.api.app;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,6 +29,8 @@ public class BucketHandler implements Task {
 
 	private long m_startTime;
 
+	public final static String SAVE_PATH = "/data/appdatas/cat/app-data-save/";
+
 	public BucketHandler(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
 		m_appDataQueue = new AppDataQueue();
@@ -33,25 +38,25 @@ public class BucketHandler implements Task {
 		m_appDataService = appDataService;
 	}
 
-	private void end() {
+	public void end() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(m_startTime);
 
 		int minute = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
 		minute = minute - minute % 5;
-		
+
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
-		
+
 		Date period = new Date(cal.getTimeInMillis());
 		List<AppDataCommand> appDataCommands = new ArrayList<AppDataCommand>();
 		int batchSize = 100;
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
 			HashMap<String, AppData> value = outerEntry.getValue();
-			
+
 			for (Entry<String, AppData> entry : value.entrySet()) {
 				AppData appData = entry.getValue();
 				AppDataCommand proto = new AppDataCommand();
@@ -79,6 +84,7 @@ public class BucketHandler implements Task {
 				}
 			}
 		}
+		
 		batchInsert(appDataCommands);
 	}
 
@@ -177,4 +183,44 @@ public class BucketHandler implements Task {
 		m_isActive = false;
 	}
 
+	public void save() {
+		if (m_mergedData.size() > 0) {
+			try {
+				File parentDir = new File(SAVE_PATH);
+				parentDir.mkdirs();
+				
+				String filePath = SAVE_PATH + String.valueOf(m_startTime);
+				BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+
+				for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
+					HashMap<String, AppData> value = outerEntry.getValue();
+
+					for (Entry<String, AppData> entry : value.entrySet()) {
+						AppData appData = entry.getValue();
+
+						StringBuilder sb = new StringBuilder();
+						sb.append(appData.getTimestamp()).append("\t");
+						sb.append(appData.getCity()).append("\t");
+						sb.append(appData.getOperator()).append("\t");
+						sb.append(appData.getNetwork()).append("\t");
+						sb.append(appData.getVersion()).append("\t");
+						sb.append(appData.getConnectType()).append("\t");
+						sb.append(appData.getCommand()).append("\t");
+						sb.append(appData.getCode()).append("\t");
+						sb.append(appData.getPlatform()).append("\t");
+						sb.append(appData.getRequestByte()).append("\t");
+						sb.append(appData.getResponseByte()).append("\t");
+						sb.append(appData.getResponseTime()).append("\n");
+
+						writer.append(sb.toString());
+					}
+				}
+
+				writer.close();
+
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
 }

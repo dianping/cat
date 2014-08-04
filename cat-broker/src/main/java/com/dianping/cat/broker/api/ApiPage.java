@@ -11,7 +11,9 @@ public enum ApiPage implements Page {
 
    JS("js", "js", "Js", "Js", true),
 
-   CDN("cdn", "cdn", "Cdn", "Cdn", true);
+   CDN("cdn", "cdn", "Cdn", "Cdn", true),
+
+   SAVE("save", "save", "Save", "Save", true);
 
    private String m_name;
 

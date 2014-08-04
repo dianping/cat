@@ -65,6 +65,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 
+		userIp = "180.97.33.71";
 		if (userIp != null) {
 			if ("1".equals(version)) {
 				processVersion1(payload, request, userIp);
@@ -145,6 +146,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			try {
 				appData.setTimestamp(Long.parseLong(items[0]));
 				Integer command = m_appConfigManager.getCommands().get(items[1]);
+				command = 1;
 
 				if (command != null) {
 					appData.setCommand(command);

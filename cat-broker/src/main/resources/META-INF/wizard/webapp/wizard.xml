@@ -14,6 +14,9 @@
          <page name="cdn" title="Cdn" path="cdn" template="default">
             <description>Cdn</description>
          </page>
+         <page name="save" title="Save" path="save" template="default">
+            <description>Save</description>
+         </page>
       </module>
    </webapp>
 </wizard>
