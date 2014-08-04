@@ -71,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 			if (lineChart != null) {
 				model.setJson(lineChart.getJsonString());
 			}
-			break;
+			break; 
 		}
 		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
 
