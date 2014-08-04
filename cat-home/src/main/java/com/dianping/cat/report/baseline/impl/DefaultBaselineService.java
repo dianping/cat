@@ -26,13 +26,13 @@ public class DefaultBaselineService implements BaselineService {
 	@Inject
 	private BaselineDao m_baselineDao;
 
-	private Map<String, Baseline> m_baselineMap = new LinkedHashMap<String, Baseline>() {
+	private Map<String, Baseline> m_baselines = new LinkedHashMap<String, Baseline>() {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected boolean removeEldestEntry(Entry<String, Baseline> eldest) {
-			return size() > 5000;
+			return size() > 50000;
 		}
 	};
 
@@ -73,13 +73,13 @@ public class DefaultBaselineService implements BaselineService {
 	@Override
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
 		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
-		Baseline baseline = m_baselineMap.get(baselineKey);
+		Baseline baseline = m_baselines.get(baselineKey);
 
 		if (baseline == null) {
 			try {
 				baseline = m_baselineDao
 				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
-				m_baselineMap.put(baselineKey, baseline);
+				m_baselines.put(baselineKey, baseline);
 			} catch (DalNotFoundException e) {
 				Cat.logEvent("BaselineNotFound", baselineKey);
 				return null;
