@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 			LineChart lineChart = allCharts.get(id);
 			
 			if (lineChart != null) {
-				model.setJson(allCharts.get(id).getJsonString());
+				model.setJson(lineChart.getJsonString());
 			}
 			break;
 		}
