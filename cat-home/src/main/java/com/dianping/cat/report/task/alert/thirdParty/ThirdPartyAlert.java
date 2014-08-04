@@ -78,8 +78,9 @@ public class ThirdPartyAlert implements Task {
 					String domain = entry.getKey();
 					List<ThirdPartyAlertEntity> thirdPartyAlerts = entry.getValue();
 					AlertEntity entity = new AlertEntity();
-					
-					entity.setDate(new Date()).setContent(thirdPartyAlerts.toString()).setLevel("warning");
+
+					entity.setDate(new Date()).setContent(thirdPartyAlerts.toString())
+					      .setLevel(AlertConstants.WARNING_EXCEPTION);
 					entity.setMetric(getName()).setType(getName()).setGroup(domain);
 
 					m_sendManager.addAlert(entity);

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -35,7 +36,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-	
+
 	@Inject
 	private MetricGraphCreator m_graphCreator;
 
@@ -56,24 +57,21 @@ public class Handler implements PageHandler<Context> {
 		int timeRange = payload.getTimeRange();
 		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date end = new Date(date + TimeUtil.ONE_HOUR);
+		Map<String, LineChart> allCharts = buildLineCharts(payload, start, end);
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
-			
-			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
-			break;
 		case DASHBOARD:
-			String group = payload.getGroup();
-			Map<String, LineChart> allCharts = null;
-
-			if (group == null || group.length() == 0) {
-				allCharts = m_graphCreator.buildDashboard(start, end);
-			} else {
-				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
-			}
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
+		case JSON:
+			String id = payload.getId();
+			LineChart lineChart = allCharts.get(id);
+			
+			if (lineChart != null) {
+				model.setJson(lineChart.getJsonString());
+			}
+			break; 
 		}
 		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
 
@@ -82,14 +80,28 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private Map<String, LineChart> buildLineCharts(Payload payload, Date start, Date end) {
+		Map<String, LineChart> allCharts = null;
+		String productLine = payload.getProduct();
+
+		if (StringUtils.isEmpty(productLine)) {
+			String group = payload.getGroup();
+
+			if (StringUtils.isEmpty(group)) {
+				allCharts = m_graphCreator.buildDashboard(start, end);
+			} else {
+				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
+			}
+		} else {
+			allCharts = m_graphCreator.buildChartsByProductLine(productLine, start, end);
+		}
+		return allCharts;
+	}
+
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.METRIC);
-		String poduct = payload.getProduct();
-
-		if (poduct == null || poduct.length() == 0) {
-			payload.setAction(Action.DASHBOARD.getName());
-		}
 		m_normalizePayload.normalize(model, payload);
+
 		int timeRange = payload.getTimeRange();
 		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
 		Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
@@ -97,5 +109,4 @@ public class Handler implements PageHandler<Context> {
 		model.setStartTime(startTime);
 		model.setEndTime(endTime);
 	}
-
 }
