@@ -50,16 +50,15 @@ public class AlertManager implements Initializable {
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		for (AlertChannel channel : channels) {
-			String channelName = channel.getName();
 			Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
 			String title = pair.getKey();
-			String content = m_splitterManager.process(pair.getValue(), channelName);
-			List<String> receivers = m_contactorManager.queryReceivers(group, channelName, type);
+			String content = m_splitterManager.process(pair.getValue(), channel);
+			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, content, receivers);
 
 			m_alertEntityService.storeAlert(alert, message);
 
-			if (m_senderManager.sendAlert(channelName, type, message)) {
+			if (m_senderManager.sendAlert(channel, type, message)) {
 				result = true;
 			}
 		}

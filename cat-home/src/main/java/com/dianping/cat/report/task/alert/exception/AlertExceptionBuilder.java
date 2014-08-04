@@ -14,7 +14,7 @@ import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.top.TopMetric.Item;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertLevel;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class AlertExceptionBuilder {
@@ -50,7 +50,7 @@ public class AlertExceptionBuilder {
 				double value = entry.getValue().doubleValue();
 
 				if (value >= warn) {
-					alertExceptions.add(new AlertException(exception, AlertConstants.WARNING_EXCEPTION, value));
+					alertExceptions.add(new AlertException(exception, AlertLevel.WARNING, value));
 				}
 			}
 		}
@@ -77,19 +77,19 @@ public class AlertExceptionBuilder {
 				totalException += value;
 
 				if (errorLimit > 0 && value >= errorLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertConstants.ERROR_EXCEPTION, value,
+					alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value,
 					      needSendSms(domain, exceptionName)));
 				} else if (warnLimit > 0 && value >= warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertConstants.WARNING_EXCEPTION, value));
+					alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
 				}
 			}
 		}
 
 		if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertConstants.ERROR_EXCEPTION,
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.ERROR,
 			      totalException, needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)));
 		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertConstants.WARNING_EXCEPTION,
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.WARNING,
 			      totalException));
 		}
 

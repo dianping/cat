@@ -17,7 +17,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 
@@ -122,7 +122,7 @@ public class ThirdPartyAlert implements Task {
 
 	@Override
 	public String getName() {
-		return AlertConstants.THIRDPARTY;
+		return AlertType.THIRDPARTY;
 	}
 
 	@Override
