@@ -4,18 +4,17 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
+import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
 
 public abstract class ProjectDecorator extends DefaultDecorator {
 
 	@Inject
-	protected ProjectDao m_projectDao;
+	protected ProjectService m_projectService;
 
 	public String buildContactInfo(String domainName) {
 		try {
-			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			Project project = m_projectService.findByDomain(domainName);
 			String owners = project.getOwner();
 			String phones = project.getPhone();
 			StringBuilder builder = new StringBuilder();

@@ -102,7 +102,9 @@ import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -131,6 +133,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
+		all.add(C(ProjectService.class).req(ProjectDao.class));
+		all.add(C(HostinfoService.class).req(HostinfoDao.class));
 
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
@@ -141,10 +145,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, SystemContactor.ID, SystemContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
 		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
@@ -157,11 +161,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class));
 
 		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
 
 		all.add(C(DecoratorManager.class).req(Decorator.class, BusinessDecorator.ID, "businessDecorator")
 		      .req(Decorator.class, NetworkDecorator.ID, "networkDecorator")
@@ -231,7 +235,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportServiceManager.class));
-		all.add(C(DomainNavManager.class).req(ProjectDao.class));
+		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
@@ -245,7 +249,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// update project database
 		all.add(C(ProjectUpdateTask.class)//
-		      .req(ProjectDao.class, HostinfoDao.class));
+		      .req(ProjectService.class, HostinfoService.class));
 
 		return all;
 	}
@@ -324,7 +328,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricGroupConfigManager.class, AlertInfo.class));
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectDao.class));
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectService.class));
 		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));

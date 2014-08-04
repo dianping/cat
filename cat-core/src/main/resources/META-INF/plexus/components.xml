@@ -8,8 +8,26 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.HostinfoService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ProjectService</role>
+			<implementation>com.dianping.cat.service.ProjectService</implementation>
+			<requirements>
+				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.HostinfoService</role>
+			<implementation>com.dianping.cat.service.HostinfoService</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>

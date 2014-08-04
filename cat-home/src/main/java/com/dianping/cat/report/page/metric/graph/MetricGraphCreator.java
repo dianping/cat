@@ -18,8 +18,6 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
@@ -27,16 +25,17 @@ import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
 
 public class MetricGraphCreator extends AbstractGraphCreator {
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	protected String buildContactInfo(String domainName) {
 		try {
-			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			Project project = m_projectService.findByDomain(domainName);
 			String owners = project.getOwner();
 			String phones = project.getPhone();
 			StringBuilder builder = new StringBuilder();

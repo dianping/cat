@@ -16,7 +16,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -25,20 +24,18 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.core.dal.Hostinfo;
-import com.dianping.cat.core.dal.HostinfoDao;
-import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
 
 public class DomainManager implements Initializable, LogEnabled {
 
 	@Inject
-	private HostinfoDao m_hostInfoDao;
+	private HostinfoService m_hostInfoService;
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	@Inject
 	private ServerConfigManager m_manager;
@@ -75,14 +72,14 @@ public class DomainManager implements Initializable, LogEnabled {
 		if (!m_manager.isLocalMode()) {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
-				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+				List<Hostinfo> infos = m_hostInfoService.findAll();
 
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
 					m_ipsInCat.put(info.getIp(), info);
 				}
 
-				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+				List<Project> projects = m_projectService.findAll();
 				for (Project project : projects) {
 					m_domainsInCat.add(project.getDomain());
 				}
@@ -95,11 +92,11 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	public boolean insert(String domain, String ip) {
 		try {
-			Hostinfo info = m_hostInfoDao.createLocal();
+			Hostinfo info = m_hostInfoService.createLocal();
 
 			info.setDomain(domain);
 			info.setIp(ip);
-			m_hostInfoDao.insert(info);
+			m_hostInfoService.insert(info);
 			m_domainsInCat.add(domain);
 			m_ipsInCat.put(ip, info);
 			return true;
@@ -110,13 +107,13 @@ public class DomainManager implements Initializable, LogEnabled {
 	}
 
 	public boolean insertDomain(String domain) {
-		Project project = m_projectDao.createLocal();
+		Project project = m_projectService.createLocal();
 
 		project.setDomain(domain);
 		project.setProjectLine("Default");
 		project.setDepartment("Default");
 		try {
-			m_projectDao.insert(project);
+			m_projectService.insert(project);
 			m_domainsInCat.add(domain);
 
 			return true;
@@ -159,7 +156,7 @@ public class DomainManager implements Initializable, LogEnabled {
 						return hostname;
 					}
 				}
-				info = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				info = m_hostInfoService.findByIp(ip);
 
 				if (info != null) {
 					m_ipsInCat.put(ip, info);
@@ -169,9 +166,7 @@ public class DomainManager implements Initializable, LogEnabled {
 			} else {
 				return null;
 			}
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
@@ -179,21 +174,16 @@ public class DomainManager implements Initializable, LogEnabled {
 	}
 
 	public boolean update(int id, String domain, String ip) {
-		try {
-			Hostinfo info = m_hostInfoDao.createLocal();
+		Hostinfo info = m_hostInfoService.createLocal();
 
-			info.setId(id);
-			info.setDomain(domain);
-			info.setIp(ip);
-			info.setLastModifiedDate(new Date());
-			m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
-			m_domainsInCat.add(domain);
-			m_ipsInCat.put(ip, info);
-			return true;
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return false;
+		info.setId(id);
+		info.setDomain(domain);
+		info.setIp(ip);
+		info.setLastModifiedDate(new Date());
+		m_hostInfoService.updateHostinfo(info);
+		m_domainsInCat.add(domain);
+		m_ipsInCat.put(ip, info);
+		return true;
 	}
 
 	private boolean validateIp(String str) {
@@ -254,7 +244,7 @@ public class DomainManager implements Initializable, LogEnabled {
 			Set<String> addIps = new HashSet<String>();
 			for (String ip : m_unknownIps.keySet()) {
 				try {
-					Hostinfo hostinfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+					Hostinfo hostinfo = m_hostInfoService.findByIp(ip);
 
 					addIps.add(hostinfo.getIp());
 					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());

@@ -32,6 +32,8 @@ import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -45,7 +47,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(DomainManager.class)//
-		      .req(ServerConfigManager.class, ProjectDao.class, HostinfoDao.class));
+		      .req(ServerConfigManager.class, ProjectService.class, HostinfoService.class));
+
+		all.add(C(ProjectService.class).req(ProjectDao.class));
+
+		all.add(C(HostinfoService.class).req(HostinfoDao.class));
 
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));
@@ -67,7 +73,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(AppDataService.class).req(AppConfigManager.class, AppDataCommandDao.class));
-	
+
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class));
