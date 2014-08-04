@@ -60,16 +60,30 @@ final class FailurePayload extends AbstractPayload {
 
 	@Override
 	protected double[] loadValues() {
-		double[] values = new double[12];
+		double[] values = new double[60];
 
 		for (Range range : getEventName().getRanges().values()) {
 			int value = range.getValue();
-			int k = value / 5;
 
-			values[k] += range.getFails();
+			values[value] += range.getFails();
 		}
 
 		return values;
+	}
+	
+	@Override
+	public int getColumns() {
+		return 60;
+	}
+	
+	@Override
+	public String getAxisXLabel(int i) {
+		return String.valueOf(i);
+	}
+	
+	@Override
+	public boolean isAxisXLabelSkipped() {
+		return true;
 	}
 }
 
@@ -80,15 +94,24 @@ final class HitPayload extends AbstractPayload {
 
 	@Override
 	protected double[] loadValues() {
-		double[] values = new double[12];
+		double[] values = new double[60];
 
 		for (Range range : getEventName().getRanges().values()) {
 			int value = range.getValue();
-			int k = value / 5;
 
-			values[k] += range.getCount();
+			values[value] += range.getCount();
 		}
 
 		return values;
+	}
+	
+	@Override
+	public int getColumns() {
+		return 60;
+	}
+	
+	@Override
+	public String getAxisXLabel(int i) {
+		return String.valueOf(i);
 	}
 }
