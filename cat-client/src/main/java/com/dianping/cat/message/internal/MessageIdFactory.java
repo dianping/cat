@@ -130,6 +130,10 @@ public class MessageIdFactory {
 			m_byteBuffer.rewind();
 			m_byteBuffer.putInt(m_index);
 			m_byteBuffer.putLong(m_timestamp);
+
+			if (m_index % 100 == 0) {
+				m_byteBuffer.force();
+			}
 		} catch (Exception e) {
 			// ignore it
 		}

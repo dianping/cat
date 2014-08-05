@@ -17,7 +17,9 @@ import com.dianping.cat.config.app.AppDataService;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 
-	public static final long DURATION = 5 * 60 * 1000L;
+	public static final long MINUTE = 60 * 1000L;
+
+	public static final long DURATION = 5 * MINUTE;
 
 	@Inject
 	private AppDataService m_appDataService;
@@ -104,7 +106,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		private void closeLastTask(long currentDuration) {
-			Long last = new Long(currentDuration - DURATION);
+			Long last = new Long(currentDuration - MINUTE * 2 - DURATION);
 			BucketHandler lastBucketHandler = m_tasks.get(last);
 
 			if (lastBucketHandler != null) {
@@ -142,7 +144,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 				long elapsedTime = System.currentTimeMillis() - curTime;
 
 				try {
-					Thread.sleep(DURATION - elapsedTime);
+					Thread.sleep(MINUTE - elapsedTime);
 				} catch (InterruptedException e) {
 				}
 			}
