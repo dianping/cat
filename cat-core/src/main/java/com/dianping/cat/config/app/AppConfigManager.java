@@ -110,7 +110,11 @@ public class AppConfigManager implements Initializable {
 		Command c = m_config.findCommand(command);
 
 		if (c != null) {
-			return c.getCodes().values();
+			Collection<Code> values = c.getCodes().values();
+			Collection<Code> result = new ArrayList<Code>(values);
+
+			result.addAll(m_config.getCodes().values());
+			return result;
 		} else {
 			return Collections.emptySet();
 		}

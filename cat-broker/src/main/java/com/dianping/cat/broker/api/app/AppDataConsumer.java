@@ -106,12 +106,14 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		private void closeLastTask(long currentDuration) {
-			Long last = new Long(currentDuration - MINUTE * 2 - DURATION);
+			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
 			BucketHandler lastBucketHandler = m_tasks.get(last);
+
+			System.out.println("Date:" + new Date(last));
 
 			if (lastBucketHandler != null) {
 				lastBucketHandler.shutdown();
-				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
+				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(last)));
 			}
 		}
 
@@ -133,9 +135,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 				try {
 					long currentDuration = curTime - curTime % DURATION;
+					long currentMinute = curTime - curTime % MINUTE;
 
+					closeLastTask(currentMinute);
 					removeLastLastTask(currentDuration);
-					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
 				} catch (Exception e) {
