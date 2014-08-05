@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.system.config.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.dal.jdbc.DalException;
@@ -86,6 +87,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
+
+    @Inject
+    private DatabaseConfigManager m_databaseConfigManager;
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;

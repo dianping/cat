@@ -119,5 +119,45 @@
       </query>
     </query-defs>
   </entity>
+  <entity name="scheduled-report-subscription2" table="scheduledReportSubscription2" alias="s3">
+    <member name="scheduled-report-id" field="scheduled_report_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="user-name" field="user_name" value-type="String" length="20" nullable="false" key="true" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <var name="key-scheduled-report-id" value-type="int" key-member="scheduled-report-id" />
+    <var name="key-user-name" value-type="String" key-member="user-name" />
+    <primary-key name="PRIMARY" members="scheduled_report_id, user_name" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-scheduled-report-id" />
+        <param name="key-user-name" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-name'/> = ${key-user-name}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[REPLACE INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-scheduled-report-id" />
+        <param name="key-user-name" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-name'/> = ${key-user-name}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-scheduled-report-id" />
+        <param name="key-user-name" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-name'/> = ${key-user-name}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
 </entities>
 

@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dianping.cat.system.page.login.service.LoginMember;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
@@ -22,9 +23,9 @@ import com.dianping.cat.home.dal.user.DpAdminLogin;
 
 public class SystemContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
 
-	private DpAdminLogin m_signinMember;
+    private LoginMember m_signinMember;
 
-	public DpAdminLogin getSigninMember() {
+	public LoginMember getSigninMember() {
 		return m_signinMember;
 	}
 
@@ -58,7 +59,7 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 		}
 	}
 
-	public void setSigninMember(DpAdminLogin signinMember) {
+	public void setSigninMember(LoginMember signinMember) {
 		m_signinMember = signinMember;
 	}
 
