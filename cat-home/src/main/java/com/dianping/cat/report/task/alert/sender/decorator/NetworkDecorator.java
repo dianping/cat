@@ -1,11 +1,11 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class NetworkDecorator extends DefaultDecorator {
 
-	public static final String ID = AlertConstants.NETWORK;
+	public static final String ID = AlertType.NETWORK;
 
 	@Override
 	public String getId() {

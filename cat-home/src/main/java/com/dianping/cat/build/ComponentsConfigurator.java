@@ -153,12 +153,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
 		      AggregationConfigManager.class));
 
-		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
-		      .req(Contactor.class, NetworkContactor.ID, "networkContactor")
-		      .req(Contactor.class, SystemContactor.ID, "exceptionContactor")
-		      .req(Contactor.class, ExceptionContactor.ID, "systemContactor")
-		      .req(Contactor.class, ThirdpartyContactor.ID, "thirdpartyContactor")
-		      .req(Contactor.class, FrontEndExceptionContactor.ID, "frontEndExceptionContactor"));
+		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProjectDao.class));
 
@@ -172,12 +167,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
 
-		all.add(C(DecoratorManager.class).req(Decorator.class, BusinessDecorator.ID, "businessDecorator")
-		      .req(Decorator.class, NetworkDecorator.ID, "networkDecorator")
-		      .req(Decorator.class, ExceptionDecorator.ID, "exceptionDecorator")
-		      .req(Decorator.class, SystemDecorator.ID, "systemDecorator")
-		      .req(Decorator.class, ThirdpartyDecorator.ID, "thirdpartyDecorator")
-		      .req(Decorator.class, FrontEndExceptionDecorator.ID, "frontEndExceptionDecorator"));
+		all.add(C(DecoratorManager.class));
 
 		all.add(C(AlertPolicyManager.class).req(ConfigDao.class));
 
@@ -187,8 +177,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
 
-		all.add(C(SpliterManager.class).req(Spliter.class, MailSpliter.ID, "mailSpliter")
-		      .req(Spliter.class, SmsSpliter.ID, "smsSpliter").req(Spliter.class, WeixinSpliter.ID, "weixinSpliter"));
+		all.add(C(SpliterManager.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(ServerConfigManager.class));
 
@@ -196,8 +185,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class));
 
-		all.add(C(SenderManager.class).req(Sender.class, MailSender.ID, "mailSender")
-		      .req(Sender.class, WeixinSender.ID, "weixinSender").req(Sender.class, SmsSender.ID, "smsSender"));
+		all.add(C(SenderManager.class));
 
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
 		      AlertEntityService.class, SpliterManager.class, SenderManager.class));

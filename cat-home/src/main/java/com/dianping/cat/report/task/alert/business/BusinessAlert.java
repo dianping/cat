@@ -16,7 +16,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
@@ -24,7 +24,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
-	public static String ID = AlertConstants.BUSINESS;
+	public static String ID = AlertType.BUSINESS;
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;

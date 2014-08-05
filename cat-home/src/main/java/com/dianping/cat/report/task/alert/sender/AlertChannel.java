@@ -1,14 +1,13 @@
 package com.dianping.cat.report.task.alert.sender;
 
-import com.dianping.cat.report.task.alert.AlertConstants;
 
 public enum AlertChannel {
 
-	MAIL(AlertConstants.MAIL),
+	MAIL("mail"),
 
-	SMS(AlertConstants.SMS),
+	SMS("sms"),
 
-	WEIXIN(AlertConstants.WEIXIN);
+	WEIXIN("weixin");
 
 	private String m_name;
 

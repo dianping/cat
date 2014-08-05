@@ -1,11 +1,11 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class BusinessDecorator extends DefaultDecorator {
 
-	public static final String ID = AlertConstants.BUSINESS;
+	public static final String ID = AlertType.BUSINESS;
 
 	@Override
 	public String getId() {

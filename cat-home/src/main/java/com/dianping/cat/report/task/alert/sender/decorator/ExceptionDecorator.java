@@ -10,7 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 
@@ -21,7 +21,7 @@ public class ExceptionDecorator extends DefaultDecorator implements Initializabl
 
 	public Configuration m_configuration;
 
-	public static final String ID = AlertConstants.EXCEPTION;
+	public static final String ID = AlertType.EXCEPTION;
 
 	protected DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 

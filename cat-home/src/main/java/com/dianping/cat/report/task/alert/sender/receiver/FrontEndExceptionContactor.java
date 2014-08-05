@@ -8,14 +8,14 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 
 public class FrontEndExceptionContactor implements Contactor {
 
 	@Inject
 	private AggregationConfigManager m_configManager;
 
-	public static final String ID = AlertConstants.FRONT_END_EXCEPTION;
+	public static final String ID = AlertType.FRONT_END_EXCEPTION;
 
 	@Override
 	public String getId() {

@@ -1,10 +1,10 @@
 package com.dianping.cat.report.task.alert.sender.spliter;
 
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 
 public class WeixinSpliter implements Spliter {
 
-	public static final String ID = AlertConstants.WEIXIN;
+	public static final String ID = AlertChannel.WEIXIN.getName();
 
 	@Override
 	public String process(String content) {
